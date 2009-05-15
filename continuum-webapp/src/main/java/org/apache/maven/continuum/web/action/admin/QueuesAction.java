@@ -20,7 +20,6 @@ package org.apache.maven.continuum.web.action.admin;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +38,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.bean.BuildProjectQueue;
+import org.apache.maven.continuum.web.bean.CheckoutQueue;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
@@ -76,13 +77,13 @@ public class QueuesAction
 
     private String projectName;
 
-    private Map<String, BuildProjectTask> currentBuildProjectTasks = new HashMap<String, BuildProjectTask>();
+    private List<BuildProjectQueue> currentBuildProjectTasks = new ArrayList<BuildProjectQueue>();
 
-    private Map<String, CheckOutTask> currentCheckoutTasks = new HashMap<String, CheckOutTask>();
+    private List<CheckoutQueue> currentCheckoutTasks = new ArrayList<CheckoutQueue>();
 
-    private Map<String, List<BuildProjectTask>> buildsInQueue = new HashMap<String, List<BuildProjectTask>>();
+    private List<BuildProjectQueue> buildsInQueue = new ArrayList<BuildProjectQueue>();
 
-    private Map<String, List<CheckOutTask>> checkoutsInQueue = new HashMap<String, List<CheckOutTask>>();
+    private List<CheckoutQueue> checkoutsInQueue = new ArrayList<CheckoutQueue>();
 
     /**
      * @plexus.requirement
@@ -247,7 +248,10 @@ public class QueuesAction
                 for ( String key : keySet )
                 {
                     BuildProjectTask buildTask = currentBuilds.get( key );
-                    currentBuildProjectTasks.put( key, buildTask );
+                    BuildProjectQueue queue = new BuildProjectQueue();
+                    queue.setName( key );
+                    queue.setTask( buildTask );
+                    currentBuildProjectTasks.add( queue );
                 }
             }
             catch ( BuildManagerException e )
@@ -264,12 +268,13 @@ public class QueuesAction
                 Set<String> keySet = builds.keySet();
                 for ( String key : keySet )
                 {
-                    List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
                     for ( BuildProjectTask task : builds.get( key ) )
                     {
-                        buildTasks.add( task );
+                        BuildProjectQueue queue = new BuildProjectQueue();
+                        queue.setName( key );
+                        queue.setTask( task );
+                        buildsInQueue.add( queue );
                     }
-                    buildsInQueue.put( key, buildTasks );
                 }
             }
             catch ( BuildManagerException e )
@@ -286,7 +291,10 @@ public class QueuesAction
                 for ( String key : keySet )
                 {
                     CheckOutTask checkoutTask = currentCheckouts.get( key );
-                    currentCheckoutTasks.put( key, checkoutTask );
+                    CheckoutQueue queue = new CheckoutQueue();
+                    queue.setName( key );
+                    queue.setTask( checkoutTask );
+                    currentCheckoutTasks.add( queue );
                 }
             }
             catch ( BuildManagerException e )
@@ -303,12 +311,13 @@ public class QueuesAction
                 Set<String> keySet = checkouts.keySet();
                 for ( String key : keySet )
                 {
-                    List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
                     for ( CheckOutTask task : checkouts.get( key ) )
                     {
-                        checkoutTasks.add( task );
+                        CheckoutQueue queue = new CheckoutQueue();
+                        queue.setName( key );
+                        queue.setTask( task );
+                        checkoutsInQueue.add( queue );
                     }
-                    checkoutsInQueue.put( key, checkoutTasks );
                 }
             }
             catch ( BuildManagerException e )
@@ -586,42 +595,42 @@ public class QueuesAction
         this.selectedCheckOutTaskHashCodes = selectedCheckOutTaskHashCodes;
     }
 
-    public Map<String, BuildProjectTask> getCurrentBuildProjectTasks()
+    public List<BuildProjectQueue> getCurrentBuildProjectTasks()
     {
         return currentBuildProjectTasks;
     }
 
-    public void setCurrentBuildProjectTasks( Map<String, BuildProjectTask> currentBuildProjectTasks )
+    public void setCurrentBuildProjectTasks( List<BuildProjectQueue> currentBuildProjectTasks )
     {
         this.currentBuildProjectTasks = currentBuildProjectTasks;
     }
 
-    public Map<String, CheckOutTask> getCurrentCheckoutTasks()
+    public List<CheckoutQueue> getCurrentCheckoutTasks()
     {
         return currentCheckoutTasks;
     }
 
-    public void setCurrentCheckoutTasks( Map<String, CheckOutTask> currentCheckoutTasks )
+    public void setCurrentCheckoutTasks( List<CheckoutQueue> currentCheckoutTasks )
     {
         this.currentCheckoutTasks = currentCheckoutTasks;
     }
 
-    public Map<String, List<BuildProjectTask>> getBuildsInQueue()
+    public List<BuildProjectQueue> getBuildsInQueue()
     {
         return buildsInQueue;
     }
 
-    public void setBuildsInQueue( Map<String, List<BuildProjectTask>> buildsInQueue )
+    public void setBuildsInQueue( List<BuildProjectQueue> buildsInQueue )
     {
         this.buildsInQueue = buildsInQueue;
     }
 
-    public Map<String, List<CheckOutTask>> getCheckoutsInQueue()
+    public List<CheckoutQueue> getCheckoutsInQueue()
     {
         return checkoutsInQueue;
     }
 
-    public void setCheckoutsInQueue( Map<String, List<CheckOutTask>> checkoutsInQueue )
+    public void setCheckoutsInQueue( List<CheckoutQueue> checkoutsInQueue )
     {
         this.checkoutsInQueue = checkoutsInQueue;
     }
