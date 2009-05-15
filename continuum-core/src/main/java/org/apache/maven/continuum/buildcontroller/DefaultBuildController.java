@@ -457,7 +457,7 @@ public class DefaultBuildController
         }
         if ( context.getOldBuildResult() == null )
         {
-            log.info( "The project was never be built with the current build definition, building" );
+            log.info( "The project has never been built with the current build definition, building" );
             return true;
         }
 
