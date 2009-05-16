@@ -79,6 +79,5 @@ public class QueueTest
         assertTextPresent( "Continuum - Build Queue" );
         assertTextPresent( "Current Checkout" );
         assertTextPresent( "Checkout Queue" );
-        assertButtonWithValuePresent( "Cancel Entries" );
     }
 }
