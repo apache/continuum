@@ -587,10 +587,7 @@ public class ContinuumBuildAgentServiceImpl
 
             size = size + buildAgentTaskQueueManager.getProjectsInBuildQueue().size();
 
-            for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
-            {
-                size = size + task.getBuildContexts().size();
-            }
+            size = size + buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue().size();
         }
         catch ( TaskQueueManagerException e )
         {

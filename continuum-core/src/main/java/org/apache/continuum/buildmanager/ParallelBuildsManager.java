@@ -1176,11 +1176,7 @@ public class ParallelBuildsManager
                             if ( tempSize < size )
                             {
                                 whereToBeQueued = overallBuildQueue;
-                                size = taskQueue.getQueueSnapshot().size();
-                                if ( taskQueueExecutor.getCurrentTask() != null )
-                                {
-                                    size++;
-                                }
+                                size = tempSize;
                             }
 
                             idx++;

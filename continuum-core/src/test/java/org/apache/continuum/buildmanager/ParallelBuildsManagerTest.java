@@ -75,6 +75,10 @@ public class ParallelBuildsManagerTest
 
     private List<Project> projects;
 
+    private TaskQueueExecutor buildTaskQueueExecutor;
+
+    private TaskQueueExecutor checkoutTaskQueueExecutor;
+
     @Override
     public void setUp()
         throws Exception
@@ -109,6 +113,10 @@ public class ParallelBuildsManagerTest
         projectDao = context.mock( ProjectDao.class );
 
         buildsManager.setProjectDao( projectDao );
+
+        buildTaskQueueExecutor = context.mock( TaskQueueExecutor.class, "build-task-queue" );
+
+        checkoutTaskQueueExecutor = context.mock( TaskQueueExecutor.class, "checkout-task-queue" );
     }
 
     @Override
@@ -186,6 +194,9 @@ public class ParallelBuildsManagerTest
 
                 exactly( 2 ).of( overallBuildQueue ).getBuildQueue();
                 will( returnValue( buildQueue ) );
+
+                exactly( 2 ).of( overallBuildQueue ).getBuildTaskQueueExecutor();
+                will( returnValue( buildTaskQueueExecutor ) );
             }} );
     }
 
@@ -199,8 +210,11 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                exactly( 3 ).of( buildQueue ).getQueueSnapshot();
+                exactly( 2 ).of( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
+                
+                exactly( 2 ).of( buildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
 
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );
@@ -234,6 +248,9 @@ public class ParallelBuildsManagerTest
 
                 exactly( 2 ).of( overallBuildQueue ).getCheckoutQueue();
                 will( returnValue( checkoutQueue ) );
+
+                exactly( 2 ).of( overallBuildQueue ).getCheckoutTaskQueueExecutor();
+                will( returnValue( checkoutTaskQueueExecutor ) );
             }} );
 
     }
@@ -247,8 +264,11 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                exactly( 3 ).of( checkoutQueue ).getQueueSnapshot();
+                exactly( 2 ).of( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
+
+                exactly( 2 ).of( checkoutTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
 
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );
@@ -320,12 +340,15 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                exactly( 2 ).of( buildQueue ).getQueueSnapshot();
+                one( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasksOfFirstBuildQueue ) );
 
                 // the second build queue has no tasks queued, so it should return 0
-                exactly( 2 ).of( buildQueue ).getQueueSnapshot();
+                one( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
+
+                exactly( 2 ).of( buildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
 
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_3" ) );
@@ -343,9 +366,12 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                exactly( 3 ).of( buildQueue ).getQueueSnapshot();
+                exactly( 2 ).of( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasksOfFirstBuildQueue ) );
 
+                exactly( 2 ).of( buildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
+                
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );
             }} );
@@ -440,12 +466,15 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                exactly( 2 ).of( checkoutQueue ).getQueueSnapshot();
+                one( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasksInFirstCheckoutQueue ) );
 
-                exactly( 2 ).of( checkoutQueue ).getQueueSnapshot();
+                one( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
 
+                exactly( 2 ).of( checkoutTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
+                
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_3" ) );
             }} );
@@ -463,9 +492,12 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                exactly( 3 ).of( checkoutQueue ).getQueueSnapshot();
+                exactly( 2 ).of( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasksInFirstCheckoutQueue ) );
 
+                exactly( 2 ).of( checkoutTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
+                
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );
             }} );
@@ -649,9 +681,15 @@ public class ParallelBuildsManagerTest
                 exactly( 2 ).of( overallBuildQueue ).getBuildQueue();
                 will( returnValue( buildQueue ) );
 
-                exactly( 3 ).of( buildQueue ).getQueueSnapshot();
+                exactly( 2 ).of( overallBuildQueue ).getBuildTaskQueueExecutor();
+                will( returnValue( buildQueueExecutor ) );
+                
+                exactly( 2 ).of( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
 
+                exactly( 2 ).of( buildQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
+                
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );
 
@@ -671,8 +709,14 @@ public class ParallelBuildsManagerTest
                 exactly( 2 ).of( overallBuildQueue ).getCheckoutQueue();
                 will( returnValue( checkoutQueue ) );
 
-                exactly( 3 ).of( checkoutQueue ).getQueueSnapshot();
+                exactly( 2 ).of( overallBuildQueue ).getCheckoutTaskQueueExecutor();
+                will( returnValue( checkoutQueueExecutor ) );
+
+                exactly( 2 ).of( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
+
+                exactly( 2 ).of( checkoutQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
 
                 one( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );

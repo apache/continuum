@@ -894,8 +894,6 @@ public class DefaultDistributedBuildManager
                                     {
                                         whereToBeQueued = distributedBuildQueue;
                                         size = agentBuildSize;
-
-                                        
                                     }
 
                                     if ( agentBuildSize < size )
