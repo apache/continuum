@@ -44,10 +44,10 @@ public class CheckOutTask
     
     private final String scmRootUrl;
     
-    private final List<Project> projectsWithSimilarScmRoot;
+    private final List<Project> projectsWithCommonScmRoot;
 
     public CheckOutTask( int projectId, File workingDirectory, String projectName, String scmUserName,
-                         String scmPassword, String scmRootUrl, List<Project> projectsWithSimilarScmRoot )
+                         String scmPassword, String scmRootUrl, List<Project> projectsWithCommonScmRoot )
     {
         this.projectId = projectId;
 
@@ -61,7 +61,7 @@ public class CheckOutTask
         
         this.scmRootUrl = scmRootUrl;
         
-        this.projectsWithSimilarScmRoot = projectsWithSimilarScmRoot;
+        this.projectsWithCommonScmRoot = projectsWithCommonScmRoot;
     }
 
     public int getProjectId()
@@ -106,8 +106,8 @@ public class CheckOutTask
         return scmRootUrl;
     }
 
-    public List<Project> getProjectsWithSimilarScmRoot()
+    public List<Project> getProjectsWithCommonScmRoot()
     {
-        return projectsWithSimilarScmRoot;
+        return projectsWithCommonScmRoot;
     }
 }

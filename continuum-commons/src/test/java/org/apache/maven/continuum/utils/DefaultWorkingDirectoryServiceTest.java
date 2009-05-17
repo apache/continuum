@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;

@@ -871,9 +871,9 @@ public class ParallelBuildsManager
         {
             try
             {
-                BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( task.getProjectId() );
+                BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( task.getProjectId() );                
                 checkoutProject( task.getProjectId(), task.getProjectName(), task.getWorkingDirectory(),
-                                 null, task.getScmUserName(), task.getScmPassword(), buildDefinition, null );
+                                 task.getScmRootUrl(), task.getScmUserName(), task.getScmPassword(), buildDefinition, task.getProjectsWithCommonScmRoot() );
             }
             catch ( ContinuumStoreException e )
             {
