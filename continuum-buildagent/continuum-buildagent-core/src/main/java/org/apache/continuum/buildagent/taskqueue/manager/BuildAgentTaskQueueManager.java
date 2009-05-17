@@ -19,6 +19,10 @@ package org.apache.continuum.buildagent.taskqueue.manager;
  * under the License.
  */
 
+import java.util.List;
+
+import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 
@@ -33,9 +37,15 @@ public interface BuildAgentTaskQueueManager
     void cancelBuild()
         throws TaskQueueManagerException;
 
-    int getCurrentProjectInBuilding()
+    int getIdOfProjectCurrentlyBuilding()
         throws TaskQueueManagerException;
 
+    BuildProjectTask getCurrentProjectInBuilding()
+        throws TaskQueueManagerException;
+
+    PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
+        throws TaskQueueManagerException;
+    
     boolean hasBuildTaskInQueue()
         throws TaskQueueManagerException;
 
@@ -44,4 +54,12 @@ public interface BuildAgentTaskQueueManager
 
     boolean isInPrepareBuildQueue( int projectGroupId, int trigger, String scmRootAddress )
         throws TaskQueueManagerException;
+
+    List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+        throws TaskQueueManagerException;
+
+    List<BuildProjectTask> getProjectsInBuildQueue()
+        throws TaskQueueManagerException;
+
+    //removeProjectFrom
 }

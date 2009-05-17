@@ -31,6 +31,7 @@ import javax.annotation.Resource;
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
@@ -80,6 +81,9 @@ public class ParallelBuildsManager
     @Resource
     private BuildDefinitionDao buildDefinitionDao;
 
+    @Resource
+    private ProjectDao projectDao;
+
     private TaskQueue prepareBuildQueue;
 
     @Resource
@@ -91,10 +95,10 @@ public class ParallelBuildsManager
     private PlexusContainer container;
 
     /**
-     * @see BuildsManager#buildProject(int, BuildDefinition, String, int, ScmResult)
+     * @see BuildsManager#buildProject(int, BuildDefinition, String, int, ScmResult, int)
      */
     public void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger,
-                              ScmResult scmResult )
+                              ScmResult scmResult, int projectGroupId )
         throws BuildManagerException
     {
         try
@@ -111,8 +115,12 @@ public class ParallelBuildsManager
                 "Error occurred while checking if the project is already in queue: " + e.getMessage() );
         }
 
-        OverallBuildQueue overallBuildQueue =
-            getOverallBuildQueue( BUILD_QUEUE, buildDefinition.getSchedule().getBuildQueues() );
+        OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectsInGroupAreQueued( projectGroupId );
+
+        if ( overallBuildQueue == null )
+        {
+            overallBuildQueue = getOverallBuildQueue( BUILD_QUEUE, buildDefinition.getSchedule().getBuildQueues() );
+        }
 
         String buildDefinitionLabel = buildDefinition.getDescription();
         if ( StringUtils.isEmpty( buildDefinitionLabel ) )
@@ -122,7 +130,7 @@ public class ParallelBuildsManager
 
         BuildProjectTask buildTask =
             new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel,
-                                  scmResult );
+                                  scmResult, projectGroupId );
         try
         {
             log.info(
@@ -136,10 +144,10 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#buildProjects(List, Map, int, Map)
+     * @see BuildsManager#buildProjects(List, Map, int, Map, int)
      */
     public void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap,
-                               int trigger, Map<Integer, ScmResult> scmResultMap )
+                               int trigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
         throws BuildManagerException
     {
         int firstProjectId = 0;
@@ -163,8 +171,12 @@ public class ParallelBuildsManager
         if ( firstProjectId != 0 )
         {
             BuildDefinition buildDef = projectsBuildDefinitionsMap.get( firstProjectId );
-            OverallBuildQueue overallBuildQueue =
-                getOverallBuildQueue( BUILD_QUEUE, buildDef.getSchedule().getBuildQueues() );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectsInGroupAreQueued( projectGroupId );
+
+            if ( overallBuildQueue == null )
+            {
+                overallBuildQueue = getOverallBuildQueue( BUILD_QUEUE, buildDef.getSchedule().getBuildQueues() );
+            }
 
             if ( overallBuildQueue != null )
             {
@@ -196,7 +208,7 @@ public class ParallelBuildsManager
                     ScmResult scmResult = scmResultMap.get( project.getId() );
                     BuildProjectTask buildTask =
                         new BuildProjectTask( project.getId(), buildDefinition.getId(), trigger, project.getName(),
-                                              buildDefinitionLabel, scmResult );
+                                              buildDefinitionLabel, scmResult, projectGroupId );
                     buildTask.setMaxExecutionTime( buildDefinition.getSchedule().getMaxJobExecutionTime() * 1000 );
 
                     try
@@ -592,7 +604,8 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#removeProjectFromBuildQueue(int, int, int, String)
      */
-    public void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+    public void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName,
+                                             int projectGroupId )
         throws BuildManagerException
     {
         try
@@ -600,7 +613,8 @@ public class ParallelBuildsManager
             OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, BUILD_QUEUE );
             if ( overallBuildQueue != null )
             {
-                overallBuildQueue.removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger, projectName );
+                overallBuildQueue.removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger, projectName,
+                                                               projectGroupId );
             }
             else
             {
@@ -859,7 +873,7 @@ public class ParallelBuildsManager
                     buildDefinitionDao.getBuildDefinition( buildTask.getBuildDefinitionId() );
 
                 buildProject( buildTask.getProjectId(), buildDefinition, buildTask.getProjectName(),
-                              buildTask.getTrigger(), buildTask.getScmResult() );
+                              buildTask.getTrigger(), buildTask.getScmResult(), buildTask.getProjectGroupId() );
             }
             catch ( ContinuumStoreException e )
             {
@@ -1134,25 +1148,35 @@ public class ParallelBuildsManager
                         if ( overallBuildQueue != null )
                         {
                             TaskQueue taskQueue = null;
+                            TaskQueueExecutor taskQueueExecutor = null;
+                            int tempSize = 0;
                             if ( typeOfQueue == BUILD_QUEUE )
                             {
                                 taskQueue = overallBuildQueue.getBuildQueue();
+                                taskQueueExecutor = overallBuildQueue.getBuildTaskQueueExecutor();
                             }
                             else if ( typeOfQueue == CHECKOUT_QUEUE )
                             {
                                 taskQueue = overallBuildQueue.getCheckoutQueue();
+                                taskQueueExecutor = overallBuildQueue.getCheckoutTaskQueueExecutor();
+                            }
+
+                            tempSize = taskQueue.getQueueSnapshot().size();
+                            if ( taskQueueExecutor.getCurrentTask() != null )
+                            {
+                                tempSize++;
                             }
 
                             if ( idx == 0 )
                             {
-                                size = taskQueue.getQueueSnapshot().size();
                                 whereToBeQueued = overallBuildQueue;
+                                size = tempSize;
                             }
 
-                            if ( taskQueue.getQueueSnapshot().size() < size )
+                            if ( tempSize < size )
                             {
                                 whereToBeQueued = overallBuildQueue;
-                                size = taskQueue.getQueueSnapshot().size();
+                                size = tempSize;
                             }
 
                             idx++;
@@ -1190,6 +1214,63 @@ public class ParallelBuildsManager
         }
 
         return whereToBeQueued;
+    }
+
+    public OverallBuildQueue getOverallBuildQueueWhereProjectsInGroupAreQueued( int projectGroupId )
+        throws BuildManagerException
+    {
+        OverallBuildQueue whereToBeQueued = null;
+
+        try
+        {
+            List<Project> projects = projectDao.getProjectsInGroup( projectGroupId );
+
+            if ( projects != null )
+            {
+                for ( Project project : projects )
+                {
+                    whereToBeQueued = getOverallBuildQueueWhereProjectIsQueued( project.getId(), BUILD_QUEUE );
+
+                    if ( whereToBeQueued == null )
+                    {
+                        whereToBeQueued = getOverallBuildQueueWhereProjectIsBuilding( project.getId() );
+                    }
+
+                    if ( whereToBeQueued != null )
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new BuildManagerException( "Error while retrieving overall build queue for project: " + e.getMessage() );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error while retrieving overall build queue for project: " + e.getMessage() );
+        }
+
+        return whereToBeQueued;
+    }
+
+    private OverallBuildQueue getOverallBuildQueueWhereProjectIsBuilding( int projectId )
+    {
+        synchronized ( overallBuildQueues )
+        {
+            for ( Integer key : overallBuildQueues.keySet() )
+            {
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                BuildProjectTask task =
+                    (BuildProjectTask) overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
+                if ( task != null && task.getProjectId() == projectId )
+                {
+                    return overallBuildQueue;
+                }
+            }
+            return null;
+        }
     }
 
     public void contextualize( Context context )
@@ -1271,5 +1352,10 @@ public class ParallelBuildsManager
     public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
     {
         this.buildDefinitionDao = buildDefinitionDao;
+    }
+
+    public void setProjectDao( ProjectDao projectDao )
+    {
+        this.projectDao = projectDao;
     }
 }

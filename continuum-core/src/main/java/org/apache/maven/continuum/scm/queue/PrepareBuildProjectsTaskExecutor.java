@@ -562,6 +562,7 @@ public class PrepareBuildProjectsTaskExecutor
             AbstractContinuumAction.setProjectsBuildDefinitionsMap( context, projectsBuildDefinitionsMap );
             AbstractContinuumAction.setTrigger( context, trigger );
             AbstractContinuumAction.setScmResultMap( context, scmResultMap );
+            AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
             log.info( "Performing action create-build-project-task" );
             actionManager.lookup( "create-build-project-task" ).execute( context );

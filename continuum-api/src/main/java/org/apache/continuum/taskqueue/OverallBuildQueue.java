@@ -215,10 +215,12 @@ public interface OverallBuildQueue
      * @param buildDefinitionId
      * @param trigger
      * @param projectName
+     * @param projectGroupId
      * @return
      * @throws TaskQueueException TODO
      */
-    boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+    boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName,
+                                         int projectGroupId )
         throws TaskQueueException;
 
     /**

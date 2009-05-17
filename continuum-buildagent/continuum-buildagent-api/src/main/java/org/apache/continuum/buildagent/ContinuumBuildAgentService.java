@@ -33,7 +33,7 @@ public interface ContinuumBuildAgentService
     Map<String, Object> getBuildResult( int projectId )
         throws ContinuumBuildAgentException;
 
-    int getProjectCurrentlyBuilding()
+    Map<String, Object> getProjectCurrentlyBuilding()
         throws ContinuumBuildAgentException;
 
     void cancelBuild()
@@ -80,4 +80,18 @@ public interface ContinuumBuildAgentService
 
     void releaseRollback( String releaseId, int projectId )
         throws ContinuumBuildAgentException;
+
+    List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws ContinuumBuildAgentException;
+
+    List<Map<String, Object>> getProjectsInBuildQueue()
+        throws ContinuumBuildAgentException;
+
+    int getBuildSizeOfAgent()
+        throws ContinuumBuildAgentException;
+
+    Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws ContinuumBuildAgentException;
+
+    boolean isProjectGroupInQueue( int projectGroupId );
 }

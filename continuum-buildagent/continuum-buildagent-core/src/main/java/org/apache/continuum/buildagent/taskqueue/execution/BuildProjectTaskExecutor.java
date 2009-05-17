@@ -239,6 +239,7 @@ public class BuildProjectTaskExecutor
         try
         {
             buildAgentManager.returnBuildResult( result );
+            buildContextManager.removeBuildContext( buildContext.getProjectId() );
         }
         catch ( ContinuumException e )
         {

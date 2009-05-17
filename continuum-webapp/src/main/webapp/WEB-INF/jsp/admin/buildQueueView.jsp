@@ -106,6 +106,7 @@
                       <s:param name="buildDefinitionId">${queue.task.buildDefinitionId}</s:param>
                       <s:param name="trigger">${queue.task.trigger}</s:param>
                       <s:param name="projectName">${queue.task.projectName}</s:param>
+                      <s:param name="projectGroupId">${queue.task.projectGroupId}</s:param>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
                   </redback:ifAuthorized>

@@ -323,9 +323,10 @@ public class DefaultOverallBuildQueue
     }
 
     /**
-     * @see OverallBuildQueue#removeProjectFromBuildQueue(int, int, int, String)
+     * @see OverallBuildQueue#removeProjectFromBuildQueue(int, int, int, String, int)
      */
-    public boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+    public boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName,
+                                                int projectGroupId )
         throws TaskQueueException
     {
         BuildDefinition buildDefinition;
@@ -347,7 +348,8 @@ public class DefaultOverallBuildQueue
         }
 
         BuildProjectTask buildProjectTask =
-            new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, buildDefinitionLabel, null );
+            new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, 
+                                  buildDefinitionLabel, null, projectGroupId );
 
         return getBuildQueue().remove( buildProjectTask );
     }

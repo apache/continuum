@@ -40,6 +40,7 @@ import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -175,7 +176,18 @@ public class ContinuumBuildAgentServiceImpl
     {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        if ( projectId == getProjectCurrentlyBuilding() )
+        int currentBuildId = 0;
+
+        try
+        {
+            currentBuildId = buildAgentTaskQueueManager.getIdOfProjectCurrentlyBuilding();
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumBuildAgentException( e.getMessage(), e );
+        }
+
+        if ( projectId == currentBuildId )
         {
             BuildContext buildContext = buildContextManager.getBuildContext( projectId );
 
@@ -233,19 +245,6 @@ public class ContinuumBuildAgentServiceImpl
                         ContinuumBuildAgentUtil.createScmResult( buildContext ) );
         }
         return result;
-    }
-
-    public int getProjectCurrentlyBuilding()
-        throws ContinuumBuildAgentException
-    {
-        try
-        {
-            return buildAgentTaskQueueManager.getCurrentProjectInBuilding();
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw new ContinuumBuildAgentException( e.getMessage(), e );
-        }
     }
 
     public void cancelBuild()
@@ -570,6 +569,184 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
+    public int getBuildSizeOfAgent()
+    {
+        int size = 0;
+        
+        try
+        {
+            if ( buildAgentTaskQueueManager.getCurrentProjectInBuilding() != null )
+            {
+                size++;
+            }
+
+            if ( buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild() != null )
+            {
+                size++;
+            }
+
+            size = size + buildAgentTaskQueueManager.getProjectsInBuildQueue().size();
+
+            size = size + buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue().size();
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while getting build size of agent" );
+        }
+
+        return size;
+    }
+
+    public List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
+
+            for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
+            {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ID, new Integer( task.getScmRootId() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, task.getScmRootAddress() );
+                map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( task.getTrigger() ) );
+
+                projects.add( map );
+            }
+
+            return projects;
+        }
+        catch( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while retrieving projects in prepare build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving projects in prepare build queue", e );
+        }
+    }
+
+    public List<Map<String, Object>> getProjectsInBuildQueue()
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
+
+            for ( BuildProjectTask task : buildAgentTaskQueueManager.getProjectsInBuildQueue() )
+            {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( task.getProjectId() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( task.getBuildDefinitionId() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( task.getTrigger() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_LABEL, task.getBuildDefinitionLabel() );
+
+                projects.add( map );
+            }
+
+            return projects;
+        }
+        catch( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while retrieving projects in build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving projects in build queue", e );
+        }
+    }
+
+    public Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            Map<String, Object> project = new HashMap<String, Object>();
+
+            PrepareBuildProjectsTask task = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+
+            if ( task != null )
+            {
+                project.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
+                project.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ID, new Integer( task.getScmRootId() ) );
+                project.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, task.getScmRootAddress() );
+                project.put( ContinuumBuildAgentUtil.KEY_TRIGGER, task.getTrigger() );
+            }
+
+            return project;
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while retrieving current project in prepare build", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving current project in prepare build", e );
+        }
+    }
+
+    public Map<String, Object> getProjectCurrentlyBuilding()
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            Map<String, Object> project = new HashMap<String, Object>();
+
+            BuildProjectTask task = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
+
+            if ( task != null )
+            {
+                project.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( task.getProjectId() ) );
+                project.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( task.getBuildDefinitionId() ) );
+                project.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( task.getTrigger() ) );
+                project.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
+                project.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_LABEL, task.getBuildDefinitionLabel() );
+            }
+
+            return project;
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while retrieving current project in building", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving current project in building", e );
+        }
+    }
+
+    public boolean isProjectGroupInQueue( int projectGroupId )
+    {
+        try
+        {
+            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+
+            if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
+            {
+                return true;
+            }
+
+            BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
+
+            if ( currentBuildTask != null && currentBuildTask.getProjectGroupId() == projectGroupId )
+            {
+                return true;
+            }
+
+            for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
+            {
+                if ( task.getProjectGroupId() == projectGroupId )
+                {
+                    return true;
+                }
+            }
+
+            for ( BuildProjectTask task : buildAgentTaskQueueManager.getProjectsInBuildQueue() )
+            {
+                if ( task.getProjectGroupId() == projectGroupId )
+                {
+                    return true;
+                }
+            }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error while checking if project group " + projectGroupId + " is queued in agent", e);
+        }
+
+        return false;
+    }
+
     private void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
                                  List<Map<String, String>> projects )
         throws Exception
@@ -641,6 +818,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setProjectGroupId( ContinuumBuildAgentUtil.getProjectGroupId( map ) );
             context.setProjectGroupName( ContinuumBuildAgentUtil.getProjectGroupName( map ) );
             context.setScmRootAddress( ContinuumBuildAgentUtil.getScmRootAddress( map ) );
+            context.setScmRootId( ContinuumBuildAgentUtil.getScmRootId( map ) );
             context.setProjectName( ContinuumBuildAgentUtil.getProjectName( map ) );
             context.setProjectState( ContinuumBuildAgentUtil.getProjectState( map ) );
             context.setTrigger( ContinuumBuildAgentUtil.getTrigger( map ) );
@@ -650,11 +828,12 @@ public class ContinuumBuildAgentServiceImpl
             context.setLatestUpdateDate( ContinuumBuildAgentUtil.getLatestUpdateDate( map ) );
             context.setBuildAgentUrl( ContinuumBuildAgentUtil.getBuildAgentUrl( map ) );
             context.setMaxExecutionTime( ContinuumBuildAgentUtil.getMaxExecutionTime( map ) );
+            context.setBuildDefinitionLabel( ContinuumBuildAgentUtil.getBuildDefinitionLabel( map ) );
 
             buildContext.add( context );
         }
 
-        buildContextManager.setBuildContextList( buildContext );
+        buildContextManager.addBuildContexts( buildContext );
 
         return buildContext;
     }
@@ -726,7 +905,7 @@ public class ContinuumBuildAgentServiceImpl
         {
             BuildContext context = buildContexts.get( 0 );
             return new PrepareBuildProjectsTask( buildContexts, context.getTrigger(), context.getProjectGroupId(),
-                                                 context.getScmRootAddress() );
+                                                 context.getScmRootAddress(), context.getScmRootId() );
         }
         else
         {

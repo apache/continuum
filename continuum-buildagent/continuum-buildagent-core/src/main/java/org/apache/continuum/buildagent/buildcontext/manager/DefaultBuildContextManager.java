@@ -19,7 +19,10 @@ package org.apache.continuum.buildagent.buildcontext.manager;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 
@@ -30,34 +33,50 @@ import org.apache.continuum.buildagent.buildcontext.BuildContext;
 public class DefaultBuildContextManager
     implements BuildContextManager
 {
-    public List<BuildContext> buildContexts;
+    public Map<Integer, BuildContext> buildContexts;
 
     public BuildContext getBuildContext( int projectId )
     {
-        BuildContext context = null;
+        if ( buildContexts != null )
+        {
+            return buildContexts.get( projectId );
+        }
+
+        return null;
+    }
+
+    public List<BuildContext> getBuildContexts()
+    {
+        List<BuildContext> bContexts = new ArrayList<BuildContext>();
 
         if ( buildContexts != null )
         {
-            for ( BuildContext item : buildContexts )
-            {
-                if (item.getProjectId() == projectId)
-                {
-                    context = item;
-                    break;
-                }
-            }
+            bContexts.addAll( buildContexts.values() );
         }
 
-        return context;
+        return bContexts;
     }
 
-    public List<BuildContext> getBuildContextList()
+    public void addBuildContexts( List<BuildContext> buildContextList )
     {
-        return buildContexts;
+        if ( buildContexts == null )
+        {
+            buildContexts = new HashMap<Integer, BuildContext>();
+        }
+
+        for ( BuildContext buildContext : buildContextList )
+        {
+            buildContexts.put( buildContext.getProjectId(), buildContext );
+        }
     }
 
-    public void setBuildContextList( List<BuildContext> buildContexts )
+    public void removeBuildContext( int projectId )
     {
-        this.buildContexts = buildContexts;
+        BuildContext buildContext = getBuildContext( projectId );
+
+        if ( buildContext != null )
+        {
+            buildContexts.remove( buildContext );
+        }
     }
 }

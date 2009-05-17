@@ -45,10 +45,11 @@ public interface BuildsManager
      * @param projectsBuildDefinitionsMap
      * @param trigger
      * @param scmResultMap                TODO
+     * @param projectGroupId
      * @throws BuildManagerException
      */
     void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap, int trigger,
-                        Map<Integer, ScmResult> scmResultMap )
+                        Map<Integer, ScmResult> scmResultMap, int projectGroupId )
         throws BuildManagerException;
 
     /**
@@ -61,10 +62,11 @@ public interface BuildsManager
      * @param projectName
      * @param trigger
      * @param scmResult       TODO
+     * @param projectGroupId
      * @throws BuildManagerException
      */
     void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger,
-                       ScmResult scmResult )
+                       ScmResult scmResult, int projectGroupId )
         throws BuildManagerException;
 
     /**
@@ -161,9 +163,11 @@ public interface BuildsManager
      * @param buildDefinitionId
      * @param trigger
      * @param projectName
+     * @param projectGroupId
      * @throws BuildManagerException
      */
-    void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+    void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName,
+                                      int projectGroupId )
         throws BuildManagerException;
 
     // TODO: should we throw an exception when one of the projects cannot be removed?

@@ -49,8 +49,10 @@ public class BuildProjectTask
 
     private ScmResult scmResult;
 
+    int projectGroupId;
+
     public BuildProjectTask( int projectId, int buildDefinitionId, int trigger, String projectName,
-                             String buildDefinitionLabel, ScmResult scmResult )
+                             String buildDefinitionLabel, ScmResult scmResult, int projectGroupId )
     {
         this.projectId = projectId;
 
@@ -65,6 +67,8 @@ public class BuildProjectTask
         this.buildDefinitionLabel = buildDefinitionLabel;
 
         this.scmResult = scmResult;
+
+        this.projectGroupId = projectGroupId;
     }
 
     public int getProjectId()
@@ -110,6 +114,11 @@ public class BuildProjectTask
     public ScmResult getScmResult()
     {
         return scmResult;
+    }
+
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
     }
 
     public boolean equals( Object obj )

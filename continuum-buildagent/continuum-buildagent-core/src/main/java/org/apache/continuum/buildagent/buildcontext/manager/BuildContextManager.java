@@ -30,9 +30,11 @@ public interface BuildContextManager
 {
     String ROLE = BuildContextManager.class.getName();
 
-    public void setBuildContextList( List<BuildContext> buildContext );
+    public void addBuildContexts( List<BuildContext> buildContextList );
 
-    public List<BuildContext> getBuildContextList();
+    public List<BuildContext> getBuildContexts();
 
     public BuildContext getBuildContext( int projectId );
+
+    public void removeBuildContext( int projectId );
 }
