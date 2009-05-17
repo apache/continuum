@@ -106,7 +106,8 @@ public class DistributedBuildProjectTaskExecutor
             log.info( "initializing buildContext" );
             List<Map<String, Object>> buildContext =
                 initializeBuildContext( prepareBuildTask.getProjectsBuildDefinitionsMap(),
-                                        prepareBuildTask.getTrigger(), prepareBuildTask.getScmRootAddress() );
+                                        prepareBuildTask.getTrigger(), prepareBuildTask.getScmRootAddress(),
+                                        prepareBuildTask.getProjectScmRootId() );
 
             startTime = System.currentTimeMillis();
             client.buildProjects( buildContext );
@@ -126,7 +127,7 @@ public class DistributedBuildProjectTaskExecutor
     }
 
     private List<Map<String, Object>> initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions,
-                                                              int trigger, String scmRootAddress )
+                                                              int trigger, String scmRootAddress, int scmRootId )
         throws ContinuumException
     {
         List<Map<String, Object>> buildContext = new ArrayList<Map<String, Object>>();
@@ -152,6 +153,7 @@ public class DistributedBuildProjectTaskExecutor
 
                 context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_ID, project.getProjectGroup().getId() );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_NAME, project.getProjectGroup().getName() );
+                context.put( ContinuumBuildConstant.KEY_SCM_ROOT_ID, scmRootId );
                 context.put( ContinuumBuildConstant.KEY_SCM_ROOT_ADDRESS, scmRootAddress );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_ID, project.getId() );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_NAME, project.getName() );
@@ -196,6 +198,13 @@ public class DistributedBuildProjectTaskExecutor
                 }
 
                 context.put( ContinuumBuildConstant.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
+                String buildDefinitionLabel = buildDef.getDescription();
+                if ( StringUtils.isEmpty( buildDefinitionLabel ) )
+                {
+                    buildDefinitionLabel = buildDef.getGoals();
+                }
+                context.put( ContinuumBuildConstant.KEY_BUILD_DEFINITION_LABEL, buildDefinitionLabel );
+                
                 context.put( ContinuumBuildConstant.KEY_BUILD_FILE, buildDef.getBuildFile() );
                 context.put( ContinuumBuildConstant.KEY_GOALS, buildDef.getGoals() );
 

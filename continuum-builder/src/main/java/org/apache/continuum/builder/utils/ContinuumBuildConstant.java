@@ -37,6 +37,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_BUILD_DEFINITION_ID = "builddefinition-id";
 
+    public static final String KEY_BUILD_DEFINITION_LABEL = "builddefinition-label";
+
     public static final String KEY_TRIGGER = "trigger";
 
     public static final String KEY_EXECUTOR_ID = "executor-id";
@@ -82,6 +84,8 @@ public class ContinuumBuildConstant
     public static final String KEY_PROJECT_GROUP_NAME = "project-group-name";
 
     public static final String KEY_SCM_ROOT_ADDRESS = "scm-root-address";
+
+    public static final String KEY_SCM_ROOT_ID = "scm-root-id";
 
     public static final String KEY_SCM_ERROR = "scm-error";
 
@@ -487,6 +491,16 @@ public class ContinuumBuildConstant
     public static String getBuildAgentUrl( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_AGENT_URL );
+    }
+
+    public static int getScmRootId( Map<String, Object> context )
+    {
+        return getInteger( context, KEY_SCM_ROOT_ID );
+    }
+
+    public static String getBuildDefinitionLabel( Map<String, Object> context )
+    {
+        return getString( context, KEY_BUILD_DEFINITION_LABEL, "" );
     }
 
     // ----------------------------------------------------------------------

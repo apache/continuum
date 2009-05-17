@@ -22,6 +22,7 @@ package org.apache.maven.continuum.buildqueue;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
@@ -131,7 +132,8 @@ public class BuildQueueTest
     private void buildProject( int projectId, int trigger )
         throws Exception
     {
-        buildQueue.put( new BuildProjectTask( projectId, 0, trigger, null, null, null ) );
+        ProjectGroup group = getDefaultProjectGroup();
+        buildQueue.put( new BuildProjectTask( projectId, 0, trigger, null, null, null, group.getId() ) );
     }
 
     private void assertNextBuildIs( int expectedProjectId )

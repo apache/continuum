@@ -55,8 +55,8 @@ public class CreateBuildProjectTaskAction
         {
             BuildProjectTask buildProjectTask =
                 new BuildProjectTask( buildContext.getProjectId(), buildContext.getBuildDefinitionId(),
-                                      buildContext.getTrigger(), buildContext.getProjectName(), "",
-                                      buildContext.getScmResult() );
+                                      buildContext.getTrigger(), buildContext.getProjectName(), buildContext.getBuildDefinitionLabel(),
+                                      buildContext.getScmResult(), buildContext.getProjectGroupId() );
             buildProjectTask.setMaxExecutionTime( buildContext.getMaxExecutionTime() * 1000 );
 
             try
@@ -78,23 +78,6 @@ public class CreateBuildProjectTaskAction
                 throw new ContinuumException(
                     "Error while checking if project " + buildContext.getProjectId() + " is in build queue", e );
             }
-        }
-
-        try
-        {
-            boolean stop = false;
-            while ( !stop )
-            {
-                if ( buildAgentTaskQueueManager.getCurrentProjectInBuilding() <= 0 &&
-                    !buildAgentTaskQueueManager.hasBuildTaskInQueue() )
-                {
-                    stop = true;
-                }
-            }
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
         }
     }
 

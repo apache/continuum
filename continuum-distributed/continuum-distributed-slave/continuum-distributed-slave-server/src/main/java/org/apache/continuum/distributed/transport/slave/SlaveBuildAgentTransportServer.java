@@ -101,14 +101,14 @@ public class SlaveBuildAgentTransportServer
         return buildResult;
     }
 
-    public Integer getProjectCurrentlyBuilding()
+    public Map<String, Object> getProjectCurrentlyBuilding()
         throws Exception
     {
-        Integer projectId = continuumBuildAgentService.getProjectCurrentlyBuilding();
+        Map<String, Object> project = continuumBuildAgentService.getProjectCurrentlyBuilding();
 
-        log.info( "Currently building project " + projectId );
+        log.info( "Retrieving currently building project");
 
-        return projectId;
+        return project;
     }
 
     public Boolean ping()
@@ -342,5 +342,67 @@ public class SlaveBuildAgentTransportServer
         }
 
         return result;
+    }
+
+    public Integer getBuildSizeOfAgent()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getBuildSizeOfAgent();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve build size of agent", e );
+            throw e;
+        }
+    }
+
+    public Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getProjectCurrentlyPreparingBuild();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects currently preparing build", e );
+            throw e;
+        }
+    }
+
+    public List<Map<String, Object>> getProjectsInBuildQueue()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getProjectsInBuildQueue();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects in build queue", e );
+            throw e;
+        }
+    }
+
+    public List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getProjectsInPrepareBuildQueue();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects in prepare build queue", e );
+            throw e;
+        }
+    }
+
+    public Boolean isProjectGroupInQueue( int projectGroupId )
+        throws Exception
+    {
+        return continuumBuildAgentService.isProjectGroupInQueue( projectGroupId );
     }
 }

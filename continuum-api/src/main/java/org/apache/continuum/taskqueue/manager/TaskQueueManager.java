@@ -19,9 +19,6 @@ package org.apache.continuum.taskqueue.manager;
  * under the License.
  */
 
-import java.util.List;
-
-import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.codehaus.plexus.taskqueue.TaskQueue;;
 
 /**
@@ -31,15 +28,7 @@ public interface TaskQueueManager
 {
     String ROLE = TaskQueueManager.class.getName();
 
-    TaskQueue getDistributedBuildQueue();
-
-    List<PrepareBuildProjectsTask> getDistributedBuildProjectsInQueue()
-        throws TaskQueueManagerException;
-
     TaskQueue getPurgeQueue();
-
-    boolean isInDistributedBuildQueue( int projectGroupId, String scmRootAddress )
-        throws TaskQueueManagerException;
 
     boolean isInPurgeQueue( int purgeConfigurationId )
         throws TaskQueueManagerException;
@@ -77,9 +66,6 @@ public interface TaskQueueManager
     boolean releaseInProgress()
         throws TaskQueueManagerException;
 
-    void removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
-        throws TaskQueueManagerException;
-  
     /**
      * Remove local repository from the purge queue
      * 
@@ -107,8 +93,5 @@ public interface TaskQueueManager
      * @throws TaskQueueManagerException
      */
     void removeRepositoryFromPurgeQueue( int repositoryId )
-        throws TaskQueueManagerException;
-
-    void removeTasksFromDistributedBuildQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueManagerException;
 }

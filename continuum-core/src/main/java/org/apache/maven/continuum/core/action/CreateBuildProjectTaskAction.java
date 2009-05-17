@@ -65,6 +65,7 @@ public class CreateBuildProjectTaskAction
         Map<Integer, ScmResult> scmResultMap = AbstractContinuumAction.getScmResultMap( context );
         List<Project> projectsToBeBuilt = new ArrayList<Project>();
         int trigger = AbstractContinuumAction.getTrigger( context );
+        int projectGroupId = AbstractContinuumAction.getProjectGroupId( context );
 
         // update state of each project first
         for ( Project project : projects )
@@ -127,6 +128,7 @@ public class CreateBuildProjectTaskAction
             }
         }
 
-        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger, scmResultMap );
+        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, 
+                                             trigger, scmResultMap, projectGroupId );
     }
 }

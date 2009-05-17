@@ -39,6 +39,8 @@ public class BuildContext
 
     private int buildDefinitionId;
 
+    private String buildDefinitionLabel;
+
     private String buildFile;
 
     private String goals;
@@ -62,6 +64,8 @@ public class BuildContext
     private String projectGroupName;
 
     private String scmRootAddress;
+
+    private int scmRootId;
 
     private Map<String, Object> actionContext;
 
@@ -349,5 +353,25 @@ public class BuildContext
     public int getMaxExecutionTime()
     {
         return maxExecutionTime;
+    }
+
+    public void setScmRootId( int scmRootId )
+    {
+        this.scmRootId = scmRootId;
+    }
+
+    public int getScmRootId()
+    {
+        return scmRootId;
+    }
+
+    public void setBuildDefinitionLabel( String buildDefinitionLabel )
+    {
+        this.buildDefinitionLabel = buildDefinitionLabel;
+    }
+
+    public String getBuildDefinitionLabel()
+    {
+        return buildDefinitionLabel;
     }
 }

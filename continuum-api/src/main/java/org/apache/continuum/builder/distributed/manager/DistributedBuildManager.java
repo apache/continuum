@@ -22,7 +22,7 @@ package org.apache.continuum.builder.distributed.manager;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.system.Installation;
@@ -31,25 +31,13 @@ public interface DistributedBuildManager
 {
     String ROLE = DistributedBuildManager.class.getName();
 
-    void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
-        throws ContinuumException;
-
-    void updateBuildResult( Map<String, Object> context )
-        throws ContinuumException;
-
-    void prepareBuildFinished( Map<String, Object> context )
-        throws ContinuumException;
-
-    void startProjectBuild( int projectId )
-        throws ContinuumException;
-
-    void startPrepareBuild( Map<String, Object> context )
+    void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, int scmRootId )
         throws ContinuumException;
 
     void reload()
         throws ContinuumException;
 
-    void removeAgentFromTaskQueueExecutor( String buildAgentUrl )
+    void removeDistributedBuildQueueOfAgent( String buildAgentUrl )
         throws ContinuumException;
 
     boolean isBuildAgentBusy( String buildAgentUrl );
@@ -57,24 +45,34 @@ public interface DistributedBuildManager
     List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException;
 
-    Map<String, PrepareBuildProjectsTask> getDistributedBuildProjects();
+    Map<String, List<PrepareBuildProjectsTask>> getProjectsInPrepareBuildQueue()
+        throws ContinuumException;
+
+    Map<String, List<BuildProjectTask>> getProjectsInBuildQueue()
+        throws ContinuumException;
 
     Map<String, Object> getBuildResult( int projectId )
         throws ContinuumException;
-
-    Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
-        throws ContinuumException;
-
-    void updateProject( Map<String, Object> context )
-        throws ContinuumException;
-
-    boolean shouldBuild( Map<String, Object> context );
-
-    Map<String, DistributedBuildTaskQueueExecutor> getTaskQueueExecutors();
 
     String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
         throws ContinuumException;
 
     String getFileContent( int projectId, String directory, String filename )
+        throws ContinuumException;
+
+    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, 
+                               String projectGroupName, String scmRootAddress, int scmRootId )
+        throws ContinuumException;
+ 
+    void removeFromDistributedBuildQueue( int projectGroupId, int scmRootId )
+        throws ContinuumException;
+ 
+    void removeFromDistributedBuildQueue( int[] hashCodes )
+        throws ContinuumException;
+ 
+    Map<String, PrepareBuildProjectsTask> getProjectsCurrentlyPreparingBuild()
+        throws ContinuumException;
+
+    Map<String, BuildProjectTask> getProjectsCurrentlyBuilding()
         throws ContinuumException;
 }

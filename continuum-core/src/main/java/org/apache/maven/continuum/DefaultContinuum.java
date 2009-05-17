@@ -901,6 +901,7 @@ public class DefaultContinuum
         }
 
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
+        List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
 
         for ( Project project : projectsList )
         {
@@ -929,6 +930,11 @@ public class DefaultContinuum
                             projectsAndBuildDefinitionsMap.put( project.getId(), buildDefId );
 
                             map.put( scmRoot, projectsAndBuildDefinitionsMap );
+
+                            if ( !sortedScmRoot.contains( scmRoot ) )
+                            {
+                                sortedScmRoot.add( scmRoot );
+                            }
                         }
                     }
                     catch ( BuildManagerException e )
@@ -939,7 +945,7 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map, ContinuumProjectState.TRIGGER_SCHEDULED );
+        prepareBuildProjects( map, ContinuumProjectState.TRIGGER_SCHEDULED, sortedScmRoot );
     }
 
     public void buildProject( int projectId )
@@ -3231,6 +3237,7 @@ public class DefaultContinuum
         throws ContinuumException
     {
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
+        List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
 
         for ( Project project : projects )
         {
@@ -3313,15 +3320,21 @@ public class DefaultContinuum
             projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
 
             map.put( scmRoot, projectsAndBuildDefinitionsMap );
+
+            if ( !sortedScmRoot.contains( scmRoot ) )
+            {
+                sortedScmRoot.add( scmRoot );
+            }
         }
 
-        prepareBuildProjects( map, trigger );
+        prepareBuildProjects( map, trigger, sortedScmRoot );
     }
 
     private void prepareBuildProjects( Collection<Project> projects, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
+        List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
 
         for ( Project project : projects )
         {
@@ -3353,6 +3366,11 @@ public class DefaultContinuum
                 projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
 
                 map.put( scmRoot, projectsAndBuildDefinitionsMap );
+
+                if ( !sortedScmRoot.contains( scmRoot ) )
+                {
+                    sortedScmRoot.add( scmRoot );
+                }
             }
             catch ( BuildManagerException e )
             {
@@ -3360,13 +3378,14 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map, trigger );
+        prepareBuildProjects( map, trigger, sortedScmRoot );
     }
 
-    private void prepareBuildProjects( Map<ProjectScmRoot, Map<Integer, Integer>> map, int trigger )
+    private void prepareBuildProjects( Map<ProjectScmRoot, Map<Integer, Integer>> map, int trigger,
+                                       List<ProjectScmRoot> scmRoots )
         throws ContinuumException
     {
-        for ( ProjectScmRoot scmRoot : map.keySet() )
+        for ( ProjectScmRoot scmRoot : scmRoots )
         {
             prepareBuildProjects( map.get( scmRoot ), trigger, scmRoot.getScmRootAddress(),
                                   scmRoot.getProjectGroup().getId(), scmRoot.getId() );
@@ -3383,28 +3402,14 @@ public class DefaultContinuum
         {
             if ( configurationService.isDistributedBuildEnabled() )
             {
-                if ( !taskQueueManager.isInDistributedBuildQueue( projectGroupId, scmRootAddress ) )
-                {
-                    PrepareBuildProjectsTask task =
-                        new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger, projectGroupId,
-                                                      group.getName(), scmRootAddress, scmRootId );
-
-                    taskQueueManager.getDistributedBuildQueue().put( task );
-                }
+                distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, trigger, projectGroupId, 
+                                                              group.getName(), scmRootAddress, scmRootId );
             }
             else
             {
                 parallelBuildsManager.prepareBuildProjects( projectsBuildDefinitionsMap, trigger, projectGroupId,
                                                             group.getName(), scmRootAddress, scmRootId );
             }
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw logAndCreateException( e.getMessage(), e );
-        }
-        catch ( TaskQueueException e )
-        {
-            throw logAndCreateException( "Error while creating enqueuing object.", e );
         }
         catch ( BuildManagerException e )
         {

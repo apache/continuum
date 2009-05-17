@@ -125,15 +125,15 @@ public class SlaveBuildAgentTransportClient
         return buildResult;
     }
 
-    public Integer getProjectCurrentlyBuilding()
+    public Map<String, Object> getProjectCurrentlyBuilding()
         throws Exception
     {
-        Integer projectId;
+        Map map;
 
         try
         {
-            projectId = slave.getProjectCurrentlyBuilding();
-            log.info( "Currently building project " + projectId );
+            map = slave.getProjectCurrentlyBuilding();
+            log.info( "Retrieving currently building project" );
         }
         catch ( Exception e )
         {
@@ -141,7 +141,7 @@ public class SlaveBuildAgentTransportClient
             throw new Exception( "Failed to get the currently building project", e );
         }
 
-        return projectId;
+        return map;
     }
 
     public Boolean ping()
@@ -432,6 +432,101 @@ public class SlaveBuildAgentTransportClient
         {
             log.error( "Failed to rollback release " + releaseId );
             throw new Exception( "Failed to rollback release " + releaseId );
+        }
+
+        return result;
+    }
+
+    public Integer getBuildSizeOfAgent()
+        throws Exception
+    {
+        Integer size;
+
+        try
+        {
+            size = slave.getBuildSizeOfAgent();
+            log.info( "Retrieving build size of agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to retrieve build size of agent", e );
+            throw new Exception( "Failed to retrieve build size of agent", e );
+        }
+
+        return size;
+    }
+
+    public Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws Exception
+    {
+        Map<String, Object> projects;
+
+        try
+        {
+            projects = slave.getProjectCurrentlyPreparingBuild();
+            log.info( "Retrieving projects currently preparing build" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to retrieve projects currently preparing build", e );
+            throw new Exception( "Failed to retrieve projects currently preparing build", e );
+        }
+
+        return projects;
+    }
+
+    public List<Map<String, Object>> getProjectsInBuildQueue()
+        throws Exception
+    {
+        List<Map<String, Object>> projects;
+
+        try
+        {
+            projects = slave.getProjectsInBuildQueue();
+            log.info( "Retrieving projects in build queue" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to retrieve projects in build queue", e );
+            throw new Exception( "Failed to retrieve projects in build queue", e );
+        }
+
+        return projects;
+    }
+
+    public List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws Exception
+    {
+        List<Map<String, Object>> projects;
+
+        try
+        {
+            projects = slave.getProjectsInPrepareBuildQueue();
+            log.info( "Retrieving projects in prepare build queue" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to retrieve projects in prepare build queue", e );
+            throw new Exception( "Failed to retrieve projects in prepare build queue", e );
+        }
+
+        return projects;
+    }
+
+    public Boolean isProjectGroupInQueue( int projectGroupId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectGroupInQueue( projectGroupId );
+            log.info( "Checking if project group is in queue" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if project group is in queue", e );
+            throw new Exception( "Failed to check if project group is in queue", e );
         }
 
         return result;

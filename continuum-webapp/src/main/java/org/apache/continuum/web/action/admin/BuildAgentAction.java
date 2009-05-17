@@ -52,11 +52,6 @@ public class BuildAgentAction
 {
     private static final Logger logger = LoggerFactory.getLogger( BuildAgentAction.class );
 
-    /**
-     * @plexus.requirement
-     */
-    private DistributedBuildManager distributedBuildManager;
-
     private List<BuildAgentConfiguration> buildAgents;
 
     private BuildAgentConfiguration buildAgent;
@@ -139,7 +134,7 @@ public class BuildAgentAction
 
                 try
                 {
-                    installations = distributedBuildManager.getAvailableInstallations( buildAgent.getUrl() );
+                    installations = getContinuum().getDistributedBuildManager().getAvailableInstallations( buildAgent.getUrl() );
                 }
                 catch ( ContinuumException e )
                 {
@@ -188,7 +183,7 @@ public class BuildAgentAction
             }
         }
 
-        distributedBuildManager.reload();
+        getContinuum().getDistributedBuildManager().reload();
 
         return SUCCESS;
     }
@@ -201,33 +196,39 @@ public class BuildAgentAction
             return CONFIRM;
         }
 
-        if ( distributedBuildManager.isBuildAgentBusy( buildAgent.getUrl() ) )
+        if ( getContinuum().getDistributedBuildManager().isBuildAgentBusy( buildAgent.getUrl() ) )
         {
             message = getText( "buildAgent.error.delete.busy" );
             return ERROR;
         }
         else
         {
-            distributedBuildManager.removeAgentFromTaskQueueExecutor( buildAgent.getUrl() );
+            getContinuum().getDistributedBuildManager().removeDistributedBuildQueueOfAgent( buildAgent.getUrl() );
         }
 
         ConfigurationService configuration = getContinuum().getConfiguration();
 
-        for ( BuildAgentGroupConfiguration buildAgentGroup : configuration.getBuildAgentGroups() )
-        {
-            if ( configuration.containsBuildAgentUrl( buildAgent.getUrl(), buildAgentGroup ) )
+        if ( configuration.getBuildAgentGroups() != null )
+        {   
+            for ( BuildAgentGroupConfiguration buildAgentGroup : configuration.getBuildAgentGroups() )
             {
-                message = getText( "buildAgent.error.remove.in.use" );
-                return ERROR;
+                if ( configuration.containsBuildAgentUrl( buildAgent.getUrl(), buildAgentGroup ) )
+                {
+                    message = getText( "buildAgent.error.remove.in.use" );
+                    return ERROR;
+                }
             }
         }
 
-        for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
+        if ( configuration.getBuildAgents() != null )
         {
-            if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+            for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
             {
-                configuration.removeBuildAgent( agent );
-                return SUCCESS;
+                if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+                {
+                    configuration.removeBuildAgent( agent );
+                    return SUCCESS;
+                }
             }
         }
 
@@ -324,7 +325,7 @@ public class BuildAgentAction
             }
         }
 
-        distributedBuildManager.reload();
+        getContinuum().getDistributedBuildManager().reload();
 
         return SUCCESS;
     }

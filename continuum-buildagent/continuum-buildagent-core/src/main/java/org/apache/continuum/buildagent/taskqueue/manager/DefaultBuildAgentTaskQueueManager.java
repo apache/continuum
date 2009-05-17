@@ -69,7 +69,7 @@ public class DefaultBuildAgentTaskQueueManager
         return buildAgentBuildQueue;
     }
 
-    public int getCurrentProjectInBuilding()
+    public int getIdOfProjectCurrentlyBuilding()
         throws TaskQueueManagerException
     {
         Task task = getBuildTaskQueueExecutor().getCurrentTask();
@@ -144,6 +144,19 @@ public class DefaultBuildAgentTaskQueueManager
         try
         {
             return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "build-agent" );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+    }
+
+    public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "prepare-build-agent" );
         }
         catch ( ComponentLookupException e )
         {
@@ -231,9 +244,63 @@ public class DefaultBuildAgentTaskQueueManager
         return false;
     }
 
+    public List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return buildAgentPrepareBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            log.error( "Error occurred while retrieving projects in prepare build queue", e );
+            throw new TaskQueueManagerException( "Error occurred while retrieving projects in prepare build queue", e );
+        }
+    }
+
+    public List<BuildProjectTask> getProjectsInBuildQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return buildAgentBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            log.error( "Error occurred while retrieving projects in build queue", e );
+            throw new TaskQueueManagerException( "Error occurred while retrieving projects in build queue", e );
+        }
+    }
+
+    public PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
+        throws TaskQueueManagerException
+    {
+        Task task = getPrepareBuildTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            return (PrepareBuildProjectsTask) task;
+        }
+        return null;
+    }
+
+    public BuildProjectTask getCurrentProjectInBuilding()
+        throws TaskQueueManagerException
+    {
+        Task task = getBuildTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            return (BuildProjectTask) task;
+        }
+
+        return null;
+    }
+
     public void contextualize( Context context )
         throws ContextException
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
+
 }

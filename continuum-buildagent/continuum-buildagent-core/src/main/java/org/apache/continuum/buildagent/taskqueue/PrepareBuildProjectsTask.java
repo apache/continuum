@@ -35,13 +35,16 @@ public class PrepareBuildProjectsTask
 
     private final String scmRootAddress;
 
+    private final int scmRootId;
+
     public PrepareBuildProjectsTask( List<BuildContext> buildContexts, int trigger, int projectGroupId,
-                                     String scmRootAddress )
+                                     String scmRootAddress, int scmRootId )
     {
         this.buildContexts = buildContexts;
         this.trigger = trigger;
         this.projectGroupId = projectGroupId;
         this.scmRootAddress = scmRootAddress;
+        this.scmRootId = scmRootId;
     }
 
     public long getMaxExecutionTime()
@@ -68,5 +71,15 @@ public class PrepareBuildProjectsTask
     public String getScmRootAddress()
     {
         return scmRootAddress;
+    }
+
+    public int getScmRootId()
+    {
+        return scmRootId;
+    }
+
+    public int getHashCode()
+    {
+        return projectGroupId + scmRootId + trigger;
     }
 }

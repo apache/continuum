@@ -85,6 +85,11 @@ public class PrepareBuildProjectsTask
         return scmRootAddress;
     }
 
+    public int getProjectScmRootId()
+    {
+        return projectScmRootId;
+    }
+
     public int hashCode()
     {
         return this.projectGroupId + this.projectScmRootId + this.trigger;

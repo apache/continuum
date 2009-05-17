@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
@@ -35,7 +36,9 @@ import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExe
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
@@ -60,6 +63,8 @@ public class ParallelBuildsManagerTest
 
     private BuildDefinitionDao buildDefinitionDao;
 
+    private ProjectDao projectDao;
+
     private ConfigurationService configurationService;
 
     private OverallBuildQueue overallBuildQueue;
@@ -67,6 +72,8 @@ public class ParallelBuildsManagerTest
     private TaskQueue buildQueue;
 
     private TaskQueue checkoutQueue;
+
+    private List<Project> projects;
 
     @Override
     public void setUp()
@@ -98,6 +105,10 @@ public class ParallelBuildsManagerTest
         buildQueue = context.mock( TaskQueue.class, "build-queue" );
 
         checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
+
+        projectDao = context.mock( ProjectDao.class );
+
+        buildsManager.setProjectDao( projectDao );
     }
 
     @Override
@@ -159,13 +170,16 @@ public class ParallelBuildsManagerTest
 
     // build project recordings
     private void recordStartOfBuildProjectSequence()
-        throws TaskQueueException
+        throws TaskQueueException, ContinuumStoreException
     {
         context.checking( new Expectations()
         {
             {
                 exactly( 5 ).of( overallBuildQueue ).isInBuildQueue( with( any( int.class ) ) );
                 will( returnValue( false ) );
+
+                one( projectDao ).getProjectsInGroup( with( any( int.class ) ) );
+                will( returnValue( projects ) );
 
                 one( configurationService ).getNumberOfBuildsInParallel();
                 will( returnValue( 2 ) );
@@ -176,7 +190,7 @@ public class ParallelBuildsManagerTest
     }
 
     private void recordBuildProjectBuildQueuesAreEmpty()
-        throws TaskQueueException
+        throws TaskQueueException, ContinuumStoreException
     {
         // shouldn't only the build queues attached to the schedule be checked?
         recordStartOfBuildProjectSequence();
@@ -276,7 +290,7 @@ public class ParallelBuildsManagerTest
 
         recordBuildProjectBuildQueuesAreEmpty();
 
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null );
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null, 1 );
 
         context.assertIsSatisfied();
     }
@@ -292,7 +306,7 @@ public class ParallelBuildsManagerTest
 
         recordBuildProjectBuildQueuesAreEmpty();
 
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null );
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null, 1 );
         context.assertIsSatisfied();
 
         //queue second project - 1st queue is not empty, 2nd queue is empty 
@@ -302,7 +316,7 @@ public class ParallelBuildsManagerTest
         final List<Task> tasks = new ArrayList<Task>();
         final List<Task> tasksOfFirstBuildQueue = new ArrayList<Task>();
         tasksOfFirstBuildQueue.add(
-            new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", buildDef.getDescription(), null ) );
+            new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", buildDef.getDescription(), null, 2 ) );
         context.checking( new Expectations()
         {
             {
@@ -319,7 +333,7 @@ public class ParallelBuildsManagerTest
 
         recordAddToBuildQueue();
 
-        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1, null );
+        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1, null, 2 );
         context.assertIsSatisfied();
 
         // queue third project - both queues have 1 task queued each
@@ -338,7 +352,7 @@ public class ParallelBuildsManagerTest
 
         recordAddToBuildQueue();
 
-        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1, null );
+        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1, null, 3 );
         context.assertIsSatisfied();
     }
 
@@ -558,7 +572,7 @@ public class ParallelBuildsManagerTest
             context.mock( TaskQueueExecutor.class, "checkout-queue-executor" );
 
         final List<Task> buildTasks = new ArrayList<Task>();
-        buildTasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null ) );
+        buildTasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
 
         final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
         checkoutTasks.add(
@@ -626,6 +640,9 @@ public class ParallelBuildsManagerTest
                 exactly( 4 ).of( overallBuildQueue ).isInBuildQueue( with( any( int.class ) ) );
                 will( returnValue( false ) );
 
+                one( projectDao ).getProjectsInGroup( with( any( int.class ) ) );
+                will( returnValue( projects ) );
+
                 one( configurationService ).getNumberOfBuildsInParallel();
                 will( returnValue( 2 ) );
 
@@ -680,10 +697,10 @@ public class ParallelBuildsManagerTest
         buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
 
         final TaskQueueExecutor buildQueueExecutor = context.mock( TaskQueueExecutor.class, "build-queue-executor" );
-        final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-1", "BUILD_DEF", null );
+        final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-1", "BUILD_DEF", null, 1 );
 
         final List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
-        buildTasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null ) );
+        buildTasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
 
         final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
         checkoutTasks.add(
@@ -743,6 +760,9 @@ public class ParallelBuildsManagerTest
                 one( overallBuildQueue ).isInBuildQueue( with( any( int.class ) ) );
                 will( returnValue( false ) );
 
+                one( projectDao ).getProjectsInGroup( with( any( int.class ) ) );
+                will( returnValue( projects ) );
+
                 one( configurationService ).getNumberOfBuildsInParallel();
                 will( returnValue( 2 ) );
 
@@ -752,7 +772,7 @@ public class ParallelBuildsManagerTest
                 one( overallBuildQueue ).addToBuildQueue( with( any( BuildProjectTask.class ) ) );
             }} );
 
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null );
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null, 1 );
         context.assertIsSatisfied();
     }
 
@@ -762,7 +782,7 @@ public class ParallelBuildsManagerTest
         setupMockOverallBuildQueues();
 
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null ) );
+        tasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2  ) );
 
         context.checking( new Expectations()
         {

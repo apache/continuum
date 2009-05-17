@@ -36,7 +36,7 @@ public interface SlaveBuildAgentTransportService
     public Map<String, Object> getBuildResult( int projectId )
         throws Exception;
 
-    public Integer getProjectCurrentlyBuilding()
+    public Map<String, Object> getProjectCurrentlyBuilding()
         throws Exception;
 
     public List<Map<String, String>> getAvailableInstallations()
@@ -89,5 +89,20 @@ public interface SlaveBuildAgentTransportService
         throws Exception;
 
     public Boolean releaseRollback( String releaseId, int projectId )
+        throws Exception;
+
+    public Integer getBuildSizeOfAgent()
+        throws Exception;
+
+    public List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws Exception;
+
+    public List<Map<String, Object>> getProjectsInBuildQueue()
+        throws Exception;
+
+    public Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws Exception;
+
+    public Boolean isProjectGroupInQueue( int projectGroupId )
         throws Exception;
 }
