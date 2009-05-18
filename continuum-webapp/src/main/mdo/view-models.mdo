@@ -262,7 +262,7 @@
           <required>true</required>
           <description>number of successful builds in the project group</description>
           <type>int</type>
-          <defaultValue>-1</defaultValue>
+          <defaultValue>0</defaultValue>
         </field>
         <field>
           <name>numFailures</name>
@@ -270,7 +270,7 @@
           <required>true</required>
           <description>number of failed builds in the project group</description>
           <type>int</type>
-          <defaultValue>-1</defaultValue>
+          <defaultValue>0</defaultValue>
         </field>
         <field>
           <name>numErrors</name>
@@ -278,7 +278,7 @@
           <required>true</required>
           <description>number of errored builds in the project group</description>
           <type>int</type>
-          <defaultValue>-1</defaultValue>
+          <defaultValue>0</defaultValue>
         </field>
         <field>
           <name>repositoryId</name>

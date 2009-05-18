@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.model.project.ProjectGroupSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
@@ -146,6 +147,8 @@ public interface Continuum
     Map<Integer, BuildResult> getBuildResultsInSuccess( int projectGroupId );
 
     Map<Integer, BuildResult> getBuildResultsInSuccess();
+
+    Map<Integer, ProjectGroupSummary> getProjectsSummaryByGroups();
 
     // ----------------------------------------------------------------------
     // Building

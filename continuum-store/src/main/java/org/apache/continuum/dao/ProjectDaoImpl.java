@@ -19,6 +19,8 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import org.apache.continuum.model.project.ProjectGroupSummary;
+import org.apache.continuum.model.project.ProjectSummaryResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
@@ -31,7 +33,10 @@ import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -298,5 +303,79 @@ public class ProjectDaoImpl
         throws ContinuumStoreException
     {
         return (Project) getObjectById( Project.class, projectId, PROJECT_DEPENDENCIES_FETCH_GROUP );
+    }
+
+    public Map<Integer, ProjectGroupSummary> getProjectsSummary()
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( Project.class );
+
+            Query query = pm.newQuery( extent );
+
+            query.setResult( "projectGroup.id as projectGroupId, state as projectState, count(state) as size" );
+
+            query.setResultClass( ProjectSummaryResult.class );
+
+            query.setGrouping( "projectGroup.id, state" );
+
+            List<ProjectSummaryResult> results = (List<ProjectSummaryResult>) query.execute();
+
+            Map<Integer, ProjectGroupSummary> summaries = processProjectGroupSummary( results );
+
+            tx.commit();
+
+            return summaries;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    private Map<Integer, ProjectGroupSummary> processProjectGroupSummary( List<ProjectSummaryResult> results )
+    {
+        Map<Integer, ProjectGroupSummary> map = new HashMap<Integer, ProjectGroupSummary>();
+
+        for ( ProjectSummaryResult result : results )
+        {
+            ProjectGroupSummary summary;
+            int projectGroupId = result.getProjectGroupId();
+            int size = new Long( result.getSize() ).intValue();
+            int state = result.getProjectState();
+            
+            if ( map.containsKey( projectGroupId ) )
+            {
+                summary = map.get( projectGroupId );
+            }
+            else
+            {
+                summary = new ProjectGroupSummary( projectGroupId );
+            }
+
+            summary.addProjects( size );
+
+            if ( state == 2 )
+            {
+                summary.addNumberOfSuccesses( size );
+            }
+            else if ( state == 3 )
+            {
+                summary.addNumberOfFailures( size );
+            }
+            else if ( state == 4 )
+            {
+                summary.addNumberOfErrors( size );
+            }
+
+            map.put( projectGroupId, summary );
+        }
+        return map;
     }
 }
