@@ -48,6 +48,7 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.model.project.ProjectGroupSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
@@ -738,6 +739,11 @@ public class DefaultContinuum
         throws ContinuumException
     {
         return projectDao.getAllProjectsByName();
+    }
+
+    public Map<Integer, ProjectGroupSummary> getProjectsSummaryByGroups()
+    {
+        return projectDao.getProjectsSummary();
     }
 
     // ----------------------------------------------------------------------

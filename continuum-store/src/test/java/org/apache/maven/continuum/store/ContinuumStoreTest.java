@@ -22,6 +22,7 @@ package org.apache.maven.continuum.store;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildDefinitionTemplateDao;
 import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.model.project.ProjectGroupSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
@@ -48,6 +49,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -1354,6 +1356,52 @@ public class ContinuumStoreTest
         releaseResults = releaseResultDao.getAllContinuumReleaseResults();
         assertEquals( "check size of continuum release results", 1, releaseResults.size() );
     }
+
+	public void testGetProjectSummaryByProjectGroup()
+	    throws Exception
+	{
+	    List<Project> projects = projectDao.getProjectsInGroup( defaultProjectGroup.getId() );
+	    assertEquals( 2, projects.size() );
+
+	    Project project = projects.get( 0 );
+	    project.setState( 2 );
+	    projectDao.updateProject( project );
+
+	    project = projects.get( 1 );
+	    project.setState( 2 );
+	    projectDao.updateProject( project );
+
+	    ProjectGroup newGroup = projectGroupDao.getProjectGroupWithProjects( testProjectGroup2.getId() );
+	    Project project1 = createTestProject( testProject1 );
+	    project1.setState( 4 );
+	    newGroup.addProject( project1 );
+
+	    Project project2 = createTestProject( testProject2 );
+	    project2.setState( 1 );
+	    newGroup.addProject( project2 );
+	    projectGroupDao.updateProjectGroup( newGroup );
+
+	    Map<Integer, ProjectGroupSummary> summaries = projectDao.getProjectsSummary();
+
+	    assertNotNull( summaries );
+	    assertEquals( "check size of project summaries", 2, summaries.size() );
+
+	    ProjectGroupSummary summary = summaries.get( testProjectGroup2.getId() );
+	    assertEquals( "check id of project group", testProjectGroup2.getId(), summary.getProjectGroupId() );
+	    assertEquals( "check number of errors", 1, summary.getNumberOfErrors() );
+	    assertEquals( "check number of successes", 0, summary.getNumberOfSuccesses() );
+	    assertEquals( "check number of failures", 0, summary.getNumberOfFailures() );
+	    assertEquals( "check number of projects", 2, summary.getNumberOfProjects() );
+
+	    summary = summaries.get( defaultProjectGroup.getId() );
+	    assertEquals( "check id of project group", defaultProjectGroup.getId(), summary.getProjectGroupId() );
+        assertEquals( "check number of errors", 0, summary.getNumberOfErrors() );
+        assertEquals( "check number of successes", 2, summary.getNumberOfSuccesses() );
+        assertEquals( "check number of failures", 0, summary.getNumberOfFailures() );
+        assertEquals( "check number of projects", 2, summary.getNumberOfProjects() );
+
+	}
+
     // ----------------------------------------------------------------------
     //  HELPER METHODS
     // ----------------------------------------------------------------------

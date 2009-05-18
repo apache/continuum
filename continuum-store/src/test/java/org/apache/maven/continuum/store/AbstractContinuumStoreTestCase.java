@@ -1204,9 +1204,9 @@ public abstract class AbstractContinuumStoreTestCase
             .getVersion(), project.getWorkingDirectory() );
     }
 
-    private static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
-                                              String name, String scmUrl, int state, String url, String version,
-                                              String workingDirectory )
+    protected static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
+                                                String name, String scmUrl, int state, String url, String version,
+                                                String workingDirectory )
     {
         Project project = new Project();
         project.setArtifactId( artifactId );
