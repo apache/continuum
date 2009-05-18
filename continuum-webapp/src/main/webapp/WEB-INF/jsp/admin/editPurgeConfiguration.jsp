@@ -68,6 +68,7 @@
             <s:select label="%{getText('purgeConfig.schedule.label')}" name="scheduleId" list="schedules"
                        headerKey="-1" headerValue=""/>
             <s:textfield label="%{getText('purgeConfig.description.label')}" name="description"/>
+            <s:checkbox label="%{getText('purgeConfig.enabled.label')}" name="enabled"/>
           </table>
           <s:hidden name="purgeConfigId"/>
           <s:hidden name="purgeType"/>
