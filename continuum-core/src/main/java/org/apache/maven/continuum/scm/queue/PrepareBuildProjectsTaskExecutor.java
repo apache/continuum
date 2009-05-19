@@ -197,7 +197,7 @@ public class PrepareBuildProjectsTaskExecutor
             for ( ProjectScmRoot projectScmRoot : scmRoots )
             {
                 projectScmRootAddress = projectScmRoot.getScmRootAddress();
-                if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
+                if ( projectScmUrl.startsWith( projectScmRoot.getScmRootAddress() ) )
                 {                    
                     context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
                     context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRootAddress );
@@ -220,7 +220,7 @@ public class PrepareBuildProjectsTaskExecutor
                 List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
                 for( Project projectInGroup : projectsInGroup )
                 {
-                    if( projectInGroup.getScmUrl().contains( projectScmRootAddress ) )
+                    if( projectInGroup.getScmUrl().startsWith( projectScmRootAddress ) )
                     {
                         projectsWithCommonScmRoot.add( projectInGroup );
                     }

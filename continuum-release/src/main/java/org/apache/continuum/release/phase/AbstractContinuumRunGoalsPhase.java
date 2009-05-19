@@ -75,7 +75,7 @@ public abstract class AbstractContinuumRunGoalsPhase
                     executable = ( (ContinuumReleaseDescriptor) releaseDescriptor).getExecutable();
                 }
                 shellCommandHelper.executeGoals( determineWorkingDirectory( workingDirectory,
-                                                                            releaseDescriptor.getScmRelativePathProjectDirectory() ),
+                                                                            releaseDescriptor.getScmRelativePathProjectDirectory(), releaseDescriptor.getRootProjectPath() ),
                                                  executable, goals, releaseDescriptor.isInteractive(), additionalArguments, result, 
                                                  environments );
             }
