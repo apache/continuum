@@ -25,18 +25,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
-import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
-import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
-import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.bean.BuildProjectQueue;
@@ -46,7 +40,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.apache.maven.continuum.web.model.DistributedPrepareBuildSummary;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
@@ -66,6 +60,8 @@ public class QueuesAction
     private static final Logger logger = LoggerFactory.getLogger( QueuesAction.class );
 
     private static final String DISTRIBUTED_BUILD_SUCCESS = "distributed-build-success";
+
+    private List<String> selectedPrepareBuildTaskHashCodes;
 
     private List<String> selectedBuildTaskHashCodes;
 
@@ -94,15 +90,12 @@ public class QueuesAction
     private List<DistributedBuildSummary> currentDistributedBuilds = new ArrayList<DistributedBuildSummary>();
 
     private List<DistributedBuildSummary> distributedBuildQueues = new ArrayList<DistributedBuildSummary>();
+
     private String buildAgentUrl;
 
     private int projectGroupId;
 
     private int scmRootId;
-
-    private List<String> selectedDistributedBuildTaskHashCodes;
-
-    private List<String> selectedDistributedPrepareBuildTaskHashCodes;
 
     // -----------------------------------------------------
     //  webwork
@@ -474,7 +467,53 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getDistributedBuildManager().cancelDistributedBuild( buildAgentUrl, projectGroupId, scmRootId );
+        getContinuum().getDistributedBuildManager().cancelDistributedBuild( buildAgentUrl );
+
+        return SUCCESS;
+    }
+
+    public String removeDistributedPrepareBuildEntry()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue( buildAgentUrl, projectGroupId, scmRootId );
+
+        return SUCCESS;
+    }
+
+    public String removeDistributedPrepareBuildEntries()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue(  this.getSelectedPrepareBuildTaskHashCodes() );
 
         return SUCCESS;
     }
@@ -497,7 +536,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getDistributedBuildManager().removeFromDistributedBuildQueue( projectGroupId, scmRootId );
+        getContinuum().getDistributedBuildManager().removeFromBuildQueue( buildAgentUrl, projectId, buildDefinitionId );
 
         return SUCCESS;
     }
@@ -520,8 +559,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getDistributedBuildManager().removeFromDistributedBuildQueue(
-            listToIntArray( this.getSelectedDistributedBuildTaskHashCodes() ) );
+        getContinuum().getDistributedBuildManager().removeFromBuildQueue( this.getSelectedBuildTaskHashCodes() );
 
         return SUCCESS;
     }
@@ -718,26 +756,6 @@ public class QueuesAction
         this.buildAgentUrl = buildAgentUrl;
     }
 
-    public List<String> getSelectedDistributedBuildTaskHashCodes()
-    {
-        return selectedDistributedBuildTaskHashCodes;
-    }
-
-    public void setSelectedDistributedBuildTaskHashCodes( List<String> selectedDistributedBuildTaskHashCodes )
-    {
-        this.selectedDistributedBuildTaskHashCodes = selectedDistributedBuildTaskHashCodes;
-    }
-
-    public List<String> getSelectedDistributedPrepareBuildTaskHashCodes()
-    {
-        return selectedDistributedPrepareBuildTaskHashCodes;
-    }
-
-    public void setSelectedDistributedPrepareBuildTaskHashCodes( List<String> selectedDistributedPrepareBuildTaskHashCodes )
-    {
-        this.selectedDistributedPrepareBuildTaskHashCodes = selectedDistributedPrepareBuildTaskHashCodes;
-    }
-
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
@@ -746,5 +764,15 @@ public class QueuesAction
     public void setScmRootId( int scmRootId )
     {
         this.scmRootId = scmRootId;
+    }
+
+    public void setSelectedPrepareBuildTaskHashCodes( List<String> selectedPrepareBuildTaskHashCodes )
+    {
+        this.selectedPrepareBuildTaskHashCodes = selectedPrepareBuildTaskHashCodes;
+    }
+
+    public List<String> getSelectedPrepareBuildTaskHashCodes()
+    {
+        return selectedPrepareBuildTaskHashCodes;
     }
 }

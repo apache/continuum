@@ -31,7 +31,7 @@ public interface DistributedBuildManager
 {
     String ROLE = DistributedBuildManager.class.getName();
 
-    void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, int scmRootId )
+    void cancelDistributedBuild( String buildAgentUrl )
         throws ContinuumException;
 
     void reload()
@@ -63,16 +63,22 @@ public interface DistributedBuildManager
     void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, 
                                String projectGroupName, String scmRootAddress, int scmRootId )
         throws ContinuumException;
- 
-    void removeFromDistributedBuildQueue( int projectGroupId, int scmRootId )
-        throws ContinuumException;
- 
-    void removeFromDistributedBuildQueue( int[] hashCodes )
-        throws ContinuumException;
- 
+
     Map<String, PrepareBuildProjectsTask> getProjectsCurrentlyPreparingBuild()
         throws ContinuumException;
 
     Map<String, BuildProjectTask> getProjectsCurrentlyBuilding()
+        throws ContinuumException;
+
+    void removeFromPrepareBuildQueue( String buildAgnetUrl, int projectGroupId, int scmRootId )
+        throws ContinuumException;
+
+    void removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws ContinuumException;
+
+    void removeFromBuildQueue( String buildAgentUrl, int projectId, int buildDefinitionId )
+        throws ContinuumException;
+
+    void removeFromBuildQueue( List<String> hashCodes )
         throws ContinuumException;
 }

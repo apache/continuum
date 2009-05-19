@@ -21,6 +21,7 @@ package org.apache.continuum.buildagent.taskqueue.manager;
 
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
@@ -60,8 +61,24 @@ public class DefaultBuildAgentTaskQueueManager
     public void cancelBuild()
         throws TaskQueueManagerException
     {
-        removeProjectsFromBuildQueue();
-        cancelCurrentBuild();
+        Task task = getBuildTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            if ( task instanceof BuildProjectTask )
+            {
+                log.info( "Cancelling current build task of project " + ( (BuildProjectTask) task ).getProjectId() );
+                getBuildTaskQueueExecutor().cancelTask( task );
+            }
+            else
+            {
+                log.warn( "Current task not a BuildProjectTask - not cancelling" );
+            }
+        }
+        else
+        {
+            log.warn( "No task running - not cancelling" );
+        }
     }
 
     public TaskQueue getBuildQueue()
@@ -112,30 +129,6 @@ public class DefaultBuildAgentTaskQueueManager
         {
             throw new TaskQueueManagerException( "Error while getting build tasks from queue", e );
         }
-    }
-
-    private boolean cancelCurrentBuild()
-        throws TaskQueueManagerException
-    {
-        Task task = getBuildTaskQueueExecutor().getCurrentTask();
-
-        if ( task != null )
-        {
-            if ( task instanceof BuildProjectTask )
-            {
-                log.info( "Cancelling current build task" );
-                return getBuildTaskQueueExecutor().cancelTask( task );
-            }
-            else
-            {
-                log.warn( "Current task not a BuildProjectTask - not cancelling" );
-            }
-        }
-        else
-        {
-            log.warn( "No task running - not cancelling" );
-        }
-        return false;
     }
 
     public TaskQueueExecutor getBuildTaskQueueExecutor()
@@ -295,6 +288,78 @@ public class DefaultBuildAgentTaskQueueManager
         }
 
         return null;
+    }
+
+    public boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( task.getProjectGroupId() == projectGroupId && task.getScmRootId() == scmRootId )
+                {
+                    return getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void removeFromPrepareBuildQueue( int[] hashCodes )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                {
+                    getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+    }
+
+    public boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws TaskQueueManagerException
+    {
+        List<BuildProjectTask> tasks = getProjectsInBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( BuildProjectTask task : tasks )
+            {
+                if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                {
+                    return getBuildQueue().remove( task );
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void removeFromBuildQueue( int[] hashCodes )
+        throws TaskQueueManagerException
+    {
+        List<BuildProjectTask> tasks = getProjectsInBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( BuildProjectTask task : tasks )
+            {
+                if ( ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                {
+                    getBuildQueue().remove( task );
+                }
+            }
+        }
     }
 
     public void contextualize( Context context )

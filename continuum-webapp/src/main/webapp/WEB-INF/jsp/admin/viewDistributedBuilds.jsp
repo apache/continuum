@@ -36,7 +36,7 @@
         </div>
       </c:if>
       
-      <s:form id="removeForm" action="none" method="post">
+      <form id="queuesForm" action="none" method="post">
         <div id="h3">
           <h3><s:text name="distributedBuilds.currentPrepareBuild.section.title"/></h3>
           <c:if test="${not empty currentDistributedPrepareBuilds}">
@@ -77,8 +77,6 @@
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.agentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <s:url id="cancelUrl" action="cancelDistributedBuild" method="cancelDistributedBuild" namespace="/">
-                    <s:param name="projectId">${pageScope.currentBuild.projectId}</s:param>
-                    <s:param name="buildDefinitionId">${pageScope.currentBuild.buildDefinitionId}</s:param>
                     <s:param name="buildAgentUrl">${pageScope.currentBuild.buildAgentUrl}</s:param>
                   </s:url>
                   <redback:ifAuthorized permission="continuum-manage-queues">
@@ -95,6 +93,8 @@
             <s:text name="distributedBuilds.empty"/>
           </c:if>
         </div>
+      </form>
+      <form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.prepareBuildQueue.section.title"/>
@@ -110,8 +110,8 @@
                       filterable="false">
               <ec:row>
                 <redback:ifAuthorized permission="continuum-manage-queues">
-                  <ec:column alias="selectedDistributedPrepareBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
-                    <input type="checkbox" name="selectedDistributedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
+                  <ec:column alias="selectedPrepareBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
+                    <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
                   </ec:column>              
                 </redback:ifAuthorized>
                 <ec:column property="projectGroupName" title="distributedPrepareBuild.table.projectGroupName"/>
@@ -140,14 +140,15 @@
               <tbody>
                 <tr>
                   <td>
-                    <input type="submit" value="<s:text name="distributedPrepareBuilds.removeEntries"/>"
-                           onclick="document.forms.removeForm.action='removeDistributedPrepareBuildEntries.action';document.forms.removeForm.submit();" /> 
+                    <input type="button" name="remove-prepare-build-queues" value="<s:text name="distributedPrepareBuilds.removeEntries"/>" onclick="document.forms.removePrepareBuildForm.submit();" /> 
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </c:if>
+      </form>
+      <form id="removeBuildForm" action="removeDistributedBuildEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.buildQueue.section.title"/>
@@ -163,8 +164,8 @@
                       filterable="false">
               <ec:row>
                 <redback:ifAuthorized permission="continuum-manage-queues">
-                  <ec:column alias="selectedDistributedBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
-                    <input type="checkbox" name="selectedDistributedBuildTaskHashCodes" value="${pageScope.buildQueue.hashCode}" />
+                  <ec:column alias="selectedBuildTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
+                    <input type="checkbox" name="selectedBuildTaskHashCodes" value="${pageScope.buildQueue.hashCode}" />
                   </ec:column>              
                 </redback:ifAuthorized>
                 <ec:column property="projectName" title="distributedBuild.table.projectName"/>
@@ -194,15 +195,14 @@
               <tbody>
                 <tr>
                   <td>
-                    <input type="submit" value="<s:text name="distributedBuilds.removeEntries"/>"
-                           onclick="document.forms.removeForm.action='removeDistributedBuildEntries.action';document.forms.removeForm.submit();" /> 
+                    <input type="button" name="remove-build-queues" value="<s:text name="distributedBuilds.removeEntries"/>" onclick="document.forms.removeBuildForm.submit();" /> 
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </c:if>
-      </s:form>
+      </form>
     </body>
   </s:i18n>
 </html>

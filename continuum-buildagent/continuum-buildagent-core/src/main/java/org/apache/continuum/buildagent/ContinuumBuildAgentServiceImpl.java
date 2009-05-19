@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
@@ -747,6 +748,106 @@ public class ContinuumBuildAgentServiceImpl
         return false;
     }
 
+    public boolean isProjectCurrentlyBuilding( int projectId )
+    {
+        try
+        {
+            BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
+
+            if ( currentBuildTask != null && currentBuildTask.getProjectId() == projectId )
+            {
+                return true;
+            }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while checking if project " + projectId + " is currently building in agent", e );
+        }
+
+        return false;
+    }
+
+    public boolean isProjectInBuildQueue( int projectId )
+    {
+        try
+        {
+            List<BuildProjectTask> buildTasks = buildAgentTaskQueueManager.getProjectsInBuildQueue();
+
+            if ( buildTasks != null )
+            {
+                for ( BuildProjectTask task : buildTasks )
+                {
+                    if ( task.getProjectId() == projectId )
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while checking if project " + projectId + " is in build queue of agent", e );
+        }
+
+        return false;
+    }
+
+    public boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            return buildAgentTaskQueueManager.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while removing projects from prepare build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while removing projects from prepare build queue", e );
+        }
+    }
+
+    public void removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            buildAgentTaskQueueManager.removeFromPrepareBuildQueue( listToIntArray( hashCodes ) );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while removing projects from prepare build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while removing projects from prepare build queue", e );
+        }
+    }
+
+    public boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            return buildAgentTaskQueueManager.removeFromBuildQueue( projectId, buildDefinitionId );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while removing project from build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while removing project from build queue ", e );
+        }
+    }
+
+    public void removeFromBuildQueue( List<String> hashCodes )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            buildAgentTaskQueueManager.removeFromBuildQueue( listToIntArray( hashCodes ) );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error occurred while removing projects from build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while removing project from build queue ", e );
+        }
+    }
+
     private void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
                                  List<Map<String, String>> projects )
         throws Exception
@@ -912,5 +1013,19 @@ public class ContinuumBuildAgentServiceImpl
             log.info( "Nothing to build" );
             return null;
         }
+    }
+
+    private int[] listToIntArray( List<String> strings )
+    {
+        if ( strings == null || strings.isEmpty() )
+        {
+            return new int[0];
+        }
+        int[] array = new int[0];
+        for ( String intString : strings )
+        {
+            array = ArrayUtils.add( array, Integer.parseInt( intString ) );
+        }
+        return array;
     }
 }

@@ -436,46 +436,6 @@ public class DefaultDistributedBuildManager
         return map;
     }
 
-    public void removeFromDistributedBuildQueue( int projectGroupId, int scmRootId )
-        throws ContinuumException
-    {
-        try
-        {
-            OverallDistributedBuildQueue distributedBuildQueue = getOverallDistributedBuildQueueByGroupAndScmRoot( projectGroupId, scmRootId );
-
-            if ( distributedBuildQueue != null )
-            {
-                distributedBuildQueue.removeFromDistributedBuildQueue( projectGroupId, scmRootId );
-            }
-        }
-        catch ( TaskQueueException e )
-        {
-            log.error( "Error occurred while removing projectGroupId=" + projectGroupId + 
-                       " scmRootId=" + scmRootId + " from distributed build queue", e );
-            throw new ContinuumException( "Error occurred while removing projectGroupId=" + projectGroupId + 
-                                          " scmRootId=" + scmRootId + " from distributed build queue", e );
-        }
-    }
-
-    public void removeFromDistributedBuildQueue( int[] hashCodes )
-        throws ContinuumException
-    {
-        for ( int i = 0; i < hashCodes.length; i++ )
-        {
-            try
-            {
-                OverallDistributedBuildQueue distributedBuildQueue = getOverallDistributedBuildQueueByHashCode( hashCodes[i] );
-
-                distributedBuildQueue.removeFromDistributedBuildQueueByHashCode( hashCodes[i] );
-            }
-            catch ( TaskQueueException e )
-            {
-                log.error( "Error occurred while removing projects from distributed build queue", e );
-                throw new ContinuumException( "Error occcurred while removing projects from distributed build queue", e );
-            }
-        }
-    }
-
     public boolean isBuildAgentBusy( String buildAgentUrl )
     {
         synchronized ( overallDistributedBuildQueues )
@@ -494,53 +454,24 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, int scmRootId )
+    public void cancelDistributedBuild( String buildAgentUrl )
         throws ContinuumException
     {
-        synchronized ( overallDistributedBuildQueues )
+        try
         {
-            OverallDistributedBuildQueue distributedBuildQueue = overallDistributedBuildQueues.get( buildAgentUrl );
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
-            if ( distributedBuildQueue != null )
-            {
-                if ( distributedBuildQueue.getDistributedBuildTaskQueueExecutor().getCurrentTask() != null )
-                {
-                    PrepareBuildProjectsTask task = (PrepareBuildProjectsTask)
-                        distributedBuildQueue.getDistributedBuildTaskQueueExecutor().getCurrentTask();
-
-                    if ( task.getProjectGroupId() == projectGroupId && 
-                         task.getProjectScmRootId() == scmRootId )
-                    {
-                        log.info( "Cancelling task for projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId );
-                        distributedBuildQueue.getDistributedBuildTaskQueueExecutor().cancelTask( task );
-
-                        try
-                        {
-                            SlaveBuildAgentTransportClient client =
-                                new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                            client.cancelBuild();
-                        }
-                        catch ( Exception e )
-                        {
-                            log.error( "Error while cancelling build in build agent '" + buildAgentUrl + "'" );
-                            throw new ContinuumException(
-                                "Error while cancelling build in build agent '" + buildAgentUrl + "'", e );
-                        }
-                    }
-                    else
-                    {
-                        log.info( "current task not for project group " + projectGroupId + " with scm root id " + scmRootId );
-                    }
-                }
-                else
-                {
-                    log.info( "no current task in build agent '" + buildAgentUrl + "'" );
-                }
-            }
-            else
-            {
-                log.info( "no distributed build queue for build agent '" + buildAgentUrl + "'" );
-            }
+            client.cancelBuild();
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Error cancelling build in build agent: Invalid build agent url " + buildAgentUrl );
+            throw new ContinuumException( "Error cancelling build in build agent: Invalid build agent url " + buildAgentUrl );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error occurred while cancelling build in build agent " + buildAgentUrl, e );
+            throw new ContinuumException( "Error occurred while cancelling build in build agent " + buildAgentUrl, e );
         }
     }
 
@@ -692,6 +623,102 @@ public class DefaultDistributedBuildManager
         return "";
     }
 
+    public void removeFromPrepareBuildQueue( String buildAgentUrl, int projectGroupId, int scmRootId )
+        throws ContinuumException
+    {
+        try
+        {
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+            client.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Unable to remove projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId + 
+                       " from prepare build queue: Invalid build agent url " + buildAgentUrl );
+            throw new ContinuumException( "Unable to remove projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId + 
+                                          " from prepare build queue: Invalid build agent url " + buildAgentUrl );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error occurred while removing projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId + 
+                       " from prepare build queue of agent " + buildAgentUrl, e );
+            throw new ContinuumException( "Error occurred while removing projectGroupId=" + projectGroupId + " scmRootId=" +
+                                          scmRootId + " from prepare build queue of agent " + buildAgentUrl, e );
+        }
+    }
+
+    public void removeFromBuildQueue( String buildAgentUrl, int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
+        try
+        {
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+            client.removeFromBuildQueue( projectId, buildDefinitionId );
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Unable to remove project " + projectId + 
+                       " from build queue: Invalid build agent url " + buildAgentUrl );
+            throw new ContinuumException( "Unable to remove project " + projectId + 
+                                          " from build queue: Invalid build agent url " + buildAgentUrl );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error occurred while removing project " + projectId +
+                       " from build queue of agent " + buildAgentUrl, e );
+            throw new ContinuumException( "Error occurred while removing project " + projectId + 
+                                          " from build queue of agent " + buildAgentUrl, e );
+        }
+    }
+
+    public void removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws ContinuumException
+    {
+        synchronized ( overallDistributedBuildQueues )
+        {
+            for ( String buildAgentUrl : overallDistributedBuildQueues.keySet() )
+            {
+                try
+                {
+                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                    client.removeFromPrepareBuildQueue( hashCodes );
+                }
+                catch ( MalformedURLException e )
+                {
+                    log.error( "Error trying to remove projects from prepare build queue. Invalid build agent url: " + buildAgentUrl );
+                }
+                catch ( Exception e )
+                {
+                    log.error( "Error trying to remove projects from prepare build queue of agent " + buildAgentUrl, e );
+                }
+            }
+        }
+    }
+
+    public void removeFromBuildQueue( List<String> hashCodes )
+        throws ContinuumException
+    {
+        synchronized ( overallDistributedBuildQueues )
+        {
+            for ( String buildAgentUrl : overallDistributedBuildQueues.keySet() )
+            {
+                try
+                {
+                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                    client.removeFromBuildQueue( hashCodes );
+                }
+                catch ( MalformedURLException e )
+                {
+                    log.error( "Error trying to remove projects from build queue. Invalid build agent url: " + buildAgentUrl );
+                }
+                catch ( Exception e )
+                {
+                    log.error( "Error trying to remove projects from build queue of agent " + buildAgentUrl, e );
+                }
+            }
+        }
+    }
+
     private String getBuildAgent( int projectId )
         throws ContinuumException
     {
@@ -704,15 +731,23 @@ public class DefaultDistributedBuildManager
     
                 if ( overallDistributedBuildQueue != null )
                 {
-                    PrepareBuildProjectsTask task = 
-                        (PrepareBuildProjectsTask) overallDistributedBuildQueue.getDistributedBuildTaskQueueExecutor().getCurrentTask();
-    
-                    for ( Integer id : task.getProjectsBuildDefinitionsMap().keySet() )
+                    try
                     {
-                        if ( projectId == id )
+                        SlaveBuildAgentTransportClient client = 
+                            new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        
+                        if ( client.isProjectCurrentlyBuilding( projectId ) )
                         {
                             return buildAgentUrl;
                         }
+                    }
+                    catch ( MalformedURLException e )
+                    {
+                        log.warn( "Unable to check if project " + projectId + " is currently building in agent: Invalid build agent url" + buildAgentUrl );
+                    }
+                    catch ( Exception e )
+                    {
+                        log.warn( "Unable to check if project " + projectId + " is currently building in agent", e );
                     }
                 }
             }

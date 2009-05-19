@@ -531,4 +531,121 @@ public class SlaveBuildAgentTransportClient
 
         return result;
     }
+
+    public Boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectCurrentlyBuilding( projectId );
+            log.info( "Checking if project " + projectId + " is currently building in agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if project " + projectId + " is currently building in agent", e );
+            throw new Exception( "Failed to check if project " + projectId + " is currently building in agent", e );
+        }
+
+        return result;
+    }
+
+    public Boolean isProjectInBuildQueue( int projectId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectInBuildQueue( projectId );
+            log.info( "Checking if project " + projectId + "is in build queue of agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if project " + projectId + " is in build queue of agent", e );
+            throw new Exception( "Failed to check if project " + projectId + " is in build queue of agent", e );
+        }
+
+        return result;
+    }
+
+    public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+            log.info( "Removing projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId +
+                      " from prepare build queue of agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to remove projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId +
+                       " from prepare build queue of agent", e );
+            throw new Exception( "Failed to remove projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId +
+                                 " from prepare build queue of agent", e );
+        }
+
+        return result;
+    }
+
+    public Boolean removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.removeFromPrepareBuildQueue( hashCodes );
+            log.info( "Removing projects from prepare build queue of agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to remove projects from prepare build queue of agent", e );
+            throw new Exception( "Failed to remove projects from prepare build queue of agent", e );
+        }
+
+        return result;
+    }
+
+    public Boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.removeFromBuildQueue( projectId, buildDefinitionId );
+            log.info( "Removing project " + projectId + " from build queue of agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to remove project " + projectId + " from build queue of agent", e );
+            throw new Exception( "Failed to remove project " + projectId + " from build queue of agent", e );
+        }
+
+        return result;
+    }
+
+    public Boolean removeFromBuildQueue( List<String> hashCodes )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.removeFromBuildQueue( hashCodes );
+            log.info( "Removing projects from build queue of agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to remove projects from build queue of agent", e );
+            throw new Exception( "Failed to remove projects from build queue of agent", e );
+        }
+
+        return result;
+    }
 }
