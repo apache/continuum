@@ -107,6 +107,9 @@ public class BuildResultAction
                 buildResult = ContinuumBuildConstant.getBuildResult( map, null );
 
                 buildOutput = ContinuumBuildConstant.getBuildOutput( map );
+
+                state =
+                    StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
             }
             changeSet = null;
 

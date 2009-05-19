@@ -105,4 +105,22 @@ public interface SlaveBuildAgentTransportService
 
     public Boolean isProjectGroupInQueue( int projectGroupId )
         throws Exception;
+
+    public Boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception;
+
+    public Boolean isProjectInBuildQueue( int projectId )
+        throws Exception;
+
+    public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws Exception;
+
+    public Boolean removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws Exception;
+
+    public Boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws Exception;
+
+    public Boolean removeFromBuildQueue( List<String> hashCodes )
+        throws Exception;    
 }

@@ -61,5 +61,15 @@ public interface BuildAgentTaskQueueManager
     List<BuildProjectTask> getProjectsInBuildQueue()
         throws TaskQueueManagerException;
 
-    //removeProjectFrom
+    boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws TaskQueueManagerException;
+
+    void removeFromPrepareBuildQueue( int[] hashCodes )
+        throws TaskQueueManagerException;
+
+    boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws TaskQueueManagerException;
+
+    void removeFromBuildQueue( int[] hashCodes )
+        throws TaskQueueManagerException;
 }

@@ -94,4 +94,20 @@ public interface ContinuumBuildAgentService
         throws ContinuumBuildAgentException;
 
     boolean isProjectGroupInQueue( int projectGroupId );
+
+    boolean isProjectCurrentlyBuilding( int projectId );
+
+    boolean isProjectInBuildQueue( int projectId );
+
+    boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws ContinuumBuildAgentException;
+
+    void removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws ContinuumBuildAgentException;
+
+    boolean removeFromBuildQueue( int projectId, int builddefinitonId )
+        throws ContinuumBuildAgentException;
+
+    void removeFromBuildQueue( List<String> hashCodes )
+        throws ContinuumBuildAgentException;
 }

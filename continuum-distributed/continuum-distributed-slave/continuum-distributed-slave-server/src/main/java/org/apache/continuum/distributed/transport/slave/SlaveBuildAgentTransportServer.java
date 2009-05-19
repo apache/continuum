@@ -405,4 +405,82 @@ public class SlaveBuildAgentTransportServer
     {
         return continuumBuildAgentService.isProjectGroupInQueue( projectGroupId );
     }
+
+    public Boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception
+    {
+        return continuumBuildAgentService.isProjectCurrentlyBuilding( projectId );
+    }
+
+    public Boolean isProjectInBuildQueue( int projectId )
+        throws Exception
+    {
+        return continuumBuildAgentService.isProjectInBuildQueue( projectId );
+    }
+
+    public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove projects from prepare build queue" );
+             throw e;
+        }
+    }
+
+    public Boolean removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            continuumBuildAgentService.removeFromPrepareBuildQueue( hashCodes );
+            result = Boolean.TRUE;
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove projects from prepare build queue" );
+            throw e;
+        }
+
+        return result;
+    }
+
+    public Boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.removeFromBuildQueue( projectId, buildDefinitionId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove project from build queue" );
+            throw e;
+        }
+    }
+
+    public Boolean removeFromBuildQueue( List<String> hashCodes )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            continuumBuildAgentService.removeFromBuildQueue( hashCodes );
+            result = Boolean.TRUE;
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove projects from build queue" );
+            throw e;
+        }
+
+        return result;
+    }
 }
