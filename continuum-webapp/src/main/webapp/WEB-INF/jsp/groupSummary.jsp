@@ -39,6 +39,14 @@
        <h3><s:text name="groups.page.section.title"/></h3>
     </s:else>
   
+    <c:if test="${!empty actionErrors}">
+      <div class="errormessage">
+        <s:iterator value="actionErrors">
+          <p><s:property/></p>
+        </s:iterator>
+      </div>
+    </c:if>
+
     <c:if test="${empty groups}">
       <s:text name="groups.page.list.empty"/>
     </c:if>

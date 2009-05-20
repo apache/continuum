@@ -39,6 +39,15 @@
                 <s:param><s:property value="project.name"/></s:param>
             </s:text>
         </h3>
+        
+        <c:if test="${!empty actionErrors}">
+          <div class="errormessage">
+            <s:iterator value="actionErrors">
+              <p><s:property/></p>
+            </s:iterator>
+          </div>
+        </c:if>
+    
         <form id="buildResultsForm" action="removeBuildResults.action" method="post">
           <s:hidden name="projectGroupId"/>
           <s:hidden name="projectId"/>

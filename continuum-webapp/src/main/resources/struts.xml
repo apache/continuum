@@ -67,6 +67,20 @@
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
       </interceptor-stack>
+      
+      <interceptor-stack name="storeStack">
+        <interceptor-ref name="defaultStack"/>
+        <interceptor-ref name="store">
+          <param name="operationMode">STORE</param>
+        </interceptor-ref>
+      </interceptor-stack>
+
+      <interceptor-stack name="retrieveStack">
+        <interceptor-ref name="defaultStack"/>
+        <interceptor-ref name="store">
+          <param name="operationMode">RETRIEVE</param>
+        </interceptor-ref>
+      </interceptor-stack> 
     </interceptors>
 
     <default-interceptor-ref name="configuredContinuumStack"/>
@@ -167,6 +181,7 @@
     
 
     <action name="groupSummary" class="groupSummary">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/groupSummary.jsp</result>
     </action>
 
@@ -223,6 +238,7 @@
     </action>
 
     <action name="deleteProject" class="deleteProject">
+      <interceptor-ref name="storeStack"/>
       <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -231,6 +247,7 @@
     </action>
 
     <action name="ProjectsList" class="projects">
+      <interceptor-ref name="storeStack"/>
       <result name="confirmRemove">/WEB-INF/jsp/confirmDeleteProjects.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -300,6 +317,7 @@
     * project group actions
     -->
     <action name="projectGroupSummary" class="projectGroup" method="summary">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/projectGroupSummary.jsp</result>
     </action>
 
@@ -324,6 +342,7 @@
     </action>
 
     <action name="removeProjectGroup" class="projectGroup" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="confirm">/WEB-INF/jsp/confirmGroupRemoval.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">groupSummary</param>
@@ -362,10 +381,12 @@
     *  build results, test reporting, working copy actions
     -->
     <action name="buildResults" class="buildResults">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/buildResults.jsp</result>
     </action>
     
     <action name="removeBuildResults" class="buildResults" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
@@ -374,6 +395,7 @@
     </action>
 
     <action name="buildResult" class="buildResult">
+      <interceptor-ref name="storeStack"/>
       <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
       <result name="error" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -389,6 +411,7 @@
     </action>    
     
     <action name="removeBuildResult" class="buildResult" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
@@ -648,6 +671,7 @@
     -->      
       
     <action name="buildEnvList" class="profileAdministration" method="list">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
     </action>   
       
@@ -661,16 +685,11 @@
     </action>
       
     <action name="deleteBuildEnv" class="profileAdministration" method="delete">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">buildEnvList</param>
         <param name="namespace">/admin</param>
         <param name="method">list</param>
-      </result>
-      <result name="error" type="redirect-action">
-        <param name="actionName">buildEnvList</param>
-        <param name="namespace">/admin</param>
-        <param name="method">list</param>
-        <param name="errorMessage">${message}</param>
       </result>
     </action>      
     
@@ -891,6 +910,7 @@
     -->
     
     <action name="repositoryList" class="localRepository" method="list">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/localRepositoriesList.jsp</result>
     </action>
     
@@ -908,10 +928,7 @@
     </action>
     
     <action name="removeRepository" class="localRepository" method="remove">
-      <result name="error" type="redirect-action">
-        <param name="actionName">repositoryList</param>
-        <param name="errorMessage">${message}</param>
-      </result>
+      <interceptor-ref name="storeStack"/>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteLocalRepository.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">repositoryList</param>
@@ -919,12 +936,9 @@
     </action>
     
     <action name="purgeRepository" class="localRepository" method="doPurge">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">repositoryList</param>
-      </result>
-      <result name="error" type="redirect-action">
-        <param name="actionName">repositoryList</param>
-        <param name="errorMessage">${message}</param>
       </result>
     </action>
     

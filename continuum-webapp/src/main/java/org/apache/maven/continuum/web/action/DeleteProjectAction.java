@@ -24,6 +24,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -33,6 +35,8 @@ import org.apache.continuum.web.util.AuditLogConstants;
 public class DeleteProjectAction
     extends ContinuumActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private int projectId;
 
     private String projectName;
@@ -58,7 +62,16 @@ public class DeleteProjectAction
         event.setCategory( AuditLogConstants.PROJECT );
         event.log();
 
-        getContinuum().removeProject( projectId );
+        try
+        {
+            getContinuum().removeProject( projectId );
+        }
+        catch ( ContinuumException e )
+        {
+            logger.error( "Error removing project with id " + projectId, e );
+            addActionError( getText( "deleteProject.error", "Unable to delete project", 
+                                     new Integer( projectId ).toString() ) );
+        }
 
         return SUCCESS;
     }

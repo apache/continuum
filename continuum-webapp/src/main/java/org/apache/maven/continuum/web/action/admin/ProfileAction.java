@@ -77,8 +77,6 @@ public class ProfileAction
 
     private List<BuildAgentGroupConfiguration> buildAgentGroups;
 
-    private String message;
-
     public void prepare()
         throws Exception
     {
@@ -106,13 +104,6 @@ public class ProfileAction
     public String list()
         throws Exception
     {
-        String errorMessage = ServletActionContext.getRequest().getParameter( "errorMessage" );
-
-        if ( errorMessage != null )
-        {
-            addActionError( getText( errorMessage ) );
-        }
-
         this.profiles = profileService.getAllProfiles();
         return SUCCESS;
     }
@@ -188,13 +179,13 @@ public class ProfileAction
         {
             profileService.deleteProfile( profile.getId() );
             this.profiles = profileService.getAllProfiles();
-            return SUCCESS;
         }
         catch ( ProfileException e )
         {
-            message = "profile.remove.error";
+            addActionError( getText( "profile.remove.error" ) );
             return ERROR;
         }
+        return SUCCESS;
     }
 
     public String confirmDelete()
@@ -324,16 +315,6 @@ public class ProfileAction
     public void setInstallationId( int installationId )
     {
         this.installationId = installationId;
-    }
-
-    public String getMessage()
-    {
-        return message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
     }
 
     public List<BuildAgentGroupConfiguration> getBuildAgentGroups()

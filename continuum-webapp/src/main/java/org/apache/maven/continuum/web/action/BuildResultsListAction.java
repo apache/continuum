@@ -103,7 +103,8 @@ public class BuildResultsListAction
                     catch ( ContinuumException e )
                     {
                         logger.error( "Error removing BuildResult with id=" + buildId );
-                        addActionError( getText( "Unable to remove BuildResult with id=" + buildId ) );
+                        addActionError( getText( "buildResult.delete.error", "Unable to delete build result",
+                                                 new Integer( buildId ).toString() ) );
                     }
                 }
             }
@@ -127,6 +128,7 @@ public class BuildResultsListAction
                         else
                         {
                             this.addActionMessage( getResourceBundle().getString( "buildResult.cannot.delete" ) );
+                            return SUCCESS;
                         }
                     }
                     catch ( BuildManagerException e )
