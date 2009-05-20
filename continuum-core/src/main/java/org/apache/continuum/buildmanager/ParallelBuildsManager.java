@@ -28,6 +28,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -1048,6 +1049,70 @@ public class ParallelBuildsManager
         }
     }
 
+    public PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
+        throws BuildManagerException
+    {
+        Task task = getPrepareBuildTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            return (PrepareBuildProjectsTask) task;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+        throws BuildManagerException
+    {
+        try
+        {
+            return getPrepareBuildQueue().getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error occurred while retrieving projects in prepare build queue", e );
+        }
+    }
+
+    public boolean removeProjectFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws BuildManagerException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
+                {
+                    return getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void removeProjectsFromPrepareBuildQueueWithHashCodes( int[] hashCodes )
+        throws BuildManagerException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                {
+                    getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+    }
+
     private boolean isInQueue( int projectId, int typeOfQueue, int buildDefinitionId )
         throws TaskQueueException
     {
@@ -1270,6 +1335,19 @@ public class ParallelBuildsManager
                 }
             }
             return null;
+        }
+    }
+
+    public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
+        throws BuildManagerException
+    {
+        try
+        {
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "prepare-build-project" );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new BuildManagerException( e.getMessage(), e );
         }
     }
 

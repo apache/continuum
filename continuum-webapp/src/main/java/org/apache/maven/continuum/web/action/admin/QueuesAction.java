@@ -38,7 +38,7 @@ import org.apache.maven.continuum.web.bean.CheckoutQueue;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
-import org.apache.maven.continuum.web.model.DistributedPrepareBuildSummary;
+import org.apache.maven.continuum.web.model.PrepareBuildSummary;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
@@ -83,9 +83,13 @@ public class QueuesAction
 
     private List<CheckoutQueue> checkoutsInQueue = new ArrayList<CheckoutQueue>();
 
-    private List<DistributedPrepareBuildSummary> currentDistributedPrepareBuilds = new ArrayList<DistributedPrepareBuildSummary>();
+    private List<PrepareBuildSummary> currentPrepareBuilds = new ArrayList<PrepareBuildSummary>();
 
-    private List<DistributedPrepareBuildSummary> distributedPrepareBuildQueues = new ArrayList<DistributedPrepareBuildSummary>();
+    private List<PrepareBuildSummary> prepareBuildQueues = new ArrayList<PrepareBuildSummary>();
+
+    private List<PrepareBuildSummary> currentDistributedPrepareBuilds = new ArrayList<PrepareBuildSummary>();
+
+    private List<PrepareBuildSummary> distributedPrepareBuildQueues = new ArrayList<PrepareBuildSummary>();
 
     private List<DistributedBuildSummary> currentDistributedBuilds = new ArrayList<DistributedBuildSummary>();
 
@@ -207,7 +211,7 @@ public class QueuesAction
 
                 ProjectGroup projectGroup = getContinuum().getProjectGroup( task.getProjectGroupId() );
 
-                DistributedPrepareBuildSummary summary = new DistributedPrepareBuildSummary();
+                PrepareBuildSummary summary = new PrepareBuildSummary();
                 summary.setBuildAgentUrl( url );
                 summary.setProjectGroupId( task.getProjectGroupId() );
                 summary.setProjectGroupName( projectGroup.getName() );
@@ -247,7 +251,7 @@ public class QueuesAction
                 {
                     ProjectGroup projectGroup = getContinuum().getProjectGroup( task.getProjectGroupId() );
 
-                    DistributedPrepareBuildSummary summary = new DistributedPrepareBuildSummary();
+                    PrepareBuildSummary summary = new PrepareBuildSummary();
                     summary.setBuildAgentUrl( url );
                     summary.setProjectGroupId( task.getProjectGroupId() );
                     summary.setProjectGroupName( projectGroup.getName() );
@@ -288,6 +292,28 @@ public class QueuesAction
         {
             try
             {
+                // current prepare builds
+                PrepareBuildProjectsTask currentPrepareBuildTask = getContinuum().getBuildsManager().getCurrentProjectInPrepareBuild();
+
+                if ( currentPrepareBuildTask != null )
+                {
+                    PrepareBuildSummary s = new PrepareBuildSummary();
+                    
+                    s.setProjectGroupId( currentPrepareBuildTask.getProjectGroupId() );
+                    s.setProjectGroupName( currentPrepareBuildTask.getProjectGroupName() );
+                    s.setScmRootId( currentPrepareBuildTask.getProjectScmRootId() );
+                    s.setScmRootAddress( currentPrepareBuildTask.getScmRootAddress() );
+                    currentPrepareBuilds.add( s );
+                }
+            }
+            catch ( BuildManagerException e )
+            {
+                addActionError( e.getMessage() );
+                return ERROR;
+            }
+
+            try
+            {
                 // current builds
                 Map<String, BuildProjectTask> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
                 Set<String> keySet = currentBuilds.keySet();
@@ -298,6 +324,29 @@ public class QueuesAction
                     queue.setName( key );
                     queue.setTask( buildTask );
                     currentBuildProjectTasks.add( queue );
+                }
+            }
+            catch ( BuildManagerException e )
+            {
+                addActionError( e.getMessage() );
+                return ERROR;
+            }
+
+            try
+            {
+                // queued prepare builds
+                List<PrepareBuildProjectsTask> prepareBuilds = 
+                    getContinuum().getBuildsManager().getProjectsInPrepareBuildQueue();
+                for ( PrepareBuildProjectsTask task : prepareBuilds )
+                {
+                    PrepareBuildSummary summary = new PrepareBuildSummary();
+                    summary.setProjectGroupId( task.getProjectGroupId() );
+                    summary.setProjectGroupName( task.getProjectGroupName() );
+                    summary.setScmRootId( task.getProjectScmRootId() );
+                    summary.setScmRootAddress( task.getScmRootAddress() );
+                    summary.setHashCode( task.getHashCode() );
+
+                    prepareBuildQueues.add( summary );
                 }
             }
             catch ( BuildManagerException e )
@@ -446,6 +495,51 @@ public class QueuesAction
 
         getContinuum().getBuildsManager().removeProjectsFromCheckoutQueueWithHashcodes(
             listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
+        return SUCCESS;
+    }
+
+    public String removePrepareBuildEntry()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getBuildsManager().removeProjectFromPrepareBuildQueue( projectGroupId, scmRootId );
+        return SUCCESS;
+    }
+
+    public String removePrepareBuildEntries()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getBuildsManager().removeProjectsFromPrepareBuildQueueWithHashCodes( 
+            listToIntArray( this.selectedPrepareBuildTaskHashCodes ) );
         return SUCCESS;
     }
 
@@ -726,7 +820,7 @@ public class QueuesAction
         this.checkoutsInQueue = checkoutsInQueue;
     }
 
-    public List<DistributedPrepareBuildSummary> getCurrentDistributedPrepareBuilds()
+    public List<PrepareBuildSummary> getCurrentDistributedPrepareBuilds()
     {
         return currentDistributedPrepareBuilds;
     }
@@ -736,7 +830,7 @@ public class QueuesAction
         return currentDistributedBuilds;
     }
 
-    public List<DistributedPrepareBuildSummary> getDistributedPrepareBuildQueues()
+    public List<PrepareBuildSummary> getDistributedPrepareBuildQueues()
     {
         return distributedPrepareBuildQueues;
     }
@@ -745,7 +839,17 @@ public class QueuesAction
     {
         return distributedBuildQueues;
     }
-    
+
+    public List<PrepareBuildSummary> getCurrentPrepareBuilds()
+    {
+        return currentPrepareBuilds;
+    }
+
+    public List<PrepareBuildSummary> getPrepareBuildQueues()
+    {
+        return prepareBuildQueues;
+    }
+
     public String getBuildAgentUrl()
     {
         return buildAgentUrl;

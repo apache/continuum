@@ -818,6 +818,18 @@
         <param name="actionName">displayQueues</param>
       </result>      
     </action>    
+
+    <action name="removePrepareBuildEntry" class="queues" method="removePrepareBuildEntry">
+	  <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+
+    <action name="removePrepareBuildEntries" class="queues" method="removePrepareBuildEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
     
     <action name="cancelDistributedBuild" class="queues" method="cancelDistributedBuild">
       <result name="success" type="redirect-action">
