@@ -345,7 +345,26 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
     boolean isBuildInProgress();
 
     /**
-     * Return currently preparing build project 
+     * Checks if at least one of the projects is currently building.
+     * @param projectIds
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean isAnyProjectCurrentlyBuilding( int[] projectIds )
+        throws BuildManagerException;
+
+    /**
+     * Checks whether project is currently being checked out.
+     * 
+     * @param projectId
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean isProjectCurrentlyBeingCheckedOut( int projectId )
+        throws BuildManagerException;
+
+    /**
+     * Return currently preparing build project.
      * @return
      * @throws BuildManagerException
      */
@@ -353,7 +372,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
         throws BuildManagerException;
 
     /**
-     * Return all projects in prepare build queue
+     * Return all projects in prepare build queue.
      * @return
      * @throws BuildManagerException
      */
@@ -361,7 +380,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
         throws BuildManagerException;
 
     /**
-     * Remove a project from a prepare build queue
+     * Remove a project from a prepare build queue.
      * @param projectGroupId
      * @param scmRootId
      * @return
