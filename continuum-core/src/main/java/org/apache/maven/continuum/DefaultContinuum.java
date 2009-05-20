@@ -402,6 +402,18 @@ public class DefaultContinuum
                     throw new ContinuumException(
                         "Unable to delete group. At least one project in group is still being checked out." );
                 }
+
+                if ( parallelBuildsManager.isAnyProjectCurrentlyBuilding( projectIds ) )
+                {
+                    throw new ContinuumException(
+                        "Unable to delete group. At least one project in group is still building." );
+                }
+
+                if ( isAnyProjectsInReleaseStage( projects ) )
+                {
+                    throw new ContinuumException(
+                        "Unable to delete group. At least one project in group is in release stage" );
+                }
             }
             catch ( BuildManagerException e )
             {
@@ -608,6 +620,42 @@ public class DefaultContinuum
         {
             Project project = getProjectWithBuilds( projectId );
 
+            try
+            {
+                if ( parallelBuildsManager.isProjectCurrentlyBeingCheckedOut( projectId ) )
+                {
+                    throw new ContinuumException( "Unable to remove project " + projectId + 
+                        " because it is currently being checked out" );
+                }
+
+                if ( parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) )
+                {
+                    throw new ContinuumException( "Unable to remove project " + projectId + 
+                        " because it is currently building" );
+                }
+            }
+            catch ( BuildManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
+
+            if ( isProjectInReleaseStage( project ) )
+            {
+                throw new ContinuumException( "Unable to remove project " + projectId + 
+                    " because it is in release stage" );
+            }
+
+            try
+            {
+                parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
+
+                parallelBuildsManager.removeProjectFromBuildQueue( projectId );
+            }
+            catch ( BuildManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
+
             List<ContinuumReleaseResult> releaseResults =
                 releaseResultDao.getContinuumReleaseResultsByProject( projectId );
 
@@ -638,21 +686,6 @@ public class DefaultContinuum
             }
 
             log.info( "Remove project " + project.getName() + "(" + projectId + ")" );
-
-            try
-            {
-                parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
-
-                parallelBuildsManager.removeProjectFromBuildQueue( projectId );
-
-                //parallelBuildsManager.cancelCheckout( projectId );
-
-                parallelBuildsManager.cancelBuild( projectId );
-            }
-            catch ( BuildManagerException e )
-            {
-                throw new ContinuumException( e.getMessage(), e );
-            }
 
             for ( Object o : project.getBuildResults() )
             {
@@ -1052,6 +1085,36 @@ public class DefaultContinuum
         throws ContinuumException
     {
         BuildResult buildResult = getBuildResult( buildId );
+        
+        // check first if build result is currently being used by a building project
+        Project project = buildResult.getProject();
+        BuildResult bResult = getLatestBuildResultForProject( project.getId() );
+
+        try
+        {
+            if ( bResult != null && buildResult.getId() == bResult.getId() && 
+                 parallelBuildsManager.isProjectInAnyCurrentBuild( project.getId() ) )
+            {
+                throw new ContinuumException( "Unable to remove build result because it is currently being used by" +
+                        "a building project " + project.getId() );
+            }
+        }
+        catch ( BuildManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+
+        buildResult.setModifiedDependencies( null );
+        buildResult.setBuildDefinition( null );
+
+        try
+        {
+            buildResultDao.updateBuildResult( buildResult );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw logAndCreateException( "Error while removing build result in database.", e );
+        }
         removeBuildResult( buildResult );
     }
 
@@ -3527,6 +3590,20 @@ public class DefaultContinuum
                     ") in group is currently in release stage." );
             }
         }
+        return false;
+    }
+
+    private boolean isAnyProjectsInReleaseStage( List<Project> projects )
+        throws ContinuumException
+    {
+        for ( Project project : projects )
+        {
+            if ( isProjectInReleaseStage( project ) )
+            {
+                return true;
+            }
+        }
+
         return false;
     }
 

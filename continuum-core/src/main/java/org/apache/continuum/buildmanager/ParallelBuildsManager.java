@@ -1351,6 +1351,36 @@ public class ParallelBuildsManager
         }
     }
 
+    public boolean isProjectCurrentlyBeingCheckedOut( int projectId )
+        throws BuildManagerException
+    {
+        Map<String, CheckOutTask> checkouts = getCurrentCheckouts();
+        for( String key : checkouts.keySet() )
+        {
+            CheckOutTask task = checkouts.get( key );
+            if( task.getProjectId() == projectId )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isAnyProjectCurrentlyBuilding( int[] projectIds )
+        throws BuildManagerException
+    {
+        for ( int i = 0; i < projectIds.length; i++ )
+        {
+            if ( isProjectInAnyCurrentBuild( projectIds[i] ) ) 
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void contextualize( Context context )
         throws ContextException
     {
