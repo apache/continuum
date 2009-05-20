@@ -495,13 +495,13 @@
       </fields>
     </class>    
     <class>
-      <name>DistributedPrepareBuildSummary</name>
+      <name>PrepareBuildSummary</name>
       <version>1.0.0+</version>
       <fields>
         <field>
           <name>buildAgentUrl</name>
           <version>1.0.0</version>
-          <required>true</required>
+          <required>false</required>
           <description>URL of the build agent</description>
           <type>String</type>
         </field>

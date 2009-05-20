@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
+import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
@@ -342,4 +343,39 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
      * @return
      */
     boolean isBuildInProgress();
+
+    /**
+     * Return currently preparing build project 
+     * @return
+     * @throws BuildManagerException
+     */
+    PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
+        throws BuildManagerException;
+
+    /**
+     * Return all projects in prepare build queue
+     * @return
+     * @throws BuildManagerException
+     */
+    List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+        throws BuildManagerException;
+
+    /**
+     * Remove a project from a prepare build queue
+     * @param projectGroupId
+     * @param scmRootId
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean removeProjectFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws BuildManagerException;
+
+    /**
+     * Removes a set of projects using the specified hashcodes from the prepare build queues.
+     *
+     * @param hashcodes
+     * @throws BuildManagerException
+     */
+    void removeProjectsFromPrepareBuildQueueWithHashCodes( int[] hashCodes )
+        throws BuildManagerException;
 }

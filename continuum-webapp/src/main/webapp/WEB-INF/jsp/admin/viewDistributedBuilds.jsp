@@ -56,7 +56,7 @@
             </ec:table>
           </c:if>
           <c:if test="${empty currentDistributedPrepareBuilds}">
-            <s:text name="distributedPrepareBuilds.empty"/>
+            <s:text name="distributedPrepareBuilds.no.currentTasks"/>
           </c:if>
         </div>
         <div id="h3">
@@ -90,7 +90,7 @@
             </ec:table>
           </c:if>
           <c:if test="${empty currentDistributedBuilds}">
-            <s:text name="distributedBuilds.empty"/>
+            <s:text name="distributedBuilds.no.currentTasks"/>
           </c:if>
         </div>
       </form>
@@ -147,6 +147,9 @@
             </table>
           </div>
         </c:if>
+        <c:if test="${empty distributedPrepareBuildQueues}">
+          <s:text name="distributedPrepareBuilds.empty"/>
+        </c:if>
       </form>
       <form id="removeBuildForm" action="removeDistributedBuildEntries.action" method="post">
         <div id="h3">
@@ -201,6 +204,9 @@
               </tbody>
             </table>
           </div>
+        </c:if>
+        <c:if test="${empty distributedBuildQueues}">
+          <s:text name="distributedBuilds.empty"/>
         </c:if>
       </form>
     </body>
