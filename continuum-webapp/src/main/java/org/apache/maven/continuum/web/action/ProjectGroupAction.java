@@ -296,7 +296,16 @@ public class ProjectGroupAction
 
         if ( confirmed )
         {
-            getContinuum().removeProjectGroup( projectGroupId );
+            try
+            {
+                getContinuum().removeProjectGroup( projectGroupId );
+            }
+            catch ( ContinuumException e )
+            {
+                logger.error( "Error while removing project group with id " + projectGroupId, e );
+                addActionError( getText( "projectGroup.delete.error", "Unable to remove project group",
+                                new Integer( projectGroupId ).toString() ) );
+            }
         }
         else
         {

@@ -68,9 +68,7 @@ public class LocalRepositoryAction
     private List<String> layouts;
     
     private Map<String, Boolean> defaultPurgeMap;
-    
-    private String message;
-    
+
     /**
      * @plexus.requirement
      */
@@ -112,13 +110,6 @@ public class LocalRepositoryAction
     public String list()
         throws Exception
     {
-        String errorMessage = ServletActionContext.getRequest().getParameter( "errorMessage" );
-        
-        if ( errorMessage != null )
-        {
-            addActionError( getText( errorMessage ) );
-        }
-        
         repositories = repositoryService.getAllLocalRepositories();
         
         defaultPurgeMap = new HashMap<String, Boolean>();
@@ -209,29 +200,31 @@ public class LocalRepositoryAction
         throws Exception
     {
         TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
+
+        repository = repositoryService.getLocalRepository( repository.getId() );
+
         if ( taskQueueManager.isRepositoryInUse( repository.getId() ) )
         {
-            message = "repository.error.remove.in.use";
-            return ERROR;
+            addActionError( getText( "repository.error.remove.in.use", "Unable to remove local repository because it is in use" ) );
         }
-        
-        repository = repositoryService.getLocalRepository( repository.getId() );
-        
+
         if ( repository.getName().equals( "DEFAULT" ) )
         {
-            message = "repository.error.remove.default";
-            return ERROR;
+            addActionError( getText( "repository.error.remove.default", "Unable to remove default local repository" ) );
         }
-        
-        if ( confirmed )
+
+        if ( !hasActionErrors() )
         {
-            repositoryService.removeLocalRepository( repository.getId() );
+            if ( confirmed )
+            {
+                repositoryService.removeLocalRepository( repository.getId() );
+            }
+            else
+            {
+                return CONFIRM;
+            }
         }
-        else
-        {
-            return CONFIRM;
-        }
-        
+
         return SUCCESS;
     }
     
@@ -244,18 +237,19 @@ public class LocalRepositoryAction
         // check if repository is in use
         if ( taskQueueManager.isRepositoryInUse( repository.getId() ) )
         {
-            message = "repository.error.purge.in.use";
-            return ERROR;
+            addActionError( getText( "repository.error.purge.in.use", "Unable to purge repository because it is in use" ) );
         }
-        
-        // get default purge configuration for repository
-        RepositoryPurgeConfiguration purgeConfig = purgeConfigService.getDefaultPurgeConfigurationForRepository( repository.getId() );
-        
-        if ( purgeConfig != null )
+     
+        if ( !hasActionErrors() )
         {
-            purgeManager.purgeRepository( purgeConfig );
-        }
+            // get default purge configuration for repository
+            RepositoryPurgeConfiguration purgeConfig = purgeConfigService.getDefaultPurgeConfigurationForRepository( repository.getId() );
         
+            if ( purgeConfig != null )
+            {
+                purgeManager.purgeRepository( purgeConfig );
+            }
+        }
         return SUCCESS;
     }
     
@@ -323,17 +317,7 @@ public class LocalRepositoryAction
     {
         this.defaultPurgeMap = defaultPurgeMap;
     }
-    
-    public String getMessage()
-    {
-        return this.message;
-    }
-    
-    public void setMessage( String message )
-    {
-        this.message = message;
-    }
-    
+
     private void createDefaultPurgeConfiguration()
         throws Exception
     {
