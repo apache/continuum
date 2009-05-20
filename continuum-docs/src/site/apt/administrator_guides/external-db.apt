@@ -29,3 +29,10 @@ How to use an external database?
 ** Webapp
 
     To use an external database with the Continuum webapp, you should configure the DataSource in your container.
+
+* Shutdown Procedure
+
+   When using an external database, it is very important to stop Continuum prior to stopping or restarting the database.
+   Continuum may exhibit unpredictable behavior if the database disappears while it is running, and may not recover
+   once the database comes back up.  If this happens, you must re-start Continuum.  If you experience errors after
+   re-starting, the data may be corrupted and may need to be fixed by editing records directly in the database.
