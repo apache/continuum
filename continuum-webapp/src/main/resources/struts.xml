@@ -69,14 +69,14 @@
       </interceptor-stack>
       
       <interceptor-stack name="storeStack">
-        <interceptor-ref name="defaultStack"/>
+        <interceptor-ref name="configuredContinuumStack"/>
         <interceptor-ref name="store">
           <param name="operationMode">STORE</param>
         </interceptor-ref>
       </interceptor-stack>
 
       <interceptor-stack name="retrieveStack">
-        <interceptor-ref name="defaultStack"/>
+        <interceptor-ref name="configuredContinuumStack"/>
         <interceptor-ref name="store">
           <param name="operationMode">RETRIEVE</param>
         </interceptor-ref>
