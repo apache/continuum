@@ -33,6 +33,8 @@ public interface RepositoryPurgeConfigurationDao
     List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations();
 
     List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsBySchedule( int scheduleId );
+    
+    List<RepositoryPurgeConfiguration> getEnableRepositoryPurgeConfigurationsBySchedule( int scheduleId );
 
     List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByLocalRepository( int repositoryId );
 

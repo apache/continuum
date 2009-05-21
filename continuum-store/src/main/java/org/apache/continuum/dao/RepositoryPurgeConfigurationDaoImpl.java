@@ -75,6 +75,36 @@ public class RepositoryPurgeConfigurationDaoImpl
             rollback( tx );
         }
     }
+    
+    public List<RepositoryPurgeConfiguration> getEnableRepositoryPurgeConfigurationsBySchedule( int scheduleId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( RepositoryPurgeConfiguration.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int scheduleId" );
+
+            query.setFilter( "this.schedule.id == scheduleId  && this.enabled == true" );
+
+            List result = (List) query.execute( scheduleId );
+
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
 
     public List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByLocalRepository( int repositoryId )
     {

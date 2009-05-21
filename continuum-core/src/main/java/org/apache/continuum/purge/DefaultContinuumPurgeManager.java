@@ -69,8 +69,8 @@ public class DefaultContinuumPurgeManager
         List<RepositoryPurgeConfiguration> repoPurgeList = null;
         List<DirectoryPurgeConfiguration> dirPurgeList = null;
 
-        repoPurgeList = purgeConfigurationService.getRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
-        dirPurgeList = purgeConfigurationService.getDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+        repoPurgeList = purgeConfigurationService.getEnableRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
+        dirPurgeList = purgeConfigurationService.getEnableDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
 
         if ( repoPurgeList != null && repoPurgeList.size() > 0 )
         {
