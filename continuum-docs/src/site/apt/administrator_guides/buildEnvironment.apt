@@ -14,6 +14,10 @@ Build Environment
 
   The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined
   envvar (MAVEN_OPTS, ANT_OPTS ...).  This is now possible at the build definition level (in 1.1).
+  
+  As of Continuum 1.2.1, build environments can be used in releasing projects.
+  This is set upon supplying the release prepare parameters during the
+  {{{../user_guides/release/prepare.html} Release preparation}} of the project.
 
 * Setup Build Environments/Installations
 
