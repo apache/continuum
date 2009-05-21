@@ -45,7 +45,9 @@ Managing Parallel Builds
     or edit an existing one.
 
     [[2]] In the Add Build Queue field, move build queues from the left hand list box to the right hand list box by clicking the appropriate
-    buttons in between the two list boxes. All build queues on the right hand list box will be attached to the schedule when you click Save.
+    buttons in between the two list boxes. All build queues on the right hand list box will be attached to the schedule when you click Save.\
+    
+    .
 
 [../images/editSchedule.png] Edit Schedule
 
