@@ -16,7 +16,7 @@ Administrator's Guides
 
  * {{{jdk.html}Managing JDKs}}
 
- * {{{profiles.html}Managing Build Environments}}
+ * {{{buildEnvironment.html}Managing Build Environments}}
 
  * {{{build-agents.html}Managing Build Agents}}
 
