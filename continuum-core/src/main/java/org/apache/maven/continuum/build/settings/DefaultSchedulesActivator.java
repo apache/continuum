@@ -249,9 +249,9 @@ public class DefaultSchedulesActivator
     private boolean isScheduleFromPurgeJob( Schedule schedule )
     {
         List<RepositoryPurgeConfiguration> repoPurgeConfigs =
-            repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
+            repositoryPurgeConfigurationDao.getEnableRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
         List<DirectoryPurgeConfiguration> dirPurgeConfigs =
-            directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+            directoryPurgeConfigurationDao.getEnableDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
 
         return repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0;
 

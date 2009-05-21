@@ -209,6 +209,11 @@ public class DefaultPurgeConfigurationService
     {
         return directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsBySchedule( scheduleId );
     }
+    
+    public List<DirectoryPurgeConfiguration> getEnableDirectoryPurgeConfigurationsBySchedule( int scheduleId )
+    {
+        return directoryPurgeConfigurationDao.getEnableDirectoryPurgeConfigurationsBySchedule( scheduleId );
+    }
 
     public List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByRepository( int repositoryId )
     {
@@ -218,6 +223,11 @@ public class DefaultPurgeConfigurationService
     public List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsBySchedule( int scheduleId )
     {
         return repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsBySchedule( scheduleId );
+    }
+    
+    public List<RepositoryPurgeConfiguration> getEnableRepositoryPurgeConfigurationsBySchedule( int scheduleId )
+    {
+        return repositoryPurgeConfigurationDao.getEnableRepositoryPurgeConfigurationsBySchedule( scheduleId );
     }
 
     public void removeDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfig )

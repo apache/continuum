@@ -60,6 +60,8 @@ public interface PurgeConfigurationService
     
     List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsBySchedule( int scheduleId );
     
+    List<RepositoryPurgeConfiguration> getEnableRepositoryPurgeConfigurationsBySchedule( int scheduleId );
+    
     List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByRepository( int repositoryId );
     
     List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations();
@@ -79,6 +81,8 @@ public interface PurgeConfigurationService
     DirectoryPurgeConfiguration getDefaultPurgeConfigurationForDirectoryType( String directoryType );
     
     List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsBySchedule( int scheduleId );
+    
+    List<DirectoryPurgeConfiguration> getEnableDirectoryPurgeConfigurationsBySchedule( int scheduleId );
     
     List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByLocation( String location );
     
