@@ -26,6 +26,12 @@ Building Projects
     
     [] 
     
+    When building projects, the build order is determined by the inter-dependency of the projects.
+    This would mean that the dependencies of a project are built first.
+    
+    In cases when a project group can build projects in parallel build queues but one of those projects depend
+    on another project, the inter-dependent projects will build in the same build queue.
+    
     Projects can be built in two ways:
     
     [[1]] {{{schedule_build.html} Scheduled Builds}}

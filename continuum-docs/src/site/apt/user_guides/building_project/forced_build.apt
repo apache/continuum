@@ -8,7 +8,22 @@
 Force Project Build
 
     Occasionally you may want to force a build outside of the regular schedule.
-    The following procedure explains how to do this.
+    When builds are triggered manually, the following happens:
+    
+    * Projects are updated from the SCM.
+      These are queued under the Prepare Build Queues section in <<Queues>> page.
+    
+    * Builds of the projects are executed.
+      These are queued under the Build Queues in <<Queues>> page.
+    
+    []
+    
+    If there are duplicates of a project in <<another project group>> (duplicates would mean
+    another instance of a project with the same groupId, artifactId, and version),
+    all the projects are built.
+    
+    However, if there are duplicates of a project in the <<same project group>>, only one (1) of the duplicated
+    projects is built.
     
     To manually build a project perform the following steps:
     
