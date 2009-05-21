@@ -7,8 +7,23 @@
 
 Scheduling Project Build
 
-    Schedules determine the project's time interval to build. In this section,
-    how to configure a project to build on a schedule is discussed.
+    Schedules determine the project's time interval to build.
+    
+    When scheduled builds are triggered, the following happens:
+    
+    * Projects are updated from the SCM.
+      These are queued under the Prepare Build Queues section in <<Queues>> page.
+    
+    * Builds of the projects are executed.
+      These are queued under the Build Queues in <<Queues>> page.
+    
+    []
+    
+    If there are duplicates of a project in <<another project group>> (duplicates would mean
+    another instance of a project with the same groupId, artifactId, and version),
+    only one (1) of the duplicated projects is built.
+    
+    However, if there are duplicates of a project in the <<same project group>>, the project build is not executed.
     
     To configure a scheduled build:
 

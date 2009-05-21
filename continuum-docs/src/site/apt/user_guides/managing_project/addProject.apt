@@ -18,7 +18,7 @@ Add a Project
 [../../images/add-m2-project-menu.png] Add a maven2 project
 
   The pom.xml file must be available through one of the following protocols: http, https, or ftp 
-  (The file protocol is also supported but is disabled by default for security and must enabled manually).
+  (The file protocol is also supported but is disabled by default for security and must be enabled manually).
     
   Or it can be uploaded from a local file (Note this doesn't support multi modules project).
     
@@ -35,6 +35,10 @@ Add a Project
   You can choose a Build Definition Template which will be applied to your project.  If you choose a Build Definition
   Template, the build definitions from the template will be added in addition to any build definitions that are defined
   at the project group level.
+  
+  When adding projects whose parent project is building on another server,
+  make sure that the <<<settings.xml>>> exists in <<<[USER_HOME]/.m2/>>> directory.
+  Continuum uses <<<[USER_HOME]/.m2/settings.xml>>> and not the one found in <<<[M2_HOME]/conf/>>>.
 
 * {Maven 1 project}
     
