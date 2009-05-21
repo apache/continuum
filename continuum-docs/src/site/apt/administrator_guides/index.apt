@@ -32,6 +32,8 @@ Administrator's Guides
 
  * {{{parallelBuilds.html}Managing Parallel Builds}}
 
+ * {{{queues.html}Managing Build Queues}}
+
  * {{{external-db.html}External Databases}}
 
  * {{{monitoring.html}Monitoring Continuum}}
