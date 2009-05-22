@@ -244,6 +244,10 @@ public class DefaultDistributedBuildManager
                 throw new ContinuumException( "Error occurred while enqueuing prepare build task", e );
             }
         }
+        else
+        {
+            log.warn( "No build agent configured. Not building projects." );
+        }
     }
 
     public void removeDistributedBuildQueueOfAgent( String buildAgentUrl )

@@ -1657,6 +1657,15 @@ public class DefaultContinuum
 
         for ( Project project : projects )
         {
+            checkForDuplicateProjectInGroup( projectGroup, project, result );
+          
+            if ( result.hasErrors() )
+            {
+                log.info( result.getErrors().size() + " errors during project add: " );
+                log.info( result.getErrorsAsString() );
+                return result;
+            }
+
             project.setScmUseCache( useCredentialsCache );
 
             // values backup for first checkout
@@ -3626,6 +3635,31 @@ public class DefaultContinuum
             }
         }
         return filteredProjectsList;
+    }
+
+    private void checkForDuplicateProjectInGroup( ProjectGroup projectGroup, Project projectToCheck, 
+                                                   ContinuumProjectBuildingResult result )
+    {
+        String duplicateProjects = "";
+
+        List<Project> projectsInGroup = projectGroup.getProjects();
+        
+        if ( projectsInGroup == null )
+        {
+            return;
+        }
+
+        for ( Project project : (List<Project>) projectGroup.getProjects() )
+        {
+            
+            if ( project.getGroupId().equals( projectToCheck.getGroupId() ) && 
+                 project.getArtifactId().equals( projectToCheck.getArtifactId() ) &&
+                 project.getVersion().equals( projectToCheck.getVersion() ) )
+            {
+                result.addError( result.ERROR_DUPLICATE_PROJECTS );
+                return;
+            }
+        }
     }
 
     void setTaskQueueManager( TaskQueueManager taskQueueManager )

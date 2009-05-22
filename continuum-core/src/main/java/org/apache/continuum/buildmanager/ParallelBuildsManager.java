@@ -123,24 +123,32 @@ public class ParallelBuildsManager
             overallBuildQueue = getOverallBuildQueue( BUILD_QUEUE, buildDefinition.getSchedule().getBuildQueues() );
         }
 
-        String buildDefinitionLabel = buildDefinition.getDescription();
-        if ( StringUtils.isEmpty( buildDefinitionLabel ) )
+        if ( overallBuildQueue != null )
         {
-            buildDefinitionLabel = buildDefinition.getGoals();
-        }
+            String buildDefinitionLabel = buildDefinition.getDescription();
 
-        BuildProjectTask buildTask =
-            new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel,
-                                  scmResult, projectGroupId );
-        try
-        {
-            log.info(
-                "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
-            overallBuildQueue.addToBuildQueue( buildTask );
+            if ( StringUtils.isEmpty( buildDefinitionLabel ) )
+            {
+                buildDefinitionLabel = buildDefinition.getGoals();
+            }
+    
+            BuildProjectTask buildTask =
+                new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel,
+                                      scmResult, projectGroupId );
+            try
+            {
+                log.info(
+                    "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
+                overallBuildQueue.addToBuildQueue( buildTask );
+            }
+            catch ( TaskQueueException e )
+            {
+                throw new BuildManagerException( "Error occurred while adding project to build queue: " + e.getMessage() );
+            }
         }
-        catch ( TaskQueueException e )
+        else
         {
-            throw new BuildManagerException( "Error occurred while adding project to build queue: " + e.getMessage() );
+            log.warn( "No build queue configured. Not building." );
         }
     }
 
@@ -225,6 +233,10 @@ public class ParallelBuildsManager
                             "Error occurred while adding project to build queue: " + e.getMessage() );
                     }
                 }
+            }
+            else
+            {
+                log.warn( "No build queue configured. Not building" );
             }
         }
         else

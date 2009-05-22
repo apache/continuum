@@ -68,7 +68,7 @@ public class ProjectSorter
 
             if ( dag.getVertex( id ) != null )
             {
-                logger.warn( "Project '" + id + "' is duplicated in the reactor and will be discarded" );
+                logger.warn( "Project '" + id + "' is duplicated in the reactor." );
             }
 
             dag.addVertex( id );
@@ -79,13 +79,15 @@ public class ProjectSorter
         for ( Project project : projects )
         {
             String id = getProjectId( project );
+            
+            String projectGroupId = "[" + project.getProjectGroup().getId() + "]";
 
             // Dependencies
             for ( Object o : project.getDependencies() )
             {
                 ProjectDependency dependency = (ProjectDependency) o;
 
-                String dependencyId = getDependencyId( dependency );
+                String dependencyId = projectGroupId + ":" + getDependencyId( dependency );
 
                 if ( dag.getVertex( dependencyId ) != null )
                 {
@@ -105,7 +107,7 @@ public class ProjectSorter
 
             if ( parent != null )
             {
-                String parentId = getDependencyId( parent );
+                String parentId = projectGroupId + ":" + getDependencyId( parent );
 
                 if ( dag.getVertex( parentId ) != null )
                 {
@@ -161,8 +163,10 @@ public class ProjectSorter
         {
             artifactId = project.getArtifactId();
         }
+        
+        String projectGroupId = "[" + project.getProjectGroup().getId() + "]";
 
-        return groupId + ":" + artifactId + ":" + project.getVersion();
+        return projectGroupId + ":" + groupId + ":" + artifactId + ":" + project.getVersion();
     }
 
     private static String getDependencyId( ProjectDependency project )
