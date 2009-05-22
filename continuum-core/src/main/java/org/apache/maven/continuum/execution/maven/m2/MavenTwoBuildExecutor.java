@@ -413,13 +413,6 @@ public class MavenTwoBuildExecutor
 
         MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
 
-        //CONTINUUM-1815: additional check for projects recently released
-        if ( !continuumProject.getVersion().equals( project.getVersion() ) )
-        {
-            log.info( "Found changes in project's version ( maybe project was recently released ), building" );
-            return true;
-        }
-        
         if ( changes.isEmpty() )
         {
             if ( log.isInfoEnabled() )
