@@ -83,6 +83,8 @@ public class ContinuumProjectBuildingResult
 
     public static final String ERROR_UNKNOWN = "add.project.unknown.error";
 
+    public static final String ERROR_DUPLICATE_PROJECTS = "add.project.duplicate.error";
+
     private final List<Project> projects = new ArrayList<Project>();
 
     private final List<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
