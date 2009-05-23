@@ -256,7 +256,12 @@
                       sortable="false"
                       filterable="false">
               <ec:row>
-                <ec:column property="projectGroupName" title="prepareBuildQueue.table.projectGroupName"/>
+                <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
+                  <s:url id="viewUrl" action="projectGroupSummary">
+                    <s:param name="projectGroupId">${pageScope.currentPrepareBuild.projectGroupId}</s:param>
+                  </s:url>
+                  <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
+                </ec:column>
                 <ec:column property="scmRootAddress" title="prepareBuildQueue.table.scmRootAddress"/>
               </ec:row>
             </ec:table>
@@ -287,7 +292,12 @@
                     <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
                   </ec:column>             
                 </redback:ifAuthorized>
-                <ec:column property="projectGroupName" title="prepareBuildQueue.table.projectGroupName"/>
+                <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
+                  <s:url id="viewUrl" action="projectGroupSummary">
+                    <s:param name="projectGroupId">${pageScope.currentPrepareBuild.projectGroupId}</s:param>
+                  </s:url>
+                  <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
+                </ec:column>
                 <ec:column property="scmRootAddress" title="prepareBuildQueue.table.scmRootAddress"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">

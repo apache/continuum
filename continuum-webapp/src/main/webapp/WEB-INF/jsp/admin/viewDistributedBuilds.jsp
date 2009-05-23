@@ -36,29 +36,7 @@
         </div>
       </c:if>
       
-      <form id="queuesForm" action="none" method="post">
-        <div id="h3">
-          <h3><s:text name="distributedBuilds.currentPrepareBuild.section.title"/></h3>
-          <c:if test="${not empty currentDistributedPrepareBuilds}">
-            <s:set name="currentDistributedPrepareBuilds" value="currentDistributedPrepareBuilds" scope="request"/>
-            <ec:table items="currentDistributedPrepareBuilds"
-                      var="currentPrepareBuild"
-                      showExports="false"
-                      showPagination="false"
-                      showStatusBar="false"
-                      sortable="false"
-                      filterable="false">
-              <ec:row>
-                <ec:column property="projectGroupName" title="distributedPrepareBuild.table.projectGroupName"/>
-                <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
-                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.agentUrl"/>
-              </ec:row>
-            </ec:table>
-          </c:if>
-          <c:if test="${empty currentDistributedPrepareBuilds}">
-            <s:text name="distributedPrepareBuilds.no.currentTasks"/>
-          </c:if>
-        </div>
+      <s:form id="buildForm" action="none" method="post">
         <div id="h3">
           <h3><s:text name="distributedBuilds.currentBuild.section.title"/></h3>
           <c:if test="${not empty currentDistributedBuilds}">
@@ -71,7 +49,12 @@
                       sortable="false"
                       filterable="false">
               <ec:row>
-                <ec:column property="projectName" title="distributedBuild.table.projectName"/>
+                <ec:column property="projectUrl" title="distributedBuild.table.projectName">
+                  <s:url id="viewUrl" action="buildResults">
+                    <s:param name="projectId">${pageScope.currentBuild.projectId}</s:param>
+                  </s:url>
+                  <s:a href="%{viewUrl}">${pageScope.currentBuild.projectName}</s:a>
+                </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.agentUrl"/>
@@ -93,65 +76,8 @@
             <s:text name="distributedBuilds.no.currentTasks"/>
           </c:if>
         </div>
-      </form>
-      <form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries.action" method="post">
-        <div id="h3">
-          <h3>
-            <s:text name="distributedBuilds.prepareBuildQueue.section.title"/>
-          </h3>
-          <c:if test="${not empty distributedPrepareBuildQueues}">
-            <s:set name="distributedPrepareBuildQueues" value="distributedPrepareBuildQueues" scope="request"/>
-            <ec:table items="distributedPrepareBuildQueues"
-                      var="prepareBuildQueue"
-                      showExports="false"
-                      showPagination="false"
-                      showStatusBar="false"
-                      sortable="false"
-                      filterable="false">
-              <ec:row>
-                <redback:ifAuthorized permission="continuum-manage-queues">
-                  <ec:column alias="selectedPrepareBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
-                    <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
-                  </ec:column>              
-                </redback:ifAuthorized>
-                <ec:column property="projectGroupName" title="distributedPrepareBuild.table.projectGroupName"/>
-                <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
-                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.agentUrl"/>
-                <ec:column property="cancelEntry" title="&nbsp;" width="1%">
-                  <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="removeDistributedPrepareBuildEntry" method="removeDistributedPrepareBuildEntry" namespace="/">
-                      <s:param name="projectGroupId">${pageScope.prepareBuildQueue.projectGroupId}</s:param>
-                      <s:param name="scmRootId">${pageScope.prepareBuildQueue.scmRootId}</s:param>
-                      <s:param name="buildAgentUrl">${pageScope.prepareBuildQueue.buildAgentUrl}</s:param>
-                    </s:url>
-                    <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
-                  </redback:ifAuthorized>
-                  <redback:elseAuthorized>
-                    <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
-                  </redback:elseAuthorized>
-                </ec:column>
-              </ec:row>
-            </ec:table>
-          </c:if>
-        </div>
-        <c:if test="${not empty distributedPrepareBuildQueues}">
-          <div class="functnbar3">
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    <input type="button" name="remove-prepare-build-queues" value="<s:text name="distributedPrepareBuilds.removeEntries"/>" onclick="document.forms.removePrepareBuildForm.submit();" /> 
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </c:if>
-        <c:if test="${empty distributedPrepareBuildQueues}">
-          <s:text name="distributedPrepareBuilds.empty"/>
-        </c:if>
-      </form>
-      <form id="removeBuildForm" action="removeDistributedBuildEntries.action" method="post">
+      </s:form>
+      <s:form id="removeBuildForm" action="removeDistributedBuildEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.buildQueue.section.title"/>
@@ -171,7 +97,12 @@
                     <input type="checkbox" name="selectedBuildTaskHashCodes" value="${pageScope.buildQueue.hashCode}" />
                   </ec:column>              
                 </redback:ifAuthorized>
-                <ec:column property="projectName" title="distributedBuild.table.projectName"/>
+                <ec:column property="projectUrl" title="distributedBuild.table.projectName">
+                  <s:url id="viewUrl" action="buildResults">
+                    <s:param name="projectId">${pageScope.currentBuild.projectId}</s:param>
+                  </s:url>
+                  <s:a href="%{viewUrl}">${pageScope.currentBuild.projectName}</s:a>
+                </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.agentUrl"/>
@@ -208,7 +139,100 @@
         <c:if test="${empty distributedBuildQueues}">
           <s:text name="distributedBuilds.empty"/>
         </c:if>
-      </form>
+      </s:form>
+      <s:form id="prepareForm" action="none" method="post">
+        <div id="h3">
+          <h3><s:text name="distributedBuilds.currentPrepareBuild.section.title"/></h3>
+          <c:if test="${not empty currentDistributedPrepareBuilds}">
+            <s:set name="currentDistributedPrepareBuilds" value="currentDistributedPrepareBuilds" scope="request"/>
+            <ec:table items="currentDistributedPrepareBuilds"
+                      var="currentPrepareBuild"
+                      showExports="false"
+                      showPagination="false"
+                      showStatusBar="false"
+                      sortable="false"
+                      filterable="false">
+              <ec:row>
+                <ec:column property="projectGroupUrl" title="distributedPrepareBuild.table.projectGroupName">
+                  <s:url id="viewUrl" action="projectGroupSummary">
+                    <s:param name="projectGroupId">${pageScope.currentPrepareBuild.projectGroupId}</s:param>
+                  </s:url>
+                  <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
+                </ec:column>
+                <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
+                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.agentUrl"/>
+              </ec:row>
+            </ec:table>
+          </c:if>
+          <c:if test="${empty currentDistributedPrepareBuilds}">
+            <s:text name="distributedPrepareBuilds.no.currentTasks"/>
+          </c:if>
+        </div>
+      </s:form>
+      
+      <s:form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries.action" method="post">
+        <div id="h3">
+          <h3>
+            <s:text name="distributedBuilds.prepareBuildQueue.section.title"/>
+          </h3>
+          <c:if test="${not empty distributedPrepareBuildQueues}">
+            <s:set name="distributedPrepareBuildQueues" value="distributedPrepareBuildQueues" scope="request"/>
+            <ec:table items="distributedPrepareBuildQueues"
+                      var="prepareBuildQueue"
+                      showExports="false"
+                      showPagination="false"
+                      showStatusBar="false"
+                      sortable="false"
+                      filterable="false">
+              <ec:row>
+                <redback:ifAuthorized permission="continuum-manage-queues">
+                  <ec:column alias="selectedPrepareBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
+                    <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
+                  </ec:column>              
+                </redback:ifAuthorized>
+                <ec:column property="projectGroupUrl" title="distributedPrepareBuild.table.projectGroupName">
+                  <s:url id="viewUrl" action="projectGroupSummary">
+                    <s:param name="projectGroupId">${pageScope.currentPrepareBuild.projectGroupId}</s:param>
+                    <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
+                  </s:url>
+                </ec:column>
+                <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
+                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.agentUrl"/>
+                <ec:column property="cancelEntry" title="&nbsp;" width="1%">
+                  <redback:ifAuthorized permission="continuum-manage-queues">
+                    <s:url id="cancelUrl" action="removeDistributedPrepareBuildEntry" method="removeDistributedPrepareBuildEntry" namespace="/">
+                      <s:param name="projectGroupId">${pageScope.prepareBuildQueue.projectGroupId}</s:param>
+                      <s:param name="scmRootId">${pageScope.prepareBuildQueue.scmRootId}</s:param>
+                      <s:param name="buildAgentUrl">${pageScope.prepareBuildQueue.buildAgentUrl}</s:param>
+                    </s:url>
+                    <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                  </redback:ifAuthorized>
+                  <redback:elseAuthorized>
+                    <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                  </redback:elseAuthorized>
+                </ec:column>
+              </ec:row>
+            </ec:table>
+          </c:if>
+        </div>
+        <c:if test="${not empty distributedPrepareBuildQueues}">
+          <div class="functnbar3">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="button" name="remove-prepare-build-queues" value="<s:text name="distributedPrepareBuilds.removeEntries"/>" onclick="document.forms.removePrepareBuildForm.submit();" /> 
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </c:if>
+        <c:if test="${empty distributedPrepareBuildQueues}">
+          <s:text name="distributedPrepareBuilds.empty"/>
+        </c:if>
+      </s:form>
+      
     </body>
   </s:i18n>
 </html>
