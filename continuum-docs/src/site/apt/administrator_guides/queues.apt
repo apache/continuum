@@ -33,3 +33,5 @@ Managing Queues
   
     [[2]] Cancel multiple queued tasks by selecting the corresponding checkboxes of the checkouts, builds, or project updates
     you want to cancel and then click the <<Cancel Entries>> button.
+
+    Note: Cancelling current prepare build is not allowed to prevent data corruption.

@@ -43,3 +43,5 @@ Managing Parallel Builds
 
     [[2]] Concurrent build of inter-dependent projects in a group is not yet supported.
 
+    [[3]] All projects in a project group will be enqueued to the same {{{buildQueue.html} Build Queue}}.
+

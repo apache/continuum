@@ -89,7 +89,7 @@
         <item name="Managing Build Queues" href="administrator_guides/buildQueue.html"/>
         <item name="Managing Build Agents" href="administrator_guides/build-agents.html"/>
         <item name="Managing Build Agent Groups" href="administrator_guides/build-agent-groups.html"/>
-        <item name="Project Queues" href="administrator_guides/queues.html"/>
+        <item name="Managing Project Queues" href="administrator_guides/queues.html"/>
         <item name="External databases" href="administrator_guides/external-db.html"/>
         <item name="Monitoring Continuum" href="administrator_guides/monitoring.html"/>
         <item name="Appearance Configuration" href="administrator_guides/appearance.html"/>

@@ -30,8 +30,10 @@ Add a Project
 
   You can define the group you want to use or "Defined by POM" in this case project.name will be use as Project Group.
 
+  You cannot add a duplicate project (duplicates would mean another instance of a project with the same groupId, artifactId, and version) in the same Project Group.
+
   By default, Continuum adds each sub-module POM as an individual Continuum Project. If you want to add only the root POM without sub-modules, check the "load only root as recursive build" field.
-  
+
   You can choose a Build Definition Template which will be applied to your project.  If you choose a Build Definition
   Template, the build definitions from the template will be added in addition to any build definitions that are defined
   at the project group level.
@@ -61,6 +63,8 @@ Add a Project
 
   You can define the group you want to use or "Defined by POM." In this case project.name will be used as the Project Group.
   
+  You cannot add a duplicate project (duplicates would mean another instance of a project with the same groupId, artifactId, and version) in the same Project Group.
+
   You can choose a Build Definition Template which will be applied to your project.
 
 * {ANT Project}

@@ -98,6 +98,8 @@ Understanding Distributed Builds
 
     * the Build Agent needs a configuration web interface
 
+    * building all projects in a project group will be distributed to the same build agent
+
 * Future Enhancements
 
     * Remote builders
