@@ -99,9 +99,9 @@
                 </redback:ifAuthorized>
                 <ec:column property="projectUrl" title="distributedBuild.table.projectName">
                   <s:url id="viewUrl" action="buildResults">
-                    <s:param name="projectId">${pageScope.currentBuild.projectId}</s:param>
+                    <s:param name="projectId">${pageScope.buildQueue.projectId}</s:param>
                   </s:url>
-                  <s:a href="%{viewUrl}">${pageScope.currentBuild.projectName}</s:a>
+                  <s:a href="%{viewUrl}">${pageScope.buildQueue.projectName}</s:a>
                 </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
@@ -192,9 +192,9 @@
                 </redback:ifAuthorized>
                 <ec:column property="projectGroupUrl" title="distributedPrepareBuild.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
-                    <s:param name="projectGroupId">${pageScope.currentPrepareBuild.projectGroupId}</s:param>
-                    <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
+                    <s:param name="projectGroupId">${pageScope.prepareBuildQueue.projectGroupId}</s:param>
                   </s:url>
+                  <s:a href="%{viewUrl}">${pageScope.prepareBuildQueue.projectGroupName}</s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
                 <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.agentUrl"/>
