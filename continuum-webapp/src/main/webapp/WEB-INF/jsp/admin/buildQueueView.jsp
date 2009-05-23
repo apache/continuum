@@ -294,9 +294,9 @@
                 </redback:ifAuthorized>
                 <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
-                    <s:param name="projectGroupId">${pageScope.currentPrepareBuild.projectGroupId}</s:param>
+                    <s:param name="projectGroupId">${pageScope.prepareBuildQueue.projectGroupId}</s:param>
                   </s:url>
-                  <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
+                  <s:a href="%{viewUrl}">${pageScope.prepareBuildQueue.projectGroupName}</s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="prepareBuildQueue.table.scmRootAddress"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
