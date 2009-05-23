@@ -192,7 +192,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             for ( ProjectScmRoot projectScmRoot : scmRoots )
             {
-                if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
+                if ( projectScmUrl.startsWith( projectScmRoot.getScmRootAddress() ) )
                 {
                     AbstractContinuumAction.setProjectScmRoot( context, projectScmRoot );
                     break;
