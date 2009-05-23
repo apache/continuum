@@ -32,7 +32,9 @@ Administrator's Guides
 
  * {{{parallelBuilds.html}Managing Parallel Builds}}
 
- * {{{queues.html}Managing Build Queues}}
+ * {{{buildQueue.html}Managing Build Queues}}
+
+ * {{{queues.html}Managing Project Queues}}
 
  * {{{external-db.html}External Databases}}
 
