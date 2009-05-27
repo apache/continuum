@@ -86,7 +86,6 @@ under the License.
             -postfixpackage -nodefontsize 9
             -nodefontpackagesize 7
           </additionalparam>
-          <excludePackageNames>*.validator</excludePackageNames>
         </configuration>
       </plugin>
       <plugin>
