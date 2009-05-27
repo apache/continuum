@@ -1,5 +1,7 @@
 package org.apache.continuum.web.test.parent;
 
+import org.testng.Assert;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -64,22 +66,34 @@ public abstract class AbstractBuildQueueTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addBuildQueue( String name, boolean success )
-    {
-        goToBuildQueuePage();
-        assertBuildQueuePage();
-        submit();
-        assertAddBuildQueuePage();
-        setFieldValue( "name", name );
-        submit();
-        if ( success )
-        {
-            assertBuildQueuePage();
-            assertTextPresent( name );
-        }
-        else
-        {
-            assertAddBuildQueuePage();
-        }
-    }
+	public void addBuildQueue( String name, boolean success )
+	{
+	    goToBuildQueuePage();
+	    assertBuildQueuePage();
+	    submit();
+	    assertAddBuildQueuePage();
+	    setFieldValue( "name", name );
+	    submit();
+	    if ( success )
+	    {
+	        assertBuildQueuePage();
+	        assertTextPresent( name );
+	    }
+	    else
+	    {
+	        assertAddBuildQueuePage();
+	    }
+	}
+	    
+	public void buildProjectForQueuePageTest( String projectGroupName, String groupId, String description, String projectName )
+    throws Exception
+    {       
+        showProjectGroup( projectGroupName, groupId, description );
+        clickButtonWithValue( "Build all projects" );
+        waitForElementPresent( "//img[@alt='Building']" );
+        Thread.sleep( 10000 );
+               	
+     }
+	    
+	    
 }
