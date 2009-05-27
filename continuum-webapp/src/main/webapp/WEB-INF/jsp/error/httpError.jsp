@@ -33,79 +33,52 @@
       <c:when test="${param.errorCode == 404}">
         <s:text name="error.404.title"/>
       </c:when>
-      <c:when test="${param.errorCode == 405}">
-        <s:text name="error.405.title"/>
+      <c:when test="${param.errorCode == 500}">
+        <s:text name="error.500.title"/>
       </c:when>
       <c:otherwise>
         <s:text name="error.page.title"/>
       </c:otherwise>
     </c:choose>
   </title>
-  <link rel="stylesheet" type="text/css" href="<s:url value="/css/tigris.css" includeParams="none"/>" media="screen"/>
-  <link rel="stylesheet" type="text/css" href="<s:url value="/css/print.css" includeParams="none"/>" media="print"/>
-  <link rel="stylesheet" type="text/css" href="<s:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
-  <link rel="shortcut icon" href="<s:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>
-
-  <script src="<s:url value="/scripts/tigris.js" includeParams="none"/>" type="text/javascript"></script>
 </head>
 
-<body onload="focus()" marginwidth="0" marginheight="0" class="composite">
-<s:include value="/WEB-INF/jsp/navigations/DefaultTop.jsp"/>
+<body>
+  <div id="h3">
+    <h3>
+      <c:choose>
+        <c:when test="${param.errorCode == 403}">
+          <s:text name="error.403.section.title"/>
+        </c:when>
+        <c:when test="${param.errorCode == 404}">
+          <s:text name="error.404.section.title"/>
+        </c:when>
+        <c:when test="${param.errorCode == 500}">
+          <s:text name="error.500.section.title"/>
+        </c:when>
+        <c:otherwise>
+          The URL requested results to an unknown error (Error <s:property value="errorCode"/>).
+        </c:otherwise>
+      </c:choose>
+    </h3>
 
-<table id="main" border="0" cellpadding="4" cellspacing="0" width="100%">
-  <tbody>
-    <tr valign="top">
-      <td id="leftcol" width="180">
-        <br/> <br/>
-        <s:include value="/WEB-INF/jsp/navigations/Menu.jsp"/>
-      </td>
-      <td width="86%">
-        <br/>
-
-        <div id="bodycol">
-          <div class="app">
-            <div id="axial" class="h3">
-              <h3>
-                <c:choose>
-                  <c:when test="${param.errorCode == 403}">
-                    <s:text name="error.403.section.title"/>
-                  </c:when>
-                  <c:when test="${param.errorCode == 404}">
-                    <s:text name="error.404.section.title"/>
-                  </c:when>
-                  <c:when test="${param.errorCode == 405}">
-                    <s:text name="error.405.section.title"/>
-                  </c:when>
-                  <c:otherwise>
-                    The URL requested results to an unknown error.
-                  </c:otherwise>
-                </c:choose>
-              </h3>
-
-              <div class="errormessage">
-                <c:choose>
-                  <c:when test="${param.errorCode == 403}">
-                    <s:text name="error.403.message"/>
-                  </c:when>
-                  <c:when test="${param.errorCode == 404}">
-                    <s:text name="error.404.message"/>
-                  </c:when>
-                  <c:when test="${param.errorCode == 405}">
-                    <s:text name="error.405.message"/>
-                  </c:when>
-                  <c:otherwise>
-                    The URL requested results to an unknown error.
-                  </c:otherwise>
-                </c:choose>
-              </div>
-            </div>
-          </div>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<s:include value="/WEB-INF/jsp/navigations/DefaultBottom.jsp"/>
+    <div class="errormessage">
+      <c:choose>
+        <c:when test="${param.errorCode == 403}">
+          <s:text name="error.403.message"/>
+        </c:when>
+        <c:when test="${param.errorCode == 404}">
+          <s:text name="error.404.message"/>
+        </c:when>
+        <c:when test="${param.errorCode == 500}">
+          <s:text name="error.500.message"/>
+        </c:when>
+        <c:otherwise>
+          The URL requested results to an unknown error (Error <s:property value="errorCode"/>).
+        </c:otherwise>
+      </c:choose>
+    </div>
+  </div>
 </body>
 </html>
 </s:i18n>
