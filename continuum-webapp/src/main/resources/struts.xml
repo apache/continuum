@@ -164,10 +164,13 @@
       <result type="redirect-action">groupSummary</result>
     </action>
 
+    <action name="httpError" class="httpError">
+      <result name="success">/WEB-INF/jsp/error/httpError.jsp</result>
+    </action>
+
     <action name="about" class="about">
       <result name="success">/WEB-INF/jsp/about.jsp</result>
     </action>
-
 
     <action name="companyInfo" class="companyInfo">
       <result name="success">/WEB-INF/jsp/components/companyLogo.jsp</result>
