@@ -12,51 +12,67 @@ Welcome to Apache Continuum
   systems. Whether you have a centralized build team or want to put control of releases in the hands of developers,
   Continuum can help you improve quality and maintain a consistent build environment. 
 
-Documentation
+* Documentation
 
-* Installation/Upgrade Guides
+  * {{{release-notes.html} Release Notes}}
 
-** {{{installation/index.html}Installation}}
+  * Installation/Upgrade Guides
 
-*** Standalone version
+    * {{{installation/index.html}Installation}}
 
-    {{{installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
+      * Standalone version:
+      
+        {{{installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
 
-*** Webapp
+      * Webapp: 
+        
+        {{{installation/tomcat.html}Tomcat}},
+        
+        {{{installation/jetty.html}Jetty}},
+        
+        {{{installation/jboss.html}JBoss}},
+        
+        {{{installation/geronimo.html}Geronimo}},
+        
+        {{{installation/glassfish.html}GlassFish}}
+        
+      []
 
-    {{{installation/tomcat.html}Tomcat}},
-    {{{installation/jetty.html}Jetty}},
-    {{{installation/jboss.html}JBoss}},
-    {{{installation/geronimo.html}Geronimo}},
-    {{{installation/glassfish.html}GlassFish}},
-    ...
+    * {{{installation/upgrade.html} How to upgrade from a previous version}}
+    
+    []
 
-** Release Notes
+  * {{{user_guides/index.html} User's Guide}}
 
-    {{{release-notes.html} Release Notes}}
+  * {{{administrator_guides/index.html} Administrator's Guide}}
 
-** Upgrade
+  * {{{developer_guides/building.html} Developer's Guide to building Continuum}}
 
-    {{{installation/upgrade.html} How to upgrade from a previous version}}
+  * Knowledge Base
 
-* User's Guide
+      {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
 
-    {{{user_guides/index.html} User's Guide}}
+      {{{http://cwiki.apache.org/confluence/display/CONTINUUM}Wiki}}
 
-* Administrator's Guide
+      {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Old Wiki}}
 
-    {{{administrator_guides/index.html} Administrator's Guide}}
+      {{{http://apache-continuum.blogspot.com/}Blog}}
+   
+   []
+   
+* Log Files
 
-* Developer's Guide
-
-    {{{developer_guides/building.html}Guide to building Continuum}}
-
-* Knowledge Base
-
-    {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
-
-    {{{http://cwiki.apache.org/confluence/display/CONTINUUM}Wiki}}
-
-    {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Old Wiki}}
-
-    {{{http://apache-continuum.blogspot.com/}Blog}}
+  To keep track of the Continuum performance and problems, log files are created during runtime.
+  These files can be found in the <<<logs/>>> directory.
+  
+  * <<continuum.log>> - contains all the start-up information for Continuum.
+  
+  * <<continuum-audit.log>> - contains information regarding the project operations and configurations being modified.
+                            For example, projects added are logged here, with date and timestamp,
+                            userId of who performed the deploy, and the project that was built.
+  
+  * <<continuum-security-audit.log>> - contains information regarding Continuum's security.
+                            For example, a successful login of a user or a user account is created.
+                            For security measure, passwords are masked behind asterisks.
+  
+  []
