@@ -26,12 +26,14 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "queue" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
-public class QueueTest
-    extends AbstractBuildQueueTest
-{
 
-    public void testAddBuildQueue()
+
+@Test( groups = { "queue" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+    public class QueueTest
+        extends AbstractBuildQueueTest
+    {
+    
+	public void testAddBuildQueue()
     {
         setMaxBuildQueue( 2 );
         String BUILD_QUEUE_NAME = p.getProperty( "BUILD_QUEUE_NAME" );
@@ -55,7 +57,8 @@ public class QueueTest
         addBuildQueue( BUILD_QUEUE_NAME, false );
         assertTextPresent( "Build queue name already exists." );
     }
-
+    
+    //@Test( dependsOnMethods = { "testAddAlreadyExistBuildQueue" } )
     public void testAddEmptyBuildQueue()
     {
         setMaxBuildQueue( 3 );
@@ -69,15 +72,52 @@ public class QueueTest
         goToBuildQueuePage();
         String BUILD_QUEUE_NAME = p.getProperty( "BUILD_QUEUE_NAME" );
         removeBuildQueue( BUILD_QUEUE_NAME );
+        assertTextNotPresent( BUILD_QUEUE_NAME );
     }
-
-    public void testQueuePage()
+    
+       
+    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
+    public void testQueuePageWithProjectCurrentlyBuilding()
+        throws Exception
+    {   
+    	//build a project
+        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = p.getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = p.getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+        
+        //check queue page while building
+    	clickAndWait( "link=Queues" );
+	    assertPage( "Continuum - Build Queue" );
+	    assertTextPresent( "Current Build" );
+	    assertTextPresent( "Build Queue" );
+	    assertTextPresent( "Current Checkout" );
+	    assertTextPresent( "Checkout Queue " );
+	    assertTextPresent( "Current Prepare Build" );
+	    assertTextPresent( "Prepare Build Queue" );
+	    assertElementPresent("//table[@id='ec_table']/tbody/tr/td[4]");
+	    assertTextPresent( M2_PROJ_GRP_NAME );
+	    getSelenium().goBack();
+	    getSelenium().refresh();
+        waitPage();
+	    waitForElementPresent( "//img[@alt='Success']" );
+	    Thread.sleep( 10000 );
+    }
+    
+    //@Test( dependsOnMethods = { "testDeleteBuildQueue" } )
+    public void testQueuePageWithoutBuild()
     {
-        clickLinkWithText( "Queues" );
+        clickAndWait( "link=Queues"  );
         assertPage( "Continuum - Build Queue" );
+        assertTextPresent( "Nothing is building" );
+        assertTextNotPresent( "Project Name* Build Definition" );
         assertTextPresent( "Current Build" );
-        assertTextPresent( "Continuum - Build Queue" );
-        assertTextPresent( "Current Checkout" );
-        assertTextPresent( "Checkout Queue" );
-    }
+	    assertTextPresent( "Build Queue" );
+	    assertTextPresent( "Current Checkout" );
+	    assertTextPresent( "Checkout Queue " );
+	    assertTextPresent( "Current Prepare Build" );
+	    assertTextPresent( "Prepare Build Queue" );
+        
+    }    
+    
 }

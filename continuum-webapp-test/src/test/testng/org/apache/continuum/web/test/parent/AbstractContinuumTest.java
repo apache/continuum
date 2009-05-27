@@ -752,7 +752,8 @@ public abstract class AbstractContinuumTest
     private void waitAddProject( String title )
         throws Exception
     {
-        Thread.sleep( 100 );
+    	
+    	Thread.sleep( 4000 ); 
         String condition = "selenium.browserbot.getCurrentWindow().document.title != ''";
         getSelenium().waitForCondition( condition, maxWaitTimeInMs );
         Thread.sleep( 1000 );

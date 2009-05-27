@@ -361,4 +361,30 @@ public abstract class AbstractSeleniumTest
     {
         Assert.assertFalse( getSelenium().isChecked( locator ) );
     }
+    public void clickAndWait (String locator) 
+	{
+	  getSelenium().click(locator);
+	  getSelenium().waitForPageToLoad(maxWaitTimeInMs);
+	}
+    
+    public void waitForElementPresent(String locator) throws InterruptedException
+    {   
+    	getSelenium().waitForPageToLoad(maxWaitTimeInMs);
+    	for (int second = 0;; second++) {
+    		if (second >= 60) Assert.fail("timeout");
+    		try { if ( isElementPresent(locator)) break; } catch (Exception e) {}
+    		Thread.sleep(1000);
+    	}
+    }
+
+    public void waitForTextPresent(String text) throws InterruptedException
+    {   
+    	getSelenium().waitForPageToLoad(maxWaitTimeInMs);
+    	for (int second = 0;; second++) {
+    		if (second >= 60) Assert.fail( "Timeout" );
+    		try { if ( isTextPresent(text)) break; } catch (Exception e) {}
+    		Thread.sleep(1000);
+    	}
+    }
+    
 }
