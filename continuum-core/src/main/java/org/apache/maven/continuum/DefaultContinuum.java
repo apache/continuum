@@ -55,7 +55,6 @@ import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.repository.RepositoryService;
-import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.ProjectSorter;
@@ -103,8 +102,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
-import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -624,14 +623,14 @@ public class DefaultContinuum
             {
                 if ( parallelBuildsManager.isProjectCurrentlyBeingCheckedOut( projectId ) )
                 {
-                    throw new ContinuumException( "Unable to remove project " + projectId + 
-                        " because it is currently being checked out" );
+                    throw new ContinuumException(
+                        "Unable to remove project " + projectId + " because it is currently being checked out" );
                 }
 
                 if ( parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) )
                 {
-                    throw new ContinuumException( "Unable to remove project " + projectId + 
-                        " because it is currently building" );
+                    throw new ContinuumException(
+                        "Unable to remove project " + projectId + " because it is currently building" );
                 }
             }
             catch ( BuildManagerException e )
@@ -641,8 +640,8 @@ public class DefaultContinuum
 
             if ( isProjectInReleaseStage( project ) )
             {
-                throw new ContinuumException( "Unable to remove project " + projectId + 
-                    " because it is in release stage" );
+                throw new ContinuumException(
+                    "Unable to remove project " + projectId + " because it is in release stage" );
             }
 
             try
@@ -1085,18 +1084,19 @@ public class DefaultContinuum
         throws ContinuumException
     {
         BuildResult buildResult = getBuildResult( buildId );
-        
+
         // check first if build result is currently being used by a building project
         Project project = buildResult.getProject();
         BuildResult bResult = getLatestBuildResultForProject( project.getId() );
 
         try
         {
-            if ( bResult != null && buildResult.getId() == bResult.getId() && 
-                 parallelBuildsManager.isProjectInAnyCurrentBuild( project.getId() ) )
+            if ( bResult != null && buildResult.getId() == bResult.getId() &&
+                parallelBuildsManager.isProjectInAnyCurrentBuild( project.getId() ) )
             {
-                throw new ContinuumException( "Unable to remove build result because it is currently being used by" +
-                        "a building project " + project.getId() );
+                throw new ContinuumException(
+                    "Unable to remove build result because it is currently being used by" + "a building project " +
+                        project.getId() );
             }
         }
         catch ( BuildManagerException e )
@@ -1658,7 +1658,7 @@ public class DefaultContinuum
         for ( Project project : projects )
         {
             checkForDuplicateProjectInGroup( projectGroup, project, result );
-          
+
             if ( result.hasErrors() )
             {
                 log.info( result.getErrors().size() + " errors during project add: " );
@@ -2995,13 +2995,14 @@ public class DefaultContinuum
 
     private String getVersion()
     {
+        InputStream resourceAsStream = null;
         try
         {
             Properties properties = new Properties();
 
             String name = "META-INF/maven/org.apache.continuum/continuum-core/pom.properties";
 
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream( name );
+            resourceAsStream = getClass().getClassLoader().getResourceAsStream( name );
 
             if ( resourceAsStream == null )
             {
@@ -3015,6 +3016,13 @@ public class DefaultContinuum
         catch ( IOException e )
         {
             return "unknown";
+        }
+        finally
+        {
+            if ( resourceAsStream != null )
+            {
+                IOUtil.close( resourceAsStream );
+            }
         }
     }
 
@@ -3480,7 +3488,7 @@ public class DefaultContinuum
         {
             if ( configurationService.isDistributedBuildEnabled() )
             {
-                distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, trigger, projectGroupId, 
+                distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, trigger, projectGroupId,
                                                               group.getName(), scmRootAddress, scmRootId );
             }
             else
@@ -3637,13 +3645,13 @@ public class DefaultContinuum
         return filteredProjectsList;
     }
 
-    private void checkForDuplicateProjectInGroup( ProjectGroup projectGroup, Project projectToCheck, 
-                                                   ContinuumProjectBuildingResult result )
+    private void checkForDuplicateProjectInGroup( ProjectGroup projectGroup, Project projectToCheck,
+                                                  ContinuumProjectBuildingResult result )
     {
         String duplicateProjects = "";
 
         List<Project> projectsInGroup = projectGroup.getProjects();
-        
+
         if ( projectsInGroup == null )
         {
             return;
@@ -3651,10 +3659,10 @@ public class DefaultContinuum
 
         for ( Project project : (List<Project>) projectGroup.getProjects() )
         {
-            
-            if ( project.getGroupId().equals( projectToCheck.getGroupId() ) && 
-                 project.getArtifactId().equals( projectToCheck.getArtifactId() ) &&
-                 project.getVersion().equals( projectToCheck.getVersion() ) )
+
+            if ( project.getGroupId().equals( projectToCheck.getGroupId() ) &&
+                project.getArtifactId().equals( projectToCheck.getArtifactId() ) &&
+                project.getVersion().equals( projectToCheck.getVersion() ) )
             {
                 result.addError( result.ERROR_DUPLICATE_PROJECTS );
                 return;

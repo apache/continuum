@@ -31,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.configuration.model.ContinuumConfigurationModel;
 import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Reader;
 import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Writer;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,11 +115,12 @@ public class DefaultContinuumConfiguration
     public void reload( File file )
         throws ContinuumConfigurationException
     {
+        FileInputStream fis = null;
         try
         {
+            fis = new FileInputStream( file );
             ContinuumConfigurationModelXpp3Reader configurationXpp3Reader = new ContinuumConfigurationModelXpp3Reader();
-            ContinuumConfigurationModel configuration =
-                configurationXpp3Reader.read( new InputStreamReader( new FileInputStream( file ) ) );
+            ContinuumConfigurationModel configuration = configurationXpp3Reader.read( new InputStreamReader( fis ) );
 
             this.generalConfiguration = new GeneralConfiguration();
 
@@ -208,7 +210,13 @@ public class DefaultContinuumConfiguration
             log.error( e.getMessage(), e );
             throw new RuntimeException( e.getMessage(), e );
         }
-
+        finally
+        {
+            if ( fis != null )
+            {
+                IOUtil.close( fis );
+            }
+        }
     }
 
     public void save( File file )
@@ -308,6 +316,8 @@ public class DefaultContinuumConfiguration
             ContinuumConfigurationModelXpp3Writer writer = new ContinuumConfigurationModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );
             writer.write( fileWriter, configurationModel );
+            fileWriter.flush();
+            fileWriter.close();
         }
         catch ( IOException e )
         {

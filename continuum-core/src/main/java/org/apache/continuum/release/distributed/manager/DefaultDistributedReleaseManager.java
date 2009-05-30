@@ -48,6 +48,7 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
@@ -599,10 +600,12 @@ public class DefaultDistributedReleaseManager
 
         if ( file.exists() )
         {
+            FileInputStream fis = null;
             try
             {
+                fis = new FileInputStream( file );
                 ContinuumPrepareReleasesModelXpp3Reader reader = new ContinuumPrepareReleasesModelXpp3Reader();
-                PreparedReleaseModel model = reader.read( new InputStreamReader( new FileInputStream( file ) ) );
+                PreparedReleaseModel model = reader.read( new InputStreamReader( fis ) );
 
                 return model.getPreparedReleases();
             }
@@ -615,6 +618,13 @@ public class DefaultDistributedReleaseManager
             {
                 log.error( e.getMessage(), e );
                 throw new ContinuumReleaseException( e.getMessage(), e );
+            }
+            finally
+            {
+                if ( fis != null )
+                {
+                    IOUtil.close( fis );
+                }
             }
         }
 
@@ -670,6 +680,8 @@ public class DefaultDistributedReleaseManager
             ContinuumPrepareReleasesModelXpp3Writer writer = new ContinuumPrepareReleasesModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );
             writer.write( fileWriter, model );
+            fileWriter.flush();
+            fileWriter.close();
         }
         catch ( IOException e )
         {
