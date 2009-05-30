@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import org.apache.continuum.buildagent.model.ContinuumBuildAgentConfigurationModel;
 import org.apache.continuum.buildagent.model.io.xpp3.ContinuumBuildAgentConfigurationModelXpp3Reader;
 import org.apache.continuum.buildagent.model.io.xpp3.ContinuumBuildAgentConfigurationModelXpp3Writer;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
@@ -82,12 +83,14 @@ public class DefaultBuildAgentConfiguration
     public void reload( File file )
         throws BuildAgentConfigurationException
     {
+        FileInputStream fis = null;
         try
         {
+            fis = new FileInputStream( file );
             ContinuumBuildAgentConfigurationModelXpp3Reader configurationXpp3Reader =
                 new ContinuumBuildAgentConfigurationModelXpp3Reader();
             ContinuumBuildAgentConfigurationModel configuration =
-                configurationXpp3Reader.read( new InputStreamReader( new FileInputStream( file ) ) );
+                configurationXpp3Reader.read( new InputStreamReader( fis ) );
 
             this.generalBuildAgentConfiguration = new GeneralBuildAgentConfiguration();
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
@@ -112,6 +115,13 @@ public class DefaultBuildAgentConfiguration
         {
             log.error( e.getMessage(), e );
             throw new BuildAgentConfigurationException( e.getMessage(), e );
+        }
+        finally
+        {
+            if ( fis != null )
+            {
+                IOUtil.close( fis );
+            }
         }
     }
 
@@ -148,6 +158,8 @@ public class DefaultBuildAgentConfiguration
                 new ContinuumBuildAgentConfigurationModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );
             writer.write( fileWriter, configurationModel );
+            fileWriter.flush();
+            fileWriter.close();
         }
         catch ( IOException e )
         {
