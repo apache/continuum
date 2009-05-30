@@ -1,10 +1,5 @@
 package org.apache.continuum.distributed.transport.slave;
 
-import com.atlassian.xmlrpc.ServiceObject;
-
-import java.util.List;
-import java.util.Map;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,6 +18,11 @@ import java.util.Map;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import com.atlassian.xmlrpc.ServiceObject;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * SlaveBuildAgentTransportService
@@ -122,5 +122,5 @@ public interface SlaveBuildAgentTransportService
         throws Exception;
 
     public Boolean removeFromBuildQueue( List<String> hashCodes )
-        throws Exception;    
+        throws Exception;
 }
