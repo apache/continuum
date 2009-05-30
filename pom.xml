@@ -1661,7 +1661,7 @@ under the License.
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.1</maven-scm.version>
     <redback.version>1.2.1</redback.version>
-    <archiva.version>1.1</archiva.version>
+    <archiva.version>1.2.1</archiva.version>
     <slf4jVersion>1.5.6</slf4jVersion>
     <xmlrpc.version>3.1</xmlrpc.version>
     <atlassian.xmlrpc.binder.version>0.8.2</atlassian.xmlrpc.binder.version>
