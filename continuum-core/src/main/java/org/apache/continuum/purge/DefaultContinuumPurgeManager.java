@@ -27,8 +27,13 @@ import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.task.PurgeTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.maven.continuum.build.settings.DefaultSchedulesActivator;
+import org.apache.maven.continuum.build.settings.SchedulesActivationException;
+import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -43,10 +48,12 @@ import java.util.List;
 public class DefaultContinuumPurgeManager
     implements ContinuumPurgeManager
 {
+    private static final Logger log = LoggerFactory.getLogger( DefaultContinuumPurgeManager.class );
+    
     /**
      * @plexus.requirement
      */
-    private ProjectDao projectDao;
+    private SchedulesActivator schedulesActivator;
 
     /**
      * @plexus.requirement
@@ -85,6 +92,20 @@ public class DefaultContinuumPurgeManager
             for ( DirectoryPurgeConfiguration dirPurge : dirPurgeList )
             {
                 purgeDirectory( dirPurge );
+            }
+        }
+        
+        if ( ( repoPurgeList == null || repoPurgeList.isEmpty() ) && ( dirPurgeList == null || dirPurgeList.isEmpty() ) )
+        {
+            // This purge is not enable for a purge process.
+            try
+            {
+                schedulesActivator.unactivateOrphanPurgeSchedule( schedule );
+            }
+            catch ( SchedulesActivationException e )
+            {
+                log.debug( String.format( "Can't unactivate orphan schedule '%s' for purgeConfiguration",
+                                          schedule.getName() ) );
             }
         }
     }

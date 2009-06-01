@@ -270,6 +270,7 @@ public class DefaultContinuum
     {
         Runtime.getRuntime().addShutdownHook( new Thread()
         {
+            @Override
             public void run()
             {
                 try
@@ -927,7 +928,16 @@ public class DefaultContinuum
             if ( projectsMap == null || projectsMap.size() == 0 )
             {
                 log.debug( "no builds attached to schedule" );
-                // We don't have projects attached to this schedule
+                try
+                {
+                    schedulesActivator.unactivateOrphanBuildSchedule( schedule );
+                }
+                catch ( SchedulesActivationException e )
+                {
+                    log.debug( "Can't unactivate orphan shcedule for buildDefinitions" );
+                }
+                // We don't have projects attached to this schedule. This is because it's only is setting for a
+                // templateBuildDefinition
                 return;
             }
 
@@ -2091,11 +2101,14 @@ public class DefaultContinuum
         throws ContinuumException
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
+        Schedule schedule = buildDefinition.getSchedule();
 
         AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "add-build-definition-to-project", context );
+        
+        activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
     }
@@ -2104,8 +2117,10 @@ public class DefaultContinuum
         throws ContinuumException
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
+        BuildDefinition buildDefinition = getBuildDefinition( buildDefinitionId );
+        Schedule schedule = buildDefinition.getSchedule();
 
-        AbstractContinuumAction.setBuildDefinition( context, getBuildDefinition( buildDefinitionId ) );
+        AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "remove-build-definition-from-project", context );
@@ -2115,11 +2130,14 @@ public class DefaultContinuum
         throws ContinuumException
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
+        Schedule schedule = buildDefinition.getSchedule();
 
         AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "update-build-definition-from-project", context );
+        
+        activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
     }
@@ -2128,11 +2146,14 @@ public class DefaultContinuum
         throws ContinuumException
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
+        Schedule schedule = buildDefinition.getSchedule();
 
         AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
         executeAction( "add-build-definition-to-project-group", context );
+        
+        activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
     }
@@ -2152,11 +2173,14 @@ public class DefaultContinuum
         throws ContinuumException
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
+        Schedule schedule = buildDefinition.getSchedule();
 
         AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
         executeAction( "update-build-definition-from-project-group", context );
+        
+        activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
     }
@@ -2258,6 +2282,9 @@ public class DefaultContinuum
     private void updateSchedule( Schedule schedule, boolean updateScheduler )
         throws ContinuumException
     {
+        
+        Schedule old = getSchedule( schedule.getId() );
+        
         storeSchedule( schedule );
 
         if ( updateScheduler )
@@ -2266,14 +2293,15 @@ public class DefaultContinuum
             {
                 if ( schedule.isActive() )
                 {
-                    // I unactivate it before if it's already active
-                    schedulesActivator.unactivateSchedule( schedule, this );
+                    // I unactivate old shcedule (could change name) before if it's already active
+                    schedulesActivator.unactivateSchedule( old, this );
 
                     schedulesActivator.activateSchedule( schedule, this );
                 }
                 else
                 {
-                    schedulesActivator.unactivateSchedule( schedule, this );
+                    // Unactivate old because could change name in new schedule
+                    schedulesActivator.unactivateSchedule( old, this );
                 }
             }
             catch ( SchedulesActivationException e )
@@ -2347,7 +2375,30 @@ public class DefaultContinuum
             throw logAndCreateException( "Error while storing schedule.", ex );
         }
     }
-
+    
+    public void activePurgeSchedule( Schedule schedule )
+    {
+        try
+        {
+            schedulesActivator.activatePurgeSchedule( schedule, this );
+        }
+        catch ( SchedulesActivationException e )
+        {
+            log.error( "Can't activate schedule for purgeConfiguration" );
+        }
+    }
+    
+    public void activeBuildDefinitionSchedule( Schedule schedule )
+    {
+        try
+        {
+            schedulesActivator.activateBuildSchedule( schedule, this );
+        }
+        catch ( SchedulesActivationException e )
+        {
+            log.error( "Can't activate schedule for buildDefinition" );
+        }
+    }
     // ----------------------------------------------------------------------
     // Working copy
     // ----------------------------------------------------------------------

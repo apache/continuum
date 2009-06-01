@@ -34,6 +34,8 @@ import org.quartz.JobExecutionContext;
 public class ContinuumBuildJob
     extends AbstractJob
 {
+    public static final String BUILD_GROUP = "BUILD_GROUP";
+
     public void execute( JobExecutionContext context )
     {
         if ( isInterrupted() )
