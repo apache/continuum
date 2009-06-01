@@ -81,6 +81,7 @@ public class BuildDefinitionTemplateAction
     //  Webwork Methods
     // ------------------------------------------------------- 
 
+    @Override
     public void prepare()
         throws Exception
     {
@@ -230,6 +231,7 @@ public class BuildDefinitionTemplateAction
     public String saveBuildDefinition()
         throws Exception
     {
+        Schedule schedule = null;
         if ( buildDefinition.getProfile() != null )
         {
             Profile profile = getContinuum().getProfileService().getProfile( buildDefinition.getProfile().getId() );
@@ -246,7 +248,8 @@ public class BuildDefinitionTemplateAction
         {
             if ( buildDefinition.getSchedule().getId() > 0 )
             {
-                buildDefinition.setSchedule( getContinuum().getSchedule( buildDefinition.getSchedule().getId() ) );
+                schedule = getContinuum().getSchedule( buildDefinition.getSchedule().getId() );
+                buildDefinition.setSchedule( schedule );
             }
         }
 
@@ -258,6 +261,11 @@ public class BuildDefinitionTemplateAction
         {
             this.buildDefinition =
                 this.getContinuum().getBuildDefinitionService().addBuildDefinition( buildDefinition );
+        }
+        
+        if ( schedule != null )
+        {
+            getContinuum().activeBuildDefinitionSchedule( schedule );
         }
 
         return SUCCESS;

@@ -118,6 +118,7 @@ public interface Continuum
      * @throws ContinuumException
      * @deprecated
      */
+    @Deprecated
     void checkoutProject( int projectId )
         throws ContinuumException;
 
@@ -440,18 +441,21 @@ public interface Continuum
     /**
      * @deprecated
      */
+    @Deprecated
     List<BuildDefinition> getBuildDefinitions( int projectId )
         throws ContinuumException;
 
     /**
      * @deprecated
      */
+    @Deprecated
     BuildDefinition getBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException;
 
     /**
      * @deprecated
      */
+    @Deprecated
     void removeBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException;
 
@@ -528,6 +532,10 @@ public interface Continuum
 
     void removeSchedule( int scheduleId )
         throws ContinuumException;
+    
+    void activePurgeSchedule( Schedule schedule );
+    
+    void activeBuildDefinitionSchedule( Schedule schedule );
 
     // ----------------------------------------------------------------------
     // Working copy
