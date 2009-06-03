@@ -183,7 +183,6 @@ public class ProfileAction
         catch ( ProfileException e )
         {
             addActionError( getText( "profile.remove.error" ) );
-            return ERROR;
         }
         return SUCCESS;
     }
