@@ -382,6 +382,32 @@ under the License.
         </plugins>
       </build>
     </profile>
+  <profile>
+    <id>reporting</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <testFailureIgnore>true</testFailureIgnore>
+            </configuration>
+          </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>report-only</id>
+              <goals>
+                <goal>report-only</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+  </profile>
   </profiles>
   <properties>
     <cargo.installs.directory>${basedir}/target/installs</cargo.installs.directory>
