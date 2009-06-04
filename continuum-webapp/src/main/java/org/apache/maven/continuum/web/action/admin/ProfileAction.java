@@ -182,6 +182,7 @@ public class ProfileAction
         }
         catch ( ProfileException e )
         {
+            // display action error in default/success page -- CONTINUUM-2250
             addActionError( getText( "profile.remove.error" ) );
         }
         return SUCCESS;
