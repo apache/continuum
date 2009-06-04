@@ -1428,7 +1428,24 @@ public class DefaultContinuum
         Map<String, Object> context = new HashMap<String, Object>();
 
         String scmUrl = project.getScmUrl();
-        createProjectScmRoot( projectGroup, scmUrl );
+
+        List<ProjectScmRoot> scmRoots = getProjectScmRootByProjectGroup( groupId );
+
+        boolean found = false;
+
+        for ( ProjectScmRoot scmRoot : scmRoots )
+        {
+            if ( scmUrl.startsWith( scmRoot.getScmRootAddress() ) )
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if ( !found )
+        {
+            createProjectScmRoot( projectGroup, scmUrl );
+        }
 
         // ----------------------------------------------------------------------
         //
@@ -1599,8 +1616,6 @@ public class DefaultContinuum
 
         ProjectGroup projectGroup = result.getProjectGroups().iterator().next();
 
-        ProjectScmRoot projectScmRoot;
-
         boolean projectGroupCreation = false;
 
         try
@@ -1639,9 +1654,20 @@ public class DefaultContinuum
 
             String url = CreateProjectsFromMetadataAction.getUrl( context );
 
-            projectScmRoot = getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
+            List<ProjectScmRoot> scmRoots = getProjectScmRootByProjectGroup( projectGroup.getId() );
 
-            if ( projectScmRoot == null )
+            boolean found = false;
+
+            for ( ProjectScmRoot scmRoot : scmRoots )
+            {
+                if ( url.startsWith( scmRoot.getScmRootAddress() ) )
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if ( !found )
             {
                 createProjectScmRoot( projectGroup, url );
             }
