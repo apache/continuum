@@ -189,28 +189,44 @@ public class GenerateReactorProjectsPhase
         throws ContinuumReleaseException
     {
         String localRepository = null;
+        boolean found = false;
 
         if ( arguments != null )
         {
             String[] args = arguments.split( " " );
-
+    
             for ( String arg : args )
             {
                 if ( arg.contains( "-Dmaven.repo.local=" ) )
                 {
                     localRepository = arg.substring( arg.indexOf( "=" ) + 1 );
-                    break;
+
+                    if ( localRepository.endsWith( "\"" ) )
+                    {
+                        localRepository = localRepository.substring( 0, localRepository.indexOf( "\"" ) );
+                        break;
+                    }
+
+                    found = true;
+                    continue;
+                }
+
+                if ( found )
+                {
+                    localRepository += " " + arg;
+                    
+                    if ( localRepository.endsWith( "\"" ) )
+                    {
+                        localRepository = localRepository.substring( 0, localRepository.indexOf( "\"" ) );
+                        break;
+                    }
                 }
             }
         }
-
+    
         if ( localRepository == null )
         {
             localRepository = getSettings().getLocalRepository();
-        }
-        else if ( localRepository.endsWith( "\"" ) )
-        {
-            localRepository = localRepository.substring( 0, localRepository.indexOf( "\"" ) );
         }
 
         return new DefaultArtifactRepository( "local-repository", "file://" + localRepository,
