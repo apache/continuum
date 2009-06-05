@@ -54,6 +54,7 @@ under the License.
 				<include name="installation" />
 				<include name="buildEnvironment" />
 				<include name="buildDefinitionTemplate" />
+				<include name="userroles"/>
 			</run>
 		</groups>
 		<packages>
