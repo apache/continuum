@@ -190,8 +190,8 @@ public class AddProjectAction
             this.setProjectGroupId( this.getSelectedProjectGroup() );
             return "projectGroupSummary";
         }
-        
-        AuditLog event = new AuditLog( projectNameTrim, AuditLogConstants.ADD_PROJECT );
+
+        AuditLog event = new AuditLog( "Project id=" + project.getId(), AuditLogConstants.ADD_PROJECT );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();

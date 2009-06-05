@@ -22,6 +22,8 @@ package org.apache.maven.continuum.web.action.admin;
 import java.util.List;
 
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -98,6 +100,11 @@ public class BuildQueueAction
                     BuildQueue addedBuildQueue = getContinuum().addBuildQueue( buildQueue );
     
                     getContinuum().getBuildsManager().addOverallBuildQueue( addedBuildQueue );
+
+                    AuditLog event = new AuditLog( "Build Queue id=" + addedBuildQueue.getId(), AuditLogConstants.ADD_BUILD_QUEUE );
+                    event.setCategory( AuditLogConstants.BUILD_QUEUE );
+                    event.setCurrentUser( getPrincipal() );
+                    event.log();
                 }
                 else
                 {
@@ -145,6 +152,11 @@ public class BuildQueueAction
             getContinuum().removeBuildQueue( buildQueueToBeDeleted );
 
             this.buildQueueList = getContinuum().getAllBuildQueues();
+
+            AuditLog event = new AuditLog( "Build Queue id=" + buildQueue.getId(), AuditLogConstants.REMOVE_BUILD_QUEUE );
+            event.setCategory( AuditLogConstants.BUILD_QUEUE );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
         }
         else
         {

@@ -21,6 +21,8 @@ package org.apache.maven.continuum.web.action;
 
 import java.io.File;
 
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 
@@ -40,8 +42,21 @@ public class AddMavenOneProjectAction
                                                         boolean scmUseCache )
         throws ContinuumException
     {
-        return getContinuum().addMavenOneProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
+        ContinuumProjectBuildingResult result = getContinuum().addMavenOneProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
                                                   this.getBuildDefinitionTemplateId() );
+
+        AuditLog event = new AuditLog( hidePasswordInUrl( pomUrl ), AuditLogConstants.ADD_M1_PROJECT );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+
+        if ( result == null || result.hasErrors() )
+        {
+            event.setAction( AuditLogConstants.ADD_M1_PROJECT_FAILED );
+        }
+
+        event.log();
+
+        return result;
     }
 
     /**

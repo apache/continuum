@@ -22,6 +22,8 @@ package org.apache.continuum.web.action.admin;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Installation;
@@ -170,9 +172,14 @@ public class BuildAgentAction
             }
         }
 
+        AuditLog event = new AuditLog( "Build Agent URL=" + buildAgent.getUrl(), AuditLogConstants.MODIFY_BUILD_AGENT );
+        event.setCategory( AuditLogConstants.BUILD_AGENT );
+        event.setCurrentUser( getPrincipal() );
+
         if ( !found )
         {
             configuration.addBuildAgent( buildAgent );
+            event.setAction( AuditLogConstants.ADD_BUILD_AGENT );
         }
         else
         {
@@ -184,6 +191,7 @@ public class BuildAgentAction
         }
 
         getContinuum().getDistributedBuildManager().reload();
+        event.log();
 
         return SUCCESS;
     }
@@ -227,6 +235,12 @@ public class BuildAgentAction
                 if ( buildAgent.getUrl().equals( agent.getUrl() ) )
                 {
                     configuration.removeBuildAgent( agent );
+
+                    AuditLog event = new AuditLog( "Build Agent URL=" + agent.getUrl(), AuditLogConstants.REMOVE_BUILD_AGENT );
+                    event.setCategory( AuditLogConstants.BUILD_AGENT );
+                    event.setCurrentUser( getPrincipal() );
+                    event.log();
+
                     return SUCCESS;
                 }
             }
@@ -261,6 +275,12 @@ public class BuildAgentAction
             if ( buildAgentGroup.getName().equals( group.getName() ) )
             {
                 configuration.removeBuildAgentGroup( group );
+
+                AuditLog event = new AuditLog( "Build Agent Group=" + group.getName(), AuditLogConstants.REMOVE_BUILD_AGENT_GROUP );
+                event.setCategory( AuditLogConstants.BUILD_AGENT );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
+
                 return SUCCESS;
             }
         }
@@ -305,10 +325,15 @@ public class BuildAgentAction
             }
         }
 
+        AuditLog event = new AuditLog( "Build Agent Group=" + buildAgentGroup.getName(), AuditLogConstants.MODIFY_BUILD_AGENT_GROUP );
+        event.setCategory( AuditLogConstants.BUILD_AGENT );
+        event.setCurrentUser( getPrincipal() );
+
         if ( !found )
         {
             buildAgentGroup.setBuildAgents( selectedbuildAgents );
             configuration.addBuildAgentGroup( buildAgentGroup );
+            event.setAction( AuditLogConstants.ADD_BUILD_AGENT_GROUP );
         }
         else
         // found
@@ -326,6 +351,7 @@ public class BuildAgentAction
         }
 
         getContinuum().getDistributedBuildManager().reload();
+        event.log();
 
         return SUCCESS;
     }
