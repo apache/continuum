@@ -41,6 +41,7 @@ import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author Jason van Zyl
@@ -252,7 +253,17 @@ public class DefaultContinuumReleaseManager
 
         if ( repository != null )
         {
-            descriptor.setAdditionalArguments( "\"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
+            String args = descriptor.getAdditionalArguments();
+
+            if ( StringUtils.isNotEmpty( args ) )
+            {
+                descriptor.setAdditionalArguments( args +
+                                                   " \"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
+            }
+            else
+            {
+                descriptor.setAdditionalArguments( "\"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
+            }
         }
 
         //other properties
