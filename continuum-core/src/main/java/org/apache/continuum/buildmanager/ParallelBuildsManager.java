@@ -500,6 +500,7 @@ public class ParallelBuildsManager
                 CheckOutTask task = checkouts.get( key );
                 if ( task.getProjectId() == projectId )
                 {
+                    log.info( "Project " + projectId + " is currently being checked out" );
                     return true;
                 }
             }
@@ -528,6 +529,7 @@ public class ParallelBuildsManager
 
                         if ( projectIds.contains( new Integer( projectId ) ) )
                         {
+                            log.info( "Project " + projectId + " is in prepare build queue" );
                             return true;
                         }
                     }
@@ -558,6 +560,7 @@ public class ParallelBuildsManager
                     (BuildProjectTask) overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
                 if ( task != null && task.getProjectId() == projectId )
                 {
+                    log.info( "Project " + projectId + " is currently building in " + overallBuildQueue.getName() );
                     return true;
                 }
             }
@@ -1061,6 +1064,30 @@ public class ParallelBuildsManager
         }
     }
 
+    public boolean isProjectCurrentlyPreparingBuild( int projectId )
+        throws BuildManagerException
+    {
+        PrepareBuildProjectsTask task = getCurrentProjectInPrepareBuild();
+
+        if ( task != null )
+        {
+            Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+
+            if ( map.size() > 0 )
+            {
+                Set<Integer> projectIds = map.keySet();
+
+                if ( projectIds.contains( new Integer( projectId ) ) )
+                {
+                    log.info( "Project " + projectId + " is currently preparing build" );
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
         throws BuildManagerException
     {
@@ -1140,6 +1167,7 @@ public class ParallelBuildsManager
                     {
                         if ( overallBuildQueue.isInBuildQueue( projectId ) )
                         {
+                            log.info( "Project " + projectId + " is in build queue " + overallBuildQueue.getName() );
                             return true;
                         }
                     }
@@ -1147,6 +1175,7 @@ public class ParallelBuildsManager
                     {
                         if ( overallBuildQueue.isInBuildQueue( projectId, buildDefinitionId ) )
                         {
+                            log.info( "Project " + projectId + " is in build queue " + overallBuildQueue.getName() );
                             return true;
                         }
                     }
@@ -1155,6 +1184,7 @@ public class ParallelBuildsManager
                 {
                     if ( overallBuildQueue.isInCheckoutQueue( projectId ) )
                     {
+                        log.info( "Project " + projectId + " is in checkout queue " + overallBuildQueue.getName() );
                         return true;
                     }
                 }

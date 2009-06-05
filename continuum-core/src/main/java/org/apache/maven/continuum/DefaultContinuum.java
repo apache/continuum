@@ -964,7 +964,8 @@ public class DefaultContinuum
                         if ( buildDefId != null &&
                             !parallelBuildsManager.isInAnyBuildQueue( project.getId(), buildDefId ) &&
                             !parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) &&
-                            !parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) )
+                            !parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) &&
+                            !parallelBuildsManager.isProjectCurrentlyPreparingBuild( project.getId() ) )
                         {
                             ProjectScmRoot scmRoot = getProjectScmRootByProject( project.getId() );
 
@@ -3410,7 +3411,9 @@ public class DefaultContinuum
             {
                 // check if project already in queue
                 if ( parallelBuildsManager.isInAnyBuildQueue( projectId ) ||
-                    parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) )
+                    parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) ||
+                    parallelBuildsManager.isInPrepareBuildQueue( projectId ) ||
+                    parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) )
                 {
                     continue;
                 }
@@ -3507,8 +3510,11 @@ public class DefaultContinuum
             {
                 // check if project already in queue
                 if ( parallelBuildsManager.isInAnyBuildQueue( projectId ) ||
-                    parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) )
+                    parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) ||
+                    parallelBuildsManager.isInPrepareBuildQueue( projectId ) ||
+                    parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) )
                 {
+                    log.info( "not building" );
                     continue;
                 }
 

@@ -364,6 +364,16 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
         throws BuildManagerException;
 
     /**
+     * Checks whether project is currently preparing build
+     * 
+     * @param projectId
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean isProjectCurrentlyPreparingBuild( int projectId )
+        throws BuildManagerException;
+
+    /**
      * Return currently preparing build project.
      * @return
      * @throws BuildManagerException
