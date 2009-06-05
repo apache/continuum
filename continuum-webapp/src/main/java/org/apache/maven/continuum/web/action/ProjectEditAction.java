@@ -80,9 +80,8 @@ public class ProjectEditAction
         project.setScmTag( scmTag );
 
         getContinuum().updateProject( project );
-        
-        String resource = project.getGroupId() + ":" + project.getArtifactId();
-        AuditLog event = new AuditLog( resource, AuditLogConstants.MODIFY_PROJECT );
+
+        AuditLog event = new AuditLog( "Project id=" + projectId, AuditLogConstants.MODIFY_PROJECT );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();

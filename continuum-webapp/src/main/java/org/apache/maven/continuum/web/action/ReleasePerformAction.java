@@ -262,9 +262,8 @@ public class ReleasePerformAction
             releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener,
                                     repository );
         }
-        
-        String resource = project.getGroupId() + ":" + project.getArtifactId() + ":" + project.getVersion();
-        AuditLog event = new AuditLog( resource, AuditLogConstants.PERFORM_RELEASE );
+
+        AuditLog event = new AuditLog( "ReleaseId=" + releaseId, AuditLogConstants.PERFORM_RELEASE );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();

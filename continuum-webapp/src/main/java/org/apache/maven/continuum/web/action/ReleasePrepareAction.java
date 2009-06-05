@@ -356,8 +356,7 @@ public class ReleasePrepareAction
                                         workingDirectory, environments, executable );
         }
 
-        String resource = project.getGroupId() + ":" + project.getArtifactId() + ":" + project.getVersion();
-        AuditLog event = new AuditLog( resource, AuditLogConstants.PREPARE_RELEASE );
+        AuditLog event = new AuditLog( "Release id=" + releaseId, AuditLogConstants.PREPARE_RELEASE );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();

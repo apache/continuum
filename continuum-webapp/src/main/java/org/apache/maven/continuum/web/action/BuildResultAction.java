@@ -30,6 +30,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -152,7 +154,32 @@ public class BuildResultAction
         }
         if ( this.isConfirmed() )
         {
-            getContinuum().removeBuildResult( buildId );
+            try
+            {
+                if ( canRemoveBuildResult( getContinuum().getBuildResult( buildId ) ) )
+                {
+                    getContinuum().removeBuildResult( buildId );
+                }
+                else
+                {
+                    addActionError( getText( "buildResult.cannot.delete" ) );
+                }
+            }
+            catch ( ContinuumException e )
+            {
+                addActionError( getText( "buildResult.delete.error", "Unable to delete build result",
+                                         new Integer( buildId ).toString() ) );
+            }
+            catch ( BuildManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
+
+            AuditLog event = new AuditLog( "Build Result id=" + buildId, AuditLogConstants.REMOVE_BUILD_RESULT );
+            event.setCategory( AuditLogConstants.BUILD_RESULT );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
+            
             return SUCCESS;
         }
 

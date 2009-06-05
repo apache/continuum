@@ -154,7 +154,7 @@ public class AddProjectGroupAction
             return ERROR;
         }
         
-        AuditLog event = new AuditLog( name, AuditLogConstants.ADD_PROJECT_GROUP );
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroup.getId(), AuditLogConstants.ADD_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();

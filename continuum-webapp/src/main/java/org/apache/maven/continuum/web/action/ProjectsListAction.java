@@ -28,6 +28,8 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
@@ -99,7 +101,7 @@ public class ProjectsListAction
 
                 try
                 {
-                    AuditLog event = new AuditLog( "Project id=" + selectedProject, AuditLogConstants.REMOVE_PROJECT );
+                    AuditLog event = new AuditLog( "Project id=" + projectId, AuditLogConstants.REMOVE_PROJECT );
                     event.setCategory( AuditLogConstants.PROJECT );
                     event.setCurrentUser( getPrincipal() );
                     event.log();
@@ -153,6 +155,11 @@ public class ProjectsListAction
                 int projectId = Integer.parseInt( pId );
                 Project p = getContinuum().getProjectWithAllDetails( projectId );
                 projectsList.add( p );
+
+                AuditLog event = new AuditLog( "Project id=" + projectId, AuditLogConstants.FORCE_BUILD );
+                event.setCategory( AuditLogConstants.PROJECT );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
             }
 
             List<Project> sortedProjects = getContinuum().getProjectsInBuildOrder( projectsList );

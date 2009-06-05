@@ -315,7 +315,7 @@ public class BuildDefinitionAction
             return REQUIRES_AUTHORIZATION;
         }
         
-        String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+        String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
         AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
         event.setCategory( AuditLogConstants.BUILD_DEFINITION );
         event.setCurrentUser( getPrincipal() );
@@ -367,7 +367,7 @@ public class BuildDefinitionAction
 
         if ( projectId != 0 )
         {
-            String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+            String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
             AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
             event.setCategory( AuditLogConstants.BUILD_DEFINITION );
             event.setCurrentUser( getPrincipal() );
@@ -377,6 +377,11 @@ public class BuildDefinitionAction
         }
         else
         {
+            String resource = "Project Group id=" + projectGroupId + ":" + goals + " " + arguments;
+            AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+            event.setCategory( AuditLogConstants.BUILD_DEFINITION );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
             return "success_group";
         }
     }
@@ -392,7 +397,7 @@ public class BuildDefinitionAction
             {
                 getContinuum().removeBuildDefinitionFromProject( projectId, buildDefinitionId );
                 
-                String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+                String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
                 AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
                 event.setCategory( AuditLogConstants.BUILD_DEFINITION );
                 event.setCurrentUser( getPrincipal() );
@@ -426,7 +431,7 @@ public class BuildDefinitionAction
             {
                 getContinuum().removeBuildDefinitionFromProjectGroup( projectGroupId, buildDefinitionId );
                 
-                String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+                String resource = "Project Group id=" + projectGroupId + ":" +  goals + " " + arguments;
                 AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
                 event.setCategory( AuditLogConstants.BUILD_DEFINITION );
                 event.setCurrentUser( getPrincipal() );

@@ -291,6 +291,22 @@ public abstract class AddMavenProjectAction
         return INPUT;
     }
 
+    protected String hidePasswordInUrl( String url )
+    {
+        int indexAt = url.indexOf( "@" );
+
+        if ( indexAt < 0 )
+        {
+            return url;
+        }
+
+        String s = url.substring( 0, indexAt );
+
+        int pos = s.lastIndexOf( ":" );
+
+        return s.substring( 0, pos + 1 ) + "*****" + url.substring( indexAt );
+    }
+
     private void initializeProjectGroupName()
     {
         if ( disableGroupSelection && selectedProjectGroup != DEFINED_BY_POM_GROUP_ID )

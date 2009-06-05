@@ -313,7 +313,7 @@ public class ProjectGroupAction
             return CONFIRM;
         }
 
-        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.REMOVE_PROJECT_GROUP );
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.REMOVE_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();
@@ -536,7 +536,7 @@ public class ProjectGroupAction
             }
         }
 
-        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.MODIFY_PROJECT_GROUP );
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.MODIFY_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();
@@ -566,7 +566,7 @@ public class ProjectGroupAction
             getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
         }
 
-        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.FORCE_BUILD );
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.FORCE_BUILD );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();

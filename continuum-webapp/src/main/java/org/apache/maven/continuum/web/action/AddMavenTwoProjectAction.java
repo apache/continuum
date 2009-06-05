@@ -110,14 +110,17 @@ public class AddMavenTwoProjectAction
                                                         !this.isNonRecursiveProject(),
                                                         this.getBuildDefinitionTemplateId() );
         }
-        
-        String projectUrl = hidePasswordInUrl( pomUrl );
-        
-        AuditLog event = new AuditLog( projectUrl, AuditLogConstants.ADD_M2_PROJECT );
+
+        AuditLog event = new AuditLog( hidePasswordInUrl( pomUrl ), AuditLogConstants.ADD_M2_PROJECT );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
-        event.log();
 
+        if ( result == null || result.hasErrors() )
+        {
+            event.setAction( AuditLogConstants.ADD_M2_PROJECT_FAILED );
+        }
+
+        event.log();
         return result;
     }
 
@@ -161,33 +164,5 @@ public class AddMavenTwoProjectAction
     public void setNonRecursiveProject( boolean nonRecursiveProject )
     {
         this.nonRecursiveProject = nonRecursiveProject;
-    }
-    
-    private String hidePasswordInUrl( String pomUrl )
-    {
-        String projectUrl = pomUrl;
-        
-        int idx = projectUrl.indexOf( "@" );
-        
-        if ( idx > 0 )
-        {
-            int pwdIndex = projectUrl.lastIndexOf( ":" );
-            
-            if ( ( pwdIndex > 0 ) && ( pwdIndex > projectUrl.indexOf( "://" ) ) )
-            {
-                String password = projectUrl.substring( pwdIndex, idx + 1 );
-                
-                String newPwd = "@";
-                
-                if ( ( password.length() ) > 2 )
-                {
-                    newPwd = ":*****@";
-                }
-                
-                projectUrl = projectUrl.replace( password, newPwd );
-            }
-        }
-        
-        return projectUrl;
     }
 }

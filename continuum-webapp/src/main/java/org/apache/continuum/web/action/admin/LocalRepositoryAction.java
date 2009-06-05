@@ -30,6 +30,8 @@ import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
@@ -248,6 +250,11 @@ public class LocalRepositoryAction
             if ( purgeConfig != null )
             {
                 purgeManager.purgeRepository( purgeConfig );
+
+                AuditLog event = new AuditLog( "Repository id=" + repository.getId(), AuditLogConstants.PURGE_LOCAL_REPOSITORY );
+                event.setCategory( AuditLogConstants.LOCAL_REPOSITORY );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
             }
         }
         return SUCCESS;
