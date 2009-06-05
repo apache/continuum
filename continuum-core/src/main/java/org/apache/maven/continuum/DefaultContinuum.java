@@ -425,6 +425,14 @@ public class DefaultContinuum
                 removeProject( projectId );
             }
 
+            // check if there are any project scm root left
+            List<ProjectScmRoot> scmRoots = getProjectScmRootByProjectGroup( projectGroupId );
+
+            for ( ProjectScmRoot scmRoot : scmRoots )
+            {
+                removeProjectScmRoot( scmRoot );
+            }
+
             log.info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
 
             Map<String, Object> context = new HashMap<String, Object>();
