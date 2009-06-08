@@ -156,6 +156,12 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
+        catch ( ContinuumException e )
+        {
+            addActionError( getText( "projectGroup.invalid.id", "Invalid Project Group Id: " + projectGroupId,
+                                     Integer.toString( projectGroupId ) ) );
+            return "to_summary_page";
+        }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
 
@@ -304,7 +310,7 @@ public class ProjectGroupAction
             {
                 logger.error( "Error while removing project group with id " + projectGroupId, e );
                 addActionError( getText( "projectGroup.delete.error", "Unable to remove project group",
-                                new Integer( projectGroupId ).toString() ) );
+                                         new Integer( projectGroupId ).toString() ) );
             }
         }
         else
