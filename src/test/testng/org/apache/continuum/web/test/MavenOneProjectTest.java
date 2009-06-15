@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 /**
  * Based on AddMavenOneProjectTestCase of Emmanuel Venisse.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -38,12 +38,12 @@ public class MavenOneProjectTest
     public void testValidPomUrl()
         throws Exception
     {
-        String M1_POM_URL = p.getProperty( "M1_POM_URL" );
-        String M1_POM_USERNAME = p.getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = p.getProperty( "M1_POM_PASSWORD" );
-        String M1_PROJ_GRP_NAME = p.getProperty( "M1_PROJ_GRP_NAME" );
-        String M1_PROJ_GRP_ID = p.getProperty( "M1_PROJ_GRP_ID" );
-        String M1_PROJ_GRP_DESCRIPTION = p.getProperty( "M1_PROJ_GRP_DESCRIPTION" );
+        String M1_POM_URL = getProperty( "M1_POM_URL" );
+        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
+        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
+        String M1_PROJ_GRP_NAME = getProperty( "M1_PROJ_GRP_NAME" );
+        String M1_PROJ_GRP_ID = getProperty( "M1_PROJ_GRP_ID" );
+        String M1_PROJ_GRP_DESCRIPTION = getProperty( "M1_PROJ_GRP_DESCRIPTION" );
         // Enter values into Add Maven Two Project fields, and submit
         goToAddMavenOneProjectPage();
         addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, null, true );
@@ -54,12 +54,12 @@ public class MavenOneProjectTest
     public void testAddMavenOneProjectFromRemoteSourceToNonDefaultProjectGroup()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String M1_POM_URL = p.getProperty( "M1_POM_URL" );
-        String M1_POM_USERNAME = p.getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = p.getProperty( "M1_POM_PASSWORD" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String M1_POM_URL = getProperty( "M1_POM_URL" );
+        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
+        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         goToAddMavenOneProjectPage();
         addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, TEST_PROJ_GRP_NAME, null, true );
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
@@ -82,9 +82,9 @@ public class MavenOneProjectTest
     public void testMissingElementInPom()
         throws Exception
     {
-        String M1_MISS_REPO_POM_URL = p.getProperty( "M1_MISS_REPO_POM_URL" );
-        String M1_POM_USERNAME = p.getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = p.getProperty( "M1_POM_PASSWORD" );
+        String M1_MISS_REPO_POM_URL = getProperty( "M1_MISS_REPO_POM_URL" );
+        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
+        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         goToAddMavenOneProjectPage();
         addMavenOneProject( M1_MISS_REPO_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, null, false );
         assertTextPresent( "Missing 'repository' element in the POM." );
@@ -96,9 +96,9 @@ public class MavenOneProjectTest
     public void testWithExtendElementPom()
         throws Exception
     {
-        String M1_EXTENDED_POM_URL = p.getProperty( "M1_EXTENDED_POM_URL" );
-        String M1_POM_USERNAME = p.getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = p.getProperty( "M1_POM_PASSWORD" );
+        String M1_EXTENDED_POM_URL = getProperty( "M1_EXTENDED_POM_URL" );
+        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
+        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         goToAddMavenOneProjectPage();
         addMavenOneProject( M1_EXTENDED_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, null, false );
         assertTextPresent( "Cannot use a POM with an 'extend' element" );
@@ -110,9 +110,9 @@ public class MavenOneProjectTest
     public void testUnparseableXmlContent()
         throws Exception
     {
-        String M1_UNPARSEABLE_POM_URL = p.getProperty( "M1_UNPARSEABLE_POM_URL" );
-        String M1_POM_USERNAME = p.getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = p.getProperty( "M1_POM_PASSWORD" );
+        String M1_UNPARSEABLE_POM_URL = getProperty( "M1_UNPARSEABLE_POM_URL" );
+        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
+        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         goToAddMavenOneProjectPage();
         addMavenOneProject( M1_UNPARSEABLE_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, null, false );
         assertTextPresent( "The XML content of the POM can not be parsed." );

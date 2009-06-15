@@ -32,8 +32,8 @@ public class LocalRepositoriesTest
 {
     public void testAddLocalRepository()
     {
-        String LOCAL_REPOSITORY_NAME = p.getProperty( "LOCAL_REPOSITORY_NAME" );
-        String LOCAL_REPOSITORY_LOCATION = p.getProperty( "LOCAL_REPOSITORY_LOCATION" );
+        String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
+        String LOCAL_REPOSITORY_LOCATION = getProperty( "LOCAL_REPOSITORY_LOCATION" );
         goToAddLocalRepository();
         addEditLocalRepository( LOCAL_REPOSITORY_NAME, LOCAL_REPOSITORY_LOCATION, true );
     }
@@ -49,8 +49,8 @@ public class LocalRepositoriesTest
     @Test( dependsOnMethods = { "testAddLocalRepository" } )
     public void testAddDuplicatedLocalRepository()
     {
-        String LOCAL_REPOSITORY_NAME = p.getProperty( "LOCAL_REPOSITORY_NAME" );
-        String LOCAL_REPOSITORY_LOCATION = p.getProperty( "LOCAL_REPOSITORY_LOCATION" );
+        String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
+        String LOCAL_REPOSITORY_LOCATION = getProperty( "LOCAL_REPOSITORY_LOCATION" );
         goToAddLocalRepository();
         addEditLocalRepository( LOCAL_REPOSITORY_NAME, LOCAL_REPOSITORY_LOCATION, false );
         assertTextPresent( "Local repository name must be unique" );
@@ -60,8 +60,8 @@ public class LocalRepositoriesTest
     @Test( dependsOnMethods = { "testAddDuplicatedLocalRepository" } )
     public void testEditLocalRepository()
     {
-        String LOCAL_REPOSITORY_NAME = p.getProperty( "LOCAL_REPOSITORY_NAME" );
-        String LOCAL_REPOSITORY_LOCATION = p.getProperty( "LOCAL_REPOSITORY_LOCATION" );
+        String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
+        String LOCAL_REPOSITORY_LOCATION = getProperty( "LOCAL_REPOSITORY_LOCATION" );
         String newName = "new_name";
         String newLocation = "new_location";
         goToEditLocalRepository( LOCAL_REPOSITORY_NAME, LOCAL_REPOSITORY_LOCATION );
@@ -73,7 +73,7 @@ public class LocalRepositoriesTest
     @Test( dependsOnMethods = { "testEditLocalRepository" } )
     public void testDeleteLocalRepository()
     {
-        String LOCAL_REPOSITORY_NAME = p.getProperty( "LOCAL_REPOSITORY_NAME" );
+        String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
         removeLocalRepository( LOCAL_REPOSITORY_NAME );
     }
 }

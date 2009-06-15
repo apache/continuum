@@ -4,27 +4,27 @@ import java.io.File;
 
 import org.apache.continuum.web.test.XPathExpressionUtil;
 
-public abstract class AbstractUserRolesManagementTest 
+public abstract class AbstractUserRolesManagementTest
 	extends AbstractContinuumTest
 {
 	protected String username;
 	protected String fullname;
-	
+
 	public String getUserEmail()
 	{
-		String email = p.getProperty("USERROLE_EMAIL");
+		String email = getProperty( "USERROLE_EMAIL" );
 		return email;
 	}
-	
-	public String getUserRolePassword() 
+
+	public String getUserRolePassword()
 	{
-		String password = p.getProperty("USERROLE_PASSWORD");
+		String password = getProperty( "USERROLE_PASSWORD" );
 		return password;
 	}
 
-	public String getUserRoleNewPassword() 
+	public String getUserRoleNewPassword()
 	{
-		String password_new = p.getProperty( "NEW_USERROLE_PASSWORD" );
+		String password_new = getProperty( "NEW_USERROLE_PASSWORD" );
 		return password_new;
 	}
 
@@ -39,19 +39,19 @@ public abstract class AbstractUserRolesManagementTest
 
         return basedir;
     }
-	
+
 	public String getAdminUsername()
 	{
-		String adminUsername = p.getProperty( "ADMIN_USERNAME" );
+		String adminUsername = getProperty( "ADMIN_USERNAME" );
 		return adminUsername;
 	}
-	
+
 	public String getAdminPassword()
 	{
-		String adminPassword = p.getProperty( "ADMIN_PASSWORD" );
+		String adminPassword = getProperty( "ADMIN_PASSWORD" );
 		return adminPassword;
 	}
-	
+
 	////////////////////////////
 	// Assertions
 	////////////////////////////
@@ -71,7 +71,7 @@ public abstract class AbstractUserRolesManagementTest
 		assertElementPresent( "user.confirmPassword" );
 		assertButtonWithValuePresent( "Create User" );
 	}
-	
+
 	public void assertUserRolesPage()
 	{
 		assertPage( "[Admin] User Edit" );
@@ -81,29 +81,29 @@ public abstract class AbstractUserRolesManagementTest
 			for ( String userroles : arrayUserRoles )
 				assertTextPresent( userroles );
 	}
-	
+
 	public void assertUserRoleCheckBoxPresent( String value )
     {
     	getSelenium().isElementPresent( "xpath=//input[@id='addRolesToUser_addNDSelectedRoles' and @name='addNDSelectedRoles' and @value='"+ value + "']" );
     }
-    
-    public void assertResourceRolesCheckBoxPresent( String value ) 
+
+    public void assertResourceRolesCheckBoxPresent( String value )
     {
     	getSelenium().isElementPresent( "xpath=//input[@name='addDSelectedRoles' and @value='" + value + "']" );
     }
-  
-    public void checkUserRoleWithValue( String value ) 
+
+    public void checkUserRoleWithValue( String value )
     {
     	assertUserRoleCheckBoxPresent( value );
     	getSelenium().click( "xpath=//input[@id='addRolesToUser_addNDSelectedRoles' and @name='addNDSelectedRoles' and @value='"+ value + "']" );
     }
 
-    public void checkResourceRoleWithValue( String value ) 
+    public void checkResourceRoleWithValue( String value )
     {
     	assertResourceRolesCheckBoxPresent( value );
     	getSelenium().click( "xpath=//input[@name='addDSelectedRoles' and @value='" + value + "']" );
     }
-	
+
 	public void assertLeftNavMenuWithRole( String role )
 	{
 		if( role == "System Administrator" )
@@ -113,77 +113,77 @@ public abstract class AbstractUserRolesManagementTest
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "User Administrator" ) 
+    	else if( role == "User Administrator" )
     	{
     		String navMenu = "About,Show Project Groups,Users,Roles";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Group Project Administrator" ) 
+    	else if( role == "Continuum Group Project Administrator" )
     	{
     		String navMenu = "About,Show Project Groups,Maven 2.0.x Project,Maven 1.x Project,Ant Project,Shell Project,Schedules,Queues,Users,Roles";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Group Project Developer" ) 
+    	else if( role == "Continuum Group Project Developer" )
     	{
     		String navMenu = "About,Show Project Groups,Queues";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Group Project User" ) 
+    	else if( role == "Continuum Group Project User" )
     	{
     		String navMenu = "About,Show Project Groups,Queues";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Manage Build Environments" ) 
+    	else if( role == "Continuum Manage Build Environments" )
     	{
     		String navMenu = "About,Show Project Groups,Build Environments";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Manage Build Templates" ) 
+    	else if( role == "Continuum Manage Build Templates" )
     	{
     		String navMenu = "About,Show Project Groups,Build Definition Templates";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Manage Installations" ) 
+    	else if( role == "Continuum Manage Installations" )
     	{
     		String navMenu = "About,Show Project Groups,Installations";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Manage Local Repositories" ) 
+    	else if( role == "Continuum Manage Local Repositories" )
     	{
     		String navMenu = "About,Show Project Groups,Local Repositories";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Manage Purging" ) 
+    	else if( role == "Continuum Manage Purging" )
     	{
     		String navMenu = "About,Show Project Groups,Purge Configurations";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Manage Queues" ) 
+    	else if( role == "Continuum Manage Queues" )
     	{
     		String navMenu = "About,Show Project Groups,Queues";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-    	else if( role == "Continuum Manage Scheduling" ) 
+    	else if( role == "Continuum Manage Scheduling" )
     	{
     		String navMenu = "About,Show Project Groups,Schedules";
     		String[] arrayNavMenu = navMenu.split( "," );
@@ -195,9 +195,9 @@ public abstract class AbstractUserRolesManagementTest
     		String navMenu = "About,Show Project Groups,Queues,Users,Roles";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
-    			assertLinkPresent( navmenu );		
+    			assertLinkPresent( navmenu );
 	}
-    	else if( role == "Project Developer - Default Project Group" || role == "Project User - Default Project Group" ) 
+    	else if( role == "Project Developer - Default Project Group" || role == "Project User - Default Project Group" )
     	{
     		String navMenu = "About,Show Project Groups,Queues";
     		String[] arrayNavMenu = navMenu.split( "," );
@@ -215,7 +215,7 @@ public abstract class AbstractUserRolesManagementTest
     	}
 
 	}
-	
+
 	public void assertDeleteUserPage( String username )
 	 {
 	        assertPage( "[Admin] User Delete" ); //TODO
@@ -224,11 +224,11 @@ public abstract class AbstractUserRolesManagementTest
 	        assertTextPresent( "Username: " + username );
 	        assertButtonWithValuePresent( "Delete User" );
 	 }
-	
+
 	/////////////////////////////////////////
 	// User Roles Management
 	/////////////////////////////////////////
-	public void changePassword(String oldPassword, String newPassword) 
+    public void changePassword( String oldPassword, String newPassword )
 	{
 		assertPage( "Change Password" );
 		setFieldValue( "existingPassword", oldPassword );
@@ -236,13 +236,14 @@ public abstract class AbstractUserRolesManagementTest
 		setFieldValue( "newPasswordConfirm", newPassword );
 		clickButtonWithValue( "Change Password" );
 	}
-	
+
 	public void createUser( String userName, String fullName, String email, String password, boolean valid )
 	{
 		createUser( userName, fullName, email, password, password, valid );
 	}
-	
-	private void createUser( String userName, String fullName, String emailAd, String password, String confirmPassword, boolean valid ) 
+
+	private void createUser( String userName, String fullName, String emailAd, String password, String confirmPassword,
+                             boolean valid )
 	{
 		login( getAdminUsername() , getAdminPassword() );
 		clickLinkWithText( "Users" );
@@ -254,10 +255,10 @@ public abstract class AbstractUserRolesManagementTest
         setFieldValue( "user.password", password );
         setFieldValue( "user.confirmPassword", confirmPassword );
         submit();
-        
+
         assertUserRolesPage( );
         clickButtonWithValue( "Submit" );
-        
+
         /*if (valid )
         {
         	String[] columnValues = {userName, fullName, emailAd};
@@ -268,13 +269,13 @@ public abstract class AbstractUserRolesManagementTest
             assertCreateUserPage();
         }*/
 	}
-	
-	
+
+
 	 public void login( String username, String password )
 	    {
 	        login( username, password, true, "Login Page" );
 	    }
-		
+
 		public void login( String username, String password, boolean valid, String assertReturnPage )
 	    {
 	        if ( isLinkPresent( "Login" ) )
@@ -284,7 +285,7 @@ public abstract class AbstractUserRolesManagementTest
 	            submitLoginPage( username, password, false, valid, assertReturnPage );
 	        }
 	    }
-	    
+
 		public void submitLoginPage( String username, String password )
 	    {
 	        submitLoginPage( username, password, false, true, "Login Page" );
@@ -296,7 +297,7 @@ public abstract class AbstractUserRolesManagementTest
 	    }
 
 	    public void submitLoginPage( String username, String password, boolean rememberMe, boolean validUsernamePassword,
-	                                 String assertReturnPage )
+                                 String assertReturnPage )
 	    {
 	        assertLoginPage();
 	        setFieldValue( "username", username );
@@ -326,13 +327,13 @@ public abstract class AbstractUserRolesManagementTest
 	            }
 	        }
 	    }
-	
+
 	public void deleteUser( String userName, String fullName, String emailAdd )
     {
         deleteUser( userName, fullName, emailAdd, false, false );
     }
-	
-	public void deleteUser(String userName, String fullName, String emailAd, boolean validated, boolean locked)
+
+	public void deleteUser( String userName, String fullName, String emailAd, boolean validated, boolean locked )
 	{
 		//clickLinkWithText( "userlist" );
 		clickLinkWithXPath( "//table[@id='ec_table']/tbody[2]/tr[3]/td[7]/a/img" );

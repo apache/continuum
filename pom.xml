@@ -133,6 +133,12 @@ under the License.
       <scope>test</scope>
       <classifier>jdk15</classifier>
     </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.4</version>
+    </dependency>  
     
     <!-- deployables -->
     <dependency>

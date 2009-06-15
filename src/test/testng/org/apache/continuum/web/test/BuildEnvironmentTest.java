@@ -32,7 +32,7 @@ public class BuildEnvironmentTest
 {
     public void testAddBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
         goToAddBuildEnvironment();
         addBuildEnvironment( BUIL_ENV_NAME, new String[] {}, true );
     }
@@ -47,7 +47,7 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditInvalidBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
         goToEditBuildEnvironment( BUIL_ENV_NAME );
         editBuildEnvironment( "", new String[] {}, false );
         assertTextPresent( "You must define a name" );
@@ -56,7 +56,7 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testAddDuplicatedBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
         goToAddBuildEnvironment();
         addBuildEnvironment( BUIL_ENV_NAME, new String[] {}, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
@@ -65,7 +65,7 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
         String newName = "new_name";
         goToEditBuildEnvironment( BUIL_ENV_NAME );
         editBuildEnvironment( newName, new String[] {}, true );
@@ -78,7 +78,7 @@ public class BuildEnvironmentTest
         "testAddDuplicatedBuildEnvironment", "testEditInvalidBuildEnvironment" } )
     public void testDeleteBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
         removeBuildEnvironment( BUIL_ENV_NAME );
     }
 }

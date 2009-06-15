@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 /**
  * Based on MyAccountTest of Emmanuel Venisse test.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -51,11 +51,11 @@ public class MyAccountTest
         clickLinkWithText( "Edit Details" );
         assertFieldValue( newFullName, "user.fullName" );
         assertFieldValue( newEmail, "user.email" );
-        setFieldValue( "user.fullName", p.getProperty( "ADMIN_USERNAME" ) );
+        setFieldValue( "user.fullName", getProperty( "ADMIN_USERNAME" ) );
         setFieldValue( "user.email", email );
         submit();
         clickLinkWithText( "Edit Details" );
-        assertFieldValue( p.getProperty( "ADMIN_USERNAME" ), "user.fullName" );
+        assertFieldValue( getProperty( "ADMIN_USERNAME" ), "user.fullName" );
         assertFieldValue( email, "user.email" );
     }
 }
