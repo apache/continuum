@@ -19,6 +19,9 @@ package org.apache.continuum.web.test.parent;
  * under the License.
  */
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -26,8 +29,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
-
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.DefaultSelenium;
@@ -35,7 +38,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Based on AbstractSeleniumTestCase of Emmanuel Venisse test.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -47,7 +50,9 @@ public abstract class AbstractSeleniumTest
 
     private static ThreadLocal<Selenium> selenium;
 
-    public static Properties p;
+    private static Properties p;
+
+    private final static String PROPERTIES_SEPARATOR = "=";
 
     /**
      * Initialize selenium an others properties. This method is called from BeforeSuite method of sub-class.
@@ -55,24 +60,26 @@ public abstract class AbstractSeleniumTest
     public void open()
         throws Exception
     {
+        InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
         p = new Properties();
-        p.load( this.getClass().getClassLoader().getResourceAsStream( "testng.properties" ) );
+        p.load( input );
 
-        baseUrl = p.getProperty( "BASE_URL" );
-        maxWaitTimeInMs = p.getProperty( "MAX_WAIT_TIME_IN_MS" );
+        baseUrl = getProperty( "BASE_URL" );
+        maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
 
-        String seleniumHost = p.getProperty( "SELENIUM_HOST" );
-        int seleniumPort = Integer.parseInt( ( p.getProperty( "SELENIUM_PORT" ) ) );
+        String seleniumHost = getProperty( "SELENIUM_HOST" );
+        int seleniumPort = Integer.parseInt( ( getProperty( "SELENIUM_PORT" ) ) );
 
         String seleniumBrowser = System.getProperty( "browser" );
         if ( StringUtils.isEmpty( seleniumBrowser ) )
         {
-            seleniumBrowser = p.getProperty( "SELENIUM_BROWSER" );
+            seleniumBrowser = getProperty( "SELENIUM_BROWSER" );
         }
-       
+
         final Selenium s = new DefaultSelenium( seleniumHost, seleniumPort, seleniumBrowser, baseUrl );
         selenium = new ThreadLocal<Selenium>()
         {
+            @Override
             protected Selenium initialValue()
             {
                 return s;
@@ -85,6 +92,37 @@ public abstract class AbstractSeleniumTest
     {
         return selenium.get();
     }
+
+    protected String getProperty( String key )
+    {
+        return p.getProperty( key );
+    }
+
+    protected String getEscapeProperty( String key )
+    {
+        InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
+        String value = null;
+        List<String> lines;
+        try
+        {
+            lines = IOUtils.readLines( input );
+        }
+        catch ( IOException e )
+        {
+            lines = new ArrayList<String>();
+        }
+        for ( String l : lines )
+        {
+            if ( l != null && l.startsWith( key ) )
+            {
+                int indexSeparator = l.indexOf( PROPERTIES_SEPARATOR );
+                value = l.substring( indexSeparator + 1 ).trim();
+                break;
+            }
+        }
+        return value;
+    }
+
 
     /**
      * Close selenium session. Called from AfterSuite method of sub-class
@@ -361,14 +399,15 @@ public abstract class AbstractSeleniumTest
     {
         Assert.assertFalse( getSelenium().isChecked( locator ) );
     }
-    public void clickAndWait (String locator) 
+    public void clickAndWait( String locator )
 	{
 	  getSelenium().click(locator);
 	  getSelenium().waitForPageToLoad(maxWaitTimeInMs);
 	}
-    
-    public void waitForElementPresent(String locator) throws InterruptedException
-    {   
+
+    public void waitForElementPresent( String locator )
+        throws InterruptedException
+    {
     	getSelenium().waitForPageToLoad(maxWaitTimeInMs);
     	for (int second = 0;; second++) {
     		if (second >= 60) Assert.fail("timeout");
@@ -377,8 +416,9 @@ public abstract class AbstractSeleniumTest
     	}
     }
 
-    public void waitForTextPresent(String text) throws InterruptedException
-    {   
+    public void waitForTextPresent( String text )
+        throws InterruptedException
+    {
     	getSelenium().waitForPageToLoad(maxWaitTimeInMs);
     	for (int second = 0;; second++) {
     		if (second >= 60) Assert.fail( "Timeout" );
@@ -386,5 +426,4 @@ public abstract class AbstractSeleniumTest
     		Thread.sleep(1000);
     	}
     }
-    
 }

@@ -32,17 +32,17 @@ public class ScheduleTest
 {
     public void testAddSchedule()
     {
-        String SCHEDULE_NAME = p.getProperty( "SCHEDULE_NAME" );
-        String SCHEDULE_DESCRIPTION = p.getProperty( "SCHEDULE_DESCRIPTION" );
-        String SCHEDULE_EXPR_SECOND = p.getProperty( "SCHEDULE_EXPR_SECOND" );
-        String SCHEDULE_EXPR_MINUTE = p.getProperty( "SCHEDULE_EXPR_MINUTE" );
-        String SCHEDULE_EXPR_HOUR = p.getProperty( "SCHEDULE_EXPR_HOUR" );
-        String SCHEDULE_EXPR_DAY_MONTH = p.getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
-        String SCHEDULE_EXPR_MONTH = p.getProperty( "SCHEDULE_EXPR_MONTH" );
-        String SCHEDULE_EXPR_DAY_WEEK = p.getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
-        String SCHEDULE_EXPR_YEAR = p.getProperty( "SCHEDULE_EXPR_YEAR" );
-        String SCHEDULE_MAX_TIME = p.getProperty( "SCHEDULE_MAX_TIME" );
-        String SCHEDULE_PERIOD = p.getProperty( "SCHEDULE_PERIOD" );
+        String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
+        String SCHEDULE_DESCRIPTION = getProperty( "SCHEDULE_DESCRIPTION" );
+        String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
+        String SCHEDULE_EXPR_MINUTE = getProperty( "SCHEDULE_EXPR_MINUTE" );
+        String SCHEDULE_EXPR_HOUR = getProperty( "SCHEDULE_EXPR_HOUR" );
+        String SCHEDULE_EXPR_DAY_MONTH = getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
+        String SCHEDULE_EXPR_MONTH = getProperty( "SCHEDULE_EXPR_MONTH" );
+        String SCHEDULE_EXPR_DAY_WEEK = getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
+        String SCHEDULE_EXPR_YEAR = getProperty( "SCHEDULE_EXPR_YEAR" );
+        String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
+        String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
         goToAddSchedule();
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
@@ -61,17 +61,17 @@ public class ScheduleTest
     @Test( dependsOnMethods = { "testAddSchedule" } )
     public void testAddDuplicatedSchedule()
     {
-        String SCHEDULE_NAME = p.getProperty( "SCHEDULE_NAME" );
-        String SCHEDULE_DESCRIPTION = p.getProperty( "SCHEDULE_DESCRIPTION" );
-        String SCHEDULE_EXPR_SECOND = p.getProperty( "SCHEDULE_EXPR_SECOND" );
-        String SCHEDULE_EXPR_MINUTE = p.getProperty( "SCHEDULE_EXPR_MINUTE" );
-        String SCHEDULE_EXPR_HOUR = p.getProperty( "SCHEDULE_EXPR_HOUR" );
-        String SCHEDULE_EXPR_DAY_MONTH = p.getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
-        String SCHEDULE_EXPR_MONTH = p.getProperty( "SCHEDULE_EXPR_MONTH" );
-        String SCHEDULE_EXPR_DAY_WEEK = p.getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
-        String SCHEDULE_EXPR_YEAR = p.getProperty( "SCHEDULE_EXPR_YEAR" );
-        String SCHEDULE_MAX_TIME = p.getProperty( "SCHEDULE_MAX_TIME" );
-        String SCHEDULE_PERIOD = p.getProperty( "SCHEDULE_PERIOD" );
+        String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
+        String SCHEDULE_DESCRIPTION = getProperty( "SCHEDULE_DESCRIPTION" );
+        String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
+        String SCHEDULE_EXPR_MINUTE = getProperty( "SCHEDULE_EXPR_MINUTE" );
+        String SCHEDULE_EXPR_HOUR = getProperty( "SCHEDULE_EXPR_HOUR" );
+        String SCHEDULE_EXPR_DAY_MONTH = getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
+        String SCHEDULE_EXPR_MONTH = getProperty( "SCHEDULE_EXPR_MONTH" );
+        String SCHEDULE_EXPR_DAY_WEEK = getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
+        String SCHEDULE_EXPR_YEAR = getProperty( "SCHEDULE_EXPR_YEAR" );
+        String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
+        String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
         goToAddSchedule();
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
@@ -82,17 +82,17 @@ public class ScheduleTest
     @Test( dependsOnMethods = { "testAddDuplicatedSchedule" } )
     public void testEditSchedule()
     {
-        String SCHEDULE_NAME = p.getProperty( "SCHEDULE_NAME" );
-        String SCHEDULE_DESCRIPTION = p.getProperty( "SCHEDULE_DESCRIPTION" );
-        String SCHEDULE_EXPR_SECOND = p.getProperty( "SCHEDULE_EXPR_SECOND" );
-        String SCHEDULE_EXPR_MINUTE = p.getProperty( "SCHEDULE_EXPR_MINUTE" );
-        String SCHEDULE_EXPR_HOUR = p.getProperty( "SCHEDULE_EXPR_HOUR" );
-        String SCHEDULE_EXPR_DAY_MONTH = p.getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
-        String SCHEDULE_EXPR_MONTH = p.getProperty( "SCHEDULE_EXPR_MONTH" );
-        String SCHEDULE_EXPR_DAY_WEEK = p.getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
-        String SCHEDULE_EXPR_YEAR = p.getProperty( "SCHEDULE_EXPR_YEAR" );
-        String SCHEDULE_MAX_TIME = p.getProperty( "SCHEDULE_MAX_TIME" );
-        String SCHEDULE_PERIOD = p.getProperty( "SCHEDULE_PERIOD" );
+        String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
+        String SCHEDULE_DESCRIPTION = getProperty( "SCHEDULE_DESCRIPTION" );
+        String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
+        String SCHEDULE_EXPR_MINUTE = getProperty( "SCHEDULE_EXPR_MINUTE" );
+        String SCHEDULE_EXPR_HOUR = getProperty( "SCHEDULE_EXPR_HOUR" );
+        String SCHEDULE_EXPR_DAY_MONTH = getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
+        String SCHEDULE_EXPR_MONTH = getProperty( "SCHEDULE_EXPR_MONTH" );
+        String SCHEDULE_EXPR_DAY_WEEK = getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
+        String SCHEDULE_EXPR_YEAR = getProperty( "SCHEDULE_EXPR_YEAR" );
+        String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
+        String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
         String name = "new_name";
         String description = "new_description";
         String second = "1";
@@ -117,7 +117,7 @@ public class ScheduleTest
     @Test( dependsOnMethods = { "testEditSchedule" } )
     public void testDeleteSchedule()
     {
-        String SCHEDULE_NAME = p.getProperty( "SCHEDULE_NAME" );
+        String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
         removeSchedule( SCHEDULE_NAME );
     }
 }

@@ -32,11 +32,11 @@ import org.testng.annotations.Test;
     public class QueueTest
         extends AbstractBuildQueueTest
     {
-    
+
 	public void testAddBuildQueue()
     {
         setMaxBuildQueue( 2 );
-        String BUILD_QUEUE_NAME = p.getProperty( "BUILD_QUEUE_NAME" );
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
         addBuildQueue( BUILD_QUEUE_NAME, true );
     }
 
@@ -53,11 +53,11 @@ import org.testng.annotations.Test;
     public void testAddAlreadyExistBuildQueue()
     {
         setMaxBuildQueue( 3 );
-        String BUILD_QUEUE_NAME = p.getProperty( "BUILD_QUEUE_NAME" );
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
         addBuildQueue( BUILD_QUEUE_NAME, false );
         assertTextPresent( "Build queue name already exists." );
     }
-    
+
     //@Test( dependsOnMethods = { "testAddAlreadyExistBuildQueue" } )
     public void testAddEmptyBuildQueue()
     {
@@ -70,22 +70,22 @@ import org.testng.annotations.Test;
     public void testDeleteBuildQueue()
     {
         goToBuildQueuePage();
-        String BUILD_QUEUE_NAME = p.getProperty( "BUILD_QUEUE_NAME" );
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
         removeBuildQueue( BUILD_QUEUE_NAME );
         assertTextNotPresent( BUILD_QUEUE_NAME );
     }
-    
-       
+
+
     @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
     public void testQueuePageWithProjectCurrentlyBuilding()
         throws Exception
-    {   
+    {
     	//build a project
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = p.getProperty( "M2_PROJ_GRP_ID" );
-        String M2_PROJ_GRP_DESCRIPTION = p.getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
-        
+
         //check queue page while building
     	clickAndWait( "link=Queues" );
 	    assertPage( "Continuum - Build Queue" );
@@ -103,7 +103,7 @@ import org.testng.annotations.Test;
 	    waitForElementPresent( "//img[@alt='Success']" );
 	    Thread.sleep( 10000 );
     }
-    
+
     //@Test( dependsOnMethods = { "testDeleteBuildQueue" } )
     public void testQueuePageWithoutBuild()
     {
@@ -117,7 +117,7 @@ import org.testng.annotations.Test;
 	    assertTextPresent( "Checkout Queue " );
 	    assertTextPresent( "Current Prepare Build" );
 	    assertTextPresent( "Prepare Build Queue" );
-        
-    }    
-    
+
+    }
+
 }

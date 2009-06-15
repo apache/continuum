@@ -32,26 +32,26 @@ public class InstallationTest
 {
     public void testAddJdkToolWithoutBuildEnvirotment()
     {
-        String INSTALL_TOOL_JDK_NAME = p.getProperty( "INSTALL_TOOL_JDK_NAME" );
-        String INSTALL_TOOL_JDK_PATH = p.getProperty( "INSTALL_TOOL_JDK_PATH" );
+        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
+        String INSTALL_TOOL_JDK_PATH = getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
         goToAddInstallationTool();
         addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
     }
 
     public void testAddMavenToolWithBuildEnvirotment()
     {
-        String INTALLA_TOOL_MAVEN_NAME = p.getProperty( "INTALLA_TOOL_MAVEN_NAME" );
-        String INTALLA_TOOL_MAVEN_PATH = p.getProperty( "INTALLA_TOOL_MAVEN_PATH" );
+        String INTALL_TOOL_MAVEN_NAME = getProperty( "INTALL_TOOL_MAVEN_NAME" );
+        String INTALL_TOOL_MAVEN_PATH = getEscapeProperty( "INTALL_TOOL_MAVEN_PATH" );
         goToAddInstallationTool();
-        addInstallation( INTALLA_TOOL_MAVEN_NAME, "Maven 2", INTALLA_TOOL_MAVEN_PATH, true, true, true );
+        addInstallation( INTALL_TOOL_MAVEN_NAME, "Maven 2", INTALL_TOOL_MAVEN_PATH, true, true, true );
         // TODO: Validate build envirotment
     }
 
     public void testAddInstallationVariableWithBuildEnvirotment()
     {
-        String INSTALL_VAR_NAME = p.getProperty( "INSTALL_VAR_NAME" );
-        String INSTALL_VAR_VARIABLE_NAME = p.getProperty( "INSTALL_VAR_VARIABLE_NAME" );
-        String INSTALL_VAR_PATH = p.getProperty( "INSTALL_VAR_PATH" );
+        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
+        String INSTALL_VAR_VARIABLE_NAME = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
+        String INSTALL_VAR_PATH = getProperty( "INSTALL_VAR_PATH" );
         goToAddInstallationVariable();
         addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, true, false, true );
         // TODO: Validate build envirotment
@@ -99,8 +99,8 @@ public class InstallationTest
     @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvirotment" } )
     public void testAddDuplicatedInstallationTool()
     {
-        String INSTALL_TOOL_JDK_NAME = p.getProperty( "INSTALL_TOOL_JDK_NAME" );
-        String INSTALL_TOOL_JDK_PATH = p.getProperty( "INSTALL_TOOL_JDK_PATH" );
+        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
+        String INSTALL_TOOL_JDK_PATH = getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
         goToAddInstallationTool();
         addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
         assertTextPresent( "Installation name already exists" );
@@ -109,9 +109,9 @@ public class InstallationTest
     @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvirotment" } )
     public void testAddDuplicatedInstallationVariable()
     {
-        String INSTALL_VAR_NAME = p.getProperty( "INSTALL_VAR_NAME" );
-        String INSTALL_VAR_VARIABLE_NAME = p.getProperty( "INSTALL_VAR_VARIABLE_NAME" );
-        String INSTALL_VAR_PATH = p.getProperty( "INSTALL_VAR_PATH" );
+        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
+        String INSTALL_VAR_VARIABLE_NAME = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
+        String INSTALL_VAR_PATH = getProperty( "INSTALL_VAR_PATH" );
         goToAddInstallationVariable();
         addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, false, false );
         assertTextPresent( "Installation name already exists" );
@@ -120,8 +120,8 @@ public class InstallationTest
     @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvirotment" } )
     public void testEditInstallationTool()
     {
-        String INSTALL_TOOL_JDK_NAME = p.getProperty( "INSTALL_TOOL_JDK_NAME" );
-        String INSTALL_TOOL_JDK_PATH = p.getProperty( "INSTALL_TOOL_JDK_PATH" );
+        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
+        String INSTALL_TOOL_JDK_PATH = getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
         String newName = "new_name";
         goToEditInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true );
         editInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
@@ -132,9 +132,9 @@ public class InstallationTest
     @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvirotment" } )
     public void testEditInstallationVariable()
     {
-        String INSTALL_VAR_NAME = p.getProperty( "INSTALL_VAR_NAME" );
-        String INSTALL_VAR_VARIABLE_NAME = p.getProperty( "INSTALL_VAR_VARIABLE_NAME" );
-        String INSTALL_VAR_PATH = p.getProperty( "INSTALL_VAR_PATH" );
+        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
+        String INSTALL_VAR_VARIABLE_NAME = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
+        String INSTALL_VAR_PATH = getProperty( "INSTALL_VAR_PATH" );
         String newName = "new_name";
         String newVarName = "new_var_name";
         String newPath = "new_path";
@@ -147,14 +147,14 @@ public class InstallationTest
     @Test( dependsOnMethods = { "testEditInstallationTool", "testAddDuplicatedInstallationTool" } )
     public void testDeleteInstallationTool()
     {
-        String INSTALL_TOOL_JDK_NAME = p.getProperty( "INSTALL_TOOL_JDK_NAME" );
+        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
         removeInstallation( INSTALL_TOOL_JDK_NAME );
     }
 
     @Test( dependsOnMethods = { "testEditInstallationVariable", "testAddDuplicatedInstallationVariable" } )
     public void testDeleteInstallationVariable()
     {
-        String INSTALL_VAR_NAME = p.getProperty( "INSTALL_VAR_NAME" );
+        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
         removeInstallation( INSTALL_VAR_NAME );
     }
 }

@@ -33,9 +33,9 @@ public class NotifierTest
     public void testAddValidMailProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String MAIL_NOTIFIER_ADDRESS = p.getProperty( "MAIL_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MAIL_NOTIFIER_ADDRESS = getProperty( "MAIL_NOTIFIER_ADDRESS" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addMailNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MAIL_NOTIFIER_ADDRESS, true );
     }
@@ -44,9 +44,9 @@ public class NotifierTest
     public void testEditValidMailProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String MAIL_NOTIFIER_ADDRESS = p.getProperty( "MAIL_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MAIL_NOTIFIER_ADDRESS = getProperty( "MAIL_NOTIFIER_ADDRESS" );
         String newMail = "newmail@mail.com";
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         editMailNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MAIL_NOTIFIER_ADDRESS, newMail, true );
@@ -57,9 +57,9 @@ public class NotifierTest
     public void testEditInvalidMailProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String MAIL_NOTIFIER_ADDRESS = p.getProperty( "MAIL_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MAIL_NOTIFIER_ADDRESS = getProperty( "MAIL_NOTIFIER_ADDRESS" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         editMailNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MAIL_NOTIFIER_ADDRESS, "invalid_email_add", false );
     }
@@ -67,8 +67,8 @@ public class NotifierTest
     public void testAddInvalidMailProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addMailNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "invalid_email_add", false );
     }
@@ -76,10 +76,10 @@ public class NotifierTest
     public void testAddValidMailGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String MAIL_NOTIFIER_ADDRESS = p.getProperty( "MAIL_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String MAIL_NOTIFIER_ADDRESS = getProperty( "MAIL_NOTIFIER_ADDRESS" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addMailNotifier( TEST_PROJ_GRP_NAME, null, MAIL_NOTIFIER_ADDRESS, true );
     }
@@ -88,10 +88,10 @@ public class NotifierTest
     public void testEditValidMailGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String MAIL_NOTIFIER_ADDRESS = p.getProperty( "MAIL_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String MAIL_NOTIFIER_ADDRESS = getProperty( "MAIL_NOTIFIER_ADDRESS" );
         String newMail = "newmail@mail.com";
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
@@ -104,10 +104,10 @@ public class NotifierTest
     public void testEditInvalidMailGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String MAIL_NOTIFIER_ADDRESS = p.getProperty( "MAIL_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String MAIL_NOTIFIER_ADDRESS = getProperty( "MAIL_NOTIFIER_ADDRESS" );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
         assertGroupNotifierPage( TEST_PROJ_GRP_NAME );
@@ -117,9 +117,9 @@ public class NotifierTest
     public void testAddInvalidMailGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addMailNotifier( TEST_PROJ_GRP_NAME, null, "invalid_email_add", false );
     }
@@ -127,10 +127,10 @@ public class NotifierTest
     public void testAddValidIrcProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String IRC_NOTIFIER_HOST = p.getProperty( "IRC_NOTIFIER_HOST" );
-        String IRC_NOTIFIER_CHANNEL = p.getProperty( "IRC_NOTIFIER_CHANNEL" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String IRC_NOTIFIER_HOST = getProperty( "IRC_NOTIFIER_HOST" );
+        String IRC_NOTIFIER_CHANNEL = getProperty( "IRC_NOTIFIER_CHANNEL" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addIrcNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, IRC_NOTIFIER_HOST, IRC_NOTIFIER_CHANNEL, true );
     }
@@ -139,10 +139,10 @@ public class NotifierTest
     public void testEditValidIrcProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String IRC_NOTIFIER_HOST = p.getProperty( "IRC_NOTIFIER_HOST" );
-        String IRC_NOTIFIER_CHANNEL = p.getProperty( "IRC_NOTIFIER_CHANNEL" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String IRC_NOTIFIER_HOST = getProperty( "IRC_NOTIFIER_HOST" );
+        String IRC_NOTIFIER_CHANNEL = getProperty( "IRC_NOTIFIER_CHANNEL" );
         String newHost = "new.test.com";
         String newChannel = "new_test_channel";
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
@@ -156,10 +156,10 @@ public class NotifierTest
     public void testEditInvalidIrcProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String IRC_NOTIFIER_HOST = p.getProperty( "IRC_NOTIFIER_HOST" );
-        String IRC_NOTIFIER_CHANNEL = p.getProperty( "IRC_NOTIFIER_CHANNEL" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String IRC_NOTIFIER_HOST = getProperty( "IRC_NOTIFIER_HOST" );
+        String IRC_NOTIFIER_CHANNEL = getProperty( "IRC_NOTIFIER_CHANNEL" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         editIrcNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, IRC_NOTIFIER_HOST, IRC_NOTIFIER_CHANNEL, "", "", false );
     }
@@ -167,8 +167,8 @@ public class NotifierTest
     public void testAddInvalidIrcProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addIrcNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", false );
     }
@@ -176,11 +176,11 @@ public class NotifierTest
     public void testAddValidIrcGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String IRC_NOTIFIER_HOST = p.getProperty( "IRC_NOTIFIER_HOST" );
-        String IRC_NOTIFIER_CHANNEL = p.getProperty( "IRC_NOTIFIER_CHANNEL" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String IRC_NOTIFIER_HOST = getProperty( "IRC_NOTIFIER_HOST" );
+        String IRC_NOTIFIER_CHANNEL = getProperty( "IRC_NOTIFIER_CHANNEL" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addIrcNotifier( TEST_PROJ_GRP_NAME, null, IRC_NOTIFIER_HOST, IRC_NOTIFIER_CHANNEL, true );
     }
@@ -189,11 +189,11 @@ public class NotifierTest
     public void testEditValidIrcGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String IRC_NOTIFIER_HOST = p.getProperty( "IRC_NOTIFIER_HOST" );
-        String IRC_NOTIFIER_CHANNEL = p.getProperty( "IRC_NOTIFIER_CHANNEL" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String IRC_NOTIFIER_HOST = getProperty( "IRC_NOTIFIER_HOST" );
+        String IRC_NOTIFIER_CHANNEL = getProperty( "IRC_NOTIFIER_CHANNEL" );
         String newHost = "new.test.com";
         String newChannel = "new_test_channel";
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
@@ -207,11 +207,11 @@ public class NotifierTest
     public void testEditInvalidIrcGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String IRC_NOTIFIER_HOST = p.getProperty( "IRC_NOTIFIER_HOST" );
-        String IRC_NOTIFIER_CHANNEL = p.getProperty( "IRC_NOTIFIER_CHANNEL" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String IRC_NOTIFIER_HOST = getProperty( "IRC_NOTIFIER_HOST" );
+        String IRC_NOTIFIER_CHANNEL = getProperty( "IRC_NOTIFIER_CHANNEL" );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
         assertGroupNotifierPage( TEST_PROJ_GRP_NAME );
@@ -221,9 +221,9 @@ public class NotifierTest
     public void testAddInvalidIrcGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addIrcNotifier( TEST_PROJ_GRP_NAME, null, "", "", false );
     }
@@ -231,12 +231,12 @@ public class NotifierTest
     public void testAddValidJabberProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String JABBER_NOTIFIER_HOST = p.getProperty( "JABBER_NOTIFIER_HOST" );
-        String JABBER_NOTIFIER_LOGIN = p.getProperty( "JABBER_NOTIFIER_LOGIN" );
-        String JABBER_NOTIFIER_PASSWORD = p.getProperty( "JABBER_NOTIFIER_PASSWORD" );
-        String JABBER_NOTIFIER_ADDRESS = p.getProperty( "JABBER_NOTIFIER_ADDRESS" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String JABBER_NOTIFIER_HOST = getProperty( "JABBER_NOTIFIER_HOST" );
+        String JABBER_NOTIFIER_LOGIN = getProperty( "JABBER_NOTIFIER_LOGIN" );
+        String JABBER_NOTIFIER_PASSWORD = getProperty( "JABBER_NOTIFIER_PASSWORD" );
+        String JABBER_NOTIFIER_ADDRESS = getProperty( "JABBER_NOTIFIER_ADDRESS" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addJabberNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, JABBER_NOTIFIER_HOST, JABBER_NOTIFIER_LOGIN,
                            JABBER_NOTIFIER_PASSWORD, JABBER_NOTIFIER_ADDRESS, true );
@@ -246,12 +246,12 @@ public class NotifierTest
     public void testEditValidJabberProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String JABBER_NOTIFIER_HOST = p.getProperty( "JABBER_NOTIFIER_HOST" );
-        String JABBER_NOTIFIER_LOGIN = p.getProperty( "JABBER_NOTIFIER_LOGIN" );
-        String JABBER_NOTIFIER_PASSWORD = p.getProperty( "JABBER_NOTIFIER_PASSWORD" );
-        String JABBER_NOTIFIER_ADDRESS = p.getProperty( "JABBER_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String JABBER_NOTIFIER_HOST = getProperty( "JABBER_NOTIFIER_HOST" );
+        String JABBER_NOTIFIER_LOGIN = getProperty( "JABBER_NOTIFIER_LOGIN" );
+        String JABBER_NOTIFIER_PASSWORD = getProperty( "JABBER_NOTIFIER_PASSWORD" );
+        String JABBER_NOTIFIER_ADDRESS = getProperty( "JABBER_NOTIFIER_ADDRESS" );
         String newHost = "new_test";
         String newLogin = "new_test_login";
         String newPassword = "new_password";
@@ -267,11 +267,11 @@ public class NotifierTest
     public void testEditInvalidJabberProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String JABBER_NOTIFIER_HOST = p.getProperty( "JABBER_NOTIFIER_HOST" );
-        String JABBER_NOTIFIER_LOGIN = p.getProperty( "JABBER_NOTIFIER_LOGIN" );
-        String JABBER_NOTIFIER_ADDRESS = p.getProperty( "JABBER_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String JABBER_NOTIFIER_HOST = getProperty( "JABBER_NOTIFIER_HOST" );
+        String JABBER_NOTIFIER_LOGIN = getProperty( "JABBER_NOTIFIER_LOGIN" );
+        String JABBER_NOTIFIER_ADDRESS = getProperty( "JABBER_NOTIFIER_ADDRESS" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         editJabberNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, JABBER_NOTIFIER_HOST, JABBER_NOTIFIER_LOGIN,
                             JABBER_NOTIFIER_ADDRESS, "", "", "", "", false );
@@ -280,8 +280,8 @@ public class NotifierTest
     public void testAddInvalidJabberProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addJabberNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", "", "", false );
     }
@@ -289,13 +289,13 @@ public class NotifierTest
     public void testAddValidJabberGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String JABBER_NOTIFIER_HOST = p.getProperty( "JABBER_NOTIFIER_HOST" );
-        String JABBER_NOTIFIER_LOGIN = p.getProperty( "JABBER_NOTIFIER_LOGIN" );
-        String JABBER_NOTIFIER_PASSWORD = p.getProperty( "JABBER_NOTIFIER_PASSWORD" );
-        String JABBER_NOTIFIER_ADDRESS = p.getProperty( "JABBER_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String JABBER_NOTIFIER_HOST = getProperty( "JABBER_NOTIFIER_HOST" );
+        String JABBER_NOTIFIER_LOGIN = getProperty( "JABBER_NOTIFIER_LOGIN" );
+        String JABBER_NOTIFIER_PASSWORD = getProperty( "JABBER_NOTIFIER_PASSWORD" );
+        String JABBER_NOTIFIER_ADDRESS = getProperty( "JABBER_NOTIFIER_ADDRESS" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addJabberNotifier( TEST_PROJ_GRP_NAME, null, JABBER_NOTIFIER_HOST, JABBER_NOTIFIER_LOGIN,
                            JABBER_NOTIFIER_PASSWORD, JABBER_NOTIFIER_ADDRESS, true );
@@ -305,13 +305,13 @@ public class NotifierTest
     public void testEditValidJabberGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String JABBER_NOTIFIER_HOST = p.getProperty( "JABBER_NOTIFIER_HOST" );
-        String JABBER_NOTIFIER_LOGIN = p.getProperty( "JABBER_NOTIFIER_LOGIN" );
-        String JABBER_NOTIFIER_PASSWORD = p.getProperty( "JABBER_NOTIFIER_PASSWORD" );
-        String JABBER_NOTIFIER_ADDRESS = p.getProperty( "JABBER_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String JABBER_NOTIFIER_HOST = getProperty( "JABBER_NOTIFIER_HOST" );
+        String JABBER_NOTIFIER_LOGIN = getProperty( "JABBER_NOTIFIER_LOGIN" );
+        String JABBER_NOTIFIER_PASSWORD = getProperty( "JABBER_NOTIFIER_PASSWORD" );
+        String JABBER_NOTIFIER_ADDRESS = getProperty( "JABBER_NOTIFIER_ADDRESS" );
         String newHost = "new_test";
         String newLogin = "new_test_login";
         String newPassword = "new_password";
@@ -329,12 +329,12 @@ public class NotifierTest
     public void testEditInvalidJabberGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String JABBER_NOTIFIER_HOST = p.getProperty( "JABBER_NOTIFIER_HOST" );
-        String JABBER_NOTIFIER_LOGIN = p.getProperty( "JABBER_NOTIFIER_LOGIN" );
-        String JABBER_NOTIFIER_ADDRESS = p.getProperty( "JABBER_NOTIFIER_ADDRESS" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String JABBER_NOTIFIER_HOST = getProperty( "JABBER_NOTIFIER_HOST" );
+        String JABBER_NOTIFIER_LOGIN = getProperty( "JABBER_NOTIFIER_LOGIN" );
+        String JABBER_NOTIFIER_ADDRESS = getProperty( "JABBER_NOTIFIER_ADDRESS" );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
         assertGroupNotifierPage( TEST_PROJ_GRP_NAME );
@@ -345,9 +345,9 @@ public class NotifierTest
     public void testAddInvalidJabberGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addJabberNotifier( TEST_PROJ_GRP_NAME, null, "", "", "", "", false );
     }
@@ -355,11 +355,11 @@ public class NotifierTest
     public void testAddValidMsnProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String MSN_NOTIFIER_ADDRESS = p.getProperty( "MSN_NOTIFIER_ADDRESS" );
-        String MSN_NOTIFIER_LOGIN = p.getProperty( "MSN_NOTIFIER_LOGIN" );
-        String MSN_NOTIFIER_PASSWORD = p.getProperty( "MSN_NOTIFIER_PASSWORD" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MSN_NOTIFIER_ADDRESS = getProperty( "MSN_NOTIFIER_ADDRESS" );
+        String MSN_NOTIFIER_LOGIN = getProperty( "MSN_NOTIFIER_LOGIN" );
+        String MSN_NOTIFIER_PASSWORD = getProperty( "MSN_NOTIFIER_PASSWORD" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addMsnNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MSN_NOTIFIER_LOGIN, MSN_NOTIFIER_PASSWORD,
                         MSN_NOTIFIER_ADDRESS, true );
@@ -369,11 +369,11 @@ public class NotifierTest
     public void testEditValidMsnProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String MSN_NOTIFIER_ADDRESS = p.getProperty( "MSN_NOTIFIER_ADDRESS" );
-        String MSN_NOTIFIER_LOGIN = p.getProperty( "MSN_NOTIFIER_LOGIN" );
-        String MSN_NOTIFIER_PASSWORD = p.getProperty( "MSN_NOTIFIER_PASSWORD" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MSN_NOTIFIER_ADDRESS = getProperty( "MSN_NOTIFIER_ADDRESS" );
+        String MSN_NOTIFIER_LOGIN = getProperty( "MSN_NOTIFIER_LOGIN" );
+        String MSN_NOTIFIER_PASSWORD = getProperty( "MSN_NOTIFIER_PASSWORD" );
         String newLogin = "new_test_login";
         String newPassword = "new_password";
         String newAddress = "new.test@mail.com";
@@ -388,10 +388,10 @@ public class NotifierTest
     public void testEditInvalidMsnProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String MSN_NOTIFIER_ADDRESS = p.getProperty( "MSN_NOTIFIER_ADDRESS" );
-        String MSN_NOTIFIER_LOGIN = p.getProperty( "MSN_NOTIFIER_LOGIN" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MSN_NOTIFIER_ADDRESS = getProperty( "MSN_NOTIFIER_ADDRESS" );
+        String MSN_NOTIFIER_LOGIN = getProperty( "MSN_NOTIFIER_LOGIN" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         editMsnNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MSN_NOTIFIER_LOGIN, MSN_NOTIFIER_ADDRESS, "", "", "",
                          false );
@@ -400,8 +400,8 @@ public class NotifierTest
     public void testAddInvalidMsnProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addMsnNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", "", false );
     }
@@ -409,12 +409,12 @@ public class NotifierTest
     public void testAddValidMsnGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String MSN_NOTIFIER_ADDRESS = p.getProperty( "MSN_NOTIFIER_ADDRESS" );
-        String MSN_NOTIFIER_LOGIN = p.getProperty( "MSN_NOTIFIER_LOGIN" );
-        String MSN_NOTIFIER_PASSWORD = p.getProperty( "MSN_NOTIFIER_PASSWORD" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String MSN_NOTIFIER_ADDRESS = getProperty( "MSN_NOTIFIER_ADDRESS" );
+        String MSN_NOTIFIER_LOGIN = getProperty( "MSN_NOTIFIER_LOGIN" );
+        String MSN_NOTIFIER_PASSWORD = getProperty( "MSN_NOTIFIER_PASSWORD" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addMsnNotifier( TEST_PROJ_GRP_NAME, null, MSN_NOTIFIER_LOGIN, MSN_NOTIFIER_PASSWORD, MSN_NOTIFIER_ADDRESS, true );
     }
@@ -423,12 +423,12 @@ public class NotifierTest
     public void testEditValidMsnGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String MSN_NOTIFIER_ADDRESS = p.getProperty( "MSN_NOTIFIER_ADDRESS" );
-        String MSN_NOTIFIER_LOGIN = p.getProperty( "MSN_NOTIFIER_LOGIN" );
-        String MSN_NOTIFIER_PASSWORD = p.getProperty( "MSN_NOTIFIER_PASSWORD" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String MSN_NOTIFIER_ADDRESS = getProperty( "MSN_NOTIFIER_ADDRESS" );
+        String MSN_NOTIFIER_LOGIN = getProperty( "MSN_NOTIFIER_LOGIN" );
+        String MSN_NOTIFIER_PASSWORD = getProperty( "MSN_NOTIFIER_PASSWORD" );
         String newLogin = "new_test_login";
         String newPassword = "new_password";
         String newAddress = "new.test@mail.com";
@@ -445,11 +445,11 @@ public class NotifierTest
     public void testEditInvalidMsnGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String MSN_NOTIFIER_ADDRESS = p.getProperty( "MSN_NOTIFIER_ADDRESS" );
-        String MSN_NOTIFIER_LOGIN = p.getProperty( "MSN_NOTIFIER_LOGIN" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String MSN_NOTIFIER_ADDRESS = getProperty( "MSN_NOTIFIER_ADDRESS" );
+        String MSN_NOTIFIER_LOGIN = getProperty( "MSN_NOTIFIER_LOGIN" );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
         assertGroupNotifierPage( TEST_PROJ_GRP_NAME );
@@ -459,9 +459,9 @@ public class NotifierTest
     public void testAddInvalidMsnGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addMsnNotifier( TEST_PROJ_GRP_NAME, null, "", "", "", false );
     }
@@ -469,10 +469,10 @@ public class NotifierTest
     public void testAddValidWagonProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String WAGON_NOTIFIER_URL = p.getProperty( "WAGON_NOTIFIER_URL" );
-        String WAGON_SERVER_ID = p.getProperty( "WAGON_SERVER_ID" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
+        String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addWagonNotifierPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, true );
     }
@@ -481,10 +481,10 @@ public class NotifierTest
     public void testEditValidWagonProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String WAGON_NOTIFIER_URL = p.getProperty( "WAGON_NOTIFIER_URL" );
-        String WAGON_SERVER_ID = p.getProperty( "WAGON_SERVER_ID" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
+        String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         String newId = "newId";
         String newUrl = WAGON_NOTIFIER_URL;
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
@@ -498,10 +498,10 @@ public class NotifierTest
     public void testEditInvalidWagonProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String WAGON_NOTIFIER_URL = p.getProperty( "WAGON_NOTIFIER_URL" );
-        String WAGON_SERVER_ID = p.getProperty( "WAGON_SERVER_ID" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
+        String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         editWagonNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, "", "", false );
     }
@@ -509,8 +509,8 @@ public class NotifierTest
     public void testAddInvalidWagonProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addWagonNotifierPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", false );
     }
@@ -518,11 +518,11 @@ public class NotifierTest
     public void testAddValidWagonGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String WAGON_NOTIFIER_URL = p.getProperty( "WAGON_NOTIFIER_URL" );
-        String WAGON_SERVER_ID = p.getProperty( "WAGON_SERVER_ID" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
+        String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addWagonNotifierPage( TEST_PROJ_GRP_NAME, null, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, true );
     }
@@ -531,11 +531,11 @@ public class NotifierTest
     public void testEditValidWagonGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String WAGON_NOTIFIER_URL = p.getProperty( "WAGON_NOTIFIER_URL" );
-        String WAGON_SERVER_ID = p.getProperty( "WAGON_SERVER_ID" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
+        String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         String newId = "newId";
         String newUrl = WAGON_NOTIFIER_URL;
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
@@ -549,11 +549,11 @@ public class NotifierTest
     public void testEditInvalidWagonGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String WAGON_NOTIFIER_URL = p.getProperty( "WAGON_NOTIFIER_URL" );
-        String WAGON_SERVER_ID = p.getProperty( "WAGON_SERVER_ID" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
+        String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
         assertGroupNotifierPage( TEST_PROJ_GRP_NAME );
@@ -563,9 +563,9 @@ public class NotifierTest
     public void testAddInvalidWagonGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addWagonNotifierPage( TEST_PROJ_GRP_NAME, null, "", "", false );
     }
@@ -574,9 +574,9 @@ public class NotifierTest
     public void testDeleteGroupNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
         assertGroupNotifierPage( TEST_PROJ_GRP_NAME );
@@ -591,8 +591,8 @@ public class NotifierTest
     public void testDeleteProjectNotifier()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         // Delete
         clickLinkWithXPath( "(//a[contains(@href,'deleteProjectNotifier') and contains(@href,'mail')])//img" );
