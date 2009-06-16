@@ -59,9 +59,11 @@ java -Xmx512m -jar data-management-cli-1.2.x-app.jar -buildsJdbcUrl jdbc:derby:$
         * Execute this command to import the builds data from the xml file you created earlier:
 
 +------------------------------------------+
-java -Xmx512m -jar data-management-cli-1.3.2-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/continuum -mode IMPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.3.2-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/continuum -mode IMPORT -directory backups -strict
 +------------------------------------------+
-        
+
+    <<Note:>> Remove <<<-strict>>> when importing data from 1.3.1 to 1.3.x to ignore unrecognized tags due to model changes.
+
         []
  
         Finally, be aware that sometimes the NEXT_VAL values in the SEQUENCE_TABLE need to be adjusted.

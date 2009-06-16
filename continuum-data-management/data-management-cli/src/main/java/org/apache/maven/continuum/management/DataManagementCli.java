@@ -179,7 +179,7 @@ public class DataManagementCli
             LOGGER.info( "Processing Continuum database..." );
             processDatabase( databaseType, databaseFormat, mode, command.buildsJdbcUrl, command.directory,
                              command.settings, databaseFormat.getContinuumToolRoleHint(), "data-management-jdo",
-                             "continuum" );
+                             "continuum", command.strict );
         }
 
         if ( command.usersJdbcUrl != null )
@@ -187,13 +187,14 @@ public class DataManagementCli
             LOGGER.info( "Processing Redback database..." );
             processDatabase( databaseType, databaseFormat, mode, command.usersJdbcUrl, command.directory,
                              command.settings, databaseFormat.getRedbackToolRoleHint(), "data-management-redback-jdo",
-                             "redback" );
+                             "redback", command.strict );
         }
     }
 
     private static void processDatabase( SupportedDatabase databaseType, DatabaseFormat databaseFormat,
                                          OperationMode mode, String jdbcUrl, File directory, File setting,
-                                         String toolRoleHint, String managementArtifactId, String configRoleHint )
+                                         String toolRoleHint, String managementArtifactId, String configRoleHint,
+                                         boolean strict )
         throws PlexusContainerException, ComponentLookupException, ComponentLifecycleException,
         ArtifactNotFoundException, ArtifactResolutionException, IOException
     {
@@ -285,7 +286,7 @@ public class DataManagementCli
         else if ( mode == OperationMode.IMPORT )
         {
             manager.eraseDatabase();
-            manager.restoreDatabase( directory );
+            manager.restoreDatabase( directory, strict );
         }
 
         container.setLookupRealm( oldRealm );
@@ -566,6 +567,9 @@ public class DataManagementCli
         
         @Argument( description = "Alternate path for the user settings file", value = "settings", required = false, alias = "s" )
         private File settings;
+
+        @Argument(description = "Run on strict mode. Default is false.", value="strict")
+        private boolean strict;
     }
 
     private enum OperationMode

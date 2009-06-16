@@ -118,7 +118,7 @@ public class DataManagementToolTest
 
         IOUtil.copy( getClass().getResourceAsStream( "/expected.xml" ), new FileWriter( backupFile ) );
 
-        dataManagementTool.restoreDatabase( targetDirectory );
+        dataManagementTool.restoreDatabase( targetDirectory, true );
 /*
         // TODO: why is this wrong?
         assertBuildDatabase();
