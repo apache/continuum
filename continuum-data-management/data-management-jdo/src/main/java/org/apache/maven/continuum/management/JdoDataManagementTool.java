@@ -232,7 +232,7 @@ public class JdoDataManagementTool
         daoUtils.eraseDatabase();
     }
 
-    public void restoreDatabase( File backupDirectory )
+    public void restoreDatabase( File backupDirectory, boolean strict )
         throws IOException
     {
         ContinuumStaxReader reader = new ContinuumStaxReader();
@@ -242,7 +242,7 @@ public class JdoDataManagementTool
         ContinuumDatabase database;
         try
         {
-            database = reader.read( fileReader );
+            database = reader.read( fileReader, strict );
         }
         catch ( XMLStreamException e )
         {

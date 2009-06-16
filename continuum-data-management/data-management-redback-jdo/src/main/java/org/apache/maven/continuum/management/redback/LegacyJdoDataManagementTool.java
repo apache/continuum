@@ -101,7 +101,7 @@ public class LegacyJdoDataManagementTool
         }
     }
 
-    public void restoreDatabase( File backupDirectory )
+    public void restoreDatabase( File backupDirectory, boolean strict )
         throws IOException, DataManagementException
     {
         try
