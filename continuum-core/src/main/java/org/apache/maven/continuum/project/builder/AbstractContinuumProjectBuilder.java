@@ -109,6 +109,8 @@ public abstract class AbstractContinuumProjectBuilder
             URI uri = metadata.toURI();
             HttpGet httpGet = new HttpGet( uri );
 
+            httpClient.getCredentialsProvider().clear();
+
             // basic auth
             if ( username != null && password != null )
             {
