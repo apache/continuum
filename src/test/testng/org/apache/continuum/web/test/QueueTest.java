@@ -21,6 +21,8 @@ package org.apache.continuum.web.test;
 
 import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
 import org.testng.annotations.Test;
+import org.apache.continuum.web.test.ScheduleTest;
+
 
 /**
  * @author José Morales Martínez
@@ -32,15 +34,61 @@ import org.testng.annotations.Test;
     public class QueueTest
         extends AbstractBuildQueueTest
     {
-
+    
 	public void testAddBuildQueue()
     {
         setMaxBuildQueue( 2 );
         String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
         addBuildQueue( BUILD_QUEUE_NAME, true );
     }
-
-    @Test( dependsOnMethods = { "testAddBuildQueue" } )
+	
+	@Test( dependsOnMethods = { "testAddBuildQueue" } ) //"testDeleteBuildQueue" } )
+    public void testQueuePageWithoutBuild()
+    {
+        clickAndWait( "link=Queues"  );
+        assertPage( "Continuum - Build Queue" );
+        assertTextPresent( "Nothing is building" );
+        assertTextNotPresent( "Project Name* Build Definition" );
+        assertTextPresent( "Current Build" );
+	    assertTextPresent( "Build Queue" );
+	    assertTextPresent( "Current Checkout" );
+	    assertTextPresent( "Checkout Queue " );
+	    assertTextPresent( "Current Prepare Build" );
+	    assertTextPresent( "Prepare Build Queue" );
+       
+    }    
+	
+	@Test( dependsOnMethods = { "testAddBuildQueue", "testAddSchedule" } )
+    public void testAddBuildQueueToSchedule()
+  {
+	    ScheduleTest sched = new ScheduleTest();
+	  
+	    String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
+        String SCHEDULE_DESCRIPTION = getProperty( "SCHEDULE_DESCRIPTION" );
+        String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
+        String SCHEDULE_EXPR_MINUTE = getProperty( "SCHEDULE_EXPR_MINUTE" );
+        String SCHEDULE_EXPR_HOUR = getProperty( "SCHEDULE_EXPR_HOUR" );
+        String SCHEDULE_EXPR_DAY_MONTH = getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
+        String SCHEDULE_EXPR_MONTH = getProperty( "SCHEDULE_EXPR_MONTH" );
+        String SCHEDULE_EXPR_DAY_WEEK = getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
+        String SCHEDULE_EXPR_YEAR = getProperty( "SCHEDULE_EXPR_YEAR" );
+        String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
+        String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
+        
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
+        
+     		  
+      sched.goToEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
+              SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
+              SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD );	
+	  getSelenium().removeSelection("saveSchedule_availableBuildQueues", "label=DEFAULT_BUILD_QUEUE");
+	  getSelenium().addSelection("saveSchedule_availableBuildQueues", "label="+BUILD_QUEUE_NAME);
+	  getSelenium().click("//input[@value='->']");
+	  submit();
+      
+  }
+	
+	@Test( dependsOnMethods = { "testAddBuildQueue" } )
     public void testAddNotAllowedBuildQueue()
     {
         setMaxBuildQueue( 1 );
@@ -57,8 +105,8 @@ import org.testng.annotations.Test;
         addBuildQueue( BUILD_QUEUE_NAME, false );
         assertTextPresent( "Build queue name already exists." );
     }
-
-    //@Test( dependsOnMethods = { "testAddAlreadyExistBuildQueue" } )
+    
+    @Test( dependsOnMethods = { "testAddAlreadyExistBuildQueue" } )
     public void testAddEmptyBuildQueue()
     {
         setMaxBuildQueue( 3 );
@@ -66,7 +114,7 @@ import org.testng.annotations.Test;
         assertTextPresent( "You must define a name" );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildQueue", "testAddAlreadyExistBuildQueue" } )
+    @Test( dependsOnMethods = { "testAddBuildQueueToSchedule" } ) 
     public void testDeleteBuildQueue()
     {
         goToBuildQueuePage();
@@ -74,18 +122,18 @@ import org.testng.annotations.Test;
         removeBuildQueue( BUILD_QUEUE_NAME );
         assertTextNotPresent( BUILD_QUEUE_NAME );
     }
-
-
+    
+       
     @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
     public void testQueuePageWithProjectCurrentlyBuilding()
         throws Exception
-    {
+    {   
     	//build a project
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
-
+        
         //check queue page while building
     	clickAndWait( "link=Queues" );
 	    assertPage( "Continuum - Build Queue" );
@@ -103,21 +151,5 @@ import org.testng.annotations.Test;
 	    waitForElementPresent( "//img[@alt='Success']" );
 	    Thread.sleep( 10000 );
     }
-
-    //@Test( dependsOnMethods = { "testDeleteBuildQueue" } )
-    public void testQueuePageWithoutBuild()
-    {
-        clickAndWait( "link=Queues"  );
-        assertPage( "Continuum - Build Queue" );
-        assertTextPresent( "Nothing is building" );
-        assertTextNotPresent( "Project Name* Build Definition" );
-        assertTextPresent( "Current Build" );
-	    assertTextPresent( "Build Queue" );
-	    assertTextPresent( "Current Checkout" );
-	    assertTextPresent( "Checkout Queue " );
-	    assertTextPresent( "Current Prepare Build" );
-	    assertTextPresent( "Prepare Build Queue" );
-
-    }
-
-}
+    
+ }

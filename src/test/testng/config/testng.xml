@@ -55,6 +55,7 @@ under the License.
 				<include name="buildEnvironment" />
 				<include name="buildDefinitionTemplate" />
 				<include name="userroles"/>
+				<include name="agent"/>
 			</run>
 		</groups>
 		<packages>
