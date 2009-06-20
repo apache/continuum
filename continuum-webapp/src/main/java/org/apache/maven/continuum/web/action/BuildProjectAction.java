@@ -20,7 +20,9 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.codehaus.plexus.util.StringUtils;
@@ -56,27 +58,29 @@ public class BuildProjectAction
         {
             return REQUIRES_AUTHORIZATION;
         }
+        
+        BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, getPrincipal() );
 
         if ( projectId > 0 )
         {
             if ( buildDefinitionId > 0 )
             {
-                getContinuum().buildProjectWithBuildDefinition( projectId, buildDefinitionId );
+            	getContinuum().buildProjectWithBuildDefinition( projectId, buildDefinitionId, buildTrigger );
             }
             else
             {
-                getContinuum().buildProject( projectId );
+            	getContinuum().buildProject( projectId, buildTrigger.getUsername() );
             }
         }
         else
         {
             if ( buildDefinitionId > 0 )
             {
-                getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
+            	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
             }
             else
             {
-                getContinuum().buildProjects();
+            	getContinuum().buildProjects( buildTrigger.getUsername() );
             }
         }
         

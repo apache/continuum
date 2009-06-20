@@ -38,6 +38,7 @@ import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
@@ -96,9 +97,9 @@ public class ParallelBuildsManager
     private PlexusContainer container;
 
     /**
-     * @see BuildsManager#buildProject(int, BuildDefinition, String, int, ScmResult, int)
+     * @see BuildsManager#buildProject(int, BuildDefinition, String, BuildTrigger, ScmResult, int)
      */
-    public void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger,
+    public void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, BuildTrigger buildTrigger,
                               ScmResult scmResult, int projectGroupId )
         throws BuildManagerException
     {
@@ -133,7 +134,7 @@ public class ParallelBuildsManager
             }
     
             BuildProjectTask buildTask =
-                new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel,
+            	new BuildProjectTask( projectId, buildDefinition.getId(), buildTrigger, projectName, buildDefinitionLabel,
                                       scmResult, projectGroupId );
             try
             {
@@ -153,10 +154,10 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#buildProjects(List, Map, int, Map, int)
+     * @see BuildsManager#buildProjects(List, Map, BuildTrigger, Map, int)
      */
     public void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap,
-                               int trigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
+    		                   BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
         throws BuildManagerException
     {
         int firstProjectId = 0;
@@ -216,7 +217,7 @@ public class ParallelBuildsManager
 
                     ScmResult scmResult = scmResultMap.get( project.getId() );
                     BuildProjectTask buildTask =
-                        new BuildProjectTask( project.getId(), buildDefinition.getId(), trigger, project.getName(),
+                    	new BuildProjectTask( project.getId(), buildDefinition.getId(), buildTrigger, project.getName(),
                                               buildDefinitionLabel, scmResult, projectGroupId );
                     buildTask.setMaxExecutionTime( buildDefinition.getSchedule().getMaxJobExecutionTime() * 1000 );
 
@@ -569,9 +570,9 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#prepareBuildProjects(Map, int, int, String, String, int)
+     * @see BuildsManager#prepareBuildProjects(Map, BuildTrigger, int, String, String, int)
      */
-    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger,
+    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
                                       int projectGroupId, String projectGroupName, String scmRootAddress,
                                       int scmRootId )
         throws BuildManagerException
@@ -579,7 +580,7 @@ public class ParallelBuildsManager
         try
         {
             PrepareBuildProjectsTask task =
-                new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger, projectGroupId, projectGroupName,
+            	new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, buildTrigger, projectGroupId, projectGroupName,
                                               scmRootAddress, scmRootId );
 
             log.info( "Queueing prepare-build-project task '" + task + "' to prepare-build queue." );
@@ -618,10 +619,10 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#removeProjectFromBuildQueue(int, int, int, String)
+     * @see BuildsManager#removeProjectFromBuildQueue(int, int, BuildTrigger, String, int)
      */
-    public void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName,
-                                             int projectGroupId )
+    public void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
+    		                                 String projectName, int projectGroupId )
         throws BuildManagerException
     {
         try
@@ -629,7 +630,7 @@ public class ParallelBuildsManager
             OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, BUILD_QUEUE );
             if ( overallBuildQueue != null )
             {
-                overallBuildQueue.removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger, projectName,
+            	overallBuildQueue.removeProjectFromBuildQueue( projectId, buildDefinitionId, buildTrigger, projectName,
                                                                projectGroupId );
             }
             else
@@ -889,7 +890,7 @@ public class ParallelBuildsManager
                     buildDefinitionDao.getBuildDefinition( buildTask.getBuildDefinitionId() );
 
                 buildProject( buildTask.getProjectId(), buildDefinition, buildTask.getProjectName(),
-                              buildTask.getTrigger(), buildTask.getScmResult(), buildTask.getProjectGroupId() );
+                		      buildTask.getBuildTrigger(), buildTask.getScmResult(), buildTask.getProjectGroupId() );
             }
             catch ( ContinuumStoreException e )
             {

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -54,6 +55,8 @@ public class ContinuumBuildAgentUtil
     public static final String KEY_BUILD_DEFINITION_LABEL = "builddefinition-label";
 
     public static final String KEY_TRIGGER = "trigger";
+    
+    public static final String KEY_USERNAME = "username";
 
     public static final String KEY_EXECUTOR_ID = "executor-id";
 
@@ -354,6 +357,16 @@ public class ContinuumBuildAgentUtil
     public static int getTrigger( Map<String, Object> context )
     {
         return getInteger( context, KEY_TRIGGER );
+    }
+    
+    public static String getUsername( Map<String, Object> context )
+    {
+         return getString( context, KEY_USERNAME, "" );
+    }
+    
+    public static BuildTrigger getBuildTrigger( Map<String, Object> context )
+    {
+         return new BuildTrigger( getTrigger( context ), getUsername( context ) );
     }
 
     public static BuildResult getBuildResult( Map<String, Object> context, Object defaultValue )

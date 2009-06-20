@@ -31,6 +31,7 @@ import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.utils.ContinuumUtils;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.ExecuteBuilderContinuumAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -118,14 +119,15 @@ public class DefaultBuildController
     /**
      * @param projectId
      * @param buildDefinitionId
-     * @param trigger
+     * @param buildTrigger
+     * @param scmResult
      * @throws TaskExecutionException
      */
-    public void build( int projectId, int buildDefinitionId, int trigger, ScmResult scmResult )
+    public void build( int projectId, int buildDefinitionId, BuildTrigger buildTrigger, ScmResult scmResult )
         throws TaskExecutionException
     {
         log.info( "Initializing build" );
-        BuildContext context = initializeBuildContext( projectId, buildDefinitionId, trigger, scmResult );
+        BuildContext context = initializeBuildContext( projectId, buildDefinitionId, buildTrigger, scmResult );
 
         // ignore this if AlwaysBuild ?
         if ( !checkScmResult( context ) )
@@ -320,11 +322,12 @@ public class DefaultBuildController
      *
      * @param projectId
      * @param buildDefinitionId
-     * @param trigger
+     * @param buildTrigger
+     * @param scmResult
      * @return
      * @throws TaskExecutionException
      */
-    protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, int trigger,
+    protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
                                                    ScmResult scmResult )
         throws TaskExecutionException
     {
@@ -332,7 +335,7 @@ public class DefaultBuildController
 
         context.setStartTime( System.currentTimeMillis() );
 
-        context.setTrigger( trigger );
+        context.setBuildTrigger( buildTrigger );
 
         try
         {
@@ -375,7 +378,7 @@ public class DefaultBuildController
 
         AbstractContinuumAction.setBuildDefinition( actionContext, context.getBuildDefinition() );
 
-        AbstractContinuumAction.setTrigger( actionContext, trigger );
+        AbstractContinuumAction.setBuildTrigger( actionContext, buildTrigger );
 
         AbstractContinuumAction.setScmResult( actionContext, context.getScmResult() );
 
@@ -471,7 +474,7 @@ public class DefaultBuildController
             return true;
         }
 
-        if ( context.getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
+        if ( context.getBuildTrigger().getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
         {
             log.info( "The project build is forced, building" );
             return true;
@@ -483,7 +486,7 @@ public class DefaultBuildController
 
         if ( project.getOldState() != ContinuumProjectState.NEW &&
             project.getOldState() != ContinuumProjectState.CHECKEDOUT &&
-            context.getTrigger() != ContinuumProjectState.TRIGGER_FORCED &&
+            context.getBuildTrigger().getTrigger() != ContinuumProjectState.TRIGGER_FORCED &&
             project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.CHECKEDOUT )
         {
             // Check SCM changes
@@ -674,7 +677,9 @@ public class DefaultBuildController
 
         build.setState( ContinuumProjectState.ERROR );
 
-        build.setTrigger( context.getTrigger() );
+        build.setTrigger( context.getBuildTrigger().getTrigger() );
+        
+        build.setUsername( context.getBuildTrigger().getUsername() );
 
         build.setStartTime( context.getStartTime() );
 

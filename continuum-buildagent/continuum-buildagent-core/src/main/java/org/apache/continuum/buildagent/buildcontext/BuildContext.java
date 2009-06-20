@@ -22,6 +22,7 @@ package org.apache.continuum.buildagent.buildcontext;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.scm.ScmResult;
 
@@ -56,6 +57,8 @@ public class BuildContext
     private String scmPassword;
 
     private int trigger;
+    
+    private String username;
 
     private boolean buildFresh;
 
@@ -373,5 +376,15 @@ public class BuildContext
     public String getBuildDefinitionLabel()
     {
         return buildDefinitionLabel;
+    }
+    
+    public void setUsername( String username )
+    {
+         this.username = username;
+    }
+    
+    public String getUsername()
+    {
+         return username;
     }
 }

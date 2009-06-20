@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -64,7 +65,7 @@ public class CreateBuildProjectTaskAction
             AbstractContinuumAction.getProjectsBuildDefinitionsMap( context );
         Map<Integer, ScmResult> scmResultMap = AbstractContinuumAction.getScmResultMap( context );
         List<Project> projectsToBeBuilt = new ArrayList<Project>();
-        int trigger = AbstractContinuumAction.getTrigger( context );
+        BuildTrigger buildTrigger = AbstractContinuumAction.getBuildTrigger( context );
         int projectGroupId = AbstractContinuumAction.getProjectGroupId( context );
 
         // update state of each project first
@@ -129,6 +130,6 @@ public class CreateBuildProjectTaskAction
         }
 
         parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, 
-                                             trigger, scmResultMap, projectGroupId );
+        		                             buildTrigger, scmResultMap, projectGroupId );
     }
 }
