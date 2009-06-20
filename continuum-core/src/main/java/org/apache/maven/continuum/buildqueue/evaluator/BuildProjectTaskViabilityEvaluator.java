@@ -117,7 +117,7 @@ public class BuildProjectTaskViabilityEvaluator
                 // If this build is forces, don't remove it
                 // ----------------------------------------------------------------------
 
-                if ( task.getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
+                if ( task.getBuildTrigger().getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
                 {
                     continue;
                 }

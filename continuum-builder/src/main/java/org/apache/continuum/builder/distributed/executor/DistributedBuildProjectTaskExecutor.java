@@ -38,6 +38,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -106,7 +107,7 @@ public class DistributedBuildProjectTaskExecutor
             log.info( "initializing buildContext" );
             List<Map<String, Object>> buildContext =
                 initializeBuildContext( prepareBuildTask.getProjectsBuildDefinitionsMap(),
-                                        prepareBuildTask.getTrigger(), prepareBuildTask.getScmRootAddress(),
+                		                prepareBuildTask.getBuildTrigger(), prepareBuildTask.getScmRootAddress(),
                                         prepareBuildTask.getProjectScmRootId() );
 
             startTime = System.currentTimeMillis();
@@ -127,7 +128,7 @@ public class DistributedBuildProjectTaskExecutor
     }
 
     private List<Map<String, Object>> initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions,
-                                                              int trigger, String scmRootAddress, int scmRootId )
+    		                                     BuildTrigger buildTrigger, String scmRootAddress, int scmRootId )
         throws ContinuumException
     {
         List<Map<String, Object>> buildContext = new ArrayList<Map<String, Object>>();
@@ -216,7 +217,8 @@ public class DistributedBuildProjectTaskExecutor
                 {
                     context.put( ContinuumBuildConstant.KEY_ARGUMENTS, buildDef.getArguments() );
                 }
-                context.put( ContinuumBuildConstant.KEY_TRIGGER, trigger );
+                context.put( ContinuumBuildConstant.KEY_TRIGGER, buildTrigger.getTrigger() );
+                context.put( ContinuumBuildConstant.KEY_USERNAME, buildTrigger.getUsername() );
                 context.put( ContinuumBuildConstant.KEY_BUILD_FRESH, buildDef.isBuildFresh() );
                 context.put( ContinuumBuildConstant.KEY_ALWAYS_BUILD, buildDef.isAlwaysBuild() );
                 context.put( ContinuumBuildConstant.KEY_OLD_SCM_CHANGES,
@@ -269,7 +271,8 @@ public class DistributedBuildProjectTaskExecutor
                         buildResult.setBuildDefinition( buildDef );
                         buildResult.setError( error );
                         buildResult.setState( ContinuumProjectState.ERROR );
-                        buildResult.setTrigger( task.getTrigger() );
+                        buildResult.setTrigger( task.getBuildTrigger().getTrigger() );
+                        buildResult.setUsername( task.getBuildTrigger().getUsername() );
                         buildResult.setStartTime( startTime );
                         buildResult.setEndTime( endTime );
 

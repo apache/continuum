@@ -20,6 +20,7 @@ package org.apache.maven.continuum.buildqueue;
  */
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -133,7 +134,7 @@ public class BuildQueueTest
         throws Exception
     {
         ProjectGroup group = getDefaultProjectGroup();
-        buildQueue.put( new BuildProjectTask( projectId, 0, trigger, null, null, null, group.getId() ) );
+        buildQueue.put( new BuildProjectTask( projectId, 0, new BuildTrigger( trigger, "" ), null, null, null, group.getId() ) );
     }
 
     private void assertNextBuildIs( int expectedProjectId )

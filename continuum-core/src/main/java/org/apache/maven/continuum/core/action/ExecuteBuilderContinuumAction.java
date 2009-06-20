@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.utils.ContinuumUtils;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildCancelledException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
@@ -87,7 +88,7 @@ public class ExecuteBuilderContinuumAction
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
-        int trigger = getTrigger( context );
+        BuildTrigger buildTrigger = getBuildTrigger( context );
 
         ScmResult scmResult = getScmResult( context );
 
@@ -105,7 +106,9 @@ public class ExecuteBuilderContinuumAction
 
         buildResult.setState( ContinuumProjectState.BUILDING );
 
-        buildResult.setTrigger( trigger );
+        buildResult.setTrigger( buildTrigger.getTrigger() );
+        
+        buildResult.setUsername( buildTrigger.getUsername() );
 
         buildResult.setScmResult( scmResult );
 

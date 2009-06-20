@@ -34,6 +34,7 @@ import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -166,7 +167,7 @@ public interface Continuum
      */
     List<Project> getProjectsInBuildOrder( Collection<Project> projects );
 
-    void buildProjects()
+    void buildProjects( String username )
         throws ContinuumException;
 
     void buildProjectsWithBuildDefinition( int buildDefinitionId )
@@ -178,31 +179,31 @@ public interface Continuum
     void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
         throws ContinuumException;
 
-    void buildProjects( int trigger )
+    void buildProjects( BuildTrigger buildTrigger )
         throws ContinuumException;
 
-    void buildProjects( int trigger, int buildDefinitionId )
+    void buildProjects( BuildTrigger buildTrigger, int buildDefinitionId )
         throws ContinuumException;
 
     void buildProjects( Schedule schedule )
         throws ContinuumException;
 
-    void buildProject( int projectId )
+    void buildProject( int projectId, String username )
         throws ContinuumException;
 
-    void buildProject( int projectId, int trigger )
+    void buildProject( int projectId, BuildTrigger buildTrigger )
         throws ContinuumException;
 
-    void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId )
+    void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
         throws ContinuumException;
 
-    void buildProject( int projectId, int buildDefinitionId, int trigger )
+    void buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
         throws ContinuumException;
 
-    public void buildProjectGroup( int projectGroupId )
+    public void buildProjectGroup( int projectGroupId, BuildTrigger buildTrigger )
         throws ContinuumException;
 
-    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId )
+    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId, BuildTrigger buildTrigger )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------

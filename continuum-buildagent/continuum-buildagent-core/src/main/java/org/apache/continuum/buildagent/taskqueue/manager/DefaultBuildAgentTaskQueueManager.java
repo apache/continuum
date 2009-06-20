@@ -25,6 +25,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -205,7 +206,7 @@ public class DefaultBuildAgentTaskQueueManager
         return false;
     }
 
-    public boolean isInPrepareBuildQueue( int projectGroupId, int trigger, String scmRootAddress )
+    public boolean isInPrepareBuildQueue( int projectGroupId, BuildTrigger buildTrigger, String scmRootAddress )
         throws TaskQueueManagerException
     {
         try
@@ -216,7 +217,7 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( PrepareBuildProjectsTask task : queues )
                 {
-                    if ( task.getProjectGroupId() == projectGroupId && task.getTrigger() == trigger &&
+                	if ( task.getProjectGroupId() == projectGroupId && task.getBuildTrigger().getTrigger() == buildTrigger.getTrigger() &&
                         task.getScmRootAddress().equals( scmRootAddress ) )
                     {
                         log.info( "projects already in build queue" );

@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.taskqueue.Task;
@@ -323,10 +324,10 @@ public class DefaultOverallBuildQueue
     }
 
     /**
-     * @see OverallBuildQueue#removeProjectFromBuildQueue(int, int, int, String, int)
+     * @see OverallBuildQueue#removeProjectFromBuildQueue(int, int, BuildTrigger, String, int)
      */
-    public boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName,
-                                                int projectGroupId )
+    public boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
+    		                                    String projectName, int projectGroupId )
         throws TaskQueueException
     {
         BuildDefinition buildDefinition;
@@ -348,7 +349,7 @@ public class DefaultOverallBuildQueue
         }
 
         BuildProjectTask buildProjectTask =
-            new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, 
+        	                      new BuildProjectTask( projectId, buildDefinitionId, buildTrigger, projectName, 
                                   buildDefinitionLabel, null, projectGroupId );
 
         return getBuildQueue().remove( buildProjectTask );

@@ -34,6 +34,7 @@ import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
@@ -562,14 +563,16 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
+        
+        BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, getPrincipal() );
 
         if ( this.getBuildDefinitionId() == -1 )
         {
-            getContinuum().buildProjectGroup( projectGroupId );
+        	getContinuum().buildProjectGroup( projectGroupId, buildTrigger );
         }
         else
         {
-            getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
+        	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
         }
 
         AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.FORCE_BUILD );

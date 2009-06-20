@@ -33,6 +33,7 @@ import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.CheckWorkingDirectoryAction;
 import org.apache.maven.continuum.core.action.CheckoutProjectContinuumAction;
@@ -108,7 +109,7 @@ public class PrepareBuildProjectsTaskExecutor
         PrepareBuildProjectsTask prepareTask = (PrepareBuildProjectsTask) task;
 
         Map<Integer, Integer> projectsBuildDefinitionsMap = prepareTask.getProjectsBuildDefinitionsMap();
-        int trigger = prepareTask.getTrigger();
+        BuildTrigger buildTrigger = prepareTask.getBuildTrigger();
         Set<Integer> projectsId = projectsBuildDefinitionsMap.keySet();
         Map<String, Object> context = new HashMap<String, Object>();
         Map<Integer, ScmResult> scmResultMap = new HashMap<Integer, ScmResult>();
@@ -120,7 +121,7 @@ public class PrepareBuildProjectsTaskExecutor
                 int buildDefinitionId = projectsBuildDefinitionsMap.get( projectId );
 
                 log.info( "Initializing prepare build" );
-                context = initializeContext( projectId, buildDefinitionId );
+                context = initializeContext( projectId, buildDefinitionId, prepareTask.getBuildTrigger() );
 
                 log.info(
                     "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
@@ -173,11 +174,11 @@ public class PrepareBuildProjectsTaskExecutor
         if ( checkProjectScmRoot( context ) )
         {
             int projectGroupId = AbstractContinuumAction.getProjectGroupId( context );
-            buildProjects( projectGroupId, projectsBuildDefinitionsMap, trigger, scmResultMap );
+            buildProjects( projectGroupId, projectsBuildDefinitionsMap, buildTrigger, scmResultMap );
         }
     }
 
-    private Map<String, Object> initializeContext( int projectId, int buildDefinitionId )
+    private Map<String, Object> initializeContext( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
         throws TaskExecutionException
     {
         Map<String, Object> context = new HashMap<String, Object>();
@@ -202,6 +203,7 @@ public class PrepareBuildProjectsTaskExecutor
             AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
             AbstractContinuumAction.setProjectId( context, projectId );
             AbstractContinuumAction.setProject( context, project );
+            AbstractContinuumAction.setBuildTrigger( context, buildTrigger );
 
             AbstractContinuumAction.setBuildDefinitionId( context, buildDefinitionId );
             AbstractContinuumAction.setBuildDefinition( context,
@@ -500,8 +502,8 @@ public class PrepareBuildProjectsTaskExecutor
         }
     }
 
-    private void buildProjects( int projectGroupId, Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger,
-                                Map<Integer, ScmResult> scmResultMap )
+    private void buildProjects( int projectGroupId, Map<Integer, Integer> projectsAndBuildDefinitionsMap,
+    		                    BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap )
         throws TaskExecutionException
     {
         List<Project> projects = projectDao.getProjectsWithDependenciesByGroupId( projectGroupId );
@@ -560,7 +562,7 @@ public class PrepareBuildProjectsTaskExecutor
             Map<String, Object> context = new HashMap<String, Object>();
             AbstractContinuumAction.setListOfProjects( context, projectsToBeBuilt );
             AbstractContinuumAction.setProjectsBuildDefinitionsMap( context, projectsBuildDefinitionsMap );
-            AbstractContinuumAction.setTrigger( context, trigger );
+            AbstractContinuumAction.setBuildTrigger( context, buildTrigger );
             AbstractContinuumAction.setScmResultMap( context, scmResultMap );
             AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 

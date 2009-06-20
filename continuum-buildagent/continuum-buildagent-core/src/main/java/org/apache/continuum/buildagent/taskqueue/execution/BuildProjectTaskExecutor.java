@@ -164,6 +164,7 @@ public class BuildProjectTaskExecutor
                            BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS,
                            getEnvironments( buildContext.getBuildDefinitionId(),
                                             getInstallationType( buildContext ) ) );
@@ -205,6 +206,7 @@ public class BuildProjectTaskExecutor
         result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
         result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
+        result.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, buildResult.getState() );
         result.put( ContinuumBuildAgentUtil.KEY_START_TIME, Long.toString( buildResult.getStartTime() ) );
         result.put( ContinuumBuildAgentUtil.KEY_END_TIME, Long.toString( buildResult.getEndTime() ) );
@@ -300,6 +302,8 @@ public class BuildProjectTaskExecutor
             build.setState( ContinuumProjectState.ERROR );
 
             build.setTrigger( context.getTrigger() );
+            
+            build.setUsername( context.getUsername() );
 
             build.setStartTime( context.getBuildStartTime() );
 
@@ -401,6 +405,7 @@ public class BuildProjectTaskExecutor
         map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, context.getProjectId() );
         map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, context.getBuildDefinitionId() );
         map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, context.getTrigger() );
+        map.put( ContinuumBuildAgentUtil.KEY_USERNAME, context.getUsername() );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
         map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );
         if ( context.getLatestUpdateDate() != null )

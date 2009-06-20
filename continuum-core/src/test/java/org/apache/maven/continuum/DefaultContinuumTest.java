@@ -32,6 +32,7 @@ import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -518,7 +519,7 @@ public class DefaultContinuumTest
 
         try
         {
-            continuum.buildProject( 1 );
+        	continuum.buildProject( 1, "test-user" );
             fail( "An exception should have been thrown." );
         }
         catch ( ContinuumException e )
@@ -564,7 +565,7 @@ public class DefaultContinuumTest
 
         try
         {
-            continuum.buildProjectGroup( 1 );
+        	continuum.buildProjectGroup( 1, new BuildTrigger( 1, "test-user" ) );
             fail( "An exception should have been thrown." );
         }
         catch ( ContinuumException e )

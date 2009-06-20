@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
@@ -44,13 +45,13 @@ public interface BuildsManager
      *
      * @param projects
      * @param projectsBuildDefinitionsMap
-     * @param trigger
+     * @param buildTrigger
      * @param scmResultMap                TODO
      * @param projectGroupId
      * @throws BuildManagerException
      */
-    void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap, int trigger,
-                        Map<Integer, ScmResult> scmResultMap, int projectGroupId )
+	void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap,
+			            BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
         throws BuildManagerException;
 
     /**
@@ -61,12 +62,12 @@ public interface BuildsManager
      * @param projectId
      * @param buildDefinition
      * @param projectName
-     * @param trigger
+     * @param buildTrigger
      * @param scmResult       TODO
      * @param projectGroupId
      * @throws BuildManagerException
      */
-    void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger,
+	void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, BuildTrigger buildTrigger,
                        ScmResult scmResult, int projectGroupId )
         throws BuildManagerException;
 
@@ -74,13 +75,14 @@ public interface BuildsManager
      * Adds the projects in the prepare-build-queue.
      *
      * @param projectsBuildDefinitionsMap
-     * @param trigger
+     * @param buildTrigger
      * @param projectGroupId              TODO
      * @param scmRootAddress              TODO
+     * @param scmRootId
      * @throws BuildManagerException
      */
-    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId,
-                               String projectGroupName, String scmRootAddress, int scmRootId )
+	void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
+			                   int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId )
         throws BuildManagerException;
 
     /**
@@ -162,13 +164,13 @@ public interface BuildsManager
      *
      * @param projectId
      * @param buildDefinitionId
-     * @param trigger
+     * @param buildTrigger
      * @param projectName
      * @param projectGroupId
      * @throws BuildManagerException
      */
-    void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName,
-                                      int projectGroupId )
+    void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
+    		                          String projectName, int projectGroupId )
         throws BuildManagerException;
 
     // TODO: should we throw an exception when one of the projects cannot be removed?
