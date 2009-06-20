@@ -21,7 +21,6 @@ package org.apache.maven.continuum.buildcontroller;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -128,7 +127,7 @@ public class DefaultBuildControllerTest
         throws Exception
     {
         return controller.initializeBuildContext( projectId2, buildDefinitionId2,
-                          new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ), new ScmResult() );
+                                                  ContinuumProjectState.TRIGGER_SCHEDULED, new ScmResult() );
     }
 
     private BuildContext getContext( int hourOfLastExecution )

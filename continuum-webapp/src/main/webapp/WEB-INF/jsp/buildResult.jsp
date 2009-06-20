@@ -66,9 +66,6 @@
                     </s:else>
                 </s:param>
             </c1:data>
-            <c1:data label="%{getText('buildResult.username')}">
-                <s:param name="after"><s:property value="buildResult.username"/></s:param>
-            </c1:data>
           </table>
         </div>
         <div class="functnbar3">

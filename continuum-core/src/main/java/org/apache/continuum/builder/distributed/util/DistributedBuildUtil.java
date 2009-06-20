@@ -45,7 +45,6 @@ public class DistributedBuildUtil
         buildResult.setExitCode( ContinuumBuildConstant.getBuildExitCode( context ) );
         buildResult.setState( ContinuumBuildConstant.getBuildState( context ) );
         buildResult.setTrigger( ContinuumBuildConstant.getTrigger( context ) );
-        buildResult.setUsername( ContinuumBuildConstant.getUsername( context ) );
         buildResult.setBuildUrl( ContinuumBuildConstant.getBuildAgentUrl( context ) );
     
         return buildResult;

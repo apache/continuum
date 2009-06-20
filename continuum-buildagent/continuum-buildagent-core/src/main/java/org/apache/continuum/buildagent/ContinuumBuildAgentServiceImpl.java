@@ -43,7 +43,6 @@ import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.scm.ChangeFile;
@@ -196,7 +195,6 @@ public class ContinuumBuildAgentServiceImpl
             result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
             result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
             result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
-            result.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
 
             BuildResult buildResult = buildContext.getBuildResult();
 
@@ -613,8 +611,7 @@ public class ContinuumBuildAgentServiceImpl
                 map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
                 map.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ID, new Integer( task.getScmRootId() ) );
                 map.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, task.getScmRootAddress() );
-                map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, task.getBuildTrigger().getTrigger() );
-                map.put( ContinuumBuildAgentUtil.KEY_USERNAME, task.getBuildTrigger().getUsername() );
+                map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( task.getTrigger() ) );
 
                 projects.add( map );
             }
@@ -640,8 +637,7 @@ public class ContinuumBuildAgentServiceImpl
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( task.getProjectId() ) );
                 map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( task.getBuildDefinitionId() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, task.getBuildTrigger().getTrigger() );
-                map.put( ContinuumBuildAgentUtil.KEY_USERNAME, task.getBuildTrigger().getUsername() );
+                map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( task.getTrigger() ) );
                 map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
                 map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_LABEL, task.getBuildDefinitionLabel() );
 
@@ -671,8 +667,7 @@ public class ContinuumBuildAgentServiceImpl
                 project.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
                 project.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ID, new Integer( task.getScmRootId() ) );
                 project.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, task.getScmRootAddress() );
-                project.put( ContinuumBuildAgentUtil.KEY_TRIGGER, task.getBuildTrigger().getTrigger() );
-                project.put( ContinuumBuildAgentUtil.KEY_USERNAME, task.getBuildTrigger().getUsername() );
+                project.put( ContinuumBuildAgentUtil.KEY_TRIGGER, task.getTrigger() );
             }
 
             return project;
@@ -697,8 +692,7 @@ public class ContinuumBuildAgentServiceImpl
             {
                 project.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( task.getProjectId() ) );
                 project.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( task.getBuildDefinitionId() ) );
-                project.put( ContinuumBuildAgentUtil.KEY_TRIGGER, task.getBuildTrigger().getTrigger() );
-                project.put( ContinuumBuildAgentUtil.KEY_USERNAME, task.getBuildTrigger().getUsername() );
+                project.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( task.getTrigger() ) );
                 project.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
                 project.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_LABEL, task.getBuildDefinitionLabel() );
             }
@@ -929,7 +923,6 @@ public class ContinuumBuildAgentServiceImpl
             context.setProjectName( ContinuumBuildAgentUtil.getProjectName( map ) );
             context.setProjectState( ContinuumBuildAgentUtil.getProjectState( map ) );
             context.setTrigger( ContinuumBuildAgentUtil.getTrigger( map ) );
-            context.setUsername( ContinuumBuildAgentUtil.getUsername( map ) );
             context.setLocalRepository( ContinuumBuildAgentUtil.getLocalRepository( map ) );
             context.setBuildNumber( ContinuumBuildAgentUtil.getBuildNumber( map ) );
             context.setOldScmResult( getScmResult( ContinuumBuildAgentUtil.getOldScmChanges( map ) ) );
@@ -1012,8 +1005,8 @@ public class ContinuumBuildAgentServiceImpl
         if ( buildContexts != null && buildContexts.size() > 0 )
         {
             BuildContext context = buildContexts.get( 0 );
-            return new PrepareBuildProjectsTask( buildContexts, new BuildTrigger( context.getTrigger(), context.getUsername() ),
-            		                             context.getProjectGroupId(), context.getScmRootAddress(), context.getScmRootId() );
+            return new PrepareBuildProjectsTask( buildContexts, context.getTrigger(), context.getProjectGroupId(),
+                                                 context.getScmRootAddress(), context.getScmRootId() );
         }
         else
         {

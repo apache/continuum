@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.system.Installation;
 
@@ -61,7 +60,7 @@ public interface DistributedBuildManager
     String getFileContent( int projectId, String directory, String filename )
         throws ContinuumException;
 
-    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId,  
+    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, 
                                String projectGroupName, String scmRootAddress, int scmRootId )
         throws ContinuumException;
 

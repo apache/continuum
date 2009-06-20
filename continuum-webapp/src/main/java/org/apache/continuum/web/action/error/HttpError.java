@@ -25,7 +25,7 @@ import org.apache.maven.continuum.web.action.ContinuumActionSupport;
  * AboutAction:
  *
  * @author: Emmanuel Venisse <evenisse@apache.org>
- * @version: $Id:$
+ * @version: $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="httpError"
  */
 public class HttpError

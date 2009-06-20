@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.model.project.ProjectScmRoot;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
@@ -70,7 +69,7 @@ public abstract class AbstractContinuumAction
 
     private static final String KEY_UPDATE_DEPENDENCIES = "update-dependencies";
 
-    private static final String KEY_BUILD_TRIGGER = "buildTrigger";
+    private static final String KEY_TRIGGER = "trigger";
 
     private static final String KEY_SCM_RESULT = "scmResult";
 
@@ -166,15 +165,14 @@ public abstract class AbstractContinuumAction
         context.put( KEY_BUILD_ID, buildId );
     }
 
-    public static BuildTrigger getBuildTrigger( Map<String, Object> context )
+    public static int getTrigger( Map<String, Object> context )
     {
-    	BuildTrigger defaultValue = new BuildTrigger( 0, "" );
-    	return (BuildTrigger) getObject( context, KEY_BUILD_TRIGGER, defaultValue );
+        return getInteger( context, KEY_TRIGGER );
     }
 
-    public static void setBuildTrigger( Map<String, Object> context, BuildTrigger buildTrigger )
+    public static void setTrigger( Map<String, Object> context, int trigger )
     {
-    	context.put( KEY_BUILD_TRIGGER, buildTrigger );
+        context.put( KEY_TRIGGER, trigger );
     }
 
     public static Project getUnvalidatedProject( Map<String, Object> context )

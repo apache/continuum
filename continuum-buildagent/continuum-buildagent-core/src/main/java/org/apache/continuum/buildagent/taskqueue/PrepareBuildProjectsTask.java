@@ -22,7 +22,6 @@ package org.apache.continuum.buildagent.taskqueue;
 import java.util.List;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.taskqueue.Task;
 
 public class PrepareBuildProjectsTask
@@ -30,7 +29,7 @@ public class PrepareBuildProjectsTask
 {
     private final List<BuildContext> buildContexts;
 
-    private BuildTrigger buildTrigger;
+    private final int trigger;
 
     private final int projectGroupId;
 
@@ -38,11 +37,11 @@ public class PrepareBuildProjectsTask
 
     private final int scmRootId;
 
-    public PrepareBuildProjectsTask( List<BuildContext> buildContexts, BuildTrigger buildTrigger, int projectGroupId,
+    public PrepareBuildProjectsTask( List<BuildContext> buildContexts, int trigger, int projectGroupId,
                                      String scmRootAddress, int scmRootId )
     {
         this.buildContexts = buildContexts;
-        this.buildTrigger = buildTrigger;
+        this.trigger = trigger;
         this.projectGroupId = projectGroupId;
         this.scmRootAddress = scmRootAddress;
         this.scmRootId = scmRootId;
@@ -59,9 +58,9 @@ public class PrepareBuildProjectsTask
         return buildContexts;
     }
 
-    public BuildTrigger getBuildTrigger()
+    public int getTrigger()
     {
-    	return buildTrigger;
+        return trigger;
     }
 
     public int getProjectGroupId()
@@ -81,6 +80,6 @@ public class PrepareBuildProjectsTask
 
     public int getHashCode()
     {
-    	return projectGroupId + scmRootId + buildTrigger.getTrigger();
+        return projectGroupId + scmRootId + trigger;
     }
 }

@@ -19,7 +19,6 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -52,7 +51,7 @@ public class BuildContext
 
     private ScmResult scmResult;
 
-    private BuildTrigger buildTrigger;
+    private int trigger;
 
     private BuildResult buildResult;
 
@@ -139,14 +138,14 @@ public class BuildContext
         return actionContext;
     }
 
-    public BuildTrigger getBuildTrigger()
+    public int getTrigger()
     {
-    	return buildTrigger;
+        return trigger;
     }
 
-    public void setBuildTrigger( BuildTrigger buildTrigger )
+    public void setTrigger( int trigger )
     {
-    	this.buildTrigger = buildTrigger;
+        this.trigger = trigger;
     }
 
     public List<ProjectDependency> getModifiedDependencies()

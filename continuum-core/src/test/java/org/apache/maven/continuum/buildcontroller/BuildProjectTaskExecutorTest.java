@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -246,8 +245,8 @@ public class BuildProjectTaskExecutorTest
 
         // projectGroup = continuumStore.addProjectGroup( projectGroup );
 
-        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), new BuildTrigger( 0, "" ),
-        		                                 project.getName(), buildDefinition.getDescription(), null, projectGroupId );
+        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), 0, project.getName(),
+                                                      buildDefinition.getDescription(), null, projectGroupId );
 
         task.setMaxExecutionTime( maxRunTime );
 

@@ -21,7 +21,6 @@ package org.apache.continuum.taskqueue;
 
 import java.util.Map;
 
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.taskqueue.Task;
 
 public class PrepareBuildProjectsTask
@@ -29,7 +28,7 @@ public class PrepareBuildProjectsTask
 {
     private final Map<Integer, Integer> projectsBuildDefinitionsMap;
 
-    private BuildTrigger buildTrigger;
+    private final int trigger;
 
     private final int projectGroupId;
 
@@ -39,11 +38,11 @@ public class PrepareBuildProjectsTask
 
     private final int projectScmRootId;
 
-    public PrepareBuildProjectsTask( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId,
+    public PrepareBuildProjectsTask( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId,
                                      String projectGroupName, String scmRootAddress, int projectScmRootId )
     {
         this.projectsBuildDefinitionsMap = projectsBuildDefinitionsMap;
-        this.buildTrigger = buildTrigger;
+        this.trigger = trigger;
         this.projectGroupId = projectGroupId;
         this.projectGroupName = projectGroupName;
         this.scmRootAddress = scmRootAddress;
@@ -61,9 +60,9 @@ public class PrepareBuildProjectsTask
         return projectsBuildDefinitionsMap;
     }
 
-    public BuildTrigger getBuildTrigger()
+    public int getTrigger()
     {
-    	return buildTrigger;
+        return trigger;
     }
 
     public int getHashCode()
@@ -93,6 +92,6 @@ public class PrepareBuildProjectsTask
 
     public int hashCode()
     {
-    	return this.projectGroupId + this.projectScmRootId + this.buildTrigger.getTrigger();
+        return this.projectGroupId + this.projectScmRootId + this.trigger;
     }
 }

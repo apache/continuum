@@ -27,7 +27,6 @@ import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueMana
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.codehaus.plexus.action.AbstractAction;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
@@ -54,11 +53,9 @@ public class CreateBuildProjectTaskAction
 
         for ( BuildContext buildContext : buildContexts )
         {
-        	BuildTrigger buildTrigger = new BuildTrigger( buildContext.getTrigger(), buildContext.getUsername() );
-        	
-        	BuildProjectTask buildProjectTask =
+            BuildProjectTask buildProjectTask =
                 new BuildProjectTask( buildContext.getProjectId(), buildContext.getBuildDefinitionId(),
-                		              buildTrigger, buildContext.getProjectName(), buildContext.getBuildDefinitionLabel(),
+                                      buildContext.getTrigger(), buildContext.getProjectName(), buildContext.getBuildDefinitionLabel(),
                                       buildContext.getScmResult(), buildContext.getProjectGroupId() );
             buildProjectTask.setMaxExecutionTime( buildContext.getMaxExecutionTime() * 1000 );
 

@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
@@ -185,7 +184,7 @@ public class DefaultOverallBuildQueueTest
         throws Exception
     {
         final BuildProjectTask buildTask =
-        	new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 );
+            new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2 );
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
 
         context.checking( new Expectations()
@@ -206,7 +205,7 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
+        tasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
 
         context.checking( new Expectations()
         {
@@ -230,7 +229,7 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
+        tasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
 
         context.checking( new Expectations()
         {
@@ -249,7 +248,7 @@ public class DefaultOverallBuildQueueTest
     public void testCancelBuildTask()
         throws Exception
     {
-    	final Task buildTask = new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 );
+        final Task buildTask = new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2 );
 
         context.checking( new Expectations()
         {
@@ -267,7 +266,7 @@ public class DefaultOverallBuildQueueTest
     public void testCancelCurrentBuild()
         throws Exception
     {
-    	final Task buildTask = new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 );
+        final Task buildTask = new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 2 );
 
         context.checking( new Expectations()
         {
@@ -303,14 +302,14 @@ public class DefaultOverallBuildQueueTest
                 one( buildQueue ).remove( with( any( Task.class ) ) );
             }} );
 
-        overallQueue.removeProjectFromBuildQueue( 1, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-1", 1 );
+        overallQueue.removeProjectFromBuildQueue( 1, 1, 1, "continuum-project-test-1", 1 );
         context.assertIsSatisfied();
     }
 
     public void testRemoveProjectFromBuildQueue()
         throws Exception
     {
-    	final Task buildTask = new BuildProjectTask( 1, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 1 );
+        final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-2", "BUILD_DEF", null, 1 );
 
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
         final List<Task> tasks = new ArrayList<Task>();

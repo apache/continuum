@@ -58,7 +58,6 @@ import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.ProjectSorter;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -792,16 +791,16 @@ public class DefaultContinuum
     // Building
     // ----------------------------------------------------------------------
 
-    public void buildProjects( String username )
+    public void buildProjects()
         throws ContinuumException
     {
-    	buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
+        buildProjects( ContinuumProjectState.TRIGGER_FORCED );
     }
 
     public void buildProjectsWithBuildDefinition( int buildDefinitionId )
         throws ContinuumException
     {
-    	buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, "" ), buildDefinitionId );
+        buildProjects( ContinuumProjectState.TRIGGER_FORCED, buildDefinitionId );
     }
 
     public void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
@@ -809,7 +808,7 @@ public class DefaultContinuum
     {
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
 
-        prepareBuildProjects( filteredProjectsList, bds, true, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, "" ) );
+        prepareBuildProjects( filteredProjectsList, bds, true, ContinuumProjectState.TRIGGER_FORCED );
     }
 
     public void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
@@ -817,50 +816,49 @@ public class DefaultContinuum
     {
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
 
-        prepareBuildProjects( filteredProjectsList, buildDefinitionId, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, "" ) );
+        prepareBuildProjects( filteredProjectsList, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
     }
 
     /**
      * fire of the builds of all projects across all project groups using their default build definitions
      *
-     * @param buildTrigger
+     * @param trigger
      * @throws ContinuumException
      */
-    public void buildProjects( BuildTrigger buildTrigger )
+    public void buildProjects( int trigger )
         throws ContinuumException
     {
         Collection<Project> projectsList = getProjectsInBuildOrder();
 
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );
 
-        prepareBuildProjects( filteredProjectsList, null, true, buildTrigger );
+        prepareBuildProjects( filteredProjectsList, null, true, trigger );
     }
 
     /**
      * fire of the builds of all projects across all project groups using the group build definition
      *
-     * @param buildTrigger
+     * @param trigger
      * @param buildDefinitionId
      * @throws ContinuumException
      */
-    public void buildProjects( BuildTrigger buildTrigger, int buildDefinitionId )
+    public void buildProjects( int trigger, int buildDefinitionId )
         throws ContinuumException
     {
         Collection<Project> projectsList = getProjectsInBuildOrder();
 
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );
 
-        prepareBuildProjects( filteredProjectsList, buildDefinitionId, buildTrigger );
+        prepareBuildProjects( filteredProjectsList, buildDefinitionId, trigger );
     }
 
     /**
      * fire off a build for all of the projects in a project group using their default builds
      *
      * @param projectGroupId
-     * @param buildTrigger
      * @throws ContinuumException
      */
-    public void buildProjectGroup( int projectGroupId, BuildTrigger buildTrigger )
+    public void buildProjectGroup( int projectGroupId )
         throws ContinuumException
     {
         List<BuildDefinition> groupDefaultBDs;
@@ -869,7 +867,7 @@ public class DefaultContinuum
         {
             groupDefaultBDs = getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
 
-            buildProjectGroupWithBuildDefinition( projectGroupId, groupDefaultBDs, true, buildTrigger );
+            buildProjectGroupWithBuildDefinition( projectGroupId, groupDefaultBDs, true );
         }
     }
 
@@ -878,10 +876,9 @@ public class DefaultContinuum
      *
      * @param projectGroupId    the project group id
      * @param buildDefinitionId the build definition id to use
-     * @param buildTrigger      the trigger state and the username
      * @throws ContinuumException
      */
-    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId, BuildTrigger buildTrigger )
+    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId )
         throws ContinuumException
     {
         if ( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
@@ -892,7 +889,7 @@ public class DefaultContinuum
             {
                 bds.add( bd );
             }
-            buildProjectGroupWithBuildDefinition( projectGroupId, bds, false, buildTrigger );
+            buildProjectGroupWithBuildDefinition( projectGroupId, bds, false );
         }
     }
 
@@ -900,13 +897,10 @@ public class DefaultContinuum
      * fire off a build for all of the projects in a project group using their default builds
      *
      * @param projectGroupId
-     * @param bds
-     * @param checkDefaultBuildDefinitionForProject
-     * @param buildTrigger
      * @throws ContinuumException
      */
     private void buildProjectGroupWithBuildDefinition( int projectGroupId, List<BuildDefinition> bds,
-    		                                   boolean checkDefaultBuildDefinitionForProject, BuildTrigger buildTrigger )
+                                                       boolean checkDefaultBuildDefinitionForProject )
         throws ContinuumException
     {
         if ( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
@@ -914,10 +908,9 @@ public class DefaultContinuum
             Collection<Project> projectsList;
 
             projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
-            
-            buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
 
-            prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject, buildTrigger );
+            prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject,
+                                  ContinuumProjectState.TRIGGER_FORCED );
         }
     }
 
@@ -1009,23 +1002,22 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ), sortedScmRoot );
+        prepareBuildProjects( map, ContinuumProjectState.TRIGGER_SCHEDULED, sortedScmRoot );
     }
 
-    public void buildProject( int projectId, String username )
+    public void buildProject( int projectId )
         throws ContinuumException
     {
-    	buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
+        buildProject( projectId, ContinuumProjectState.TRIGGER_FORCED );
     }
 
-    public void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
+    public void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
-    	buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
-    	buildProject( projectId, buildDefinitionId, buildTrigger );
+        buildProject( projectId, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
     }
 
-    public void buildProject( int projectId, BuildTrigger buildTrigger )
+    public void buildProject( int projectId, int trigger )
         throws ContinuumException
     {
         Project project = getProject( projectId );
@@ -1059,11 +1051,11 @@ public class DefaultContinuum
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-        prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, scmRoot.getScmRootAddress(),
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(),
                               scmRoot.getProjectGroup().getId(), scmRoot.getId() );
     }
 
-    public void buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
+    public void buildProject( int projectId, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
         Project project = getProject( projectId );
@@ -1090,7 +1082,7 @@ public class DefaultContinuum
         projectsBuildDefinitionsMap.put( projectId, buildDefinitionId );
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-        prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, scmRoot.getScmRootAddress(),
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(),
                               scmRoot.getProjectGroup().getId(), scmRoot.getId() );
     }
 
@@ -3413,7 +3405,7 @@ public class DefaultContinuum
     }
 
     private void prepareBuildProjects( Collection<Project> projects, List<BuildDefinition> bds,
-    		                           boolean checkDefaultBuildDefinitionForProject, BuildTrigger buildTrigger )
+                                       boolean checkDefaultBuildDefinitionForProject, int trigger )
         throws ContinuumException
     {
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
@@ -3509,10 +3501,10 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map, buildTrigger, sortedScmRoot );
+        prepareBuildProjects( map, trigger, sortedScmRoot );
     }
 
-    private void prepareBuildProjects( Collection<Project> projects, int buildDefinitionId, BuildTrigger buildTrigger )
+    private void prepareBuildProjects( Collection<Project> projects, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
@@ -3563,21 +3555,21 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map, buildTrigger, sortedScmRoot );
+        prepareBuildProjects( map, trigger, sortedScmRoot );
     }
 
-    private void prepareBuildProjects( Map<ProjectScmRoot, Map<Integer, Integer>> map, BuildTrigger buildTrigger,
+    private void prepareBuildProjects( Map<ProjectScmRoot, Map<Integer, Integer>> map, int trigger,
                                        List<ProjectScmRoot> scmRoots )
         throws ContinuumException
     {
         for ( ProjectScmRoot scmRoot : scmRoots )
         {
-        	prepareBuildProjects( map.get( scmRoot ), buildTrigger, scmRoot.getScmRootAddress(),
+            prepareBuildProjects( map.get( scmRoot ), trigger, scmRoot.getScmRootAddress(),
                                   scmRoot.getProjectGroup().getId(), scmRoot.getId() );
         }
     }
 
-    private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
+    private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger,
                                        String scmRootAddress, int projectGroupId, int scmRootId )
         throws ContinuumException
     {
@@ -3587,12 +3579,12 @@ public class DefaultContinuum
         {
             if ( configurationService.isDistributedBuildEnabled() )
             {
-            	distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, projectGroupId, 
+                distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, trigger, projectGroupId,
                                                               group.getName(), scmRootAddress, scmRootId );
             }
             else
             {
-            	parallelBuildsManager.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, projectGroupId,
+                parallelBuildsManager.prepareBuildProjects( projectsBuildDefinitionsMap, trigger, projectGroupId,
                                                             group.getName(), scmRootAddress, scmRootId );
             }
         }

@@ -29,7 +29,6 @@ import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -444,8 +443,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getBuildsManager().removeProjectFromBuildQueue( projectId, buildDefinitionId,
-        		                                     new BuildTrigger( trigger, "" ), projectName, projectGroupId );
+        getContinuum().getBuildsManager().removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger,
+                                                                       projectName, projectGroupId );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
         getContinuum().updateProject( project );

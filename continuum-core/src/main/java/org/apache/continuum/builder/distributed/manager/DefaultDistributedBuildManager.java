@@ -41,7 +41,6 @@ import org.apache.continuum.taskqueue.OverallDistributedBuildQueue;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -212,11 +211,11 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void prepareBuildProjects( Map<Integer, Integer>projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId, 
+    public void prepareBuildProjects( Map<Integer, Integer>projectsBuildDefinitionsMap, int trigger, int projectGroupId, 
                                       String projectGroupName, String scmRootAddress, int scmRootId )
         throws ContinuumException
     {
-    	PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, buildTrigger,
+        PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
                                                                       projectGroupId, projectGroupName, 
                                                                       scmRootAddress, scmRootId );
 
@@ -1066,19 +1065,19 @@ public class DefaultDistributedBuildManager
         int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
         int scmRootId = ContinuumBuildConstant.getScmRootId( context );
         String scmRootAddress = ContinuumBuildConstant.getScmRootAddress( context );
-        BuildTrigger buildTrigger = new BuildTrigger( ContinuumBuildConstant.getTrigger( context ), ContinuumBuildConstant.getUsername( context ) );
+        int trigger = ContinuumBuildConstant.getTrigger( context );
 
-        return new PrepareBuildProjectsTask( null, buildTrigger, projectGroupId, null, scmRootAddress, scmRootId );
+        return new PrepareBuildProjectsTask( null, trigger, projectGroupId, null, scmRootAddress, scmRootId );
     }
 
     private BuildProjectTask getBuildProjectTask( Map context )
     {
         int projectId = ContinuumBuildConstant.getProjectId( context );
         int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( context );
-        BuildTrigger buildTrigger = new BuildTrigger( ContinuumBuildConstant.getTrigger( context ), ContinuumBuildConstant.getUsername( context ) );
+        int trigger = ContinuumBuildConstant.getTrigger( context );
         int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
         String buildDefinitionLabel = ContinuumBuildConstant.getBuildDefinitionLabel( context );
 
-        return new BuildProjectTask( projectId, buildDefinitionId, buildTrigger, null, buildDefinitionLabel, null, projectGroupId );
+        return new BuildProjectTask( projectId, buildDefinitionId, trigger, null, buildDefinitionLabel, null, projectGroupId );
     }
 }
