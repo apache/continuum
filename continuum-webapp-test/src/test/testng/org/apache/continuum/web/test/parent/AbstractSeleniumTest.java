@@ -129,7 +129,6 @@ public abstract class AbstractSeleniumTest
         return value;
     }
 
-
     /**
      * Close selenium session. Called from AfterSuite method of sub-class
      */
@@ -146,20 +145,26 @@ public abstract class AbstractSeleniumTest
     public void assertFieldValue( String fieldValue, String fieldName )
     {
         assertElementPresent( fieldName );
-        try {
-	    Assert.assertEquals( fieldValue, getSelenium().getValue( fieldName ) );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertEquals( fieldValue, getSelenium().getValue( fieldName ) );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertPage( String title )
     {
-        try {
-	    Assert.assertEquals( getTitle(), title );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertEquals( getTitle(), title );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public String getTitle()
@@ -174,56 +179,74 @@ public abstract class AbstractSeleniumTest
 
     public void assertTextPresent( String text )
     {
-        try {
-	    Assert.assertTrue( getSelenium().isTextPresent( text ), "'" + text + "' isn't present." );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertTrue( getSelenium().isTextPresent( text ), "'" + text + "' isn't present." );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertTextNotPresent( String text )
     {
-        try {
-	    Assert.assertFalse( getSelenium().isTextPresent( text ), "'" + text + "' is present." );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertFalse( getSelenium().isTextPresent( text ), "'" + text + "' is present." );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertElementPresent( String elementLocator )
     {
-        try {
-	    Assert.assertTrue( isElementPresent( elementLocator ), "'" + elementLocator + "' isn't present." );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertTrue( isElementPresent( elementLocator ), "'" + elementLocator + "' isn't present." );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertElementNotPresent( String elementLocator )
     {
- 	try {
-	    Assert.assertFalse( isElementPresent( elementLocator ), "'" + elementLocator + "' is present." );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertFalse( isElementPresent( elementLocator ), "'" + elementLocator + "' is present." );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertLinkPresent( String text )
     {
-        try {
-	    Assert.assertTrue( isElementPresent( "link=" + text ), "The link '" + text + "' isn't present." );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertTrue( isElementPresent( "link=" + text ), "The link '" + text + "' isn't present." );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertLinkNotPresent( String text )
     {
-        try {
-	    Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertImgWithAlt( String alt )
@@ -242,11 +265,14 @@ public abstract class AbstractSeleniumTest
 
     public void assertCellValueFromTable( String expected, String tableElement, int row, int column )
     {
-        try {
-	    Assert.assertEquals( expected, getCellValueFromTable( tableElement, row, column ) );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertEquals( expected, getCellValueFromTable( tableElement, row, column ) );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public boolean isTextPresent( String text )
@@ -290,22 +316,28 @@ public abstract class AbstractSeleniumTest
         String[] optionsPresent = getSelenium().getSelectOptions( selectField );
         List<String> expected = Arrays.asList( options );
         List<String> present = Arrays.asList( optionsPresent );
-        try {
-	    Assert.assertTrue( present.containsAll( expected ), "Options expected are not included in present options" );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertTrue( present.containsAll( expected ), "Options expected are not included in present options" );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertSelectedValue( String value, String fieldName )
     {
         assertElementPresent( fieldName );
         String optionsPresent = getSelenium().getSelectedLabel( value );
-        try {
-	    Assert.assertEquals( optionsPresent, value );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertEquals( optionsPresent, value );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void submit()
@@ -315,29 +347,38 @@ public abstract class AbstractSeleniumTest
 
     public void assertButtonWithValuePresent( String text )
     {
-        try {
-	    Assert.assertTrue( isButtonWithValuePresent( text ), "'" + text + "' button isn't present" );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertTrue( isButtonWithValuePresent( text ), "'" + text + "' button isn't present" );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertButtonWithIdPresent( String id )
     {
-        try {
-	    Assert.assertTrue( isButtonWithIdPresent( id ), "'Button with id =" + id + "' isn't present" );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertTrue( isButtonWithIdPresent( id ), "'Button with id =" + id + "' isn't present" );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertButtonWithValueNotPresent( String text )
     {
-        try {
-	    Assert.assertFalse( isButtonWithValuePresent( text ), "'" + text + "' button is present" );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertFalse( isButtonWithValuePresent( text ), "'" + text + "' button is present" );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public boolean isButtonWithValuePresent( String text )
@@ -454,91 +495,119 @@ public abstract class AbstractSeleniumTest
 
     public void assertIsChecked( String locator )
     {
-        try {
-	    Assert.assertTrue( getSelenium().isChecked( locator ) );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertTrue( getSelenium().isChecked( locator ) );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void assertIsNotChecked( String locator )
     {
-        try {
-	    Assert.assertFalse( getSelenium().isChecked( locator ) );
-	} catch(java.lang.AssertionError e){        	
-       	    captureAssertionError(e);
-	}
+        try
+        {
+            Assert.assertFalse( getSelenium().isChecked( locator ) );
+        }
+        catch ( java.lang.AssertionError e )
+        {
+            captureAssertionError( e );
+        }
     }
 
     public void clickAndWait( String locator )
-	{
-	  getSelenium().click(locator);
-	  getSelenium().waitForPageToLoad(maxWaitTimeInMs);
-	}
+    {
+        getSelenium().click( locator );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+    }
 
     public void waitForElementPresent( String locator )
         throws InterruptedException
     {
-    	getSelenium().waitForPageToLoad(maxWaitTimeInMs);
-    	for (int second = 0;; second++) {
-    		if (second >= 60) Assert.fail("timeout");
-    		try { if ( isElementPresent(locator)) break; } catch (Exception e) {}
-    		Thread.sleep(1000);
-    	}
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        for ( int second = 0;; second++ )
+        {
+            if ( second >= 60 )
+                Assert.fail( "timeout" );
+            try
+            {
+                if ( isElementPresent( locator ) )
+                    break;
+            }
+            catch ( Exception e )
+            {
+            }
+            Thread.sleep( 1000 );
+        }
     }
 
     public void waitForTextPresent( String text )
         throws InterruptedException
     {
-    	getSelenium().waitForPageToLoad(maxWaitTimeInMs);
-    	for (int second = 0;; second++) {
-    		if (second >= 60) Assert.fail( "Timeout" );
-    		try { if ( isTextPresent(text)) break; } catch (Exception e) {}
-    		Thread.sleep(1000);
-    	}
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        for ( int second = 0;; second++ )
+        {
+            if ( second >= 60 )
+                Assert.fail( "Timeout" );
+            try
+            {
+                if ( isTextPresent( text ) )
+                    break;
+            }
+            catch ( Exception e )
+            {
+            }
+            Thread.sleep( 1000 );
+        }
     }
 
-    // captureAssertionError() creates a 'target/screenshots' directory and saves '.png' page screenshot of the encountered error
-    public void captureError() 
+    // captureAssertionError() creates a 'target/screenshots' directory and saves '.png' page screenshot of the
+    // encountered error
+    public void captureError()
     {
-    	File f = new File("");
-    	String filePath = f.getAbsolutePath();
-    	Date d = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
-    	String time = sdf.format(d);
-    	String fs = File.separator;
-    	File targetPath = new File(filePath + fs + "target" + fs + "screenshots");
-    	targetPath.mkdir();
-    	String cName = getClass().getName();
-    	StackTraceElement stackTrace [] = new Throwable().fillInStackTrace().getStackTrace();
-	int index = getStackTraceIndexOfCallingClass(cName, stackTrace);
-	String methodName = stackTrace[index].getMethodName();
-	int lNumber = stackTrace[index].getLineNumber();
-	String lineNumber = Integer.toString(lNumber);
-	String className = cName.substring(cName.lastIndexOf('.') + 1);
-	String fileName = targetPath.toString() + fs + methodName + "("  + className + ".java:" + lineNumber + ")-" + time + ".png";
-	getSelenium().windowMaximize();
-	getSelenium().captureEntirePageScreenshot(fileName, "");
-    }
-    
-    public int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace [] ) 
-    {
-    	boolean match = false;
-    	int i = 0;
-    	do {
-    		String className = stackTrace[i].getClassName();
-    		match = Pattern.matches(nameOfClass, className);
-    		i++;
-        } while (match == false);
-	i--;
-    	return i;
+        File f = new File( "" );
+        String filePath = f.getAbsolutePath();
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy.MM.dd-HH_mm_ss" );
+        String time = sdf.format( d );
+        String fs = File.separator;
+        File targetPath = new File( filePath + fs + "target" + fs + "screenshots" );
+        targetPath.mkdir();
+        String cName = getClass().getName();
+        StackTraceElement stackTrace[] = new Throwable().fillInStackTrace().getStackTrace();
+        int index = getStackTraceIndexOfCallingClass( cName, stackTrace );
+        String methodName = stackTrace[index].getMethodName();
+        int lNumber = stackTrace[index].getLineNumber();
+        String lineNumber = Integer.toString( lNumber );
+        String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
+        String fileName =
+            targetPath.toString() + fs + methodName + "(" + className + ".java_" + lineNumber + ")-" + time + ".png";
+        getSelenium().windowMaximize();
+        getSelenium().captureEntirePageScreenshot( fileName, "" );
     }
 
-    // captureError calls the captureAssertionError method to capture screenshot and 
+    public int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )
+    {
+        boolean match = false;
+        int i = 0;
+        do
+        {
+            String className = stackTrace[i].getClassName();
+            match = Pattern.matches( nameOfClass, className );
+            i++;
+        }
+        while ( match == false );
+        i--;
+        return i;
+    }
+
+    // captureError calls the captureAssertionError method to capture screenshot and
     // throw an assertion error for the errors to be displayed in the build results summary
-    public void captureAssertionError( Object e ) 
+    public void captureAssertionError( Object e )
     {
-    	captureError();
-    	throw new java.lang.AssertionError(e);
+        captureError();
+        throw new java.lang.AssertionError( e );
     }
 }

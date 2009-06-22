@@ -82,6 +82,14 @@ public abstract class AbstractUserRolesManagementTest
 				assertTextPresent( userroles );
 	}
 
+	   public void assertCreatedUserInfo( String username )
+    {
+        selectValue( "name=ec_rd", "50" );
+        waitPage();
+        clickLinkWithText( username );
+        clickLinkWithText( "Edit Roles" );
+    }
+
 	public void assertUserRoleCheckBoxPresent( String value )
     {
     	getSelenium().isElementPresent( "xpath=//input[@id='addRolesToUser_addNDSelectedRoles' and @name='addNDSelectedRoles' and @value='"+ value + "']" );
