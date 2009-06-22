@@ -51,7 +51,9 @@ public class GroupSummaryAction
     {
         groups = new ArrayList<GroupSummary>();
 
+        //TODO: Merge this two requests to one
         Collection<ProjectGroup> projectGroups = getContinuum().getAllProjectGroups();
+        Map<Integer, ProjectGroupSummary> summaries = getContinuum().getProjectsSummaryByGroups();
 
         for ( ProjectGroup projectGroup : projectGroups )
         {
@@ -66,7 +68,6 @@ public class GroupSummaryAction
                 groupModel.setName( projectGroup.getName() );
                 groupModel.setDescription( projectGroup.getDescription() );
 
-                Map<Integer, ProjectGroupSummary> summaries = getContinuum().getProjectsSummaryByGroups();
                 ProjectGroupSummary summary = summaries.get( projectGroup.getId() );
 
                 if ( summary != null )
