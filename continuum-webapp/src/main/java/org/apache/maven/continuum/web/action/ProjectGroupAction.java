@@ -310,7 +310,7 @@ public class ProjectGroupAction
             {
                 logger.error( "Error while removing project group with id " + projectGroupId, e );
                 addActionError( getText( "projectGroup.delete.error", "Unable to remove project group",
-                                         new Integer( projectGroupId ).toString() ) );
+                                         Integer.toString( projectGroupId ) ) );
             }
         }
         else
@@ -363,7 +363,7 @@ public class ProjectGroupAction
             }
         }
 
-        for ( ProjectGroup pg : getContinuum().getAllProjectGroupsWithProjects() )
+        for ( ProjectGroup pg : getContinuum().getAllProjectGroups() )
         {
             if ( isAuthorized( projectGroup.getName() ) )
             {
