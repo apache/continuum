@@ -95,10 +95,9 @@
          -->
         <buildSubjectFormat>[continuum] BUILD ${state}: ${project.projectGroup.name} - ${project.name} - ${build.buildDefinition.description}</buildSubjectFormat>
         <prepareBuildSubjectFormat>[continuum] PREPARE BUILD ${state}: ${project.projectGroup.name}</prepareBuildSubjectFormat>
-        <includeBuildResult>true</includeBuildResult>
         <includeBuildSummary>true</includeBuildSummary>
         <includeTestSummary>true</includeTestSummary>
-        <includeOutput>false</includeOutput>
+        <includeBuildOutput>false</includeBuildOutput>
         <alwaysSend>false</alwaysSend>
         <!--
         Setting this propery will make Continuum send all emails to

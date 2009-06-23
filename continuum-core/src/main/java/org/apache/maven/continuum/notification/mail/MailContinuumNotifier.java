@@ -136,11 +136,6 @@ public class MailContinuumNotifier
     /**
      * @plexus.configuration
      */
-    private boolean includeBuildResult = true;
-
-    /**
-     * @plexus.configuration
-     */
     private boolean includeBuildSummary = true;
 
     /**
@@ -151,7 +146,7 @@ public class MailContinuumNotifier
     /**
      * @plexus.configuration
      */
-    private boolean includeOutput = false;
+    private boolean includeBuildOutput = false;
 
     /**
      * Customizable mail subject.  Use any combination of literal text, project or build attributes.
@@ -254,7 +249,6 @@ public class MailContinuumNotifier
         Project project = context.getProject();
         List<ProjectNotifier> notifiers = context.getNotifiers();
         BuildResult build = context.getBuildResult();
-        String buildOutput = getBuildOutput( project, build );
         BuildDefinition buildDefinition = context.getBuildDefinition();
         ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
 
@@ -281,7 +275,7 @@ public class MailContinuumNotifier
 
         if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
         {
-            buildComplete( project, notifiers, build, buildOutput, messageId, context, buildDefinition );
+            buildComplete( project, notifiers, build, messageId, context, buildDefinition );
         }
         else if ( isPrepareBuildComplete )
         {
@@ -289,8 +283,8 @@ public class MailContinuumNotifier
         }
     }
 
-    private void buildComplete( Project project, List<ProjectNotifier> notifiers, BuildResult build, String buildOutput,
-                                String messageId, MessageContext context, BuildDefinition buildDefinition )
+    private void buildComplete( Project project, List<ProjectNotifier> notifiers, BuildResult build, String messageId,
+                                MessageContext context, BuildDefinition buildDefinition )
         throws NotificationException
     {
         BuildResult previousBuild = getPreviousBuild( project, buildDefinition, build );
@@ -307,12 +301,12 @@ public class MailContinuumNotifier
                 notifiersList.add( notifier );
             }
         }
-        buildComplete( project, notifiersList, build, previousBuild, buildOutput, messageId, context, buildDefinition );
+        buildComplete( project, notifiersList, build, previousBuild, messageId, context, buildDefinition );
     }
 
     private void buildComplete( Project project, List<ProjectNotifier> notifiers, BuildResult build,
-                                BuildResult previousBuild, String buildOutput, String messageId,
-                                MessageContext messageContext, BuildDefinition buildDefinition )
+                                BuildResult previousBuild, String messageId, MessageContext messageContext,
+                                BuildDefinition buildDefinition )
         throws NotificationException
     {
         // ----------------------------------------------------------------------
@@ -333,11 +327,11 @@ public class MailContinuumNotifier
 
             context.put( "includeTestSummary", includeTestSummary );
 
-            context.put( "includeOutput", includeOutput );
+            context.put( "includeOutput", includeBuildOutput );
 
-            if ( includeBuildResult )
+            if ( includeBuildOutput )
             {
-                context.put( "buildOutput", buildOutput );
+                context.put( "buildOutput", getBuildOutput( project, build ) );
             }
 
             if ( includeBuildSummary )
