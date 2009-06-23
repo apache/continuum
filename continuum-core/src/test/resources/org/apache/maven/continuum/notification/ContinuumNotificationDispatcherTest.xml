@@ -59,7 +59,7 @@
         <fromMailbox>continuum@localhost</fromMailbox>
         <fromName>Continuum</fromName>
         <timestampFormat>EEE, d MMM yyyy HH:mm:ss Z</timestampFormat>
-        <includeBuildResult>true</includeBuildResult>
+        <includeBuildOutput>true</includeBuildOutput>
         <toOverride>nobody@localhost</toOverride>
       </configuration>
     </component>
