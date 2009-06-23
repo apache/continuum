@@ -60,7 +60,10 @@ public class GroupSummaryAction
 
             if ( isAuthorized( projectGroup.getName() ) )
             {
-                logger.debug( "GroupSummaryAction: building group " + projectGroup.getName() );
+                if ( logger.isDebugEnabled() )
+                {
+                    logger.debug( "GroupSummaryAction: building group " + projectGroup.getName() );
+                }
 
                 GroupSummary groupModel = new GroupSummary();
                 groupModel.setId( projectGroup.getId() );
@@ -81,7 +84,10 @@ public class GroupSummaryAction
                 //todo wire in the next scheduled build for the project group and a meaningful status message
                 //groupModel.setNextScheduledBuild( "unknown" );
                 //groupModel.setStatusMessage( "none" );
-                logger.debug( "GroupSummaryAction: adding group to groups list " + groupModel.getName() );
+                if ( logger.isDebugEnabled() )
+                {
+                    logger.debug( "GroupSummaryAction: adding group to groups list " + groupModel.getName() );
+                }
                 groups.add( groupModel );
             }
         }
