@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Map;
 
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
@@ -62,6 +63,14 @@ public class CheckWorkingDirectoryAction
         }
 
         File[] files = workingDirectory.listFiles();
+
+        if ( files == null )
+        {
+            //workingDirectory isn't a directory but a file. Not possible in theory.
+            String msg = workingDirectory.getAbsolutePath() + " isn't a directory but a file.";
+            getLogger().error( msg );
+            throw new ContinuumException( msg );
+        }
 
         setWorkingDirectoryExist( context, files.length > 0 );
     }
