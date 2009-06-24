@@ -13,6 +13,8 @@ Release Results Management
 [../../images/release_result-1.png] Release Results page
 
     To view the release result, click the <<View Result>> link in-line with the release goal being executed.
+    
+    The <<Triggered by>> field displays the username of the person who initiated the release.
 
 [../../images/release_result-2.png] Release Summary
 
