@@ -1,5 +1,5 @@
  ----
- Welcome
+ Requirements
  ----
 
 ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -19,15 +19,16 @@
 ~~ specific language governing permissions and limitations
 ~~ under the License.
 
-Apache Continuum Developer Documentation
+Requirements
 
- Welcome!  This site contains the developer documentation for Apache Continuum.  Here you will find Javadocs,
- FindBugs reports, information about our unit and functional tests, and some requirements docs.
+ The Continuum project does not have formal requirements docs, but there are some general requirements we adhere to.
 
-  {{{apidocs/index.html}Javadocs}}.
+ For example:
 
-  {{{findbugs.html}Findbugs Reports}}.
+ * Anything that goes in the database must have a way to come out.  For example, we add build results to the database,
+ and provide a way to delete them through the Web UI and the XML-RPC interface, as well as deleting them automatically
+ when the project they belong to is deleted.
 
-  {{{architecture.html}Architecture}}.
+ In addition, we have the following requirements defined:
 
-  {{{requirements.html}Requirements}}.
+ * {{{credentials.html}Credentials Handling}}
