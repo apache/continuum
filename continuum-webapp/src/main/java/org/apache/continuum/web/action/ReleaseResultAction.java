@@ -61,6 +61,8 @@ public class ReleaseResultAction
     private String projectName;
 
     private String releaseGoal;
+    
+    private String username;
 
     public String list()
         throws ContinuumException
@@ -142,6 +144,7 @@ public class ReleaseResultAction
 
         releaseGoal = releaseResult.getReleaseGoal();
         projectName = releaseResult.getProject().getName();
+        username = releaseResult.getUsername();
 
         try
         {
@@ -281,5 +284,15 @@ public class ReleaseResultAction
     public void setReleaseGoal( String releaseGoal )
     {
         this.releaseGoal = releaseGoal;
+    }
+    
+    public void setUsername( String username )
+    {
+        this.username = username;
+    }
+    
+    public String getUsername()
+    {
+        return username;
     }
 }

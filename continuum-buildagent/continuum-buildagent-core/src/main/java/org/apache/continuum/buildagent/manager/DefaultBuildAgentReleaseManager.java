@@ -66,7 +66,7 @@ public class DefaultBuildAgentReleaseManager
 
     public String releasePrepare( Map<String, Object> projectMap, Map<String, Object> properties,
                                   Map<String, String> releaseVersion, Map<String, String> developmentVersion,
-                                  Map<String, String> environments )
+                                  Map<String, String> environments, String username )
         throws ContinuumReleaseException
     {
         Project project = getProject( projectMap );
@@ -74,6 +74,8 @@ public class DefaultBuildAgentReleaseManager
         Properties releaseProperties = getReleaseProperties( properties );
 
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
+        
+        listener.setUsername( username );
 
         String workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getPath();
 
@@ -118,6 +120,9 @@ public class DefaultBuildAgentReleaseManager
         if ( listener != null )
         {
             map.put( ContinuumBuildAgentUtil.KEY_RELEASE_STATE, listener.getState() );
+            
+            map.put( ContinuumBuildAgentUtil.KEY_USERNAME, listener.getUsername() );
+            
             if ( listener.getPhases() != null )
             {
                 map.put( ContinuumBuildAgentUtil.KEY_RELEASE_PHASES, listener.getPhases() );
@@ -158,10 +163,12 @@ public class DefaultBuildAgentReleaseManager
     }
 
     public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                Map repository )
+                                Map repository, String username )
         throws ContinuumReleaseException
     {
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
+        
+        listener.setUsername( username );
 
         LocalRepository repo = null;
 
@@ -182,7 +189,7 @@ public class DefaultBuildAgentReleaseManager
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map<String, String> environments )
+                                         String scmTagBase, Map<String, String> environments, String username )
         throws ContinuumReleaseException
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
@@ -203,7 +210,7 @@ public class DefaultBuildAgentReleaseManager
 
         releaseManager.getPreparedReleases().put( releaseId, descriptor );
 
-        releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+        releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
 
         return releaseId;
     }

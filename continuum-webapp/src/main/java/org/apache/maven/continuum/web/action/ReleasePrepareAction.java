@@ -304,6 +304,8 @@ public class ReleasePrepareAction
         {
             profile = getContinuum().getProfileService().getProfile( profileId );
         }
+        
+        String username = getPrincipal();
 
         Map<String, String> environments = getEnvironments( profile );
 
@@ -314,7 +316,7 @@ public class ReleasePrepareAction
             try
             {
                 releaseId = distributedReleaseManager.releasePrepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), 
-                                                                      environments );
+                                                                      environments, username );
 
                 if ( releaseId == null )
                 {
@@ -334,6 +336,8 @@ public class ReleasePrepareAction
         else
         {
             listener = new DefaultReleaseManagerListener();
+            
+            listener.setUsername( username );
 
             String workingDirectory = getContinuum().getWorkingDirectory( projectId ).getPath();
 
@@ -358,7 +362,7 @@ public class ReleasePrepareAction
         
         AuditLog event = new AuditLog( "Release id=" + releaseId, AuditLogConstants.PREPARE_RELEASE );
         event.setCategory( AuditLogConstants.PROJECT );
-        event.setCurrentUser( getPrincipal() );
+        event.setCurrentUser( username );
         event.log();
 
         return SUCCESS;

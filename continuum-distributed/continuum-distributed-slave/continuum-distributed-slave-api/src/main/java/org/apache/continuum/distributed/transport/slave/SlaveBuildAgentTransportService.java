@@ -61,7 +61,7 @@ public interface SlaveBuildAgentTransportService
         throws Exception;
 
     public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                                  Map environments )
+                                  Map environments, String username )
         throws Exception;
 
     public Map<String, Object> getReleaseResult( String releaseId )
@@ -77,12 +77,12 @@ public interface SlaveBuildAgentTransportService
         throws Exception;
 
     public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                   Map repository )
+                                   Map repository, String username )
         throws Exception;
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map environments )
+                                         String scmTagBase, Map environments, String username )
         throws Exception;
 
     public String releaseCleanup( String releaseId )

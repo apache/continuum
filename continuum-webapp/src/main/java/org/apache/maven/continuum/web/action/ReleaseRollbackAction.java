@@ -90,6 +90,8 @@ public class ReleaseRollbackAction
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
     
             ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
+            
+            listener.setUsername( getPrincipal() );
     
             Project project = getContinuum().getProject( projectId );
     

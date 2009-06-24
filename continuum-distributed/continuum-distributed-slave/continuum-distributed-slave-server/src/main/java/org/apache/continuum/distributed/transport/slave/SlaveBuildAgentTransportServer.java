@@ -197,13 +197,13 @@ public class SlaveBuildAgentTransportServer
     }
 
     public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                                  Map environments )
+                                  Map environments, String username )
         throws Exception
     {
         try
         {
             return continuumBuildAgentService.releasePrepare( project, properties, releaseVersion, developmentVersion,
-                                                              environments );
+                                                              environments, username );
         }
         catch ( ContinuumBuildAgentException e )
         {
@@ -274,14 +274,14 @@ public class SlaveBuildAgentTransportServer
     }
 
     public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                   Map repository )
+                                   Map repository, String username )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            continuumBuildAgentService.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+            continuumBuildAgentService.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
             result = Boolean.TRUE;
         }
         catch ( ContinuumBuildAgentException e )
@@ -295,14 +295,14 @@ public class SlaveBuildAgentTransportServer
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map environments )
+                                         String scmTagBase, Map environments, String username )
         throws Exception
     {
         try
         {
             return continuumBuildAgentService.releasePerformFromScm( goals, arguments, useReleaseProfile, repository,
                                                                      scmUrl, scmUsername, scmPassword, scmTag,
-                                                                     scmTagBase, environments );
+                                                                     scmTagBase, environments, username );
         }
         catch ( ContinuumBuildAgentException e )
         {

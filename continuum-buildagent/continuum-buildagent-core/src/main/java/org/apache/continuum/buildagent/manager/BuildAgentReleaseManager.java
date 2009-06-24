@@ -30,7 +30,7 @@ public interface BuildAgentReleaseManager
 
     String releasePrepare( Map<String, Object> project, Map<String, Object> properties,
                            Map<String, String> releaseVersion, Map<String, String> developmentVersion,
-                           Map<String, String> environments )
+                           Map<String, String> environments, String username )
         throws ContinuumReleaseException;
 
     ReleaseResult getReleaseResult( String releaseId );
@@ -41,12 +41,12 @@ public interface BuildAgentReleaseManager
 
     String getPreparedReleaseName( String releaseId );
 
-    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository, String username )
         throws ContinuumReleaseException;
 
     String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                   String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                  String scmTagBase, Map<String, String> environments )
+                                  String scmTagBase, Map<String, String> environments, String username )
         throws ContinuumReleaseException;
 
     String releaseCleanup( String releaseId );

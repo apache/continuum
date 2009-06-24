@@ -52,6 +52,9 @@
               </s:else>
             </s:param>
           </c1:data>
+          <c1:data label="%{getText('releaseViewResult.username')}">
+              <s:param name="after"><s:property value="username"/></s:param>
+          </c1:data>
         </table>
       </div>
 

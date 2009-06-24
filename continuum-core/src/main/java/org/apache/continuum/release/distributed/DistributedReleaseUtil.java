@@ -99,6 +99,8 @@ public class DistributedReleaseUtil
     public static final String KEY_RELEASE_GOAL = "release-goal";
 
     public static final String KEY_BUILD_AGENT_URL = "build-agent-url";
+    
+    public static final String KEY_USERNAME = "username";
 
     public static String getScmTag( Map<String, Object> context, String defaultValue )
     {
@@ -208,6 +210,11 @@ public class DistributedReleaseUtil
     public static int getProjectId( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_ID );
+    }
+    
+    public static String getUsername( Map<String, Object> context )
+    {
+        return getString( context, KEY_USERNAME, "" );
     }
 
     // ----------------------------------------------------------------------

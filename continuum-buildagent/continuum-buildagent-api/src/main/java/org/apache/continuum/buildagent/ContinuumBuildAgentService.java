@@ -52,7 +52,7 @@ public interface ContinuumBuildAgentService
         throws ContinuumBuildAgentException;
 
     String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                           Map<String, String> environments )
+                           Map<String, String> environments, String username )
         throws ContinuumBuildAgentException;
 
     Map<String, Object> getReleaseResult( String releaseId )
@@ -67,12 +67,12 @@ public interface ContinuumBuildAgentService
     String getPreparedReleaseName( String releaseId )
         throws ContinuumBuildAgentException;
 
-    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository, String username )
         throws ContinuumBuildAgentException;
 
     String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                   String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                  String scmTagBase, Map<String, String> environments )
+                                  String scmTagBase, Map<String, String> environments, String username )
         throws ContinuumBuildAgentException;
 
     String releaseCleanup( String releaseId )

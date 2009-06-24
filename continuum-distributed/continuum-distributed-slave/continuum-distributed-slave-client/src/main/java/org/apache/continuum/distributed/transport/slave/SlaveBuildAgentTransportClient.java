@@ -259,14 +259,14 @@ public class SlaveBuildAgentTransportClient
     }
 
     public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                                  Map environments )
+                                  Map environments, String username )
         throws Exception
     {
         String releaseId;
 
         try
         {
-            releaseId = slave.releasePrepare( project, properties, releaseVersion, developmentVersion, environments );
+            releaseId = slave.releasePrepare( project, properties, releaseVersion, developmentVersion, environments, username );
             log.info( "Preparing release" );
         }
         catch ( Exception e )
@@ -356,14 +356,14 @@ public class SlaveBuildAgentTransportClient
     }
 
     public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                   Map repository )
+                                   Map repository, String username )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            slave.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+            slave.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
             result = Boolean.FALSE;
             log.info( "Performing release" );
         }
@@ -378,7 +378,7 @@ public class SlaveBuildAgentTransportClient
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map environments )
+                                         String scmTagBase, Map environments, String username )
         throws Exception
     {
         String result;
@@ -386,7 +386,7 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername,
-                                                  scmPassword, scmTag, scmTagBase, environments );
+                                                  scmPassword, scmTag, scmTagBase, environments, username );
             log.info( "Performing release" );
         }
         catch ( Exception e )

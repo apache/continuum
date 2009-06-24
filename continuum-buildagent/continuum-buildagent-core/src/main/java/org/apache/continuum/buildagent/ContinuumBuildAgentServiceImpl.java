@@ -478,13 +478,13 @@ public class ContinuumBuildAgentServiceImpl
     }
 
     public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                                  Map<String, String> environments )
+                                  Map<String, String> environments, String username )
         throws ContinuumBuildAgentException
     {
         try
         {
             return buildAgentReleaseManager.releasePrepare( project, properties, releaseVersion, developmentVersion,
-                                                            environments );
+                                                            environments, username );
         }
         catch ( ContinuumReleaseException e )
         {
@@ -523,12 +523,12 @@ public class ContinuumBuildAgentServiceImpl
     }
 
     public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                Map repository )
+                                Map repository, String username )
         throws ContinuumBuildAgentException
     {
         try
         {
-            buildAgentReleaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+            buildAgentReleaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
         }
         catch ( ContinuumReleaseException e )
         {
@@ -538,14 +538,14 @@ public class ContinuumBuildAgentServiceImpl
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map<String, String> environments )
+                                         String scmTagBase, Map<String, String> environments, String username )
         throws ContinuumBuildAgentException
     {
         try
         {
             return buildAgentReleaseManager.releasePerformFromScm( goals, arguments, useReleaseProfile, repository,
                                                                    scmUrl, scmUsername, scmPassword, scmTag, scmTagBase,
-                                                                   environments );
+                                                                   environments, username );
         }
         catch ( ContinuumReleaseException e )
         {

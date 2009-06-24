@@ -140,7 +140,7 @@ public class DefaultDistributedReleaseManager
     }
 
     public String releasePrepare( Project project, Properties releaseProperties, Map<String, String> releaseVersion,
-                                  Map<String, String> developmentVersion, Map<String, String> environments )
+                                  Map<String, String> developmentVersion, Map<String, String> environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( project.getId() );
@@ -157,11 +157,11 @@ public class DefaultDistributedReleaseManager
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
             String releaseId =
                 client.releasePrepare( createProjectMap( project ), createPropertiesMap( releaseProperties ),
-                                       releaseVersion, developmentVersion, environments );
+                                       releaseVersion, developmentVersion, environments, username );
 
             addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ) );
 
-            addReleaseInProgress( releaseId, "prepare", project.getId() );
+            addReleaseInProgress( releaseId, "prepare", project.getId(), username );
 
             return releaseId;
         }
@@ -295,7 +295,7 @@ public class DefaultDistributedReleaseManager
     }
 
     public void releasePerform( int projectId, String releaseId, String goals, String arguments,
-                                boolean useReleaseProfile, LocalRepository repository )
+                                boolean useReleaseProfile, LocalRepository repository, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
@@ -316,6 +316,7 @@ public class DefaultDistributedReleaseManager
         }
 
         Map<String, String> map = new HashMap<String, String>();
+        map.put( DistributedReleaseUtil.KEY_USERNAME, username );
 
         if ( repository != null )
         {
@@ -327,9 +328,9 @@ public class DefaultDistributedReleaseManager
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            client.releasePerform( releaseId, goals, arguments, useReleaseProfile, map );
+            client.releasePerform( releaseId, goals, arguments, useReleaseProfile, map, username );
 
-            addReleaseInProgress( releaseId, "perform", projectId );
+            addReleaseInProgress( releaseId, "perform", projectId, username );
         }
         catch ( MalformedURLException e )
         {
@@ -345,7 +346,7 @@ public class DefaultDistributedReleaseManager
 
     public void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile,
                                        LocalRepository repository, String scmUrl, String scmUsername,
-                                       String scmPassword, String scmTag, String scmTagBase, Map environments )
+                                       String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
@@ -368,6 +369,7 @@ public class DefaultDistributedReleaseManager
         }
 
         Map<String, String> map = new HashMap<String, String>();
+        map.put( DistributedReleaseUtil.KEY_USERNAME, username );
 
         if ( repository != null )
         {
@@ -381,9 +383,9 @@ public class DefaultDistributedReleaseManager
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
             String releaseId =
                 client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername,
-                                              scmPassword, scmTag, scmTagBase, environments );
+                                              scmPassword, scmTag, scmTagBase, environments, username );
 
-            addReleaseInProgress( releaseId, "perform", projectId );
+            addReleaseInProgress( releaseId, "perform", projectId, username );
         }
         catch ( MalformedURLException e )
         {
@@ -689,7 +691,7 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    private void addReleaseInProgress( String releaseId, String releaseType, int projectId )
+    private void addReleaseInProgress( String releaseId, String releaseType, int projectId, String username )
     {
         if ( releasesInProgress == null )
         {
@@ -699,6 +701,7 @@ public class DefaultDistributedReleaseManager
         Map<String, Object> map = new HashMap<String, Object>();
         map.put( DistributedReleaseUtil.KEY_RELEASE_GOAL, releaseType );
         map.put( DistributedReleaseUtil.KEY_PROJECT_ID, projectId );
+        map.put( DistributedReleaseUtil.KEY_USERNAME, username );
 
         releasesInProgress.put( releaseId, map );
     }

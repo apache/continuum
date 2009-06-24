@@ -62,6 +62,8 @@ public class ReleaseInProgressAction
     private String projectGroupName = "";
 
     private ReleaseListenerSummary listenerSummary;
+    
+    private String username = "";
 
     public String execute()
         throws Exception
@@ -101,6 +103,8 @@ public class ReleaseInProgressAction
             if ( map != null && !map.isEmpty() )
             {
                 int state = DistributedReleaseUtil.getReleaseState( map );
+                
+                username = DistributedReleaseUtil.getUsername( map );
 
                 if ( state == ContinuumReleaseManagerListener.LISTENING )
                 {
@@ -144,6 +148,8 @@ public class ReleaseInProgressAction
     
             if ( listener != null )
             {
+            	username = listener.getUsername();
+            	
                 if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
                 {
                     status = "inProgress";
@@ -353,6 +359,7 @@ public class ReleaseInProgressAction
         releaseResult.setProjectGroup( projectGroup );
         releaseResult.setProject( project );
         releaseResult.setReleaseGoal( releaseGoal );
+        releaseResult.setUsername( username );
 
         String releaseName = "releases-" + result.getStartTime();
 

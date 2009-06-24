@@ -81,6 +81,7 @@ public interface ContinuumReleaseManager
      * @param buildDirectory
      * @param goals
      * @param useReleaseProfile
+     * @param listener
      * @throws ContinuumReleaseException
      */
     void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
