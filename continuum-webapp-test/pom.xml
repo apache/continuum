@@ -97,6 +97,12 @@ under the License.
               <goal>test</goal>
             </goals>
             <configuration>
+              <properties>
+                <property>
+                  <name>listener</name>
+                  <value>org.apache.continuum.web.test.listener.CaptureScreenShotsListener</value>
+                </property>
+              </properties>
               <systemProperties>
                 <property>
                   <name>browser</name>
