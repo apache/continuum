@@ -1,0 +1,17 @@
+ ---
+Architecture
+ ---
+
+Continuum Architecture
+
+
+ There has been {{{http://www.nabble.com/separating-the-builder-code-from-the-UI-td16626111.html}some discussion}}
+ of moving the Continuum architecture from
+
+[./images/continuum-now.png]
+
+ to
+
+[./images/continuum-new.png]
+
+ .

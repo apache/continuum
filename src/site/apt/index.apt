@@ -27,5 +27,7 @@ Apache Continuum Developer Documentation
 
   {{{findbugs.html}Findbugs Reports}}.
 
+  Continuum {{{architecture.html}Architecture}}.
+
 
   Requirements for {{{credentials.html}Credentials Handling}}.
