@@ -31,17 +31,17 @@ import org.apache.continuum.web.test.ScheduleTest;
 
 
 @Test( groups = { "queue" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
-    public class QueueTest
-        extends AbstractBuildQueueTest
-    {
-    
-	public void testAddBuildQueue()
+public class QueueTest
+    extends AbstractBuildQueueTest
+{
+
+    public void testAddBuildQueue()
     {
         setMaxBuildQueue( 2 );
         String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
         addBuildQueue( BUILD_QUEUE_NAME, true );
     }
-	
+
 	@Test( dependsOnMethods = { "testAddBuildQueue" } ) //"testDeleteBuildQueue" } )
     public void testQueuePageWithoutBuild()
     {
@@ -55,14 +55,13 @@ import org.apache.continuum.web.test.ScheduleTest;
 	    assertTextPresent( "Checkout Queue " );
 	    assertTextPresent( "Current Prepare Build" );
 	    assertTextPresent( "Prepare Build Queue" );
-       
-    }    
-	
+    }
+
 	@Test( dependsOnMethods = { "testAddBuildQueue", "testAddSchedule" } )
     public void testAddBuildQueueToSchedule()
   {
 	    ScheduleTest sched = new ScheduleTest();
-	  
+
 	    String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
         String SCHEDULE_DESCRIPTION = getProperty( "SCHEDULE_DESCRIPTION" );
         String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
@@ -74,20 +73,20 @@ import org.apache.continuum.web.test.ScheduleTest;
         String SCHEDULE_EXPR_YEAR = getProperty( "SCHEDULE_EXPR_YEAR" );
         String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
         String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
-        
+
         String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
-        
-     		  
+
+
       sched.goToEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
               SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
-              SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD );	
+              SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD );
 	  getSelenium().removeSelection("saveSchedule_availableBuildQueues", "label=DEFAULT_BUILD_QUEUE");
 	  getSelenium().addSelection("saveSchedule_availableBuildQueues", "label="+BUILD_QUEUE_NAME);
 	  getSelenium().click("//input[@value='->']");
 	  submit();
-      
+
   }
-	
+
 	@Test( dependsOnMethods = { "testAddBuildQueue" } )
     public void testAddNotAllowedBuildQueue()
     {
@@ -105,7 +104,7 @@ import org.apache.continuum.web.test.ScheduleTest;
         addBuildQueue( BUILD_QUEUE_NAME, false );
         assertTextPresent( "Build queue name already exists." );
     }
-    
+
     @Test( dependsOnMethods = { "testAddAlreadyExistBuildQueue" } )
     public void testAddEmptyBuildQueue()
     {
@@ -114,7 +113,7 @@ import org.apache.continuum.web.test.ScheduleTest;
         assertTextPresent( "You must define a name" );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildQueueToSchedule" } ) 
+    @Test( dependsOnMethods = { "testAddBuildQueueToSchedule" } )
     public void testDeleteBuildQueue()
     {
         goToBuildQueuePage();
@@ -122,18 +121,18 @@ import org.apache.continuum.web.test.ScheduleTest;
         removeBuildQueue( BUILD_QUEUE_NAME );
         assertTextNotPresent( BUILD_QUEUE_NAME );
     }
-    
-       
+
+
     @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
     public void testQueuePageWithProjectCurrentlyBuilding()
         throws Exception
-    {   
+    {
     	//build a project
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
-        
+
         //check queue page while building
     	clickAndWait( "link=Queues" );
 	    assertPage( "Continuum - Build Queue" );
@@ -151,5 +150,5 @@ import org.apache.continuum.web.test.ScheduleTest;
 	    waitForElementPresent( "//img[@alt='Success']" );
 	    Thread.sleep( 10000 );
     }
-    
+
  }
