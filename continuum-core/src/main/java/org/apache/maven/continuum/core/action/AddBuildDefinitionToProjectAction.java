@@ -55,7 +55,6 @@ public class AddBuildDefinitionToProjectAction
 
                 project.addBuildDefinition( buildDefinition );
 
-                projectDao.updateProject( project );
                 if ( buildDefinition.isDefaultForProject() )
                 {
                     AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
@@ -69,9 +68,10 @@ public class AddBuildDefinitionToProjectAction
 
             project.addBuildDefinition( buildDefinition );
 
-            projectDao.updateProject( project );
             AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         }
 
+        // Save the project
+        projectDao.updateProject( project );
     }
 }

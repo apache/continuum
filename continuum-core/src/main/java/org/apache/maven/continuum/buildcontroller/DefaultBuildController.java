@@ -84,11 +84,6 @@ public class DefaultBuildController
     /**
      * @plexus.requirement
      */
-    private ProjectGroupDao projectGroupDao;
-
-    /**
-     * @plexus.requirement
-     */
     private ProjectScmRootDao projectScmRootDao;
 
     /**
@@ -602,7 +597,7 @@ public class DefaultBuildController
 
         try
         {
-            Project project = projectDao.getProjectWithAllDetails( context.getProject().getId() );
+            Project project = projectDao.getProjectWithDependencies( context.getProject().getId() );
             List<ProjectDependency> dependencies = project.getDependencies();
 
             if ( dependencies == null )

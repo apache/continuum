@@ -71,6 +71,7 @@ public class BuildResultDaoImpl
 
             project.setState( build.getState() );
 
+            //TODO: Use projectDao
             pm.makePersistent( project );
 
             tx.commit();
@@ -142,7 +143,7 @@ public class BuildResultDaoImpl
 
             if ( result != null && !result.isEmpty() )
             {
-                return (BuildResult) result.get( 0 );
+                return result.get( 0 );
             }
         }
         finally

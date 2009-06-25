@@ -101,23 +101,14 @@ public class CreateBuildProjectTaskAction
                     }
                     else
                     {
-                        project.setOldState( project.getState() );
-
                         project.setState( ContinuumProjectState.ERROR );
-
-                        projectDao.updateProject( project );
-
-                        project = projectDao.getProject( project.getId() );
                     }
                 }
-                else
-                {
-                    project.setOldState( project.getState() );
+                project.setOldState( project.getState() );
 
-                    projectDao.updateProject( project );
+                projectDao.updateProject( project );
 
-                    project = projectDao.getProject( project.getId() );
-                }
+                project = projectDao.getProject( project.getId() );
 
                 projectsToBeBuilt.add( project );
             }
@@ -128,7 +119,7 @@ public class CreateBuildProjectTaskAction
             }
         }
 
-        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, 
-                                             trigger, scmResultMap, projectGroupId );
+        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger, scmResultMap,
+                                             projectGroupId );
     }
 }
