@@ -57,8 +57,6 @@ public class AddBuildDefinitionToProjectGroupAction
                 resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );
 
                 projectGroup.addBuildDefinition( buildDefinition );
-
-                projectGroupDao.updateProjectGroup( projectGroup );
             }
         }
         else
@@ -68,9 +66,11 @@ public class AddBuildDefinitionToProjectGroupAction
             resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );
 
             projectGroup.addBuildDefinition( buildDefinition );
-
-            projectGroupDao.updateProjectGroup( projectGroup );
         }
+
+        // Save the project group
+        projectGroupDao.updateProjectGroup( projectGroup );
+
         //map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
     }
 }
