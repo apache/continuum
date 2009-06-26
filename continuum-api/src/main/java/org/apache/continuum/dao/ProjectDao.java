@@ -65,8 +65,6 @@ public interface ProjectDao
     List<Project> getProjectsInGroupWithDependencies( int projectGroupId )
         throws ContinuumStoreException;
 
-    List<Project> getAllProjectsWithAllDetails();
-
     Project getProjectWithAllDetails( int projectId )
         throws ContinuumStoreException;
 

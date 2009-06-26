@@ -19,6 +19,16 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 import org.apache.continuum.model.project.ProjectGroupSummary;
 import org.apache.continuum.model.project.ProjectSummaryResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -26,17 +36,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Repository;
-
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -154,22 +153,33 @@ public class ProjectDaoImpl
         }
     }
 
-    // todo get this natively supported in the store
     public List<Project> getProjectsWithDependenciesByGroupId( int projectGroupId )
     {
-        List<Project> allProjects =
-            getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
+        PersistenceManager pm = getPersistenceManager();
 
-        List<Project> groupProjects = new ArrayList<Project>();
+        Transaction tx = pm.currentTransaction();
 
-        for ( Project project : allProjects )
+        try
         {
-            if ( project.getProjectGroup().getId() == projectGroupId )
-            {
-                groupProjects.add( project );
-            }
+            tx.begin();
+
+            Extent extent = pm.getExtent( Project.class, true );
+
+            Query query = pm.newQuery( extent, "projectGroup.id == " + projectGroupId );
+
+            pm.getFetchPlan().addGroup( PROJECT_DEPENDENCIES_FETCH_GROUP );
+            List<Project> result = (List<Project>) query.execute();
+
+            result = (List<Project>) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
         }
-        return groupProjects;
+        finally
+        {
+            rollback( tx );
+        }
     }
 
     public Project getProjectWithBuilds( int projectId )
@@ -207,9 +217,9 @@ public class ProjectDaoImpl
 
             query.setOrdering( "name ascending" );
 
-            List result = (List) query.execute();
+            List<Project> result = (List<Project>) query.execute();
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<Project>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -242,9 +252,9 @@ public class ProjectDaoImpl
 
             pm.getFetchPlan().addGroup( PROJECTGROUP_PROJECTS_FETCH_GROUP );
 
-            List result = (List) query.execute();
+            List<Project> result = (List<Project>) query.execute();
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<Project>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -254,12 +264,6 @@ public class ProjectDaoImpl
         {
             rollback( tx );
         }
-    }
-
-
-    public List<Project> getAllProjectsWithAllDetails()
-    {
-        return getAllObjectsDetached( Project.class, "name ascending", PROJECT_ALL_DETAILS_FETCH_GROUP );
     }
 
     public Project getProjectWithAllDetails( int projectId )
@@ -349,7 +353,7 @@ public class ProjectDaoImpl
             int projectGroupId = result.getProjectGroupId();
             int size = new Long( result.getSize() ).intValue();
             int state = result.getProjectState();
-            
+
             if ( map.containsKey( projectGroupId ) )
             {
                 summary = map.get( projectGroupId );
