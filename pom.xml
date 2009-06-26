@@ -272,7 +272,6 @@ under the License.
     <module>continuum-xmlrpc</module>
     <module>continuum-release</module>
     <module>continuum-data-management</module>
-    <module>maven-continuum-plugin</module>
     <module>continuum-docs</module>
     <module>continuum-jetty</module>
     <module>continuum-purge</module>
