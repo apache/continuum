@@ -544,12 +544,14 @@ public class DefaultContinuum
     // Projects
     // ----------------------------------------------------------------------
 
+    // TODO: Remove this method
     public Collection<Project> getProjects()
         throws ContinuumException
     {
         return projectDao.getAllProjectsByName();
     }
 
+    // TODO: Remove this method
     public Collection<Project> getProjectsWithDependencies()
         throws ContinuumException
     {
@@ -568,33 +570,9 @@ public class DefaultContinuum
         return result;
     }
 
-    public Map<Integer, BuildResult> getLatestBuildResults()
-    {
-        Map<Integer, BuildResult> result = buildResultDao.getLatestBuildResults();
-
-        if ( result == null )
-        {
-            result = new HashMap<Integer, BuildResult>();
-        }
-
-        return result;
-    }
-
     public Map<Integer, BuildResult> getBuildResultsInSuccess( int projectGroupId )
     {
         Map<Integer, BuildResult> result = buildResultDao.getBuildResultsInSuccessByProjectGroupId( projectGroupId );
-
-        if ( result == null )
-        {
-            result = new HashMap<Integer, BuildResult>();
-        }
-
-        return result;
-    }
-
-    public Map<Integer, BuildResult> getBuildResultsInSuccess()
-    {
-        Map<Integer, BuildResult> result = buildResultDao.getBuildResultsInSuccess();
 
         if ( result == null )
         {
@@ -774,12 +752,6 @@ public class DefaultContinuum
         {
             throw logAndCreateException( "Exception while getting project '" + projectId + "'.", ex );
         }
-    }
-
-    public Collection<Project> getAllProjects( int start, int end )
-        throws ContinuumException
-    {
-        return projectDao.getAllProjectsByName();
     }
 
     public Map<Integer, ProjectGroupSummary> getProjectsSummaryByGroups()
@@ -1184,6 +1156,7 @@ public class DefaultContinuum
         }
     }
 
+    //TODO: Must be done by build definition
     public List<ChangeSet> getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException
     {
@@ -1256,7 +1229,8 @@ public class DefaultContinuum
     //
     // ----------------------------------------------------------------------
 
-    public List<Project> getProjectsInBuildOrder()
+    //TODO: Remove this method when it won't be used
+    private List<Project> getProjectsInBuildOrder()
         throws ContinuumException
     {
         return getProjectsInBuildOrder( getProjectsWithDependencies() );
@@ -2938,11 +2912,6 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Error retrieving the requested project", e );
         }
-    }
-
-    public List<Project> getAllProjectsWithAllDetails( int start, int end )
-    {
-        return projectDao.getAllProjectsWithAllDetails();
     }
 
     public Project getProjectWithAllDetails( int projectId )
