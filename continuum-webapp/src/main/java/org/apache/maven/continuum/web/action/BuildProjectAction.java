@@ -76,6 +76,7 @@ public class BuildProjectAction
             }
             else
             {
+                //TODO: Check if it is called somewhere
                 getContinuum().buildProjects();
             }
         }

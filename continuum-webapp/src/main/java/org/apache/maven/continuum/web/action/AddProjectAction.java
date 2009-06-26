@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -32,8 +34,6 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.continuum.web.util.AuditLog;
-import org.apache.continuum.web.util.AuditLogConstants;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,6 +148,7 @@ public class AddProjectAction
         String projectNameTrim = projectName.trim();
         String versionTrim = projectVersion.trim();
         String scmTrim = projectScmUrl.trim();
+        //TODO: Instead of get all projects then test them, it would be better to check it directly in the DB
         for ( Project project : getContinuum().getProjects() )
         {
             // CONTINUUM-1445
