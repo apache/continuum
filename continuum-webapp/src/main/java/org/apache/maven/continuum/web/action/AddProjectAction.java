@@ -148,6 +148,7 @@ public class AddProjectAction
         String projectNameTrim = projectName.trim();
         String versionTrim = projectVersion.trim();
         String scmTrim = projectScmUrl.trim();
+        //TODO: Instead of get all projects then test them, it would be better to check it directly in the DB
         for ( Project project : getContinuum().getProjects() )
         {
             // CONTINUUM-1445
