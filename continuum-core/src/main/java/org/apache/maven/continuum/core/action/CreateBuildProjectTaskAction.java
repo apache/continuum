@@ -120,7 +120,7 @@ public class CreateBuildProjectTaskAction
             }
         }
 
-        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger, scmResultMap,
+        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, buildTrigger, scmResultMap,
                                              projectGroupId );
     }
 }
