@@ -129,11 +129,6 @@ public interface Continuum
     Project getProjectWithBuildDetails( int projectId )
         throws ContinuumException;
 
-    List<Project> getAllProjectsWithAllDetails( int start, int end );
-
-    Collection<Project> getAllProjects( int start, int end )
-        throws ContinuumException;
-
     Collection<Project> getProjects()
         throws ContinuumException;
 
@@ -144,20 +139,13 @@ public interface Continuum
 
     Map<Integer, BuildResult> getLatestBuildResults( int projectGroupId );
 
-    Map<Integer, BuildResult> getLatestBuildResults();
-
     Map<Integer, BuildResult> getBuildResultsInSuccess( int projectGroupId );
-
-    Map<Integer, BuildResult> getBuildResultsInSuccess();
 
     Map<Integer, ProjectGroupSummary> getProjectsSummaryByGroups();
 
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
-
-    List<Project> getProjectsInBuildOrder()
-        throws ContinuumException;
 
     /**
      * take a collection of projects and sort for order
@@ -533,9 +521,9 @@ public interface Continuum
 
     void removeSchedule( int scheduleId )
         throws ContinuumException;
-    
+
     void activePurgeSchedule( Schedule schedule );
-    
+
     void activeBuildDefinitionSchedule( Schedule schedule );
 
     // ----------------------------------------------------------------------
