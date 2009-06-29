@@ -21,7 +21,7 @@
 <project name="Apache Continuum">
   <body>
     <breadcrumbs>
-      <item name="1.3.2" href="/" />
+      <item name="1.4.0" href="/" />
     </breadcrumbs>
     <menu name="Documentation">
       <item name="Index (category)" href="index.html"/>
@@ -103,6 +103,7 @@
         <!-- item name="Design" href="developer_guides/design.html"/ -->
         <item name="XML-RPC" href="developer_guides/xmlrpc.html"/>
       </item>
+      <item name="PDF" href="apache-continuum-1.4.0-SNAPSHOT.pdf"/>
     </menu>
   </body>
 </project>
