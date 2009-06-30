@@ -20,13 +20,15 @@ Add a Project
   The pom.xml file must be available through one of the following protocols: http, https, or ftp 
   (The file protocol is also supported but is disabled by default for security and must be enabled manually).
     
-  Or it can be uploaded from a local file (Note this doesn't support multi modules project).
+  Or it can be uploaded from a local file (Note this doesn't support multi module projects).
     
 [../../images/add-m2-project.png] Add a maven2 project
 
-  You can define username/password if the POM URL requires authentication.
+  You can supply a username and password if the POM URL requires authentication.  This information will be stored in the database in plain text and reused later for scm checkouts and updates.
 
   If your SCM stores credentials like CVS or SVN and you want to use the SCM Credentials cache, check the "Use SCM Credentials Cache" field.
+
+~~ TODO:  If 'use cached credentials' is checked, then the credentials should NOT be stored in the database.  Need to see whether that's actually true before documenting it.
 
   You can define the group you want to use or "Defined by POM" in this case project.name will be use as Project Group.
 
@@ -39,7 +41,7 @@ Add a Project
   at the project group level.
   
   When adding projects whose parent project is building on another server,
-  make sure that the <<<settings.xml>>> exists in <<<[USER_HOME]/.m2/>>> directory.
+  make sure that the <<<settings.xml>>> with the necessary repositories exists in <<<[USER_HOME]/.m2/>>> directory.
   Continuum uses <<<[USER_HOME]/.m2/settings.xml>>> and not the one found in <<<[M2_HOME]/conf/>>>.
 
 * {Maven 1 project}
