@@ -24,22 +24,480 @@
 
 
 Continuum Webapp Test
-
- This module contains Selenium tests for the Continuum webapp.
-
- Test results can be seen in the {{{surefire-report.html}Surefire Report}}.
-
- To run the tests and generate the report locally, execute <<<mvn clean install site -P reporting>>>
- and then view <<<target/site/surefire-report.html>>>.
-
-* TODO
-
- * What are the prerequisites
-
- * What happens when you run the tests
-
- * Running the tests against an existing Continuum instance
-
- * Running the tests on vmbuild.apache.org
  
- * How to contribute new tests
+* Contents
+
+	* {{{About_the_Continuum_Webapp_Tests}About the Continuum Webapp Tests}}
+	
+	* {{Pre-requisites}}
+	
+	* {{{Getting_the_Source_from_the_Repository} Getting the Source from the Repository}}
+	
+	* {{{Running_the_Tests} Running the Tests}}
+	
+	* {{{Viewing_the_Test_Results} Viewing the Test Results}}
+	
+	* {{{Test_Coverage}Test Coverage}}
+	
+	* {{{Adding_New_Tests} Adding New Tests}}
+	
+	* {{{Improving_the_Existing_Tests} Improving the Existing Tests}}
+	
+	* {{{Creating_Patches} Creating Patches}}
+	
+	* {{{Submitting_Patches} Submitting Patches}}	
+	
+
+* {About the Continuum Webapp Tests}
+
+	{{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test}Continuum web app tests}} depends on {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp} continuum-webapp}} module of Continuum. It depends on a successful build result in {{{https://svn.apache.org/repos/asf/continuum/trunk} continuum-trunk}}. 
+
+** Automation Tool
+	
+	The module makes use of the latest {{{http://seleniumhq.org/projects/remote-control/} Selenium Remote Control}} release (1.0.1)
+	
+		* {{{http://release.seleniumhq.org/selenium-remote-control/1.0-beta-2/doc/java/} selenium-java-client-driver}}
+		
+		* {{{http://release.seleniumhq.org/selenium-remote-control/1.0-beta-2/doc/server/} selenium-server}}
+		
+		<Note: Documents for 1.0.1 are not yet available for both selenium java client driver and selenium server. The above links direct to 1.0-beta-2 docs.>
+		
+** Maven Plugins
+	
+	The module makes use of the following maven plugins:
+	
+		* {{{http://cargo.codehaus.org/Maven2+plugin} cargo-maven2-plugin}} who is in-charge on the start-up of the container {{{http://apache.mirrors.redwire.net/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip]} tomcat5x}}, deployment of the application to the container and stopping the container. 
+		
+		* {{{http://mojo.codehaus.org/selenium-maven-plugin/} selenium-maven-plugin}} who is in-charge on starting/stopping the selenium server, running a suite of HTML Selenese tests and starting an Xvfb instance suitable for handling X11 displays for headless systems.
+		
+		*{{{http://maven.apache.org/plugins/maven-surefire-plugin/} maven-surefire-plugin}} and {{{http://maven.apache.org/plugins/maven-surefire-report-plugin/} maven-surefire-report-plugin}} for reporting.
+		
+** Testing Framework
+
+	Continuum web app tests module uses TestNG for the following reasons:
+
+		* flexibility (coding convention), 
+		
+		* dependency testing (skipping not failing), 
+		
+		* fail and rerun (handy in large test suite) and 
+		
+		* parametric testing ( reusing generic test) features. 
+		
+		More on TestNG {{{http://testng.org/doc/documentation-main.html}here}}.
+
+	View the module's pom.xml {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/pom.xml}here}}
+
+* {Pre-requisites}
+
+		* {{{http://java.sun.com/javase/downloads/index.jsp}JDK 1.5 or higher}}
+
+		* {{{http://maven.apache.org/download.html}Maven 2.0.9 or higher}}
+
+		* {{{http://subversion.tigris.org/}Subversion}}
+
+	Installation instructions for Windows and Unix-based systems can be found {{{http://maven.apache.org/download.html}here}}
+
+* {Getting the Source from the Repository}
+
+	Checkout continuum trunk {{{https://svn.apache.org/repos/asf/continuum/trunk}here}}.
+
++-----------------------------------------------------------------------------+
+svn co https://svn.apache.org/repos/asf/continuum/trunk continuum-trunk
+or
+svn co http://svn.apache.org/repos/asf/continuum/trunk continuum-trunk
++-----------------------------------------------------------------------------+
+
+* {Running the Tests}
+
+	Getting started with the tests:
+
+	After getting the source from the repository, execute the following:
+	
++-----------------------------------------------------------------------------+
+cd /path/to/continuum-trunk/
+mvn clean install
++-----------------------------------------------------------------------------+
+
+
+	<<Reminder: Continuum-trunk must have a successful build or else there's no way to run continuum-webapp-test successfully.>>	
+
+	
++-----------------------------------------------------------------------------+
+cd /path/to/continuum-trunk/continuum-webapp-test/
++-----------------------------------------------------------------------------+
+
+	Default configuration (i.e. App's Base URL, Selenium Host, Selenium Port's values, etc.) are stored in a property file that can be found in <</path/to/continuum-trunk/continuum-webapp-test/src/test/resources/testng.properties>> (or {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/resources/testng.properties}here}}). You may change the values in it before executing the next command.
+
++-----------------------------------------------------------------------------+
+mvn clean install
++-----------------------------------------------------------------------------+
+
+	This command will:
+
+		* build the application from source
+	
+		* deploy the packaged application to a container and start it
+	
+		*  start the selenium server
+
+		*  start the selenium tests by launching the selenium test runner and the application under test (AUT)
+		
+		For every test failure encountered, {{{http://testng.org/doc/documentation-main.html#logging-listeners}TestNG Listeners}} will call selenium's windowMaximize and captureEntirePageScreenshot commands. This will maximize the application-under-test (AUT) browser then do a screen capture of the page and saves it as an image file with .png extension.
+		
+		View the code {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/listener/CaptureScreenShotsListener.java}here}} 
+		
+		* kill the selenium server after the tests are done
+		
+		* stop the app server (container)
+		
+		* return the results of the build (summary, reports, screen shots)
+
+[]
+
+** {Running selected tests by editing testng.xml}
+
+	Continuum web app tests is invoked with a {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/config/testng.xml}testng.xml}} file. The contents of that xml file is displayed below and/or this could be found in <</path/to/continuum-trunk/continuum-webapp-test/src/test/testng/config/>> directory.
+
++---------------------------------------------------------+
+<suite name="ContinuumTest" verbose="1">
+   <test name="BasicTest" enabled="true">
+     <groups>
+	<run>
+	   <include name="about" />
+	</run>
+     </groups>
+     <packages>
+	<package name="org.apache.continuum.web.test" />
+     </packages>
+   </test>
+   <test name="AdminTest" enabled="true">
+     <groups>
+	<run>
+	   <include name="login" />
+	   <include name="mavenTwoProject"/>								
+	   <include name="projectGroup" />				
+      	   <include name="mavenOneProject" />
+      	   <include name="antProject" />
+      	   <include name="shellProject" />
+           <include name="buildDefinition" />
+           <include name="notifier" />
+	   <include name="schedule" />
+	   <include name="myAccount" />
+	   <include name="queue" />
+	   <include name="purge" />
+	   <include name="repository" />
+	   <include name="configuration" />
+	   <include name="installation" />
+	   <include name="buildEnvironment" />
+	   <include name="buildDefinitionTemplate" />
+	   <include name="userroles"/>
+	   <include name="agent"/>
+	</run>
+     </groups>
+     <packages>
+	<package name="org.apache.continuum.web.test" />
+     </packages>
+   </test>
+</suite>
++---------------------------------------------------------+
+
+	The order of the build when running the tests is defined in the annotations of each test. Groups are divided into unit tests. If want to run a specific test, you may edit the testng.xml file and exclude the undesired tests to be ran.
+
++---------------------------------------------------------+
+Example:
+
+<test name="AdminTest" enabled="true">
+     <groups>
+	<run>
+	   <include name="login" />
+	   <exclude name="mavenTwoProject"/>								
+	   <exclude name="projectGroup" />				
+      	   <exclude name="mavenOneProject" />
+      	   <include name="antProject" />
+      	   <exclude name="shellProject" />
+           ...
+           ...
+           ...
+	</run>
+     </groups>
+     <packages>
+	<package name="org.apache.continuum.web.test" />
+     </packages>
+   </test>
++---------------------------------------------------------+
+
+	More information about testng.xml {{{http://testng.org/doc/documentation-main.html#testng-xml}here}}.
+
+
+** Running the tests with different container and/or browsers
+
+*** Running Selenium tests in an alternate browser
+
+	Modify src/test/resources/testng.properties as needed then execute:
+	
++---------------------------------------------------------+
+mvn clean install -Dbrowser=iexplore  (or -Dbrowser=safari or -Dbrowser=other -DbrowserPath=/path/to/browser)
++---------------------------------------------------------+
+
+*** Running Selenium tests against an existing Continuum instance
+
+	Modify src/test/resources/testng.properties as needed, then execute:
+	
++---------------------------------------------------------+
+mvn clean install -Dexisting-container
++---------------------------------------------------------+
+
+	(This skips the Cargo plugin configuration that starts a container with the Continuum webapp deployed)
+
+*** Test with Firefox and Selenium IDE
+
+	continuum-webapp-test also has Selenium IDE scripts. Here's how you should run it:
+
+		* Start Continuum
+		
+		* Open Firefox and navigate to Continuum (it should be on the "Create Admin User" page.)
+		
+		* in Firefox, Tools -> Selenium IDE 
+		
+		* in Selenium IDE, File -> Open Test Suite and choose src/test/selenium-ide/continuum_test_suite.html
+		
+		* in Selenium IDE, modify the Base URL if necessary (for example, http://localhost:8080/continuum)
+		
+		* in Selenium IDE, click the 'Play entire test suite' icon
+
+* {Viewing the Test Results}
+
+** Surefire-reports
+
+	After running the continuum webapp tests, cd to <</path/to/continuum-trunk/continuum-webapp-test/target/surefire-reports/>> and open the index.html file.
+	
+	Click the 'ContinuumTest' suite link
+	
+	Click the 'Results' link to view the summary of the tests. (Passed/Failed/Skipped)
+	
+** Screenshots
+
+	If there are test failures, cd to <</path/to/continuum-trunk/continuum-webapp-test/target/screenshots/>> to view the captured image files.
+	
+	Screen shots are saved with the format "methodName(className.java_lineNumber)-time.png" in order to easily debug the error encountered.
+
+* {Test Coverage}
+
+	Test scripts available {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/}here}} automate the various {{{http://continuum.apache.org/features.html}features}} of Continuum. Listed below are the existing scripts with which you can help improve the testing process or you may contribute on any areas you see not covered.
+
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/AboutTest.java}About}}
+
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/LoginTest.java}Login}}
+
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/MyAccountTest.java}My Account}}
+
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/ProjectGroupTest.java}Project Groups}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/MavenOneProjectTest.java}Maven 1.0.X Projects}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/MavenTwoProjectTest.java}Maven 2.0.X Projects}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/AntProjectTest.java}Ant Projects}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/ShellProjectTest.java}Shell Projects}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/LocalRepositoriesTest.java}Local Repository}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/InstallationTest.java}Installation}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/PurgeTest.java}Purge Configurations}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/ScheduleTest.java}Schedules}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/ConfigurationTest.java}Configurations}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/UserRolesManagementTest.java}User Roles Management}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/BuildEnvironmentTest.java}Build Environments}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/QueueTest.java}Queues}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/BuildDefinitionTest.java}Build Definition}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/BuildDefinitionTemplateTest.java}Build Definition Templates}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/BuildAgentsTest.java}Distributed Builds}}
+	
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/NotifierTest.java}Build Notification}}
+	
+	[]
+
+** Continuum Feature/s for development:
+
+	* Release Projects
+	
+[]
+	
+	If you would like to be involved, start by reading the Continuum {{{http://continuum.apache.org/docs/}documentation}} to familiarize yourself with the features of the application. 
+
+
+* {Adding New Tests}
+
+	This section will guide you on how to contribute new script/s to run with the existing ones.
+
+	You can find out what features already have tests by looking at the source code of the scripts on the {{{Test_Coverage} Test Coverage}} section. If you look at the scripts, you can see which features have lots of tests and which need more. But note that even if the coverage looks good, there may be more interesting tests to write.
+
+** Directory where to add new tests
+
+	Once you have written a good test scenario, the script must be placed in this directory:
+
++---------------------------------------------------------+
+/path/to/continuum-trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/
++---------------------------------------------------------+
+
+	Put your abstract classes in this directory:
+	
++---------------------------------------------------------+
+/path/to/continuum-trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/parent/
++---------------------------------------------------------+
+
+~~** Order where to put the new class
+** Editing the testng.xml file to include the new class / group
+
+	* Edit the testng.xml (refer to {{{Running_selected_tests_by_editing_testng.xml} Editing testng.xml}}) to include the newly created script. 
+	
+	* Run the test suite (refer to {{{Running_the_Tests} Running the Tests}}) to check if it will build successfully. 
+
+	[]
+	Once you have a successful build in continuum-webapp-test, you are now ready to create a patch and submit your work to the community. Just follow the guidelines on the {{{Creating_Patches} Creating Patches}} and {{{Submitting_Patches} Submitting Patches}} section.
+
+* {Improving the Existing Tests}
+
+	The listed items on continuum-webapp-test Test Coverage are not yet complete. Releasing Projects is one of the features listed for development but basically, the existing scripts still have missing scenarios that need to be completed, such as:
+
+	[[1]] Functions of Continuum Features to Projects
+	
+	* Wide use of Continuum features to different projects (i.e. the use of different build definitions, schedules, queues, agent, etc. ) --ant, shell, maven1, maven2.
+	
+	
+	[]
+	
+	[[2]] User Roles Test
+	
+	* User roles tests only have scripts for assertion of elements on the specific roles. Tests for user roles should include its specific function on Continuum.
+	
+	[]
+	
+	[[3]]Logo / Headers / Footers
+	
+	* Assertion of Logo / Headers / Footers on each page (or scenarios) are not yet implemented.
+	
+	[]
+	
+	[[4]]Optimization of the Automation Tool and Test Framework
+	
+	* Selenium and TestNG have lots of capabilities that will help improve the existing tests. Discussed below are the items that are not yet implemented on the existing tests:
+For reporting, the generated report of surefire for TestNG has a text and html file. Improving the html file that would link to the screenshots of the failed tests would help a lot.
+	
+	* The wide use of TestNG, i.e. The use or @Parameters for values to be used on that specific test class. It will help developers not to be confused with regards to values that are placed in the property files (lots of values on that file) and those values will also be placed on the TestNG report. 
+
+[]
+
+	As listed above, those are just examples on how to improve Continuum's existing tests. As you go along with the scripts, you may encounter scenarios that need to be modified so that it will be easily read by fellow developers. Tests contributions are welcome in this community. See {{{Adding_New_Tests} Adding New Tests}} section on how.
+
+
+
+* {Creating Patches}
+
+	After adding new tests or improving existing tests, the next step is to create a patch.
+
+	Below are the steps needed for creating patches:
+
+	* Update the version of the project's source. 
+	
++---------------------------------------------------------+
+svn up
++---------------------------------------------------------+
+
+	* Ensure that the project will build successfully (from trunk) and that your modification will not break anything
+	
++---------------------------------------------------------+
+mvn clean install
++---------------------------------------------------------+
+	
+	* Go to the directory where the modifications are done. Verify if the module's build is working. (i.e. /path/to/continuum-trunk/continuum-webapp-test/)
+	
++---------------------------------------------------------+
+mvn clean install
++---------------------------------------------------------+
+
+	* After a successful build, add the new tests to version control.
+	
+
+		Directory:
+	
++---------------------------------------------------------+
+svn add /path/to/the/new_module/
++---------------------------------------------------------+
+
+		
+		File:
+	
++---------------------------------------------------------+
+svn add /path/to/the/new_module/file.extension
++---------------------------------------------------------+
+
+	Note: If the modifications are made to the existing files which are already under version control, there is no need to do "svn add".
+	
+	* Create the patch from the trunk
+	
++---------------------------------------------------------+
+cd /path/to/continuum-trunk/
++---------------------------------------------------------+
+
++---------------------------------------------------------+
+svn diff > PatchName.patch
++---------------------------------------------------------+
+
+	* Verify the content of the generated patch by viewing the file using any text editor. It should display all the intended changes.
+
+* {Submitting Patches}
+
+	After creating the patch, the next step is to contribute by sending the patch to the community!
+	
+	* If you don't have a codehaus jira account yet, sign up {{{http://jira.codehaus.org/secure/Signup!default.jspa} here}}
+	
+	* Login using your account
+	
+	* Go to {{{http://jira.codehaus.org/browse/CONTINUUM}Continuum}} project
+	
+	* Create a new issue with the appropriate issue type (bug, improvement, feature, test, etc)
+	
+	* Provide a good summary
+	
++---------------------------------------------------------+
+New Tests for X Feature
+or 
+Improve Tests for an Existing X Feature
++---------------------------------------------------------+
+
+	* Provide the environment details
+	
++---------------------------------------------------------+
+Windows/Linux/Mac
+Maven version
+Java version
++---------------------------------------------------------+
+
+	* Provide the description
+	
++---------------------------------------------------------+
+Describe what the patch is for. (changes made to the existing version)
+Post the results of the build (test runs, failures, errors etc)
++---------------------------------------------------------+
+
+	* Don't forget to add your patch as an attachment. Tick the 'Patch Submitted' box then click the 'Create' button.
+
+
+	<<If nothing happens in a few days, write to the {{{mailto:dev@continuum.apache.org}dev list}} and nudge the developers to review your patch.>>
+
+		
+
+
+
