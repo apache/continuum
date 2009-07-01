@@ -103,7 +103,7 @@
         <!-- item name="Design" href="developer_guides/design.html"/ -->
         <item name="XML-RPC" href="developer_guides/xmlrpc.html"/>
       </item>
-      <item name="PDF" href="apache-continuum-1.4.0-SNAPSHOT.pdf"/>
+      <item name="PDF" href="apache-continuum.pdf"/>
     </menu>
   </body>
 </project>

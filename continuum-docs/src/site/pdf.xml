@@ -18,7 +18,7 @@
  ~ under the License.
  -->
 
-<document outputName="apache-continuum-${project.version}">
+<document outputName="apache-continuum">
 
  <meta>
    <title>Apache Continuum ${project.version}</title>
