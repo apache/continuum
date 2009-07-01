@@ -31,3 +31,6 @@ Apache Continuum Developer Documentation
   {{{architecture.html}Architecture}}.
 
   {{{requirements.html}Requirements}}.
+
+  {{{continuum-webapp-test/index.html}Functional Tests}}.
+  
