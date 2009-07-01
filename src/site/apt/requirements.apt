@@ -23,11 +23,11 @@ Requirements
 
  The Continuum project does not have formal requirements docs, but there are some general requirements we adhere to.
 
- For example:
-
  * Anything that goes in the database must have a way to come out.  For example, we add build results to the database,
  and provide a way to delete them through the Web UI and the XML-RPC interface, as well as deleting them automatically
  when the project they belong to is deleted.
+
+ []
 
  In addition, we have the following requirements defined:
 
