@@ -38,7 +38,7 @@ public class DistributedBuildUtil
     public BuildResult convertMapToBuildResult( Map<String, Object> context )
     {
         BuildResult buildResult = new BuildResult();
-    
+
         buildResult.setStartTime( ContinuumBuildConstant.getStartTime( context ) );
         buildResult.setEndTime( ContinuumBuildConstant.getEndTime( context ) );
         buildResult.setError( ContinuumBuildConstant.getBuildError( context ) );
@@ -46,7 +46,7 @@ public class DistributedBuildUtil
         buildResult.setState( ContinuumBuildConstant.getBuildState( context ) );
         buildResult.setTrigger( ContinuumBuildConstant.getTrigger( context ) );
         buildResult.setBuildUrl( ContinuumBuildConstant.getBuildAgentUrl( context ) );
-    
+
         return buildResult;
     }
 
@@ -57,40 +57,39 @@ public class DistributedBuildUtil
         {
             return null;
         }
-    
+
         try
         {
             Project project = projectDao.getProjectWithAllDetails( ContinuumBuildConstant.getProjectId( context ) );
             List<ProjectDependency> dependencies = project.getDependencies();
-    
+
             if ( dependencies == null )
             {
                 dependencies = new ArrayList<ProjectDependency>();
             }
-    
+
             if ( project.getParent() != null )
             {
                 dependencies.add( project.getParent() );
             }
-    
+
             if ( dependencies.isEmpty() )
             {
                 return null;
             }
-    
+
             List<ProjectDependency> modifiedDependencies = new ArrayList<ProjectDependency>();
-    
+
             for ( ProjectDependency dep : dependencies )
             {
                 Project dependencyProject =
                     projectDao.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
-    
+
                 if ( dependencyProject != null )
                 {
-                    List<BuildResult> buildResults =
-                        buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
-                                                                           oldBuildResult.getEndTime() );
-                    if ( buildResults != null && !buildResults.isEmpty() )
+                    long nbBuild = buildResultDao.getNbBuildResultsInSuccessForProject( dependencyProject.getId(),
+                                                                                        oldBuildResult.getEndTime() );
+                    if ( nbBuild > 0 )
                     {
                         log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
                             dep.getVersion() );
@@ -108,21 +107,21 @@ public class DistributedBuildUtil
                         dep.getVersion() );
                 }
             }
-    
+
             return modifiedDependencies;
         }
         catch ( ContinuumStoreException e )
         {
             log.warn( "Can't get the project dependencies", e );
         }
-    
+
         return null;
     }
 
     public ScmResult getScmResult( Map<String, Object> context )
     {
         Map<String, Object> map = ContinuumBuildConstant.getScmResult( context );
-    
+
         if ( !map.isEmpty() )
         {
             ScmResult scmResult = new ScmResult();
@@ -132,10 +131,10 @@ public class DistributedBuildUtil
             scmResult.setProviderMessage( ContinuumBuildConstant.getScmProviderMessage( map ) );
             scmResult.setSuccess( ContinuumBuildConstant.isScmSuccess( map ) );
             scmResult.setChanges( getScmChanges( map ) );
-    
+
             return scmResult;
         }
-    
+
         return null;
     }
 
@@ -143,7 +142,7 @@ public class DistributedBuildUtil
     {
         List<ChangeSet> changes = new ArrayList<ChangeSet>();
         List<Map<String, Object>> scmChanges = ContinuumBuildConstant.getScmChanges( context );
-    
+
         if ( scmChanges != null )
         {
             for ( Map<String, Object> map : scmChanges )
@@ -156,14 +155,14 @@ public class DistributedBuildUtil
                 changes.add( changeSet );
             }
         }
-    
+
         return changes;
     }
 
     private void setChangeFiles( ChangeSet changeSet, Map<String, Object> context )
     {
         List<Map<String, Object>> changeFiles = ContinuumBuildConstant.getChangeSetFiles( context );
-    
+
         if ( changeFiles != null )
         {
             for ( Map<String, Object> map : changeFiles )
@@ -172,7 +171,7 @@ public class DistributedBuildUtil
                 changeFile.setName( ContinuumBuildConstant.getChangeFileName( map ) );
                 changeFile.setRevision( ContinuumBuildConstant.getChangeFileRevision( map ) );
                 changeFile.setStatus( ContinuumBuildConstant.getChangeFileStatus( map ) );
-    
+
                 changeSet.addFile( changeFile );
             }
         }

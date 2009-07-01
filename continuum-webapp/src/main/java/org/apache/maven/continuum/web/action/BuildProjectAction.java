@@ -76,7 +76,8 @@ public class BuildProjectAction
             }
             else
             {
-                //TODO: Check if it is called somewhere
+                //TODO: Check if this code is called, I don't think
+                //If it is, it should used the projectId
                 getContinuum().buildProjects();
             }
         }

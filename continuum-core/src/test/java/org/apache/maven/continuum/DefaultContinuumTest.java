@@ -247,7 +247,7 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
-        Collection projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        Collection projectGroupList = continuum.getAllProjectGroups();
 
         int projectGroupsBefore = projectGroupList.size();
 
@@ -265,7 +265,7 @@ public class DefaultContinuumTest
 
         assertEquals( "plexus", projectGroup.getGroupId() );
 
-        projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        projectGroupList = continuum.getAllProjectGroups();
 
         assertEquals( "Project group missing, should have " + ( projectGroupsBefore + 1 ) + " project groups",
                       projectGroupsBefore + 1, projectGroupList.size() );
@@ -276,7 +276,7 @@ public class DefaultContinuumTest
 
         BuildsManager buildsManager = continuum.getBuildsManager();
 
-        List<Project> projects = projectGroup.getProjects();
+        List<Project> projects = continuum.getProjectGroupWithProjects( projectGroup.getId() ).getProjects();
         int[] projectIds = new int[projects.size()];
 
         int idx = 0;
@@ -292,7 +292,7 @@ public class DefaultContinuumTest
 
         continuum.removeProjectGroup( projectGroup.getId() );
 
-        projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        projectGroupList = continuum.getAllProjectGroups();
 
         assertEquals( "Remove project group failed", projectGroupsBefore, projectGroupList.size() );
     }
@@ -305,7 +305,7 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
-        Collection projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        Collection projectGroupList = continuum.getAllProjectGroups();
 
         int projectGroupsBefore = projectGroupList.size();
 

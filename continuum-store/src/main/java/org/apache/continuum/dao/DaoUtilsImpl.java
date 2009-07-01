@@ -119,10 +119,6 @@ public class DaoUtilsImpl
                 {
                     pmf.close();
                 }
-                catch ( SecurityException e )
-                {
-                    throw e;
-                }
                 catch ( JDOUserException e )
                 {
                     if ( numTry < 5 )
@@ -176,9 +172,8 @@ public class DaoUtilsImpl
         // might define their own build definitions
         if ( projectGroupSource != null )
         {
-            for ( Iterator i = projectGroupSource.keySet().iterator(); i.hasNext(); )
+            for ( Integer projectGroupId : projectGroupSource.keySet() )
             {
-                Integer projectGroupId = (Integer) i.next();
                 List<Project> projectsInGroup = projectDao.getProjectsInGroup( projectGroupId );
 
                 for ( Project p : projectsInGroup )
