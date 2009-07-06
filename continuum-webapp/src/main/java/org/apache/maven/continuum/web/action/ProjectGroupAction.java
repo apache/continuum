@@ -483,14 +483,11 @@ public class ProjectGroupAction
 
         projectGroup.setDescription( description );
 
+        // [CONTINUUM-2228]. In select field can't select empty values.
         if ( repositoryId > 0 )
         {
             LocalRepository repository = getContinuum().getRepositoryService().getLocalRepository( repositoryId );
             projectGroup.setLocalRepository( repository );
-        }
-        else
-        {
-            projectGroup.setLocalRepository( null );
         }
 
         getContinuum().updateProjectGroup( projectGroup );
