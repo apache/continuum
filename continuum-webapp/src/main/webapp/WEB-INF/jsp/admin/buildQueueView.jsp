@@ -106,7 +106,7 @@
                     <s:url id="cancelUrl" action="removeBuildQueueEntry" method="remove" namespace="/">
                       <s:param name="projectId">${queue.task.projectId}</s:param>
                       <s:param name="buildDefinitionId">${queue.task.buildDefinitionId}</s:param>
-                      <s:param name="trigger">${queue.task.trigger}</s:param>
+                      <s:param name="trigger">${queue.task.buildTrigger.trigger}</s:param>
                       <s:param name="projectName">${queue.task.projectName}</s:param>
                       <s:param name="projectGroupId">${queue.task.projectGroupId}</s:param>
                     </s:url>
