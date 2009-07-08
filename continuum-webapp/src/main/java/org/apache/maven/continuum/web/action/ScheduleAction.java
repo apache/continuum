@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.Preparable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -79,9 +80,11 @@ public class ScheduleAction
 
     private String year;
 
-    private List<String> availableBuildQueues;
+    private List<BuildQueue> availableBuildQueues;
 
-    private List<String> selectedBuildQueues = new ArrayList<String>();
+    private List<BuildQueue> selectedBuildQueues = new ArrayList<BuildQueue>();
+    
+    private List<String> selectedBuildQueuesIds = new ArrayList<String>();
 
     public void prepare()
         throws Exception
@@ -94,27 +97,19 @@ public class ScheduleAction
     private void populateBuildQueues()
         throws ContinuumException
     {
-        List<BuildQueue> buildQueues;
         if ( schedule != null )
         {
-            buildQueues = schedule.getBuildQueues();
-            for ( BuildQueue buildQueue : buildQueues )
+            selectedBuildQueues = schedule.getBuildQueues();
+            for ( BuildQueue bq : selectedBuildQueues )
             {
-                selectedBuildQueues.add( buildQueue.getName() );
+                this.selectedBuildQueuesIds.add( Integer.toString( bq.getId() ) );
             }
-
         }
 
-        availableBuildQueues = new ArrayList<String>();
-
-        buildQueues = getContinuum().getAllBuildQueues();
-        for ( BuildQueue buildQueue : buildQueues )
-        {
-            availableBuildQueues.add( buildQueue.getName() );
-        }
+        availableBuildQueues = getContinuum().getAllBuildQueues();
 
         // remove selected build queues from available build queues
-        for ( String buildQueue : selectedBuildQueues )
+        for ( BuildQueue buildQueue : selectedBuildQueues )
         {
             if ( availableBuildQueues.contains( buildQueue ) )
             {
@@ -222,23 +217,29 @@ public class ScheduleAction
         {
             logger.error( "Can't create schedule. No schedule name was supplied." );
             addActionError( getText( "buildDefinition.noname.save.error.message" ) );
+        }
+        if ( !getContinuum().getConfiguration().isDistributedBuildEnabled()
+            && ( selectedBuildQueuesIds == null || selectedBuildQueuesIds.isEmpty() ) )
+        {
+            addActionError( getText( "schedule.buildqueues.empty.error" ) );
+        }
+        if ( hasErrors() )
+        {
             return ERROR;
         }
-        else
+
+        try
         {
-            try
+            Schedule s = getContinuum().getScheduleByName( name );
+            if ( s != null && id != s.getId() )
             {
-                Schedule s = getContinuum().getScheduleByName( name );
-                if ( s != null && id != s.getId() )
-                {
-                    addActionError( getText( "schedule.name.already.exists" ) );
-                    return ERROR;
-                }
+                addActionError( getText( "schedule.name.already.exists" ) );
+                return ERROR;
             }
-            catch ( ContinuumException e )
-            {
-                logger.debug( "Unexpected error getting schedule" );
-            }
+        }
+        catch ( ContinuumException e )
+        {
+            logger.debug( "Unexpected error getting schedule" );
         }
         
         AuditLog event = new AuditLog( getName(), AuditLogConstants.ADD_SCHEDULE );
@@ -284,15 +285,14 @@ public class ScheduleAction
         schedule.setDelay( delay );
         schedule.setDescription( description );
         schedule.setName( name );
-        schedule.setMaxJobExecutionTime( maxJobExecutionTime );
-
-        // remove old build queues
-        schedule.setBuildQueues( null );
-
-        for ( String name : selectedBuildQueues )
-        {
-            BuildQueue buildQueue = getContinuum().getBuildQueueByName( name );
-            schedule.addBuildQueue( buildQueue );
+        schedule.setMaxJobExecutionTime(maxJobExecutionTime);
+        if (!getContinuum().getConfiguration().isDistributedBuildEnabled()) {
+            // if distributed build don't update schedules
+            schedule.setBuildQueues(null);
+            for (String id : selectedBuildQueuesIds) {
+                BuildQueue buildQueue = getContinuum().getBuildQueue(Integer.parseInt(id));
+                schedule.addBuildQueue(buildQueue);
+            }
         }
 
         return schedule;
@@ -529,23 +529,33 @@ public class ScheduleAction
             year ).trim();
     }
 
-    public List<String> getAvailableBuildQueues()
+    public List<BuildQueue> getAvailableBuildQueues()
     {
         return availableBuildQueues;
     }
 
-    public void setAvailableBuildQueues( List<String> availableBuildQueues )
+    public void setAvailableBuildQueues( List<BuildQueue> availableBuildQueues )
     {
         this.availableBuildQueues = availableBuildQueues;
     }
 
-    public List<String> getSelectedBuildQueues()
+    public List<BuildQueue> getSelectedBuildQueues()
     {
         return selectedBuildQueues;
     }
 
-    public void setSelectedBuildQueues( List<String> selectedBuildQueues )
+    public void setSelectedBuildQueues( List<BuildQueue> selectedBuildQueues )
     {
         this.selectedBuildQueues = selectedBuildQueues;
+    }
+
+    public List<String> getSelectedBuildQueuesIds()
+    {
+        return selectedBuildQueuesIds;
+    }
+
+    public void setSelectedBuildQueuesIds( List<String> selectedBuildQueuesIds )
+    {
+        this.selectedBuildQueuesIds = selectedBuildQueuesIds;
     }
 }
