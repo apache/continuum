@@ -20,8 +20,6 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /*
@@ -91,21 +89,5 @@ public class LoginTest
         assertTextPresent( "Edit Details" );
         assertTextPresent( "Logout" );
         assertTextPresent( getProperty( "ADMIN_USERNAME" ) );
-    }
-
-    @Override
-    @BeforeTest
-    public void open()
-        throws Exception
-    {
-        super.open();
-    }
-
-    @Override
-    @AfterTest
-    public void close()
-        throws Exception
-    {
-        super.close();
     }
 }

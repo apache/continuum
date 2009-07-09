@@ -20,9 +20,7 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
@@ -39,7 +37,6 @@ public class AboutTest
     public void initializeContinuum()
         throws Exception
     {
-        super.open();
         getSelenium().open( baseUrl );
         String title = getSelenium().getTitle();
         if ( title.equals( "Create Admin User" ) )
@@ -55,7 +52,6 @@ public class AboutTest
             postAdminUserCreation();
             clickLinkWithText( "Logout" );
         }
-        super.close();
     }
 
     private void postAdminUserCreation()
@@ -75,24 +71,9 @@ public class AboutTest
         }
     }
 
-    @Override
-    @BeforeTest( groups = { "about" } )
-    public void open()
-        throws Exception
-    {
-        super.open();
-    }
-
     public void displayAboutPage()
     {
         goToAboutPage();
     }
 
-    @Override
-    @AfterTest( groups = { "about" } )
-    public void close()
-        throws Exception
-    {
-        super.close();
-    }
 }

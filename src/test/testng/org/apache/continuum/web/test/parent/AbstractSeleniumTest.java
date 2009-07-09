@@ -21,8 +21,6 @@ package org.apache.continuum.web.test.parent;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -30,13 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
-import java.text.SimpleDateFormat;
-import java.lang.Throwable;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
@@ -62,6 +59,7 @@ public abstract class AbstractSeleniumTest
     /**
      * Initialize selenium an others properties. This method is called from BeforeSuite method of sub-class.
      */
+    @BeforeSuite( alwaysRun = true )
     public void open()
         throws Exception
     {
@@ -131,6 +129,7 @@ public abstract class AbstractSeleniumTest
     /**
      * Close selenium session. Called from AfterSuite method of sub-class
      */
+    @AfterSuite( alwaysRun = true )
     public void close()
         throws Exception
     {
