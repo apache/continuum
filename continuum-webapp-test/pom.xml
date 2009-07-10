@@ -284,6 +284,10 @@ under the License.
           <name>!seleniumHost</name>
         </property>
       </activation>
+      <properties>
+        <seleniumHost>localhost</seleniumHost>
+        <seleniumPort>4444</seleniumPort>
+      </properties>
       <build>
         <plugins>
           <plugin>
