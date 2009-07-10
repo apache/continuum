@@ -102,21 +102,6 @@ under the License.
       </plugin>
     </plugins>
   </build>
-
-  <repositories>
-    <repository>
-      <id>openqa</id>
-      <url>http://nexus.openqa.org/content/repositories/releases</url>
-      <snapshots><enabled>false</enabled></snapshots>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>openqa</id>
-      <url>http://nexus.openqa.org/content/repositories/releases</url>
-      <snapshots><enabled>false</enabled></snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 	
   <dependencies>
     <dependency>
