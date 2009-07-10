@@ -20,6 +20,9 @@ under the License.
 -->
 
 <suite name="ContinuumTest" verbose="1">
+    <listeners>
+        <listener class-name="org.apache.continuum.web.test.listener.CaptureScreenShotsListener"/>
+    </listeners>
 	<test name="BasicTest" enabled="true">
 		<!--
 			Groups are divided into the unit tests. The order will be described
