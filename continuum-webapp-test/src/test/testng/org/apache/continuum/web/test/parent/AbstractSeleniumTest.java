@@ -30,10 +30,7 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
-import org.codehaus.plexus.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
@@ -54,15 +51,19 @@ public abstract class AbstractSeleniumTest
 
     private static Properties p;
 
+    private static String seleniumHost;
+
+    private static int seleniumPort;
+
     private final static String PROPERTIES_SEPARATOR = "=";
 
     /**
-     * Initialize selenium an others properties. This method is called from BeforeSuite method of sub-class.
+     * Initialize properties.
      */
-    @BeforeSuite( alwaysRun = true )
     public void open()
         throws Exception
     {
+        System.out.println( this.getClass().getName() + " open" );
         InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
         p = new Properties();
         p.load( input );
@@ -70,30 +71,34 @@ public abstract class AbstractSeleniumTest
         baseUrl = getProperty( "BASE_URL" );
         maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
 
-        String seleniumHost = getProperty( "SELENIUM_HOST" );
-        int seleniumPort = Integer.parseInt( ( getProperty( "SELENIUM_PORT" ) ) );
+        seleniumHost = getProperty( "SELENIUM_HOST" );
+        seleniumPort = Integer.parseInt( ( getProperty( "SELENIUM_PORT" ) ) );
+    }
 
-        String seleniumBrowser = System.getProperty( "browser" );
-        if ( StringUtils.isEmpty( seleniumBrowser ) )
+    /**
+     * Initialize selenium
+     */
+    public void open( String browser )
+        throws Exception
+    {
+        if ( getSelenium() == null )
         {
-            seleniumBrowser = getProperty( "SELENIUM_BROWSER" );
-        }
-
-        final Selenium s = new DefaultSelenium( seleniumHost, seleniumPort, seleniumBrowser, baseUrl );
-        selenium = new ThreadLocal<Selenium>()
-        {
-            @Override
-            protected Selenium initialValue()
+            final Selenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
+            selenium = new ThreadLocal<Selenium>()
             {
-                return s;
-            }
-        };
-        getSelenium().start();
+                @Override
+                protected Selenium initialValue()
+                {
+                    return s;
+                }
+            };
+            getSelenium().start();
+        }
     }
 
     public static Selenium getSelenium()
     {
-        return selenium.get();
+        return selenium == null ? null : selenium.get();
     }
 
     protected String getProperty( String key )
@@ -129,11 +134,15 @@ public abstract class AbstractSeleniumTest
     /**
      * Close selenium session. Called from AfterSuite method of sub-class
      */
-    @AfterSuite( alwaysRun = true )
     public void close()
         throws Exception
     {
-        getSelenium().stop();
+        System.out.println(this.getClass().getName() + " close");
+
+        if ( getSelenium() != null )
+        {
+            getSelenium().stop();
+        }
     }
 
     // *******************************************************

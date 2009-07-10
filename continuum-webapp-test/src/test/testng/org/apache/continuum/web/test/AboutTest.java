@@ -20,7 +20,6 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 /**
@@ -33,44 +32,6 @@ import org.testng.annotations.Test;
 public class AboutTest
     extends AbstractContinuumTest
 {
-    @BeforeSuite
-    public void initializeContinuum()
-        throws Exception
-    {
-        getSelenium().open( baseUrl );
-        String title = getSelenium().getTitle();
-        if ( title.equals( "Create Admin User" ) )
-        {
-            assertCreateAdmin();
-            String fullname = getProperty( "ADMIN_FULLNAME" );
-            String username = getProperty( "ADMIN_USERNAME" );
-            String mail = getProperty( "ADMIN_MAIL" );
-            String password = getProperty( "ADMIN_PASSWORD" );
-            submitAdminData( fullname, mail, password );
-            assertAutenticatedPage( username );
-            assertEditConfigurationPage();
-            postAdminUserCreation();
-            clickLinkWithText( "Logout" );
-        }
-    }
-
-    private void postAdminUserCreation()
-    {
-        if ( getTitle().endsWith( "Continuum - Configuration" ) )
-        {
-            String workingDir = getFieldValue( "configuration_workingDirectory" );
-            String buildOutputDir = getFieldValue( "configuration_buildOutputDirectory" );
-            String releaseOutputDir = getFieldValue( "configuration_releaseOutputDirectory" );
-            String locationDir = "target/data";
-            String data = "data";
-            setFieldValue( "workingDirectory", workingDir.replaceFirst( data, locationDir ) );
-            setFieldValue( "buildOutputDirectory", buildOutputDir.replaceFirst( data, locationDir ) );
-            setFieldValue( "releaseOutputDirectory", releaseOutputDir.replaceFirst( data, locationDir ) );
-            setFieldValue( "baseUrl", baseUrl );
-            submit();
-        }
-    }
-
     public void displayAboutPage()
     {
         goToAboutPage();
