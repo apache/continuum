@@ -70,15 +70,12 @@ public abstract class AbstractSeleniumTest
 
         baseUrl = getProperty( "BASE_URL" );
         maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
-
-        seleniumHost = getProperty( "SELENIUM_HOST" );
-        seleniumPort = Integer.parseInt( ( getProperty( "SELENIUM_PORT" ) ) );
     }
 
     /**
      * Initialize selenium
      */
-    public void open( String browser )
+    public void open( String browser, String seleniumHost, int seleniumPort )
         throws Exception
     {
         if ( getSelenium() == null )

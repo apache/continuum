@@ -87,6 +87,14 @@ under the License.
                   <name>browser</name>
                   <value>${browser}</value>
                 </property>
+                <property>
+                  <name>seleniumHost</name>
+                  <value>${seleniumHost}</value>
+                </property>
+                <property>
+                  <name>seleniumPort</name>
+                  <value>${seleniumPort}</value>
+                </property>
               </systemProperties>
             </configuration>
           </execution>
@@ -288,7 +296,7 @@ under the License.
       <id>start-selenium</id>
       <activation>
         <property>
-          <name>!seleniumhost</name>
+          <name>!seleniumHost</name>
         </property>
       </activation>
       <build>

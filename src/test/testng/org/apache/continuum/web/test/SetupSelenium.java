@@ -24,6 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -54,13 +55,14 @@ public class SetupSelenium
     }
 
     @BeforeTest
-    @Parameters( { "browser" } )
-    public void initializeContinuum( String browser )
+    @Parameters( { "browser", "seleniumHost", "seleniumPort" } )
+    public void initializeContinuum( String browser, @Optional( "localhost" ) String seleniumHost,
+                                     @Optional( "4444" ) int seleniumPort )
         throws Exception
     {
         System.out.println( this.getClass().getName() + " initializeContinuum" );
 
-        super.open( browser );
+        super.open( browser, seleniumHost, seleniumPort );
         Assert.assertNotNull( getSelenium(), "Selenium is not initialized" );
         getSelenium().open( baseUrl );
         String title = getSelenium().getTitle();
