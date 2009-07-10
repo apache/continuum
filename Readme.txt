@@ -21,9 +21,9 @@ Run Selenium tests in an alternate browser
   * modify src/test/resources/testng.properties as needed
   * mvn clean install -Dbrowser=iexplore  (or -Dbrowser=safari or -Dbrowser=other -DbrowserPath=/path/to/browser)
 
-Run Selenium tests in an running Selenium server/hub
+Run Selenium tests in an running Selenium server or hub
   * modify src/test/resources/testng.properties as needed
-  * mvn clean install -Dseleniumhost=localhost
+  * mvn clean install -DseleniumHost=localhost -DseleniumPort=4444
 
 Run Selenium tests in src/test/it with Maven, JUnit and Cargo
  * modify src/test/resources/it.properties as needed
