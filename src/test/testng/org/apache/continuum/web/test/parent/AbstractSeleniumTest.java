@@ -51,10 +51,6 @@ public abstract class AbstractSeleniumTest
 
     private static Properties p;
 
-    private static String seleniumHost;
-
-    private static int seleniumPort;
-
     private final static String PROPERTIES_SEPARATOR = "=";
 
     /**
@@ -63,21 +59,20 @@ public abstract class AbstractSeleniumTest
     public void open()
         throws Exception
     {
-        System.out.println( this.getClass().getName() + " open" );
         InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
         p = new Properties();
         p.load( input );
 
-        baseUrl = getProperty( "BASE_URL" );
         maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
     }
 
     /**
      * Initialize selenium
      */
-    public void open( String browser, String seleniumHost, int seleniumPort )
+    public void open( String baseUrl, String browser, String seleniumHost, int seleniumPort )
         throws Exception
     {
+        this.baseUrl = baseUrl;
         if ( getSelenium() == null )
         {
             final Selenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
@@ -134,8 +129,6 @@ public abstract class AbstractSeleniumTest
     public void close()
         throws Exception
     {
-        System.out.println(this.getClass().getName() + " close");
-
         if ( getSelenium() != null )
         {
             getSelenium().stop();
