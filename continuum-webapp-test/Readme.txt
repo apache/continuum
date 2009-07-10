@@ -12,17 +12,14 @@ Run Selenium tests in src/test/testNG with Maven, TestNG and Cargo
  * mvn clean install
 
 Run Selenium tests against an existing Continuum instance
-  * modify src/test/resources/testng.properties as needed
-  * mvn clean install -Dexisting-container
+  * mvn clean install -DbaseUrl=http://localhost:9595/continuum
 
   (This skips the Cargo plugin configuration that starts a container with the Continuum webapp deployed)
 
 Run Selenium tests in an alternate browser
-  * modify src/test/resources/testng.properties as needed
   * mvn clean install -Dbrowser=iexplore  (or -Dbrowser=safari or -Dbrowser=other -DbrowserPath=/path/to/browser)
 
 Run Selenium tests in an running Selenium server or hub
-  * modify src/test/resources/testng.properties as needed
   * mvn clean install -DseleniumHost=localhost -DseleniumPort=4444
 
 Run Selenium tests in src/test/it with Maven, JUnit and Cargo

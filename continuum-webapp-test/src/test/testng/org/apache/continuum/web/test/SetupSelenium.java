@@ -55,14 +55,12 @@ public class SetupSelenium
     }
 
     @BeforeTest
-    @Parameters( { "browser", "seleniumHost", "seleniumPort" } )
-    public void initializeContinuum( String browser, @Optional( "localhost" ) String seleniumHost,
+    @Parameters( { "baseUrl", "browser", "seleniumHost", "seleniumPort" } )
+    public void initializeContinuum( String baseUrl, String browser, @Optional( "localhost" ) String seleniumHost,
                                      @Optional( "4444" ) int seleniumPort )
         throws Exception
     {
-        System.out.println( this.getClass().getName() + " initializeContinuum" );
-
-        super.open( browser, seleniumHost, seleniumPort );
+        super.open( baseUrl, browser, seleniumHost, seleniumPort );
         Assert.assertNotNull( getSelenium(), "Selenium is not initialized" );
         getSelenium().open( baseUrl );
         String title = getSelenium().getTitle();

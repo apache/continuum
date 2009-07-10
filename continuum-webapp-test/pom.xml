@@ -84,6 +84,10 @@ under the License.
             <configuration>
               <systemProperties>
                 <property>
+                  <name>baseUrl</name>
+                  <value>${baseUrl}</value>
+                </property>
+                <property>
                   <name>browser</name>
                   <value>${browser}</value>
                 </property>
@@ -324,11 +328,12 @@ under the License.
       <id>existing-container</id>
       <activation>
         <property>
-          <name>container</name>
-          <value>existing</value>
+          <name>!baseUrl</name>
         </property>
       </activation>
-      <!-- edit src/test/resources/it.properties as needed -->
+      <properties>
+        <baseUrl>http://localhost:9595/continuum</baseUrl>
+      </properties>
     </profile>
     <profile>
       <id>firefox</id>
