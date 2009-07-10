@@ -305,6 +305,7 @@ under the License.
                 </goals>
                 <configuration>
                   <background>true</background>
+                  <port>${seleniumPort}</port>
                 </configuration>
               </execution>
             </executions>

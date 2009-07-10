@@ -19,6 +19,9 @@ Run Selenium tests against an existing Continuum instance
 Run Selenium tests in an alternate browser
   * mvn clean install -Dbrowser=iexplore  (or -Dbrowser=safari or -Dbrowser=other -DbrowserPath=/path/to/browser)
 
+Change the port the embedded selenium runs on
+  * mvn clean install -DseleniumPort=4444
+
 Run Selenium tests in an running Selenium server or hub
   * mvn clean install -DseleniumHost=localhost -DseleniumPort=4444
 
