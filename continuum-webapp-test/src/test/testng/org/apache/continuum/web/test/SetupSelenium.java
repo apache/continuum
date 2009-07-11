@@ -95,10 +95,4 @@ public class SetupSelenium
             submit();
         }
     }
-
-    public void displayAboutPage()
-    {
-        goToAboutPage();
-    }
-
 }
