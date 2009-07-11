@@ -334,7 +334,7 @@ under the License.
         </property>
       </activation>
       <properties>
-        <baseUrl>http://localhost:9595/continuum</baseUrl>
+        <baseUrl>http://localhost:9595/continuum/</baseUrl>
       </properties>
     </profile>
     <profile>
