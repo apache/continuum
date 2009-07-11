@@ -21,7 +21,7 @@ package org.apache.continuum.web.test;
 
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
@@ -39,7 +39,7 @@ public class SetupSelenium
     extends AbstractContinuumTest
 {
     @Override
-    @AfterSuite
+    @AfterTest
     public void close()
         throws Exception
     {
