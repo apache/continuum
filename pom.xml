@@ -306,6 +306,7 @@ under the License.
                 <configuration>
                   <background>true</background>
                   <port>${seleniumPort}</port>
+                  <logOutput>true</logOutput>      
                 </configuration>
               </execution>
             </executions>
