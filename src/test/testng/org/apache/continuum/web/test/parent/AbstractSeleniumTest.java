@@ -47,7 +47,7 @@ public abstract class AbstractSeleniumTest
 
     public static String maxWaitTimeInMs;
 
-    private static ThreadLocal<Selenium> selenium;
+    private static ThreadLocal<Selenium> selenium = new ThreadLocal<Selenium>();
 
     private static Properties p;
 
@@ -73,17 +73,10 @@ public abstract class AbstractSeleniumTest
         throws Exception
     {
         this.baseUrl = baseUrl;
+
         if ( getSelenium() == null )
         {
-            final Selenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
-            selenium = new ThreadLocal<Selenium>()
-            {
-                @Override
-                protected Selenium initialValue()
-                {
-                    return s;
-                }
-            };
+            selenium.set( new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl ) );
             getSelenium().start();
         }
     }
@@ -132,6 +125,7 @@ public abstract class AbstractSeleniumTest
         if ( getSelenium() != null )
         {
             getSelenium().stop();
+            selenium.set( null );
         }
     }
 
