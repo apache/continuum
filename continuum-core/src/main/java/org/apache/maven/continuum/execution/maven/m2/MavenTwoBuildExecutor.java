@@ -398,10 +398,10 @@ public class MavenTwoBuildExecutor
         //Check if it's a recursive build
         boolean isRecursive = false;
         if (StringUtils.isNotEmpty( buildDefinition.getArguments() ) )
-            {
+        {
             isRecursive =  buildDefinition.getArguments().indexOf( "-N" ) < 0 &&
                 buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 ;
-            }
+        }
         if ( isRecursive && changes != null && !changes.isEmpty() )
         {
             if ( log.isInfoEnabled() )
@@ -413,7 +413,7 @@ public class MavenTwoBuildExecutor
 
         MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
 
-        if ( changes.isEmpty() )
+        if ( changes == null || changes.isEmpty() )
         {
             if ( log.isInfoEnabled() )
             {

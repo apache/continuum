@@ -516,9 +516,13 @@ public class DefaultBuildController
             try
             {
                 ContinuumBuildExecutor executor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
-                shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project,
-                                                    workingDirectoryService.getWorkingDirectory( project ),
-                                                    context.getBuildDefinition() );
+
+                if ( context.getScmResult() != null )
+                {
+                    shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project,
+                                                        workingDirectoryService.getWorkingDirectory( project ),
+                                                        context.getBuildDefinition() );
+                }
             }
             catch ( Exception e )
             {
