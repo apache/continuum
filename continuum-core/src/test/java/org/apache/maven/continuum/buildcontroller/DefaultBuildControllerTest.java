@@ -184,6 +184,16 @@ public class DefaultBuildControllerTest
         assertTrue( controller.shouldBuild( context ) );
     }
 
+    public void testWithNullScmResult()
+        throws Exception
+    {
+        BuildContext context = getContext( +1 );
+        context.setScmResult( null );
+        controller.checkProjectDependencies( context );
+        assertEquals( 0, context.getModifiedDependencies().size() );
+        assertFalse( controller.shouldBuild( context ) );
+    }
+
     private File getWorkingDirectory()
         throws Exception
     {
