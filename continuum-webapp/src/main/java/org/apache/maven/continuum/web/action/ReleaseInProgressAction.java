@@ -218,6 +218,8 @@ public class ReleaseInProgressAction
                     listenerSummary.setCompletedPhases( DistributedReleaseUtil.getCompletedReleasePhases( map ) );
                     listenerSummary.setInProgress( DistributedReleaseUtil.getReleaseInProgress( map ) );
                     listenerSummary.setError( DistributedReleaseUtil.getReleaseError( map ) );
+                    
+                    username = DistributedReleaseUtil.getUsername( map );
     
                     if ( state == ContinuumReleaseManagerListener.FINISHED )
                     {
@@ -256,6 +258,8 @@ public class ReleaseInProgressAction
                 listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
                 listenerSummary.setInProgress( listener.getInProgress() );
                 listenerSummary.setError( listener.getError() );
+                
+                username = listener.getUsername();
 
                 if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
                 {
@@ -381,6 +385,17 @@ public class ReleaseInProgressAction
         }
 
         return releaseResult;
+    }
+    
+    public String getProjectName()
+        throws ContinuumException
+    {
+        return getProjectGroupName();
+    }
+    
+    public String getUsername()
+    {
+        return this.username;
     }
 
 }
