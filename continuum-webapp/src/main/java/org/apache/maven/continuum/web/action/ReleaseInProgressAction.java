@@ -375,5 +375,11 @@ public class ReleaseInProgressAction
 
         return releaseResult;
     }
+    
+    public String getProjectName()
+        throws ContinuumException
+    {
+        return getProjectGroupName();
+    }
 
 }
