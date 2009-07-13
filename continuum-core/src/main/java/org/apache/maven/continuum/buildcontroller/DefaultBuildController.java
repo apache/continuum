@@ -485,11 +485,14 @@ public class DefaultBuildController
             project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.CHECKEDOUT )
         {
             // Check SCM changes
-            allChangesUnknown = checkAllChangesUnknown( context.getScmResult().getChanges() );
+            if ( context.getScmResult() != null )
+            {
+                allChangesUnknown = checkAllChangesUnknown( context.getScmResult().getChanges() );
+            }
 
             if ( allChangesUnknown )
             {
-                if ( !context.getScmResult().getChanges().isEmpty() )
+                if ( context.getScmResult() != null && !context.getScmResult().getChanges().isEmpty() )
                 {
                     log.info(
                         "The project was not built because all changes are unknown (maybe local modifications or ignored files not defined in your SCM tool." );
@@ -510,14 +513,19 @@ public class DefaultBuildController
         }
 
         // Check changes
-        if ( !shouldBuild && ( ( !allChangesUnknown && !context.getScmResult().getChanges().isEmpty() ) ||
+        if ( !shouldBuild && ( ( !allChangesUnknown && context.getScmResult() != null && !context.getScmResult().getChanges().isEmpty() ) ||
             project.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ) )
         {
             try
             {
                 ContinuumBuildExecutor executor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
-                if ( context.getScmResult() != null )
+                if ( executor == null )
+                {
+                    log.warn( "No continuum build executor found for project " + project.getId() + 
+                              " with executor '" + project.getExecutorId() + "'" );
+                }
+                else if ( context.getScmResult() != null )
                 {
                     shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project,
                                                         workingDirectoryService.getWorkingDirectory( project ),
