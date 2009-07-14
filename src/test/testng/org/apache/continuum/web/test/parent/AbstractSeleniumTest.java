@@ -49,6 +49,8 @@ public abstract class AbstractSeleniumTest
 
     private static ThreadLocal<Selenium> selenium = new ThreadLocal<Selenium>();
 
+    private static ThreadLocal<String> seleniumBrowser = new ThreadLocal<String>();
+
     private static Properties p;
 
     private final static String PROPERTIES_SEPARATOR = "=";
@@ -79,12 +81,18 @@ public abstract class AbstractSeleniumTest
             DefaultSelenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
             s.start();
             selenium.set( s );
+            seleniumBrowser.set( browser );
         }
     }
 
     public static Selenium getSelenium()
     {
         return selenium == null ? null : selenium.get();
+    }
+
+    public static String getSeleniumBrowser()
+    {
+        return seleniumBrowser == null ? null : seleniumBrowser.get();
     }
 
     /**

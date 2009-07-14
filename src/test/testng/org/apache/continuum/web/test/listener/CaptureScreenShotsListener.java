@@ -35,14 +35,14 @@ public class CaptureScreenShotsListener
     public void onTestFailure( ITestResult tr )
     {
         captureError( tr );
-        System.out.println( "Test " + tr.getName() + " -> Failed" );
+        System.out.println( "Test " + tr.getName() + " [" + AbstractSeleniumTest.getSeleniumBrowser() + "] -> Failed" );
         super.onTestFailure( tr );
     }
 
     @Override
     public void onTestSuccess( ITestResult tr )
     {
-        System.out.println( "Test " + tr.getName() + " -> Success" );
+        System.out.println( "Test " + tr.getName() + " [" + AbstractSeleniumTest.getSeleniumBrowser() + "] -> Success" );
         super.onTestFailure( tr );
     }
 
@@ -54,7 +54,7 @@ public class CaptureScreenShotsListener
         }
         catch ( RuntimeException e )
         {
-            System.out.println( "Error when take screenshot for test " + tr.getName() );
+            System.out.println( "Error when taking screenshot for test " + tr.getName() );
             e.printStackTrace();
         }
     }
