@@ -19,7 +19,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<suite name="ContinuumTest" verbose="1">
+<suite name="ContinuumTest" verbose="1" parallel="methods" thread-count="4">
     <listeners>
         <listener class-name="org.apache.continuum.web.test.listener.CaptureScreenShotsListener"/>
     </listeners>
