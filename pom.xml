@@ -71,7 +71,7 @@ under the License.
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <suiteXmlFiles>
-            <suiteXmlFile>src/test/testng/config/testng.xml</suiteXmlFile>
+            <suiteXmlFile>src/test/testng/config/testng-multienvironment.xml</suiteXmlFile>
           </suiteXmlFiles>
         </configuration>
         <executions>
