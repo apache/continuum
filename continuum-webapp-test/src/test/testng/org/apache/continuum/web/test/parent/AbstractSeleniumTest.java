@@ -76,8 +76,9 @@ public abstract class AbstractSeleniumTest
 
         if ( getSelenium() == null )
         {
-            selenium.set( new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl ) );
-            getSelenium().start();
+            DefaultSelenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
+            s.start();
+            selenium.set( s );
         }
     }
 
