@@ -245,7 +245,7 @@ under the License.
                 <home>${project.build.directory}/${container.name}</home>
                 <type>standalone</type>
                 <properties>
-                  <cargo.servlet.port>9595</cargo.servlet.port>
+                  <cargo.servlet.port>8090</cargo.servlet.port>
                   <cargo.datasource.datasource.users>
                     cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
                     cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
