@@ -31,11 +31,11 @@ public class BuildAgentsTest
 
     public void testAddBuildAgent()
     {
-		String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
+		String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" ) + getTestId();
 		String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
-		String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
+		String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" ) + getTestId();
 		String BUILD_AGENT_DESCRIPTION2 = getProperty( "BUILD_AGENT_DESCRIPTION2" );
-		String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
+		String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" ) + getTestId();
 		String BUILD_AGENT_DESCRIPTION3 = getProperty( "BUILD_AGENT_DESCRIPTION3" );
 
 		enableDistributedBuilds();
@@ -51,7 +51,7 @@ public class BuildAgentsTest
 	@Test( dependsOnMethods = { "testEditBuildAgent" } )
     public void testAddAnExistingBuildAgent()
     {
-		String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
+		String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" ) + getTestId();
 		String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
 
 		enableDistributedBuilds();
@@ -65,7 +65,7 @@ public class BuildAgentsTest
 	public void testEditBuildAgent()
 
     {
-		String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
+		String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" ) + getTestId();
 		String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
 		String new_agentDescription = "new_agentDescription";
 

@@ -33,6 +33,7 @@ public class MavenTwoProjectTest
     extends AbstractContinuumTest
 {
 
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testAddMavenTwoProject()
         throws Exception
     {
@@ -41,10 +42,10 @@ public class MavenTwoProjectTest
         String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
 
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" ) + getTestId();
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         // Enter values into Add Maven Two Project fields, and submit
-        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, M2_PROJ_GRP_NAME, true );
         // Wait Struct Listener
         assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
     }
@@ -53,8 +54,8 @@ public class MavenTwoProjectTest
     public void testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_NAME = getTestGroupName();
+        String TEST_PROJ_GRP_ID = getTestGroupId();
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
 
         String M2_POM_URL = getProperty( "M2_POM_URL" );

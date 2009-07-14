@@ -38,7 +38,7 @@ public class QueueTest
     public void testAddBuildQueue()
     {
         setMaxBuildQueue( 2 );
-        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" ) + getTestId();
         addBuildQueue( BUILD_QUEUE_NAME, true );
     }
 
@@ -74,7 +74,7 @@ public class QueueTest
         String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
         String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
 
-        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" ) + getTestId();
 
 
       sched.goToEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
@@ -100,7 +100,7 @@ public class QueueTest
     public void testAddAlreadyExistBuildQueue()
     {
         setMaxBuildQueue( 3 );
-        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" ) + getTestId();
         addBuildQueue( BUILD_QUEUE_NAME, false );
         assertTextPresent( "Build queue name already exists." );
     }
@@ -117,7 +117,7 @@ public class QueueTest
     public void testDeleteBuildQueue()
     {
         goToBuildQueuePage();
-        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" );
+        String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" ) + getTestId();
         removeBuildQueue( BUILD_QUEUE_NAME );
         assertTextNotPresent( BUILD_QUEUE_NAME );
     }
@@ -129,7 +129,7 @@ public class QueueTest
     {
     	//build a project
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" ) + getTestId();
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
 

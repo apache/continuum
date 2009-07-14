@@ -43,8 +43,8 @@ public class AntProjectTest
         String ANT_SCM_URL = getProperty( "ANT_SCM_URL" );
         String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
         String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_NAME = getTestGroupName();
+        String TEST_PROJ_GRP_ID = getTestGroupId();
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,

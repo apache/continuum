@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 public class ShellProjectTest
     extends AbstractContinuumTest
 {
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testAddShellProject()
         throws Exception
     {

@@ -36,8 +36,8 @@ public class ProjectGroupTest
     public void testAddProjectGroup()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_NAME = getTestGroupName();
+        String TEST_PROJ_GRP_ID = getTestGroupId();
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
 
         addProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, true );
@@ -47,8 +47,8 @@ public class ProjectGroupTest
     public void testAddProjectGroup2()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
 
         addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, true );
@@ -59,8 +59,8 @@ public class ProjectGroupTest
     public void testMoveProject()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_NAME = getTestGroupName();
+        String TEST_PROJ_GRP_ID = getTestGroupId();
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
         String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_NAME" );
@@ -102,8 +102,8 @@ public class ProjectGroupTest
         final String sNewProjectName = "New Project Group Name";
         final String sNewProjectDescription = "New Project Group Description";
 
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
 
         editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, sNewProjectName,
@@ -120,8 +120,8 @@ public class ProjectGroupTest
         throws Exception
     {
 
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, " ",
                           TEST2_PROJ_GRP_DESCRIPTION );
@@ -133,7 +133,7 @@ public class ProjectGroupTest
         throws Exception
     {
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" ) + getTestId();
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
         clickButtonWithValue( "Release" );

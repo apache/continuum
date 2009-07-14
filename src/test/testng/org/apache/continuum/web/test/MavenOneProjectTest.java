@@ -35,6 +35,7 @@ public class MavenOneProjectTest
     /**
      * test with valid pom url
      */
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testValidPomUrl()
         throws Exception
     {
@@ -42,11 +43,11 @@ public class MavenOneProjectTest
         String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
         String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         String M1_PROJ_GRP_NAME = getProperty( "M1_PROJ_GRP_NAME" );
-        String M1_PROJ_GRP_ID = getProperty( "M1_PROJ_GRP_ID" );
+        String M1_PROJ_GRP_ID = getProperty( "M1_PROJ_GRP_ID" ) + getTestId();
         String M1_PROJ_GRP_DESCRIPTION = getProperty( "M1_PROJ_GRP_DESCRIPTION" );
-        // Enter values into Add Maven Two Project fields, and submit
+        // Enter values into Add Maven One Project fields, and submit
         goToAddMavenOneProjectPage();
-        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, null, true );
+        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, M1_PROJ_GRP_NAME, null, true );
         assertProjectGroupSummaryPage( M1_PROJ_GRP_NAME, M1_PROJ_GRP_ID, M1_PROJ_GRP_DESCRIPTION );
     }
 
@@ -54,8 +55,8 @@ public class MavenOneProjectTest
     public void testAddMavenOneProjectFromRemoteSourceToNonDefaultProjectGroup()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_NAME = getTestGroupName();
+        String TEST_PROJ_GRP_ID = getTestGroupId();
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         String M1_POM_URL = getProperty( "M1_POM_URL" );
         String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );

@@ -556,8 +556,8 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "selectedProjectGroup" );
     }
 
-    public void addMavenTwoProject(String pomUrl,String username,String password,String projectGroup,
-                                   boolean success )
+    public void addMavenTwoProject( String pomUrl, String username, String password, String projectGroupName,
+                                    boolean success )
         throws Exception
     {
         goToAddMavenTwoProjectPage();
@@ -567,9 +567,9 @@ public abstract class AbstractContinuumTest
         setFieldValue( "scmUsername", username );
         setFieldValue( "scmPassword", password );
 
-        if ( projectGroup != null )
+        if ( projectGroupName != null )
         {
-            selectValue( "addMavenTwoProject_selectedProjectGroup", projectGroup );
+            selectValue( "addMavenTwoProject_selectedProjectGroup", projectGroupName );
         }
         submit();
         String title;
@@ -634,8 +634,8 @@ public abstract class AbstractContinuumTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addMavenOneProject(String pomUrl,String username,String password,String projectGroup,
-                                   String buildTemplate,boolean success )
+    public void addMavenOneProject( String pomUrl, String username, String password, String projectGroupName,
+                                    String buildTemplate, boolean success )
         throws Exception
     {
         setFieldValue( "m1PomUrl", pomUrl );
@@ -646,9 +646,9 @@ public abstract class AbstractContinuumTest
         {
             selectValue( "buildDefinitionTemplateId", buildTemplate );
         }
-        if ( projectGroup != null )
+        if ( projectGroupName != null )
         {
-            selectValue( "selectedProjectGroup", projectGroup );
+            selectValue( "selectedProjectGroup", projectGroupName );
         }
         submit();
         String title;
@@ -712,9 +712,9 @@ public abstract class AbstractContinuumTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addProject(String name,String description,String version,String scmUrl,String scmUser,
-                           String scmPassword,String scmTag,boolean useCache,String projectGroup,
-                           String buildTemplate,boolean success )
+    public void addProject( String name, String description, String version, String scmUrl, String scmUser,
+                            String scmPassword, String scmTag, boolean useCache, String projectGroupName,
+                            String buildTemplate, boolean success )
         throws Exception
     {
         setFieldValue( "projectName", name );
@@ -732,9 +732,9 @@ public abstract class AbstractContinuumTest
         {
             selectValue( "buildDefinitionTemplateId", buildTemplate );
         }
-        if ( projectGroup != null )
+        if ( projectGroupName != null )
         {
-            selectValue( "selectedProjectGroup", projectGroup );
+            selectValue( "selectedProjectGroup", projectGroupName );
         }
         submit();
         String title;
@@ -758,6 +758,16 @@ public abstract class AbstractContinuumTest
         getSelenium().waitForCondition( condition, maxWaitTimeInMs );
         Thread.sleep( 1000 );
         String t = getTitle();
-        Assert.assertTrue( t.contains( title ) );
+        Assert.assertTrue( t.contains( title ), "Title '" + title + "' not found in page, instead got '" + t + "'" );
+    }
+
+    protected String getTestGroupId()
+    {
+        return getProperty( "TEST_PROJ_GRP_ID" ) + getTestId();
+    }
+
+    protected String getTestGroupName()
+    {
+        return getProperty( "TEST_PROJ_GRP_NAME" ) + getTestId();
     }
 }

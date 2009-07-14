@@ -76,14 +76,26 @@ public abstract class AbstractSeleniumTest
 
         if ( getSelenium() == null )
         {
-            selenium.set( new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl ) );
-            getSelenium().start();
+            DefaultSelenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
+            s.start();
+            selenium.set( s );
         }
     }
 
     public static Selenium getSelenium()
     {
         return selenium == null ? null : selenium.get();
+    }
+
+    /**
+     * Returns an unique identifier that can be used to allow rerunning the tests against the same server without status
+     * collision
+     * 
+     * @return
+     */
+    public static long getTestId()
+    {
+        return Thread.currentThread().hashCode();
     }
 
     protected String getProperty( String key )

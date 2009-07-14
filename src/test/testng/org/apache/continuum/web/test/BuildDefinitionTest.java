@@ -70,8 +70,8 @@ public class BuildDefinitionTest
     public void testAddInvalidGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickButtonWithValue( "Add" );
@@ -84,8 +84,8 @@ public class BuildDefinitionTest
     public void testBuildFromGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickImgWithAlt( "Build" );
@@ -96,8 +96,8 @@ public class BuildDefinitionTest
     public void testAddDefautltGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
         String BUILD_GOALS = getProperty( "BUILD_GOALS" );
@@ -113,8 +113,8 @@ public class BuildDefinitionTest
     public void testAddNotDefautltGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
         String BUILD_GOALS = getProperty( "BUILD_GOALS" );
@@ -130,8 +130,8 @@ public class BuildDefinitionTest
     public void testEditGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
         String BUILD_GOALS = getProperty( "BUILD_GOALS" );
@@ -154,8 +154,8 @@ public class BuildDefinitionTest
     public void testDeleteGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         String BUILD_GOALS = getProperty( "BUILD_GOALS" );
         String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
@@ -171,7 +171,7 @@ public class BuildDefinitionTest
     public void testAddNotDefautltProjectBuildDefinition()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getTestGroupName();
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
         String BUILD_GOALS = getProperty( "BUILD_GOALS" );
@@ -187,7 +187,7 @@ public class BuildDefinitionTest
     public void testDeleteProjectBuildDefinition()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getTestGroupName();
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String BUILD_GOALS = getProperty( "BUILD_GOALS" );
         String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
