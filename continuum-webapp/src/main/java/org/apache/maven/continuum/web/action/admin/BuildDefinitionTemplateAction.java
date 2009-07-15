@@ -138,6 +138,8 @@ public class BuildDefinitionTemplateAction
     {
         List<BuildDefinition> selectedBuildDefinitions = getBuildDefinitionsFromSelectedBuildDefinitions();
         
+        BuildDefinitionTemplate result;
+        
         AuditLog event = new AuditLog( buildDefinitionTemplate.getName(), AuditLogConstants.ADD_TEMPLATE );
         event.setCategory( AuditLogConstants.TEMPLATE );
         event.setCurrentUser( getPrincipal() );
@@ -145,15 +147,24 @@ public class BuildDefinitionTemplateAction
         if ( this.buildDefinitionTemplate.getId() > 0 )
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
-            this.getContinuum().getBuildDefinitionService().updateBuildDefinitionTemplate( buildDefinitionTemplate );
+            result = this.getContinuum().getBuildDefinitionService().updateBuildDefinitionTemplate( buildDefinitionTemplate );
             event.setAction( AuditLogConstants.MODIFY_TEMPLATE );
-            event.log();
         }
         else
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
             this.buildDefinitionTemplate =
                 this.getContinuum().getBuildDefinitionService().addBuildDefinitionTemplate( buildDefinitionTemplate );
+            result = this.buildDefinitionTemplate;
+        }
+        
+        if ( result == null )
+        {
+            addActionError( getText( "buildDefintionTemplate.name.exists" ) );
+            return INPUT;
+        }
+        else
+        {
             event.log();
         }
 
