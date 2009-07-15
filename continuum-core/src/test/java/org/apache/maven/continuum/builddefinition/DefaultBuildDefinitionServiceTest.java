@@ -144,12 +144,12 @@ public class DefaultBuildDefinitionServiceTest
         throws Exception
     {
         BuildDefinitionTemplate template = new BuildDefinitionTemplate();
-        template.setName( "test" );
+        template.setName( "testTemplate" );
 
         template = getBuildDefinitionService().addBuildDefinitionTemplate( template );
         template = getBuildDefinitionService().getBuildDefinitionTemplate( template.getId() );
         assertNotNull( template );
-        assertEquals( "test", template.getName() );
+        assertEquals( "testTemplate", template.getName() );
         List<BuildDefinition> all = getBuildDefinitionService().getAllBuildDefinitions();
         assertEquals( 5, all.size() );
         BuildDefinition bd =
@@ -168,4 +168,14 @@ public class DefaultBuildDefinitionServiceTest
         assertEquals( 5, all.size() );
 
     }
+    
+    public void testAddDuplicateBuildDefinitionTemplate()
+	      throws Exception
+	  {
+	      BuildDefinitionTemplate template = new BuildDefinitionTemplate();
+	      template.setName( "test" );
+	      
+	      template = getBuildDefinitionService().addBuildDefinitionTemplate( template );
+	      assertNull( template );
+	  }
 }
