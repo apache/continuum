@@ -19,18 +19,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<suite name="ContinuumTest" verbose="1" parallel="methods" thread-count="4">
+<suite name="ContinuumTest" verbose="3" parallel="methods" thread-count="4">
     <listeners>
         <listener class-name="org.apache.continuum.web.test.listener.CaptureScreenShotsListener"/>
+        <listener class-name="org.apache.continuum.web.test.listener.SeleniumListener"/>
     </listeners>
-	<test name="BasicTest" enabled="true">
+	<test name="BasicTest" enabled="false">
 		<!--
 			Groups are divided into the unit tests. The order will be described
 			in the annotations of each type of test.
 		-->
 		<groups>
 			<run>
-                <include name="setup" /> <!-- required to setup Selenium -->
 				<include name="about" />
 			</run>
 		</groups>
@@ -41,7 +41,7 @@ under the License.
 	<test name="AdminTest" enabled="true">
 		<groups>
 			<run>
-                <include name="setup" /> <!-- required to setup Selenium -->
+                <include name="about" />
 				<include name="login" />
 				<include name="mavenTwoProject"/>								
 				<include name="projectGroup" />				
