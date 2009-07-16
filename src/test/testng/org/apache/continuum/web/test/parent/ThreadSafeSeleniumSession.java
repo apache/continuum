@@ -78,7 +78,7 @@ public class ThreadSafeSeleniumSession
         SetupContinuum setup = new SetupContinuum();
         try
         {
-            setup.initializeContinuum();
+            setup.initializeContinuumIfNeeded();
         }
         catch ( Exception e )
         {

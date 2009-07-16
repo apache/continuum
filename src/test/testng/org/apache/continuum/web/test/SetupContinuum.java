@@ -31,7 +31,7 @@ public class SetupContinuum
     extends AbstractContinuumTest
 {
 
-     public void initializeContinuum()
+     public void initializeContinuumIfNeeded()
         throws Exception
     {
         getSelenium().open( baseUrl );
