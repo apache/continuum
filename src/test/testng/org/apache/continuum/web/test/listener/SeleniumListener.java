@@ -19,8 +19,13 @@ package org.apache.continuum.web.test.listener;
  * under the License.
  */
 
-import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.*;
+import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getSession;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.apache.continuum.web.test.parent.SeleniumSession;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -34,10 +39,15 @@ import org.testng.TestListenerAdapter;
 public class SeleniumListener
     extends TestListenerAdapter
 {
+    private static final boolean ONE_BROWSER_PER_TEST = false;
+
+    private static final Collection<SeleniumSession> SELENIUM_SESSIONS =
+        Collections.synchronizedCollection( new ArrayList<SeleniumSession>() );
+
     @Override
     public void onTestStart( ITestResult result )
     {
-        if ( !isStarted() && !isInError() )
+        if ( !getSession().isStarted() && !getSession().isInError() )
         {
             /* start selenium */
             String browser = getProperty( "browser" );
@@ -50,24 +60,53 @@ public class SeleniumListener
             Assert.assertNotNull( baseUrl, "baseUrl parameter is not defined" );
             System.out.println( "Starting Selenium session: " + "[" + seleniumHost + ", " + seleniumPort + ", "
                 + baseUrl + ", " + browser + "]" );
-            start( seleniumHost, Integer.parseInt( seleniumPort ), browser, baseUrl );
-            System.out.println( "Started Selenium session: " + configurationString() );
+            getSession().start( seleniumHost, Integer.parseInt( seleniumPort ), browser, baseUrl );
+            SELENIUM_SESSIONS.add( getSession() );
+            System.out.println( "Started Selenium session: " + getSession().configurationString() );
         }
         super.onTestStart( result );
     }
 
     @Override
+    public void onFinish( ITestContext testContext )
+    {
+        /* ensure all browsers are killed */
+        for ( SeleniumSession session : SELENIUM_SESSIONS )
+        {
+            try
+            {
+                if ( session.isStarted() )
+                {
+                    session.stop();
+                }
+            }
+            catch ( RuntimeException e )
+            {
+                System.err.println( "Error stoping selenium server: " + session.configurationString() );
+                e.printStackTrace();
+            }
+        }
+        super.onFinish( testContext );
+    }
+
+    @Override
     public void onTestSuccess( ITestResult tr )
     {
-        stop();
+        if ( ONE_BROWSER_PER_TEST )
+        {
+            getSession().stop();
+        }
         super.onTestSuccess( tr );
     }
 
     @Override
     public void onTestFailure( ITestResult tr )
     {
-        stop();
-        System.out.println( "Test " + tr.getName() + configurationString() + " -> Failed" );
+        if ( ONE_BROWSER_PER_TEST )
+        {
+            getSession().stop();
+        }
+        System.out.println( "Test " + tr.getName() + " " + getSession().configurationString() + " -> Failed" );
         super.onTestFailure( tr );
     }
 

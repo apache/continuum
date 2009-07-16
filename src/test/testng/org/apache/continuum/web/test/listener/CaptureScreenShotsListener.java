@@ -19,8 +19,7 @@ package org.apache.continuum.web.test.listener;
  * under the License.
  */
 
-import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getBrowser;
-import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getSelenium;
+import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getSession;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -51,7 +50,8 @@ public class CaptureScreenShotsListener
             /* ignore errors related to captureEntirePageScreenshot not implemented in some browsers */
             if ( !e.getMessage().contains( "captureEntirePageScreenshot is only implemented for Firefox" ) )
             {
-                System.out.println( "Error when taking screenshot for test " + tr.getName() + " [" + getBrowser() + "]" );
+                System.out.println( "Error when taking screenshot for test " + tr.getName() + " ["
+                    + getSession().getBrowser() + "]" );
                 e.printStackTrace();
             }
         }
@@ -78,8 +78,8 @@ public class CaptureScreenShotsListener
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
         String fileName =
             targetPath.toString() + fs + methodName + "(" + className + ".java_" + lineNumber + ")-" + time + ".png";
-        getSelenium().windowMaximize();
-        getSelenium().captureEntirePageScreenshot( fileName, "" );
+        getSession().getSelenium().windowMaximize();
+        getSession().getSelenium().captureEntirePageScreenshot( fileName, "" );
     }
 
     private int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )

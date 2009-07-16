@@ -76,7 +76,7 @@ public abstract class AbstractSeleniumTest
 
     public Selenium getSelenium()
     {
-        return ThreadSafeSeleniumSession.getSelenium();
+        return ThreadSafeSeleniumSession.getSession().getSelenium();
     }
 
     /**
@@ -126,7 +126,7 @@ public abstract class AbstractSeleniumTest
     public void close()
         throws Exception
     {
-        ThreadSafeSeleniumSession.stop();
+        ThreadSafeSeleniumSession.getSession().stop();
     }
 
     // *******************************************************
