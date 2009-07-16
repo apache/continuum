@@ -19,12 +19,14 @@ package org.apache.continuum.web.test.listener;
  * under the License.
  */
 
+import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getBrowser;
+import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getSelenium;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
@@ -35,14 +37,6 @@ public class CaptureScreenShotsListener
     public void onTestFailure( ITestResult tr )
     {
         captureError( tr );
-        System.out.println( "Test " + tr.getName() + " [" + AbstractSeleniumTest.getSeleniumBrowser() + "] -> Failed" );
-        super.onTestFailure( tr );
-    }
-
-    @Override
-    public void onTestSuccess( ITestResult tr )
-    {
-        System.out.println( "Test " + tr.getName() + " [" + AbstractSeleniumTest.getSeleniumBrowser() + "] -> Success" );
         super.onTestFailure( tr );
     }
 
@@ -54,8 +48,12 @@ public class CaptureScreenShotsListener
         }
         catch ( RuntimeException e )
         {
-            System.out.println( "Error when taking screenshot for test " + tr.getName() );
-            e.printStackTrace();
+            /* ignore errors related to captureEntirePageScreenshot not implemented in some browsers */
+            if ( !e.getMessage().contains( "captureEntirePageScreenshot is only implemented for Firefox" ) )
+            {
+                System.out.println( "Error when taking screenshot for test " + tr.getName() + " [" + getBrowser() + "]" );
+                e.printStackTrace();
+            }
         }
     }
 
@@ -80,8 +78,8 @@ public class CaptureScreenShotsListener
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
         String fileName =
             targetPath.toString() + fs + methodName + "(" + className + ".java_" + lineNumber + ")-" + time + ".png";
-        AbstractSeleniumTest.getSelenium().windowMaximize();
-        AbstractSeleniumTest.getSelenium().captureEntirePageScreenshot( fileName, "" );
+        getSelenium().windowMaximize();
+        getSelenium().captureEntirePageScreenshot( fileName, "" );
     }
 
     private int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )
