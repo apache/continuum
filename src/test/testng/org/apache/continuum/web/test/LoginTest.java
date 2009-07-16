@@ -39,6 +39,7 @@ public class LoginTest
 {
     public void testWithBadUsername()
     {
+        logoutIfNeeded();
         goToLoginPage();
         getSelenium().type( "loginForm_username", "badUsername" );
         getSelenium().type( "loginForm_username", getProperty( "ADMIN_PASSWORD" ) );
@@ -49,6 +50,7 @@ public class LoginTest
 
     public void testWithBadPassword()
     {
+        logoutIfNeeded();
         goToLoginPage();
         getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
         getSelenium().type( "loginForm_password", "badPassword" );
@@ -59,6 +61,7 @@ public class LoginTest
 
     public void testWithEmptyUsername()
     {
+        logoutIfNeeded();
         goToLoginPage();
         getSelenium().type( "loginForm_password", "password" );
         getSelenium().click( "loginForm__login" );
@@ -68,6 +71,7 @@ public class LoginTest
 
     public void testWithEmptyPassword()
     {
+        logoutIfNeeded();
         goToLoginPage();
         getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
         getSelenium().click( "loginForm__login" );
@@ -78,6 +82,12 @@ public class LoginTest
     @Test( groups = { "loginSuccess" } )
     public void testWithCorrectUsernamePassword()
     {
-        loginAsAdmin();
+        logoutIfNeeded();
+        goToLoginPage();
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        assertAutenticatedPage( getProperty( "ADMIN_USERNAME" ) );
     }
 }

@@ -104,8 +104,22 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Forgot your Password? Request a password reset." );
     }
 
-    public void loginAsAdmin()
+    public void logoutIfNeeded()
     {
+        if ( !getSelenium().isTextPresent( "Current User" ) )
+        {
+            return;
+        }
+        clickLinkWithText( "Logout" );
+    }
+
+    public void loginAsAdminIfNeeded()
+    {
+        if ( getSelenium().isTextPresent( "Current User" )
+            && getSelenium().isTextPresent( getProperty( "ADMIN_USERNAME" ) ) )
+        {
+            return;
+        }
         goToLoginPage();
         getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
         getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
