@@ -32,7 +32,6 @@ import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 
-import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -47,52 +46,37 @@ public abstract class AbstractSeleniumTest
 
     public static String maxWaitTimeInMs;
 
-    private static ThreadLocal<Selenium> selenium = new ThreadLocal<Selenium>();
-
-    private static ThreadLocal<String> seleniumBrowser = new ThreadLocal<String>();
-
-    private static Properties p;
+    private static Properties properties;
 
     private final static String PROPERTIES_SEPARATOR = "=";
+
+    static
+    {
+        initialize();
+    }
 
     /**
      * Initialize properties.
      */
-    public void open()
-        throws Exception
+    private static void initialize()
     {
-        InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
-        p = new Properties();
-        p.load( input );
-
-        maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
-    }
-
-    /**
-     * Initialize selenium
-     */
-    public void open( String baseUrl, String browser, String seleniumHost, int seleniumPort )
-        throws Exception
-    {
-        this.baseUrl = baseUrl;
-
-        if ( getSelenium() == null )
+        InputStream input = AbstractSeleniumTest.class.getClassLoader().getResourceAsStream( "testng.properties" );
+        properties = new Properties();
+        try
         {
-            DefaultSelenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
-            s.start();
-            selenium.set( s );
-            seleniumBrowser.set( browser );
+            properties.load( input );
         }
+        catch ( IOException e )
+        {
+            throw new RuntimeException( e );
+        }
+
+        maxWaitTimeInMs = properties.getProperty( "MAX_WAIT_TIME_IN_MS" );
     }
 
-    public static Selenium getSelenium()
+    public Selenium getSelenium()
     {
-        return selenium == null ? null : selenium.get();
-    }
-
-    public static String getSeleniumBrowser()
-    {
-        return seleniumBrowser == null ? null : seleniumBrowser.get();
+        return ThreadSafeSeleniumSession.getSelenium();
     }
 
     /**
@@ -108,7 +92,7 @@ public abstract class AbstractSeleniumTest
 
     protected String getProperty( String key )
     {
-        return p.getProperty( key );
+        return properties.getProperty( key );
     }
 
     protected String getEscapeProperty( String key )
@@ -142,11 +126,7 @@ public abstract class AbstractSeleniumTest
     public void close()
         throws Exception
     {
-        if ( getSelenium() != null )
-        {
-            getSelenium().stop();
-            selenium.set( null );
-        }
+        ThreadSafeSeleniumSession.stop();
     }
 
     // *******************************************************
@@ -201,7 +181,7 @@ public abstract class AbstractSeleniumTest
 
     public void assertLinkNotPresent( String text )
     {
-            Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
+        Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
     }
 
     public void assertImgWithAlt( String alt )

@@ -20,48 +20,20 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
-import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 /**
- * Based on SetupSelenium of Wendy Smoak test.
+ * Based on SetupContinuum of Wendy Smoak test.
  * 
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "setup" }, alwaysRun = true )
-public class SetupSelenium
+public class SetupContinuum
     extends AbstractContinuumTest
 {
-    @Override
-    @AfterTest
-    public void close()
-        throws Exception
-    {
-        super.close();
-    }
 
-    @Override
-    @BeforeSuite
-    public void open()
+     public void initializeContinuum()
         throws Exception
     {
-        super.open();
-    }
-
-    @BeforeTest
-    @Parameters( { "baseUrl", "browser", "seleniumHost", "seleniumPort" } )
-    public void initializeContinuum( String baseUrl, String browser, @Optional( "localhost" ) String seleniumHost,
-                                     @Optional( "4444" ) int seleniumPort )
-        throws Exception
-    {
-        super.open( baseUrl, browser, seleniumHost, seleniumPort );
-        Assert.assertNotNull( getSelenium(), "Selenium is not initialized" );
         getSelenium().open( baseUrl );
         String title = getSelenium().getTitle();
         if ( title.equals( "Create Admin User" ) )
