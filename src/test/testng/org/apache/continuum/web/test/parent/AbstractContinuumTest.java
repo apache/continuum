@@ -104,27 +104,17 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Forgot your Password? Request a password reset." );
     }
 
-    public void submitUserData(String username,String password,boolean rememberme,boolean success )
+    public void loginAsAdmin()
     {
-
-        setFieldValue( "username", username );
-        setFieldValue( "password", password );
-        if ( rememberme )
-        {
-            checkField( "rememberMe" );
-        }
-        submit();
-        if ( success )
-        {
-            assertAutenticatedPage( username );
-        }
-        else
-        {
-            assertLoginPage();
-        }
+        goToLoginPage();
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        assertAutenticatedPage( getProperty( "ADMIN_USERNAME" ) );
     }
 
-    public void assertAutenticatedPage(String username )
+    public void assertAutenticatedPage( String username )
     {
         assertTextPresent( "Current User" );
         assertTextPresent( "Edit Details" );
