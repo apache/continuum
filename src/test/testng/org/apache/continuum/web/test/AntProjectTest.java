@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "antProject" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "antProject" } )
 public class AntProjectTest
     extends AbstractContinuumTest
 {
@@ -36,6 +36,7 @@ public class AntProjectTest
     public void testAddAntProject()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String ANT_NAME = getProperty( "ANT_NAME" );
         String ANT_DESCRIPTION = getProperty( "ANT_DESCRIPTION" );
         String ANT_VERSION = getProperty( "ANT_VERSION" );
@@ -54,6 +55,7 @@ public class AntProjectTest
 
     public void testSubmitEmptyForm()
     {
+        loginAsAdminIfNeeded();
         goToAddAntProjectPage();
         submit();
         assertAddProjectPage( "ant" );
@@ -66,6 +68,7 @@ public class AntProjectTest
     public void testAddDupliedAntProject()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String ANT_NAME = getProperty( "ANT_NAME" );
         String ANT_DESCRIPTION = getProperty( "ANT_DESCRIPTION" );
         String ANT_VERSION = getProperty( "ANT_VERSION" );

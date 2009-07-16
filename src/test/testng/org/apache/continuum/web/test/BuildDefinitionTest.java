@@ -26,13 +26,14 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "buildDefinition" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "buildDefinition" } )
 public class BuildDefinitionTest
     extends AbstractContinuumTest
 {
     public void testDefaultGroupBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
         String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
         String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
@@ -70,6 +71,7 @@ public class BuildDefinitionTest
     public void testAddInvalidGroupBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
         String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
@@ -84,6 +86,7 @@ public class BuildDefinitionTest
     public void testBuildFromGroupBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
         String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
@@ -96,6 +99,7 @@ public class BuildDefinitionTest
     public void testAddDefautltGroupBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
         String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
@@ -113,6 +117,7 @@ public class BuildDefinitionTest
     public void testAddNotDefautltGroupBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
         String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
@@ -130,6 +135,7 @@ public class BuildDefinitionTest
     public void testEditGroupBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
         String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
@@ -154,6 +160,7 @@ public class BuildDefinitionTest
     public void testDeleteGroupBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" ) + getTestId();
         String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" ) + getTestId();
         String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
@@ -171,6 +178,7 @@ public class BuildDefinitionTest
     public void testAddNotDefautltProjectBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST_PROJ_GRP_NAME = getTestGroupName();
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
@@ -187,6 +195,7 @@ public class BuildDefinitionTest
     public void testDeleteProjectBuildDefinition()
         throws Exception
     {
+        loginAsAdminIfNeeded();
         String TEST_PROJ_GRP_NAME = getTestGroupName();
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String BUILD_GOALS = getProperty( "BUILD_GOALS" );

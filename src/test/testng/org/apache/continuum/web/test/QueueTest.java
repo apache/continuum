@@ -30,13 +30,14 @@ import org.apache.continuum.web.test.ScheduleTest;
  */
 
 
-@Test( groups = { "queue" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "queue" } )
 public class QueueTest
     extends AbstractBuildQueueTest
 {
 
     public void testAddBuildQueue()
     {
+        loginAsAdminIfNeeded();
         setMaxBuildQueue( 2 );
         String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" ) + getTestId();
         addBuildQueue( BUILD_QUEUE_NAME, true );
@@ -45,6 +46,7 @@ public class QueueTest
 	@Test( dependsOnMethods = { "testAddBuildQueue" } ) //"testDeleteBuildQueue" } )
     public void testQueuePageWithoutBuild()
     {
+        loginAsAdminIfNeeded();
         clickAndWait( "link=Queues"  );
         assertPage( "Continuum - Build Queue" );
         assertTextPresent( "Nothing is building" );
@@ -59,10 +61,11 @@ public class QueueTest
 
 	@Test( dependsOnMethods = { "testAddBuildQueue", "testAddSchedule" } )
     public void testAddBuildQueueToSchedule()
-  {
-	    ScheduleTest sched = new ScheduleTest();
+    {
+        loginAsAdminIfNeeded();
+        ScheduleTest sched = new ScheduleTest();
 
-	    String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
+        String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
         String SCHEDULE_DESCRIPTION = getProperty( "SCHEDULE_DESCRIPTION" );
         String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
         String SCHEDULE_EXPR_MINUTE = getProperty( "SCHEDULE_EXPR_MINUTE" );
@@ -90,6 +93,7 @@ public class QueueTest
 	@Test( dependsOnMethods = { "testAddBuildQueue" } )
     public void testAddNotAllowedBuildQueue()
     {
+        loginAsAdminIfNeeded();
         setMaxBuildQueue( 1 );
         String secodQueue = "second_queue_name";
         addBuildQueue( secodQueue, false );
@@ -99,6 +103,7 @@ public class QueueTest
     @Test( dependsOnMethods = { "testAddBuildQueue" } )
     public void testAddAlreadyExistBuildQueue()
     {
+        loginAsAdminIfNeeded();
         setMaxBuildQueue( 3 );
         String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" ) + getTestId();
         addBuildQueue( BUILD_QUEUE_NAME, false );
@@ -108,6 +113,7 @@ public class QueueTest
     @Test( dependsOnMethods = { "testAddAlreadyExistBuildQueue" } )
     public void testAddEmptyBuildQueue()
     {
+        loginAsAdminIfNeeded();
         setMaxBuildQueue( 3 );
         addBuildQueue( "", false );
         assertTextPresent( "You must define a name" );
@@ -116,6 +122,7 @@ public class QueueTest
     @Test( dependsOnMethods = { "testAddBuildQueueToSchedule" } )
     public void testDeleteBuildQueue()
     {
+        loginAsAdminIfNeeded();
         goToBuildQueuePage();
         String BUILD_QUEUE_NAME = getProperty( "BUILD_QUEUE_NAME" ) + getTestId();
         removeBuildQueue( BUILD_QUEUE_NAME );
@@ -127,6 +134,7 @@ public class QueueTest
     public void testQueuePageWithProjectCurrentlyBuilding()
         throws Exception
     {
+        loginAsAdminIfNeeded();
     	//build a project
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" ) + getTestId();

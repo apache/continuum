@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "configuration" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "configuration" } )
 public class ConfigurationTest
     extends AbstractConfigurationTest
 {
@@ -44,6 +44,7 @@ public class ConfigurationTest
 
     public void defaultConfiguration()
     {
+        loginAsAdminIfNeeded();
         goToConfigurationPage();
         WORKING_DIRECTORY = getFieldValue( "workingDirectory" );
         BASE_URL = getFieldValue( "baseUrl" );
@@ -56,6 +57,7 @@ public class ConfigurationTest
     @Test( dependsOnMethods = { "defaultConfiguration" } )
     public void editConfiguration()
     {
+        loginAsAdminIfNeeded();
         String newWorking = "newWorking";
         String newUrl = "http://localhost:8181";
         String newBuildOutput = "newBuildOutput";
@@ -72,6 +74,7 @@ public class ConfigurationTest
 
     public void setInvalidConfiguration()
     {
+        loginAsAdminIfNeeded();
         goToConfigurationPage();
         submitConfiguration( "", "", "", "", "", "", true, false );
         assertTextPresent( "You must define a working directory" );
@@ -81,6 +84,7 @@ public class ConfigurationTest
 
     public void setZeroParallelBuilds()
     {
+        loginAsAdminIfNeeded();
         setMaxBuildQueue( 0 );
         assertTextPresent( "Number of Allowed Builds in Parallel must be greater than zero" );
     }

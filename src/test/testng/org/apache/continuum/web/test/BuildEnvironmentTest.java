@@ -26,19 +26,21 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "buildEnvironment" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "buildEnvironment" } )
 public class BuildEnvironmentTest
     extends AbstractBuildEnvironmentTest
 {
     public void testAddBuildEnvironment()
     {
-        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+        loginAsAdminIfNeeded();
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" ) + getTestId();
         goToAddBuildEnvironment();
         addBuildEnvironment( BUIL_ENV_NAME, new String[] {}, true );
     }
 
     public void testAddInvalidBuildEnvironment()
     {
+        loginAsAdminIfNeeded();
         goToAddBuildEnvironment();
         addBuildEnvironment( "", new String[] {}, false );
         assertTextPresent( "You must define a name" );
@@ -47,7 +49,8 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditInvalidBuildEnvironment()
     {
-        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+        loginAsAdminIfNeeded();
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" ) + getTestId();
         goToEditBuildEnvironment( BUIL_ENV_NAME );
         editBuildEnvironment( "", new String[] {}, false );
         assertTextPresent( "You must define a name" );
@@ -56,7 +59,8 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testAddDuplicatedBuildEnvironment()
     {
-        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+        loginAsAdminIfNeeded();
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" ) + getTestId();
         goToAddBuildEnvironment();
         addBuildEnvironment( BUIL_ENV_NAME, new String[] {}, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
@@ -65,7 +69,8 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditBuildEnvironment()
     {
-        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+        loginAsAdminIfNeeded();
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" ) + getTestId();
         String newName = "new_name";
         goToEditBuildEnvironment( BUIL_ENV_NAME );
         editBuildEnvironment( newName, new String[] {}, true );
@@ -78,7 +83,8 @@ public class BuildEnvironmentTest
         "testAddDuplicatedBuildEnvironment", "testEditInvalidBuildEnvironment" } )
     public void testDeleteBuildEnvironment()
     {
-        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+        loginAsAdminIfNeeded();
+        String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" ) + getTestId();
         removeBuildEnvironment( BUIL_ENV_NAME );
     }
 }
