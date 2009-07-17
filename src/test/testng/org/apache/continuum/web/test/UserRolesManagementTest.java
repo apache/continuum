@@ -9,7 +9,7 @@ public class UserRolesManagementTest
 {
     public void testBasicAddDeleteUser()
     {
-        username = getProperty( "GUEST_USERNAME" );
+        username = getProperty( "GUEST_USERNAME" ) + getTestId();
         fullname = getProperty( "GUEST_FULLNAME" );
 
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
@@ -21,7 +21,7 @@ public class UserRolesManagementTest
     @Test( dependsOnMethods = { "testBasicAddDeleteUser" } )
     public void testUserWithGuestRole()
     {
-        username = getProperty( "GUEST_USERNAME" );
+        username = getProperty( "GUEST_USERNAME" ) + getTestId();
         fullname = getProperty( "GUEST_FULLNAME" );
 
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
