@@ -31,7 +31,7 @@ public class SetupContinuum
     extends AbstractContinuumTest
 {
 
-     public void initializeContinuumIfNeeded()
+    public void initializeContinuumIfNeeded()
         throws Exception
     {
         getSelenium().open( baseUrl );
@@ -44,10 +44,26 @@ public class SetupContinuum
             String mail = getProperty( "ADMIN_MAIL" );
             String password = getProperty( "ADMIN_PASSWORD" );
             submitAdminData( fullname, mail, password );
-            assertAutenticatedPage( username );
-            assertEditConfigurationPage();
-            postAdminUserCreation();
-            clickLinkWithText( "Logout" );
+
+            /* Avoid race conditions when several browsers try to register the admin user */
+            if ( getSelenium().isTextPresent( "Current User" ) )
+            {
+                /* this is the browser that registered the admin */
+                assertEditConfigurationPage();
+                postAdminUserCreation();
+                clickLinkWithText( "Logout" );
+            }
+            else
+            {
+                /* wait for the other browser to submit the configuration */
+                loginAsAdminIfNeeded();
+                while ( getSelenium().isTextPresent( "General Configuration" ) )
+                {
+                    Thread.sleep( 1 * 1000 );
+                    loginAsAdminIfNeeded();
+                }
+                logoutIfNeeded();
+            }
         }
     }
 
