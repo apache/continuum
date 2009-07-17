@@ -22,16 +22,20 @@ package org.apache.continuum.web.test.listener;
 import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getSession;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
 public class CaptureScreenShotsListener
     extends TestListenerAdapter
 {
+    private static final String FS = File.separator;
+
     @Override
     public void onTestFailure( ITestResult tr )
     {
@@ -41,9 +45,10 @@ public class CaptureScreenShotsListener
 
     private void captureError( ITestResult tr )
     {
+        String baseFileName = getBaseFileName( tr );
         try
         {
-            captureScreenshot( tr );
+            captureScreenshot( baseFileName );
         }
         catch ( RuntimeException e )
         {
@@ -55,31 +60,55 @@ public class CaptureScreenShotsListener
                 e.printStackTrace();
             }
         }
+        try
+        {
+            captureHtmlSource( baseFileName );
+        }
+        catch ( IOException e )
+        {
+            System.out.println( "Error capturing HTML for test " + tr.getName() + " [" + getSession().getBrowser()
+                + "]" );
+            e.printStackTrace();
+        }
     }
 
-    // captureAssertionError() creates a 'target/screenshots' directory and saves '.png' page screenshot of the
-    // encountered error
-    private void captureScreenshot( ITestResult tr )
+    private String getBaseFileName( ITestResult tr )
     {
         File f = new File( "" );
         String filePath = f.getAbsolutePath();
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat( "yyyy.MM.dd-HH_mm_ss" );
         String time = sdf.format( d );
-        String fs = File.separator;
-        File targetPath = new File( filePath + fs + "target" + fs + "screenshots" );
+        File targetPath = new File( filePath + FS + "target" + FS + "screenshots" );
         targetPath.mkdir();
         String cName = tr.getTestClass().getName();
         StackTraceElement stackTrace[] = tr.getThrowable().getStackTrace();
         int index = getStackTraceIndexOfCallingClass( cName, stackTrace );
-        String methodName = stackTrace[index].getMethodName();
-        int lNumber = stackTrace[index].getLineNumber();
+        String methodName = index >= 0 ? stackTrace[index].getMethodName() : tr.getMethod().getMethodName();
+        int lNumber = index >= 0 ? stackTrace[index].getLineNumber() : -1;
         String lineNumber = Integer.toString( lNumber );
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
         String fileName =
-            targetPath.toString() + fs + methodName + "(" + className + ".java_" + lineNumber + ")-" + time + ".png";
+            targetPath.toString() + FS + methodName + "(" + className + ".java_" + lineNumber + ")-"
+                + getSession().getBrowser() + "-" + time;
+        return fileName;
+    }
+
+    /**
+     * Save the screenshot of the browser as a PNG image
+     * 
+     * @param baseFileName
+     */
+    private void captureScreenshot( String baseFileName )
+    {
         getSession().getSelenium().windowMaximize();
-        getSession().getSelenium().captureEntirePageScreenshot( fileName, "" );
+        getSession().getSelenium().captureEntirePageScreenshot( baseFileName + ".png", "" );
+    }
+
+    private void captureHtmlSource( String baseFileName )
+        throws IOException
+    {
+        FileUtils.writeStringToFile( new File( baseFileName + ".html" ), getSession().getSelenium().getHtmlSource() );
     }
 
     private int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )
@@ -92,7 +121,14 @@ public class CaptureScreenShotsListener
             match = Pattern.matches( nameOfClass, className );
             i++;
         }
-        while ( match == false );
+        while ( ( match == false ) && ( i < stackTrace.length ) );
+
+        if ( !match )
+        {
+            /* the error happened outside of the test class, maybe pre-test */
+            return -1;
+        }
+
         i--;
         return i;
     }
