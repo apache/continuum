@@ -11,6 +11,7 @@
     </layout>
   </appender>
 
+<!--
   <logger name="org.apache.continuum.buildagent">
     <level value="info"/>
   </logger>
@@ -22,6 +23,7 @@
   <logger name="org.apache.continuum.distributed">
     <level value="info"/>
   </logger>
+-->
 
   <logger name="org.springframework">
     <level value="error"/>
