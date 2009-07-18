@@ -80,8 +80,7 @@ public class QueueTest
       sched.goToEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
               SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
               SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD );
-	  getSelenium().removeSelection("saveSchedule_availableBuildQueues", "label=DEFAULT_BUILD_QUEUE");
-	  getSelenium().addSelection("saveSchedule_availableBuildQueues", "label="+BUILD_QUEUE_NAME);
+	  getSelenium().addSelection("saveSchedule_availableBuildQueuesIds", "label="+BUILD_QUEUE_NAME);
 	  getSelenium().click("//input[@value='->']");
 	  submit();
 
