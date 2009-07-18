@@ -30,6 +30,27 @@ import org.testng.annotations.Test;
 public class ScheduleTest
     extends AbstractScheduleTest
 {
+    public void testAddScheduleNoBuildQueueToBeUsed()
+    {
+        String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
+        String SCHEDULE_DESCRIPTION = getProperty( "SCHEDULE_DESCRIPTION" );
+        String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
+        String SCHEDULE_EXPR_MINUTE = getProperty( "SCHEDULE_EXPR_MINUTE" );
+        String SCHEDULE_EXPR_HOUR = getProperty( "SCHEDULE_EXPR_HOUR" );
+        String SCHEDULE_EXPR_DAY_MONTH = getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
+        String SCHEDULE_EXPR_MONTH = getProperty( "SCHEDULE_EXPR_MONTH" );
+        String SCHEDULE_EXPR_DAY_WEEK = getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
+        String SCHEDULE_EXPR_YEAR = getProperty( "SCHEDULE_EXPR_YEAR" );
+        String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
+        String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
+        goToAddSchedule();
+        addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
+                         SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
+                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, false, false );
+	assertTextPresent( "Used Build Queues cannot be empty" );
+    }
+
+    @Test( dependsOnMethods = { "testAddScheduleNoBuildQueueToBeUsed" } )
     public void testAddSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
@@ -46,13 +67,13 @@ public class ScheduleTest
         goToAddSchedule();
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
-                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true );
+                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true, true );
     }
 
     public void testAddInvalidSchedule()
     {
         goToAddSchedule();
-        addEditSchedule( "", "", "", "", "", "", "", "", "", "", "", false );
+        addEditSchedule( "", "", "", "", "", "", "", "", "", "", "", true, false );
         assertTextPresent( "Invalid cron expression value(s)" );
         assertTextPresent( "Name is required and cannot contain spaces only" );
         assertTextPresent( "Description is required and cannot contain spaces only" );
@@ -75,7 +96,7 @@ public class ScheduleTest
         goToAddSchedule();
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
-                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, false );
+                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true, false );
         assertTextPresent( "A Schedule with the same name already exists" );
     }
 
@@ -107,11 +128,11 @@ public class ScheduleTest
         goToEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                           SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                           SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD );
-        addEditSchedule( name, description, second, minute, hour, dayMonth, month, dayWeek, year, maxTime, period, true );
+        addEditSchedule( name, description, second, minute, hour, dayMonth, month, dayWeek, year, maxTime, period, false, true );
         goToEditSchedule( name, description, second, minute, hour, dayMonth, month, dayWeek, year, maxTime, period );
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
-                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true );
+                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, false, true );
     }
 
     @Test( dependsOnMethods = { "testEditSchedule" } )
