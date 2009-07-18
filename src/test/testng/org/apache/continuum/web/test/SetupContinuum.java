@@ -40,7 +40,6 @@ public class SetupContinuum
         {
             assertCreateAdmin();
             String fullname = getProperty( "ADMIN_FULLNAME" );
-            String username = getProperty( "ADMIN_USERNAME" );
             String mail = getProperty( "ADMIN_MAIL" );
             String password = getProperty( "ADMIN_PASSWORD" );
             submitAdminData( fullname, mail, password );
@@ -60,6 +59,7 @@ public class SetupContinuum
                 while ( getSelenium().isTextPresent( "General Configuration" ) )
                 {
                     Thread.sleep( 1 * 1000 );
+                    getSelenium().open( baseUrl );
                     loginAsAdminIfNeeded();
                 }
                 logoutIfNeeded();
