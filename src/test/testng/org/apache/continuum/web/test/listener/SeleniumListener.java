@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.apache.continuum.web.test.parent.SeleniumSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -44,6 +46,8 @@ public class SeleniumListener
     private static final Collection<SeleniumSession> SELENIUM_SESSIONS =
         Collections.synchronizedCollection( new ArrayList<SeleniumSession>() );
 
+    private final Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     @Override
     public void onTestStart( ITestResult result )
     {
@@ -58,11 +62,11 @@ public class SeleniumListener
             Assert.assertNotNull( seleniumHost, "seleniumHost parameter is not defined" );
             Assert.assertNotNull( seleniumPort, "seleniumPort parameter is not defined" );
             Assert.assertNotNull( baseUrl, "baseUrl parameter is not defined" );
-            System.out.println( "Starting Selenium session: " + "[" + seleniumHost + ", " + seleniumPort + ", "
-                + baseUrl + ", " + browser + "]" );
+            logger.info( "Starting Selenium session: [" + seleniumHost + ", " + seleniumPort + ", " + baseUrl + ", "
+                + browser + "]" );
             getSession().start( seleniumHost, Integer.parseInt( seleniumPort ), browser, baseUrl );
             SELENIUM_SESSIONS.add( getSession() );
-            System.out.println( "Started Selenium session: " + getSession().configurationString() );
+            logger.info( "Started Selenium session: {}", getSession().configurationString() );
         }
         super.onTestStart( result );
     }
@@ -78,12 +82,12 @@ public class SeleniumListener
                 if ( session.isStarted() )
                 {
                     session.stop();
+                    SELENIUM_SESSIONS.remove( session );
                 }
             }
             catch ( RuntimeException e )
             {
-                System.err.println( "Error stoping selenium server: " + session.configurationString() );
-                e.printStackTrace();
+                logger.error( "Error stoping selenium server: " + session.configurationString(), e );
             }
         }
         super.onFinish( testContext );
@@ -106,7 +110,7 @@ public class SeleniumListener
         {
             getSession().stop();
         }
-        System.out.println( "Test " + tr.getName() + " " + getSession().configurationString() + " -> Failed" );
+        logger.error( "Test {} -> Failed", tr.getName(), getSession().configurationString() );
         super.onTestFailure( tr );
     }
 

@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
@@ -35,6 +37,8 @@ public class CaptureScreenShotsListener
     extends TestListenerAdapter
 {
     private static final String FS = File.separator;
+
+    private final Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     @Override
     public void onTestFailure( ITestResult tr )
@@ -55,9 +59,8 @@ public class CaptureScreenShotsListener
             /* ignore errors related to captureEntirePageScreenshot not implemented in some browsers */
             if ( !e.getMessage().contains( "captureEntirePageScreenshot is only implemented for Firefox" ) )
             {
-                System.out.println( "Error when taking screenshot for test " + tr.getName() + " ["
-                    + getSession().getBrowser() + "]" );
-                e.printStackTrace();
+                logger.error( "Error when taking screenshot for test " + tr.getName() + " ["
+                    + getSession().getBrowser() + "]", e );
             }
         }
         try
@@ -66,9 +69,7 @@ public class CaptureScreenShotsListener
         }
         catch ( IOException e )
         {
-            System.out.println( "Error capturing HTML for test " + tr.getName() + " [" + getSession().getBrowser()
-                + "]" );
-            e.printStackTrace();
+            logger.error( "Error capturing HTML for test " + tr.getName() + " [" + getSession().getBrowser() + "]", e );
         }
     }
 
