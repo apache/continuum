@@ -102,8 +102,16 @@ public class CaptureScreenShotsListener
      */
     private void captureScreenshot( String baseFileName )
     {
-        getSession().getSelenium().windowMaximize();
-        getSession().getSelenium().captureEntirePageScreenshot( baseFileName + ".png", "" );
+        if ( getSession().isStarted() )
+        {
+            getSession().getSelenium().windowMaximize();
+            getSession().getSelenium().captureEntirePageScreenshot( baseFileName + ".png", "" );
+        }
+        else
+        {
+            /* the test failed before the session was started */
+            logger.warn( "Unable to take screenshot, seelenium session is not started" );
+        }
     }
 
     private void captureHtmlSource( String baseFileName )
