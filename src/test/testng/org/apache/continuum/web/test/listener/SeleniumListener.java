@@ -24,8 +24,10 @@ import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.get
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 
 import org.apache.continuum.web.test.parent.SeleniumSession;
+import org.apache.continuum.web.test.selenium.SeleniumTestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -71,25 +73,54 @@ public class SeleniumListener
         super.onTestStart( result );
     }
 
+    private void ensureStopAllSessionsOnExit()
+    {
+        Runtime.getRuntime().addShutdownHook( new Thread()
+        {
+            public void run()
+            {
+                stopAllSessions();
+            }
+        } );
+    }
+
+    private void stopAllSessions()
+    {
+        /* ensure all browsers are stopped */
+        synchronized ( SELENIUM_SESSIONS )
+        {
+            for ( Iterator<SeleniumSession> it = SELENIUM_SESSIONS.iterator(); it.hasNext(); )
+            {
+                SeleniumSession session = it.next();
+
+                try
+                {
+                    if ( session.isStarted() )
+                    {
+                        logger.info( "Stoping selenium session {}", session.configurationString() );
+                        session.stop();
+                        it.remove();
+                    }
+                }
+                catch ( RuntimeException e )
+                {
+                    logger.error( "Error stoping selenium server: " + session.configurationString(), e );
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onStart( ITestContext testContext )
+    {
+        ensureStopAllSessionsOnExit();
+        super.onStart( testContext );
+    }
+
     @Override
     public void onFinish( ITestContext testContext )
     {
-        /* ensure all browsers are killed */
-        for ( SeleniumSession session : SELENIUM_SESSIONS )
-        {
-            try
-            {
-                if ( session.isStarted() )
-                {
-                    session.stop();
-                    SELENIUM_SESSIONS.remove( session );
-                }
-            }
-            catch ( RuntimeException e )
-            {
-                logger.error( "Error stoping selenium server: " + session.configurationString(), e );
-            }
-        }
+        stopAllSessions();
         super.onFinish( testContext );
     }
 
@@ -110,7 +141,9 @@ public class SeleniumListener
         {
             getSession().stop();
         }
-        logger.error( "Test {} -> Failed", tr.getName(), getSession().configurationString() );
+        logger.error( "Test {} {} -> Failed", tr.getName(), getSession().configurationString() );
+        SeleniumTestException e = new SeleniumTestException( getSession(), tr.getThrowable() );
+        tr.setThrowable( e );
         super.onTestFailure( tr );
     }
 
