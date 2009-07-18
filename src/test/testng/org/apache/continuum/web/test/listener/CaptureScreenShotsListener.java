@@ -49,6 +49,13 @@ public class CaptureScreenShotsListener
 
     private void captureError( ITestResult tr )
     {
+        if ( !getSession().isStarted() )
+        {
+            /* the test failed before the session was started */
+            logger.warn( "Unable to take screenshot, selenium session is not started" );
+            return;
+        }
+
         String baseFileName = getBaseFileName( tr );
         try
         {
@@ -102,16 +109,8 @@ public class CaptureScreenShotsListener
      */
     private void captureScreenshot( String baseFileName )
     {
-        if ( getSession().isStarted() )
-        {
-            getSession().getSelenium().windowMaximize();
-            getSession().getSelenium().captureEntirePageScreenshot( baseFileName + ".png", "" );
-        }
-        else
-        {
-            /* the test failed before the session was started */
-            logger.warn( "Unable to take screenshot, seelenium session is not started" );
-        }
+        getSession().getSelenium().windowMaximize();
+        getSession().getSelenium().captureEntirePageScreenshot( baseFileName + ".png", "" );
     }
 
     private void captureHtmlSource( String baseFileName )
