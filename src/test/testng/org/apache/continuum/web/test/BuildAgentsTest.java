@@ -83,7 +83,7 @@ public class BuildAgentsTest
     {
 	    enableDistributedBuilds();
         goToBuildAgentPage();
-        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
+        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" + getTestId() );
         removeBuildAgent( BUILD_AGENT_NAME3 );
         assertTextNotPresent( BUILD_AGENT_NAME3 );
         disableDistributedBuilds();
@@ -110,7 +110,7 @@ public class BuildAgentsTest
     	String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
     	enableDistributedBuilds();
     	goToAddBuildAgentGroup();
-		addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { "Agent_url_name", "Second_Agent" }, new String[] {}, true );
+		addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { getProperty( "BUILD_AGENT_NAME" ) + getTestId(), getProperty( "BUILD_AGENT_NAME2" ) + getTestId() }, new String[] {}, true );
 		disableDistributedBuilds();
 	}
 
@@ -121,11 +121,11 @@ public class BuildAgentsTest
     	String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
         String newName = "new_agentgroupname";
         enableDistributedBuilds();
-        goToEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { "Agent_url_name", "Second_Agent" } );
+        goToEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { getProperty( "BUILD_AGENT_NAME" ) + getTestId(), getProperty( "BUILD_AGENT_NAME2" ) + getTestId() } );
         addEditBuildAgentGroup( newName, new String[] {},
-                         new String[] { "Second_Agent" }, true );
-        goToEditBuildAgentGroup( newName, new String[] { "Agent_url_name" } );
-        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { "Second_Agent" },
+                         new String[] { getProperty( "BUILD_AGENT_NAME2" ) + getTestId() }, true );
+        goToEditBuildAgentGroup( newName, new String[] { getProperty( "BUILD_AGENT_NAME" ) + getTestId() } );
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { getProperty( "BUILD_AGENT_NAME2" ) + getTestId() },
                          new String[] {}, true );
         disableDistributedBuilds();
     }
@@ -138,7 +138,7 @@ public class BuildAgentsTest
 
         enableDistributedBuilds();
     	goToAddBuildAgentGroup();
-	   	addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { "Agent_url_name", "Second_Agent" }, new String[] {}, false );
+	   	addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { getProperty( "BUILD_AGENT_NAME" ) + getTestId(), getProperty( "BUILD_AGENT_NAME2" ) + getTestId() }, new String[] {}, false );
 	   	assertTextPresent( "Build agent group already exists." );
 	   	disableDistributedBuilds();
     }

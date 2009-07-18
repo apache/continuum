@@ -147,7 +147,7 @@ public abstract class AbstractBuildAgentsTest
 		goToBuildAgentPage();
 		clickAndWait("editBuildAgentGroup_0"); //add button
         String[] options =
-            new String[] { "--- Available Build Agents ---", "Agent_url_name", "Second_Agent" };
+            new String[] { "--- Available Build Agents ---", getProperty( "BUILD_AGENT_NAME" ) + getTestId(), getProperty( "BUILD_AGENT_NAME2" ) + getTestId() };
         assertAddEditBuildAgentGroupPage( options, null );
     }
 
