@@ -1,0 +1,46 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="4" skipfailedinvocationCounts="false" verbose="3" name="Failed suite [ContinuumTest]" junit="false" parallel="methods" annotations="JDK">
+  <test name="AdminTest(failed)" junit="false" parallel="methods" annotations="JDK">
+    <groups>
+      <run>
+        <include name="about"/>
+        <include name="login"/>
+        <include name="mavenTwoProject"/>
+        <include name="projectGroup"/>
+        <include name="mavenOneProject"/>
+        <include name="antProject"/>
+        <include name="shellProject"/>
+        <include name="buildDefinition"/>
+        <include name="notifier"/>
+        <include name="schedule"/>
+        <include name="myAccount"/>
+        <include name="queue"/>
+        <include name="purge"/>
+        <include name="repository"/>
+        <include name="configuration"/>
+        <include name="installation"/>
+        <include name="buildEnvironment"/>
+        <include name="buildDefinitionTemplate"/>
+        <include name="userroles"/>
+        <include name="agent"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="org.apache.continuum.web.test.BuildDefinitionTemplateTest">
+        <methods>
+          <include name="testAddBuildDefinitionTemplate"/>
+          <include name="testDeleteBuildDefinitionTemplate"/>
+          <include name="testEditBuildDefinitionTemplate"/>
+        </methods>
+      </class>
+      <class name="org.apache.continuum.web.test.BuildAgentsTest">
+        <methods>
+          <include name="testDeleteBuildAgent"/>
+          <include name="testEditBuildAgent"/>
+          <include name="testAddAnExistingBuildAgent"/>
+          <include name="testAddBuildAgent"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

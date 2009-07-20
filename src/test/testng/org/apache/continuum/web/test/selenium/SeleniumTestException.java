@@ -19,7 +19,6 @@ package org.apache.continuum.web.test.selenium;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.SeleniumSession;
 
 /**
  * Exception to encapsulate exceptions in a Selenium Grid environment

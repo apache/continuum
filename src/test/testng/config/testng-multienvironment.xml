@@ -21,7 +21,7 @@ under the License.
 
 <suite name="ContinuumTestMultiEnvironment" verbose="1" parallel="tests" thread-count="2">
     <listeners>
-        <listener class-name="org.apache.continuum.web.test.listener.CaptureScreenShotsListener"/>
+        <listener class-name="org.apache.continuum.web.test.selenium.CaptureScreenShotsListener"/>
     </listeners>
     <test name="firefox35Windows">
         <parameter name="browser" value="Firefox 3.5 on Windows"/>

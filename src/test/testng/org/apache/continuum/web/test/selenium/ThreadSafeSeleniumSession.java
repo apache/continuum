@@ -1,4 +1,5 @@
-package org.apache.continuum.web.test.parent;
+package org.apache.continuum.web.test.selenium;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

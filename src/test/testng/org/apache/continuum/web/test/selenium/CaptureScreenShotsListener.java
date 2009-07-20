@@ -1,4 +1,4 @@
-package org.apache.continuum.web.test.listener;
+package org.apache.continuum.web.test.selenium;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,7 @@ package org.apache.continuum.web.test.listener;
  * under the License.
  */
 
-import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getSession;
+import static org.apache.continuum.web.test.selenium.ThreadSafeSeleniumSession.getSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +33,9 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
+/**
+ * TestNG listener that will capture a screenshot and the page content when tests fail.
+ */
 public class CaptureScreenShotsListener
     extends TestListenerAdapter
 {

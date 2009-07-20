@@ -1,0 +1,1032 @@
+<html>
+<head>
+<title>TestNG:  AdminTest</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>AdminTest</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>69/1/109</td>
+</tr><tr>
+<td>Started on:</td><td>Mon Jul 20 10:42:05 PDT 2009</td>
+</tr>
+<tr><td>Total time:</td><td>397 seconds (397136 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td>myAccount about login mavenTwoProject configuration userroles buildEnvironment schedule buildDefinition installation purge buildDefinitionTemplate agent projectGroup antProject notifier queue shellProject repository mavenOneProject </td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-failed'>
+<tr><td colspan='3' align='center'><b>FAILED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td width="30%"><b>Exception</b></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testDeleteBuildAgent()'>testDeleteBuildAgent</td>
+<td>1</td>
+<td><div><pre>org.apache.continuum.web.test.selenium.SeleniumTestException: Selenium exception [localhost, 4444, http://localhost:8090/continuum/, Firefox 3 on Linux]
+	at org.apache.continuum.web.test.listener.SeleniumListener.onTestFailure(SeleniumListener.java:145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:651)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:676)
+	at java.lang.Thread.run(Thread.java:613)
+Caused by: java.lang.AssertionError: 'xpath=(//a[contains(@href,'deleteBuildAgent.action') and contains(@href, 'null')])//img' isn't present. expected:&lt;true&gt; but was:&lt;false&gt;
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.assertElementPresent(AbstractSeleniumTest.java:169)
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.clickLinkWithLocator(AbstractSeleniumTest.java:351)
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.clickLinkWithXPath(AbstractSeleniumTest.java:341)
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.clickLinkWithXPath(AbstractSeleniumTest.java:336)
+	at org.apache.continuum.web.test.parent.AbstractBuildAgentsTest.removeBuildAgent(AbstractBuildAgentsTest.java:95)
+	at org.apache.continuum.web.test.BuildAgentsTest.testDeleteBuildAgent(BuildAgentsTest.java:87)
+	... 6 more
+... Removed 18 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace7414930", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace7414930'><pre>org.apache.continuum.web.test.selenium.SeleniumTestException: Selenium exception [localhost, 4444, http://localhost:8090/continuum/, Firefox 3 on Linux]
+	at org.apache.continuum.web.test.listener.SeleniumListener.onTestFailure(SeleniumListener.java:145)
+	at org.testng.internal.Invoker.runTestListeners(Invoker.java:1446)
+	at org.testng.internal.Invoker.runTestListeners(Invoker.java:1430)
+	at org.testng.internal.Invoker.handleInvocationResults(Invoker.java:1165)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:898)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.internal.thread.ThreadUtil$CountDownLatchedRunnable.run(ThreadUtil.java:132)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:651)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:676)
+	at java.lang.Thread.run(Thread.java:613)
+Caused by: java.lang.AssertionError: 'xpath=(//a[contains(@href,'deleteBuildAgent.action') and contains(@href, 'null')])//img' isn't present. expected:&lt;true&gt; but was:&lt;false&gt;
+	at org.testng.Assert.fail(Assert.java:84)
+	at org.testng.Assert.failNotEquals(Assert.java:438)
+	at org.testng.Assert.assertTrue(Assert.java:32)
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.assertElementPresent(AbstractSeleniumTest.java:169)
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.clickLinkWithLocator(AbstractSeleniumTest.java:351)
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.clickLinkWithXPath(AbstractSeleniumTest.java:341)
+	at org.apache.continuum.web.test.parent.AbstractSeleniumTest.clickLinkWithXPath(AbstractSeleniumTest.java:336)
+	at org.apache.continuum.web.test.parent.AbstractBuildAgentsTest.removeBuildAgent(AbstractBuildAgentsTest.java:95)
+	at org.apache.continuum.web.test.BuildAgentsTest.testDeleteBuildAgent(BuildAgentsTest.java:87)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:580)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:478)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:617)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:885)
+	... 6 more
+</pre></div></td>
+</tr>
+</table><p>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='3' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td width="30%"><b>Exception</b></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ConfigurationTest.defaultConfiguration()'>defaultConfiguration</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.AboutTest.displayAboutPage()'>displayAboutPage</td>
+<td>35</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ConfigurationTest.editConfiguration()'>editConfiguration</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ConfigurationTest.setInvalidConfiguration()'>setInvalidConfiguration</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ConfigurationTest.setZeroParallelBuilds()'>setZeroParallelBuilds</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testAddAlreadyExistBuildQueue()'>testAddAlreadyExistBuildQueue</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testAddAnExistingBuildAgent()'>testAddAnExistingBuildAgent</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testAddAnExistingBuildAgentGroup()'>testAddAnExistingBuildAgentGroup</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testAddBuildAgent()'>testAddBuildAgent</td>
+<td>7</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testAddBuildAgentGroup()'>testAddBuildAgentGroup</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testAddBuildDefinitionTemplate()'>testAddBuildDefinitionTemplate</td>
+<td>43</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildEnvironmentTest.testAddBuildEnvironment()'>testAddBuildEnvironment</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testAddBuildQueue()'>testAddBuildQueue</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildEnvironmentTest.testAddDuplicatedBuildEnvironment()'>testAddDuplicatedBuildEnvironment</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LocalRepositoriesTest.testAddDuplicatedLocalRepository()'>testAddDuplicatedLocalRepository</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testAddEmptyBuildAgentGroupName()'>testAddEmptyBuildAgentGroupName</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testAddEmptyBuildQueue()'>testAddEmptyBuildQueue</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testAddInvalidBuildDefinitionTemplate()'>testAddInvalidBuildDefinitionTemplate</td>
+<td>43</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildEnvironmentTest.testAddInvalidBuildEnvironment()'>testAddInvalidBuildEnvironment</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testAddInvalidTemplate()'>testAddInvalidTemplate</td>
+<td>7</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LocalRepositoriesTest.testAddLocalRepository()'>testAddLocalRepository</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddMavenToolWithBuildEnvirotment()'>testAddMavenToolWithBuildEnvirotment</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testAddNotAllowedBuildQueue()'>testAddNotAllowedBuildQueue</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testAddProjectGroupWithEmptyString()'>testAddProjectGroupWithEmptyString</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testAddTemplate()'>testAddTemplate</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testBasicAddDeleteUser()'>testBasicAddDeleteUser</td>
+<td>7</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testDefaultGroupBuildDefinition()'>testDefaultGroupBuildDefinition</td>
+<td>14</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testDeleteBuildAgentGroup()'>testDeleteBuildAgentGroup</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testDeleteBuildDefinitionTemplate()'>testDeleteBuildDefinitionTemplate</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildEnvironmentTest.testDeleteBuildEnvironment()'>testDeleteBuildEnvironment</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LocalRepositoriesTest.testDeleteLocalRepository()'>testDeleteLocalRepository</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testDeleteTemplate()'>testDeleteTemplate</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testEditBuildAgent()'>testEditBuildAgent</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testEditBuildAgentGroup()'>testEditBuildAgentGroup</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testEditBuildDefinitionTemplate()'>testEditBuildDefinitionTemplate</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildEnvironmentTest.testEditBuildEnvironment()'>testEditBuildEnvironment</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildEnvironmentTest.testEditInvalidBuildEnvironment()'>testEditInvalidBuildEnvironment</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LocalRepositoriesTest.testEditLocalRepository()'>testEditLocalRepository</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTemplateTest.testEditTemplate()'>testEditTemplate</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testInaccessiblePomUrl()'>testInaccessiblePomUrl</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testMissingElementInPom()'>testMissingElementInPom</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testMissingScmElementPom()'>testMissingScmElementPom</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testNotAllowedProtocol()'>testNotAllowedProtocol</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testQueuePageWithoutBuild()'>testQueuePageWithoutBuild</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.AntProjectTest.testSubmitEmptyForm()'>testSubmitEmptyForm</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testUnparseableXmlContent()'>testUnparseableXmlContent</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumGroupProjectAdminRole()'>testUserWithContinuumGroupProjectAdminRole</td>
+<td>13</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumGroupProjectDeveloperRole()'>testUserWithContinuumGroupProjectDeveloperRole</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumGroupProjectUserRole()'>testUserWithContinuumGroupProjectUserRole</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumManageBuildEnvironmentRole()'>testUserWithContinuumManageBuildEnvironmentRole</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumManageBuildTemplatesRole()'>testUserWithContinuumManageBuildTemplatesRole</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumManageInstallationsRole()'>testUserWithContinuumManageInstallationsRole</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumManageLocalRepoRole()'>testUserWithContinuumManageLocalRepoRole</td>
+<td>13</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumManagePurgingRole()'>testUserWithContinuumManagePurgingRole</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumManageQueuesRole()'>testUserWithContinuumManageQueuesRole</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithContinuumManageSchedulingRole()'>testUserWithContinuumManageSchedulingRole</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithGuestRole()'>testUserWithGuestRole</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithProjectAdminDefaultProjectGroup()'>testUserWithProjectAdminDefaultProjectGroup</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithProjectDevDefaultProjectGroup()'>testUserWithProjectDevDefaultProjectGroup</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithProjectUserDefaultProjectGroup()'>testUserWithProjectUserDefaultProjectGroup</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithRegisteredUserRole()'>testUserWithRegisteredUserRole</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithSystemAdminRole()'>testUserWithSystemAdminRole</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.UserRolesManagementTest.testUserWithUserAdminRole()'>testUserWithUserAdminRole</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LoginTest.testWithBadPassword()'>testWithBadPassword</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LoginTest.testWithBadUsername()'>testWithBadUsername</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LoginTest.testWithCorrectUsernamePassword()'>testWithCorrectUsernamePassword</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LoginTest.testWithEmptyPassword()'>testWithEmptyPassword</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LoginTest.testWithEmptyUsername()'>testWithEmptyUsername</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testWithExtendElementPom()'>testWithExtendElementPom</td>
+<td>6</td>
+<td></td>
+</tr>
+</table><p>
+<table width='100%' border='1' class='invocation-skipped'>
+<tr><td colspan='3' align='center'><b>SKIPPED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td width="30%"><b>Exception</b></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.AntProjectTest.testAddAntProject()'>testAddAntProject</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testAddBuildQueueToSchedule()'>testAddBuildQueueToSchedule</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testAddDefautltGroupBuildDefinition()'>testAddDefautltGroupBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testAddDirectoryPurge()'>testAddDirectoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddDuplicatedInstallationTool()'>testAddDuplicatedInstallationTool</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddDuplicatedInstallationVariable()'>testAddDuplicatedInstallationVariable</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ScheduleTest.testAddDuplicatedSchedule()'>testAddDuplicatedSchedule</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.AntProjectTest.testAddDupliedAntProject()'>testAddDupliedAntProject</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ShellProjectTest.testAddDupliedShellProject()'>testAddDupliedShellProject</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildAgentsTest.testAddEmptyBuildAgent()'>testAddEmptyBuildAgent</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddInstallationVariableWithBuildEnvirotment()'>testAddInstallationVariableWithBuildEnvirotment</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddInstallationVariableWithoutBuildEnvirotment()'>testAddInstallationVariableWithoutBuildEnvirotment</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testAddInvalidDirectoryPurge()'>testAddInvalidDirectoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testAddInvalidGroupBuildDefinition()'>testAddInvalidGroupBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddInvalidInstallationTool()'>testAddInvalidInstallationTool</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddInvalidInstallationVariable()'>testAddInvalidInstallationVariable</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidIrcGroupNotifier()'>testAddInvalidIrcGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidIrcProjectNotifier()'>testAddInvalidIrcProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidJabberGroupNotifier()'>testAddInvalidJabberGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidJabberProjectNotifier()'>testAddInvalidJabberProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.LocalRepositoriesTest.testAddInvalidLocalRepository()'>testAddInvalidLocalRepository</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidMailGroupNotifier()'>testAddInvalidMailGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidMailProjectNotifier()'>testAddInvalidMailProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidMsnGroupNotifier()'>testAddInvalidMsnGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidMsnProjectNotifier()'>testAddInvalidMsnProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddInvalidPathInstallationTool()'>testAddInvalidPathInstallationTool</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testAddInvalidRepositoryPurge()'>testAddInvalidRepositoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ScheduleTest.testAddInvalidSchedule()'>testAddInvalidSchedule</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddInvalidVarNameInstallationVariable()'>testAddInvalidVarNameInstallationVariable</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidWagonGroupNotifier()'>testAddInvalidWagonGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddInvalidWagonProjectNotifier()'>testAddInvalidWagonProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testAddJdkToolWithoutBuildEnvirotment()'>testAddJdkToolWithoutBuildEnvirotment</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testAddMavenOneProjectFromRemoteSourceToNonDefaultProjectGroup()'>testAddMavenOneProjectFromRemoteSourceToNonDefaultProjectGroup</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testAddMavenTwoProject()'>testAddMavenTwoProject</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup()'>testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testAddNotDefautltGroupBuildDefinition()'>testAddNotDefautltGroupBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testAddNotDefautltProjectBuildDefinition()'>testAddNotDefautltProjectBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testAddProjectGroup()'>testAddProjectGroup</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testAddProjectGroup2()'>testAddProjectGroup2</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testAddProjectGroupWithWhitespaceString()'>testAddProjectGroupWithWhitespaceString</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testAddRepositoryPurge()'>testAddRepositoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ScheduleTest.testAddSchedule()'>testAddSchedule</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ScheduleTest.testAddScheduleNoBuildQueueToBeUsed()'>testAddScheduleNoBuildQueueToBeUsed</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ShellProjectTest.testAddShellProject()'>testAddShellProject</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidIrcGroupNotifier()'>testAddValidIrcGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidIrcProjectNotifier()'>testAddValidIrcProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidJabberGroupNotifier()'>testAddValidJabberGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidJabberProjectNotifier()'>testAddValidJabberProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidMailGroupNotifier()'>testAddValidMailGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidMailProjectNotifier()'>testAddValidMailProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidMsnGroupNotifier()'>testAddValidMsnGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidMsnProjectNotifier()'>testAddValidMsnProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidWagonGroupNotifier()'>testAddValidWagonGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testAddValidWagonProjectNotifier()'>testAddValidWagonProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testBuildFromGroupBuildDefinition()'>testBuildFromGroupBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testCancelButton()'>testCancelButton</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testCancelButton()'>testCancelButton</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testDeleteBuildQueue()'>testDeleteBuildQueue</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testDeleteDirectoryPurge()'>testDeleteDirectoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testDeleteGroupBuildDefinition()'>testDeleteGroupBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testDeleteGroupNotifier()'>testDeleteGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testDeleteInstallationTool()'>testDeleteInstallationTool</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testDeleteInstallationVariable()'>testDeleteInstallationVariable</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testDeleteProjectBuildDefinition()'>testDeleteProjectBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testDeleteProjectNotifier()'>testDeleteProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testDeleteRepositoryPurge()'>testDeleteRepositoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ScheduleTest.testDeleteSchedule()'>testDeleteSchedule</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testEditDirectoryPurge()'>testEditDirectoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.BuildDefinitionTest.testEditGroupBuildDefinition()'>testEditGroupBuildDefinition</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testEditInstallationTool()'>testEditInstallationTool</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.InstallationTest.testEditInstallationVariable()'>testEditInstallationVariable</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidIrcGroupNotifier()'>testEditInvalidIrcGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidIrcProjectNotifier()'>testEditInvalidIrcProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidJabberGroupNotifier()'>testEditInvalidJabberGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidJabberProjectNotifier()'>testEditInvalidJabberProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidMailGroupNotifier()'>testEditInvalidMailGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidMailProjectNotifier()'>testEditInvalidMailProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidMsnGroupNotifier()'>testEditInvalidMsnGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidMsnProjectNotifier()'>testEditInvalidMsnProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidWagonGroupNotifier()'>testEditInvalidWagonGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditInvalidWagonProjectNotifier()'>testEditInvalidWagonProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testEditProjectGroupWithInvalidValues()'>testEditProjectGroupWithInvalidValues</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testEditProjectGroupWithValidValues()'>testEditProjectGroupWithValidValues</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.PurgeTest.testEditRepositoryPurge()'>testEditRepositoryPurge</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ScheduleTest.testEditSchedule()'>testEditSchedule</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidIrcGroupNotifier()'>testEditValidIrcGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidIrcProjectNotifier()'>testEditValidIrcProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidJabberGroupNotifier()'>testEditValidJabberGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidJabberProjectNotifier()'>testEditValidJabberProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidMailGroupNotifier()'>testEditValidMailGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidMailProjectNotifier()'>testEditValidMailProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidMsnGroupNotifier()'>testEditValidMsnGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidMsnProjectNotifier()'>testEditValidMsnProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidWagonGroupNotifier()'>testEditValidWagonGroupNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.NotifierTest.testEditValidWagonProjectNotifier()'>testEditValidWagonProjectNotifier</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testInaccessiblePomUrl()'>testInaccessiblePomUrl</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testMalformedPomUrl()'>testMalformedPomUrl</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testMalformedPomUrl()'>testMalformedPomUrl</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testMissingConnectionElement()'>testMissingConnectionElement</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testMissingModules()'>testMissingModules</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testMissingParentPom()'>testMissingParentPom</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testMoveProject()'>testMoveProject</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MyAccountTest.testMyAccountEdit()'>testMyAccountEdit</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenTwoProjectTest.testNoPomSpecified()'>testNoPomSpecified</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testNoPomSpecified()'>testNoPomSpecified</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ProjectGroupTest.testProjectGroupAllBuildSuccess()'>testProjectGroupAllBuildSuccess</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.QueueTest.testQueuePageWithProjectCurrentlyBuilding()'>testQueuePageWithProjectCurrentlyBuilding</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.ShellProjectTest.testSubmitEmptyForm()'>testSubmitEmptyForm</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='org.apache.continuum.web.test.MavenOneProjectTest.testValidPomUrl()'>testValidPomUrl</td>
+<td>0</td>
+<td></td>
+</tr>
+</table><p>
+</body>
+</html>

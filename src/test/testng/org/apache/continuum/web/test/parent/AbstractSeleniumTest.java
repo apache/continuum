@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.continuum.web.test.selenium.ThreadSafeSeleniumSession;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;

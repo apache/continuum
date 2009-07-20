@@ -1,4 +1,4 @@
-package org.apache.continuum.web.test.parent;
+package org.apache.continuum.web.test.selenium;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,6 +20,7 @@ package org.apache.continuum.web.test.parent;
  */
 
 import org.apache.continuum.web.test.SetupContinuum;
+import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;

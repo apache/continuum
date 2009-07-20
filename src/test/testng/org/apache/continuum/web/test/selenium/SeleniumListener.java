@@ -1,4 +1,4 @@
-package org.apache.continuum.web.test.listener;
+package org.apache.continuum.web.test.selenium;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,15 +19,13 @@ package org.apache.continuum.web.test.listener;
  * under the License.
  */
 
-import static org.apache.continuum.web.test.parent.ThreadSafeSeleniumSession.getSession;
+import static org.apache.continuum.web.test.selenium.ThreadSafeSeleniumSession.getSession;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.apache.continuum.web.test.parent.SeleniumSession;
-import org.apache.continuum.web.test.selenium.SeleniumTestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -36,7 +34,7 @@ import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
 /**
- * Configures Selenium before each test if needed.
+ * Configures Selenium before the tests if needed.
  * 
  * @author Carlos Sanchez <a href="mailto:carlos@apache.org">
  */
@@ -147,7 +145,7 @@ public class SeleniumListener
         super.onTestFailure( tr );
     }
 
-    private String getProperty( String name )
+    protected String getProperty( String name )
     {
         for ( ITestContext context : getTestContexts() )
         {
