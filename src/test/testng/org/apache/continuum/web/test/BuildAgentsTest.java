@@ -83,7 +83,7 @@ public class BuildAgentsTest
     {
 	    enableDistributedBuilds();
         goToBuildAgentPage();
-        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" + getTestId() );
+        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" ) + getTestId();
         removeBuildAgent( BUILD_AGENT_NAME3 );
         assertTextNotPresent( BUILD_AGENT_NAME3 );
         disableDistributedBuilds();
