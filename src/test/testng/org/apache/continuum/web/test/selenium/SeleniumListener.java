@@ -95,14 +95,22 @@ public class SeleniumListener
                 {
                     if ( session.isStarted() )
                     {
-                        logger.info( "Stoping selenium session {}", session.configurationString() );
+                        logger.info( "Stopping selenium session {}", session.configurationString() );
                         session.stop();
-                        it.remove();
                     }
                 }
                 catch ( RuntimeException e )
                 {
-                    logger.error( "Error stoping selenium server: " + session.configurationString(), e );
+                    /* ignore errors if session has been already stopped */
+                    if ( ( e.getMessage() != null )
+                        && !e.getMessage().startsWith( "ERROR: Selenium Driver error: session already stopped:" ) )
+                    {
+                        logger.error( "Error stopping selenium server: " + session.configurationString(), e );
+                    }
+                }
+                finally
+                {
+                    it.remove();
                 }
             }
         }
