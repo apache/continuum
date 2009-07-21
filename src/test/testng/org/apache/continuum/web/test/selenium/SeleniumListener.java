@@ -157,7 +157,7 @@ public class SeleniumListener
     {
         for ( ITestContext context : getTestContexts() )
         {
-            String p = context.getSuite().getParameter( "browser" );
+            String p = context.getSuite().getParameter( name );
             if ( p != null )
             {
                 return p;
