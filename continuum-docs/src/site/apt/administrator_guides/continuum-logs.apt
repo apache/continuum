@@ -1,0 +1,42 @@
+ ------
+ Continuum Logs
+ ------
+ Jevica Arianne B. Zurbano
+ ------
+ 23 Jul 2009
+ ------
+ 
+Continuum Logs
+
+  Continuum's <<<logs>>> directory contains an continuum log file named <<<continuum.log>>>,
+  which logs all the startup information of Continuum.
+
+  A typical record looks like this:
+
+------
+2009-07-22 11:57:48,397 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - Initializing Continuum.
+2009-07-22 11:57:48,397 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - Showing all groups:
+2009-07-22 11:57:48,912 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - Showing all projects: 
+2009-07-22 11:57:49,081 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - Starting Continuum.
+2009-07-22 11:57:49,082 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - 
+2009-07-22 11:57:49,082 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - 
+2009-07-22 11:57:49,083 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - < Continuum 1.3.2 started! >
+2009-07-22 11:57:49,083 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - ------------------------------------
+2009-07-22 11:57:49,083 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  -        \   ^__^
+2009-07-22 11:57:49,083 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  -         \  (oo)\_______
+2009-07-22 11:57:49,083 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  -            (__)\       )\/\
+2009-07-22 11:57:49,083 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  -                ||----w |
+2009-07-22 11:57:49,084 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  -                ||     ||
+2009-07-22 11:57:49,084 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - 
+2009-07-22 11:57:49,084 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.DefaultContinuum  - 
+2009-07-22 11:57:49,084 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.initialization.DefaultContinuumInitializer  -
+  Continuum initializer running ...
+2009-07-22 11:57:49,177 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.initialization.DefaultContinuumInitializer  -
+  Default Project Group exists
+2009-07-22 11:57:49,177 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.initialization.DefaultContinuumInitializer  -
+  Continuum initializer end running ...
+2009-07-22 11:57:49,186 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.build.settings.DefaultSchedulesActivator  -
+  Activating schedules ...
+2009-07-22 11:57:49,236 [WrapperSimpleAppMain] INFO  org.apache.maven.continuum.build.settings.DefaultSchedulesActivator  -
+  DEFAULT_SCHEDULE: next fire time ->Wed Jul 22 12:00:00 PHT 2009
+------

@@ -1,0 +1,42 @@
+ ------
+ Security Logs
+ ------
+ Jevica Arianne B. Zurbano
+ ------
+ 23 Jul 2009
+ ------
+ 
+Security Logs
+
+  Continuum's <<<logs>>> directory contains a security log file named <<<continuum-security-audit.log>>>,
+  which keeps track of all the security operations.
+  
+  A typical record looks like this:
+
+------
+2009-07-22 12:32:00 - admin - User Created: continuum
+2009-07-22 12:32:10 - admin - Role Assigned to user continuum: Continuum Group Project Administrator
+2009-07-22 12:32:17 - admin - User Modified: continuum
+2009-07-22 12:32:34 -  - Logged Out user admin
+2009-07-22 12:32:47 -  - Successful Login for user continuum
+------
+
+  The hyphen delimited records are:
+
+    * date and time (server local time)
+    
+    * current user performing the operation
+    
+    * the operation performed
+    
+    []
+    
+  Currently, the following events are logged:
+
+    * user creation/modification/deletion
+    
+    * user log in/out
+    
+    * assigning roles to a user
+    
+    []
