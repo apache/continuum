@@ -60,19 +60,4 @@ Welcome to Apache Continuum
    
    []
    
-* Log Files
 
-  To keep track of the Continuum performance and problems, log files are created during runtime.
-  These files can be found in the <<<logs/>>> directory.
-  
-  * <<continuum.log>> - contains all the start-up information for Continuum.
-  
-  * <<continuum-audit.log>> - contains information regarding the project operations and configurations being modified.
-                            For example, projects added are logged here, with date and timestamp,
-                            userId of who performed the deploy, and the project that was built.
-  
-  * <<continuum-security-audit.log>> - contains information regarding Continuum's security.
-                            For example, a successful login of a user or a user account is created.
-                            For security measure, passwords are masked behind asterisks.
-  
-  []
