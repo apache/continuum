@@ -390,10 +390,6 @@ under the License.
       <artifactId>maven-app-configuration-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.release</groupId>
-      <artifactId>maven-release-manager</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-builder</artifactId>
     </dependency>
