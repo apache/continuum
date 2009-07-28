@@ -129,7 +129,7 @@ public abstract class AbstractContinuumProjectBuilder
                 case 200:
                     break;
                 case 401:
-                    log.error( "Error adding project: Unauthorized " + metadata );
+                    log.error( "Error adding project: Unauthorized " + url );
                     result.addError( ContinuumProjectBuildingResult.ERROR_UNAUTHORIZED );
                     return null;
                 default:
