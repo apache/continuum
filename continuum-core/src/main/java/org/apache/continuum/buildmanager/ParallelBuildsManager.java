@@ -110,6 +110,11 @@ public class ParallelBuildsManager
                 log.warn( "Project already queued." );
                 return;
             }
+            else if ( isProjectInAnyCurrentBuild( projectId ) )
+            {
+                log.warn( "Project is already building." );
+                return;
+            }
         }
         catch ( TaskQueueException e )
         {
@@ -166,7 +171,7 @@ public class ParallelBuildsManager
         {
             try
             {
-                if ( !isInQueue( project.getId(), BUILD_QUEUE, -1 ) )
+                if ( !isInQueue( project.getId(), BUILD_QUEUE, -1 ) && !isProjectInAnyCurrentBuild( project.getId() ) )
                 {
                     firstProjectId = project.getId();
                     break;
@@ -199,6 +204,12 @@ public class ParallelBuildsManager
                         {
                             log.warn( "Project '" + project.getId() + "' - '" + project.getName() +
                                 "' is already in build queue." );
+                            continue;
+                        }
+                        else if ( isProjectInAnyCurrentBuild( project.getId() ) )
+                        {
+                            log.warn( "Project '" + project.getId() + "' - '" + project.getName() +
+                                      "' is already building." );
                             continue;
                         }
                     }
@@ -243,7 +254,6 @@ public class ParallelBuildsManager
         else
         {
             log.error( "Projects are already in build queue." );
-            throw new BuildManagerException( "Projects are already in build queue." );
         }
     }
 

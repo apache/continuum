@@ -187,6 +187,9 @@ public class ParallelBuildsManagerTest
                 exactly( 5 ).of( overallBuildQueue ).isInBuildQueue( with( any( int.class ) ) );
                 will( returnValue( false ) );
 
+                exactly( 5 ).of( buildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
+
                 one( projectDao ).getProjectsInGroup( with( any( int.class ) ) );
                 will( returnValue( projects ) );
 
@@ -196,7 +199,7 @@ public class ParallelBuildsManagerTest
                 exactly( 2 ).of( overallBuildQueue ).getBuildQueue();
                 will( returnValue( buildQueue ) );
 
-                exactly( 2 ).of( overallBuildQueue ).getBuildTaskQueueExecutor();
+                exactly( 7 ).of( overallBuildQueue ).getBuildTaskQueueExecutor();
                 will( returnValue( buildTaskQueueExecutor ) );
             }} );
     }
@@ -673,6 +676,9 @@ public class ParallelBuildsManagerTest
                 exactly( 4 ).of( overallBuildQueue ).isInBuildQueue( with( any( int.class ) ) );
                 will( returnValue( false ) );
 
+                exactly( 4 ).of( buildQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
+
                 one( projectDao ).getProjectsInGroup( with( any( int.class ) ) );
                 will( returnValue( projects ) );
 
@@ -682,7 +688,7 @@ public class ParallelBuildsManagerTest
                 exactly( 2 ).of( overallBuildQueue ).getBuildQueue();
                 will( returnValue( buildQueue ) );
 
-                exactly( 2 ).of( overallBuildQueue ).getBuildTaskQueueExecutor();
+                exactly( 6 ).of( overallBuildQueue ).getBuildTaskQueueExecutor();
                 will( returnValue( buildQueueExecutor ) );
                 
                 exactly( 2 ).of( buildQueue ).getQueueSnapshot();
@@ -804,6 +810,12 @@ public class ParallelBuildsManagerTest
             {
                 one( overallBuildQueue ).isInBuildQueue( with( any( int.class ) ) );
                 will( returnValue( false ) );
+
+                one( overallBuildQueue ).getBuildTaskQueueExecutor();
+                will( returnValue( buildTaskQueueExecutor ) );
+
+                one( buildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
 
                 one( projectDao ).getProjectsInGroup( with( any( int.class ) ) );
                 will( returnValue( projects ) );
