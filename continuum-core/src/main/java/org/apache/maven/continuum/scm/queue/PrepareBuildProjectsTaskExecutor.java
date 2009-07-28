@@ -532,27 +532,6 @@ public class PrepareBuildProjectsTaskExecutor
                     throw new TaskExecutionException( "Error while creating build object", e );
                 }
             }
-            else if ( project.getState() == ContinuumProjectState.CHECKEDOUT ||
-                project.getState() == ContinuumProjectState.NEW ) //check if no build result yet for project
-            {
-                try
-                {
-                    //get default build definition for project
-                    BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( project.getId() );
-                    projectsBuildDefinitionsMap.put( project.getId(), buildDefinition );
-                    projectsToBeBuilt.add( project );
-                }
-                catch ( ContinuumStoreException e )
-                {
-                    log.error( "Error while creating build object", e );
-                    throw new TaskExecutionException( "Error while creating build object", e );
-                }
-                catch ( Exception e )
-                {
-                    log.error( e.getMessage(), e );
-                    throw new TaskExecutionException( "Error executing action 'build-project'", e );
-                }
-            }
         }
 
         try
