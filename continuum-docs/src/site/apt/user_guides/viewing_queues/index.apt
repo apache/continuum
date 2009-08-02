@@ -12,6 +12,6 @@ Viewing Queues
 
 [../../images/queues.png] Queues
 
-	You can only view the current checkout, current build, checkout queues and build queues. 
+	You can only view the current checkout, current prepare build, current build, checkout queues, prepare build queues and build queues. 
  
 [../../images/queues-view.png] Queues View 
