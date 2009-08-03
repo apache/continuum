@@ -232,38 +232,40 @@ public abstract class AbstractContinuumProjectBuilder
     protected File createMetadataFile( ContinuumProjectBuildingResult result, URL metadata, String username,
                                        String password )
     {
+        String url = metadata.toExternalForm();
+
         try
         {
             return createMetadataFile( metadata, username, password, result );
         }
         catch ( FileNotFoundException e )
         {
-            log.info( "URL not found: " + metadata, e );
+            log.info( "URL not found: " + hidePasswordInUrl( url ), e );
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
         }
         catch ( MalformedURLException e )
         {
-            log.info( "Malformed URL: " + metadata, e );
+            log.info( "Malformed URL: " + hidePasswordInUrl( url ), e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
         catch ( URISyntaxException e )
         {
-            log.info( "Malformed URL: " + metadata, e );
+            log.info( "Malformed URL: " + hidePasswordInUrl( url ), e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
         catch ( UnknownHostException e )
         {
-            log.info( "Unknown host: " + metadata, e );
+            log.info( "Unknown host: " + hidePasswordInUrl( url ), e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN_HOST );
         }
         catch ( IOException e )
         {
-            log.warn( "Could not download the URL: " + metadata, e );
+            log.warn( "Could not download the URL: " + hidePasswordInUrl( url ), e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
         catch ( HttpException e )
         {
-            log.warn( "Could not download the URL: " + metadata, e );
+            log.warn( "Could not download the URL: " + hidePasswordInUrl( url ), e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
         return null;
