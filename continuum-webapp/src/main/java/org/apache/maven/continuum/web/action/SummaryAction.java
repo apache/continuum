@@ -112,7 +112,7 @@ public class SummaryAction
 
             try
             {
-                if ( parallelBuildsManager.isInAnyBuildQueue( project.getId() ) )
+                if ( parallelBuildsManager.isInAnyBuildQueue( project.getId() ) || parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) )
                 {
                     model.setInBuildingQueue( true );
                 }
