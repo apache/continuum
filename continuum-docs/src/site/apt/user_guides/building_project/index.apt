@@ -37,3 +37,10 @@ Building Projects
     [[1]] {{{schedule_build.html} Scheduled Builds}}
     
     [[2]] {{{forced_build.html} Forced Builds}}
+
+    []
+
+    Projects will have the <<in queue>> icon once the forced build or the scheduled build is triggered. This means that the project is either in the prepare build 
+    queue or in the build queue.
+
+[../../images/inqueue.gif]
