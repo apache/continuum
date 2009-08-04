@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -692,6 +694,7 @@ public class MailContinuumNotifier
 
             if ( StringUtils.isEmpty( toOverride ) )
             {
+                Set<String> listRecipents = new HashSet<String>();
                 for ( ProjectNotifier notifier : notifiers )
                 {
                     Map<String, String> conf = notifier.getConfiguration();
@@ -704,11 +707,15 @@ public class MailContinuumNotifier
                             String[] addresses = StringUtils.split( addressField, "," );
                             for ( String address : addresses )
                             {
-                                // TODO: set a proper name
-                                InternetAddress to = new InternetAddress( address.trim() );
+                                if (!listRecipents.contains(address.trim())) {
+                                    // [CONTINUUM-2281] Dont repeat addesss in recipents.
+                                    // TODO: set a proper name
+                                    InternetAddress to = new InternetAddress(address.trim());
 
-                                log.info( "Recipient: To '" + to + "'." );
-                                message.addRecipient( Message.RecipientType.TO, to );
+                                    log.info("Recipient: To '" + to + "'.");
+                                    message.addRecipient(Message.RecipientType.TO, to);
+                                    listRecipents.add(address.trim());
+                                }
                             }
 
                         }
@@ -737,7 +744,7 @@ public class MailContinuumNotifier
                                     for ( ChangeSet changeSet : changes )
                                     {
                                         String scmId = changeSet.getAuthor();
-                                        if ( StringUtils.isNotEmpty( scmId ) )
+                                        if (StringUtils.isNotEmpty(scmId))
                                         {
                                             String email = developerToEmailMap.get( scmId );
                                             if ( StringUtils.isEmpty( email ) )
@@ -747,13 +754,15 @@ public class MailContinuumNotifier
                                                     "no email address is defined in developers list for '" + scmId +
                                                         "' scm id." );
                                             }
-                                            else
-                                            {
+                                            else if (!listRecipents.contains(email.trim()))
+                                            {  
+                                                // [CONTINUUM-2281] Dont repeat addesss in recipents.)
                                                 // TODO: set a proper name
                                                 InternetAddress to = new InternetAddress( email.trim() );
                                                 log.info( "Recipient: To '" + to + "'." );
 
                                                 message.addRecipient( Message.RecipientType.TO, to );
+                                                listRecipents.add(email.trim());
                                             }
                                         }
                                     }
