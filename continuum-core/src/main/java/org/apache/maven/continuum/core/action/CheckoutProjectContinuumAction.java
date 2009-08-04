@@ -79,7 +79,7 @@ public class CheckoutProjectContinuumAction
 
     public void execute( Map context )
         throws ContinuumStoreException
-    {
+    {   
         Project project = projectDao.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
@@ -88,6 +88,8 @@ public class CheckoutProjectContinuumAction
         {
             buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinition.getId() );
         }
+
+        int originalState = project.getState();
 
         project.setState( ContinuumProjectState.CHECKING_OUT );
 
@@ -192,7 +194,14 @@ public class CheckoutProjectContinuumAction
 
             project = projectDao.getProject( project.getId() );
 
-            project.setState( ContinuumProjectState.CHECKEDOUT );
+            if ( originalState == ContinuumProjectState.NEW )
+            {
+                project.setState( ContinuumProjectState.CHECKEDOUT );
+            }
+            else
+            {
+                project.setState( originalState );
+            }
 
             projectDao.updateProject( project );
 
