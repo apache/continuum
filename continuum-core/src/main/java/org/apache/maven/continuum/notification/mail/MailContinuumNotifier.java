@@ -720,10 +720,32 @@ public class MailContinuumNotifier
 
                         }
 
-                        String committerField = (String) notifier.getConfiguration().get( COMMITTER_FIELD );
-                        if ( StringUtils.isNotEmpty( committerField ) && context.getBuildResult() != null )
+                        if (context.getBuildResult() != null)
                         {
-                            if ( Boolean.parseBoolean( committerField ) )
+                            String committerField = (String) notifier.getConfiguration().get(COMMITTER_FIELD);
+                            String developerField = (String) notifier.getConfiguration().get(DEVELOPER_FIELD);
+                            // Developers constains committers.
+                            if (StringUtils.isNotEmpty(developerField) && Boolean.parseBoolean(developerField))
+                            {
+                                List<ProjectDeveloper> developers = project.getDevelopers();
+                                if (developers == null || developers.isEmpty())
+                                {
+                                    log.warn("No developers have been configured...notifcation email will not be sent");
+                                    return;
+                                }
+                                Map<String, String> developerToEmailMap = mapDevelopersToRecipients(developers);
+                                for (String email : developerToEmailMap.values())
+                                {
+                                    if (!listRecipents.contains(email.trim()))
+                                    {
+                                        InternetAddress to = new InternetAddress(email.trim());
+                                        log.info("Recipient: To '" + to + "'.");
+                                        message.addRecipient(Message.RecipientType.TO, to);
+                                        listRecipents.add(email.trim());
+                                    }
+                                }
+                            } 
+                            else if (StringUtils.isNotEmpty(committerField) && Boolean.parseBoolean(committerField))
                             {
                                 ScmResult scmResult = context.getBuildResult().getScmResult();
                                 if ( scmResult != null && scmResult.getChanges() != null &&

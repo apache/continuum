@@ -62,6 +62,15 @@ public final class GenerateRecipentNotifier
                     }
                 }
             }
+            if (StringUtils.isNotEmpty(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD))) {
+                if (Boolean.parseBoolean(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD))) {
+                    if ("unknown".equals(recipent)) {
+                        recipent = "project developers";
+                    } else {
+                        recipent += ", " + "project developers";
+                    }
+                }
+            }
         }
         if ( "irc".equals( notifier.getType() ) )
         {
