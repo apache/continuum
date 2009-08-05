@@ -82,7 +82,7 @@ Understanding Distributed Builds
   
     * {{{build-agent-groups.html}Add}} your Build Agents to a Build Agent Group.
 
-    * {{{profiles.html} Add}} your Build Agent Group to Build Environment.
+    * {{{buildEnvironment.html} Add}} your Build Agent Group to Build Environment.
 
     <<WARNING>> Need to have a central remote repository to store the artifacts created from the build agent so that other agents will be able to use the new artifacts.
 
