@@ -749,7 +749,7 @@ public abstract class AbstractContinuumTest
         waitAddProject( title );
     }
 
-    private void waitAddProject(String title )
+    public void waitAddProject(String title )
         throws Exception
     {
 
