@@ -117,8 +117,11 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( BuildProjectTask task : queues )
                 {
-                    log.info( "remove project '" + task.getProjectName() + "' from build queue" );
-                    buildAgentBuildQueue.remove( task );
+                    if ( task != null )
+                    {
+                        log.info( "remove project '" + task.getProjectName() + "' from build queue" );
+                        buildAgentBuildQueue.remove( task );
+                    }
                 }
             }
             else
@@ -186,7 +189,7 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( BuildProjectTask task : queues )
                 {
-                    if ( task.getProjectId() == projectId )
+                    if ( task != null && task.getProjectId() == projectId )
                     {
                         log.info( "project already in build queue" );
                         return true;
@@ -217,8 +220,9 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( PrepareBuildProjectsTask task : queues )
                 {
-                	if ( task.getProjectGroupId() == projectGroupId && task.getBuildTrigger().getTrigger() == buildTrigger.getTrigger() &&
-                        task.getScmRootAddress().equals( scmRootAddress ) )
+                	if ( task != null && task.getProjectGroupId() == projectGroupId && 
+                             task.getBuildTrigger().getTrigger() == buildTrigger.getTrigger() &&
+                             task.getScmRootAddress().equals( scmRootAddress ) )
                     {
                         log.info( "projects already in build queue" );
                         return true;
@@ -300,7 +304,7 @@ public class DefaultBuildAgentTaskQueueManager
         {
             for ( PrepareBuildProjectsTask task : tasks )
             {
-                if ( task.getProjectGroupId() == projectGroupId && task.getScmRootId() == scmRootId )
+                if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootId() == scmRootId )
                 {
                     return getPrepareBuildQueue().remove( task );
                 }
@@ -319,7 +323,7 @@ public class DefaultBuildAgentTaskQueueManager
         {
             for ( PrepareBuildProjectsTask task : tasks )
             {
-                if ( ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                if ( task != null && ArrayUtils.contains( hashCodes, task.getHashCode() ) )
                 {
                     getPrepareBuildQueue().remove( task );
                 }
@@ -336,7 +340,7 @@ public class DefaultBuildAgentTaskQueueManager
         {
             for ( BuildProjectTask task : tasks )
             {
-                if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                if ( task != null && task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
                 {
                     return getBuildQueue().remove( task );
                 }
@@ -355,7 +359,7 @@ public class DefaultBuildAgentTaskQueueManager
         {
             for ( BuildProjectTask task : tasks )
             {
-                if ( ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                if ( task != null && ArrayUtils.contains( hashCodes, task.getHashCode() ) )
                 {
                     getBuildQueue().remove( task );
                 }
