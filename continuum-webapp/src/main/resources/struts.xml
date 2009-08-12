@@ -321,7 +321,6 @@
     * project group actions
     -->
     <action name="projectGroupSummary" class="projectGroup" method="summary">
-      <interceptor-ref name="storeStack"/>
       <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/projectGroupSummary.jsp</result>
       <result name="to_summary_page" type="redirect-action">
