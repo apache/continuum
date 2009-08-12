@@ -357,6 +357,7 @@
     </action>
     
     <action name="releaseProjectGroup" class="projectGroup" method="release">
+      <interceptor-ref name="storeStack"/>
       <result name="input" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
