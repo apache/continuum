@@ -161,6 +161,7 @@
              allowing plexus-security to call out from its own set of actions
              into the application webapp, using global result names. -->
     <action name="redbackRedirect" class="redback-redirect" method="redirect">
+      <interceptor-ref name="retrieveStack"/>
       <result type="redirect-action">groupSummary</result>
     </action>
 
