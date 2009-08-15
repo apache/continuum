@@ -19,6 +19,8 @@ Mail Notification
       <notifier>
         <configuration>
           <address>email adress</address>
+          <committers>true<committers/>
+          <developers>true<developers/>
         </configuration>
       </notifier>
     </notifiers>
@@ -32,7 +34,8 @@ Mail Notification
   
 [../../images/notifier-mail-add.png] Add Email Notifier 
 
-  You must either provide a single email address, or select to notify the latest committers.
+  You must either provide a single email address, or select to notify the latest committers or project
+  developers.
 
 ~~ TODO:  Does notifying an email address in addition to the latest committers also work?
 
