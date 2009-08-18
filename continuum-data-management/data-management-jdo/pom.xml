@@ -73,6 +73,7 @@
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-commons</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>stax</groupId>

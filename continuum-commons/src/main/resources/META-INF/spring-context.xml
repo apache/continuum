@@ -29,13 +29,11 @@
   <context:annotation-config />
   <context:component-scan 
     base-package="org.apache.continuum.installation,org.apache.continuum.profile,
-                  org.apache.maven.continuum.configuration,org.apache.maven.continuum.utils,
-                  org.apache.continuum.utils.shell"/>
+                  org.apache.maven.continuum.configuration,org.apache.maven.continuum.utils"/>
 
   <bean id="configurationService" class="org.apache.maven.continuum.configuration.DefaultConfigurationService"
         init-method="initialize">
     <property name="applicationHome" value="data"/>
   </bean> 
-  <bean id="shellCommandHelper" class="org.apache.continuum.utils.shell.DefaultShellCommandHelper"/>
   <bean id="buildQueueService" class="org.apache.continuum.buildqueue.DefaultBuildQueueService"/>
 </beans>

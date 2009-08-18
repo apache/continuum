@@ -36,7 +36,7 @@ import org.slf4j.Logger;
  * Sort projects by dependencies.
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
+ * @version $Id: ProjectSorter.java 777411 2009-05-22 07:13:37Z ctan $
  */
 public class ProjectSorter
 {
@@ -46,7 +46,7 @@ public class ProjectSorter
     }
 
     /**
-     * Sort a list of projects, discarding duplicates.
+     * Sort a list of projects.
      * <ul>
      * <li>collect all the vertices for the projects that we want to build.</li>
      * <li>iterate through the deps of each project and if that dep is within
