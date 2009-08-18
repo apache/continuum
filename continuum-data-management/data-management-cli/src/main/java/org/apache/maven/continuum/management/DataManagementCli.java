@@ -40,6 +40,7 @@ import org.apache.maven.artifact.resolver.DebugResolutionListener;
 import org.apache.maven.artifact.resolver.ResolutionListener;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
+import org.apache.maven.continuum.management.util.PlexusFileSystemXmlApplicationContext;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Profile;
@@ -48,12 +49,12 @@ import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.wagon.repository.RepositoryPermissions;
-import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.spring.PlexusClassPathXmlApplicationContext;
+import org.codehaus.plexus.spring.PlexusContainerAdapter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
@@ -77,6 +78,14 @@ import java.util.Properties;
 public class DataManagementCli
 {
     private static final Logger LOGGER = Logger.getLogger( DataManagementCli.class );
+
+    private static final String JAR_FILE_PREFIX = "jar:file:";
+
+    private static final String FILE_PREFIX = "file:";
+
+    private static final String SPRING_CONTEXT_LOC = "!/**/META-INF/spring-context.xml";
+
+    private static final String PLEXUS_XML_LOC = "!/**/META-INF/plexus/components.xml";
 
     public static void main( String[] args )
         throws Exception
@@ -203,7 +212,12 @@ public class DataManagementCli
         DatabaseParams params = new DatabaseParams( databaseType.defaultParams );
         params.setUrl( jdbcUrl );
 
-        DefaultPlexusContainer container = new DefaultPlexusContainer();
+        PlexusClassPathXmlApplicationContext classPathApplicationContext = new PlexusClassPathXmlApplicationContext(
+            new String[]{"classpath*:/META-INF/spring-context.xml", "classpath*:/META-INF/plexus/components.xml",
+            		"classpath*:/META-INF/plexus/plexus.xml"} );
+
+        PlexusContainerAdapter container = new PlexusContainerAdapter();
+        container.setApplicationContext( classPathApplicationContext );
 
         initializeWagon( container, setting );
 
@@ -216,11 +230,13 @@ public class DataManagementCli
                                             applicationVersion, setting ) );
         artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion(), setting ) );
 
-        List<File> jars = new ArrayList<File>();
+        List<String> jars = new ArrayList<String>();
 
         // Little hack to make it work more nicely in the IDE
         List<String> exclusions = new ArrayList<String>();
         URLClassLoader cp = (URLClassLoader) DataManagementCli.class.getClassLoader();
+        List<URL> jarUrls = new ArrayList<URL>();
+
         for ( URL url : cp.getURLs() )
         {
             String urlEF = url.toExternalForm();
@@ -235,7 +251,8 @@ public class DataManagementCli
                 {
                     LOGGER.debug( "[IDE Help] Adding '" + id + "' as an exclusion and using one from classpath" );
                     exclusions.add( "org.apache.continuum:" + id );
-                    jars.add( new File( url.getPath() ) );
+                    jars.add( url.getPath() );
+                    jarUrls.add( url );
                 }
             }
 
@@ -243,9 +260,11 @@ public class DataManagementCli
             if ( urlEF.contains( "jpox-enhancer" ) )
             {
                 LOGGER.debug( "[IDE Help] Adding 'jpox-enhancer' as an exclusion and using one from classpath" );
-                jars.add( new File( url.getPath() ) );
+                jars.add( url.getPath() );
+                jarUrls.add( url );
             }
         }
+
         ArtifactFilter filter = new ExcludesArtifactFilter( exclusions );
 
         for ( Artifact a : artifacts )
@@ -255,29 +274,35 @@ public class DataManagementCli
                 if ( a.getVersion().equals( databaseFormat.getJpoxVersion() ) )
                 {
                     LOGGER.debug( "Adding artifact: " + a.getFile() );
-                    jars.add( a.getFile() );
+                    jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + SPRING_CONTEXT_LOC );
+                    jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + PLEXUS_XML_LOC );
+                    jarUrls.add( new URL( FILE_PREFIX + a.getFile().getAbsolutePath() ) );
                 }
             }
             else if ( filter.include( a ) )
             {
                 LOGGER.debug( "Adding artifact: " + a.getFile() );
-                jars.add( a.getFile() );
+                jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + SPRING_CONTEXT_LOC );
+                jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + PLEXUS_XML_LOC );
+                jarUrls.add( new URL( FILE_PREFIX + a.getFile().getAbsolutePath() ) );
             }
         }
 
-        ClassRealm realm = container.createComponentRealm( "app", jars );
+        URLClassLoader newClassLoader = new URLClassLoader( (URL[]) jarUrls.toArray( new URL[jarUrls.size()] ), cp );
+        Thread.currentThread().setContextClassLoader( newClassLoader );
+        classPathApplicationContext.setClassLoader( newClassLoader );
 
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader( realm );
+        PlexusFileSystemXmlApplicationContext fileSystemApplicationContext = new PlexusFileSystemXmlApplicationContext(
+             (String[]) jars.toArray( new String[jars.size()] ), classPathApplicationContext );
+        fileSystemApplicationContext.setClassLoader( newClassLoader );
+        container.setApplicationContext( fileSystemApplicationContext );
 
-        ClassRealm oldRealm = container.setLookupRealm( realm );
-
-        DatabaseFactoryConfigurator configurator = (DatabaseFactoryConfigurator) container.lookup(
-            DatabaseFactoryConfigurator.class.getName(), configRoleHint, realm );
+        DatabaseFactoryConfigurator configurator = (DatabaseFactoryConfigurator) container.lookup( 
+                                DatabaseFactoryConfigurator.class.getName(), configRoleHint );
         configurator.configure( params );
 
         DataManagementTool manager =
-            (DataManagementTool) container.lookup( DataManagementTool.class.getName(), toolRoleHint, realm );
+            (DataManagementTool) container.lookup( DataManagementTool.class.getName(), toolRoleHint );
 
         if ( mode == OperationMode.EXPORT )
         {
@@ -288,12 +313,9 @@ public class DataManagementCli
             manager.eraseDatabase();
             manager.restoreDatabase( directory, strict );
         }
-
-        container.setLookupRealm( oldRealm );
-        Thread.currentThread().setContextClassLoader( oldLoader );
     }
 
-    private static void initializeWagon( DefaultPlexusContainer container, File setting )
+    private static void initializeWagon( PlexusContainerAdapter container, File setting )
         throws ComponentLookupException, ComponentLifecycleException, IOException
     {
         WagonManager wagonManager = (WagonManager) container.lookup( WagonManager.ROLE );

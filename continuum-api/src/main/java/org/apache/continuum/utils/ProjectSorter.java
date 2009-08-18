@@ -36,7 +36,7 @@ import org.slf4j.Logger;
  * Sort projects by dependencies.
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
+ * @version $Id: ProjectSorter.java 777411 2009-05-22 07:13:37Z ctan $
  */
 public class ProjectSorter
 {
