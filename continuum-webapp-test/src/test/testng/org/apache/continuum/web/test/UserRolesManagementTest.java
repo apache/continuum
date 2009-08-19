@@ -32,17 +32,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );        
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
     }
 
     @Test( dependsOnMethods = { "testAddUserWithGuestRole" } )
@@ -79,9 +75,8 @@ public class UserRolesManagementTest
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
+
         clickLinkWithText( "Logout" );
         // assertTextPresent("You are already logged in.");
     }
@@ -123,10 +118,8 @@ public class UserRolesManagementTest
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
+	assertTextPresent( "Password successfully changed" );
 
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
         clickLinkWithText( "Logout" );
     }
 
@@ -166,10 +159,8 @@ public class UserRolesManagementTest
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
+	assertTextPresent( "Password successfully changed" );
 
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
         clickLinkWithText( "Logout" );
     }
     
@@ -221,17 +212,12 @@ public class UserRolesManagementTest
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
-
-        clickLinkWithText( "Logout" );
+	clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
     }
 
     @Test( dependsOnMethods = { "testAddUserWithContinuumGroupProjectAdminRole" } )
@@ -348,18 +334,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -376,18 +357,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -404,18 +380,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );	
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -432,18 +403,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -460,18 +426,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -488,18 +449,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -516,18 +472,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -544,18 +495,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -572,17 +518,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -599,18 +541,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -627,18 +564,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
-
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
@@ -655,17 +587,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
-		clickButtonWithValue( "Submit" );
+	clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-
-        // this section will be removed if issue from redback after changing password will be fixed.
-        getSelenium().goBack();
-        waitPage();
+	assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
-        // assertTextPresent("You are already logged in.");
 
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
