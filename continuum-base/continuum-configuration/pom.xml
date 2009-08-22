@@ -36,6 +36,7 @@ under the License.
             <model>src/main/mdo/continuum-configuration.xml</model>
           </models>
           <version>1.1.1</version>
+          <useJava5>true</useJava5>
         </configuration>
         <executions>
           <execution>

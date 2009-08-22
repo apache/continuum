@@ -16,149 +16,59 @@
           <execution>
             <id>modello-rbac</id>
             <goals>
-              <goal>jpox-metadata-class</goal>
               <goal>java</goal>
               <goal>stax-reader</goal>
               <goal>stax-writer</goal>
             </goals>
             <configuration>
-              <model>src/main/mdo/rbac-jdo.mdo</model>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jpox-jdo-mapping-rbac</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <model>src/main/mdo/rbac-jdo.mdo</model>
-              <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/security/authorization/rbac/jdo
-              </outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jpox-jdo-mapping-rbac-replication</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <model>src/main/mdo/rbac-jdo.mdo</model>
-              <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/security/authorization/rbac/jdo
-              </outputDirectory>
-              <replicationParameters>true</replicationParameters>
+              <models>
+                <model>src/main/mdo/rbac-jdo.mdo</model>
+              </models>
             </configuration>
           </execution>
           <execution>
             <id>modello-keys</id>
             <goals>
-              <goal>jpox-metadata-class</goal>
               <goal>java</goal>
               <goal>stax-reader</goal>
               <goal>stax-writer</goal>
             </goals>
             <configuration>
-              <model>src/main/mdo/keys-jdo.mdo</model>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jpox-jdo-mapping-keys</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <model>src/main/mdo/keys-jdo.mdo</model>
-              <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/security/keys/jdo
-              </outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jpox-jdo-mapping-keys-replication</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <model>src/main/mdo/keys-jdo.mdo</model>
-              <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/security/keys/jdo
-              </outputDirectory>
-              <replicationParameters>true</replicationParameters>
+              <models>
+                <model>src/main/mdo/keys-jdo.mdo</model>
+              </models>
             </configuration>
           </execution>
           <execution>
             <id>modello-users</id>
             <goals>
-              <goal>jpox-metadata-class</goal>
               <goal>java</goal>
               <goal>stax-reader</goal>
               <goal>stax-writer</goal>
             </goals>
             <configuration>
-              <model>src/main/mdo/users-jdo.mdo</model>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jpox-jdo-mapping-users</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <model>src/main/mdo/users-jdo.mdo</model>
-              <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/security/user/jdo
-              </outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jpox-jdo-mapping-users-replication</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <model>src/main/mdo/users-jdo.mdo</model>
-              <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/security/user/jdo
-              </outputDirectory>
-              <replicationParameters>true</replicationParameters>
+              <models>
+                <model>src/main/mdo/users-jdo.mdo</model>
+              </models>
             </configuration>
           </execution>
         </executions>
         <configuration>
           <version>0.9.0</version>
           <packageWithVersion>true</packageWithVersion>
+          <!--<useJava5>true</useJava5>-->
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>hack-sources</id>
-            <phase>generate-sources</phase>
+            <id>copy-resources</id>
+            <phase>process-resources</phase>
             <configuration>
               <tasks>
-                <!-- Workaround for MODELLO-89 -->
-                <replace file="target/generated-sources/modello/org/codehaus/plexus/security/keys/jdo/v0_9_0/PlexusSecurityKeyManagementJdoModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
-                <replace file="target/generated-sources/modello/org/codehaus/plexus/security/authorization/rbac/jdo/v0_9_0/RbacJdoModelModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
-                <replace file="target/generated-sources/modello/org/codehaus/plexus/security/user/jdo/v0_9_0/UserManagementModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>hack-resources</id>
-            <phase>process-classes</phase>
-            <configuration>
-              <tasks>
-                <!-- Workaround for MODELLO-91 -->
-                <replace dir="target/classes/org/codehaus/plexus/security/user/jdo" token="name=&quot;USER_PASSWORD&quot;" value="name=&quot;PASSWORD&quot;" />
-                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="SECURITY_" value="" />
-                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="name=&quot;RBAC_OPERATION&quot;" value="name=&quot;OPERATION&quot;" />
-                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="name=&quot;RBAC_RESOURCE&quot;" value="name=&quot;RESOURCE&quot;" />
-                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="name=&quot;LAST_UPDATED&quot;" value="name=&quot;TIMESTAMP&quot;" />
+                <copy file="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo/package.jdorepl" todir="target/classes"/>
+                <copy file="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo/package.jdo" todir="target/classes"/>
               </tasks>
             </configuration>
             <goals>

@@ -9,5 +9,4 @@
       <enabled>true</enabled>
     </buildAgent>
   </buildAgents>
-  <distributedBuildEnabled>true</distributedBuildEnabled>
 </continuum-configuration>

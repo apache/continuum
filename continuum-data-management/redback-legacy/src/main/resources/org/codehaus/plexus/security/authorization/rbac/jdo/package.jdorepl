@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE jdo PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 2.0//EN"
+  "http://java.sun.com/dtd/jdo_2_0.dtd">
+
+<jdo>
+  <package name="org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0">
+    <class name="RbacDatabase" detachable="true" table="RbacDatabase">
+      <field name="roles">
+        <collection element-type="JdoRole" dependent-element="true"/>
+        <join/>
+      </field>
+      <field name="permissions">
+        <collection element-type="JdoPermission" dependent-element="true"/>
+        <join/>
+      </field>
+      <field name="operations">
+        <collection element-type="JdoOperation" dependent-element="true"/>
+        <join/>
+      </field>
+      <field name="resources">
+        <collection element-type="JdoResource" dependent-element="true"/>
+        <join/>
+      </field>
+      <field name="userAssignments">
+        <collection element-type="JdoUserAssignment" dependent-element="true"/>
+        <join/>
+      </field>
+      <fetch-group name="RbacDatabase_detail">
+        <field name="roles"/>
+        <field name="permissions"/>
+        <field name="operations"/>
+        <field name="resources"/>
+        <field name="userAssignments"/>
+      </fetch-group>
+    </class>
+    <class name="JdoRole" detachable="true" table="ROLES" identity-type="application">
+      <field name="name" primary-key="true"/>
+      <field name="description"/>
+      <field name="assignable"/>
+      <field name="permanent"/>
+      <field name="childRoleNames" persistence-modifier="persistent" table="ROLE_CHILDROLE_MAP" default-fetch-group="true">
+        <collection element-type="java.lang.String" dependent-element="false"/>
+        <join/>
+      </field>
+      <field name="permissions" table="ROLE_PERMISSION_MAP" default-fetch-group="true">
+        <collection element-type="JdoPermission" dependent-element="false"/>
+        <join/>
+      </field>
+      <fetch-group name="role-child-detail">
+        <field name="childRoleNames"/>
+        <field name="permissions"/>
+      </fetch-group>
+    </class>
+    <class name="JdoPermission" detachable="true" table="PERMISSIONS" identity-type="application">
+      <field name="name" primary-key="true"/>
+      <field name="description"/>
+      <field name="permanent"/>
+      <field name="operation" indexed="true" default-fetch-group="true"/>
+      <field name="resource" indexed="true" default-fetch-group="true"/>
+    </class>
+    <class name="JdoOperation" detachable="true" table="OPERATIONS" identity-type="application">
+      <field name="name" primary-key="true"/>
+      <field name="description"/>
+      <field name="permanent"/>
+      <field name="resourceRequired"/>
+    </class>
+    <class name="JdoResource" detachable="true" table="RESOURCES" identity-type="application">
+      <field name="identifier" primary-key="true"/>
+      <field name="pattern"/>
+      <field name="permanent"/>
+    </class>
+    <class name="JdoUserAssignment" detachable="true" table="USER_ASSIGNMENTS" identity-type="application">
+      <field name="principal" primary-key="true"/>
+      <field name="timestamp">
+        <column name="TIMESTAMP"/>
+      </field>
+      <field name="permanent"/>
+      <field name="roleNames" persistence-modifier="persistent" table="USERASSIGNMENT_ROLENAMES" indexed="false" default-fetch-group="true">
+        <collection element-type="java.lang.String" dependent-element="true"/>
+        <join/>
+      </field>
+    </class>
+    <class name="RbacJdoModelModelloMetadata" detachable="true">
+      <field name="modelVersion" null-value="default">
+        <column default-value="0.9.0"/>
+      </field>
+    </class>
+  </package>
+</jdo>
