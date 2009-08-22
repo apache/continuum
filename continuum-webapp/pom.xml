@@ -178,7 +178,9 @@ under the License.
           <execution>
             <id>web summary model classes</id>
             <configuration>
-              <model>src/main/mdo/view-models.mdo</model>
+              <models>
+                <model>src/main/mdo/view-models.mdo</model>
+              </models>
               <version>1.0.0</version>
             </configuration>
             <goals>
@@ -188,7 +190,9 @@ under the License.
           <execution>
             <id>session model classes</id>
             <configuration>
-              <model>src/main/mdo/session-models.mdo</model>
+              <models>
+                <model>src/main/mdo/session-models.mdo</model>
+              </models>
               <version>1.0.0</version>
             </configuration>
             <goals>
@@ -198,7 +202,9 @@ under the License.
           <execution>
             <id>appearence model classes</id>
             <configuration>
-              <model>src/main/mdo/appearance-models.mdo</model>
+              <models>
+                <model>src/main/mdo/appearance-models.mdo</model>
+              </models>
               <version>1.0.0</version>
             </configuration>
             <goals>
@@ -206,8 +212,11 @@ under the License.
               <goal>xpp3-reader</goal>
               <goal>xpp3-writer</goal>
             </goals>
-          </execution>          
+          </execution>    
         </executions>
+        <configuration>
+          <useJava5>true</useJava5>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

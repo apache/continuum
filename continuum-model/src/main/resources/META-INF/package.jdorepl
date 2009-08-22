@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE jdo PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 2.0//EN"
+  "http://java.sun.com/dtd/jdo_2_0.dtd">
+
+<jdo>
+  <package name="org.apache.continuum.model.project">
+    <class name="ProjectScmRoot" detachable="true" table="ProjectScmRoot" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="scmRootAddress" null-value="exception"/>
+      <field name="oldState"/>
+      <field name="state">
+        <column name="scmRootState"/>
+      </field>
+      <field name="error">
+        <column length="8192"/>
+      </field>
+      <field name="projectGroup" null-value="exception" default-fetch-group="true"/>
+    </class>
+  </package>
+  <package name="org.apache.maven.continuum.model.project">
+    <class name="ProjectGroup" detachable="true" table="ProjectGroup" identity-type="application">
+      <field name="id" null-value="exception" primary-key="true"/>
+      <field name="groupId"/>
+      <field name="name"/>
+      <field name="description">
+        <column length="8192"/>
+      </field>
+      <field name="projects" mapped-by="projectGroup">
+        <collection element-type="Project" dependent-element="true"/>
+      </field>
+      <field name="notifiers">
+        <collection element-type="ProjectNotifier" dependent-element="true"/>
+        <join/>
+      </field>
+      <field name="buildDefinitions">
+        <collection element-type="BuildDefinition" dependent-element="true"/>
+        <join/>
+      </field>
+      <field name="localRepository" default-fetch-group="true"/>
+      <fetch-group name="ProjectGroup_detail">
+        <field name="projects"/>
+        <field name="notifiers"/>
+        <field name="buildDefinitions"/>
+      </fetch-group>
+      <fetch-group name="project-build-details">
+        <field name="projects"/>
+        <field name="notifiers"/>
+        <field name="buildDefinitions"/>
+      </fetch-group>
+      <fetch-group name="projectgroup-projects">
+        <field name="projects"/>
+      </fetch-group>
+      <fetch-group name="project-with-scm-result">
+        <field name="projects"/>
+      </fetch-group>
+    </class>
+    <class name="Project" detachable="true" table="Project" identity-type="application">
+      <field name="id" null-value="exception" primary-key="true"/>
+      <field name="groupId"/>
+      <field name="artifactId"/>
+      <field name="executorId"/>
+      <field name="name"/>
+      <field name="description">
+        <column length="8192"/>
+      </field>
+      <field name="url">
+        <column length="256"/>
+      </field>
+      <field name="scmUrl">
+        <column length="256"/>
+      </field>
+      <field name="scmTag"/>
+      <field name="scmUsername"/>
+      <field name="scmPassword"/>
+      <field name="scmUseCache"/>
+      <field name="version"/>
+      <field name="state">
+        <column name="projectstate"/>
+      </field>
+      <field name="oldState"/>
+      <field name="latestBuildId"/>
+      <field name="buildNumber"/>
+      <field name="workingDirectory">
+        <column length="256"/>
+      </field>
+      <field name="relativePath"/>
+      <field name="buildResults" mapped-by="project">
+        <collection element-type="BuildResult" dependent-element="true"/>
+      </field>
+      <field name="checkoutResult" dependent="true"/>
+      <field name="developers">
+        <collection element-type="ProjectDeveloper" dependent-element="true"/>
+      </field>
+      <field name="parent" dependent="true"/>
+      <field name="dependencies">
+        <collection element-type="ProjectDependency" dependent-element="true"/>
+      </field>
+      <field name="projectGroup" null-value="exception" default-fetch-group="true"/>
+      <field name="notifiers">
+        <collection element-type="ProjectNotifier" dependent-element="true"/>
+        <join/>
+      </field>
+      <field name="buildDefinitions">
+        <collection element-type="BuildDefinition" dependent-element="true"/>
+        <join/>
+      </field>
+      <fetch-group name="Project_detail">
+        <field name="buildResults"/>
+        <field name="checkoutResult"/>
+        <field name="developers"/>
+        <field name="parent"/>
+        <field name="dependencies"/>
+        <field name="notifiers"/>
+        <field name="buildDefinitions"/>
+      </fetch-group>
+      <fetch-group name="project-all-details">
+        <field name="developers"/>
+        <field name="parent"/>
+        <field name="dependencies"/>
+        <field name="notifiers"/>
+        <field name="buildDefinitions"/>
+      </fetch-group>
+      <fetch-group name="project-build-details">
+        <field name="notifiers"/>
+        <field name="buildDefinitions"/>
+      </fetch-group>
+      <fetch-group name="project-with-builds">
+        <field name="buildResults"/>
+      </fetch-group>
+      <fetch-group name="project-dependencies">
+        <field name="parent"/>
+        <field name="dependencies"/>
+      </fetch-group>
+      <fetch-group name="project-with-checkout-result">
+        <field name="checkoutResult"/>
+      </fetch-group>
+    </class>
+    <class name="ProjectNotifier" detachable="true" table="ProjectNotifier" identity-type="application">
+      <field name="id" null-value="exception" primary-key="true"/>
+      <field name="type">
+        <column name="notifiertype"/>
+      </field>
+      <field name="from">
+        <column name="notifierorigin"/>
+      </field>
+      <field name="enabled"/>
+      <field name="recipientType"/>
+      <field name="sendOnSuccess"/>
+      <field name="sendOnFailure"/>
+      <field name="sendOnError"/>
+      <field name="sendOnWarning"/>
+      <field name="configuration" default-fetch-group="true">
+        <map key-type="java.lang.String" value-type="java.lang.String" dependent-key="true" dependent-value="true"/>
+        <join/>
+      </field>
+      <field name="sendOnScmFailure"/>
+    </class>
+    <class name="ProjectDeveloper" detachable="true" table="ProjectDeveloper">
+      <field name="scmId"/>
+      <field name="name"/>
+      <field name="email"/>
+      <field name="continuumId"/>
+    </class>
+    <class name="ProjectDependency" detachable="true" table="ProjectDependency">
+      <field name="groupId"/>
+      <field name="artifactId"/>
+      <field name="version"/>
+    </class>
+    <class name="BuildResult" detachable="true" table="BuildResult" identity-type="application">
+      <field name="project" default-fetch-group="true"/>
+      <field name="buildDefinition" default-fetch-group="true"/>
+      <field name="id" primary-key="true"/>
+      <field name="buildNumber"/>
+      <field name="state">
+        <column name="resultstate"/>
+      </field>
+      <field name="trigger">
+        <column name="resulttrigger"/>
+      </field>
+      <field name="startTime"/>
+      <field name="endTime"/>
+      <field name="error">
+        <column length="8192"/>
+      </field>
+      <field name="success"/>
+      <field name="exitCode"/>
+      <field name="scmResult" dependent="true"/>
+      <field name="modifiedDependencies">
+        <collection element-type="ProjectDependency" dependent-element="true"/>
+      </field>
+      <field name="lastChangedDate" null-value="default">
+        <column default-value="0"/>
+      </field>
+      <field name="buildUrl" null-value="default">
+        <column default-value=""/>
+      </field>
+      <fetch-group name="BuildResult_detail">
+        <field name="scmResult"/>
+        <field name="modifiedDependencies"/>
+      </fetch-group>
+      <fetch-group name="build-result-with-details">
+        <field name="scmResult"/>
+        <field name="modifiedDependencies"/>
+      </fetch-group>
+    </class>
+    <class name="BuildDefinition" detachable="true" table="BuildDefinition" identity-type="application">
+      <field name="id" null-value="exception" primary-key="true"/>
+      <field name="defaultForProject"/>
+      <field name="goals"/>
+      <field name="arguments"/>
+      <field name="buildFile"/>
+      <field name="buildFresh"/>
+      <field name="description"/>
+      <field name="type">
+        <column name="builddefinition_type"/>
+      </field>
+      <field name="schedule" default-fetch-group="true"/>
+      <field name="profile" default-fetch-group="true"/>
+      <field name="alwaysBuild"/>
+      <field name="template">
+        <column name="is_template"/>
+      </field>
+    </class>
+    <class name="BuildDefinitionTemplate" detachable="true" table="BuildDefinitionTemplate" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="name" null-value="exception"/>
+      <field name="continuumDefault"/>
+      <field name="type">
+        <column name="builddefinition_template_type"/>
+      </field>
+      <field name="buildDefinitions" default-fetch-group="true">
+        <collection element-type="BuildDefinition" dependent-element="false"/>
+        <join/>
+      </field>
+      <fetch-group name="build-template-build-definitions">
+        <field name="buildDefinitions"/>
+      </fetch-group>
+    </class>
+    <class name="BuildQueue" detachable="true" table="BuildQueue" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="name" null-value="exception">
+        <column default-value=""/>
+      </field>
+    </class>
+    <class name="Schedule" detachable="true" table="Schedule" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="active"/>
+      <field name="name"/>
+      <field name="description"/>
+      <field name="delay">
+        <column name="scheduledelay"/>
+      </field>
+      <field name="maxJobExecutionTime"/>
+      <field name="cronExpression"/>
+      <field name="buildQueues" default-fetch-group="true">
+        <collection element-type="BuildQueue" dependent-element="false"/>
+        <join/>
+      </field>
+      <fetch-group name="schedule-build-queues">
+        <field name="buildQueues"/>
+      </fetch-group>
+    </class>
+    <class name="ContinuumModelloMetadata" detachable="true">
+      <field name="modelVersion" null-value="default">
+        <column default-value="1.3.3"/>
+      </field>
+    </class>
+  </package>
+  <package name="org.apache.maven.continuum.model.system">
+    <class name="Profile" detachable="true" table="profiles" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="active"/>
+      <field name="name"/>
+      <field name="description"/>
+      <field name="scmMode"/>
+      <field name="buildWithoutChanges"/>
+      <field name="buildAgentGroup" null-value="default">
+        <column default-value=""/>
+      </field>
+      <field name="jdk" default-fetch-group="true"/>
+      <field name="builder" default-fetch-group="true"/>
+      <field name="environmentVariables" default-fetch-group="true">
+        <collection element-type="Installation" dependent-element="false"/>
+        <join/>
+      </field>
+    </class>
+    <class name="Installation" detachable="true" table="Installation" identity-type="application">
+      <field name="type">
+        <column name="installationtype"/>
+      </field>
+      <field name="varValue"/>
+      <field name="varName"/>
+      <field name="name"/>
+      <field name="installationId" primary-key="true"/>
+    </class>
+    <class name="SystemConfiguration" detachable="true" table="SystemConfiguration">
+      <field name="guestAccountEnabled"/>
+      <field name="defaultScheduleDescription"/>
+      <field name="defaultScheduleCronExpression"/>
+      <field name="workingDirectory"/>
+      <field name="buildOutputDirectory"/>
+      <field name="deploymentRepositoryDirectory"/>
+      <field name="baseUrl"/>
+      <field name="initialized"/>
+      <field name="releaseOutputDirectory"/>
+      <field name="numberOfBuildsInParallel" null-value="default">
+        <column default-value="1"/>
+      </field>
+      <field name="distributedBuildEnabled"/>
+    </class>
+    <class name="NotificationAddress" detachable="true" table="NotificationAddress">
+      <field name="type">
+        <column name="notifiertype"/>
+      </field>
+      <field name="address"/>
+      <field name="configuration" default-fetch-group="true">
+        <map key-type="java.lang.String" value-type="java.lang.String" dependent-key="true" dependent-value="true"/>
+        <join/>
+      </field>
+    </class>
+  </package>
+  <package name="org.apache.continuum.model.release">
+    <class name="ContinuumReleaseResult" detachable="true" table="ContinuumReleaseResult" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="startTime"/>
+      <field name="endTime"/>
+      <field name="resultCode"/>
+      <field name="projectGroup" default-fetch-group="true"/>
+      <field name="project" default-fetch-group="true"/>
+      <field name="releaseGoal"/>
+    </class>
+  </package>
+  <package name="org.apache.continuum.model.repository">
+    <class name="LocalRepository" detachable="true" table="LocalRepository" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="name" null-value="exception"/>
+      <field name="location" null-value="exception">
+        <column name="repoLocation"/>
+      </field>
+      <field name="layout"/>
+    </class>
+    <class name="AbstractPurgeConfiguration" detachable="true" table="AbstractPurgeConfiguration" identity-type="application">
+      <field name="id" primary-key="true"/>
+      <field name="description"/>
+      <field name="deleteAll"/>
+      <field name="retentionCount"/>
+      <field name="daysOlder"/>
+      <field name="enabled"/>
+      <field name="schedule" default-fetch-group="true"/>
+      <field name="defaultPurge"/>
+    </class>
+    <class name="RepositoryPurgeConfiguration" persistence-capable-superclass="org.apache.continuum.model.repository.AbstractPurgeConfiguration" detachable="true" table="RepositoryPurgeConfiguration">
+      <inheritance strategy="new-table"/>
+      <field name="repository" null-value="exception" default-fetch-group="true"/>
+      <field name="deleteReleasedSnapshots"/>
+    </class>
+    <class name="DirectoryPurgeConfiguration" persistence-capable-superclass="org.apache.continuum.model.repository.AbstractPurgeConfiguration" detachable="true" table="DirectoryPurgeConfiguration">
+      <inheritance strategy="new-table"/>
+      <field name="location" null-value="exception">
+        <column name="directoryLocation"/>
+      </field>
+      <field name="directoryType"/>
+    </class>
+  </package>
+  <package name="org.apache.maven.continuum.model.scm">
+    <class name="ScmResult" detachable="true" table="ScmResult">
+      <field name="success"/>
+      <field name="commandLine">
+        <column length="1024"/>
+      </field>
+      <field name="providerMessage">
+        <column length="1024"/>
+      </field>
+      <field name="commandOutput">
+        <column length="1024"/>
+      </field>
+      <field name="exception">
+        <column name="exceptionstring" length="8192"/>
+      </field>
+      <field name="changes" default-fetch-group="true">
+        <collection element-type="ChangeSet" dependent-element="true"/>
+      </field>
+    </class>
+    <class name="ChangeSet" detachable="true" table="ChangeSet">
+      <field name="id"/>
+      <field name="author"/>
+      <field name="comment">
+        <column name="changecomment" length="8192"/>
+      </field>
+      <field name="date">
+        <column name="changedate"/>
+      </field>
+      <field name="files" default-fetch-group="true">
+        <collection element-type="ChangeFile" dependent-element="true"/>
+      </field>
+    </class>
+    <class name="ChangeFile" detachable="true" table="ChangeFile">
+      <field name="name">
+        <column length="1024"/>
+      </field>
+      <field name="revision"/>
+      <field name="status"/>
+    </class>
+  </package>
+</jdo>
