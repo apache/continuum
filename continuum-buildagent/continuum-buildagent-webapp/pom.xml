@@ -109,6 +109,10 @@
           <groupId>classworlds</groupId>
           <artifactId>classworlds</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
