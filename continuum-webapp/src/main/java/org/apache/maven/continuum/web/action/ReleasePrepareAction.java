@@ -320,7 +320,7 @@ public class ReleasePrepareAction
 
                 if ( releaseId == null )
                 {
-                    addActionError( "" );
+                    addActionError( "Failed to release project" );
                     return ERROR;
                 }
             }
