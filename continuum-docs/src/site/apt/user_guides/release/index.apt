@@ -62,3 +62,8 @@ Releasing Projects
     set correctly before the actual release. If between the prepare and performing of the release there is
     a change to the SCM tree, an error will occur causing the prepare process to restart.
     
+    []
+
+* Releasing projects in a distributed build
+
+    To view on-going releases from different build agents, click the <<<Releases>>> button under the Distributed Builds menu.
