@@ -66,4 +66,6 @@ Releasing Projects
 
 * Releasing projects in a distributed build
 
+    Release will happen in the Build Agent where the last build of project occurred.
+
     To view on-going releases from different build agents, click the <<<Releases>>> button under the Distributed Builds menu.
