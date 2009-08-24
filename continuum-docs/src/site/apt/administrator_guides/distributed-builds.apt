@@ -51,16 +51,16 @@ Understanding Distributed Builds
 
     [[3]] For each independent project, the Master iterates over the list of
     registered Slaves and queries each if available.  The query is an XML-RPC
-    <<<ping()>>> followed by an <<<isAvailable()>>> invocation.
+    <<<ping()>>> followed by a <<<getBuildSizeOfAgent()>>> invocation.
 
-    [[4]] If a Build Agent is available, the Master collects the information
+    [[4]] If there is a Build Agent available, the Master collects the information
     necessary for the build (SCM url, project id, etc.) and passes it when
-    invoking <<<buildProjects()>>>.
+    invoking <<<buildProjects()>>> to the Build Agent with the smallest number of
+    tasks in it's queue.
 
     [[5]] In the Build Agent, the build request is processed: the build is queued and
     executed.  Upon execution, the Build Agent first performs an SCM checkout then
-    the actual build follows.  The SCM checkout will result in invoking a
-    <<<returnScmResult()>>> callback method in the Master.
+    the actual build follows.
 
     [[6]] At this point, when the build is running, the Master can invoke
     <<<cancelBuild()>>> which returns a transient build result, and
@@ -89,8 +89,6 @@ Understanding Distributed Builds
 * Limitations
 
     * only system administrator can enable/disable distributed builds
-
-    * releases are not supported
 
     * credentials (s.a. svn credentials) are passed along if specified, but if server cache is used it will need to be done individually on the slaves
 
