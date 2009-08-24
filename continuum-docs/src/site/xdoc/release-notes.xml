@@ -4,159 +4,136 @@
   </properties>  
 <body>
 
-  <h2>Apache Continuum 1.3.3 Release Notes</h2>
+  <h2>Apache Continuum 1.3.4 Release Notes</h2>
   
-  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.3.</p>
-
-  <p>Apache Continuum 1.3.3 includes the following new features:</p>
-
-  <p><b>Provide an audit log</b> -- Ability to view in the log which user perform which function.</p>
+  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.4.</p>
 
   <p>To learn more about how the Continuum dev team versions releases, see our
       <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.</p>  
 
-  <h2>Release Notes - Continuum - Version 1.3.3</h2>
+  <h2>Release Notes - Continuum - Version 1.3.4</h2>
 
   
   <h2>        Bug
   </h2>
   <ul>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1130'>CONTINUUM-1130</a>] -         can't delete default project group
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1755'>CONTINUUM-1755</a>] -         Duplicate build definition  template name is allowed
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1806'>CONTINUUM-1806</a>] -         Unable to delete M1 projects
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2163'>CONTINUUM-2163</a>] -         Getting an Unrecognised tag: 'scmResult' error when upgrading from 1.3.1 to 1.3.2 and 1.3.3-SNAPSHOT using data management tool
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1940'>CONTINUUM-1940</a>] -         NPE in IRC notifier
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2177'>CONTINUUM-2177</a>] -         NPE when building some projects in build agent
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1979'>CONTINUUM-1979</a>] -         regression from 1.1 to 1.2.2: projects keep building even without changes
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2194'>CONTINUUM-2194</a>] -         unable to backup/restore users database from Redback 1.2 using data management CLI
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1982'>CONTINUUM-1982</a>] -         The cow in the log says &quot;Continuum unknown started!&quot;
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2195'>CONTINUUM-2195</a>] -         adding a new schedule does not work on first activation
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2019'>CONTINUUM-2019</a>] -         500 Error after editing project group info
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2204'>CONTINUUM-2204</a>] -         Continuum occasionally failing with &quot;too many open files&quot; after upgrade
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2039'>CONTINUUM-2039</a>] -         NPE in data management when a profile is active but not defined
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2205'>CONTINUUM-2205</a>] -         occasional NullPointerException on httpError page
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2075'>CONTINUUM-2075</a>] -         Error deleting project group build definition
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2208'>CONTINUUM-2208</a>] -         group scm updates make builds look like they are not queued
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2078'>CONTINUUM-2078</a>] -         Errors in export/import examples
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2228'>CONTINUUM-2228</a>] -         Edit Project Group Summary Removes Local Repository
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2083'>CONTINUUM-2083</a>] -         &quot;Project name already exist&quot; when creating a new ant or shell project in a recently created project group
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2236'>CONTINUUM-2236</a>] -         Not allowed a schedule is shared by BuildDefinition and PurgeConfiguration
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2100'>CONTINUUM-2100</a>] -         Unable to import data that includes installations
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2240'>CONTINUUM-2240</a>] -         Passwords are exposed in request log
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2106'>CONTINUUM-2106</a>] -         Update Backup / Restore Database tool for BuildQueue table
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2246'>CONTINUUM-2246</a>] -         Release profile not respected during release perform even if it is enabled
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2138'>CONTINUUM-2138</a>] -         Fix error message when attempting to delete a Build Environment that is in use
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2248'>CONTINUUM-2248</a>] -         Stacktrace error for invalid URL 
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2143'>CONTINUUM-2143</a>] -         Message schedule.buildqueues.add.error when a schedule already exist
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2249'>CONTINUUM-2249</a>] -         Build number in Build Results tab is not clickable
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2144'>CONTINUUM-2144</a>] -         NullPointerException when edit a project group with empty or only whitespaces values in Project Group Name
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2250'>CONTINUUM-2250</a>] -         Build Environment error message is displayed on the first accessed page
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2145'>CONTINUUM-2145</a>] -         Title and Text 'Schedule Removal' when you delete a schedule
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2253'>CONTINUUM-2253</a>] -         Scm Root Url created is incorrect when readding a subproject that has been previously deleted in a group
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2147'>CONTINUUM-2147</a>] -         Schema generated is incorrect when jpox.null-value=&quot;default&quot; is set in sendOnScmFailure field
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2256'>CONTINUUM-2256</a>] -         Failed in release prepare &quot;GenerateReactorProjectsPhase&quot; if local repository has spaces in it
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2150'>CONTINUUM-2150</a>] -         Message keys are showing in the jsp pages
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2257'>CONTINUUM-2257</a>] -         Release arguments missing
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2156'>CONTINUUM-2156</a>] -         Sorting not working in Project Groups Members Tab Screen 
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2259'>CONTINUUM-2259</a>] -         Project can still be added in the prepare build queue even if it's already preparing build or in the prepare build queue itself
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2157'>CONTINUUM-2157</a>] -         Build number is missing on build results
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2261'>CONTINUUM-2261</a>] -         NPE in check working directory action
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2159'>CONTINUUM-2159</a>] -         Error upgrading from 1.3.2 to 1.3.3 using Data Management Tool
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2272'>CONTINUUM-2272</a>] -         Able to add secured projects without credentials
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2161'>CONTINUUM-2161</a>] -         Release results state is always ERROR
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2281'>CONTINUUM-2281</a>] -         Same Recipiant will be added several times in Notification
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2165'>CONTINUUM-2165</a>] -         Adding Maven 1 project don't show errors in POM format
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2288'>CONTINUUM-2288</a>] -         Association with build queues are deleted if temporal enable distributebuild and edit the schedule
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2167'>CONTINUUM-2167</a>] -         Edit Wagon Notifier don't show serverId of notifier loaded 
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2290'>CONTINUUM-2290</a>] -         Values of Project Name and Triggered By of the Project Release Summary page when View Output link is clicked
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2171'>CONTINUUM-2171</a>] -         Build Definition missing from template after import
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2295'>CONTINUUM-2295</a>] -         Getting NPE when trying to check if project should build or not
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2174'>CONTINUUM-2174</a>] -         Queues page is empty when distributed builds is enabled
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2298'>CONTINUUM-2298</a>] -         upgrade Jetty bundles to Jetty 6.1.19 and JSP 2.1
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2175'>CONTINUUM-2175</a>] -         Error when add a Maven 2 Project with file url
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2299'>CONTINUUM-2299</a>] -         missing appenders in log4j configuration
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2176'>CONTINUUM-2176</a>] -         Build Queue is still specified as under Administration in Managing Parallel Builds while it is actually under Parallel Builds in the navigation menu
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2300'>CONTINUUM-2300</a>] -         upgrade to slf4j 1.5.8
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2178'>CONTINUUM-2178</a>] -         Unable to add secured projects
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2301'>CONTINUUM-2301</a>] -         unify stdout/err logging in Jetty bundles
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2179'>CONTINUUM-2179</a>] -         Error when updating project from working copy when project developer's email address is null
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2303'>CONTINUUM-2303</a>] -         All projects in a group are added in the build queue if they are 'NEW' even if you try to build selected projects only.
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2180'>CONTINUUM-2180</a>] -         Deleting  a Maven 1 project  causes a JDODataStoreException
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2314'>CONTINUUM-2314</a>] -         Password is printed in logs in clear text when adding a project fails
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2183'>CONTINUUM-2183</a>] -         project cycle can cause Continuum to fail to start 
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2315'>CONTINUUM-2315</a>] -         Intermittent double builds in projects
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2184'>CONTINUUM-2184</a>] -         temp directory should not be created within the web application
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2316'>CONTINUUM-2316</a>] -         Incorrect link to build environments in Understanding Distributed Builds (Setup section)
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2186'>CONTINUUM-2186</a>] -         No error displayed (in webapp and in logs) when an error has occurred during release:prepare parameter input
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2317'>CONTINUUM-2317</a>] -         Unable to build some projects in build agent
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2197'>CONTINUUM-2197</a>] -         select all was removed from the queue page
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2320'>CONTINUUM-2320</a>] -         NPE encountered while checking if project is in build queue using distributed build
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2200'>CONTINUUM-2200</a>] -         Logs should not display scm credentials when adding projects
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2327'>CONTINUUM-2327</a>] -          Getting 'not authorized' message after logging in
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2206'>CONTINUUM-2206</a>] -         NPE when building all projects in a group or a single project
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2328'>CONTINUUM-2328</a>] -         Error message in project group summary page still shows in the project groups page.
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2209'>CONTINUUM-2209</a>] -         Can delete projects, project group, build result while project is currently building or being checked out
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2329'>CONTINUUM-2329</a>] -         Error message when clicking the release button is not showing in the project group summary page
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2211'>CONTINUUM-2211</a>] -         s:head tag is duplicated in some pages
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2340'>CONTINUUM-2340</a>] -         Locale selection is broken
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2212'>CONTINUUM-2212</a>] -         RuntimeException when the project shouldn't build and no buildresult exist
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2213'>CONTINUUM-2213</a>] -         NullPointerException in build queues page
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2217'>CONTINUUM-2217</a>] -         Scheduled builds stopped after upgrade
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2218'>CONTINUUM-2218</a>] -         Unrelated but inter-dependent projects in the same group are not built in the correct order
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2219'>CONTINUUM-2219</a>] -         Project SCM Root is not created when migrating from 1.2.x to 1.3.x without using a data management tool
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2232'>CONTINUUM-2232</a>] -         Continuum ignores duplicate projects in forced and scheduled builds
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2233'>CONTINUUM-2233</a>] -         Unable to remove prepare build queues and build queues when distributed build is enabled
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2235'>CONTINUUM-2235</a>] -         Continuum ignores 'enable' property in PurgeConfiguration for schedules
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2344'>CONTINUUM-2344</a>] -         Localization updates
   </li>
   </ul>
     
   <h2>        Improvement
   </h2>
   <ul>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1712'>CONTINUUM-1712</a>] -         improve the performance of the group summary page
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2141'>CONTINUUM-2141</a>] -         Upgrade Modello to latest version so the model will be in java 5 format
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1848'>CONTINUUM-1848</a>] -         Forcing a build from the project group level build definitions tab returns you to the list of project groups with no feedback
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2190'>CONTINUUM-2190</a>] -         hitting / on a distributed build agent brings up &quot;Hello World&quot;
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2016'>CONTINUUM-2016</a>] -         Cannot edit Enabled field in Purge Configuration
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2199'>CONTINUUM-2199</a>] -         parallel build queue to schedule mapping is unclear
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2111'>CONTINUUM-2111</a>] -         Create a separate role for adding and deleting a (parallel) build queue
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2229'>CONTINUUM-2229</a>] -         Update the status icon of the project when it is added in build-prepare-queue
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2154'>CONTINUUM-2154</a>] -         Data management client only take into account default configuration
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2260'>CONTINUUM-2260</a>] -         missing audit log in some actions
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2185'>CONTINUUM-2185</a>] -         set default memory upper limit to 256m
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2273'>CONTINUUM-2273</a>] -         Improve performance on the group summary page
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2231'>CONTINUUM-2231</a>] -         Queues page should include the prepare build queue
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2284'>CONTINUUM-2284</a>] -         Performance Improvements
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2307'>CONTINUUM-2307</a>] -         Update the documentation on log files
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2326'>CONTINUUM-2326</a>] -         Add documentation for releasing using distributed builds
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2332'>CONTINUUM-2332</a>] -         Generate separate source distribution for Continuum Build Agent
   </li>
   </ul>
-    
-  <h2>        New Feature
-  </h2>
-  <ul>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1853'>CONTINUUM-1853</a>] -         Provide an audit log
-  </li>
-  </ul>
-    
+        
   <h2>        Task
   </h2>
   <ul>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2002'>CONTINUUM-2002</a>] -         Update docs for using a build environment during release
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2274'>CONTINUUM-2274</a>] -         Make wrapper.log roll each day so it won't get too large
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2095'>CONTINUUM-2095</a>] -         Localization updates for 1.3 GA
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2278'>CONTINUUM-2278</a>] -         Remove the Maven plugin from the distribution
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2187'>CONTINUUM-2187</a>] -         centralise logging through slf4j
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2296'>CONTINUUM-2296</a>] -         Switch from slf4j-simple to slf4j-jdk14 in the jetty bundle
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2189'>CONTINUUM-2189</a>] -         Update docs for changes in upgrade process
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2234'>CONTINUUM-2234</a>] -         Update docs when building projects with different scenarios
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2238'>CONTINUUM-2238</a>] -         Update documentation for Queues page
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2336'>CONTINUUM-2336</a>] -         Upgrade Redback to 1.2.2
   </li>
   </ul>
 
