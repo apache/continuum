@@ -28,6 +28,7 @@ import java.util.Map;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
@@ -333,7 +334,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         }
 
         assertEquals( 3, map.size() );
-        PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( map, 1, 
+        PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 
                                                                       projectGroupId, projectGroup.getName(), 
                                                                       scmRoot.getScmRootAddress(), scmRoot.getId() );
 
