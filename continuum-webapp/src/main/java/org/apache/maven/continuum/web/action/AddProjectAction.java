@@ -92,15 +92,15 @@ public class AddProjectAction
         clearErrorsAndMessages();
         try
         {
-            if ( !( projectName.trim().length() > 0 ) )
+            if ( ( projectName != null ) && !( projectName.trim().length() > 0 ) )
             {
                 addActionError( getText( "addProject.name.required" ) );
             }
-            if ( !( projectVersion.trim().length() > 0 ) )
+            if ( ( projectVersion != null ) && !( projectVersion.trim().length() > 0 ) )
             {
                 addActionError( getText( "addProject.version.required" ) );
             }
-            if ( !( projectScmUrl.trim().length() > 0 ) )
+            if ( ( projectScmUrl != null ) && !( projectScmUrl.trim().length() > 0 ) )
             {
                 addActionError( getText( "addProject.scmUrl.required" ) );
             }
