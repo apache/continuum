@@ -20,11 +20,13 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.continuum.web.action.stub.AddProjectActionStub;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
@@ -45,6 +47,12 @@ public class AddProjectActionTest
         action = new AddProjectActionStub();
         continuumMock = new Mock( Continuum.class );
         action.setContinuum( (Continuum) continuumMock.proxy() );
+        
+        Collection<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
+        ProjectGroup projectGroup = new ProjectGroup();
+        projectGroups.add( projectGroup );
+        
+        action.setProjectGroups( projectGroups );
     }
 
     public void testAddProjectNullValues()
@@ -55,6 +63,30 @@ public class AddProjectActionTest
         action.setProjectScmUrl( null );
         
         action.validate();
+    }
+    
+    /**
+     * Test add of project with no project groups available
+     *
+     * @throws Exception
+     */
+    public void testAddProjectNoProjectGroups()
+        throws Exception
+    {
+        Collection<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
+        
+        String scmUrl = "scm:svn:http://project/scm/url/test/build.xml";
+        action.setProjectGroups( projectGroups );
+        
+        List<Project> projects = createProjectList();
+        
+        action.setProjectName( "Ant Test Project" );
+        action.setProjectVersion( "1.0-SNAPSHOT" );
+        action.setProjectScmUrl( scmUrl );
+        action.setProjectType( "ant" );
+        action.setBuildDefintionTemplateId( 1 );
+        
+        assertEquals( action.add(), "input" );
     }
     
     /**
@@ -81,7 +113,6 @@ public class AddProjectActionTest
         action.validate();
         action.add();
         continuumMock.verify();
-        
     }
 
     /**
