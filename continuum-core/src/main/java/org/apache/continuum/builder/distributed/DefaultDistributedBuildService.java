@@ -139,7 +139,9 @@ public class DefaultDistributedBuildService
                 }
     
                 buildResultDao.addBuildResult( project, buildResult );
-    
+
+                buildResult = buildResultDao.getBuildResult( buildResult.getId() );
+
                 project.setOldState( project.getState() );
                 project.setState( ContinuumBuildConstant.getBuildState( context ) );
                 project.setBuildNumber( buildNumber );
