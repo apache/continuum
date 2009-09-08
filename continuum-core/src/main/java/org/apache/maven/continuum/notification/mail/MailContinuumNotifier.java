@@ -167,7 +167,7 @@ public class MailContinuumNotifier
      *
      * @plexus.configuration
      */
-    private String prepareBuildSubjectFormat = "[continuum] PREPARE BUILD ${state]";
+    private String prepareBuildSubjectFormat = "[continuum] PREPARE BUILD ${state]: ${projectScmRoot.projectGroup.name}";
 
     // ----------------------------------------------------------------------
     //
@@ -452,8 +452,6 @@ public class MailContinuumNotifier
 
             context.put( "reportUrl",
                          getReportUrl( projectScmRoot.getProjectGroup(), projectScmRoot, configurationService ) );
-
-            context.put( "projectGroup", projectScmRoot.getProjectGroup() );
 
             context.put( "projectScmRoot", projectScmRoot );
 
