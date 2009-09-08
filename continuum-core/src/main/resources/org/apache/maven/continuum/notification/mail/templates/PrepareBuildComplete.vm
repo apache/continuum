@@ -15,7 +15,7 @@
  *#
 Online report : $reportUrl
 
-  Project Group: $projectGroup.name
+  Project Group: $projectScmRoot.projectGroup.name
   SCM Root URL: $projectScmRoot.scmRootAddress
   
 #if ($projectScmRoot.state == 4)
