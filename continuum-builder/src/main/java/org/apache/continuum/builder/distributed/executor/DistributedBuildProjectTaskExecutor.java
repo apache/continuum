@@ -132,19 +132,15 @@ public class DistributedBuildProjectTaskExecutor
         throws ContinuumException
     {
         List<Map<String, Object>> buildContext = new ArrayList<Map<String, Object>>();
-        List<Project> projects = new ArrayList<Project>();
 
         try
         {
-            for ( Integer projectId : projectsAndBuildDefinitions.keySet() )
-            {
-                Project project = projectDao.getProjectWithDependencies( projectId );
-                projects.add( project );
-            }
+            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( scmRootId );
 
-            projects = ProjectSorter.getSortedProjects( projects, null );
+            List<Project> projects = projectDao.getProjectsWithDependenciesByGroupId( scmRoot.getProjectGroup().getId() );
+            List<Project> sortedProjects = ProjectSorter.getSortedProjects( projects, null );
 
-            for ( Project project : projects )
+            for ( Project project : sortedProjects )
             {
                 int buildDefinitionId = projectsAndBuildDefinitions.get( project.getId() );
                 BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
