@@ -1403,7 +1403,7 @@ under the License.
       <dependency>
         <groupId>org.apache.maven.release</groupId>
         <artifactId>maven-release-manager</artifactId>
-        <version>1.0-alpha-3</version>
+        <version>1.0-alpha-4</version>
         <exclusions>
           <exclusion>
             <groupId>org.codehaus.plexus</groupId>
