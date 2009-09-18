@@ -253,7 +253,19 @@ public class CreateProjectsFromMetadataAction
         else
         {
             int indexDiff = StringUtils.differenceAt( path1, path2 );
-            return path1.substring( 0, indexDiff );
+            String commonPath = path1.substring( 0, indexDiff );
+
+            if ( commonPath.lastIndexOf( '/' ) != commonPath.length() - 1 &&
+                 !( path1.contains( new String( commonPath + "/" ) ) || 
+                    path2.contains( new String( commonPath + "/" ) ) ) )
+            {
+                while ( commonPath.lastIndexOf( '/' ) != commonPath.length() - 1 )
+                {
+                    commonPath = commonPath.substring( 0, commonPath.length() - 1 );
+                }
+            }
+
+            return commonPath;
         }
     }
 
