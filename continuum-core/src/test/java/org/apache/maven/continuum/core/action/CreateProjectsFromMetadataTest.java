@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManager;
@@ -42,9 +43,12 @@ public class CreateProjectsFromMetadataTest
 
     private CreateProjectsFromMetadataAction action;
 
+    private ContinuumProjectBuildingResult result;
+
     protected void setUp()
         throws Exception
     {
+        result = new ContinuumProjectBuildingResult();
         action = new CreateProjectsFromMetadataAction();
         action.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
         Mock projectBuilderManagerMock = mock( ContinuumProjectBuilderManager.class );
@@ -57,7 +61,7 @@ public class CreateProjectsFromMetadataTest
         projectBuilderManagerMock.expects( once() ).method( "getProjectBuilder" ).will(
             returnValue( projectBuilder.proxy() ) );
         projectBuilder.expects( once() ).method( "buildProjectsFromMetadata" ).will(
-            returnValue( new ContinuumProjectBuildingResult() ) );
+            returnValue( result ) );
 
         projectBuilder.expects( once() ).method( "getDefaultBuildDefinitionTemplate" ).will(
             returnValue( getDefaultBuildDefinitionTemplate() ) );
@@ -123,4 +127,55 @@ public class CreateProjectsFromMetadataTest
             result.hasErrors() );
     }
 
+    public void testExecuteFlatMultiModuleProjectThatStartsWithTheSameLetter()
+        throws Exception
+    {
+        Project project = new Project();
+        project.setGroupId( "com.example.flat" );
+        project.setArtifactId( "flat-parent" );
+        project.setVersion( "1.0-SNAPSHOT" );
+        project.setId( 6 );
+        project.setName( "Flat Example" );
+        project.setScmUrl( "scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-parent" );
+
+        this.result.addProject( project );
+
+        project = new Project();
+        project.setGroupId( "com.example.flat" );
+        project.setArtifactId( "flat-core" );
+        project.setVersion( "1.0-SNAPSHOT" );
+        project.setId( 7 );
+        project.setName( "flat-core" );
+        project.setScmUrl( "scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-core" );
+
+        this.result.addProject( project );
+
+        project = new Project();
+        project.setGroupId( "com.example.flat" );
+        project.setArtifactId( "flat-webapp" );
+        project.setVersion( "1.0-SNAPSHOT" );
+        project.setId( 8 );
+        project.setName( "flat-webapp Maven Webapp" );
+        project.setScmUrl( "scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-webapp" );
+
+        this.result.addProject( project );
+
+        Map<String, Object> context = new HashMap<String, Object>();
+        CreateProjectsFromMetadataAction.setUrl( context,
+                                                 "http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-parent/pom.xml" );
+        CreateProjectsFromMetadataAction.setProjectBuilderId( context, "id" );
+        CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, true );
+
+        action.execute( context );
+
+        ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
+
+        assertFalse(
+            "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
+            result.hasErrors() );
+
+        assertEquals(
+            "Wrong scm root url created", "scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/",
+            CreateProjectsFromMetadataAction.getUrl( context ) );
+    }
 }
