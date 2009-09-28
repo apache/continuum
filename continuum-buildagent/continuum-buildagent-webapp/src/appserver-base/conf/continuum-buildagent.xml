@@ -19,7 +19,7 @@ under the License.
 -->
 
 <continuum-buildagent-configuration>
-  <continuumServerUrl>http://localhost:8080/continuum/master-xmlrpc</continuumServerUrl>
+  <continuumServerUrl>http://localhost:9090/master-xmlrpc</continuumServerUrl>
   <buildOutputDirectory>data/build-output-directory</buildOutputDirectory>
   <workingDirectory>data/working-directory</workingDirectory>
 </continuum-buildagent-configuration>
