@@ -159,7 +159,7 @@ public class PrepareBuildProjectsTaskExecutor
                     log.info(
                         "Ending prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
                     scmResultMap.put( AbstractContinuumAction.getProjectId( context ),
-                                      AbstractContinuumAction.getScmResult( context, null ) );
+                                      AbstractContinuumAction.getScmResult( context, new ScmResult() ) );
                     endProjectPrepareBuild( context );
                 }
             }
@@ -260,6 +260,13 @@ public class PrepareBuildProjectsTaskExecutor
             performAction( "checkout-project", context );
 
             scmResult = CheckoutProjectContinuumAction.getCheckoutResult( context, null );
+        }
+
+        // [CONTINUUM-2207] when returned scmResult is null, this causes a problem when building the project 
+        if ( scmResult == null )
+        {
+            log.debug( "Returned ScmResult is null when updating the working directory" );
+            scmResult = new ScmResult();
         }
 
         AbstractContinuumAction.setScmResult( context, scmResult );

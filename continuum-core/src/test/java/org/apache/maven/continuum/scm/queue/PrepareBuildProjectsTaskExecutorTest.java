@@ -278,6 +278,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-b" ).exists() );
     }
 */
+    
     private PrepareBuildProjectsTask createTask( String pomResource, boolean singleCheckout, boolean buildFresh )
         throws Exception
     {
