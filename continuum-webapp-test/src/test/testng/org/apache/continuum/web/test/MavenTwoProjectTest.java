@@ -162,4 +162,50 @@ public class MavenTwoProjectTest
         clickButtonWithValue( "Cancel" );
         assertAboutPage();
     }
+    
+    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
+    public void testDeleteMavenTwoProject()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        goToProjectGroupsSummaryPage();
+        
+        // delete project - delete icon
+        addMaven2Project( M2_PROJ_GRP_NAME );
+        clickLinkWithText( M2_PROJ_GRP_NAME );
+        clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
+        assertTextPresent( "Delete Continuum Project" );
+        clickButtonWithValue( "Delete" );
+        assertPage( "Continuum - Project Group" );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        
+        // remove group for next test
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+        
+        // delete project - "Delete Project(s)" button
+        addMaven2Project( M2_PROJ_GRP_NAME );
+        clickLinkWithText( M2_PROJ_GRP_NAME );
+        checkField( "//tbody/tr['0']/td['0']/input[@name='selectedProjects']" );
+        clickButtonWithValue( "Delete Project(s)" );
+        assertTextPresent( "Delete Continuum Projects" );
+        clickButtonWithValue( "Delete" );
+        assertPage( "Continuum - Project Group" );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        
+        // remove project group
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+    }
+    
+    private void addMaven2Project( String groupName )
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_DELETE_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_DELETE_PROJ_GRP_DESCRIPTION" );
+        
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( groupName );
+    }
 }

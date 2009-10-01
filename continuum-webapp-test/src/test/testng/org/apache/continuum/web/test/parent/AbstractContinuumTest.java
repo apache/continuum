@@ -293,6 +293,17 @@ public abstract class AbstractContinuumTest
         clickButtonWithValue( "Save" );
         assertProjectGroupsSummaryPage();
     }
+    
+    public void removeProjectGroup( String groupName )
+        throws Exception
+    {
+        goToProjectGroupsSummaryPage();
+        clickLinkWithText( groupName );
+        clickButtonWithValue( "Delete Group" );
+        assertTextPresent( "Project Group Removal" );
+        clickButtonWithValue( "Delete" );
+        assertProjectGroupsSummaryPage();
+    }
 
     public void editProjectGroup(String name,String groupId,String description,String newName,String newDescription )
         throws Exception

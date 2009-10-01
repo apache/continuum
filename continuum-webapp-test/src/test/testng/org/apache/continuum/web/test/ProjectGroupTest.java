@@ -139,4 +139,30 @@ public class ProjectGroupTest
         clickButtonWithValue( "Release" );
         assertReleaseSuccess();
     }
+
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
+    public void testDeleteProjectGroup()
+        throws Exception
+    {
+        String TEST_GRP_NAME = getProperty( "TEST_DELETE_GRP_NAME" );
+        String TEST_GRP_ID = getProperty( "TEST_DELETE_GRP_ID" );
+        String TEST_GRP_DESCRIPTION = getProperty( "TEST_DELETE_GRP_DESCRIPTION" );
+        
+        // delete group - delete icon
+        addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
+        assertLinkPresent( TEST_GRP_NAME );
+        clickLinkWithXPath( "//tbody/tr['0']/td['4']/a/img[@alt='Delete Group']" );
+        assertTextPresent( "Project Group Removal" );
+        clickButtonWithValue( "Delete" );
+        assertProjectGroupsSummaryPage();
+        assertLinkNotPresent( TEST_GRP_NAME );
+        
+        // delete group - "Delete Group" button
+        addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
+        assertLinkPresent( TEST_GRP_NAME );
+        removeProjectGroup( TEST_GRP_NAME );
+        assertLinkNotPresent( TEST_GRP_NAME );
+        assertProjectGroupsSummaryPage();
+        assertLinkNotPresent( TEST_GRP_NAME );
+    }
 }

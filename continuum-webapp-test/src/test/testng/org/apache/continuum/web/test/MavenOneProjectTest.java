@@ -152,4 +152,64 @@ public class MavenOneProjectTest
         clickButtonWithValue( "Cancel" );
         assertAboutPage();
     }
+
+    @Test( dependsOnMethods = { "testValidPomUrl" } )
+    public void testDeleteMavenOneProject()
+        throws Exception
+    {
+        boolean isExisting = false;
+        String M1_PROJ_GRP_NAME = getProperty( "M1_DELETE_PROJ_GRP_NAME" );
+        goToProjectGroupsSummaryPage();
+        
+        if ( isLinkPresent( M1_PROJ_GRP_NAME ) )
+        {
+            isExisting = true;
+        }
+        else
+        {
+            addMaven1Project( M1_PROJ_GRP_NAME );
+        }
+        
+        // delete project - delete icon
+        clickLinkWithText( M1_PROJ_GRP_NAME );
+        clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
+        assertTextPresent( "Delete Continuum Project" );
+        clickButtonWithValue( "Delete" );
+        assertPage( "Continuum - Project Group" );
+        assertLinkNotPresent( M1_PROJ_GRP_NAME );
+        
+        // remove group for next test
+        removeProjectGroup( M1_PROJ_GRP_NAME );
+        
+        // delete project - "Delete Project(s)" button
+        addMaven1Project( M1_PROJ_GRP_NAME );
+        clickLinkWithText( M1_PROJ_GRP_NAME );
+        checkField( "//tbody/tr['0']/td['0']/input[@name='selectedProjects']" );
+        clickButtonWithValue( "Delete Project(s)" );
+        assertTextPresent( "Delete Continuum Projects" );
+        clickButtonWithValue( "Delete" );
+        assertPage( "Continuum - Project Group" );
+        assertLinkNotPresent( M1_PROJ_GRP_NAME );
+        
+        if ( !isExisting )
+        {
+            removeProjectGroup( M1_PROJ_GRP_NAME );
+        }
+    }
+    
+    private void addMaven1Project( String groupName )
+        throws Exception
+    {
+        String M1_POM_URL = getProperty( "M1_DELETE_POM_URL" );
+        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
+        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
+        String M1_PROJ_GRP_ID = getProperty( "M1_DELETE_PROJ_GRP_ID" );
+        String M1_PROJ_GRP_DESCRIPTION = getProperty( "M1_DELETE_PROJ_GRP_DESCRIPTION" );
+        
+        goToAddMavenOneProjectPage();
+        assertLinkNotPresent( groupName );
+        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( groupName );
+    }
 }
