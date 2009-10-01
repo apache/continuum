@@ -52,49 +52,12 @@ under the License.
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <!-- This configuration is added to cleanup from war:inplace -->
+        <artifactId>maven-clean-plugin</artifactId>        
         <configuration>
           <filesets>
             <fileset>
               <directory>${basedir}/data</directory>
-            </fileset>
-            <fileset>
-              <directory>${basedir}/src/main/webapp</directory>
-              <includes>
-                <!-- TODO: META-INF shouldn't be required, seems to be an issue with the current war plugin -->
-                <include>META-INF</include>
-                <include>images/redback</include>
-                <!-- Images from other wars -->
-                <include>template/</include>
-                <!-- validation.js -->
-                <include>template/redback</include>
-                <!-- Templates from other wars -->
-                <include>WEB-INF/classes</include>
-                <!-- Classes and Resources from other wars -->
-                <include>WEB-INF/lib</include>
-                <!-- Dependencies from other wars -->
-                <include>WEB-INF/database</include>
-                <!-- Database location configured in application.xml -->
-                <include>WEB-INF/logs</include>
-                <!-- Log file location specified in application.xml -->
-                <include>redback</include>
-                <!-- plexus-redback css and javascript -->
-                <include>css/redback</include>
-                <include>WEB-INF/jsp/redback</include>
-                <!-- plexus-redback jsps -->
-                <include>WEB-INF/template/redback</include>
-                <!-- plexus-security xwork templates -->
-                <include>WEB-INF/build-output-directory</include>
-                <!-- Directory created by jetty:run -->
-                <include>WEB-INF/working-directory</include>
-                <!-- Directory created by jetty:run -->
-                <include>WEB-INF/logs</include>
-                <!-- Directory created by jetty:run -->
-                <include>WEB-INF/temp</include>
-                <!-- Directory created by jetty:run -->
-              </includes>
-            </fileset>
+            </fileset>            
           </filesets>
         </configuration>
       </plugin>
@@ -106,7 +69,7 @@ under the License.
                Specifically setting this to false to avoid accidental jar file creation. -->
           <archiveClasses>false</archiveClasses>
           <dependentWarExcludes>META-INF/**,WEB-INF/web.xml,WEB-INF/classes/xwork.xml,WEB-INF/lib/**</dependentWarExcludes>
-        </configuration>
+        </configuration>       
       </plugin>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
@@ -202,13 +165,65 @@ under the License.
           -->
         </configuration>
       </plugin>
+      
+      <!-- hack for jetty:run, continuum web config files are checked in /WEB-INF/ dir -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-web-config-files</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <mkdir dir="${basedir}/target/continuum/WEB-INF/"/>
+                <copy todir="${basedir}/target/continuum/WEB-INF/">
+                  <fileset dir="${basedir}/target" includes="classes/" excludes="**/struts.xml"/>         
+                </copy>
+              </tasks>              
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-redback-war</id>
+            <goals>
+             <goal>unpack</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+               <artifactItems>
+                 <artifactItem>
+                   <groupId>org.codehaus.redback</groupId>
+                   <artifactId>redback-struts2-content</artifactId>
+                   <version>${redback.version}</version>
+                   <type>war</type>
+                   <overWrite>false</overWrite>
+                   <outputDirectory>${project.build.directory}/redback</outputDirectory>
+                   <excludes>**/struts-security.xml</excludes>
+                 </artifactItem>
+               </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <configuration>
+          <webAppConfig>
+	        <contextPath>/</contextPath>	          
+	        <baseResource implementation="org.mortbay.resource.ResourceCollection">
+	          <resourcesAsCSV>src/main/webapp,target/continuum,target/redback</resourcesAsCSV>
+	        </baseResource>   
+          </webAppConfig>
           <scanIntervalSeconds>10</scanIntervalSeconds>
-          <contextPath>/</contextPath>
-          <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>
+          <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>          
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
               <port>9090</port>
@@ -228,7 +243,7 @@ under the License.
               <name>derby.system.home</name>
               <value>${project.build.directory}/appserver-base/logs</value>
             </systemProperty>
-          </systemProperties>
+          </systemProperties>          
         </configuration>
         <dependencies>
           <dependency>
@@ -462,7 +477,7 @@ under the License.
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-svn-commons</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-irc</artifactId>
