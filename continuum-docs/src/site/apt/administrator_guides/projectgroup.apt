@@ -1,14 +1,18 @@
  ------
- Adding Project Group
+ Managing Project Groups
  ------
  Olivier Lamy
  ------
- Oct 11 2007
+ Oct 06 2009
  ------
 
-Adding a Project Group
+Managing Project Groups
 
-  From the Project Groups page, use the the 'Add Project Group' button
+[../images/project-groups.png] Group Summary homepage
+
+* Adding a Project Group
+
+  From the home page (Group Summary) Use the the <<<Add Project Group>>> button
   
 [../images/add-project-group.png] Add Project Group
 
@@ -21,14 +25,43 @@ Adding a Project Group
   * Project Group Name
     
   * Project Group Id
+  
+  []
 
-Deleting a Project Group
+* Editing a Project Group
+
+  From the home page (Group Summary), click the project group name link.
+  
+  The project group information will then be displayed.
+
+[../images/project-group-summary.png] Project Group Summary
+
+  Then, click on the <<<Edit>>> button.
+  
+[../images/update-project-group.png] Update Project Group
+
+  The following fields can be updated:
+  
+  * <<Project Group Name>>: The name of the project group. 
+  
+  * <<Description>>: A brief description about the group.
+  
+  * {{{localRepository.html} <<Local Repository>>}}: The specific repository used for the project
+  which points to the exact location of the repository in the machine used for building.
+  
+  * <<Homepage Url>>: The site of the project.
+  
+  []
+  
+  And, projects can be moved to another project group.
+
+* Deleting a Project Group
 
   There are two ways to delete a project group.
 
   From the home page (Group Summary), click the Delete icon to the right of the group you wish to delete.
   
-  From the Project Group Summary page, click the Delete Group button.
+  From the Project Group Summary page, click the <<<Delete Group>>> button.
 
   Confirm the deletion
 
@@ -36,5 +69,3 @@ Deleting a Project Group
   sharing a user database among several Continuum instances, users will still be able to access the same
   group on a different server.
 
- 
-  

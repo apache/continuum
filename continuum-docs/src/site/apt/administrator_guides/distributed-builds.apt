@@ -83,6 +83,11 @@ Understanding Distributed Builds
     * {{{build-agent-groups.html}Add}} your Build Agents to a Build Agent Group.
 
     * {{{buildEnvironment.html} Add}} your Build Agent Group to Build Environment.
+    
+    * Make sure that the {{{localRepository.html} local repository}} of the {{{projectgroup.html} project group}} is properly configured.
+    In this case, it should point to the path of the repository where the build agent is installed/running.
+    
+    []
 
     <<WARNING>> Need to have a central remote repository to store the artifacts created from the build agent so that other agents will be able to use the new artifacts.
 
