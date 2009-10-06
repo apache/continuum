@@ -165,6 +165,47 @@ public class DefaultContinuumTest
         project = continuum.getProject( project.getId() );
     }
 
+    public void testRemoveMavenTwoProject()
+        throws Exception
+    {
+        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+
+        String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
+
+        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
+
+        assertNotNull( result );
+
+        List<Project> projects = result.getProjects();
+
+        assertEquals( 1, projects.size() );
+
+        assertEquals( Project.class, projects.get( 0 ).getClass() );
+
+        Project project = projects.get( 0 );
+
+        continuum.buildProject( project.getId() );
+
+        // wait for build to finish
+        Thread.sleep( 5000 );
+
+        // delete project
+        continuum.removeProject( project.getId() );
+
+        try
+        {
+            project = continuum.getProject( project.getId() );
+            
+            assertNull( project );
+
+            fail( "Project was not removed" );
+        }
+        catch ( Exception e )
+        {
+            // successfully removed project
+        }
+    }
+
     public void testBuildDefinitions()
         throws Exception
     {
