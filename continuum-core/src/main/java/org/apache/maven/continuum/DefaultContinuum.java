@@ -591,7 +591,7 @@ public class DefaultContinuum
     {
         try
         {
-            Project project = getProjectWithBuilds( projectId );
+            Project project = getProject( projectId );
 
             try
             {
@@ -660,9 +660,10 @@ public class DefaultContinuum
 
             log.info( "Remove project " + project.getName() + "(" + projectId + ")" );
 
-            for ( Object o : project.getBuildResults() )
+            Collection<BuildResult> buildResults = getBuildResultsForProject( projectId );
+
+            for ( BuildResult br : buildResults )
             {
-                BuildResult br = (BuildResult) o;
                 br.setBuildDefinition( null );
                 //Remove all modified dependencies to prevent SQL errors
                 br.setModifiedDependencies( null );
