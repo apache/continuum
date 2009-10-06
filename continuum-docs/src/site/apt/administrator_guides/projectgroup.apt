@@ -10,7 +10,7 @@ Managing Project Groups
 
 [../images/project-groups.png] Group Summary homepage
 
-* Adding Project Group
+* Adding a Project Group
 
   From the home page (Group Summary) Use the the <<<Add Project Group>>> button
   
@@ -28,7 +28,7 @@ Managing Project Groups
 
   []
 
-* Editing Project Group
+* Editing a Project Group
 
   From the home page (Group Summary), click the project group name link.
   
@@ -54,4 +54,18 @@ Managing Project Groups
   []
   
   And, projects can be moved to another project group.
+  
+* Deleting a Project Group
+
+  There are two ways to delete a project group.
+
+  From the home page (Group Summary), click the Delete icon to the right of the group you wish to delete.
+  
+  From the Project Group Summary page, click the <<<Delete Group>>> button.
+
+  Confirm the deletion
+
+  Note that user roles for this project group will not be removed.  This is intentional so that if you are
+  sharing a user database among several Continuum instances, users will still be able to access the same
+  group on a different server.
   
