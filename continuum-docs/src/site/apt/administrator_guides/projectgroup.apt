@@ -1,14 +1,18 @@
  ------
- Adding Project Group
+ Managing Project Groups
  ------
  Olivier Lamy
  ------
- Oct 11 2007
+ Oct 06 2009
  ------
 
-Adding Project Group
+Managing Project Groups
 
-  From the home page (Group Summary) Use the the 'Add Project Group' button
+[../images/project-groups.png] Group Summary homepage
+
+* Adding Project Group
+
+  From the home page (Group Summary) Use the the <<<Add Project Group>>> button
   
 [../images/add-project-group.png] Add Project Group
 
@@ -22,5 +26,32 @@ Adding Project Group
     
   * Project Group Id
 
- 
+  []
+
+* Editing Project Group
+
+  From the home page (Group Summary), click the project group name link.
+  
+  The project group information will then be displayed.
+
+[../images/project-group-summary.png] Project Group Summary
+
+  Then, click on the <<<Edit>>> button.
+  
+[../images/update-project-group.png] Update Project Group
+
+  The following fields can be updated:
+  
+  * <<Project Group Name>>: The name of the project group. 
+  
+  * <<Description>>: A brief description about the group.
+  
+  * {{{localRepository.html} <<Local Repository>>}}: The specific repository used for the project
+  which points to the exact location of the repository in the machine used for building.
+  
+  * <<Homepage Url>>: The site of the project.
+  
+  []
+  
+  And, projects can be moved to another project group.
   

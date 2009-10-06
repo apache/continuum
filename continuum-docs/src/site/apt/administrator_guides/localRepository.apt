@@ -4,6 +4,10 @@
  
 Local Repository
 
+  Local repositories can be configured for a specific project group's use. 
+  This is where the artifacts used for building the projects can be found
+  instead of the default (<<<$USER_HOME/.m2/repository>>>).
+
 	Click the <<Local Repositories>> link under the <<Administration>> section
 
 [../images/localrepositories.png] Local Repositories
