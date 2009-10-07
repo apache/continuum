@@ -3218,6 +3218,11 @@ public class DefaultContinuum
     private void removeProjectScmRoot( ProjectScmRoot projectScmRoot )
         throws ContinuumException
     {
+        if ( projectScmRoot == null )
+        {
+            return;
+        }
+
         //get all projects in the group
         ProjectGroup group = getProjectGroupWithProjects( projectScmRoot.getProjectGroup().getId() );
 
