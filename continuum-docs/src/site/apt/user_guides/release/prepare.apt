@@ -21,6 +21,10 @@ Prepare for Release
 [../../images/release-prepare-parameters.png] Release Prepare parameters
 
  Wait for the process to complete, then click Done.
+ 
+ <<WARNING>> Hitting the <<<Rollback>>> button does not roll back or delete the SCM tag created during the '<<<scm-tag>>>' phase.
+ So when re-doing the release prepare of the same version, make sure that the tag does not exist in SVN, if so,
+ the tag should be manually deleted.
 
 [../../images/release-prepare-executing.png]
 
