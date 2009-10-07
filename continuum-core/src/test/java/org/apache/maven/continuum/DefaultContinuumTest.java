@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -38,6 +39,7 @@ import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
@@ -62,6 +64,8 @@ public class DefaultContinuumTest
     private TaskQueueManager taskQueueManager;
 
     private ProjectDao projectDao;
+
+    private BuildResultDao buildResultDao;
 
     @Override
     protected void setUp()
@@ -171,39 +175,40 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
-        String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
+        Project project = makeStubProject( "test-project" );
 
-        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
+        ProjectGroup defaultGroup = getDefaultProjectGroup();
 
-        assertNotNull( result );
+        defaultGroup.addProject( project );
 
-        List<Project> projects = result.getProjects();
+        getProjectGroupDao().updateProjectGroup( defaultGroup );
 
-        assertEquals( 1, projects.size() );
+        project = getProjectDao().getProjectByName( "test-project" );
 
-        assertEquals( Project.class, projects.get( 0 ).getClass() );
+        assertNotNull ( project );
 
-        Project project = projects.get( 0 );
+        BuildResult buildResult = new BuildResult();
 
-        continuum.buildProject( project.getId() );
+        getBuildResultDao().addBuildResult( project, buildResult );
 
-        // wait for build to finish
-        Thread.sleep( 5000 );
+        Collection<BuildResult> brs = continuum.getBuildResultsForProject( project.getId() );
+
+        assertEquals( "Build result of project was not added", 1, brs.size() );
 
         // delete project
         continuum.removeProject( project.getId() );
 
         try
         {
-            project = continuum.getProject( project.getId() );
-            
-            assertNull( project );
+            continuum.getProject( project.getId() );
 
             fail( "Project was not removed" );
         }
-        catch ( Exception e )
+        catch ( ContinuumException expected )
         {
-            // successfully removed project
+            brs = continuum.getBuildResultsForProject( project.getId() );
+
+            assertEquals( "Build result of project was not removed", 0, brs.size() );
         }
     }
 
@@ -620,5 +625,10 @@ public class DefaultContinuumTest
         throws Exception
     {
         return (Continuum) lookup( Continuum.ROLE );
+    }
+
+    private BuildResultDao getBuildResultDao()
+    {
+        return (BuildResultDao) lookup( BuildResultDao.class.getName() );
     }
 }
