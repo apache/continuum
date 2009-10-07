@@ -111,8 +111,6 @@ public class PrepareBuildProjectsTaskExecutorTest
         assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString( moduleA.getId() ) ).exists() );
 
         assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString( moduleB.getId() ) ).exists() );
-
-        Thread.sleep( 5000 );
     }
 
     public void testCheckoutPrepareBuildMultiModuleProjectFreshBuild()
@@ -147,8 +145,6 @@ public class PrepareBuildProjectsTaskExecutorTest
         assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString( moduleA.getId() ) ).exists() );
 
         assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString( moduleB.getId() ) ).exists() );
-
-        Thread.sleep( 5000 );
     }
 /*
     public void testCheckoutPrepareBuildSingleCheckedoutMultiModuleProject()
