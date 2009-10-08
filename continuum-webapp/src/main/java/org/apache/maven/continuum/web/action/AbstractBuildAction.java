@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -41,7 +42,9 @@ public abstract class AbstractBuildAction
     protected boolean canRemoveBuildResult( BuildResult buildResult )
         throws BuildManagerException
     {
-        Map<String, BuildProjectTask> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
+        BuildsManager buildsManager = getContinuum().getBuildsManager();
+
+        Map<String, BuildProjectTask> currentBuilds = buildsManager.getCurrentBuilds();
         Set<String> keySet = currentBuilds.keySet();
         for ( String key : keySet )
         {

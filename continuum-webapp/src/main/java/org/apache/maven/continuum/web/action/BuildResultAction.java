@@ -34,6 +34,7 @@ import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeSet;
@@ -92,9 +93,16 @@ public class BuildResultAction
         // check if there are surefire results to display
         project = getContinuum().getProject( getProjectId() );
 
-        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() &&
-            project.getState() == ContinuumProjectState.BUILDING )
+        buildResult = getContinuum().getBuildResult( getBuildId() );
+
+        ConfigurationService configuration = getContinuum().getConfiguration();
+
+        // view build result of the current build from the distributed build agent
+        if ( configuration.isDistributedBuildEnabled() &&
+            project.getState() == ContinuumProjectState.BUILDING && buildResult == null )
         {
+            // if the project is currently building in distributed build agent, the build result will be stored in the database after the build is finished. 
+            // it's safe to assume that the build result will be null at this point
             Map<String, Object> map = distributedBuildManager.getBuildResult( project.getId() );
 
             if ( map == null )
@@ -110,8 +118,11 @@ public class BuildResultAction
 
                 buildOutput = ContinuumBuildConstant.getBuildOutput( map );
 
-                state =
-                    StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+                if ( ServletActionContext.getRequest() != null )
+                {
+                    state =
+                        StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+                }
             }
             changeSet = null;
 
@@ -121,19 +132,20 @@ public class BuildResultAction
         }
         else
         {
-            buildResult = getContinuum().getBuildResult( getBuildId() );
-
             // directory contains files ?
             File surefireReportsDirectory =
-                getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
+                configuration.getTestReportsDirectory( buildId, getProjectId() );
             File[] files = surefireReportsDirectory.listFiles();
             hasSurefireResults = files != null && files.length > 0;
             changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
             buildOutput = getBuildOutputText();
 
-            state =
-                StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+            if ( ServletActionContext.getRequest() != null )
+            {
+                state =
+                    StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+            }
 
             this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
         }
@@ -204,7 +216,8 @@ public class BuildResultAction
     private String getBuildOutputText()
         throws ConfigurationException, IOException
     {
-        File buildOutputFile = getContinuum().getConfiguration().getBuildOutputFile( getBuildId(), getProjectId() );
+        ConfigurationService configuration = getContinuum().getConfiguration();
+        File buildOutputFile = configuration.getBuildOutputFile( getBuildId(), getProjectId() );
 
         if ( buildOutputFile.exists() )
         {
@@ -273,5 +286,11 @@ public class BuildResultAction
     public int getProjectGroupId()
     {
         return projectGroupId;
+    }
+
+    // for testing
+    public void setDistributedBuildManager( DistributedBuildManager distributedBuildManager )
+    {
+        this.distributedBuildManager = distributedBuildManager;
     }
 }
