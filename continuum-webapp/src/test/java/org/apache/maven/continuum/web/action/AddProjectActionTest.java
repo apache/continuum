@@ -66,30 +66,6 @@ public class AddProjectActionTest
     }
     
     /**
-     * Test add of project with no project groups available
-     *
-     * @throws Exception
-     */
-    public void testAddProjectNoProjectGroups()
-        throws Exception
-    {
-        Collection<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
-        
-        String scmUrl = "scm:svn:http://project/scm/url/test/build.xml";
-        action.setProjectGroups( projectGroups );
-        
-        List<Project> projects = createProjectList();
-        
-        action.setProjectName( "Ant Test Project" );
-        action.setProjectVersion( "1.0-SNAPSHOT" );
-        action.setProjectScmUrl( scmUrl );
-        action.setProjectType( "ant" );
-        action.setBuildDefintionTemplateId( 1 );
-        
-        assertEquals( action.add(), "input" );
-    }
-    
-    /**
      * Test add of Ant project
      *
      * @throws Exception

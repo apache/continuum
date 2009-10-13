@@ -66,7 +66,7 @@ public class AddProjectAction
 
     private Collection<ProjectGroup> projectGroups;
 
-    private static int selectedProjectGroup;
+    private int selectedProjectGroup;
 
     private String projectGroupName;
 
@@ -143,11 +143,6 @@ public class AddProjectAction
         {
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
-        }
-        
-        if ( this.getSelectedProjectGroup() == 0 )
-        {
-            return INPUT;
         }
 
         String projectNameTrim = projectName.trim();
@@ -226,8 +221,6 @@ public class AddProjectAction
         }
 
         projectGroups = new ArrayList<ProjectGroup>();
-        
-        selectedProjectGroup = 0;
 
         Collection<ProjectGroup> allProjectGroups = getContinuum().getAllProjectGroups();
 
