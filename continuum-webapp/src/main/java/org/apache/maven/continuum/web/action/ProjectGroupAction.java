@@ -692,7 +692,8 @@ public class ProjectGroupAction
             List<String> roleNames = new ArrayList<String>();
             for ( Role r : roles )
             {
-                if ( r.getName().indexOf( projectGroup.getName() ) > -1 )
+                int index = r.getName().indexOf( projectGroup.getName() );
+                if ( index > -1 && r.getName().substring( index ).trim().equals( projectGroup.getName() ) )
                 {
                     roleNames.add( r.getName() );
                 }
