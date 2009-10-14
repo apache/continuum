@@ -771,4 +771,49 @@ public abstract class AbstractContinuumTest
         String t = getTitle();
         Assert.assertTrue( t.contains( title ) );
     }
+
+    public void createAndAddUserAsDeveloperToGroup( String username, String name, String email, String password, String groupName )
+    {
+        clickLinkWithText( "Users" );
+        assertPage( "[Admin] User List" );
+        assertTextNotPresent( username );
+        clickButtonWithValue( "Create New User" );
+        assertPage( "[Admin] User Create" );
+        setFieldValue( "user.fullName", name );
+        setFieldValue( "user.username", username );
+        setFieldValue( "user.email", email );
+        setFieldValue( "user.password", password );
+        setFieldValue( "user.confirmPassword", password );
+        clickButtonWithValue( "Create User" );
+        assertPage( "[Admin] User Edit" );
+        clickLinkWithXPath( "//input[@name='addDSelectedRoles' and @value='Project Developer - " + groupName + "']", false );
+        clickButtonWithValue( "Submit" );
+        assertPage( "[Admin] User List" );
+        assertTextPresent( username );
+        assertTextPresent( name );
+        assertTextPresent( email );
+    }
+
+    public void showMembers( String name, String groupId, String description )
+        throws Exception
+    {
+        showProjectGroup( name, groupId, description );
+        clickLinkWithText( "Members" );
+        assertTextPresent( "Member Projects of " + name + " group" );
+        assertTextPresent( "Users" );
+    }
+
+    public void assertUserPresent( String username, String name, String email )
+    {
+        assertTextPresent( username );
+        assertTextPresent( name );
+        assertTextPresent( email );
+    }
+
+    public void assertUserNotPresent( String username, String name, String email )
+    {
+        assertTextNotPresent( username );
+        assertTextNotPresent( name );
+        assertTextNotPresent( email );
+    }
 }

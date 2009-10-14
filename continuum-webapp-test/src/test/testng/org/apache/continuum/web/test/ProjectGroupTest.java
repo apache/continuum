@@ -165,4 +165,40 @@ public class ProjectGroupTest
         assertProjectGroupsSummaryPage();
         assertLinkNotPresent( TEST_GRP_NAME );
     }
+
+    public void testProjectGroupMembers()
+        throws Exception
+    {
+        String GRP_NAME_ONE = getProperty( "TEST_PROJ_GRP_NAME_ONE" );
+        String GRP_ID_ONE = getProperty( "TEST_PROJ_GRP_ID_ONE" );
+        String GRP_DESCRIPTION_ONE = getProperty( "TEST_PROJ_GRP_DESCRIPTION_ONE" );
+        String GRP_NAME_TWO = getProperty( "TEST_PROJ_GRP_NAME_TWO" );
+        String GRP_ID_TWO = getProperty( "TEST_PROJ_GRP_ID_TWO" );
+        String GRP_DESCRIPTION_TWO = getProperty( "TEST_PROJ_GRP_DESCRIPTION_TWO" );
+
+        addProjectGroup( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE, true );
+        assertLinkPresent( GRP_NAME_ONE );
+
+        addProjectGroup( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO, true );
+        assertLinkPresent( GRP_NAME_TWO );
+
+        createAndAddUserAsDeveloperToGroup( "username1", "user1", "user1@something.com", "password123", GRP_NAME_ONE );
+        createAndAddUserAsDeveloperToGroup( "username2", "user2", "user2@something.com", "password123", GRP_NAME_ONE );
+        createAndAddUserAsDeveloperToGroup( "username3", "user3", "user3@something.com", "password123", GRP_NAME_TWO );
+
+        showMembers( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE );
+        assertUserPresent( "username1", "user1", "user1@something.com" );
+        assertUserPresent( "username2", "user2", "user2@something.com" );
+        assertUserNotPresent( "username3", "user3", "user3@something.com" );
+
+        showMembers( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO );
+        assertUserNotPresent( "username1", "user1", "user1@something.com" );
+        assertUserNotPresent( "username2", "user2", "user2@something.com" );
+        assertUserPresent( "username3", "user3", "user3@something.com" );
+
+        removeProjectGroup( GRP_NAME_ONE );
+        assertLinkNotPresent( GRP_NAME_ONE );
+        removeProjectGroup( GRP_NAME_TWO );
+        assertLinkNotPresent( GRP_NAME_TWO );
+    }
 }
