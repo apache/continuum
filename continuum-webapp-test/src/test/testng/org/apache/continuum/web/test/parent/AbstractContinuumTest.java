@@ -230,6 +230,7 @@ public abstract class AbstractContinuumTest
         // assertElementPresent( "remove" );
 
         assertTextPresent( "Project Group Scm Root" );
+        assertTextPresent( "Scm Root URL" );
 
         if ( isTextPresent( "Member Projects" ) )
         {
@@ -815,5 +816,24 @@ public abstract class AbstractContinuumTest
         assertTextNotPresent( username );
         assertTextNotPresent( name );
         assertTextNotPresent( email );
+    }
+
+    public void waitForProjectCheckout()
+        throws Exception
+    {
+        int currentIt = 1;
+        int maxIt = 10;
+        while ( isElementPresent( "//img[@alt='Checking Out']" ) )
+        {
+            Thread.sleep( 10000 );
+            getSelenium().refresh();
+            waitPage();
+            if ( currentIt > maxIt )
+            {
+                Assert.fail( "Timeout, Can't check out projects" );
+            }
+            currentIt++;
+        }
+        Thread.sleep( 10000 );
     }
 }

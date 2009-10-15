@@ -43,10 +43,37 @@ public class MavenTwoProjectTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
+        
         // Enter values into Add Maven Two Project fields, and submit
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
         // Wait Struct Listener
         assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+    }
+
+    /**
+     * Test flat multi module project with names that start with the same letter
+     */
+    public void testAddMavenTwoProjectModuleNameWithSameLetter()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_SAME_LETTER_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+
+        String M2_PROJ_GRP_NAME = getProperty( "M2_SAME_LETTER_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_SAME_LETTER_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_SAME_LETTER_PROJ_GRP_DESCRIPTION" );
+
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_SAME_LETTER_PROJ_GRP_SCM_ROOT_URL" );
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
     }
 
     @Test( dependsOnMethods = { "testAddProjectGroup" } )
@@ -56,13 +83,17 @@ public class MavenTwoProjectTest
         String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
         String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
 
         String M2_POM_URL = getProperty( "M2_POM_URL" );
         String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
         String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+        
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, TEST_PROJ_GRP_NAME, true );
 
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( TEST_PROJ_GRP_SCM_ROOT_URL );
     }
 
     /**
@@ -178,6 +209,9 @@ public class MavenTwoProjectTest
         clickButtonWithValue( "Delete" );
         assertPage( "Continuum - Project Group" );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
+
+        // wait for project to finish checkout
+        waitForProjectCheckout();
         
         // remove group for next test
         removeProjectGroup( M2_PROJ_GRP_NAME );
@@ -192,10 +226,13 @@ public class MavenTwoProjectTest
         assertPage( "Continuum - Project Group" );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
         
+        //wait for project to finish checkout
+        waitForProjectCheckout();
+
         // remove project group
         removeProjectGroup( M2_PROJ_GRP_NAME );
     }
-    
+
     private void addMaven2Project( String groupName )
         throws Exception
     {
