@@ -823,7 +823,7 @@ public abstract class AbstractContinuumTest
     {
         int currentIt = 1;
         int maxIt = 10;
-        while ( isElementPresent( "//img[@alt='Checking Out']" ) )
+        while ( isElementPresent( "//img[@alt='Checking Out']" ) || isElementPresent( "//img[@alt='Updating']") )
         {
             Thread.sleep( 10000 );
             getSelenium().refresh();

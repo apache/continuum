@@ -193,44 +193,54 @@ public class MavenTwoProjectTest
         clickButtonWithValue( "Cancel" );
         assertAboutPage();
     }
-    
+
     @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
     public void testDeleteMavenTwoProject()
         throws Exception
     {
         String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_DELETE_PROJ_GRP_SCM_ROOT_URL" );
         goToProjectGroupsSummaryPage();
         
         // delete project - delete icon
         addMaven2Project( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
+
+        assertPage( "Continuum - Project Group" );
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+        // wait for project to finish checkout
+        waitForProjectCheckout();
+
         clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
         assertTextPresent( "Delete Continuum Project" );
         clickButtonWithValue( "Delete" );
         assertPage( "Continuum - Project Group" );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        assertTextNotPresent( M2_PROJ_GRP_SCM_ROOT_URL );
 
-        // wait for project to finish checkout
-        waitForProjectCheckout();
-        
         // remove group for next test
         removeProjectGroup( M2_PROJ_GRP_NAME );
-        
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+
         // delete project - "Delete Project(s)" button
         addMaven2Project( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
+
+        assertPage( "Continuum - Project Group" );
+        //wait for project to finish checkout
+        waitForProjectCheckout();
+
         checkField( "//tbody/tr['0']/td['0']/input[@name='selectedProjects']" );
         clickButtonWithValue( "Delete Project(s)" );
         assertTextPresent( "Delete Continuum Projects" );
         clickButtonWithValue( "Delete" );
         assertPage( "Continuum - Project Group" );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
-        
-        //wait for project to finish checkout
-        waitForProjectCheckout();
+        assertTextNotPresent( M2_PROJ_GRP_SCM_ROOT_URL );
 
         // remove project group
         removeProjectGroup( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
 
     private void addMaven2Project( String groupName )
