@@ -78,7 +78,74 @@ public class LoginTest
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
 
-    @Test( groups = { "loginSuccess" }, dependsOnMethods = { "testWithEmptyPassword" }, alwaysRun = true )
+    @Test( dependsOnMethods = { "testWithEmptyPassword" } )
+    public void testWithCreatedProjectAdminUser()
+    {
+        goToLoginPage();
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+
+        clickLinkWithText( "Configuration" );
+        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+
+        String username = getProperty( "PROJECT_ADMIN_USERNAME" );
+        String name = getProperty( "PROJECT_ADMIN_NAME" );
+        String email = getProperty( "PROJECT_ADMIN_EMAIL" );
+        String oldPassword = getProperty( "PROJECT_ADMIN_OLD_PASSWORD" );
+        String newPassword = getProperty( "PROJECT_ADMIN_NEW_PASSWORD" );
+
+        createNewUser( username, name, email, oldPassword );
+        assignContinuumRoleToUser( "Continuum Group Project Administrator" );
+        clickButtonWithValue( "Submit" );
+        assertUserCreatedPage();
+        assertLinkPresent( username );
+        assertTextPresent( name );
+        assertTextPresent( email );
+
+        clickLinkWithText( username );
+        assertUserEditPage( username, name, email );
+        assertTextNotPresent( "Last Login:" );
+        assertTextPresent( "Continuum Group Project User" );
+        assertTextPresent( "Continuum Group Project Developer" );
+        assertTextPresent( "Continuum Group Project Administrator" );
+        clickLinkWithText( "Logout" );
+        goToLoginPage();
+
+        getSelenium().type( "loginForm_username", username );
+        getSelenium().type( "loginForm_password", oldPassword );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        assertChangePasswordPage();
+        
+        getSelenium().type( "passwordForm_existingPassword", oldPassword );
+        getSelenium().type( "passwordForm_newPassword", newPassword );
+        getSelenium().type( "passwordForm_newPasswordConfirm", newPassword );
+        getSelenium().click( "passwordForm__submit" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        assertTextPresent( "Password successfully changed" );
+
+        assertLinkPresent( "Edit Details" );
+        assertLinkPresent( "Logout" );
+
+        assertProjectAdministratorAccess();
+
+        clickLinkWithText( "Logout" );
+
+        goToLoginPage();
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+
+        clickLinkWithText( "Configuration" );
+        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+
+        clickLinkWithText( "Logout" );
+    }
+
+    @Test( groups = { "loginSuccess" }, dependsOnMethods = { "testWithCreatedProjectAdminUser" }, alwaysRun = true )
     public void testWithCorrectUsernamePassword()
     {
         goToLoginPage();

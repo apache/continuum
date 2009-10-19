@@ -133,6 +133,38 @@ public abstract class AbstractContinuumTest
         assertTextPresent( username );
     }
 
+    public void assertChangePasswordPage()
+    {
+        assertPage( "Change Password" );
+        assertTextPresent( "Change Password" );
+        assertTextPresent( "Existing Password*:" );
+        assertElementPresent( "existingPassword" );
+        assertTextPresent( "New Password*:" );
+        assertElementPresent( "newPassword" );
+        assertTextPresent( "Confirm New Password*:" );
+        assertElementPresent( "newPasswordConfirm" );
+    }
+
+    public void assertUserEditPage( String username, String name, String email )
+    {
+        assertPage( "[Admin] User Edit" );
+        assertTextPresent( "[Admin] User Edit" );
+        assertTextPresent( "Username" );
+        assertTextPresent( username );
+        assertTextPresent( "Full Name*:" );
+        assertFieldValue( name, "userEditForm_user_fullName" );
+        assertTextPresent( "Email Address*:" );
+        assertFieldValue( email, "userEditForm_user_email" );
+        assertTextPresent( "Password*:" );
+        assertFieldValue( "", "userEditForm_user_password" );
+        assertTextPresent( "Confirm Password*:" );
+        assertElementPresent( "userEditForm_user_confirmPassword" );
+        assertTextPresent( "Account Creation:" );
+        assertTextPresent( "Last Password Change:" );
+        assertTextPresent( "Effective Roles" );
+        assertLinkPresent( "Edit Roles" );
+    }
+
     // ////////////////////////////////////
     // Configuration
     // ////////////////////////////////////
@@ -787,7 +819,7 @@ public abstract class AbstractContinuumTest
         setFieldValue( "user.confirmPassword", password );
         clickButtonWithValue( "Create User" );
         assertPage( "[Admin] User Edit" );
-        clickLinkWithXPath( "//input[@name='addDSelectedRoles' and @value='Project Developer - " + groupName + "']", false );
+        assignContinuumResourceRoleToUser( "Project Developer", groupName );
         clickButtonWithValue( "Submit" );
         assertPage( "[Admin] User List" );
         assertTextPresent( username );
@@ -835,5 +867,62 @@ public abstract class AbstractContinuumTest
             currentIt++;
         }
         Thread.sleep( 10000 );
+    }
+
+    public void createNewUser( String username, String name, String email, String password )
+    {
+        clickLinkWithText( "Users" );
+        assertPage( "[Admin] User List" );
+        assertTextNotPresent( username );
+        clickButtonWithValue( "Create New User" );
+        assertPage( "[Admin] User Create" );
+        setFieldValue( "user.fullName", name );
+        setFieldValue( "user.username", username );
+        setFieldValue( "user.email", email );
+        setFieldValue( "user.password", password );
+        setFieldValue( "user.confirmPassword", password );
+        clickButtonWithValue( "Create User" );
+        assertPage( "[Admin] User Edit" );
+    }
+
+    public void assignContinuumRoleToUser( String role )
+    {
+        clickLinkWithXPath( "//input[@id='addRolesToUser_addNDSelectedRoles' and @name='addNDSelectedRoles' and @value='" + role + "']", false );
+    }
+
+    public void assignContinuumResourceRoleToUser( String resourceRole, String groupName )
+    {
+        clickLinkWithXPath( "//input[@name='addDSelectedRoles' and @value='" + resourceRole + " - " + groupName + "']", false );
+    }
+
+    public void assertUserCreatedPage()
+    {
+        assertPage( "[Admin] User List" );
+        assertTextPresent( "[Admin] List of Users in Role: Any" );
+        assertLinkPresent( "admin" );
+        assertLinkPresent( "guest" );
+    }
+
+    public void assertProjectAdministratorAccess()
+    {
+        assertLinkPresent( "About" );
+        assertLinkPresent( "Show Project Groups" );
+        assertLinkPresent( "Maven 2.0.x Project" );
+        assertLinkPresent( "Maven 1.x Project" );
+        assertLinkPresent( "Ant Project" );
+        assertLinkPresent( "Shell Project" );
+        assertLinkPresent( "Schedules" );
+        assertLinkPresent( "Queues" );
+        assertLinkPresent( "Users" );
+        assertLinkPresent( "Roles" );
+        assertLinkNotPresent( "Local Repositories" );
+        assertLinkNotPresent( "Purge Configurations" );
+        assertLinkNotPresent( "Installations" );
+        assertLinkNotPresent( "Build Environments" );
+        assertLinkNotPresent( "Build Definition Templates" );
+        assertLinkNotPresent( "Configuration" );
+        assertLinkNotPresent( "Appearance" );
+        assertLinkNotPresent( "Build Queue" );
+        assertLinkNotPresent( "Build Agent" );
     }
 }
