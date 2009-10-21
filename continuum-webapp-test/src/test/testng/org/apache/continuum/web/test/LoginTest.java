@@ -124,24 +124,10 @@ public class LoginTest
         getSelenium().type( "passwordForm_newPasswordConfirm", newPassword );
         getSelenium().click( "passwordForm__submit" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
-        assertTextPresent( "Password successfully changed" );
 
         assertLinkPresent( "Edit Details" );
         assertLinkPresent( "Logout" );
-
-        assertProjectAdministratorAccess();
-
-        clickLinkWithText( "Logout" );
-
-        goToLoginPage();
-        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
-        getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
-        getSelenium().click( "loginForm__login" );
-        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
-
-        clickLinkWithText( "Configuration" );
-        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
-
+        
         clickLinkWithText( "Logout" );
     }
 
