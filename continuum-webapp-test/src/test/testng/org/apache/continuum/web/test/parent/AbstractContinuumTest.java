@@ -855,7 +855,7 @@ public abstract class AbstractContinuumTest
     {
         int currentIt = 1;
         int maxIt = 10;
-        while ( isElementPresent( "//img[@alt='Checking Out']" ) || isElementPresent( "//img[@alt='Updating']") )
+        while ( isElementPresent( "//img[@alt='Checking Out']" ) )
         {
             Thread.sleep( 10000 );
             getSelenium().refresh();
@@ -866,7 +866,6 @@ public abstract class AbstractContinuumTest
             }
             currentIt++;
         }
-        Thread.sleep( 10000 );
     }
 
     public void createNewUser( String username, String name, String email, String password )
@@ -901,28 +900,5 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "[Admin] List of Users in Role: Any" );
         assertLinkPresent( "admin" );
         assertLinkPresent( "guest" );
-    }
-
-    public void assertProjectAdministratorAccess()
-    {
-        assertLinkPresent( "About" );
-        assertLinkPresent( "Show Project Groups" );
-        assertLinkPresent( "Maven 2.0.x Project" );
-        assertLinkPresent( "Maven 1.x Project" );
-        assertLinkPresent( "Ant Project" );
-        assertLinkPresent( "Shell Project" );
-        assertLinkPresent( "Schedules" );
-        assertLinkPresent( "Queues" );
-        assertLinkPresent( "Users" );
-        assertLinkPresent( "Roles" );
-        assertLinkNotPresent( "Local Repositories" );
-        assertLinkNotPresent( "Purge Configurations" );
-        assertLinkNotPresent( "Installations" );
-        assertLinkNotPresent( "Build Environments" );
-        assertLinkNotPresent( "Build Definition Templates" );
-        assertLinkNotPresent( "Configuration" );
-        assertLinkNotPresent( "Appearance" );
-        assertLinkNotPresent( "Build Queue" );
-        assertLinkNotPresent( "Build Agent" );
     }
 }

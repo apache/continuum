@@ -215,6 +215,7 @@ public class MavenTwoProjectTest
         assertTextPresent( "Delete Continuum Project" );
         clickButtonWithValue( "Delete" );
         assertPage( "Continuum - Project Group" );
+        assertTextNotPresent( "Unable to delete project" );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
         assertTextNotPresent( M2_PROJ_GRP_SCM_ROOT_URL );
 
@@ -235,6 +236,7 @@ public class MavenTwoProjectTest
         assertTextPresent( "Delete Continuum Projects" );
         clickButtonWithValue( "Delete" );
         assertPage( "Continuum - Project Group" );
+        assertTextNotPresent( "Unable to delete project" );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
         assertTextNotPresent( M2_PROJ_GRP_SCM_ROOT_URL );
 

@@ -198,13 +198,13 @@ public abstract class AbstractUserRolesManagementTest
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
     	}
-	else if( role == "Project Administrator - Default Project Group" )
-	{
+    	else if( role == "Project Administrator - Default Project Group" )
+    	{
     		String navMenu = "About,Show Project Groups,Queues,Users,Roles";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
-	}
+    	}
     	else if( role == "Project Developer - Default Project Group" || role == "Project User - Default Project Group" )
     	{
     		String navMenu = "About,Show Project Groups,Queues";
@@ -224,14 +224,37 @@ public abstract class AbstractUserRolesManagementTest
 
 	}
 
-	public void assertDeleteUserPage( String username )
-	 {
-	        assertPage( "[Admin] User Delete" ); //TODO
-	        assertTextPresent( "[Admin] User Delete" );
-	        assertTextPresent( "The following user will be deleted:" );
-	        assertTextPresent( "Username: " + username );
-	        assertButtonWithValuePresent( "Delete User" );
-	 }
+    public void assertDeleteUserPage( String username )
+    {
+        assertPage( "[Admin] User Delete" ); //TODO
+        assertTextPresent( "[Admin] User Delete" );
+        assertTextPresent( "The following user will be deleted:" );
+        assertTextPresent( "Username: " + username );
+        assertButtonWithValuePresent( "Delete User" );
+    }
+
+	public void assertProjectAdministratorAccess()
+    {
+        assertLinkPresent( "About" );
+        assertLinkPresent( "Show Project Groups" );
+        assertLinkPresent( "Maven 2.0.x Project" );
+        assertLinkPresent( "Maven 1.x Project" );
+        assertLinkPresent( "Ant Project" );
+        assertLinkPresent( "Shell Project" );
+        assertLinkPresent( "Schedules" );
+        assertLinkPresent( "Queues" );
+        assertLinkPresent( "Users" );
+        assertLinkPresent( "Roles" );
+        assertLinkNotPresent( "Local Repositories" );
+        assertLinkNotPresent( "Purge Configurations" );
+        assertLinkNotPresent( "Installations" );
+        assertLinkNotPresent( "Build Environments" );
+        assertLinkNotPresent( "Build Definition Templates" );
+        assertLinkNotPresent( "Configuration" );
+        assertLinkNotPresent( "Appearance" );
+        assertLinkNotPresent( "Build Queue" );
+        assertLinkNotPresent( "Build Agent" );
+    }
 
 	/////////////////////////////////////////
 	// User Roles Management
@@ -279,74 +302,74 @@ public abstract class AbstractUserRolesManagementTest
 	}
 
 
-	 public void login( String username, String password )
+	public void login( String username, String password )
+	{
+	    login( username, password, true, "Login Page" );
+	}
+
+    public void login( String username, String password, boolean valid, String assertReturnPage )
+	{
+        if ( isLinkPresent( "Login" ) )
 	    {
-	        login( username, password, true, "Login Page" );
+            goToLoginPage();
+
+            submitLoginPage( username, password, false, valid, assertReturnPage );
 	    }
+    }
 
-		public void login( String username, String password, boolean valid, String assertReturnPage )
-	    {
-	        if ( isLinkPresent( "Login" ) )
-	        {
-	            goToLoginPage();
+    public void submitLoginPage( String username, String password )
+    {
+        submitLoginPage( username, password, false, true, "Login Page" );
+    }
 
-	            submitLoginPage( username, password, false, valid, assertReturnPage );
-	        }
-	    }
+    public void submitLoginPage( String username, String password, boolean validUsernamePassword )
+    {
+        submitLoginPage( username, password, false, validUsernamePassword, "Login Page" );
+    }
 
-		public void submitLoginPage( String username, String password )
-	    {
-	        submitLoginPage( username, password, false, true, "Login Page" );
-	    }
-
-	    public void submitLoginPage( String username, String password, boolean validUsernamePassword )
-	    {
-	        submitLoginPage( username, password, false, validUsernamePassword, "Login Page" );
-	    }
-
-	    public void submitLoginPage( String username, String password, boolean rememberMe, boolean validUsernamePassword,
+    public void submitLoginPage( String username, String password, boolean rememberMe, boolean validUsernamePassword,
                                  String assertReturnPage )
-	    {
-	        assertLoginPage();
-	        setFieldValue( "username", username );
-	        setFieldValue( "password", password );
-	        if ( rememberMe )
-	        {
-	            checkField( "rememberMe" );
-	        }
-	        clickButtonWithValue( "Login" );
+    {
+        assertLoginPage();
+        setFieldValue( "username", username );
+        setFieldValue( "password", password );
+        if ( rememberMe )
+        {
+            checkField( "rememberMe" );
+        }
+        clickButtonWithValue( "Login" );
 
-	        if ( validUsernamePassword )
-	        {
-	            assertTextPresent( "Current User:" );
-	            assertTextPresent( username );
-	            assertLinkPresent( "Edit Details" );
-	            assertLinkPresent( "Logout" );
-	        }
-	        else
-	        {
-	            if ( "Login Page".equals( assertReturnPage ) )
-	            {
-	                assertLoginPage();
-	            }
-	            else
-	            {
-	                assertPage( assertReturnPage );
-	            }
-	        }
-	    }
+        if ( validUsernamePassword )
+        {
+            assertTextPresent( "Current User:" );
+            assertTextPresent( username );
+            assertLinkPresent( "Edit Details" );
+            assertLinkPresent( "Logout" );
+        }
+        else
+        {
+            if ( "Login Page".equals( assertReturnPage ) )
+            {
+                assertLoginPage();
+            }
+            else
+            {
+                assertPage( assertReturnPage );
+            }
+        }
+    }
 
 	public void deleteUser( String userName, String fullName, String emailAdd )
     {
         deleteUser( userName, fullName, emailAdd, false, false );
     }
 
-	public void deleteUser( String userName, String fullName, String emailAd, boolean validated, boolean locked )
-	{
-		//clickLinkWithText( "userlist" );
-		clickLinkWithXPath( "//table[@id='ec_table']/tbody[2]/tr[3]/td[7]/a/img" );
-		assertDeleteUserPage( userName );
+    public void deleteUser( String userName, String fullName, String emailAd, boolean validated, boolean locked )
+    {
+	    //clickLinkWithText( "userlist" );
+        clickLinkWithXPath( "//table[@id='ec_table']/tbody[2]/tr[3]/td[7]/a/img" );
+        assertDeleteUserPage( userName );
         submit();
         assertElementNotPresent( userName );
-	}
+    }
 }

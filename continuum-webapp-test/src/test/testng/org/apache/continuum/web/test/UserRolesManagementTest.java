@@ -31,28 +31,29 @@ public class UserRolesManagementTest
 
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
-        checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        //checkUserRoleWithValue( fullname );
+        clickLinkWithLocator( "addRolesToUser_addNDSelectedRoles", false );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );        
+        //assertTextPresent( "Password successfully changed" );        
         clickLinkWithText( "Logout" );
     }
 
     @Test( dependsOnMethods = { "testAddUserWithGuestRole" } )
     public void testGuestUserRoleFunction()
     {
-	username = getProperty( "GUEST_USERNAME" );
+        username = getProperty( "GUEST_USERNAME" );
         fullname = getProperty( "GUEST_FULLNAME" );
-	login( username, getUserRoleNewPassword() );
-	assertLeftNavMenuWithRole( fullname );
-	goToAboutPage();
-	clickLinkWithText( "Show Project Groups" );
-	assertTextPresent( "Project Groups list is empty" );
-	clickLinkWithText( "Logout" );
-	login( getAdminUsername(), getAdminPassword() );
+        login( username, getUserRoleNewPassword() );
+        assertLeftNavMenuWithRole( fullname );
+        goToAboutPage();
+        clickLinkWithText( "Show Project Groups" );
+        assertTextPresent( "Project Groups list is empty" );
+        clickLinkWithText( "Logout" );
+        login( getAdminUsername(), getAdminPassword() );
     }
 
 
@@ -70,12 +71,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
 
         clickLinkWithText( "Logout" );
         // assertTextPresent("You are already logged in.");
@@ -84,11 +85,11 @@ public class UserRolesManagementTest
     @Test( dependsOnMethods = { "testAddUserWithRegisteredUserRole" } )
     public void testRegisteredRoleFunction()
     {
-	username = getProperty( "REGISTERED_USERNAME" );
+        username = getProperty( "REGISTERED_USERNAME" );
         fullname = getProperty( "REGISTERED_FULLNAME" );
-	login( username, getUserRoleNewPassword() );
+        login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
-	goToAboutPage();
+        goToAboutPage();
         clickLinkWithText( "Show Project Groups" );
         assertTextPresent( "Project Groups list is empty." );
         clickLinkWithText( "Logout" );
@@ -112,13 +113,13 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
 
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
 
         clickLinkWithText( "Logout" );
     }
@@ -126,13 +127,13 @@ public class UserRolesManagementTest
     @Test( dependsOnMethods = { "testAddUserWithSystemAdminRole" } )
     public void testSystemAdminRoleFunction()
     {
-	username = getProperty( "SYSAD_USERNAME" );
+	    username = getProperty( "SYSAD_USERNAME" );
         fullname = getProperty( "SYSAD_FULLNAME" );
-	login( username, getUserRoleNewPassword() );
+        login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Show Project Groups" );
         assertTextNotPresent( "Project Groups list is empty." );
-	assertLinkPresent( "Default Project Group" );
+        assertLinkPresent( "Default Project Group" );
 	
         clickLinkWithText( "Logout" );
         login( getAdminUsername(), getAdminPassword() );
@@ -152,14 +153,14 @@ public class UserRolesManagementTest
 
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
-            checkUserRoleWithValue( fullname );
+        checkUserRoleWithValue( fullname );
 		clickButtonWithValue( "Submit" );
 
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
 
         clickLinkWithText( "Logout" );
     }
@@ -167,31 +168,31 @@ public class UserRolesManagementTest
     @Test( dependsOnMethods = { "testAddUserWithUserAdminRole" } )
     public void testUserAdminFunction()
     {
-	username = getProperty( "USERADMIN_USERNAME" );
+        username = getProperty( "USERADMIN_USERNAME" );
         fullname = getProperty( "USERADMIN_FULLNAME" );
-	login( username, getUserRoleNewPassword() );
+        login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Show Project Groups" );
         assertTextPresent( "Project Groups list is empty." );
-	// add user
-	clickLinkWithText( "Users" );
-	clickButtonWithValue( "Create New User" );
-	assertCreateUserPage();
-	setFieldValue( "user.username", "guest0" );
+        // add user
+        clickLinkWithText( "Users" );
+        clickButtonWithValue( "Create New User" );
+	    assertCreateUserPage();
+	    setFieldValue( "user.username", "guest0" );
         setFieldValue( "user.fullName", "guest0" );
         setFieldValue( "user.email", "guest0@guest0.com" );
         setFieldValue( "user.password", "pass" );
         setFieldValue( "user.confirmPassword", "pass" );
         submit();
-	assertUserRolesPage( );
+        assertUserRolesPage( );
         clickButtonWithValue( "Submit" );
-	selectValue( "name=ec_rd", "50" );
+        selectValue( "name=ec_rd", "50" );
         waitPage();
-	// delete user	
-	deleteUser( "guest0", "guest0", "guest0@guest0.com" );	
-	// TODO edit user
+        // delete user	
+        deleteUser( "guest0", "guest0", "guest0@guest0.com" );	
+        // TODO edit user
 
-	clickLinkWithText( "Logout" );
+        clickLinkWithText( "Logout" );
         login( getAdminUsername(), getAdminPassword() );
     }
 
@@ -212,41 +213,63 @@ public class UserRolesManagementTest
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
-	clickLinkWithText( "Logout" );
+
+        // enable distributed build
+        clickLinkWithText( "Configuration" );
+        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+        clickButtonWithValue( "Save" );
+
+        clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
+
+	    assertProjectAdministratorAccess();
+
+        clickLinkWithText( "Logout" );
+
+        login( getAdminUsername(), getAdminPassword() );
+        // disable distributed build
+        clickLinkWithText( "Configuration" );
+        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+        clickButtonWithValue( "Save" );
+
+        clickLinkWithText( "Logout" );
+
+        login( username, getUserRoleNewPassword() );
+        assertProjectAdministratorAccess();
+
         clickLinkWithText( "Logout" );
     }
 
     @Test( dependsOnMethods = { "testAddUserWithContinuumGroupProjectAdminRole" } )
     public void testContinuumGroupProjectAdmin_AddProjectGroup() throws Exception
     {
-	username = getProperty( "GROUPPROJECTADMIN_USERNAME" );
+        username = getProperty( "GROUPPROJECTADMIN_USERNAME" );
         fullname = getProperty( "GROUPPROJECTADMIN_FULLNAME" );
-	login( username, getUserRoleNewPassword() );
+        login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
-	clickLinkWithText( "Show Project Groups" );
+        clickLinkWithText( "Show Project Groups" );
         assertTextNotPresent( "Project Groups list is empty." );
-	// test add project group
-	clickButtonWithValue( "Add Project Group" );
-	setFieldValue( "name", "Test Group" );
+        // test add project group
+        clickButtonWithValue( "Add Project Group" );
+        setFieldValue( "name", "Test Group" );
         setFieldValue( "groupId", "Test Group" );
         setFieldValue( "description", "testing project group" );
-	submit();
+        submit();
     }
 
     @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_AddProjectGroup" } )
     public void testContinuumGroupProjectAdmin_AddProjectToProjectGroup() throws Exception
     {
-	clickLinkWithText( "Test Group" );
-	clickButtonWithValue( "Add" );	
-	assertAddMavenTwoProjectPage();
-	setFieldValue( "m2PomUrl", "https://svn.apache.org/repos/asf/continuum/sandbox/continuum-build-queue-test-data/pom.xml" );
+        clickLinkWithText( "Test Group" );
+        clickButtonWithValue( "Add" );	
+        assertAddMavenTwoProjectPage();
+        setFieldValue( "m2PomUrl", "https://svn.apache.org/repos/asf/continuum/sandbox/continuum-build-queue-test-data/pom.xml" );
         clickButtonWithValue( "Add" );
-	String title;
-	boolean success = true;
+        String title;
+        boolean success = true;
         if ( success )
         {
             title = "Continuum - Project Group";
@@ -256,25 +279,25 @@ public class UserRolesManagementTest
             title = "Continuum - Add Maven 2 Project";
         }
         waitAddProject( title );
-	assertTextPresent( "ContinuumBuildQueueTestData" );
+        assertTextPresent( "ContinuumBuildQueueTestData" );
     }
     
     @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_AddProjectToProjectGroup" } )
     public void testContinuumGroupProjectAdmin_BuildProject() throws Exception
     {
-	buildProjectGroup( "Test Group", "Test Group", "testing project group", "ContinuumBuildQueueTestData" );
+        buildProjectGroup( "Test Group", "Test Group", "testing project group", "ContinuumBuildQueueTestData" );
     }
 
     @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_BuildProject" } )
     public void testContinuumGroupProjectAdmin_AssignUserToAGroup()
     {
-	clickLinkWithText( "Users" );
-	clickLinkWithText( "guest1" );
-	clickLinkWithText( "Edit Roles" );
-	checkUserRoleWithValue( "Guest" );
-	checkResourceRoleWithValue( "Project Developer - Test Group" );
-	submit();
-	clickLinkWithText( "Logout" );
+        clickLinkWithText( "Users" );
+        clickLinkWithText( "guest1" );
+        clickLinkWithText( "Edit Roles" );
+        checkUserRoleWithValue( "Guest" );
+        checkResourceRoleWithValue( "Project Developer - Test Group" );
+        submit();
+        clickLinkWithText( "Logout" );
         login( getAdminUsername(), getAdminPassword() );
     }
 
@@ -334,12 +357,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -357,12 +380,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -380,12 +403,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );	
+        assertTextPresent( "Password successfully changed" );	
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -403,12 +426,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -426,12 +449,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -449,12 +472,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -472,12 +495,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -495,12 +518,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+	    clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -518,12 +541,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -541,12 +564,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -564,12 +587,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
@@ -587,12 +610,12 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
-	clickButtonWithValue( "Submit" );
+        clickButtonWithValue( "Submit" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRolePassword() );
         changePassword( getUserRolePassword(), getUserRoleNewPassword() );
-	assertTextPresent( "Password successfully changed" );
+        assertTextPresent( "Password successfully changed" );
         clickLinkWithText( "Logout" );
 
         login( username, getUserRoleNewPassword() );
