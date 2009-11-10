@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.ComparatorUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -53,7 +54,6 @@ import org.codehaus.plexus.redback.rbac.UserAssignment;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.users.User;
-import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -689,8 +689,9 @@ public class ProjectGroupAction
             List<String> roleNames = new ArrayList<String>();
             for ( Role r : roles )
             {
-                int index = r.getName().indexOf( projectGroup.getName() );
-                if ( index > -1 && r.getName().substring( index ).trim().equals( projectGroup.getName() ) )
+                String projectGroupName = StringUtils.substringAfter( r.getName(), "-" ).trim();
+
+                if ( projectGroupName.equals( group.getName() ) )
                 {
                     roleNames.add( r.getName() );
                 }
