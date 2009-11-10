@@ -44,7 +44,7 @@ public class MyAccountTest
     	editMyUserInfo( adminFullName, adminEmail, adminPassword ,adminPassword, adminPassword );
     	assertTextPresent( "Your password cannot match any of your previous 6 password(s)." );
     	clickButtonWithValue( "Cancel" );
-    	assertPage( "Continuum - Group Summary" );
+    	assertPage( "Login Page" );
     }
 
 }

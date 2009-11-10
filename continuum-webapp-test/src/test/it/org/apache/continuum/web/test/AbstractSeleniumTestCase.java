@@ -26,8 +26,6 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -119,7 +117,15 @@ public abstract class AbstractSeleniumTestCase
     {
     	if ( getTitle().endsWith( "Continuum - Configuration" ) )
     	{
-    		setFieldValue("baseUrl", baseUrl);
+    		String workingDir = sel.getValue( "configuration_workingDirectory" );
+    		String buildOutputDir = sel.getValue( "configuration_buildOutputDirectory" );
+    		String releaseOutputDir = sel.getValue( "configuration_releaseOutputDirectory" );
+    		String locationDir = "target/data";
+    		String data = "data";
+    		setFieldValue( "workingDirectory" , workingDir.replaceFirst( data, locationDir ) );
+    		setFieldValue( "buildOutputDirectory", buildOutputDir.replaceFirst( data , locationDir ) );
+    		setFieldValue( "releaseOutputDirectory" , releaseOutputDir.replaceFirst( data, locationDir ) );
+    		setFieldValue( "baseUrl", baseUrl );
     		clickButtonWithValue( "Save" );
     	}
     }
@@ -236,7 +242,7 @@ public abstract class AbstractSeleniumTestCase
     {
         assertEquals( getTitlePrefix() + title, getTitle() );
         assertHeader();
-        assertFooter();
+        //assertFooter();
     }
 
     public abstract void assertHeader();
@@ -353,18 +359,6 @@ public abstract class AbstractSeleniumTestCase
         }
     }
 
-    public void setFieldValues( Map fieldMap )
-    {
-        Map.Entry entry;
-
-        for ( Iterator entries = fieldMap.entrySet().iterator(); entries.hasNext(); )
-        {
-            entry = (Map.Entry) entries.next();
-
-            sel.type( (String) entry.getKey(), (String) entry.getValue() );
-        }
-    }
-
     public void setFieldValue( String fieldName, String value )
     {
         sel.type( fieldName, value );
@@ -444,7 +438,7 @@ public abstract class AbstractSeleniumTestCase
 
         if ( validUsernamePassword )
         {
-            //assertTextPresent( "Current User:" );
+            assertTextPresent( "Current User:" );
             assertTextPresent( username );
             assertLinkPresent( "Edit Details" );
             assertLinkPresent( "Logout" );
@@ -529,41 +523,32 @@ public abstract class AbstractSeleniumTestCase
         setFieldValue( "user.confirmPassword", confirmNewPassword );
         clickButtonWithValue( "Submit" );
     }
-
+    
     //////////////////////////////////////
-    // Users
+    // User Roles
     //////////////////////////////////////
-    public void assertUsersListPage()
+    public void assertUserRoleCheckBoxPresent( String value )
     {
-        assertPage( "[Admin] User List" );
+    	sel.isElementPresent( "xpath=//input[@id='addRolesToUser_addNDSelectedRoles' and @name='addNDSelectedRoles' and @value='"+ value + "']" );
+    }
+    
+    public void assertResourceRolesCheckBoxPresent( String value ) 
+    {
+    	sel.isElementPresent( "xpath=//input[@name='addDSelectedRoles' and @value='" + value + "']" );
+    }
+  
+    public void checkUserRoleWithValue( String value ) 
+    {
+    	assertUserRoleCheckBoxPresent( value );
+    	sel.click( "xpath=//input[@id='addRolesToUser_addNDSelectedRoles' and @name='addNDSelectedRoles' and @value='"+ value + "']" );
     }
 
-    public void assertCreateUserPage()
+    public void checkResourceRoleWithValue( String value ) 
     {
-        assertPage( "[Admin] User Create" );
-        assertTextPresent( "Username" );
-        assertTextPresent( "Full Name" );
-        assertTextPresent( "Email Address" );
-        assertTextPresent( "Password" );
-        assertTextPresent( "Confirm Password" );
+    	assertResourceRolesCheckBoxPresent( value );
+    	sel.click( "xpath=//input[@name='addDSelectedRoles' and @value='" + value + "']" );
     }
-
-    public void assertUserRolesPage()
-    {
-        assertPage( "[Admin] User Edit" );
-        assertTextPresent( "[Admin] User Roles" );
-        assertTextPresent( "Assigned Roles" );
-        assertTextPresent( "Available Roles" );
-    }
-
-    public void assertDeleteUserPage( String username )
-    {
-        assertPage( "[Admin] User Delete" );
-        assertTextPresent( "[Admin] User Delete" );
-        assertTextPresent( "The following user will be deleted: " + username );
-        assertButtonWithValuePresent( "Delete User" );
-    }
-
+    
     //////////////////////////////////////
     // Create Admin User
     //////////////////////////////////////

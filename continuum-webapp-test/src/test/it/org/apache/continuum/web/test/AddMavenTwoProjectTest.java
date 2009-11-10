@@ -19,13 +19,13 @@ package org.apache.continuum.web.test;
 public class AddMavenTwoProjectTest
     extends AbstractAuthenticatedAdminAccessTestCase
 {
-    public void testAddMavenTwoProjectFromRemoteSource()
+/*    public void testAddMavenTwoProjectFromRemoteSource()
         throws Exception
     {
         // Enter values into Add Maven Two Project fields, and submit
         addMavenTwoProject( TEST_POM_URL, TEST_POM_USERNAME, TEST_POM_PASSWORD, null, true );
 
-        clickLinkWithText( DEFAULT_PROJ_GRP_NAME );
+        //clickLinkWithText( DEFAULT_PROJ_GRP_NAME );
 
         removeProjectGroup( "Apache Maven", "org.apache.maven", "Maven is a software project management and comprehension tool. Based on the concept of a project object model (POM), Maven can manage a project's build, reporting and documentation from a central piece of information." );
     }
@@ -43,7 +43,7 @@ public class AddMavenTwoProjectTest
 
         removeProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
     }
-
+*/
     /**
      * submit the page
      *
@@ -75,18 +75,18 @@ public class AddMavenTwoProjectTest
     /**
      * Test when scm element is missing from pom
      */
-    public void testMissingScmElementPom()
+/*    public void testMissingScmElementPom()
     	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-scm-element-pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "Missing 'scm' element in the POM." );
     }
-
+*/
     /**
      * Test when the specified pom url is invalid
      */
-    public void testCannotAccessResource()
+/*    public void testCannotAccessResource()
     	throws Exception
     {
         String pomUrl = "http://svn.apache.org/asf/maven/continuum/trunk/bad_url/pom.xml";
@@ -94,7 +94,7 @@ public class AddMavenTwoProjectTest
         assertTextPresent(
             "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
-
+*/
     /**
      * test with a malformed pom url
      */
@@ -110,18 +110,18 @@ public class AddMavenTwoProjectTest
     /**
      * Test when the connection element is missing from the scm tag
      */
-    public void testMissingConnectionElement()
+/*    public void testMissingConnectionElement()
     	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-connection-element-pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "Missing 'connection' sub-element in the 'scm' element in the POM." );
     }
-
+*/
     /**
      * Test when the parent pom is missing or not yet added in continuum
      */
-    public void testMissingParentPom()
+/*    public void testMissingParentPom()
     	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-parent-pom.xml";
@@ -129,21 +129,21 @@ public class AddMavenTwoProjectTest
         assertTextPresent(
             "Missing artifact trying to build the POM. Check that its parent POM is available or add it first in Continuum." );
     }
-
+*/
     /**
      * Test when the modules/subprojects specified in the pom are not found
      */
-    public void testMissingModules()
+/*    public void testMissingModules()
     	throws Exception
     {
         String pomUrl= "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-modules-pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "Unknown error trying to build POM." );
     }
-
+*/
     /**
      * test with an inaccessible pom url
-     */
+     
     public void testInaccessiblePomUrl()
     	throws Exception
     {
@@ -151,7 +151,7 @@ public class AddMavenTwoProjectTest
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
-
+*/
     /**
      * test unallowed file protocol
      */
@@ -165,12 +165,12 @@ public class AddMavenTwoProjectTest
 
     /**
      * test cancel button
-     */
+     
     public void testCancelButton()
     {
         goToAboutPage();
         goToAddMavenTwoProjectPage();
         clickButtonWithValue( "Cancel" );
         assertAboutPage();
-    }
+    } */
 }

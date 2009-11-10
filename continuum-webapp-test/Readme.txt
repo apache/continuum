@@ -6,30 +6,40 @@ Test with Firefox and Selenium IDE
  * in Selenium IDE, modify the Base URL if necessary (for example, http://localhost:8080/continuum)
  * in Selenium IDE, click the 'Play entire test suite' icon
 
-Run Selenium tests in src/test/java with Maven and Cargo using support for multiple data sources
- * modify src/test/resources/it.properties as needed
+Run Selenium tests in src/test/testNG with Maven, TestNG and Cargo
+ * Start Continuum
+ * modify src/test/resources/testng.properties as needed
  * mvn clean install
 
-Run Selenium tests in src/test/it with Maven and Cargo with alternate configuration
+Run Selenium tests against an existing Continuum instance
+  * mvn clean install -DbaseUrl=http://localhost:9595/continuum
+
+  (This skips the Cargo plugin configuration that starts a container with the Continuum webapp deployed)
+
+Run Selenium tests in an alternate browser
+  * mvn clean install -Dbrowser=iexplore  (or -Dbrowser=safari or -Dbrowser=other -DbrowserPath=/path/to/browser)
+
+Change the port the embedded selenium runs on
+  * mvn clean install -DseleniumPort=4444
+
+Run Selenium tests in an running Selenium server or hub
+  * mvn clean install -DseleniumHost=localhost -DseleniumPort=4444
+
+Run Selenium tests in src/test/it with Maven, JUnit and Cargo
  * modify src/test/resources/it.properties as needed
- * mvn clean install -f it-pom.xml
- 
-Run Selenium tests in src/test/testNG with Maven and testNG
- * Start Continuum
- * Config admin user for continuum application
- * modify src/test/resources/testng.properties as needed
- * mvn clean install -f testng-pom.xml
+ * mvn clean install -f junit-pom.xml
+
+Run Selenium tests in src/test/java with Maven and JUnit
+ * modify src/test/resources/it.properties as needed
+ * edit pom.xml and remove <testSourceDirectory>
+ * for snapshot version of selenium(1.0-beta-SNAPSHOT), modify settings.xml/pom.xml to point to this repository http://nexus.openqa.org/content/repositories/snapshots 
+ * mvn clean install -f junit-pom.xml
 
  Note that this does not install anything, it simply runs through the lifecycle including the integration test phases.
  More properly it would be 'mvn clean post-integration-test', but install is much shorter to type. :)
 
  After you have run through the lifecycle once to set up the container and webapps, you can re-start it using:
  mvn cargo:start
-
-Run Selenium teests in src/test/pom2 with Maven
- * set TOMCAT_HOME environment variable to location of Tomcat 5.5.x installation
- * modify src/test/resources/it.properties as needed
- * mvn clean install -f pom2.xml
 
 ======= OLD INSTRUCTIONS FOR src/test/it BELOW =======
 

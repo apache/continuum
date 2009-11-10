@@ -19,9 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -32,28 +30,11 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "about" }, alwaysRun = true )
 public class AboutTest
-    extends AbstractSeleniumTest
+    extends AbstractContinuumTest
 {
-
-    @BeforeTest(groups = { "about" })
-    public void open()
-        throws Exception
-    {
-        super.open(1);
-    }
-
     public void displayAboutPage()
     {
-        geSelenium().open( baseUrl + "/about.action" );
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
-        Assert.assertEquals( "Continuum - About", geSelenium().getTitle() );
+        goToAboutPage();
     }
 
-    @Override
-    @AfterTest(groups = { "about" })
-    public void close()
-        throws Exception
-    {
-        super.close();
-    }
 }
