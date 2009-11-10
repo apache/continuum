@@ -348,7 +348,7 @@ public class UserRolesManagementTest
     }
     */
 
-    @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_BuildProject" } )
+    @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_AssignUserToAGroup" } )
     public void testUserWithContinuumGroupProjectDeveloperRole()
     {
         username = getProperty( "GROUPPROJECTDEVELOPER_USERNAME" );
