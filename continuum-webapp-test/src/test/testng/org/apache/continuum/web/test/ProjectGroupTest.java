@@ -175,6 +175,9 @@ public class ProjectGroupTest
         String GRP_NAME_TWO = getProperty( "TEST_PROJ_GRP_NAME_TWO" );
         String GRP_ID_TWO = getProperty( "TEST_PROJ_GRP_ID_TWO" );
         String GRP_DESCRIPTION_TWO = getProperty( "TEST_PROJ_GRP_DESCRIPTION_TWO" );
+        String GRP_NAME_THREE = getProperty( "TEST_PROJ_GRP_NAME_THREE" );
+        String GRP_ID_THREE = getProperty( "TEST_PROJ_GRP_ID_THREE" );
+        String GRP_DESCRIPTION_THREE = getProperty( "TEST_PROJ_GRP_DESCRIPTION_THREE" );
 
         addProjectGroup( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE, true );
         assertLinkPresent( GRP_NAME_ONE );
@@ -182,23 +185,37 @@ public class ProjectGroupTest
         addProjectGroup( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO, true );
         assertLinkPresent( GRP_NAME_TWO );
 
+        addProjectGroup( GRP_NAME_THREE, GRP_ID_THREE, GRP_DESCRIPTION_THREE, true );
+        assertLinkPresent( GRP_NAME_THREE );
+
         createAndAddUserAsDeveloperToGroup( "username1", "user1", "user1@something.com", "password123", GRP_NAME_ONE );
         createAndAddUserAsDeveloperToGroup( "username2", "user2", "user2@something.com", "password123", GRP_NAME_ONE );
         createAndAddUserAsDeveloperToGroup( "username3", "user3", "user3@something.com", "password123", GRP_NAME_TWO );
+        createAndAddUserAsDeveloperToGroup( "username4", "user4", "user4@something.com", "password123", GRP_NAME_THREE );
 
         showMembers( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE );
         assertUserPresent( "username1", "user1", "user1@something.com" );
         assertUserPresent( "username2", "user2", "user2@something.com" );
         assertUserNotPresent( "username3", "user3", "user3@something.com" );
+        assertUserNotPresent( "username4", "user4", "user4@something.com" );
 
         showMembers( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO );
         assertUserNotPresent( "username1", "user1", "user1@something.com" );
         assertUserNotPresent( "username2", "user2", "user2@something.com" );
         assertUserPresent( "username3", "user3", "user3@something.com" );
+        assertUserNotPresent( "username4", "user4", "user4@something.com" );
+
+        showMembers( GRP_NAME_THREE, GRP_ID_THREE, GRP_DESCRIPTION_THREE );
+        assertUserNotPresent( "username1", "user1", "user1@something.com" );
+        assertUserNotPresent( "username2", "user2", "user2@something.com" );
+        assertUserNotPresent( "username3", "user3", "user3@something.com" );
+        assertUserPresent( "username4", "user4", "user4@something.com" );
 
         removeProjectGroup( GRP_NAME_ONE );
         assertLinkNotPresent( GRP_NAME_ONE );
         removeProjectGroup( GRP_NAME_TWO );
         assertLinkNotPresent( GRP_NAME_TWO );
+        removeProjectGroup( GRP_NAME_THREE );
+        assertLinkNotPresent( GRP_NAME_THREE );
     }
 }
