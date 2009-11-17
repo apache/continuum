@@ -295,8 +295,7 @@ public class ReleaseTaskExecutorTest
 
         ReleaseResult result = (ReleaseResult) releaseManager.getReleaseResults().get( "testRelease" );
 
-        if ( !result.getOutput().contains( "test/executable/mvn" ) && 
-                !result.getOutput().contains( "test\\executable\\mvn" ) )
+        if ( !result.getOutput().replace( "\\", "/" ).contains( "test/executable/mvn" ) )
         {
             fail( "Error in release:perform. Missing executable" );
         }
