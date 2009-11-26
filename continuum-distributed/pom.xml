@@ -30,6 +30,7 @@ under the License.
   <modules>
     <module>continuum-distributed-master</module>
     <module>continuum-distributed-slave</module>
+    <module>continuum-distributed-commons</module>
     <!-- <module>continuum-distributed-tests</module> -->
   </modules>
 </project>

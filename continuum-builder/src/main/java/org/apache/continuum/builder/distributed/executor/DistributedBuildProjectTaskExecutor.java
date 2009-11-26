@@ -104,7 +104,7 @@ public class DistributedBuildProjectTaskExecutor
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
-            log.info( "initializing buildContext" );
+            log.info( "initializing buildContext for projectGroupId=" + prepareBuildTask.getProjectGroupId() );
             List<Map<String, Object>> buildContext =
                 initializeBuildContext( prepareBuildTask.getProjectsBuildDefinitionsMap(),
                 		                prepareBuildTask.getBuildTrigger(), prepareBuildTask.getScmRootAddress(),

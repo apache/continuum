@@ -103,7 +103,7 @@ public class BuildProjectTaskExecutor
 
         int projectId = buildProjectTask.getProjectId();
 
-        log.info( "Initializing build" );
+        log.info( "Initializing build (projectId=" + projectId + ")" );
         BuildContext context = buildContextManager.getBuildContext( projectId );
         initializeBuildContext( context );
 

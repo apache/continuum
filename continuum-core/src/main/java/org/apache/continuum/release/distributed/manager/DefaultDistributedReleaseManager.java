@@ -748,7 +748,7 @@ public class DefaultDistributedReleaseManager
             return true;
         }
 
-        log.info( "Build agent: " + buildAgentUrl + "is either disabled or removed" );
+        log.info( "Build agent: " + buildAgentUrl + " is either disabled or removed" );
         return false;
     }
 }

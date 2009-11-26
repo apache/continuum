@@ -22,6 +22,7 @@ package org.apache.continuum.distributed.transport.master;
 import java.util.Map;
 
 import org.apache.continuum.builder.distributed.DistributedBuildService;
+import org.apache.continuum.distributed.commons.utils.ContinuumDistributedUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class MasterBuildAgentTransportServer
     public Boolean returnBuildResult( Map<String, Object> buildResult )
         throws Exception
     {
-        log.info( "Build result returned." );
+        log.info( "Build result returned for project " + ContinuumDistributedUtil.getProjectNameAndId( buildResult ) + "." );
         distributedBuildService.updateBuildResult( buildResult );
         return Boolean.TRUE;
     }
@@ -59,7 +60,7 @@ public class MasterBuildAgentTransportServer
     public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult )
         throws Exception
     {
-        log.info( "Prepare build finished." );
+        log.info( "Prepare build finished for project " + ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ) + "." );
         distributedBuildService.prepareBuildFinished( prepareBuildResult );
         return Boolean.TRUE;
     }
@@ -67,7 +68,7 @@ public class MasterBuildAgentTransportServer
     public Boolean startProjectBuild( Integer projectId )
         throws Exception
     {
-        log.info( "Start project build." );
+        log.info( "Start project '" + projectId + "' build." );
         distributedBuildService.startProjectBuild( projectId );
         return Boolean.TRUE;
     }
@@ -75,7 +76,7 @@ public class MasterBuildAgentTransportServer
     public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult )
         throws Exception
     {
-        log.info( "Start prepare build." );
+        log.info( "Start prepare build of project " + ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ) + "." );
         distributedBuildService.startPrepareBuild( prepareBuildResult );
         return Boolean.TRUE;
     }
@@ -83,14 +84,14 @@ public class MasterBuildAgentTransportServer
     public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
         throws Exception
     {
-        log.info( "Retrieving environments" );
+        log.info( "Retrieving environments. buildDefinitionId=" + buildDefinitionId + ", installationType=" + installationType );
         return distributedBuildService.getEnvironments( buildDefinitionId, installationType );
     }
 
     public Boolean updateProject( Map<String, Object> project )
         throws Exception
     {
-        log.info( "Start updating project" );
+        log.info( "Start updating project " + ContinuumDistributedUtil.getProjectNameAndId( project ) );
         distributedBuildService.updateProject( project );
         return Boolean.TRUE;
     }
@@ -98,7 +99,7 @@ public class MasterBuildAgentTransportServer
     public Boolean shouldBuild( Map<String, Object> context )
         throws Exception
     {
-        log.info( "Checking if project should build" );
+        log.info( "Checking if project " + ContinuumDistributedUtil.getProjectNameAndId( context ) + " should build" );
         return distributedBuildService.shouldBuild( context );
     }
 }

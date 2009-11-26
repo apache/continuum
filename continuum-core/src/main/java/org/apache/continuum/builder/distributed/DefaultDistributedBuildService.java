@@ -226,17 +226,18 @@ public class DefaultDistributedBuildService
         }
         catch ( ContinuumStoreException e )
         {
-            log.error( "Error while updating project's state", e );
-            throw new ContinuumException( "Error while updating project's state", e );
+            log.error( "Error while updating project's state (projectId=" + projectId + ")", e );
+            throw new ContinuumException( "Error while updating project's state (projectId=" + projectId + ")", e );
         }
     }
     
     public void startPrepareBuild( Map<String, Object> context )
         throws ContinuumException
     {
+        int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
+    	
         try
         {
-            int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
             String scmRootAddress = ContinuumBuildConstant.getScmRootAddress( context );
     
             ProjectScmRoot scmRoot =
@@ -247,8 +248,8 @@ public class DefaultDistributedBuildService
         }
         catch ( ContinuumStoreException e )
         {
-            log.error( "Error while updating project scm root's state", e );
-            throw new ContinuumException( "Error while updating project scm root's state", e );
+            log.error( "Error while updating project group'" + projectGroupId + "' scm root's state", e );
+            throw new ContinuumException( "Error while updating project group'" + projectGroupId + "' scm root's state", e );
         }
     }
     
@@ -334,16 +335,17 @@ public class DefaultDistributedBuildService
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumException( "Unable to update project from working copy", e );
+            throw new ContinuumException( "Unable to update project '" + ContinuumBuildConstant.getProjectId( context ) +
+        	                              "' from working copy", e );
         }
     }
 
     public boolean shouldBuild( Map<String, Object> context )
     {
+        int projectId = ContinuumBuildConstant.getProjectId( context );
+        
         try
         {
-            int projectId = ContinuumBuildConstant.getProjectId( context );
-    
             int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( context );
     
             int trigger = ContinuumBuildConstant.getTrigger( context );
@@ -361,17 +363,17 @@ public class DefaultDistributedBuildService
     
             if ( buildDefinition.isBuildFresh() )
             {
-                log.info( "FreshBuild configured, building" );
+                log.info( "FreshBuild configured, building (projectId=" + projectId + ")" );
                 return true;
             }
             if ( buildDefinition.isAlwaysBuild() )
             {
-                log.info( "AlwaysBuild configured, building" );
+                log.info( "AlwaysBuild configured, building (projectId=" + projectId + ")" );
                 return true;
             }
             if ( oldBuildResult == null )
             {
-                log.info( "The project was never be built with the current build definition, building" );
+                log.info( "The project '" +  projectId + "' was never built with the current build definition, building" );
                 return true;
             }
     
@@ -379,26 +381,26 @@ public class DefaultDistributedBuildService
             if ( project.getOldState() == ContinuumProjectState.ERROR ||
                 oldBuildResult.getState() == ContinuumProjectState.ERROR )
             {
-                log.info( "Latest state was 'ERROR', building" );
+                log.info( "Latest state was 'ERROR', building (projectId=" + projectId + ")" );
                 return true;
             }
     
             if ( trigger == ContinuumProjectState.TRIGGER_FORCED )
             {
-                log.info( "The project build is forced, building" );
+                log.info( "The project '" + projectId + "' build is forced, building" );
                 return true;
             }
     
             Date date = ContinuumBuildConstant.getLatestUpdateDate( context );
             if ( date != null && oldBuildResult.getLastChangedDate() >= date.getTime() )
             {
-                log.info( "No changes found,not building" );
+                log.info( "No changes found, not building (projectId=" + projectId + ")" );
                 return false;
             }
             else if ( date != null && changes.isEmpty() )
             {
                 // fresh checkout from build agent that's why changes is empty
-                log.info( "Changes found in the current project, building" );
+                log.info( "Changes found in the current project, building (projectId=" + projectId + ")" );
                 return true;
             }
     
@@ -418,20 +420,20 @@ public class DefaultDistributedBuildService
                 {
                     if ( !changes.isEmpty() )
                     {
-                        log.info(
-                            "The project was not built because all changes are unknown (maybe local modifications or ignored files not defined in your SCM tool." );
+                        log.info( "The project '" + projectId +
+                            "' was not built because all changes are unknown (maybe local modifications or ignored files not defined in your SCM tool." );
                     }
                     else
                     {
-                        log.info(
-                            "The project was not built because no changes were detected in sources since the last build." );
+                        log.info( "The project '" + projectId +
+                            "' was not built because no changes were detected in sources since the last build." );
                     }
                 }
     
                 // Check dependencies changes
                 if ( modifiedDependencies != null && !modifiedDependencies.isEmpty() )
                 {
-                    log.info( "Found dependencies changes, building" );
+                    log.info( "Found dependencies changes, building (projectId=" + projectId + ")" );
                     shouldBuild = true;
                 }
             }
@@ -446,22 +448,22 @@ public class DefaultDistributedBuildService
     
             if ( shouldBuild )
             {
-                log.info( "Changes found in the current project, building" );
+                log.info( "Changes found in the current project, building (projectId=" + projectId + ")" );
             }
             else
             {
-                log.info( "No changes in the current project, not building" );
+                log.info( "No changes in the current project, not building (projectId=" + projectId + ")" );
             }
     
             return shouldBuild;
         }
         catch ( ContinuumStoreException e )
         {
-            log.error( "Failed to determine if project should build", e );
+            log.error( "Failed to determine if project '" + projectId + "' should build", e );
         }
         catch ( ContinuumException e )
         {
-            log.error( "Failed to determine if project should build", e );
+            log.error( "Failed to determine if project '" + projectId + "' should build", e );
         }
     
         return false;
@@ -482,14 +484,15 @@ public class DefaultDistributedBuildService
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "recursive build and changes found --> building" );
+                log.info( "recursive build and changes found --> building (projectId=" + project.getId() + ")" );
             }
             return true;
         }
     
         if ( !project.getVersion().equals( mavenProjectVersion ) )
         {
-            log.info( "Found changes in project's version ( maybe project was recently released ), building" );
+            log.info( "Found changes in project's version ( maybe project '" + project.getId() +
+            		  "' was recently released ), building" );
             return true;
         }
     
@@ -497,7 +500,7 @@ public class DefaultDistributedBuildService
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Found no changes, not building" );
+                log.info( "Found no changes, not building (projectId=" + project.getId() + ")" );
             }
             return false;
         }
@@ -549,7 +552,7 @@ public class DefaultDistributedBuildService
     
         if ( !shouldBuild )
         {
-            log.info( "Changes are only in sub-modules." );
+            log.info( "Changes are only in sub-modules (projectId=" + project.getId() + ")." );
         }
     
         if ( log.isDebugEnabled() )

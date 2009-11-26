@@ -30,6 +30,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.apache.continuum.distributed.commons.utils.ContinuumDistributedUtil;
+
 /**
  * MasterBuildAgentTransportClient
  */
@@ -71,16 +73,17 @@ public class MasterBuildAgentTransportClient
         throws Exception
     {
         Boolean result;
+        String projectInfo = ContinuumDistributedUtil.getProjectNameAndId( buildResult );
 
         try
         {
             result = master.returnBuildResult( buildResult );
-            log.info( "Returning the build result." );
+            log.info( "Returning the build result for project " + projectInfo + "." );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return the build result.", e );
-            throw new Exception( "Failed to return the build result", e );
+            log.error( "Failed to return the build result for project " + projectInfo + ".", e );
+            throw new Exception( "Failed to return the build result for project " + projectInfo + ".", e );
         }
 
         return result;
@@ -109,16 +112,17 @@ public class MasterBuildAgentTransportClient
         throws Exception
     {
         Boolean result;
+        String projectInfo = ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult );
 
         try
         {
             result = master.prepareBuildFinished( prepareBuildResult );
-            log.info( "Prepare build finished." );
+            log.info( "Prepare build finished for project " + projectInfo + "." );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to finish prepare build" );
-            throw new Exception( "Failed to finish prepare build", e );
+            log.error( "Failed to finish prepare build for project " + projectInfo + "." );
+            throw new Exception( "Failed to finish prepare build for project " + projectInfo + ".", e );
         }
 
         return result;
@@ -132,12 +136,12 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.startProjectBuild( projectId );
-            log.info( "Return project currently building" );
+            log.info( "Return project currently building, projectId=" + projectId );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return project currently building", e );
-            throw new Exception( "Failed to return project currently building", e );
+            log.error( "Failed to return project currently building, projectId=" + projectId, e );
+            throw new Exception( "Failed to return project currently building, projectId=" + projectId, e );
         }
 
         return result;
@@ -147,16 +151,17 @@ public class MasterBuildAgentTransportClient
         throws Exception
     {
         Boolean result;
+        String projectInfo = ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult );
 
         try
         {
             result = master.startPrepareBuild( prepareBuildResult );
-            log.info( "Started prepare build" );
+            log.info( "Start prepare build for project " + projectInfo );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to start prepare build", e );
-            throw new Exception( "Failed to start prepare build", e );
+            log.error( "Failed to start prepare build for project " + projectInfo, e );
+            throw new Exception( "Failed to start prepare build for project " + projectInfo, e );
         }
 
         return result;
@@ -169,12 +174,14 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.getEnvironments( buildDefinitionId, installationType );
-            log.info( "Retrieved environments" );
+            log.info( "Retrieved environments. buildDefinitionId=" + buildDefinitionId + ", installationType=" + installationType );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to retrieve environments", e );
-            throw new Exception( "Failed to retrieve environments", e );
+            log.error( "Failed to retrieve environments. buildDefinitionId=" + buildDefinitionId +
+                       ", installationType=" + installationType, e );
+            throw new Exception( "Failed to retrieve environments. buildDefinitionId=" +
+                                  buildDefinitionId + ", installationType=" + installationType, e );
         }
 
         return result;
@@ -184,16 +191,17 @@ public class MasterBuildAgentTransportClient
         throws Exception
     {
         Boolean result;
+        String projectInfo = ContinuumDistributedUtil.getProjectNameAndId( project );
 
         try
         {
             result = master.updateProject( project );
-            log.info( "Updating project" );
+            log.info( "Updating project " + projectInfo );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to update project", e );
-            throw new Exception( "Failed to update project", e );
+            log.error( "Failed to update project " + projectInfo, e );
+            throw new Exception( "Failed to update project " + projectInfo, e );
         }
 
         return result;
@@ -203,16 +211,17 @@ public class MasterBuildAgentTransportClient
         throws Exception
     {
         Boolean result;
+        String projectInfo = ContinuumDistributedUtil.getProjectNameAndId( context );
 
         try
         {
             result = master.shouldBuild( context );
-            log.info( "Checking if project should build" );
+            log.info( "Checking if project " + projectInfo + " should build" );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to determine if project should build", e );
-            throw new Exception( "Failed to determine if project should build", e );
+            log.error( "Failed to determine if project " + projectInfo + " should build", e );
+            throw new Exception( "Failed to determine if project " + projectInfo + " should build", e );
         }
 
         return result;
