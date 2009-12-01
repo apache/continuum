@@ -34,10 +34,8 @@ Understanding Distributed Builds
 
     Distributed Builds happen at the project group level of Continuum.
     When the entire project group is built in the Master, independent projects
-    (single project or multi-module project) are distributed to any available
-    registered Slave.  A Slave is said to be available when it is currently not
-    building anything as it can only attend to a single build request from the
-    Master.
+    (single project or multi-module project) are distributed to a single
+    registered Slave.
 
     In a project group containing a mix of projects, the distribution of work
     goes through the following steps:
