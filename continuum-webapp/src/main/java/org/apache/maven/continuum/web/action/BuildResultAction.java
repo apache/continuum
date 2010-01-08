@@ -93,7 +93,14 @@ public class BuildResultAction
         // check if there are surefire results to display
         project = getContinuum().getProject( getProjectId() );
 
-        buildResult = getContinuum().getBuildResult( getBuildId() );
+        try
+        {
+            buildResult = getContinuum().getBuildResult( getBuildId() );
+        }
+        catch ( ContinuumException e )
+        {
+            buildResult = null;
+        }
 
         ConfigurationService configuration = getContinuum().getConfiguration();
 
