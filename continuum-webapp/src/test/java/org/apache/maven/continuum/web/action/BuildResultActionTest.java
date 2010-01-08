@@ -66,7 +66,6 @@ public class BuildResultActionTest
         Project project = createProject( "stub-project" );
 
         continuum.expects( once() ).method( "getProject" ).will( returnValue( project ) );
-        continuum.expects( once() ).method( "getBuildResult" ).will( returnValue( null ) );
         continuum.expects( once() ).method( "getConfiguration" ).will( returnValue( (ConfigurationService) configurationService.proxy()  ) );
         configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( true ) );
         distributedBuildManager.expects( once() ).method( "getBuildResult" ).will( returnValue( new HashMap<String, Object>() ) );

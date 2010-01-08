@@ -93,20 +93,11 @@ public class BuildResultAction
         // check if there are surefire results to display
         project = getContinuum().getProject( getProjectId() );
 
-        try
-        {
-            buildResult = getContinuum().getBuildResult( getBuildId() );
-        }
-        catch ( ContinuumException e )
-        {
-            buildResult = null;
-        }
-
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         // view build result of the current build from the distributed build agent
         if ( configuration.isDistributedBuildEnabled() &&
-            project.getState() == ContinuumProjectState.BUILDING && buildResult == null )
+            project.getState() == ContinuumProjectState.BUILDING && getBuildId() == 0 )
         {
             // if the project is currently building in distributed build agent, the build result will be stored in the database after the build is finished. 
             // it's safe to assume that the build result will be null at this point
@@ -139,6 +130,8 @@ public class BuildResultAction
         }
         else
         {
+            buildResult = getContinuum().getBuildResult( getBuildId() );
+
             // directory contains files ?
             File surefireReportsDirectory =
                 configuration.getTestReportsDirectory( buildId, getProjectId() );
