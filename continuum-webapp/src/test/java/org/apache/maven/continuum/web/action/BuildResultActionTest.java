@@ -57,6 +57,7 @@ public class BuildResultActionTest
         buildsManager.expects( once() ).method( "getCurrentBuilds" ).will( returnValue( new HashMap<String, BuildProjectTask>() ) );
 
         action.execute();
+        continuum.verify();
     }
 
     public void testViewCurrentBuildInDistributedBuildAgent()
@@ -71,6 +72,7 @@ public class BuildResultActionTest
         distributedBuildManager.expects( once() ).method( "getBuildResult" ).will( returnValue( new HashMap<String, Object>() ) );
 
         action.execute();
+        continuum.verify();
     }
 
     private Project createProject( String name )

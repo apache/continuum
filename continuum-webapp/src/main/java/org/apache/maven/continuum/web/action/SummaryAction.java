@@ -29,6 +29,7 @@ import java.util.Map;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -156,6 +157,14 @@ public class SummaryAction
                     model.setLastBuildDateTime( latestBuild.getEndTime() );
                     model.setLastBuildDuration( latestBuild.getDurationTime() );
                 }
+
+                ConfigurationService configuration = getContinuum().getConfiguration();
+
+                if ( configuration.isDistributedBuildEnabled() && 
+                                project.getState() == ContinuumProjectState.BUILDING )
+                {
+                    model.setLatestBuildId( 0 );
+                }
             }
 
             summary.add( model );
@@ -229,5 +238,11 @@ public class SummaryAction
     public void setGroupSummary( GroupSummary groupSummary )
     {
         this.groupSummary = groupSummary;
+    }
+
+    // test
+    public void setParallelBuildsManager( BuildsManager parallelBuildsManager )
+    {
+        this.parallelBuildsManager = parallelBuildsManager;
     }
 }
