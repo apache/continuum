@@ -1725,17 +1725,29 @@ public class DefaultContinuum
                 AbstractContinuumAction.setProject( context, projectDao.getProject( project.getId() ) );
 
                 BuildDefinition defaultBuildDefinition = null;
+                BuildDefinitionTemplate template = null;
                 if ( projectBuilderId.equals( MavenTwoContinuumProjectBuilder.ID ) )
                 {
-                    defaultBuildDefinition =
-                        (BuildDefinition) buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions().get(
-                            0 );
+                    template = buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate();
+
+                    if( template != null && template.getBuildDefinitions().size() > 0 )
+                    {
+                        defaultBuildDefinition = template.getBuildDefinitions().get( 0 );
+                    }
                 }
                 else if ( projectBuilderId.equals( MavenOneContinuumProjectBuilder.ID ) )
                 {
-                    defaultBuildDefinition =
-                        (BuildDefinition) buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate().getBuildDefinitions().get(
-                            0 );
+                    template = buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate();
+
+                    if ( template != null && template.getBuildDefinitions().size() > 0 )
+                    {
+                        defaultBuildDefinition = template.getBuildDefinitions().get( 0 );
+                    }
+                }
+
+                if ( defaultBuildDefinition == null )
+                {
+                    throw new ContinuumException( "Error adding projects from modules because no default build definition defined in the default template" );
                 }
 
                 // used by BuildManager to determine on which build queue will the project be put
