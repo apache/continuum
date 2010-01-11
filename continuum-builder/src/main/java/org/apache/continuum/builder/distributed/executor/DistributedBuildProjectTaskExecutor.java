@@ -141,6 +141,11 @@ public class DistributedBuildProjectTaskExecutor
 
             for ( Project project : sortedProjects )
             {
+                if ( !projectsAndBuildDefinitions.containsKey( project.getId() ) )
+                {
+                    continue;
+                }
+
                 int buildDefinitionId = projectsAndBuildDefinitions.get( project.getId() );
                 BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
                 BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( project.getId() );
