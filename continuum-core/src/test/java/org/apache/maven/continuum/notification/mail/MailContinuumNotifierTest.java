@@ -29,6 +29,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.notification.mail.MockJavaMailSender;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -62,18 +64,39 @@ public class MailContinuumNotifierTest
 
         ProjectGroup group = createStubProjectGroup( "foo.bar", "" );
 
+        BuildResultDao brDao = (BuildResultDao) lookup( BuildResultDao.class );
         Project project = addProject( "Test Project", group );
+        BuildResult br = makeBuild( ContinuumProjectState.FAILED );
+        brDao.addBuildResult( project, br );
+
+        br = makeBuild( ContinuumProjectState.OK );
+        brDao.addBuildResult( project, br );
+
+        br = makeBuild( ContinuumProjectState.FAILED );
+        brDao.addBuildResult( project, br );
 
         BuildResult build = makeBuild( ContinuumProjectState.OK );
+        assertEquals( ContinuumProjectState.OK, build.getState() );
+
+        project.setState( build.getState() );
+        getProjectDao().updateProject( project );
 
         BuildDefinition buildDef = new BuildDefinition();
         buildDef.setType( "maven2" );
         buildDef.setBuildFile( "pom.xml" );
         buildDef.setGoals( "clean install" );
         buildDef.setArguments( "" );
+        BuildDefinitionDao buildDefDao = (BuildDefinitionDao) lookup( BuildDefinitionDao.class );
+        buildDef = buildDefDao.addBuildDefinition( buildDef );
         build.setBuildDefinition( buildDef );
+        assertEquals( ContinuumProjectState.OK, build.getState() );
 
-        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots out build output", toOverride );
+        brDao.addBuildResult( project, build );
+        build = brDao.getLatestBuildResultForProjectWithDetails( project.getId() );
+        assertEquals( ContinuumProjectState.OK, build.getState() );
+
+        MimeMessage mailMessage =
+            sendNotificationAndGetMessage( project, build, buildDef, "lots out build output", toOverride );
 
         assertEquals( "[continuum] BUILD SUCCESSFUL: foo.bar Test Project", mailMessage.getSubject() );
 
@@ -92,7 +115,7 @@ public class MailContinuumNotifierTest
 
         BuildResult build = makeBuild( ContinuumProjectState.FAILED );
 
-        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, "output", null );
+        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, null, "output", null );
 
         assertEquals( "[continuum] BUILD FAILURE: foo.bar Test Project", mailMessage.getSubject() );
 
@@ -110,7 +133,7 @@ public class MailContinuumNotifierTest
 
         build.setError( "Big long error message" );
 
-        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots of stack traces", null );
+        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, null, "lots of stack traces", null );
 
         assertEquals( "[continuum] BUILD ERROR: foo.bar Test Project", mailMessage.getSubject() );
 
@@ -151,8 +174,8 @@ public class MailContinuumNotifierTest
     //
     // ----------------------------------------------------------------------
 
-    private MimeMessage sendNotificationAndGetMessage( Project project, BuildResult build, String buildOutput,
-                                                       String toOverride )
+    private MimeMessage sendNotificationAndGetMessage( Project project, BuildResult build, BuildDefinition buildDef,
+                                                       String buildOutput, String toOverride )
         throws Exception
     {
         MessageContext context = new MessageContext();
@@ -160,6 +183,8 @@ public class MailContinuumNotifierTest
         context.setProject( project );
 
         context.setBuildResult( build );
+
+        context.setBuildDefinition( buildDef );
 
         ProjectNotifier projectNotifier = new ProjectNotifier();
         projectNotifier.setType( "mail" );
@@ -216,8 +241,6 @@ public class MailContinuumNotifierTest
     private BuildResult makeBuild( int state )
     {
         BuildResult build = new BuildResult();
-
-        build.setId( 17 );
 
         build.setStartTime( System.currentTimeMillis() );
 

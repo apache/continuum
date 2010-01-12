@@ -27,7 +27,6 @@ import java.util.Map;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
-import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -639,10 +638,9 @@ public class DefaultBuildController
 
                 if ( dependencyProject != null )
                 {
-                    List<BuildResult> buildResults =
-                        buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
-                                                                           context.getOldBuildResult().getEndTime() );
-                    if ( buildResults != null && !buildResults.isEmpty() )
+                    long nbBuild = buildResultDao.getNbBuildResultsInSuccessForProject( dependencyProject.getId(),
+                                                                                        context.getOldBuildResult().getEndTime() );
+                    if ( nbBuild > 0 )
                     {
                         log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
                             dep.getVersion() );

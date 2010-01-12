@@ -274,14 +274,7 @@ public class DefaultContinuum
             @Override
             public void run()
             {
-                try
-                {
-                    stopContinuum();
-                }
-                catch ( StoppingException e )
-                {
-                    e.printStackTrace();
-                }
+                stopContinuum();
             }
         } );
     }
@@ -289,16 +282,6 @@ public class DefaultContinuum
     public ContinuumReleaseManager getReleaseManager()
     {
         return releaseManager;
-    }
-
-    public void setActionManager( ActionManager actionManager )
-    {
-        this.actionManager = actionManager;
-    }
-
-    public ActionManager getActionManager()
-    {
-        return actionManager;
     }
 
     public ContinuumPurgeManager getPurgeManager()
@@ -545,14 +528,18 @@ public class DefaultContinuum
     // Projects
     // ----------------------------------------------------------------------
 
-    // TODO: Remove this method
+    /**
+     * TODO: Remove this method
+     */
     public Collection<Project> getProjects()
         throws ContinuumException
     {
         return projectDao.getAllProjectsByName();
     }
 
-    // TODO: Remove this method
+    /**
+     * TODO: Remove this method
+     */
     public Collection<Project> getProjectsWithDependencies()
         throws ContinuumException
     {
@@ -795,6 +782,7 @@ public class DefaultContinuum
 
     /**
      * fire of the builds of all projects across all project groups using their default build definitions
+     * TODO:Remove this method
      *
      * @param buildTrigger
      * @throws ContinuumException
@@ -929,6 +917,8 @@ public class DefaultContinuum
                 return;
             }
 
+            //TODO: As all projects are built in the same queue for a project group, it would be better to get them by
+            // project group and add them in queues in parallel to save few seconds
             projectsList = getProjectsInBuildOrder();
         }
         catch ( ContinuumStoreException e )
@@ -1120,7 +1110,6 @@ public class DefaultContinuum
 
 
     private void removeBuildResult( BuildResult buildResult )
-        throws ContinuumException
     {
         buildResultDao.removeBuildResult( buildResult );
 
@@ -1138,7 +1127,7 @@ public class DefaultContinuum
                 getConfiguration().getBuildOutputFile( buildResult.getId(), buildResult.getProject().getId() );
             if ( buildOutputFile.exists() )
             {
-                buildOutputFile.delete();
+                FileUtils.forceDelete( buildOutputFile );
             }
         }
         catch ( ConfigurationException e )
@@ -1165,12 +1154,24 @@ public class DefaultContinuum
         }
     }
 
-    //TODO: Must be done by build definition
+    /**
+     * TODO: Must be done by build definition
+     */
     public List<ChangeSet> getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException
     {
-        ArrayList<BuildResult> buildResults =
-            new ArrayList<BuildResult>( buildResultDao.getBuildResultsForProject( projectId, 0 ) );
+        BuildResult previousBuildResult = null;
+        try
+        {
+            previousBuildResult = buildResultDao.getPreviousBuildResultInSuccess( projectId, buildResultId );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            //No previous build in success, Nothing to do
+        }
+        long startTime = previousBuildResult == null ? 0 : previousBuildResult.getStartTime();
+        ArrayList<BuildResult> buildResults = new ArrayList<BuildResult>(
+            buildResultDao.getBuildResultsForProjectWithDetails( projectId, startTime, buildResultId ) );
 
         Collections.reverse( buildResults );
 
@@ -1178,6 +1179,7 @@ public class DefaultContinuum
 
         boolean stop = false;
 
+        //TODO: Shouldn't be used now with the previous call of buildResultDao.getBuildResultsForProjectWithDetails
         while ( !stop )
         {
             if ( buildResultsIterator.hasNext() )
@@ -1238,7 +1240,9 @@ public class DefaultContinuum
     //
     // ----------------------------------------------------------------------
 
-    //TODO: Remove this method when it won't be used
+    /**
+     * TODO: Remove this method when it won't be used
+     */
     private List<Project> getProjectsInBuildOrder()
         throws ContinuumException
     {
@@ -1805,13 +1809,13 @@ public class DefaultContinuum
         return result;
     }
 
-    protected ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
-                                                                                     String projectBuilderId,
-                                                                                     int projectGroupId,
-                                                                                     boolean checkProtocol,
-                                                                                     boolean useCredentialsCache,
-                                                                                     boolean loadRecursiveProjects,
-                                                                                     int buildDefinitionTemplateId )
+    private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
+                                                                                   String projectBuilderId,
+                                                                                   int projectGroupId,
+                                                                                   boolean checkProtocol,
+                                                                                   boolean useCredentialsCache,
+                                                                                   boolean loadRecursiveProjects,
+                                                                                   int buildDefinitionTemplateId )
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
@@ -2140,7 +2144,7 @@ public class DefaultContinuum
         AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "add-build-definition-to-project", context );
-        
+
         activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
@@ -2151,7 +2155,6 @@ public class DefaultContinuum
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
         BuildDefinition buildDefinition = getBuildDefinition( buildDefinitionId );
-        Schedule schedule = buildDefinition.getSchedule();
 
         AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         AbstractContinuumAction.setProjectId( context, projectId );
@@ -2169,7 +2172,7 @@ public class DefaultContinuum
         AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "update-build-definition-from-project", context );
-        
+
         activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
@@ -2185,7 +2188,7 @@ public class DefaultContinuum
         AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
         executeAction( "add-build-definition-to-project-group", context );
-        
+
         activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
@@ -2212,7 +2215,7 @@ public class DefaultContinuum
         AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
         executeAction( "update-build-definition-from-project-group", context );
-        
+
         activeBuildDefinitionSchedule( schedule );
 
         return AbstractContinuumAction.getBuildDefinition( context );
@@ -2230,19 +2233,6 @@ public class DefaultContinuum
             project.removeBuildDefinition( buildDefinition );
 
             updateProject( project );
-        }
-    }
-
-    public void removeBuildDefinition( BuildDefinition buildDefinition )
-        throws ContinuumException
-    {
-        try
-        {
-            buildDefinitionDao.removeBuildDefinition( buildDefinition );
-        }
-        catch ( ContinuumStoreException ex )
-        {
-            throw logAndCreateException( "Error while removing build definition.", ex );
         }
     }
 
@@ -2315,9 +2305,9 @@ public class DefaultContinuum
     private void updateSchedule( Schedule schedule, boolean updateScheduler )
         throws ContinuumException
     {
-        
+
         Schedule old = getSchedule( schedule.getId() );
-        
+
         storeSchedule( schedule );
 
         if ( updateScheduler )
@@ -2396,7 +2386,7 @@ public class DefaultContinuum
         }
     }
 
-    public Schedule storeSchedule( Schedule schedule )
+    private Schedule storeSchedule( Schedule schedule )
         throws ContinuumException
     {
         try
@@ -2408,7 +2398,7 @@ public class DefaultContinuum
             throw logAndCreateException( "Error while storing schedule.", ex );
         }
     }
-    
+
     public void activePurgeSchedule( Schedule schedule )
     {
         try
@@ -2420,7 +2410,7 @@ public class DefaultContinuum
             log.error( "Can't activate schedule for purgeConfiguration" );
         }
     }
-    
+
     public void activeBuildDefinitionSchedule( Schedule schedule )
     {
         try
@@ -2723,9 +2713,9 @@ public class DefaultContinuum
         }
     }
 
-    public void stopContinuum()
-        throws StoppingException
+    private void stopContinuum()
     {
+        //TODO: Remove all projects from queues, stop scheduler and wait the end of current builds so build results will be ok
         if ( stopped )
         {
             return;
@@ -2890,20 +2880,7 @@ public class DefaultContinuum
         }
     }
 
-    public void removeNotifier( ProjectNotifier notifier )
-        throws ContinuumException
-    {
-        try
-        {
-            notifierDao.removeNotifier( notifier );
-        }
-        catch ( ContinuumStoreException ex )
-        {
-            throw logAndCreateException( "Error while removing notifier.", ex );
-        }
-    }
-
-    public ProjectNotifier storeNotifier( ProjectNotifier notifier )
+    private ProjectNotifier storeNotifier( ProjectNotifier notifier )
         throws ContinuumException
     {
         try
@@ -2916,7 +2893,7 @@ public class DefaultContinuum
         }
     }
 
-    public String getWorkingDirectory()
+    private String getWorkingDirectory()
     {
         return configurationService.getWorkingDirectory().getAbsolutePath();
     }
@@ -2987,12 +2964,6 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Error retrieving the requested project", e );
         }
-    }
-
-    public Collection<ProjectGroup> getAllProjectGroupsWithProjects()
-    {
-        //TODO: check why this interface isn't throwing exceptions on this guy
-        return projectGroupDao.getAllProjectGroupsWithProjects();
     }
 
     public List<ProjectGroup> getAllProjectGroupsWithBuildDetails()
@@ -3157,7 +3128,14 @@ public class DefaultContinuum
 
             if ( releaseFile.exists() )
             {
-                releaseFile.delete();
+                try
+                {
+                    FileUtils.forceDelete( releaseFile );
+                }
+                catch ( IOException e )
+                {
+                    throw new ContinuumException( "Can't delete " + releaseFile.getAbsolutePath(), e );
+                }
             }
         }
         catch ( ConfigurationException e )
@@ -3737,8 +3715,6 @@ public class DefaultContinuum
     private void checkForDuplicateProjectInGroup( ProjectGroup projectGroup, Project projectToCheck,
                                                   ContinuumProjectBuildingResult result )
     {
-        String duplicateProjects = "";
-
         List<Project> projectsInGroup = projectGroup.getProjects();
 
         if ( projectsInGroup == null )
@@ -3753,7 +3729,7 @@ public class DefaultContinuum
                 project.getArtifactId().equals( projectToCheck.getArtifactId() ) &&
                 project.getVersion().equals( projectToCheck.getVersion() ) )
             {
-                result.addError( result.ERROR_DUPLICATE_PROJECTS );
+                result.addError( ContinuumProjectBuildingResult.ERROR_DUPLICATE_PROJECTS );
                 return;
             }
         }

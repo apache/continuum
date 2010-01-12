@@ -66,13 +66,6 @@ public interface Continuum
     public ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumException;
 
-    /**
-     * Get all {@link ProjectGroup}s and their {@link Project}s
-     *
-     * @return {@link Collection} &lt;{@link ProjectGroup}>
-     */
-    public Collection<ProjectGroup> getAllProjectGroupsWithProjects();
-
     public List<ProjectGroup> getAllProjectGroupsWithBuildDetails();
 
     public List<ProjectGroup> getAllProjectGroups();
@@ -156,9 +149,6 @@ public interface Continuum
     List<Project> getProjectsInBuildOrder( Collection<Project> projects );
 
     void buildProjects( String username )
-        throws ContinuumException;
-
-    void buildProjectsWithBuildDefinition( int buildDefinitionId )
         throws ContinuumException;
 
     void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )

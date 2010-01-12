@@ -19,12 +19,12 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -45,30 +45,52 @@ public interface BuildResultDao
 
     BuildResult getLatestBuildResultForProject( int projectId );
 
+    BuildResult getLatestBuildResultForProjectWithDetails( int projectId );
+
     BuildResult getLatestBuildResultForBuildDefinition( int projectId, int buildDefinitionId );
 
-    List<BuildResult> getBuildResultsInSuccessForProject( int projectId, long fromDate );
+    BuildResult getLatestBuildResultInSuccess( int projectId );
+
+    BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )
+        throws ContinuumStoreException;
 
     long getNbBuildResultsForProject( int projectId );
+
+    /**
+     * Returns the list of build results between the fromdate and the buildResult defined by its toBuildResultId
+     *
+     * @param projectId       The project id
+     * @param fromDate        the from date
+     * @param tobuildResultId the build result id
+     * @return the list of build results
+     */
+    List<BuildResult> getBuildResultsForProjectWithDetails( int projectId, long fromDate, int tobuildResultId );
+
+    /**
+     * Returns the number of build results in success since fromDate
+     *
+     * @param projectId The project id
+     * @param fromDate  The from date
+     * @return the number of build results
+     */
+    long getNbBuildResultsInSuccessForProject( int projectId, long fromDate );
 
     List<BuildResult> getBuildResultsForProject( int projectId );
 
     List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex );
 
     /**
-     * @since 1.2
      * @param projectId
-     * @param startIndex
+     * @param startId
      * @return the returned list will contains all BuildResult for this project after the startId
+     * @since 1.2
      */
     List<BuildResult> getBuildResultsForProjectFromId( int projectId, long startId )
-        throws ContinuumStoreException;   
-    
-    List<BuildResult> getBuildResultsForProject( int projectId, long fromDate );
+        throws ContinuumStoreException;
 
     Map<Integer, BuildResult> getLatestBuildResultsByProjectGroupId( int projectGroupId );
 
-    Map<Integer, BuildResult> getLatestBuildResults();
+    Map<Integer, BuildResult> getBuildResultsInSuccessByProjectGroupId( int projectGroupId );
 
     List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber );
 
@@ -76,10 +98,6 @@ public interface BuildResultDao
 
     List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId, long startIndex,
                                                         long endIndex );
-
-    Map<Integer, BuildResult> getBuildResultsInSuccess();
-
-    Map<Integer, BuildResult> getBuildResultsInSuccessByProjectGroupId( int projectGroupId );
 
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 }
