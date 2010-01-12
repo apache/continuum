@@ -33,6 +33,34 @@ public class MavenTwoProjectTest
     extends AbstractContinuumTest
 {
 
+    public void testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
+
+        removeDefaultBuildDefinitionFromTemplate( "maven2" );
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+
+        // Delete project group
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+
+        // Re-add default build definition of template
+        addDefaultBuildDefinitionFromTemplate( "maven2" );
+    }
+
+    @Test( dependsOnMethods = { "testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate" } )
     public void testAddMavenTwoProject()
         throws Exception
     {

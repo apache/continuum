@@ -32,9 +32,33 @@ import org.testng.annotations.Test;
 public class MavenOneProjectTest
     extends AbstractContinuumTest
 {
+    public void testAddMavenOneProjectWithNoDefaultBuildDefinitionFromTemplate()
+        throws Exception
+    {
+        String M1_POM_URL = getProperty( "M1_POM_URL" );
+        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
+        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
+        String M1_PROJ_GRP_NAME = getProperty( "M1_PROJ_GRP_NAME" );
+        String M1_PROJ_GRP_ID = getProperty( "M1_PROJ_GRP_ID" );
+        String M1_PROJ_GRP_DESCRIPTION = getProperty( "M1_PROJ_GRP_DESCRIPTION" );
+
+        removeDefaultBuildDefinitionFromTemplate( "maven1" );
+        
+        goToAddMavenOneProjectPage();
+        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, null, true );
+        assertProjectGroupSummaryPage( M1_PROJ_GRP_NAME, M1_PROJ_GRP_ID, M1_PROJ_GRP_DESCRIPTION );
+
+        // Delete project group
+        removeProjectGroup( M1_PROJ_GRP_NAME );
+
+        // Re-add default build definition of template
+        addDefaultBuildDefinitionFromTemplate( "maven1" );
+    }
+
     /**
      * test with valid pom url
      */
+    @Test( dependsOnMethods = { "testAddMavenOneProjectWithNoDefaultBuildDefinitionFromTemplate" } )
     public void testValidPomUrl()
         throws Exception
     {

@@ -444,4 +444,14 @@ public abstract class AbstractSeleniumTest
             Thread.sleep( 1000 );
         }
     }
+
+    public void selectForOption( String locator, String text )
+    {
+        getSelenium().addSelection( locator, "label=" + text );
+    }
+
+    public void unselectForOption( String locator, String text )
+    {
+        getSelenium().removeSelection( locator, "label=" + text );
+    }
 }
