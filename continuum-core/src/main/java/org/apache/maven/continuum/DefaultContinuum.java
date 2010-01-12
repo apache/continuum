@@ -1771,17 +1771,20 @@ public class DefaultContinuum
 
                 if ( defaultBuildDefinition == null )
                 {
-                    throw new ContinuumException( "Error adding projects from modules because no default build definition defined in the default template" );
+                    // do not throw exception
+                    // project already added so might as well continue with the rest
+                    log.warn( "No default build definition found in the template. Project cannot be checked out." );
                 }
-
-                // used by BuildManager to determine on which build queue will the project be put
-                AbstractContinuumAction.setBuildDefinition( context, defaultBuildDefinition );
-
-                if ( !configurationService.isDistributedBuildEnabled() )
+                else
                 {
-                    executeAction( "add-project-to-checkout-queue", context );
+                    // used by BuildManager to determine on which build queue will the project be put
+                    AbstractContinuumAction.setBuildDefinition( context, defaultBuildDefinition );
+    
+                    if ( !configurationService.isDistributedBuildEnabled() )
+                    {
+                        executeAction( "add-project-to-checkout-queue", context );
+                    }
                 }
-
             }
         }
         catch ( BuildDefinitionServiceException e )

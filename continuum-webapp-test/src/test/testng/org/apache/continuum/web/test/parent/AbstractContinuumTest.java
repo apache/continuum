@@ -901,4 +901,76 @@ public abstract class AbstractContinuumTest
         assertLinkPresent( "admin" );
         assertLinkPresent( "guest" );
     }
+
+    public void removeDefaultBuildDefinitionFromTemplate( String type )
+    {
+        goToEditBuildDefinitionTemplate( type );
+        clickLinkWithXPath( "//input[@value='<-']", false );
+        submit();
+    }
+
+    public void addDefaultBuildDefinitionFromTemplate( String type )
+    {
+        goToEditBuildDefinitionTemplate( type );
+
+        if ( "maven2".equals( type ) )
+        {
+            selectForOption( "saveBuildDefinitionTemplate_buildDefinitionIds", "Default Maven 2 Build Definition" );
+        }
+        else if ( "maven1".equals( type ) )
+        {
+            
+        }
+        else if ( "ant".equals( type ) )
+        {
+            
+        }
+        else
+        {
+            
+        }
+
+        clickLinkWithXPath( "//input[@value='->']", false );
+        submit();
+    }
+
+    public void goToEditBuildDefinitionTemplate( String type )
+    {
+        clickLinkWithText( "Build Definition Templates" );
+
+        assertBuildDefinitionTemplatesPage();
+
+        if ( "maven2".equals( type ) )
+        {
+            clickLinkWithXPath( "//table[@id='ec_table']/tbody/tr[3]/td[2]/a/img", true );
+        }
+        else if ( "maven1".equals( type ) )
+        {
+            clickLinkWithXPath( "//table[@id='ec_table']/tbody/tr[2]/td[2]/a/img", true );
+        }
+        else if ( "ant".equals( type ) )
+        {
+            clickLinkWithXPath( "//img[@alt='Edit']", true );
+        }
+        else
+        {
+            clickLinkWithXPath( "//table[@id='ec_table']/tbody/tr[4]/td[2]/a/img", true );
+        }
+
+        assertPage( "Continuum - Build Definition Template" );
+    }
+
+    public void assertBuildDefinitionTemplatesPage()
+    {
+        assertPage( "Continuum - Build Definition Templates" );
+        assertTextPresent( "Default Ant Template" );
+        assertTextPresent( "Default Maven 1 Template" );
+        assertTextPresent( "Default Maven 2 Template" );
+        assertTextPresent( "Default Shell Template" );
+        assertTextPresent( "Available Build Definitions" );
+        assertTextPresent( "Default Ant Build Definition" );
+        assertTextPresent( "Default Maven 1 Build Definition" );
+        assertTextPresent( "Default Maven 2 Build Definition" );
+        assertTextPresent( "Default Shell Build Definition" );
+    }
 }
