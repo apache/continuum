@@ -1669,7 +1669,7 @@ under the License.
     <spring.version>2.5.6</spring.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.1</maven-scm.version>
-    <redback.version>1.2.2</redback.version>
+    <redback.version>1.2.3</redback.version>
     <archiva.version>1.2.1</archiva.version>
     <slf4jVersion>1.5.8</slf4jVersion>
     <xmlrpc.version>3.1</xmlrpc.version>
