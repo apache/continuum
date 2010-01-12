@@ -74,7 +74,7 @@ public class BuildDefinitionTemplateAction
     private List<String> selectedBuildDefinitionIds;
 
     private List<BuildDefinition> buildDefinitions;
-    
+
     private Map<Integer, String> buildDefinitionUpdatePolicies;
 
     // -------------------------------------------------------

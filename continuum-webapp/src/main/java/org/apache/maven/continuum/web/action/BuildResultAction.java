@@ -32,6 +32,7 @@ import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;

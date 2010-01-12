@@ -25,6 +25,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.continuum.purge.ContinuumPurgeConstants;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.common.utils.VersionComparator;
 import org.apache.maven.archiva.common.utils.VersionUtil;

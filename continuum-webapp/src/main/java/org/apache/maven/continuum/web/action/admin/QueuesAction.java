@@ -25,7 +25,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
