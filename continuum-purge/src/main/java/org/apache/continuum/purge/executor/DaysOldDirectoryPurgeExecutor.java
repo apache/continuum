@@ -151,8 +151,8 @@ public class DaysOldDirectoryPurgeExecutor
                 {
                     try
                     {
-                        FileUtils.deleteDirectory( buildDir );
                         log.info( ContinuumPurgeConstants.PURGE_DIR_CONTENTS + " - " + buildDir.getName() );
+                        FileUtils.deleteDirectory( buildDir );
                         File logFile = new File( buildDir.getAbsoluteFile() + ".log.txt" );
 
                         if ( logFile.exists() )
