@@ -18,7 +18,7 @@ Guide to Install Continuum on Geronimo
 
     Continuum uses two datasources (<<<jdbc/continuum>>> and <<<jdbc/users>>>). You can create one or two databases for them.
 
-    Here, we create only one database '<<<continuum>>>' used by both datasources.
+    Here, we create only one database <<<continuum>>> used by both datasources.
     Look at {{{http://cwiki.apache.org/GMOxDOC20/configuring-database-pools.html}Configuring database pools}} in Geronimo User's Guide.
 
 * {Deployment Plan}
@@ -40,17 +40,17 @@ Guide to Install Continuum on Geronimo
                 <groupId>console.dbpool</groupId>
                 <artifactId>continuum</artifactId>
             </dependency>
-    	    <dependency>
+            <dependency>
                 <groupId>org.apache.geronimo.configs</groupId>
                 <artifactId>javamail</artifactId>
                 <version>2.0.2</version>
                 <type>car</type>
             </dependency>
-    	    <dependency>
-    		    <groupId>commons-lang</groupId>
-    		    <artifactId>commons-lang</artifactId>
-    		    <version>2.2</version>
-    		    <type>jar</type>
+            <dependency>
+               <groupId>commons-lang</groupId>
+               <artifactId>commons-lang</artifactId>
+               <version>2.2</version>
+               <type>jar</type>
             </dependency>
         </dependencies>
 
@@ -77,7 +77,7 @@ Guide to Install Continuum on Geronimo
 </web-app>
 -----------------------------
 
-    The '<<<continuum>>>' string used in <<<console.dbpool>>> and <<<\<resource-link\>>>> is the name of the datasource created in the previous part.
+    The <<<continuum>>> string used in <<<console.dbpool>>> and <<<\<resource-link\>>>> is the name of the datasource created in the previous part.
 
     <<<commons-lang 2.2>>> is required by Continuum and must be installed in the geronimo repository.
 
@@ -91,5 +91,5 @@ Guide to Install Continuum on Geronimo
 
 * {Continuum Configuration}
 
-    By default, the '<<<working directory>>>' and the '<<<build output directory>>>' are stored under the WEB-INF directory. If you want to change them (necessary on Windows
+    By default, the <<working directory>> and the <<build output directory>> are stored under the <<<WEB-INF>>> directory. If you want to change them (necessary on Windows
     due to the path length limitation), you can configure them in the {{{../administrator_guides/configuration.html}Configuration page}}.

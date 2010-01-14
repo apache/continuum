@@ -7,8 +7,10 @@
 
 Release Results Management
 
-    <<Release Results>> tab from the <<Project Information>> page displays all the release results of a
-    project when executing release goals prepare and perform.
+    The <<Release Results>> tab from the <<Project Information>> page displays all the release results of a
+    project when executing the release goals prepare and perform.
+
+~~TODO What does the last part of the above mean?
 
 [../../images/release_result-1.png] Release Results page
 

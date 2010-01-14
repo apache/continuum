@@ -13,76 +13,84 @@ Add a Project
 
 * {Maven 2 project}
 
-  From the menu, choose the 'Maven 2.0.x Project' entry
-    
-[../../images/add-m2-project-menu.png] Add a maven2 project
+  From the menu, choose the <<Maven 2.0.x Project>> entry
 
-  The pom.xml file must be available through one of the following protocols: http, https, or ftp 
-  (The file protocol is also supported but is disabled by default for security and must be enabled manually).
-    
-  Or it can be uploaded from a local file (Note this doesn't support multi module projects).
-    
-[../../images/add-m2-project.png] Add a maven2 project
+[../../images/add-m2-project-menu.png] Add a Maven 2 project
+
+  The <<<pom.xml>>> file must be available through one of the following protocols: http, https, or ftp.
+
+  <<Note:>> The file protocol is also supported but is disabled by default for security and must be enabled manually.
+
+~~ TODO: Explain how to enable the file protocol
+
+  The <<<pom.xml>>> can also be uploaded from a local file.
+
+  <<Note:>> This doesn't support multi module projects.
+
+[../../images/add-m2-project.png] Add a Maven 2 project
 
   You can supply a username and password if the POM URL requires authentication.  This information will be stored in the database in plain text and reused later for scm checkouts and updates.
 
-  If your SCM stores credentials like CVS or SVN and you want to use the SCM Credentials cache, check the "Use SCM Credentials Cache" field.
+  If your SCM stores credentials like CVS or SVN and you want to use the SCM Credentials cache, check the <<Use SCM Credentials Cache>> field.
 
 ~~ TODO:  If 'use cached credentials' is checked, then the credentials should NOT be stored in the database.  Need to see whether that's actually true before documenting it.
 
-  You can define the group you want to use or "Defined by POM" in this case project.name will be use as Project Group.
+  You can define the group you want to use or <<Defined by POM>> in this case <<<project.name>>> will be used as <<Project Group>>.
 
   You cannot add a duplicate project (duplicates would mean another instance of a project with the same groupId, artifactId, and version) in the same Project Group.
 
-  By default, Continuum adds each sub-module POM as an individual Continuum Project. If you want to add only the root POM without sub-modules, check the "load only root as recursive build" field.
+  By default, Continuum adds each sub-module POM as an individual Continuum Project. If you want to add only the root POM without sub-modules, check the <<load only root as recursive build>> field.
 
-  You can choose a Build Definition Template which will be applied to your project.  If you choose a Build Definition
-  Template, the build definitions from the template will be added in addition to any build definitions that are defined
+  You can choose a <<Build Definition Template>> which will be applied to your project.  If you choose a <<Build Definition
+  Template>>, the build definitions from the template will be added in addition to any build definitions that are defined
   at the project group level.
-  
+
   When adding projects whose parent project is building on another server,
   make sure that the <<<settings.xml>>> with the necessary repositories exists in <<<[USER_HOME]/.m2/>>> directory.
   Continuum uses <<<[USER_HOME]/.m2/settings.xml>>> and not the one found in <<<[M2_HOME]/conf/>>>.
 
 * {Maven 1 project}
-    
-  From the menu, choose the 'Maven 1.x Project' entry
-    
-[../../images/add-m1-project-menu.png] Add a maven1 project
 
-  The project.xml file must be available through one of the following format : http, https and ftp 
-  (file protocol is off by default for security and must enabled manually).
-    
-  Or it can be uploaded (Note this doesn't support multi modules project).
+  From the menu, choose the <<Maven 1.x Project>> entry
+
+[../../images/add-m1-project-menu.png] Add a Maven 1 project
+
+  The <<<project.xml>>> file must be available through one of the following format : http, https and ftp.
+
+  <<Note:>> The file protocol is off by default for security and must enabled manually.
+
+  The <<<project.xml>>> can also be uploaded from a local file.
+
+  <<Note:>> This doesn't support multi modules project.
 
   The project you're adding can't use a parent.
-    
-[../../images/add-m1-project.png] Add a maven1 project
+
+[../../images/add-m1-project.png] Add a Maven 1 project
 
   You can define username/password if the POM URL require an authentication.
 
-  If your SCM store credentials like CVS or SVN and you want to use the SCM Credentials cache, check the "Use SCM Credentials Cache" field.
+  If your SCM store credentials like CVS or SVN and you want to use the SCM Credentials cache, check the <<Use SCM Credentials Cache>> field.
 
-  You can define the group you want to use or "Defined by POM." In this case project.name will be used as the Project Group.
-  
-  You cannot add a duplicate project (duplicates would mean another instance of a project with the same groupId, artifactId, and version) in the same Project Group.
+  You can define the group you want to use or <<Defined by POM>>. In this case <<<project.name>>> will be used as the <<Project Group>>.
 
-  You can choose a Build Definition Template which will be applied to your project.
+  You cannot add a duplicate project (duplicates would mean another instance of a project with the same groupId, artifactId, and version) in the same <<Project Group>>.
+
+  You can choose a <<Build Definition Template>> which will be applied to your project.
 
 * {ANT Project}
 
-  From the menu, choose the 'Ant Project' entry
-    
-[../../images/add-ant-project-menu.png] Add a Ant project
+  From the menu, choose the <<Ant Project>> entry
+
+[../../images/add-ant-project-menu.png] Add an Ant project
 
     TO WRITE
 
-[../../images/add-ant-project.png] Add a Ant project
+[../../images/add-ant-project.png] Add an Ant project
 
 * {Shell Project}
 
-  From the menu, choose the 'Shell Project' entry
-    
+  From the menu, choose the <<Shell Project>> entry
+
 [../../images/add-shell-project-menu.png] Add a shell project
 
     TO WRITE
@@ -91,7 +99,7 @@ Add a Project
 
 * {Add a project from the Project Group}
 
-    From the Project Group, you can add a project without using the menu. With this operation, the Project Group will be set to the current group.
+    From the <<Project Group>>, you can add a project without using the menu. With this operation, the <<Project Group>> will be set to the current group.
 
 [../../images/add-project-from-group.png] Add a project from a project group
 
@@ -119,4 +127,4 @@ Add a Project
 +----------------------------+
 
     This configuration won't work with each ClearCase installation because each ClearCase configuration is different, so we recommend reading the
-    {{{http://maven.apache.org/scm/clearcase.html}ClearCase page}} on the Maven-SCM site.
+    {{{http://maven.apache.org/scm/clearcase.html}ClearCase page}} on the Maven SCM site.
