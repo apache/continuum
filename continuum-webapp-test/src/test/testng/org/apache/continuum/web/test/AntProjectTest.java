@@ -63,7 +63,8 @@ public class AntProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    @Test( dependsOnMethods = { "testAddAntProject" } )
+    // TODO: disabled due to the above test also being disabled
+    @Test( enabled = false, dependsOnMethods = { "testAddAntProject" } )
     public void testAddDupliedAntProject()
         throws Exception
     {

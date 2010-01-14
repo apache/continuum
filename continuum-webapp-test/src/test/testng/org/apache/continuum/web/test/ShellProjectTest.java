@@ -63,7 +63,8 @@ public class ShellProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    @Test( dependsOnMethods = { "testAddShellProject" } )
+    // TODO: disabled due to the above test also being disabled
+    @Test( enabled = false, dependsOnMethods = { "testAddShellProject" } )
     public void testAddDupliedShellProject()
         throws Exception
     {
