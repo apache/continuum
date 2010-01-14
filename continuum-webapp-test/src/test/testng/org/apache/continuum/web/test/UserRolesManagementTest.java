@@ -268,17 +268,7 @@ public class UserRolesManagementTest
         assertAddMavenTwoProjectPage();
         setFieldValue( "m2PomUrl", "https://svn.apache.org/repos/asf/continuum/sandbox/continuum-build-queue-test-data/pom.xml" );
         clickButtonWithValue( "Add" );
-        String title;
-        boolean success = true;
-        if ( success )
-        {
-            title = "Continuum - Project Group";
-        }
-        else
-        {
-            title = "Continuum - Add Maven 2 Project";
-        }
-        waitAddProject( title );
+        waitAddProject( "Continuum - Project Group" );
         assertTextPresent( "ContinuumBuildQueueTestData" );
     }
     

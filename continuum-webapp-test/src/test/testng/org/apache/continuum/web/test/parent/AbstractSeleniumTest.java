@@ -408,7 +408,6 @@ public abstract class AbstractSeleniumTest
     public void waitForElementPresent( String locator )
         throws InterruptedException
     {
-        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         for ( int second = 0;; second++ )
         {
             if ( second >= 60 )
@@ -422,6 +421,7 @@ public abstract class AbstractSeleniumTest
             {
             }
             Thread.sleep( 1000 );
+            getSelenium().refresh();
         }
     }
 

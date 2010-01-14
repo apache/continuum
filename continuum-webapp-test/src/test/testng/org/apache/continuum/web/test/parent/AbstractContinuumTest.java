@@ -82,6 +82,7 @@ public abstract class AbstractContinuumTest
 
     public void goToLoginPage()
     {
+        getSelenium().deleteAllVisibleCookies();
         getSelenium().open( baseUrl );
         clickLinkWithText( "Login" );
         assertLoginPage();
@@ -208,7 +209,8 @@ public abstract class AbstractContinuumTest
     public void goToProjectGroupsSummaryPage()
         throws Exception
     {
-        clickLinkWithText( "Show Project Groups" );
+        getSelenium().open( "/continuum/groupSummary.action" );
+        waitPage();
 
         assertProjectGroupsSummaryPage();
     }
@@ -796,13 +798,10 @@ public abstract class AbstractContinuumTest
     public void waitAddProject(String title )
         throws Exception
     {
-
-    	Thread.sleep( 4000 );
-        String condition = "selenium.browserbot.getCurrentWindow().document.title != ''";
+        // the "adding project" interstitial page has an empty title, so we wait for a real title to appear
+        String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != '' && selenium.browserbot.getCurrentWindow().document.getElementById('footer') != null";
         getSelenium().waitForCondition( condition, maxWaitTimeInMs );
-        Thread.sleep( 1000 );
-        String t = getTitle();
-        Assert.assertTrue( t.contains( title ) );
+        Assert.assertEquals( getTitle(), title );
     }
 
     public void createAndAddUserAsDeveloperToGroup( String username, String name, String email, String password, String groupName )
