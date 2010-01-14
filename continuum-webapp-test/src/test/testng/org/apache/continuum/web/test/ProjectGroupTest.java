@@ -67,6 +67,8 @@ public class ProjectGroupTest
         String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
 
+        // TODO: need to wait for checkout to complete. Can we add a special IT type of project that doesn't require checkout?
+        //       currently we get away with it due to the usualy duration between the dependant test and this test
         // move the project of the test project group to the default project group
         moveProjectToProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME,
                                    DEFAULT_PROJ_GRP_NAME );
