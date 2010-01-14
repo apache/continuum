@@ -796,7 +796,8 @@ public abstract class AbstractContinuumTest
     public void waitAddProject(String title )
         throws Exception
     {
-        String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != ''";
+        // the "adding project" interstitial page has an empty title, so we wait for a real title to appear
+        String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != '' && selenium.browserbot.getCurrentWindow().document.getElementById('footer') != null";
         getSelenium().waitForCondition( condition, maxWaitTimeInMs );
         Assert.assertEquals( getTitle(), title );
     }
