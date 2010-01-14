@@ -82,6 +82,7 @@ public abstract class AbstractContinuumTest
 
     public void goToLoginPage()
     {
+        getSelenium().deleteAllVisibleCookies();
         getSelenium().open( baseUrl );
         clickLinkWithText( "Login" );
         assertLoginPage();
