@@ -21,7 +21,7 @@
 <document outputName="apache-continuum">
 
  <meta>
-   <title>Apache Continuum</title>
+   <title>Apache Continuum ${project.version}</title>
    <author>The Apache Continuum Project</author>
  </meta>
 

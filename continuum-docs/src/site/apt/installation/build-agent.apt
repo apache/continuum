@@ -5,6 +5,10 @@ Installing and Configuring a Build Agent
 
     First, {{{http://continuum.apache.org/download.html}download}} the Continuum Build Agent standalone
     distribution or webapp.
+    
+    <<Note>>: It is recommended to use build agents that come with the release of Continuum (Continuum Master) to be used.
+    While 1.3.x build agents can be used with 1.4.x Continuum (Continuum Master), using a later version of build agent than the
+    Continuum (Continuum Master) will not work.
 
 * Standalone
 
@@ -14,7 +18,7 @@ Installing and Configuring a Build Agent
 
     The Build Agent runs on a specific port (defaulting to 8181), so it is possible
     to install multiple Build Agents in one machine.  It is also possible to
-    install Slaves in the same machine as the Master.  To configure the Build Agent
+    install Agents in the same machine as the Master.  To configure the Build Agent
     to run using a different port, edit the 
     <<<$CONTINUUM_BUILDAGENT_HOME/conf/jetty.xml>>> file.
 

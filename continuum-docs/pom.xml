@@ -44,6 +44,23 @@
           <template>continuum-site.vm</template>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-pdf-plugin</artifactId>
+        <!-- TODO: remove version once it is inherited from Continuum parent pom version 3 -->
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>site-pdf</id>
+            <phase>site</phase>
+            <goals>
+              <goal>pdf</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <reporting>
@@ -73,28 +90,4 @@
       </plugin>
     </plugins>
   </reporting>
-  <profiles>
-    <profile>
-      <id>pdf</id>
-      <build>
-          <plugins>
-            <plugin>
-              <artifactId>maven-pdf-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>site-pdf</id>
-                  <phase>site</phase>
-                  <goals>
-                    <goal>pdf</goal>
-                  </goals>
-                  <configuration>
-                    <outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </build>
-    </profile>
-  </profiles>
 </project>

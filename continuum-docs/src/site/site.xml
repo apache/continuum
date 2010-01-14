@@ -36,7 +36,7 @@
           <item name="Geronimo" href="installation/geronimo.html"/>
           <item name="Glassfish" href="installation/glassfish.html"/>
         </item>
-        <item name="Release Notes" href="installation/release-notes.html"/>
+        <item name="Release Notes" href="release-notes.html"/>
         <item name="Upgrade" href="installation/upgrade.html"/>
       </item>
       <item name="User's Guides" collapse="true" href="user_guides/index.html">
@@ -108,6 +108,7 @@
         <!-- item name="Design" href="developer_guides/design.html"/ -->
         <item name="XML-RPC" href="developer_guides/xmlrpc.html"/>
       </item>
+      <item name="PDF" href="apache-continuum.pdf"/>
     </menu>
   </body>
 </project>
