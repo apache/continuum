@@ -40,7 +40,7 @@ under the License.
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/continuum/trunk</url>
+    <url>http://svn.apache.org/viewvc/continuum/trunk/</url>
   </scm>
   <distributionManagement>
     <site>

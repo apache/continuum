@@ -29,7 +29,7 @@ Add a Project
 
 [../../images/add-m2-project.png] Add a Maven 2 project
 
-  You can supply a username and password if the POM URL requires authentication.  This information will be stored in the database in plain text and reused later for scm checkouts and updates.
+  You can supply a username and password if the POM URL requires authentication.  This information will be stored in the database in plain text and reused later for SCM checkouts and updates.
 
   If your SCM stores credentials like CVS or SVN and you want to use the SCM Credentials cache, check the <<Use SCM Credentials Cache>> field.
 
@@ -103,7 +103,7 @@ Add a Project
 
 [../../images/add-project-from-group.png] Add a project from a project group
 
-* {Scm hints}
+* {SCM hints}
 
 ** {ClearCase}
 

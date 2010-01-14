@@ -74,7 +74,7 @@ Guide to Install Continuum on Tomcat
 
     For the record, we personally put them in the <<<$CATALINA_HOME/common/lib/>>> directory.
 
-    Direct download links for these jar files.
+    Direct download links for these JAR files.
 
     * JavaMail 1.4 - {{{http://repo1.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar}mail-1.4.jar}}
 
@@ -92,7 +92,7 @@ Guide to Install Continuum on Tomcat
 
     We put them into the <<<$CATALINA_HOME/common/lib/>>> directory.
 
-    Direct download links for these jar files:
+    Direct download links for these JAR files:
 
     * {{{http://repo1.maven.org/maven2/org/apache/derby/derby/10.1.3.1/derby-10.1.3.1.jar}derby-10.1.3.1.jar}}
 
@@ -106,7 +106,7 @@ Guide to Install Continuum on Tomcat
 
     The format typically expected is <<<\-Dappserver.base=\<SOMEWHERE\>>>>
 
-    You can utilize the <<<$CATALINA_HOME/bin/setenv.sh>>> script to set this value in a tomcat specific way.
+    You can utilize the <<<$CATALINA_HOME/bin/setenv.sh>>> script to set this value in a Tomcat specific way.
 
 ------------------------------------------
 #!/bin/bash
@@ -197,7 +197,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
     Tested on Tomcat v5.5.17 and v5.5.25.
 
-    This example \<Context\> assumes technique #2 in the {{{#Defining_JNDI_Resources}Define JNDI Resource}} list. (This example lists out the <<<docBase>>> to the war file itself.)
+    This example \<Context\> assumes technique #2 in the {{{#Defining_JNDI_Resources}Define JNDI Resource}} list. (This example lists out the <<<docBase>>> to the WAR file itself.)
 
 ------------------------------------------
 <Context path="/continuum"

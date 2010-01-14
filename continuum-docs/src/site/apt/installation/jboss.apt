@@ -86,9 +86,9 @@ Guide to Install Continuum on JBoss
 
 * {Install Continuum}
 
-    To Install Continuum, you'll need the Continuum war.
+    To Install Continuum, you'll need the Continuum WAR.
 
-    Extract the Continuum war into <<<$JBOSS_HOME/server/default/deploy/continuum.war>>>
+    Extract the Continuum WAR into <<<$JBOSS_HOME/server/default/deploy/continuum.war>>>
 
 * {Continuum Configuration}
 

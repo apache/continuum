@@ -79,13 +79,13 @@ Guide to Install Continuum on Geronimo
 
     The <<<continuum>>> string used in <<<console.dbpool>>> and <<<\<resource-link\>>>> is the name of the datasource created in the previous part.
 
-    <<<commons-lang 2.2>>> is required by Continuum and must be installed in the geronimo repository.
+    <<<commons-lang 2.2>>> is required by Continuum and must be installed in the Geronimo repository.
 
     <<<org.jaxen.>>> needs to be added as a <<<\<filter\>>>> in the <<<\<hidden-classes\>>>> section because of {{{https://issues.apache.org/jira/browse/GERONIMO-3894}GERONIMO-3894}}
 
 * {Install Continuum}
 
-    To Install Continuum, you'll need the Continuum war and the deployment plan.
+    To Install Continuum, you'll need the Continuum WAR and the deployment plan.
 
     Look at {{{http://cwiki.apache.org/GMOxDOC20/installing-and-removing-applications.html}Installing and removing applications}} in Geronimo.
 

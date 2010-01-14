@@ -20,7 +20,7 @@ Edit a Project
 
   * project version
 
-  * project scm url
+  * project SCM URL
 
   * project Last Build Date
 
@@ -59,9 +59,9 @@ Edit a Project
 
   Editing a build result will display:
 
-  * scm changes (author and file path)
+  * SCM changes (author and file path)
 
-  * project dependencies (project recorded in this continuum instance)
+  * project dependencies (project recorded in this Continuum instance)
 
   * detail of the build definition used
 

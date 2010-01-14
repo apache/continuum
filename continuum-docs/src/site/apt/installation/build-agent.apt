@@ -51,7 +51,7 @@ Installing and Configuring a Build Agent
 
     * <<<workingDirectory>>> - similar to the working directory of Continuum
 
-    * <<<continuumServerUrl>>> - the url pointing to the XML-RPC context of the Master Build Agent
+    * <<<continuumServerUrl>>> - the URL pointing to the XML-RPC context of the Master Build Agent
 
     * <<<installations>>> - a list of the installations available on the build agent, including Maven, Ant, JDK, etc.
 

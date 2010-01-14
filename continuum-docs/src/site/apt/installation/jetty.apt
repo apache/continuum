@@ -20,7 +20,7 @@ Guide to Install Continuum on Jetty
 
     * Create a JDBC resource named <<<jdbc/users>>>
 
-    For derby you can copy the following configuration in your <<<$JETTY_HOME/etc/jetty.xml>>>
+    For Derby you can copy the following configuration in your <<<$JETTY_HOME/etc/jetty.xml>>>
 
     For other databases see {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/jetty-env-postgres.xml}PostgreSQL}}
     and {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/jetty-env-mysql.xml}MySQL}}
@@ -73,7 +73,7 @@ Guide to Install Continuum on Jetty
 
 * {Mail Configuration}
 
-    The following xml can be used for the jetty mail configuration:
+    The following xml can be used for the Jetty mail configuration:
 
 +-------------------------------------+
     <!-- =========================================================== -->
@@ -100,9 +100,9 @@ Guide to Install Continuum on Jetty
 
 * {Install Continuum}
 
-    To Install Continuum, you'll need the Continuum war.
+    To Install Continuum, you'll need the Continuum WAR.
 
-    Copy or extract the Continuum war into $JETTY_HOME/webapps-plus/
+    Copy or extract the Continuum WAR into $JETTY_HOME/webapps-plus/
 
 * {Start Jetty}
 
