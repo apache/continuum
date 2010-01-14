@@ -78,11 +78,11 @@ Guide to Install Continuum on JBoss
 </datasources>
 +--------------------------------+
 
-    With <<<../database>>> used for the derby db path, databases will be created into <<<$JBOSS_HOME>>>
+    With <<<../database>>> used for the Derby db path, databases will be created in <<<$JBOSS_HOME>>>.
 
 * {Mail Configuration}
 
-    Edit <<<$JBOSS_HOME/server/default/deploy/mail-service.xml>>>
+    Edit <<<$JBOSS_HOME/server/default/deploy/mail-service.xml>>>.
 
 * {Install Continuum}
 
@@ -92,9 +92,9 @@ Guide to Install Continuum on JBoss
 
 * {Continuum Configuration}
 
-    By default, the '<<<working directory>>>' and the '<<<build output directory>>>' are stored under the WEB-INF directory. If you want to change them (necessary on Windows
+    By default, the <<working directory>> and the <<build output directory>> are stored under the <<<WEB-INF>>> directory. If you want to change them (necessary on Windows
     due to the path length limitation), you can configure them in the {{{../administrator_guides/configuration.html}Configuration page}}.
 
-    By default, Continuum logs are stored into <<<${appserver.base}/logs/>>>. appserver.base is a system property. If you don't define it in the JBoss startup script, it will be empty,
+    By default, Continuum logs are stored into <<<${appserver.base}/logs/>>>. <<<appserver.base>>> is a system property. If you don't define it in the JBoss startup script, it will be empty,
     so the Continuum logs directory will be at the root of your disk. If you want to use another location, you should modify
     <<<$JBOSS_HOME/server/default/deploy/continuum.war/WEB-INF/classes/log4j.xml>>>

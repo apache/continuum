@@ -16,13 +16,13 @@ Guide to Install Continuum on Jetty
 
 * {Datasource Configuration}
 
-    * Create a JDBC resource named '<<jdbc/continuum>>'
+    * Create a JDBC resource named <<<jdbc/continuum>>>
 
-    * Create a JDBC resource named '<<jdbc/users>>'
+    * Create a JDBC resource named <<<jdbc/users>>>
 
     For derby you can copy the following configuration in your <<<$JETTY_HOME/etc/jetty.xml>>>
 
-    For other databases see {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/jetty-env-postgres.xml}PostgreSQL}} 
+    For other databases see {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/jetty-env-postgres.xml}PostgreSQL}}
     and {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/jetty-env-mysql.xml}MySQL}}
 
 +-------------------------------------+
@@ -106,9 +106,9 @@ Guide to Install Continuum on Jetty
 
 * {Start Jetty}
 
-    To start Jetty, you'll need to use $JETTY_HOME/etc/jetty.xml <<and>> $JETTY_HOME/etc/jetty-plus.xml due to the datasources and mail configuration.
+    To start Jetty, you'll need to use <<<$JETTY_HOME/etc/jetty.xml>>> <<and>> <<<$JETTY_HOME/etc/jetty-plus.xml>>> due to the datasources and mail configuration.
 
 * {Continuum Configuration}
 
-    By default, the '<<<working directory>>>' and the '<<<build output directory>>>' are stored under the WEB-INF directory. If you want to change them (necessary on Windows
+    By default, the <<working directory>> and the <<build output directory>> are stored under the <<<WEB-INF>>> directory. If you want to change them (necessary on Windows
     due to the path length limitation), you can configure them in the {{{../administrator_guides/configuration.html}Configuration page}}.

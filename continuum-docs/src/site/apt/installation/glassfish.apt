@@ -17,11 +17,11 @@ Guide to Install Continuum on GlassFish V2
 
 * {Datasource Configuration}
 
-    * Create a connection pool named '<<continuum>>' for your database
+    * Create a connection pool named <<<continuum>>> for your database
 
-    * Create a JDBC resource named '<<jdbc/continuum>>' linked to the '<<continuum>>' connection pool
+    * Create a JDBC resource named <<<jdbc/continuum>>> linked to the <<<continuum>>> connection pool
 
-    * Create a JDBC resource named '<<jdbc/users>>' linked to the '<<continuum>>' connection pool
+    * Create a JDBC resource named <<<jdbc/users>>> linked to the <<<continuum>>> connection pool
 
 * {Install Continuum}
 
@@ -31,5 +31,5 @@ Guide to Install Continuum on GlassFish V2
 
 * {Continuum Configuration}
 
-    By default, the '<<<working directory>>>' and the '<<<build output directory>>>' are stored under the WEB-INF directory. If you want to change them (necessary on Windows
+    By default, the <<working directory>> and the <<build output directory>> are stored under the <<<WEB-INF>>> directory. If you want to change them (necessary on Windows
     due to the path length limitation), you can configure them in the {{{../administrator_guides/configuration.html}Configuration page}}.
