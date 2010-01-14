@@ -91,8 +91,6 @@ public abstract class AbstractBuildQueueTest
         showProjectGroup( projectGroupName, groupId, description );
         clickButtonWithValue( "Build all projects" );
         waitForElementPresent( "//img[@alt='Building']" );
-        Thread.sleep( 10000 );
-               	
      }
 	    
 	    

@@ -131,6 +131,7 @@ public class QueueTest
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+        String location = getSelenium().getLocation();
 
         //check queue page while building
     	clickAndWait( "link=Queues" );
@@ -143,11 +144,9 @@ public class QueueTest
 	    assertTextPresent( "Prepare Build Queue" );
 	    assertElementPresent("//table[@id='ec_table']/tbody/tr/td[4]");
 	    assertTextPresent( M2_PROJ_GRP_NAME );
-	    getSelenium().goBack();
-	    getSelenium().refresh();
+	    getSelenium().open( location );
         waitPage();
 	    waitForElementPresent( "//img[@alt='Success']" );
-	    Thread.sleep( 10000 );
     }
 
  }
