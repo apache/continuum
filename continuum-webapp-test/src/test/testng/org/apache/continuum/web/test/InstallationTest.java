@@ -40,10 +40,10 @@ public class InstallationTest
 
     public void testAddMavenToolWithBuildEnvirotment()
     {
-        String INTALL_TOOL_MAVEN_NAME = getProperty( "INTALL_TOOL_MAVEN_NAME" );
-        String INTALL_TOOL_MAVEN_PATH = getEscapeProperty( "INTALL_TOOL_MAVEN_PATH" );
+        String INSTALL_TOOL_MAVEN_NAME = getProperty( "INSTALL_TOOL_MAVEN_NAME" );
+        String INSTALL_TOOL_MAVEN_PATH = getEscapeProperty( "INSTALL_TOOL_MAVEN_PATH" );
         goToAddInstallationTool();
-        addInstallation( INTALL_TOOL_MAVEN_NAME, "Maven 2", INTALL_TOOL_MAVEN_PATH, true, true, true );
+        addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven 2", INSTALL_TOOL_MAVEN_PATH, true, true, true );
         // TODO: Validate build envirotment
     }
 
