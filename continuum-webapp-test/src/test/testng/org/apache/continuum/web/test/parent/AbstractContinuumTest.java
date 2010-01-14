@@ -209,7 +209,8 @@ public abstract class AbstractContinuumTest
     public void goToProjectGroupsSummaryPage()
         throws Exception
     {
-        clickLinkWithText( "Show Project Groups" );
+        getSelenium().open( "/continuum/groupSummary.action" );
+        waitPage();
 
         assertProjectGroupsSummaryPage();
     }
