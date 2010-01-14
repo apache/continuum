@@ -587,7 +587,7 @@
         </field>
         <field>
           <name>username</name>
-          <version>1.0.9+</version>
+          <version>1.4.0+</version>
           <type>String</type>
         </field>
         <field jpox.column="resultstate">
@@ -1033,7 +1033,7 @@
         </field>
         <field jpox.null-value="default">
           <name>updatePolicy</name>
-          <version>1.4.0</version>
+          <version>1.4.0+</version>
           <type>int</type>
           <defaultValue>0</defaultValue>
         </field>
@@ -1653,7 +1653,7 @@
         </field>
         <field>
           <name>username</name>
-          <version>1.1.2+</version>
+          <version>1.4.0+</version>
           <type>String</type>
         </field>
       </fields>
