@@ -54,7 +54,7 @@ continuum.bat install
 * {Installing as a Linux Service}
 
     Since the Continuum Linux script <<<bin/linux/run.sh>>> understands the same arguments as Linux boot scripts, there is no need to write a particular
-    startup script to add Continuum to the linux boot process. All you need to do, as root, is:
+    startup script to add Continuum to the Linux boot process. All you need to do, as root, is:
 
 ** {Basic script in /etc/init.d}
 
@@ -152,7 +152,7 @@ chkconfig --add continuum
 echo "Enabling Continuum on chkconfig"
 chkconfig continuum on
 echo "Continuum set to start on run levels 3, 4 and 5."
-echo "To start continuum now, run 'service continuum start'"
+echo "To start Continuum now, run 'service continuum start'"
 
 ------------------
 

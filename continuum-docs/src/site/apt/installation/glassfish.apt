@@ -25,7 +25,7 @@ Guide to Install Continuum on GlassFish V2
 
 * {Install Continuum}
 
-    To Install Continuum, you'll need the Continuum war.
+    To Install Continuum, you'll need the Continuum WAR.
 
     Look at {{{https://glassfish.dev.java.net/downloads/quickstart/index.html#ProcedureTo_Deploy_From_the_Admin}Procedure To Deploy From the Admin Console}} in GlassFish.
 

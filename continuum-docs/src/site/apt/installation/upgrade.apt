@@ -29,7 +29,7 @@ Upgrading Continuum
 
     The builds database has had model changes, and will need to be exported and imported.
 
-    First, download the Data Management tools you will need.  The tool is a standalone jar that you can download from the central repo.
+    First, download the Data Management tools you will need.  The tool is a standalone JAR that you can download from the central repo.
 
     You will need to download two versions of the tool, one for the export out of the old version and one for the import into the new version:
 
