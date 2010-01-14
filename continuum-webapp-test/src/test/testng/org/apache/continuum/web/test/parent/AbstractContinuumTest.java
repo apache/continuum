@@ -796,13 +796,9 @@ public abstract class AbstractContinuumTest
     public void waitAddProject(String title )
         throws Exception
     {
-
-    	Thread.sleep( 4000 );
-        String condition = "selenium.browserbot.getCurrentWindow().document.title != ''";
+        String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != ''";
         getSelenium().waitForCondition( condition, maxWaitTimeInMs );
-        Thread.sleep( 1000 );
-        String t = getTitle();
-        Assert.assertTrue( t.contains( title ) );
+        Assert.assertEquals( getTitle(), title );
     }
 
     public void createAndAddUserAsDeveloperToGroup( String username, String name, String email, String password, String groupName )
