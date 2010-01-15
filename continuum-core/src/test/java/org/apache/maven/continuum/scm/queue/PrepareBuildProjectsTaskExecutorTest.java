@@ -25,8 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.buildmanager.ParallelBuildsManager;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
@@ -60,6 +63,8 @@ public class PrepareBuildProjectsTaskExecutorTest
 
     private ConfigurationService configurationService;
 
+    private BuildsManager buildsManager;
+
     @Override
     protected void setUp()
         throws Exception
@@ -78,6 +83,8 @@ public class PrepareBuildProjectsTaskExecutorTest
         actionManager = (ActionManager) lookup( ActionManager.ROLE );
 
         configurationService =  (ConfigurationService ) lookup( "configurationService" );
+
+        buildsManager = (ParallelBuildsManager) lookup( BuildsManager.class, "parallel" );
     }
 
     public void testCheckoutPrepareBuildMultiModuleProject()
@@ -112,6 +119,12 @@ public class PrepareBuildProjectsTaskExecutorTest
         assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString( moduleA.getId() ) ).exists() );
 
         assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString( moduleB.getId() ) ).exists() );
+
+        while( !buildsManager.getCurrentBuilds().isEmpty() ||
+                        isAnyProjectInBuildQueue() )
+        {
+            Thread.sleep( 10 );
+        }
     }
 
     public void testCheckoutPrepareBuildMultiModuleProjectFreshBuild()
@@ -146,6 +159,12 @@ public class PrepareBuildProjectsTaskExecutorTest
         assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString( moduleA.getId() ) ).exists() );
 
         assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString( moduleB.getId() ) ).exists() );
+
+        while( !buildsManager.getCurrentBuilds().isEmpty() ||
+                        isAnyProjectInBuildQueue() )
+        {
+            Thread.sleep( 10 );
+        }
     }
 /*
     public void testCheckoutPrepareBuildSingleCheckedoutMultiModuleProject()
@@ -423,5 +442,21 @@ public class PrepareBuildProjectsTaskExecutorTest
             int indexDiff = StringUtils.differenceAt( path1, path2 );
             return path1.substring( 0, indexDiff );
         }
+    }
+
+    private boolean isAnyProjectInBuildQueue()
+        throws Exception
+    {
+        Map<String, List<BuildProjectTask>> buildTasks = buildsManager.getProjectsInBuildQueues();
+
+        for ( String queue : buildTasks.keySet() )
+        {
+            if ( !buildTasks.get( queue ).isEmpty() )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
