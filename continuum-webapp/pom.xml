@@ -178,9 +178,9 @@ under the License.
             <phase>compile</phase>
             <configuration>
               <tasks>
-                <mkdir dir="${basedir}/target/continuum/WEB-INF/"/>
+                <mkdir dir="${basedir}/target/continuum/WEB-INF/" />
                 <copy todir="${basedir}/target/continuum/WEB-INF/">
-                  <fileset dir="${basedir}/target" includes="classes/" excludes="**/struts.xml"/>         
+                  <fileset dir="${basedir}/target" includes="classes/" excludes="**/struts.xml" />         
                 </copy>
               </tasks>              
             </configuration>
