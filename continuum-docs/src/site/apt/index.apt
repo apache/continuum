@@ -27,15 +27,7 @@ Welcome to Apache Continuum
 
       * Webapp:
 
-        {{{installation/tomcat.html}Tomcat}},
-
-        {{{installation/jetty.html}Jetty}},
-
-        {{{installation/jboss.html}JBoss}},
-
-        {{{installation/geronimo.html}Geronimo}},
-
-        {{{installation/glassfish.html}GlassFish}}
+        {{{installation/tomcat.html}Tomcat}}
 
       []
 

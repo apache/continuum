@@ -31,10 +31,6 @@
         <item name="Installation" href="installation/installation.html" collapse="true">
           <item name="Standalone" href="installation/standalone.html"/>
           <item name="Tomcat" href="installation/tomcat.html"/>
-          <item name="JBoss" href="installation/jboss.html"/>
-          <item name="Jetty" href="installation/jetty.html"/>
-          <item name="Geronimo" href="installation/geronimo.html"/>
-          <item name="Glassfish" href="installation/glassfish.html"/>
         </item>
         <item name="Release Notes" href="release-notes.html"/>
         <item name="Upgrade" href="installation/upgrade.html"/>
