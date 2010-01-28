@@ -155,6 +155,7 @@ public class DefaultDistributedReleaseManager
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+
             String releaseId =
                 client.releasePrepare( createProjectMap( project ), createPropertiesMap( releaseProperties ),
                                        releaseVersion, developmentVersion, environments, username );
@@ -298,6 +299,18 @@ public class DefaultDistributedReleaseManager
                                 boolean useReleaseProfile, LocalRepository repository, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
+        List<PreparedRelease> releases = getPreparedReleases();
+
+        for ( PreparedRelease release: releases )
+        {
+            if ( release.getReleaseId().equals( releaseId ) )
+            {
+                release.setReleaseType( "perform" );
+                savePreparedReleases( releases );
+                break;
+            }
+        }
+
         String buildAgentUrl = getBuildAgentUrl( releaseId );
 
         if ( !checkBuildAgent( buildAgentUrl ) )
@@ -442,6 +455,8 @@ public class DefaultDistributedReleaseManager
             String result = client.releaseCleanup( releaseId );
 
             removeFromReleaseInProgress( releaseId );
+            removeFromPreparedReleases( releaseId );
+
             return result;
         }
         catch ( MalformedURLException e )
@@ -636,17 +651,11 @@ public class DefaultDistributedReleaseManager
     private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName )
         throws ContinuumReleaseException
     {
-        File file = getPreparedReleasesFile();
-
-        if ( !file.exists() )
-        {
-            file.getParentFile().mkdirs();
-        }
-
         PreparedRelease release = new PreparedRelease();
         release.setReleaseId( releaseId );
         release.setBuildAgentUrl( buildAgentUrl );
         release.setReleaseName( releaseName );
+        release.setReleaseType( "prepare" );
 
         List<PreparedRelease> preparedReleases = getPreparedReleases();
 
@@ -654,41 +663,25 @@ public class DefaultDistributedReleaseManager
         {
             preparedReleases = new ArrayList<PreparedRelease>();
         }
-        else
+
+        boolean found = false;
+
+        for ( PreparedRelease preparedRelease : preparedReleases )
         {
-            boolean found = false;
-
-            for ( PreparedRelease preparedRelease : preparedReleases )
+            if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) &&
+                 preparedRelease.getReleaseName().equals( release.getReleaseName() ) )
             {
-                if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) &&
-                    preparedRelease.getReleaseName().equals( release.getReleaseName() ) )
-                {
-                    preparedRelease.setBuildAgentUrl( release.getBuildAgentUrl() );
-                    found = true;
-                }
-            }
-
-            if ( !found )
-            {
-                preparedReleases.add( release );
+                preparedRelease.setBuildAgentUrl( release.getBuildAgentUrl() );
+                found = true;
             }
         }
 
-        PreparedReleaseModel model = new PreparedReleaseModel();
-        model.setPreparedReleases( preparedReleases );
+        if ( !found )
+        {
+            preparedReleases.add( release );
+        }
 
-        try
-        {
-            ContinuumPrepareReleasesModelXpp3Writer writer = new ContinuumPrepareReleasesModelXpp3Writer();
-            FileWriter fileWriter = new FileWriter( file );
-            writer.write( fileWriter, model );
-            fileWriter.flush();
-            fileWriter.close();
-        }
-        catch ( IOException e )
-        {
-            throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
-        }
+        savePreparedReleases( preparedReleases );
     }
 
     private void addReleaseInProgress( String releaseId, String releaseType, int projectId, String username )
@@ -750,5 +743,62 @@ public class DefaultDistributedReleaseManager
 
         log.info( "Build agent: " + buildAgentUrl + " is either disabled or removed" );
         return false;
+    }
+
+    private void removeFromPreparedReleases( String releaseId )
+        throws ContinuumReleaseException
+    {
+        List<PreparedRelease> releases = getPreparedReleases();
+
+        for ( PreparedRelease release : releases )
+        {
+            if ( release.getReleaseId().equals( releaseId ) )
+            {
+                if ( release.getReleaseType().equals( "perform" ) )
+                {
+                    releases.remove( release );
+                    savePreparedReleases( releases );
+                    break;
+                }
+            }
+        }
+    }
+
+    private void savePreparedReleases( List<PreparedRelease> preparedReleases)
+        throws ContinuumReleaseException
+    {
+        File file = getPreparedReleasesFile();
+
+        if ( !file.exists() )
+        {
+            file.getParentFile().mkdirs();
+        }
+
+        PreparedReleaseModel model = new PreparedReleaseModel();
+        model.setPreparedReleases( preparedReleases );
+
+        try
+        {
+            ContinuumPrepareReleasesModelXpp3Writer writer = new ContinuumPrepareReleasesModelXpp3Writer();
+            FileWriter fileWriter = new FileWriter( file );
+            writer.write( fileWriter, model );
+            fileWriter.flush();
+            fileWriter.close();
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
+        }
+    }
+
+    // for testing
+    public void setBuildResultDao( BuildResultDao buildResultDao )
+    {
+        this.buildResultDao = buildResultDao;
+    }
+
+    public void setConfigurationService( ConfigurationService configurationService )
+    {
+        this.configurationService = configurationService;
     }
 }

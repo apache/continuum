@@ -121,7 +121,7 @@ under the License.
           <models>
             <model>src/main/mdo/prepared-releases.mdo</model>
           </models>
-          <version>1.0.0</version>
+          <version>1.4.0</version>
           <useJava5>true</useJava5>
         </configuration>
         <executions>
