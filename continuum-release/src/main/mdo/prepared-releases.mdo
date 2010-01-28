@@ -29,11 +29,11 @@
   <classes>
     <class rootElement="true" xml.tagName="prepared-releases">
       <name>PreparedReleaseModel</name>
-      <version>1.0.0+</version>
+      <version>1.0.0</version>
       <fields>
         <field>
           <name>preparedReleases</name>
-          <version>1.0.0+</version>
+          <version>1.0.0</version>
           <description></description>
           <required>true</required>
           <association>
@@ -45,34 +45,27 @@
     </class>
     <class>
       <name>PreparedRelease</name>
-      <version>1.0.0+</version>
+      <version>1.0.0</version>
       <fields>
         <field>
           <name>releaseId</name>
-          <version>1.0.0+</version>
+          <version>1.0.0</version>
           <required>true</required>
           <description>release id</description>
           <type>String</type>
         </field>
         <field>
           <name>releaseName</name>
-          <version>1.0.0+</version>
+          <version>1.0.0</version>
           <required>true</required>
           <description>prepared release name</description>
           <type>String</type>
         </field>
         <field>
           <name>buildAgentUrl</name>
-          <version>1.0.0+</version>
+          <version>1.0.0</version>
           <required>true</required>
           <description>build agent url</description>
-          <type>String</type>
-        </field>
-        <field>
-          <name>releaseType</name>
-          <version>1.4.0+</version>
-          <required>true</required>
-          <description>type of release. possible values are "prepare" or "perform"</description>
           <type>String</type>
         </field>
       </fields>

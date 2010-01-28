@@ -94,7 +94,7 @@ public class ReleaseInProgressAction
                 List<String> args = new ArrayList<String>();
                 args.add( e.getMessage() );
 
-                addActionError( getText( "distributedBuild.releaseInProgress.error", args ) );
+                addActionError( getText( "releaseInProgress.error", args ) );
                 return ERROR;
             }
 
