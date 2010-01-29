@@ -271,6 +271,14 @@ public class MavenTwoProjectTest
         // remove project group
         removeProjectGroup( M2_PROJ_GRP_NAME );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
+
+        // re-add for later use
+        addMaven2Project( M2_PROJ_GRP_NAME );
+        clickLinkWithText( M2_PROJ_GRP_NAME );
+
+        assertPage( "Continuum - Project Group" );
+        //wait for project to finish checkout
+        waitForProjectCheckout();
     }
 
     private void addMaven2Project( String groupName )
