@@ -3,7 +3,7 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
   <appender name="rolling" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${CONTINUUM_BUILDAGENT_HOME}/logs/continuum-buildagent.log" />
+    <param name="file" value="${appserver.base}/logs/continuum-buildagent.log" />
     <param name="append" value="true" />
     <param name="datePattern" value="'.'yyyy-MM-dd" />
     <layout class="org.apache.log4j.PatternLayout">
