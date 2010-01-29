@@ -435,7 +435,7 @@
       <result name="success">/WEB-INF/jsp/workingCopy.jsp</result>
       <result name="stream" type="stream">
         <param name="contentType">application/octet-stream</param>
-        <param name="contentDisposition">filename="${downloadFilename}"</param>
+        <param name="contentDisposition">attachment; filename="${downloadFilename}"</param>
         <param name="contentLength">${fileLength}</param>
       </result>
     </action>
