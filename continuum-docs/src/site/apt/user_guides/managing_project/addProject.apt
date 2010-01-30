@@ -49,6 +49,8 @@ Add a Project
   make sure that the <<<settings.xml>>> with the necessary repositories exists in <<<[USER_HOME]/.m2/>>> directory.
   Continuum uses <<<[USER_HOME]/.m2/settings.xml>>> and not the one found in <<<[M2_HOME]/conf/>>>.
 
+  The scm connection url must be present in the POM and must match the actual location of the pom in the scm repository.
+
 * {Maven 1 project}
 
   From the menu, choose the <<Maven 1.x Project>> entry
