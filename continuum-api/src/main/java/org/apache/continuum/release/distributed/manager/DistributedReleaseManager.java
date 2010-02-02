@@ -56,8 +56,8 @@ public interface DistributedReleaseManager
     void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
-    void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
-                                String scmUrl, String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
+    String releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
+                                  String scmUrl, String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     void releaseRollback( String releaseId, int projectId )

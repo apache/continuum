@@ -49,6 +49,8 @@ under the License.
         <include name="mavenOneProject" />
         <include name="antProject"/>
         <include name="shellProject"/>
+        <include name="agent"/>
+        <include name="release"/>
         <include name="buildDefinition" />
         <include name="notifier"/>
         <include name="myAccount" />
@@ -61,8 +63,6 @@ under the License.
         <include name="buildEnvironment" />
         <include name="buildDefinitionTemplate" />
         <include name="userroles"/>
-        <include name="agent"/>
-        <include name="release"/>
       </run>
     </groups>
     <packages>

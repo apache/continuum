@@ -1,5 +1,12 @@
 package org.apache.continuum.web.test.parent;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
+import org.testng.Assert;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -35,21 +42,22 @@ public abstract class AbstractReleaseTest
         setFieldValue( "devVersions", developmentVersion );
         submit();
 
-        while ( !isButtonWithValuePresent( "Done" ) )
-        {
-            Thread.sleep( 10000 );
-        }
+        assertRelease( success );
+    }
 
-        assertButtonWithValuePresent( "Rollback changes" );
-
-        if ( success )
-        {
-            assertImgWithAltNotPresent( "Error" );
-        }
-        else
-        {
-            assertImgWithAlt( "Error" );
-        }
+    public void releasePerformProjectWithProvideParameters( String username, String password, String tagBase, String tag, String scmUrl, boolean success )
+        throws Exception
+    {
+        goToReleasePerformProvideParametersPage();
+        setFieldValue( "scmUrl", scmUrl );
+        setFieldValue( "scmUsername", username );
+        setFieldValue( "scmPassword", password );
+        setFieldValue( "scmTag", tag );
+        setFieldValue( "scmTagBase", tagBase );
+        setFieldValue( "goals", "clean deploy" );
+        submit();
+    
+        assertRelease( success );
     }
 
     public void goToReleasePreparePage()
@@ -57,6 +65,13 @@ public abstract class AbstractReleaseTest
         clickLinkWithLocator( "goal", false );
         submit();
         assertReleasePreparePage();
+    }
+
+    public void goToReleasePerformProvideParametersPage()
+    {
+        clickLinkWithLocator( "//input[@name='goal' and @value='perform']", false );
+        submit();
+        assertReleasePerformProvideParametersPage();
     }
 
     public void assertReleasePreparePage()
@@ -75,5 +90,61 @@ public abstract class AbstractReleaseTest
         assertTextPresent( "Release Version" );
         assertTextPresent( "Next Development Version" );
         assertButtonWithValuePresent( "Submit" );
+    }
+
+    public void assertReleasePerformProvideParametersPage()
+    {
+        assertPage( "Continuum - Perform Project Release" );
+        assertTextPresent( "Perform Project Release" );
+        assertTextPresent( "Release Perform Parameters" );
+        assertTextPresent( "SCM Connection URL" );
+        assertTextPresent( "SCM Username" );
+        assertTextPresent( "SCM Password" );
+        assertTextPresent( "SCM Tag" );
+        assertTextPresent( "SCM Tag Base" );
+        assertTextPresent( "Maven Arguments" );
+        assertTextPresent( "Arguments" );
+        assertTextPresent( "Build Environment" );
+        assertButtonWithValuePresent( "Submit" );
+    }
+
+    public void assertRelease( boolean success )
+        throws Exception
+    {
+        while ( !isButtonWithValuePresent( "Done" ) && !isTextPresent( "Release Error" ) )
+        {
+            Thread.sleep( 10000 );
+        }
+    
+        assertButtonWithValuePresent( "Rollback changes" );
+    
+        if ( success )
+        {
+            assertImgWithAltNotPresent( "Error" );
+        }
+        else
+        {
+            assertImgWithAlt( "Error" );
+        }
+    }
+
+    public void assertPreparedReleasesFileCreated()
+        throws Exception
+    {
+        File file = new File( "target/conf/prepared-releases.xml" );
+        Assert.assertTrue( file.exists(), "prepared-releases.xml was not created" );
+
+        FileInputStream fis = new FileInputStream( file );
+        BufferedReader reader = new BufferedReader( new InputStreamReader( fis ) );
+
+        String BUILD_AGENT_URL = getProperty( "BUILD_AGENT_NAME2" );
+        String strLine;
+        StringBuffer str = new StringBuffer();
+        while( ( strLine = reader.readLine() ) != null )
+        {
+            str.append( strLine );
+        }
+
+        Assert.assertTrue( str.toString().contains( "<buildAgentUrl>" + BUILD_AGENT_URL + "</buildAgentUrl>" ), "prepared-releases.xml was not populated" );
     }
 }

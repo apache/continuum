@@ -23,7 +23,7 @@ package org.apache.continuum.web.test;
 import org.testng.annotations.Test;
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
 
-@Test( groups = { "agent" }, dependsOnMethods = { "testDeleteBuildDefinitionTemplate" } )
+@Test( groups = { "agent" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
 public class BuildAgentsTest
     extends AbstractBuildAgentsTest
 {
@@ -60,7 +60,7 @@ public class BuildAgentsTest
         disableDistributedBuilds();
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgent" } )
+    @Test( dependsOnMethods = { "testAddBuildAgent", "testReleasePerformUsingProvideParamtersWithDistributedBuilds" } )
     public void testEditBuildAgent()
     {
         String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );

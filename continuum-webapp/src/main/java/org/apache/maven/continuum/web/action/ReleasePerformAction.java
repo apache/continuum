@@ -299,8 +299,8 @@ public class ReleasePerformAction
 
             try
             {
-                releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
-                                                      scmUsername, scmPassword, scmTag, scmTagBase, environments, getPrincipal() );
+                releaseId = releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
+                                                                  scmUsername, scmPassword, scmTag, scmTagBase, environments, getPrincipal() );
             }
             catch ( BuildAgentConfigurationException e )
             {

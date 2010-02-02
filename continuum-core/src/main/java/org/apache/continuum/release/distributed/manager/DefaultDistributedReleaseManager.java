@@ -160,7 +160,7 @@ public class DefaultDistributedReleaseManager
                 client.releasePrepare( createProjectMap( project ), createPropertiesMap( releaseProperties ),
                                        releaseVersion, developmentVersion, environments, username );
 
-            addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ) );
+            addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ), "prepare" );
 
             addReleaseInProgress( releaseId, "prepare", project.getId(), username );
 
@@ -357,9 +357,9 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    public void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile,
-                                       LocalRepository repository, String scmUrl, String scmUsername,
-                                       String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
+    public String releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile,
+                                         LocalRepository repository, String scmUrl, String scmUsername,
+                                         String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
@@ -398,7 +398,10 @@ public class DefaultDistributedReleaseManager
                 client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername,
                                               scmPassword, scmTag, scmTagBase, environments, username );
 
+            addReleasePrepare( releaseId, buildAgentUrl, scmTag, "perform" );
             addReleaseInProgress( releaseId, "perform", projectId, username );
+
+            return releaseId;
         }
         catch ( MalformedURLException e )
         {
@@ -648,14 +651,14 @@ public class DefaultDistributedReleaseManager
         return null;
     }
 
-    private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName )
+    private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName, String releaseType )
         throws ContinuumReleaseException
     {
         PreparedRelease release = new PreparedRelease();
         release.setReleaseId( releaseId );
         release.setBuildAgentUrl( buildAgentUrl );
         release.setReleaseName( releaseName );
-        release.setReleaseType( "prepare" );
+        release.setReleaseType( releaseType );
 
         List<PreparedRelease> preparedReleases = getPreparedReleases();
 
@@ -789,16 +792,5 @@ public class DefaultDistributedReleaseManager
         {
             throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
         }
-    }
-
-    // for testing
-    public void setBuildResultDao( BuildResultDao buildResultDao )
-    {
-        this.buildResultDao = buildResultDao;
-    }
-
-    public void setConfigurationService( ConfigurationService configurationService )
-    {
-        this.configurationService = configurationService;
     }
 }
