@@ -143,12 +143,12 @@ public class LocalRepositoryAction
         {
             if ( repository.getId() != repo.getId() )
             {
-                if ( repository.getName().equals( repo.getName() ) )
+                if ( repository.getName().trim().equals( repo.getName() ) )
                 {
                     addActionError( getText( "repository.error.name.unique" ) );
                 }
                 
-                if ( repository.getLocation().equals( repo.getLocation() ) )
+                if ( repository.getLocation().trim().equals( repo.getLocation() ) )
                 {
                     addActionError( getText( "repository.error.location.unique" ) );
                 }
@@ -169,6 +169,10 @@ public class LocalRepositoryAction
         {
             return INPUT;
         }
+        
+        // trim repository name and location before saving
+        repository.setName( repository.getName().trim() );
+        repository.setLocation( repository.getLocation().trim() );
         
         if ( repository.getId() == 0 )
         {

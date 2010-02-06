@@ -56,8 +56,19 @@ public class LocalRepositoriesTest
         assertTextPresent( "Local repository name must be unique" );
         assertTextPresent( "Local repository location must be unique" );
     }
-
+    
     @Test( dependsOnMethods = { "testAddDuplicatedLocalRepository" } )
+    public void testAddDuplicateLocalRepositoryWithTrailingWhitespaces()
+    {
+        String duplicateRepositoryName = addTrailingWhitespace( getProperty( "LOCAL_REPOSITORY_NAME" ) );
+        String duplicateRepositoryLocation = addTrailingWhitespace( getProperty( "LOCAL_REPOSITORY_LOCATION" ) );
+        goToAddLocalRepository();
+        addEditLocalRepository( duplicateRepositoryName, duplicateRepositoryLocation, false );
+        assertTextPresent( "Local repository name must be unique" );
+        assertTextPresent( "Local repository location must be unique" );
+    }
+
+    @Test( dependsOnMethods = { "testAddDuplicateLocalRepositoryWithTrailingWhitespaces" } )
     public void testEditLocalRepository()
     {
         String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
@@ -75,5 +86,11 @@ public class LocalRepositoriesTest
     {
         String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
         removeLocalRepository( LOCAL_REPOSITORY_NAME );
+    }
+
+    private String addTrailingWhitespace( String str )
+    {
+        String WHITESPACE = "    ";
+        return WHITESPACE.concat( str.concat( WHITESPACE ) );
     }
 }
