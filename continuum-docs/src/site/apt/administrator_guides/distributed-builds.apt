@@ -57,8 +57,8 @@ Understanding Distributed Builds
     tasks in it's queue.
 
     [[5]] In the Build Agent, the build request is processed: the build is queued and
-    executed.  Upon execution, the Build Agent first performs an SCM checkout then
-    the actual build follows.
+    executed.  Upon execution, the Build Agent first performs an SCM checkout or an SCM
+    update followed by an SCM changelog to get the latest update date, then the actual build follows.
 
     [[6]] At this point, when the build is running, the Master can invoke
     <<<cancelBuild()>>> which returns a transient build result, and
