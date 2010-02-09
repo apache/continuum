@@ -44,3 +44,8 @@ Building Projects
     queue>> or in the <<build queue>>.
 
 [../../images/inqueue.gif]
+
+    []
+
+    Checkout or update of projects takes longer with distributed builds enabled because after an SCM checkout or SCM update, an SCM changelog follows to get the "latest
+    update date" needed to determine whether projects should build or not.
