@@ -26,6 +26,7 @@
   <s:i18n name="localization.Continuum">
     <head>
       <title><s:text name="distributedBuilds.page.title"/></title>
+      <meta http-equiv="refresh" content="60"/>
     </head>
     <body>
       <c:if test="${!empty actionErrors}">
