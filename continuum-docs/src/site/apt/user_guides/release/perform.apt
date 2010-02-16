@@ -10,8 +10,10 @@ Perform Release
 
  Fill in the form and click <<Submit>>
 
- To specify a different Maven goal to execute during the release, fill in the <<Maven Arguments>> field with another goal.
+ To specify a different Maven goal to execute during the release, fill in the <<Perform Goals>> field with another goal.
  By default, the goal for this field is <<<clean deploy>>>.
+
+ To specify additional arguments during execution, fill in the <<Arguments>> field.
 
 [../../images/release-perform-parameters.png]
 
