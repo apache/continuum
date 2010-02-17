@@ -73,6 +73,7 @@ under the License.
           <suiteXmlFiles>
             <suiteXmlFile>src/test/testng/config/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
+          <argLine>-Xmx256m</argLine>
         </configuration>
         <executions>
           <execution>
