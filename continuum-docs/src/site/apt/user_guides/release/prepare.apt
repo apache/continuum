@@ -1,6 +1,9 @@
  ------
  Preparing for Release
  ------
+ ------
+ 2010-02-19
+ ------
 
 Prepare for Release
 
@@ -32,4 +35,4 @@ Prepare for Release
 
 [../../images/release-choose-perform-goal.png]
 
- To view the release prepare results, refer to {{{release_results.html}Release Results Management}}.
+ To view the release prepare results, refer to {{{./release_results.html}Release Results Management}}.
