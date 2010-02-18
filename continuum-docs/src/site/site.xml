@@ -23,9 +23,11 @@
     <breadcrumbs>
       <item name="${project.version}" href="/" />
     </breadcrumbs>
+
     <menu name="Documentation">
       <item name="Index (category)" href="index.html"/>
       <item name="Getting Started" href="getting-started.html"/>
+
       <item name="Installation/Upgrade Guides" href="installation/index.html" collapse="true">
         <item name="System Requirements" href="installation/requirements.html"/>
         <item name="Installation" href="installation/installation.html" collapse="true">
@@ -35,8 +37,8 @@
         <item name="Release Notes" href="release-notes.html"/>
         <item name="Upgrade" href="installation/upgrade.html"/>
       </item>
+
       <item name="User's Guides" collapse="true" href="user_guides/index.html">
-        <item name="Getting Started" href="getting-started.html"/>
         <item name="Managing Projects" href="user_guides/managing_project/index.html" collapse="true">
           <item name="Add a Project" href="user_guides/managing_project/addProject.html"/>
           <item name="Edit a Project" href="user_guides/managing_project/editProject.html"/>
@@ -68,6 +70,7 @@
           <item name="Release Results Management" href="user_guides/release/release_results.html"/>
         </item>
       </item>
+
       <item name="Administrator's Guides" href="administrator_guides/index.html" collapse="true">
         <item name="Managing Users and Security" href="administrator_guides/security/index.html" collapse="true">
           <item name="Security Configuration" href="administrator_guides/security/customising-security.html"/>
@@ -95,16 +98,18 @@
           <item name="Security Logs" href="administrator_guides/security-logs.html" />
         </item>
         <item name="Appearance Configuration" href="administrator_guides/appearance.html"/>
-        <item name="Build Definition Template" href="administrator_guides/builddefTemplate.html"/>        
+        <item name="Build Definition Template" href="administrator_guides/builddefTemplate.html"/>
         <item name="Shutdown Continuum" href="administrator_guides/shutdown.html"/>
         <item name="Understanding Distributed Builds" href="administrator_guides/distributed-builds.html"/>
       </item>
+
       <item name="Developer's Guides" href="developer_guides/index.html" collapse="true">
         <!-- item name="SVN repository structure" href="developer_guides/svn.html"/ -->
         <item name="Building Continuum" href="developer_guides/building.html"/>
         <!-- item name="Design" href="developer_guides/design.html"/ -->
         <item name="XML-RPC" href="developer_guides/xmlrpc.html"/>
       </item>
+
       <item name="PDF" href="apache-continuum.pdf"/>
     </menu>
   </body>
