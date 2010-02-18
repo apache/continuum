@@ -1,6 +1,9 @@
  ------
  Perform Release
  ------
+ ------
+ 2010-02-19
+ ------
 
 Perform Release
 
@@ -21,4 +24,4 @@ Perform Release
 
 [../../images/release-perform-executing.png]
 
- To view the release perform results, refer to {{{release_results.html}Release Results Management}}.
+ To view the release perform results, refer to {{{./release_results.html}Release Results Management}}.
