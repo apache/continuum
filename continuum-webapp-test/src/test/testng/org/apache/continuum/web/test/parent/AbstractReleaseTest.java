@@ -102,7 +102,7 @@ public abstract class AbstractReleaseTest
         assertTextPresent( "SCM Password" );
         assertTextPresent( "SCM Tag" );
         assertTextPresent( "SCM Tag Base" );
-        assertTextPresent( "Maven Arguments" );
+        assertTextPresent( "Perform Goals" );
         assertTextPresent( "Arguments" );
         assertTextPresent( "Build Environment" );
         assertButtonWithValuePresent( "Submit" );
