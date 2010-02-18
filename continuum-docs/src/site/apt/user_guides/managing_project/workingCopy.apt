@@ -1,0 +1,17 @@
+ ------
+ Project Working Copy
+ ------
+ Jevica Arianne B. Zurbano
+ ------
+ Feb 01, 2010
+ ------
+
+Project Working Copy
+
+    The <<Working Copy>> tab displays the working copy used for the project.
+    
+    The source files can be viewed by clicking the filename and can be downloaded as text using the <<Download as Text>> link.
+    
+    <<Note>>: The file is automatically loaded as an attachment for download when it exceeds 100MB in size.
+
+[../../images/workingCopy.png] Working Copy

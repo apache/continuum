@@ -41,6 +41,7 @@
           <item name="Add a Project" href="user_guides/managing_project/addProject.html"/>
           <item name="Edit a Project" href="user_guides/managing_project/editProject.html"/>
           <item name="Remove a Project" href="user_guides/managing_project/removeProject.html"/>
+          <item name="Working Copy" href="user_guides/managing_project/workingCopy.html"/>
           <!-- item name="SCM security hints"/ -->
         </item>
         <item name="Managing Build Definitions" href="user_guides/managing_builddef/index.html" collapse="true">
