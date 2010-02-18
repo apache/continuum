@@ -2,9 +2,9 @@
  Parallel Build Queue
  ------
  ------
- May 2009
+ 2010-02-18
  ------
- 
+
 Managing Parallel Builds
 
     Since 1.3.1, Continuum can be configured to checkout and build projects in parallel or concurrently.
@@ -12,27 +12,27 @@ Managing Parallel Builds
 * Configuring Parallel Builds
 
     The number of build queues to be used when checking out or building projects can be configured in the Configuration page, via
-    the Number of Allowed Builds in Parallel field (see {{{configuration.html} Managing General Configuration}}).
+    the Number of Allowed Builds in Parallel field (see {{{./configuration.html} Managing General Configuration}}).
     The value should be greater than one (1) to be able to create a build queue aside from the default.
 
     Another thing to note is that if Distributed Builds is enabled, Parallel Builds is automatically disabled. To make it
     short, you're only allowed to use one of these functionalities at a time in the current implementation.
-    
+
     To configure parallel builds:
-    
+
     [[1]] Create a build queue to be used for the projects.
-          Refer to {{{buildQueue.html} Managing Build Queues}}
-    
+          Refer to {{{./buildQueue.html} Managing Build Queues}}
+
     [[2]] Attach the build queue(s) to a build schedule.
-          Refer to {{{schedules.html} Attaching Build Queue to a Schedule}}
-    
+          Refer to {{{./schedules.html} Attaching Build Queue to a Schedule}}
+
     [[3]] Create or edit the project's build definition to use the build schedule configured with the build queue(s).
           Refer to {{{../user_guides/managing_builddef/index.html} Managing Build Definitions}}
-    
+
     []
-    
+
     A screen similar to the following is displayed under the <<Queues>> page when the project is built (force/sheduled).
-    
+
 [../images/parallelBuildsQueues.png] Queues
 
 * Limitations
@@ -43,5 +43,5 @@ Managing Parallel Builds
 
     [[2]] Concurrent build of inter-dependent projects in a group is not yet supported.
 
-    [[3]] All projects in a project group will be enqueued to the same {{{buildQueue.html} Build Queue}}.
+    [[3]] All projects in a project group will be enqueued to the same {{{./buildQueue.html} Build Queue}}.
 

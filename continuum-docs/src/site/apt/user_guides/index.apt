@@ -1,17 +1,20 @@
  ------
  User's Guides
  ------
+ ------
+ 2010-02-18
+ ------
 
 User's Guides
 
- * {{{building_project/index.html}Building Projects}}
+ * {{{./building_project/index.html}Building Projects}}
 
- * {{{cancelling_build/index.html}Cancelling Builds}}
+ * {{{./cancelling_build/index.html}Cancelling Builds}}
 
- * {{{managing_builddef/index.html}Managing Build Definitions}}
+ * {{{./managing_builddef/index.html}Managing Build Definitions}}
 
- * {{{managing_project/index.html}Managing Projects}}
+ * {{{./managing_project/index.html}Managing Projects}}
 
- * {{{notification/index.html}Notifications}}
+ * {{{./notification/index.html}Notifications}}
 
- * {{{release/index.html}Releasing Projects}}
+ * {{{./release/index.html}Releasing Projects}}

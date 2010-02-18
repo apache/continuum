@@ -3,7 +3,7 @@
  ------
  Emmanuel Venisse
  ------
- Oct 3 2007
+ 2010-02-18
  ------
 
 Building Projects
@@ -34,9 +34,9 @@ Building Projects
 
     Projects can be built in two ways:
 
-    [[1]] {{{schedule_build.html} Scheduled Builds}}
+    [[1]] {{{./schedule_build.html} Scheduled Builds}}
 
-    [[2]] {{{forced_build.html} Forced Builds}}
+    [[2]] {{{./forced_build.html} Forced Builds}}
 
     []
 

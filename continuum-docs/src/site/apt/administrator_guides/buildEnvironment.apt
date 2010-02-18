@@ -14,7 +14,7 @@ Build Environment
 
   The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined
   envvar (MAVEN_OPTS, ANT_OPTS ...).  This is now possible at the build definition level (in 1.1).
-  
+
   As of Continuum 1.2.1, build environments can be used in releasing projects.
   This is set upon supplying the release prepare parameters during the
   {{{../user_guides/release/prepare.html} Release preparation}} of the project.
@@ -33,7 +33,7 @@ Build Environment
 
 ** {Attach Build Agent Group to a Build Environment}
 
-  The list box contains all available Build Agent Groups. The list box will only be visible if Distributed Builds is enabled in the {{{configuration.html}General Configuration}} Page
+  The list box contains all available Build Agent Groups. The list box will only be visible if Distributed Builds is enabled in the {{{./configuration.html}General Configuration}} Page
 
 [../images/profile-build-agent-group.png] Add Build Agent Group to Build Environment
 
@@ -62,11 +62,11 @@ Build Environment
   []
 
 +-------------------------------+
-  Java Home version : 
+  Java Home version :
           java version "1.4.2_06"
           Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.2_06-b03)
           Java HotSpot(TM) Client VM (build 1.4.2_06-b03, mixed mode)
-        
+
   Builder version :
-          Maven version: 2.0.5 
+          Maven version: 2.0.5
 +-------------------------------+
