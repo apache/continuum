@@ -3,49 +3,49 @@
  ------
  Emmanuel Venisse
  ------
- Oct 3 2007
+ 2010-02-18
  ------
 
 Administrator's Guides
 
- * {{{security/index.html}Managing Users and Security}}
+ * {{{./security/index.html}Managing Users and Security}}
 
- * {{{projectgroup.html}Managing Project Groups}}
+ * {{{./projectgroup.html}Managing Project Groups}}
 
- * {{{builder.html}Managing Builders}}
+ * {{{./builder.html}Managing Builders}}
 
- * {{{jdk.html}Managing JDKs}}
+ * {{{./jdk.html}Managing JDKs}}
 
- * {{{buildEnvironment.html}Managing Build Environments}}
+ * {{{./buildEnvironment.html}Managing Build Environments}}
 
- * {{{build-agents.html}Managing Build Agents}}
+ * {{{./build-agents.html}Managing Build Agents}}
 
- * {{{build-agent-groups.html}Managing Build Agent Groups}}
+ * {{{./build-agent-groups.html}Managing Build Agent Groups}}
 
- * {{{schedules.html}Managing Schedules}}
+ * {{{./schedules.html}Managing Schedules}}
 
- * {{{configuration.html}Managing General Configuration}}
+ * {{{./configuration.html}Managing General Configuration}}
 
- * {{{localRepository.html}Managing Local Repositories}}
+ * {{{./localRepository.html}Managing Local Repositories}}
 
- * {{{purgeConfiguration.html}Managing Purge Configuration}}
+ * {{{./purgeConfiguration.html}Managing Purge Configuration}}
 
- * {{{parallelBuilds.html}Managing Parallel Builds}}
+ * {{{./parallelBuilds.html}Managing Parallel Builds}}
 
- * {{{buildQueue.html}Managing Build Queues}}
+ * {{{./buildQueue.html}Managing Build Queues}}
 
- * {{{queues.html}Managing Project Queues}}
+ * {{{./queues.html}Managing Project Queues}}
 
- * {{{external-db.html}External Databases}}
+ * {{{./external-db.html}External Databases}}
 
- * {{{monitoring.html}Monitoring Continuum}}
- 
- * {{{logging.html} Log Files}}
+ * {{{./monitoring.html}Monitoring Continuum}}
 
- * {{{appearance.html}Appearance Configuration}}
+ * {{{./logging.html} Log Files}}
 
- * {{{builddefTemplate.html}Build Definition Templates}}
+ * {{{./appearance.html}Appearance Configuration}}
 
- * {{{shutdown.html}Shutting Down Continuum}}
+ * {{{./builddefTemplate.html}Build Definition Templates}}
 
- * {{{distributed-builds.html}Understanding Distributed Builds}}
+ * {{{./shutdown.html}Shutting Down Continuum}}
+
+ * {{{./distributed-builds.html}Understanding Distributed Builds}}

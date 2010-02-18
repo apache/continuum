@@ -4,7 +4,7 @@
  Joakim Erdfelt
  Emmanuel Venisse
  ------
- 2008-09-01
+ 2010-02-18
  ------
 
 Guide to Install Continuum on Tomcat
@@ -197,7 +197,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
     Tested on Tomcat v5.5.17 and v5.5.25.
 
-    This example \<Context\> assumes technique #2 in the {{{#Defining_JNDI_Resources}Define JNDI Resource}} list. (This example lists out the <<<docBase>>> to the WAR file itself.)
+    This example \<Context\> assumes technique #2 in the {{{Defining_JNDI_Resources}Define JNDI Resource}} list. (This example lists out the <<<docBase>>> to the WAR file itself.)
 
 ------------------------------------------
 <Context path="/continuum"

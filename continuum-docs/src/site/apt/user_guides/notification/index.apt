@@ -3,7 +3,7 @@
  ------
  Emmanuel Venisse
  ------
- Oct 3 2007
+ 2010-02-18
  ------
 
 Managing Notification
@@ -45,14 +45,14 @@ Managing Notification
 
   You have the following choices:
 
-  * {{{mail.html}Mail}}
+  * {{{./mail.html}Mail}}
 
-  * {{{irc.html}IRC}}
+  * {{{./irc.html}IRC}}
 
-  * {{{jabber.html}Jabber}}
+  * {{{./jabber.html}Jabber}}
 
-  * {{{msn.html}MSN}}
+  * {{{./msn.html}MSN}}
 
-  * {{{wagon.html}Wagon}}
+  * {{{./wagon.html}Wagon}}
 
 

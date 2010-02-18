@@ -2,7 +2,7 @@
  Force Project Build
  ------
  ------
- Feb 23 2009
+ 2010-02-18
  ------
 
 Force Project Build
@@ -51,4 +51,4 @@ Force Project Build
 
     []
 
-    To view the results of the build, refer to {{{build_results.html}Build Results Management}}.
+    To view the results of the build, refer to {{{./build_results.html}Build Results Management}}.

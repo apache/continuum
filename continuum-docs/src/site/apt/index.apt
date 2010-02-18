@@ -3,7 +3,7 @@
  ------
  Emmanuel Venisse
  ------
- Oct 3 2007
+ 2010-02-18
  ------
 
 Welcome to Apache Continuum
@@ -15,31 +15,31 @@ Welcome to Apache Continuum
 
 * Documentation
 
-  * {{{release-notes.html} Release Notes}}
+  * {{{./release-notes.html} Release Notes}}
 
   * Installation/Upgrade Guides
 
-    * {{{installation/index.html}Installation}}
+    * {{{./installation/index.html}Installation}}
 
       * Standalone version:
 
-        {{{installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
+        {{{./installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
 
       * Webapp:
 
-        {{{installation/tomcat.html}Tomcat}}
+        {{{./installation/tomcat.html}Tomcat}}
 
       []
 
-    * {{{installation/upgrade.html} How to upgrade from a previous version}}
+    * {{{./installation/upgrade.html} How to upgrade from a previous version}}
 
     []
 
-  * {{{user_guides/index.html} User's Guide}}
+  * {{{./user_guides/index.html} User's Guide}}
 
-  * {{{administrator_guides/index.html} Administrator's Guide}}
+  * {{{./administrator_guides/index.html} Administrator's Guide}}
 
-  * {{{developer_guides/building.html} Developer's Guide to building Continuum}}
+  * {{{./developer_guides/building.html} Developer's Guide to building Continuum}}
 
   * Knowledge Base
 
@@ -54,5 +54,5 @@ Welcome to Apache Continuum
    []
 
    This documentation is also available in {{{./apache-continuum.pdf}PDF}} format.
-   
+
 

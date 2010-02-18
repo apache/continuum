@@ -1,10 +1,13 @@
  ------
  Releasing Projects
  ------
+ ------
+ 2010-02-18
+ ------
 
 Releasing Projects
 
-    The release process has two steps, {{{prepare.html}Prepare}} and {{{perform.html}Perform}}.
+    The release process has two steps, {{{./prepare.html}Prepare}} and {{{./perform.html}Perform}}.
 
     [[1]] First, it prepares your project for release by doing the following:
 
