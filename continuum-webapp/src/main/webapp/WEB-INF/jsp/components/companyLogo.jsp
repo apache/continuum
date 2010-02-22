@@ -21,15 +21,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <s:set name="companyLogo" value="companyLogo"/>
 <c:if test="${!empty (companyLogo)}">
+  <s:set name="companyName" value="companyName"/>
   <s:set name="companyUrl" value="companyUrl"/>
   <c:choose>
     <c:when test="${!empty (companyUrl)}">
       <a href="${companyUrl}">
-        <img src="${companyLogo}" title="${companyName}" border="0" alt=""/>
+        <img src="${companyLogo}" title="${companyName}" border="0" alt="${companyName}"/>
       </a>
     </c:when>
     <c:otherwise>
-      <img src="${companyLogo}" title="${companyName}" border="0" alt=""/>
+      <img src="${companyLogo}" title="${companyName}" border="0" alt="${companyName}"/>
     </c:otherwise>
   </c:choose>
 </c:if>
