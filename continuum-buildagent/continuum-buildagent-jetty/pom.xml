@@ -129,7 +129,7 @@ under the License.
               <jvmSettings>
                 <systemProperties>
                   <systemProperty>appserver.home=.</systemProperty>
-                  <systemProperty>CONTINUUM_BUILDAGENT_HOME=%CONTINUUM_BUILDAGENT_BASE%</systemProperty>
+                  <systemProperty>appserver.base=%CONTINUUM_BUILDAGENT_BASE%</systemProperty>
                   <systemProperty>jetty.logs=%CONTINUUM_BUILDAGENT_BASE%/logs</systemProperty>
                   <systemProperty>java.io.tmpdir=%CONTINUUM_BUILDAGENT_BASE%/tmp</systemProperty>
                 </systemProperties>
