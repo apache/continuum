@@ -129,6 +129,12 @@ under the License.
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-buildagent-webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
 
     <!-- container dependencies -->
     <dependency>
@@ -275,9 +281,35 @@ under the License.
                       <context>continuum</context>
                     </properties>
                   </deployable>
+                  <deployable>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>continuum-buildagent-webapp</artifactId>
+                    <type>war</type>
+                    <properties>
+                      <context>continuum-buildagent</context>
+                    </properties>
+                  </deployable>
                 </deployables>
               </configuration>
             </configuration>
+          </plugin>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <copy todir="${project.build.directory}">
+                      <fileset dir="src/appserver-base" />
+                    </copy>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
