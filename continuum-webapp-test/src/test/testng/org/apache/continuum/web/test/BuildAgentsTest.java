@@ -60,7 +60,7 @@ public class BuildAgentsTest
         disableDistributedBuilds();
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgent", "testReleasePerformUsingProvideParamtersWithDistributedBuilds" } )
+    @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testEditBuildAgent()
     {
         String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );

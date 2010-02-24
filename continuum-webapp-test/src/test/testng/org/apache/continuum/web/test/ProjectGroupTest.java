@@ -143,25 +143,6 @@ public class ProjectGroupTest
         assertReleaseSuccess();
     }
 
-    @Test( dependsOnMethods = { "testDeleteMavenTwoProject", "testAddBuildAgent" } )
-    public void testProjectGroupAllBuildSuccessWithDistributedBuilds()
-        throws Exception
-    {
-        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
-        String BUILD_AGENT_URL = getProperty( "BUILD_AGENT_NAME2" );
-
-        enableDistributedBuilds();
-        goToBuildAgentPage();
-        clickLinkWithText( BUILD_AGENT_URL );
-        assertTextPresent( "true" );
-        
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
-        disableDistributedBuilds();
-    }
-
     @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testDeleteProjectGroup()
         throws Exception
