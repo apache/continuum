@@ -19,20 +19,6 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
@@ -108,6 +94,20 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -666,7 +666,7 @@ public class DefaultContinuum
             {
                 br.setBuildDefinition( null );
                 //Remove all modified dependencies to prevent SQL errors
-                br.setModifiedDependencies( null );
+                br.getModifiedDependencies().clear();
                 buildResultDao.updateBuildResult( br );
                 removeBuildResult( br );
             }
@@ -1066,7 +1066,7 @@ public class DefaultContinuum
             throw new ContinuumException( e.getMessage(), e );
         }
 
-        buildResult.setModifiedDependencies( null );
+        buildResult.getModifiedDependencies().clear();
         buildResult.setBuildDefinition( null );
 
         try
