@@ -21,6 +21,7 @@ package org.apache.maven.continuum.core.action;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -61,10 +62,22 @@ public class AddProjectToCheckOutQueueAction
             project = projectDao.getProject( getProjectId( context ) );
         }
 
+        String scmUsername = project.getScmUsername();
+        String scmPassword = project.getScmPassword();
+        
+        if( scmUsername == null || StringUtils.isEmpty( scmUsername ) )
+        {
+            scmUsername = CheckoutProjectContinuumAction.getScmUsername( context, null );
+        }
+        
+        if( scmPassword == null || StringUtils.isEmpty( scmPassword ) )
+        {
+            scmPassword = CheckoutProjectContinuumAction.getScmPassword( context, null );
+        }
+        
         BuildDefinition defaultBuildDefinition = getBuildDefinition( context );
         parallelBuildsManager.checkoutProject( project.getId(), project.getName(),
                                                workingDirectoryService.getWorkingDirectory( project ),
-                                               project.getScmUsername(), project.getScmPassword(),
-                                               defaultBuildDefinition );
+                                               scmUsername, scmPassword, defaultBuildDefinition );
     }
 }
