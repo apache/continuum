@@ -1454,6 +1454,22 @@ public class DefaultContinuum
         AbstractContinuumAction.setUnvalidatedProjectGroup( context, projectGroup );
 
         AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
+        
+        StoreProjectAction.setUseScmCredentialsCache( context, project.isScmUseCache() );
+        
+        // set for initial checkout
+        String scmUsername = project.getScmUsername();
+        String scmPassword = project.getScmPassword();
+        
+        if( scmUsername != null && !StringUtils.isEmpty( scmUsername ) )
+        {
+            CheckoutProjectContinuumAction.setScmUsername( context, scmUsername );
+        }
+        
+        if( scmPassword != null && !StringUtils.isEmpty( scmPassword ) )
+        {
+            CheckoutProjectContinuumAction.setScmPassword( context, scmPassword );
+        }
 
         executeAction( "validate-project", context );
 

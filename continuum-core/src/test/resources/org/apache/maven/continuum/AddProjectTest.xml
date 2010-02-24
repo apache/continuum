@@ -24,5 +24,10 @@
       <role-hint>continuumUrl</role-hint>
       <implementation>org.apache.maven.continuum.utils.ContinuumUrlValidator</implementation>
     </component>
+    <component>
+      <role>org.codehaus.plexus.action.Action</role>
+      <role-hint>add-project-to-checkout-queue</role-hint>
+      <implementation>org.apache.maven.continuum.AddProjectToCheckoutQueueStub</implementation>
+    </component>
   </components>
 </plexus>

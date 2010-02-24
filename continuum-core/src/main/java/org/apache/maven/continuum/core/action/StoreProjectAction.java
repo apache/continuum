@@ -56,11 +56,11 @@ public class StoreProjectAction
 
         boolean useCredentialsCache = isUseScmCredentialsCache( context, false );
         // CONTINUUM-1605 don't store username/password
-        if ( !useCredentialsCache )
+        if ( useCredentialsCache )
         {
             project.setScmUsername( null );
             project.setScmPassword( null );
-            project.setScmUseCache( false );
+            project.setScmUseCache( true );
         }
 
         projectGroup.addProject( project );
