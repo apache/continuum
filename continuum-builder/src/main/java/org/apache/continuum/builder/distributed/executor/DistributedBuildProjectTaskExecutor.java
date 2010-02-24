@@ -199,6 +199,15 @@ public class DistributedBuildProjectTaskExecutor
                     context.put( ContinuumBuildConstant.KEY_SCM_PASSWORD, project.getScmPassword() );
                 }
 
+                if ( project.getScmTag() != null )
+                {
+                    context.put( ContinuumBuildConstant.KEY_SCM_TAG, project.getScmTag() );
+                }
+                else
+                {
+                    context.put( ContinuumBuildConstant.KEY_SCM_TAG, "" );
+                }
+
                 context.put( ContinuumBuildConstant.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
                 String buildDefinitionLabel = buildDef.getDescription();
                 if ( StringUtils.isEmpty( buildDefinitionLabel ) )
