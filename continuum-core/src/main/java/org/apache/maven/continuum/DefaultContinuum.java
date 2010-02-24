@@ -660,6 +660,12 @@ public class DefaultContinuum
 
             log.info( "Remove project " + project.getName() + "(" + projectId + ")" );
 
+            // remove dependencies first to avoid key clash with build results
+            project = projectDao.getProjectWithDependencies( projectId );
+            project.setParent( null );
+            project.getDependencies().clear();
+            projectDao.updateProject( project );
+
             Collection<BuildResult> buildResults = getBuildResultsForProject( projectId );
 
             for ( BuildResult br : buildResults )
