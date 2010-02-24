@@ -19,6 +19,7 @@ package org.apache.continuum.web.test.parent;
  * under the License.
  */
 
+import org.apache.continuum.web.test.ConfigurationTest;
 import org.testng.Assert;
 
 /**
@@ -373,6 +374,10 @@ public abstract class AbstractContinuumTest
         int maxIt = 10;
         showProjectGroup( projectGroupName, groupId, description );
         clickButtonWithValue( "Build all projects" );
+
+        Thread.sleep( 10000 );
+        getSelenium().refresh();
+
         while ( isElementPresent( "//img[@alt='Building']" ) || isElementPresent( "//img[@alt='Updating']" ) )
         {
             Thread.sleep( 10000 );
@@ -384,6 +389,7 @@ public abstract class AbstractContinuumTest
             }
             currentIt++;
         }
+
         Thread.sleep( 10000 );
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
@@ -971,5 +977,44 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Default Maven 1 Build Definition" );
         assertTextPresent( "Default Maven 2 Build Definition" );
         assertTextPresent( "Default Shell Build Definition" );
+    }
+
+    // ////////////////////////////////////
+    // DISTRIBUTED BUILD
+    // ////////////////////////////////////
+
+    public void enableDistributedBuilds()
+    {
+        ConfigurationTest config = new ConfigurationTest();
+        config.goToConfigurationPage();
+        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
+        if ( !isChecked( "configuration_distributedBuildEnabled" ) )
+        {
+            checkField( "configuration_distributedBuildEnabled" );
+        }
+        clickAndWait( "configuration_" );
+        assertTextPresent( "true" );
+        assertTextPresent( "Distributed Builds" );
+        assertElementPresent( "link=Build Agents" );
+    }
+
+    public void disableDistributedBuilds()
+    {
+        ConfigurationTest config = new ConfigurationTest();
+        config.goToConfigurationPage();
+        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
+        if ( isChecked( "configuration_distributedBuildEnabled" ) )
+        {
+            uncheckField( "configuration_distributedBuildEnabled" );
+        }
+        submit();
+        assertTextPresent( "false" );
+        assertElementNotPresent( "link=Build Agents" );
+    }
+
+    public void goToBuildAgentPage()
+    {
+        clickAndWait("link=Build Agents");
+        assertPage("Continuum - Build Agents");
     }
 }

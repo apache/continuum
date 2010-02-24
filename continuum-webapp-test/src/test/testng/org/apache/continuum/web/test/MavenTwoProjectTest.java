@@ -273,6 +273,51 @@ public class MavenTwoProjectTest
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
 
+    public void testBuildMaven2ProjectWithTag()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_PROJ_WITH_TAG_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = "";
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+    }
+
+    @Test( dependsOnMethods = { "testAddBuildAgent" } )
+    public void testBuildMaven2ProjectWithTagDistributedBuild()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_PROJ_WITH_TAG_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = "";
+
+        enableDistributedBuilds();
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+
+        disableDistributedBuilds();
+    }
+
     private void addMaven2Project( String groupName )
         throws Exception
     {

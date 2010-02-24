@@ -25,48 +25,12 @@ import org.apache.continuum.web.test.ConfigurationTest;
 public abstract class AbstractBuildAgentsTest
     extends AbstractContinuumTest
 {
-    public void enableDistributedBuilds()
-    {
-		ConfigurationTest config = new ConfigurationTest();
-	    config.goToConfigurationPage();
-        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( !isChecked( "configuration_distributedBuildEnabled" ) )
-        {
-            checkField( "configuration_distributedBuildEnabled" );
-        }
-        clickAndWait( "configuration_" );
-        assertTextPresent( "true" );
-        assertTextPresent( "Distributed Builds" );
-        assertElementPresent( "link=Build Agents" );
-    }
-
-    public void disableDistributedBuilds()
-    {
-        ConfigurationTest config = new ConfigurationTest();
-        config.goToConfigurationPage();
-        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( isChecked( "configuration_distributedBuildEnabled" ) )
-        {
-            uncheckField( "configuration_distributedBuildEnabled" );
-        }
-        submit();
-        assertTextPresent( "false" );
-        assertElementNotPresent( "link=Build Agents" );
-    }
-
-	public void goToBuildAgentPage()
-    {
-		clickAndWait("link=Build Agents");
-		assertPage("Continuum - Build Agents");
-	}
-
-	public void assertBuildAgentPage()
+    public void assertBuildAgentPage()
     {
 		assertPage("Continuum - Build Agents");
 		assertTextPresent("Build Agents");
 		assertTextPresent("Build Agent Groups");
 		assertButtonWithValuePresent( "Add" );
-
     }
 
 	public void goToAddBuildAgent()
@@ -102,23 +66,29 @@ public abstract class AbstractBuildAgentsTest
         assertBuildAgentPage();
     }
 
-	public void addBuildAgent( String agentURL, String description, boolean success )
+	public void addBuildAgent( String agentURL, String description, boolean success, boolean enabled )
 	{
 		setFieldValue( "saveBuildAgent_buildAgent_url", agentURL );
 	    setFieldValue("saveBuildAgent_buildAgent_description", description );
-	    checkField("saveBuildAgent_buildAgent_enabled");
+	    
+	    if ( enabled )
+	    {
+	        checkField("saveBuildAgent_buildAgent_enabled");
+	    }
+
 		submit();
-	    if ( success )
+
+		if ( success )
 	    {
 	        assertBuildAgentPage();
 	        assertElementPresent( "link=" + agentURL );
-
+	        clickLinkWithText( agentURL );
+	        assertTextPresent( new Boolean( enabled ).toString() );
 	    }
 	    else
 	    {
 	        assertAddEditBuildAgentPage();
 	    }
-
 	}
 
 	public void goToEditBuildAgent( String name, String description )
@@ -128,7 +98,6 @@ public abstract class AbstractBuildAgentsTest
 	   assertAddEditBuildAgentPage();
 	   assertFieldValue( name, "saveBuildAgent_buildAgent_url" );
 	   assertFieldValue( description, "saveBuildAgent_buildAgent_description" );
-
 	}
 
 	public void addEditBuildAgent( String agentName, String newDesc )
@@ -138,16 +107,18 @@ public abstract class AbstractBuildAgentsTest
 		submit();
 		assertBuildAgentPage();
 		assertTextPresent( newDesc );
-
 	}
 
 
 	public void goToAddBuildAgentGroup()
     {
+	    String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
+	    String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
+
 		goToBuildAgentPage();
 		clickAndWait("editBuildAgentGroup_0"); //add button
         String[] options =
-            new String[] { "--- Available Build Agents ---", "Agent_url_name", "Second_Agent" };
+            new String[] { "--- Available Build Agents ---", BUILD_AGENT_NAME, BUILD_AGENT_NAME2 };
         assertAddEditBuildAgentGroupPage( options, null );
     }
 
@@ -181,8 +152,6 @@ public abstract class AbstractBuildAgentsTest
 		{
 			assertAddEditBuildAgentGroupPage( null, null );
 		}
-
-
 	}
 
 	public void assertAddEditBuildAgentGroupPage( String[] availableBuildAgents, String[] usedBuildAgents )
@@ -227,6 +196,4 @@ public abstract class AbstractBuildAgentsTest
         clickButtonWithValue( "Delete" );
         assertBuildAgentPage();
     }
-
-
 }
