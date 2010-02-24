@@ -55,6 +55,8 @@ public class BuildContext
 
     private String scmPassword;
 
+    private String scmTag;
+
     private int trigger;
 
     private boolean buildFresh;
@@ -213,6 +215,16 @@ public class BuildContext
     public void setScmPassword( String scmPassword )
     {
         this.scmPassword = scmPassword;
+    }
+
+    public String getScmTag()
+    {
+        return scmTag;
+    }
+
+    public void setScmTag( String scmTag )
+    {
+        this.scmTag = scmTag;
     }
 
     public int getTrigger()

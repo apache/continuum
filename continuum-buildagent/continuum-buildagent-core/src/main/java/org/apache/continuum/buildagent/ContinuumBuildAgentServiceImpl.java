@@ -930,6 +930,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setBuildAgentUrl( ContinuumBuildAgentUtil.getBuildAgentUrl( map ) );
             context.setMaxExecutionTime( ContinuumBuildAgentUtil.getMaxExecutionTime( map ) );
             context.setBuildDefinitionLabel( ContinuumBuildAgentUtil.getBuildDefinitionLabel( map ) );
+            context.setScmTag( ContinuumBuildAgentUtil.getScmTag( map ) );
 
             buildContext.add( context );
         }
