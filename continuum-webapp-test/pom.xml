@@ -274,7 +274,7 @@ under the License.
                 </properties>
                 <deployables>
                   <deployable>
-                    <groupId>${project.goupId}</groupId>
+                    <groupId>${project.groupId}</groupId>
                     <artifactId>continuum-webapp</artifactId>
                     <type>war</type>
                     <properties>
