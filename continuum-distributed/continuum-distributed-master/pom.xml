@@ -32,12 +32,4 @@ under the License.
     <module>continuum-distributed-master-server</module>
     <module>continuum-distributed-master-client</module>
   </modules>
-  
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-commons</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
 </project>
