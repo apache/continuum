@@ -19,6 +19,11 @@ package org.apache.continuum.web.test.parent;
  * under the License.
  */
 
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.io.IOUtils;
+import org.testng.Assert;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,14 +31,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
-
-import org.apache.commons.io.IOUtils;
-import org.testng.Assert;
-
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import java.util.Properties;
 
 /**
  * Based on AbstractSeleniumTestCase of Emmanuel Venisse test.
@@ -78,6 +77,7 @@ public abstract class AbstractSeleniumTest
         {
             DefaultSelenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
             s.start();
+            s.setTimeout( maxWaitTimeInMs );
             selenium.set( s );
         }
     }
