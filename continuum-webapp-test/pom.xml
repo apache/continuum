@@ -252,7 +252,7 @@ under the License.
                 <type>standalone</type>
                 <properties>
                   <cargo.servlet.port>9595</cargo.servlet.port>
-                  <cargo.jvmargs>-Xmx512m</cargo.jvmargs>
+                  <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
                   <cargo.datasource.datasource.users>
                     cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
                     cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
@@ -274,7 +274,7 @@ under the License.
                 </properties>
                 <deployables>
                   <deployable>
-                    <groupId>${project.goupId}</groupId>
+                    <groupId>${project.groupId}</groupId>
                     <artifactId>continuum-webapp</artifactId>
                     <type>war</type>
                     <properties>
@@ -465,6 +465,6 @@ under the License.
   </profile>
   </profiles>
   <properties>
-    <cargo.installs.directory>${basedir}/target/installs</cargo.installs.directory>
+    <cargo.installs.directory>${basedir}/cargo-installs</cargo.installs.directory>
   </properties>
 </project>
