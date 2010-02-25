@@ -87,6 +87,8 @@ public class AddProjectAction
 
     private List<BuildDefinitionTemplate> buildDefinitionTemplates;
 
+    private boolean emptyProjectGroups;
+
     public void validate()
     {
         clearErrorsAndMessages();
@@ -104,7 +106,7 @@ public class AddProjectAction
             {
                 addActionError( getText( "addProject.scmUrl.required" ) );
             }
-            if ( selectedProjectGroup == 0 )
+            if ( isEmptyProjectGroups() )
             {
                 addActionError( getText( "addProject.projectGroup.required" ) );
             }
@@ -433,5 +435,15 @@ public class AddProjectAction
     public void setProjectDescription( String projectDescription )
     {
         this.projectDescription = projectDescription;
+    }
+
+    public boolean isEmptyProjectGroups()
+    {
+        return emptyProjectGroups;
+    }
+
+    public void setEmptyProjectGroups( boolean emptyProjectGroups )
+    {
+        this.emptyProjectGroups = emptyProjectGroups;
     }
 }

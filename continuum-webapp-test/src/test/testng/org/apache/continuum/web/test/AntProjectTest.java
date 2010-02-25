@@ -32,8 +32,7 @@ import org.testng.annotations.Test;
 public class AntProjectTest
     extends AbstractContinuumTest
 {
-    // TODO: seems like a bug, currently giving "Project Group is required and all projects must be in a project group"
-    @Test( enabled = false/*, dependsOnMethods = { "testAddProjectGroup" }*/ )
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testAddAntProject()
         throws Exception
     {
@@ -49,7 +48,7 @@ public class AntProjectTest
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    false, TEST_PROJ_GRP_NAME, null, true );
+                    false, TEST_PROJ_GRP_NAME, null, true, "ant" );
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
     }
 
@@ -63,9 +62,8 @@ public class AntProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    // TODO: disabled due to the above test also being disabled
-    @Test( enabled = false, dependsOnMethods = { "testAddAntProject" } )
-    public void testAddDupliedAntProject()
+    @Test( dependsOnMethods = { "testAddAntProject" } )
+    public void testAddDuplicateAntProject()
         throws Exception
     {
         String ANT_NAME = getProperty( "ANT_NAME" );
@@ -77,7 +75,7 @@ public class AntProjectTest
         String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    false, null, null, false );
+                    false, null, null, false, "ant" );
         assertTextPresent( "Project name already exist" );
     }
 }

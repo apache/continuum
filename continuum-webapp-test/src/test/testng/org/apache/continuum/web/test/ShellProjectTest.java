@@ -32,8 +32,6 @@ import org.testng.annotations.Test;
 public class ShellProjectTest
     extends AbstractContinuumTest
 {
-    // TODO: seems like a bug, currently giving "Project Group is required and all projects must be in a project group", and returning to the Ant add page?
-    @Test( enabled = false )
     public void testAddShellProject()
         throws Exception
     {
@@ -49,7 +47,7 @@ public class ShellProjectTest
         String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddShellProjectPage();
         addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, true );
+                    SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, true, "shell" );
         assertProjectGroupSummaryPage( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
     }
 
@@ -63,9 +61,8 @@ public class ShellProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    // TODO: disabled due to the above test also being disabled
-    @Test( enabled = false, dependsOnMethods = { "testAddShellProject" } )
-    public void testAddDupliedShellProject()
+    @Test( dependsOnMethods = { "testAddShellProject" } )
+    public void testAddDuplicateShellProject()
         throws Exception
     {
         String SHELL_NAME = getProperty( "SHELL_NAME" );
@@ -77,7 +74,7 @@ public class ShellProjectTest
         String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD" );
         goToAddShellProjectPage();
         addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, null, null, false );
+                    SHELL_SCM_PASSWORD, SHELL_TAG, false, null, null, false, "shell" );
         assertTextPresent( "Project name already exist" );
     }
 }
