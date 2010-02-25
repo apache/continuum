@@ -86,6 +86,14 @@
                               <s:select label="%{getText('projectGroup.name.label')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
                             </c:otherwise>
                             </c:choose>
+                            <c:choose>
+                              <c:when test="${!empty projectGroups}">
+                                <s:hidden name="emptyProjectGroups" value="false"/>
+                              </c:when>
+                              <c:otherwise>
+                                <s:hidden name="emptyProjectGroups" value="true"/>
+                              </c:otherwise>
+                            </c:choose>
                             <s:select label="%{getText('add.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
                                        headerValue="%{getText('add.project.defaultBuildDefinition')}"/>                             

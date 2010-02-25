@@ -766,7 +766,7 @@ public abstract class AbstractContinuumTest
 
     public void addProject(String name,String description,String version,String scmUrl,String scmUser,
                            String scmPassword,String scmTag,boolean useCache,String projectGroup,
-                           String buildTemplate,boolean success )
+                           String buildTemplate,boolean success,String type )
         throws Exception
     {
         setFieldValue( "projectName", name );
@@ -790,13 +790,14 @@ public abstract class AbstractContinuumTest
         }
         submit();
         String title;
+        type = type.substring( 0, 1 ).toUpperCase() + type.substring( 1 ).toLowerCase();
         if ( success )
         {
             title = "Continuum - Project Group";
         }
         else
         {
-            title = "Continuum - Add ";
+            title = "Continuum - Add " + type + " Project";
         }
         waitAddProject( title );
     }
