@@ -112,18 +112,6 @@ under the License.
             </goals>
           </execution>
           <execution>
-            <id>session model classes</id>
-            <configuration>
-              <models>
-                <model>src/main/mdo/session-models.mdo</model>
-              </models>
-              <version>1.0.0</version>
-            </configuration>
-            <goals>
-              <goal>java</goal>
-            </goals>
-          </execution>
-          <execution>
             <id>appearence model classes</id>
             <configuration>
               <models>
