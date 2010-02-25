@@ -377,7 +377,25 @@ public abstract class AbstractContinuumTest
         
         Thread.sleep( 10000 );
         getSelenium().refresh();
+        
+        // check if project group is updating from SCM
+        while ( isElementPresent( "//td/img[@alt='Updating']" ) )
+           {
+            Thread.sleep( 10000 );
+            getSelenium().refresh();
+            waitPage();
+            if ( currentIt > maxIt )
+                {
+                Assert.fail( "Timeout, Can't update project group from SCM" );
+                }
+            currentIt++;
+           }
+        
+        currentIt = 1;
+        Thread.sleep( 10000 );
+        getSelenium().refresh();
 
+        // check if project is building, or updating
         while ( isElementPresent( "//img[@alt='Building']" ) || isElementPresent( "//img[@alt='Updating']" ) )
         {
             Thread.sleep( 10000 );
