@@ -92,6 +92,7 @@ public abstract class AbstractSeleniumTest
         return p.getProperty( key );
     }
 
+    // TODO: look into removing this, as the issue should be fixed by upgrading the resources plugin to v2.4+
     protected String getEscapeProperty( String key )
     {
         InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
