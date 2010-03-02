@@ -86,15 +86,15 @@ public class CaptureScreenShotsListener
         catch ( RuntimeException e )
         {
             System.out.println( "Error when take screenshot for test " + tr.getName() + ": " + e.getMessage() );
-            try
-            {
-                File fileName = new File( targetPath, fileBaseName + ".html" );
-                FileUtils.writeStringToFile( fileName, selenium.getHtmlSource() );
-            }
-            catch ( IOException ioe )
-            {
-                System.out.println( ioe.getMessage() );
-            }
+        }
+        try
+        {
+            File fileName = new File( targetPath, fileBaseName + ".html" );
+            FileUtils.writeStringToFile( fileName, selenium.getHtmlSource() );
+        }
+        catch ( IOException ioe )
+        {
+            System.out.println( "Error writing HTML of error: " + ioe.getMessage() );
         }
     }
 
