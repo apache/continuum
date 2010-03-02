@@ -98,7 +98,7 @@ public class ReleaseTaskExecutorTest
         File scmTargetPath = new File( getBasedir(), "target/scm-test" ).getAbsoluteFile();
         FileUtils.copyDirectoryStructure( scmPath, scmTargetPath );
     }
-
+    
     public void releaseSimpleProject()
         throws Exception
     {
@@ -140,6 +140,7 @@ public class ReleaseTaskExecutorTest
         releaseAndRollbackProject();
         releaseSimpleProjectWithNextVersion();
         releasePerformWithExecutableInDescriptor();
+        releaseProjectWithDependencyOfCustomPackagingType();
     }
 
     public void releaseSimpleProjectWithNextVersion()
@@ -300,6 +301,50 @@ public class ReleaseTaskExecutorTest
             fail( "Error in release:perform. Missing executable" );
         }
     }
+    
+    // CONTINUUM-1814
+    public void releaseProjectWithDependencyOfCustomPackagingType()
+    	throws Exception
+	{
+    	String scmPath = new File( getBasedir(), "target/scm-test/continuum-1814" ).getAbsolutePath().replace( '\\', '/' );
+        File workDir = new File( getBasedir(), "target/test-classes/continuum-1814" );
+        FileUtils.deleteDirectory( workDir );
+        File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
+        FileUtils.deleteDirectory( testDir );
+
+        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
+        descriptor.setInteractive( false );
+        descriptor.setScmSourceUrl( "scm:svn:file://localhost/" + scmPath + "/trunk" );
+        descriptor.setWorkingDirectory( workDir.getAbsolutePath() );
+
+        ScmRepository repository = getScmRepositorty( descriptor.getScmSourceUrl() );
+        ScmFileSet fileSet = new ScmFileSet( workDir );
+        scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
+
+        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        assertTrue( "Test dev version", pom.indexOf( "<version>1.6-SNAPSHOT</version>" ) > 0 );
+
+        doPrepareWithNoError( descriptor );
+
+        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        assertTrue( "Test version increment", pom.indexOf( "<version>1.7-SNAPSHOT</version>" ) > 0 );
+
+        repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/continuum-1814-1.6" );
+        fileSet = new ScmFileSet( testDir );
+        scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
+
+        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        assertTrue( "Test released version", pom.indexOf( "<version>1.6</version>" ) > 0 );
+        
+        performExec.executeTask(
+                getPerformTask( "testRelease", descriptor, new File( getBasedir(), "target/test-classes/build-dir" ) ) );
+
+        ReleaseResult result = (ReleaseResult) releaseManager.getReleaseResults().get( "testRelease" );
+        if ( result.getResultCode() != ReleaseResult.SUCCESS )
+        {
+            fail( "Error in release:perform. Release output follows:\n" + result.getOutput() );
+        }
+	}
 
     private void doPrepareWithNoError( ReleaseDescriptor descriptor )
         throws TaskExecutionException

@@ -27,8 +27,6 @@ import java.util.List;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.profiles.DefaultProfileManager;
 import org.apache.maven.profiles.ProfileManager;
@@ -103,7 +101,7 @@ public class GenerateReactorProjectsPhase
         {
             ArtifactRepository repository = getLocalRepository( descriptor.getAdditionalArguments() );
 
-            project = projectBuilder.buildWithDependencies( getProjectDescriptorFile( descriptor ), repository,
+            project = projectBuilder.build( getProjectDescriptorFile( descriptor ), repository,
                                                             getProfileManager( getSettings() ) );
 
             reactorProjects.add( project );
@@ -111,14 +109,6 @@ public class GenerateReactorProjectsPhase
             addModules( reactorProjects, project, repository );
         }
         catch ( ProjectBuildingException e )
-        {
-            throw new ContinuumReleaseException( "Failed to build project.", e );
-        }
-        catch ( ArtifactNotFoundException e )
-        {
-            throw new ContinuumReleaseException( "Failed to build project.", e );
-        }
-        catch ( ArtifactResolutionException e )
         {
             throw new ContinuumReleaseException( "Failed to build project.", e );
         }
@@ -151,21 +141,13 @@ public class GenerateReactorProjectsPhase
             try
             {
                 MavenProject reactorProject =
-                    projectBuilder.buildWithDependencies( pomFile, repository, getProfileManager( getSettings() ) );
+                    projectBuilder.build( pomFile, repository, getProfileManager( getSettings() ) );
 
                 reactorProjects.add( reactorProject );
 
                 addModules( reactorProjects, reactorProject, repository );
             }
             catch ( ProjectBuildingException e )
-            {
-                throw new ContinuumReleaseException( "Failed to build project.", e );
-            }
-            catch ( ArtifactNotFoundException e )
-            {
-                throw new ContinuumReleaseException( "Failed to build project.", e );
-            }
-            catch ( ArtifactResolutionException e )
             {
                 throw new ContinuumReleaseException( "Failed to build project.", e );
             }
