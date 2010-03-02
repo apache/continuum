@@ -30,55 +30,37 @@ import org.testng.annotations.Test;
 public class InstallationTest
     extends AbstractInstallationTest
 {
-    public void testAddJdkToolWithoutBuildEnvirotment()
+    public void testAddJdkToolWithoutBuildEnvironment()
     {
         String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-		if(isWindows())
-		{
-			String INSTALL_TOOL_JDK_PATH = getProperty( "INSTALL_TOOL_JDK_PATH" );
-			goToAddInstallationTool();
-			addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
-		} 
-		else if(isMac() || isUnix())
-		{
-			String INSTALL_TOOL_JDK_PATH = getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
-			goToAddInstallationTool();
-			addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
-		}
+		String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
+		goToAddInstallationTool();
+		addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
     }
 
-    public void testAddMavenToolWithBuildEnvirotment()
+    public void testAddMavenToolWithBuildEnvironment()
     {
         String INSTALL_TOOL_MAVEN_NAME = getProperty( "INSTALL_TOOL_MAVEN_NAME" );
-        if(isWindows())
-		{
-			String INSTALL_TOOL_MAVEN_PATH = getProperty( "INSTALL_TOOL_MAVEN_PATH" );
-			goToAddInstallationTool();
-			addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven 2", INSTALL_TOOL_MAVEN_PATH, true, true, true );
-			// TODO: Validate build envirotment
-		}
-		else if(isMac() || isUnix())
-		{
-			String INSTALL_TOOL_MAVEN_PATH = getEscapeProperty( "INSTALL_TOOL_MAVEN_PATH" );
-			goToAddInstallationTool();
-			addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven 2", INSTALL_TOOL_MAVEN_PATH, true, true, true );
-			// TODO: Validate build envirotment
-		}
+		String INSTALL_TOOL_MAVEN_PATH = isWindows() ? getProperty( "INSTALL_TOOL_MAVEN_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_MAVEN_PATH" );
+		goToAddInstallationTool();
+		addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven 2", INSTALL_TOOL_MAVEN_PATH, true, true, true );
+		// TODO: Validate build environment
+		
     }
 
-    public void testAddInstallationVariableWithBuildEnvirotment()
+    public void testAddInstallationVariableWithBuildEnvironment()
     {
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
         String INSTALL_VAR_VARIABLE_NAME = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
         String INSTALL_VAR_PATH = getProperty( "INSTALL_VAR_PATH" );
         goToAddInstallationVariable();
         addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, true, false, true );
-        // TODO: Validate build envirotment
+        // TODO: Validate build environment
     }
 
-    public void testAddInstallationVariableWithoutBuildEnvirotment()
+    public void testAddInstallationVariableWithoutBuildEnvironment()
     {
-        String INSTALL_VAR_NAME = "var_without_build_envirotment";
+        String INSTALL_VAR_NAME = "var_without_build_environment";
         String INSTALL_VAR_VARIABLE_NAME = "var_name";
         String INSTALL_VAR_PATH = "path";
         goToAddInstallationVariable();
@@ -115,27 +97,18 @@ public class InstallationTest
         assertTextPresent( "You must define an environment variable" );
     }
 
-    @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvirotment" } )
+    @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvironment" } )
     public void testAddDuplicatedInstallationTool()
     {
         String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-		if(isWindows())
-		{
-			String INSTALL_TOOL_JDK_PATH = getProperty( "INSTALL_TOOL_JDK_PATH" );
-			goToAddInstallationTool();
-			addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
-			assertTextPresent( "Installation name already exists" );
-		}
-		else if(isMac() || isUnix())
-		{
-			String INSTALL_TOOL_JDK_PATH = getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
-			goToAddInstallationTool();
-			addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
-			assertTextPresent( "Installation name already exists" );
-		}
+		String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
+		goToAddInstallationTool();
+		addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
+		assertTextPresent( "Installation name already exists" );
+		
     }
 
-    @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvirotment" } )
+    @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvironment" } )
     public void testAddDuplicatedInstallationVariable()
     {
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
@@ -146,31 +119,19 @@ public class InstallationTest
         assertTextPresent( "Installation name already exists" );
     }
 
-    @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvirotment" } )
+    @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvironment" } )
     public void testEditInstallationTool()
     {
         String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-		if(isWindows())
-		{
-			String INSTALL_TOOL_JDK_PATH = getProperty( "INSTALL_TOOL_JDK_PATH" );
-			String newName = "new_name";
-			goToEditInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true );
-			editInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
-			goToEditInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true );
-			editInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
-		}
-		else if(isMac() || isUnix())
-		{
-			String INSTALL_TOOL_JDK_PATH = getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
-			String newName = "new_name";
-			goToEditInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true );
-			editInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
-			goToEditInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true );
-			editInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
-		}
+		String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
+		String newName = "new_name";
+		goToEditInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true );
+		editInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
+		goToEditInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true );
+		editInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
     }
 
-    @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvirotment" } )
+    @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvironment" } )
     public void testEditInstallationVariable()
     {
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
@@ -198,22 +159,11 @@ public class InstallationTest
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
         removeInstallation( INSTALL_VAR_NAME );
     }
-	
+
 	public static boolean isWindows()
 	{
 		String os = System.getProperty("os.name").toLowerCase();
-		return (os.indexOf( "win" ) >= 0); 
-	}
- 
-	public static boolean isMac()
-	{
-		String os = System.getProperty("os.name").toLowerCase();
-		return (os.indexOf( "mac" ) >= 0); 
-	}
- 
-	public static boolean isUnix()
-	{
-		String os = System.getProperty("os.name").toLowerCase();
-		return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
+		//windows
+	    return (os.indexOf( "win" ) >= 0); 
 	}
 }
