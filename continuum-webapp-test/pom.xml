@@ -70,6 +70,8 @@ under the License.
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <!-- Better to be able to see the results output from the listener as we go -->
+          <redirectTestOutputToFile>false</redirectTestOutputToFile>
           <suiteXmlFiles>
             <suiteXmlFile>src/test/testng/config/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
