@@ -58,6 +58,13 @@ public class CaptureScreenShotsListener
 
     private void captureError( ITestResult tr )
     {
+        Selenium selenium = AbstractSeleniumTest.getSelenium();
+        String locator = "link=Show/hide Stack Trace";
+        if ( selenium.isElementPresent( locator ) )
+        {
+            selenium.click( locator );
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat( "yyyy.MM.dd-HH_mm_ss" );
         String time = sdf.format( new Date() );
         File targetPath = new File( "target", "screenshots" );
@@ -69,7 +76,6 @@ public class CaptureScreenShotsListener
         String lineNumber = Integer.toString( lNumber );
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
         targetPath.mkdirs();
-        Selenium selenium = AbstractSeleniumTest.getSelenium();
         String fileBaseName = methodName + "_" + className + ".java_" + lineNumber + "-" + time;
         try
         {
