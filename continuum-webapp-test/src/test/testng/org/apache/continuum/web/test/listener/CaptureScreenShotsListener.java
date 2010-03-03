@@ -58,6 +58,11 @@ public class CaptureScreenShotsListener
 
     private void captureError( ITestResult tr )
     {
+        captureScreenshotAndSource( tr.getTestClass().getName(), tr.getThrowable() );
+    }
+
+    private static void captureScreenshotAndSource( String cName, Throwable throwable )
+    {
         Selenium selenium = AbstractSeleniumTest.getSelenium();
         String locator = "link=Show/hide Stack Trace";
         if ( selenium.isElementPresent( locator ) )
@@ -68,8 +73,7 @@ public class CaptureScreenShotsListener
         SimpleDateFormat sdf = new SimpleDateFormat( "yyyy.MM.dd-HH_mm_ss" );
         String time = sdf.format( new Date() );
         File targetPath = new File( "target", "screenshots" );
-        StackTraceElement stackTrace[] = tr.getThrowable().getStackTrace();
-        String cName = tr.getTestClass().getName();
+        StackTraceElement stackTrace[] = throwable.getStackTrace();
         int index = getStackTraceIndexOfCallingClass( cName, stackTrace );
         String methodName = stackTrace[index].getMethodName();
         int lNumber = stackTrace[index].getLineNumber();
@@ -80,16 +84,16 @@ public class CaptureScreenShotsListener
         try
         {
             selenium.windowMaximize();
-            File fileName = new File( targetPath, fileBaseName + ".png" );
+            File fileName = getFileName( targetPath, fileBaseName, ".png" );
             selenium.captureEntirePageScreenshot( fileName.getAbsolutePath(), "" );
         }
         catch ( RuntimeException e )
         {
-            System.out.println( "Error when take screenshot for test " + tr.getName() + ": " + e.getMessage() );
+            System.out.println( "Error when take screenshot of error: " + e.getMessage() );
         }
         try
         {
-            File fileName = new File( targetPath, fileBaseName + ".html" );
+            File fileName = getFileName( targetPath, fileBaseName, ".html" );
             FileUtils.writeStringToFile( fileName, selenium.getHtmlSource() );
         }
         catch ( IOException ioe )
@@ -98,9 +102,21 @@ public class CaptureScreenShotsListener
         }
     }
 
-    private int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )
+    private static File getFileName( File targetPath, String fileBaseName, String ext )
     {
-        boolean match = false;
+        File fileName = new File( targetPath, fileBaseName + ext );
+        int count = 0;
+        while ( fileName.exists() )
+        {
+            count++;
+            fileName = new File( targetPath, fileBaseName + "_" + count + ext );
+        }
+        return fileName;
+    }
+
+    private static int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )
+    {
+        boolean match;
         int i = 0;
         do
         {
@@ -108,8 +124,13 @@ public class CaptureScreenShotsListener
             match = Pattern.matches( nameOfClass, className );
             i++;
         }
-        while ( match == false );
+        while ( !match );
         i--;
         return i;
+    }
+
+    public static void captureScreenshotAndSource( String name )
+    {
+        captureScreenshotAndSource( name, new Exception() );
     }
 }

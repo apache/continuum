@@ -355,7 +355,6 @@ public abstract class AbstractSeleniumTest
 
     public void clickLinkWithLocator( String locator, boolean wait )
     {
-        assertElementPresent( locator );
         getSelenium().click( locator );
         if ( wait )
         {

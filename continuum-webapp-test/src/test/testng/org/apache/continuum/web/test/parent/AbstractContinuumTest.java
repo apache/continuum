@@ -20,7 +20,10 @@ package org.apache.continuum.web.test.parent;
  */
 
 import org.apache.continuum.web.test.ConfigurationTest;
+import org.apache.continuum.web.test.listener.CaptureScreenShotsListener;
 import org.testng.Assert;
+
+import java.io.File;
 
 /**
  * Based on AbstractContinuumTestCase of Emmanuel Venisse test.
@@ -407,9 +410,24 @@ public abstract class AbstractContinuumTest
             }
         }
 
+        // TODO: investigate and remove
+        // sometimes the project is still building in the later checks, even though the above has passed. This is here
+        // to help diagnose
+        if ( !isElementPresent( "//img[@alt='Success']" ) )
+        {
+            CaptureScreenShotsListener.captureScreenshotAndSource( getClass().getName() );
+        }
+
+        // TODO: investigate and remove
         // not sure why this is needed, but the page seems to be partially loaded as the screenshot can be
         // correct even if the link is not yet present
-        Thread.sleep( 1000 );
+        if ( !isLinkPresent( projectName ) )
+        {
+            CaptureScreenShotsListener.captureScreenshotAndSource( getClass().getName() );
+
+            // This seems to be enough to avoid it
+            Thread.sleep( 10000 );
+        }
 
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
