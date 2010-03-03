@@ -407,6 +407,10 @@ public abstract class AbstractContinuumTest
             }
         }
 
+        // not sure why this is needed, but the page seems to be partially loaded as the screenshot can be
+        // correct even if the link is not yet present
+        Thread.sleep( 1000 );
+
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
         clickLinkWithText( "Result" );
