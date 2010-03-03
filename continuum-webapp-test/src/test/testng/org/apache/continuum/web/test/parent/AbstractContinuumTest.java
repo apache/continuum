@@ -595,7 +595,22 @@ public abstract class AbstractContinuumTest
         throws Exception
     {
         showProjectGroup( groupName, groupId, groupDescription );
-        clickButtonWithValue( "Edit" );
+        String id = getFieldValue( "name=projectGroupId" );
+        String url = baseUrl + "/editProjectGroup.action?projectGroupId=" + id;
+        getSelenium().open( url );
+        waitPage();
+
+        // TODO: it would be better if the project checkout was part of the corresponding "add project" test to
+        // ensure it was in place
+        int count = 0;
+        while ( isTextPresent( "Projects that are members of this project group are still being checked out" ) &&
+            count < 120 )
+        {
+            Thread.sleep( 1000 );
+            getSelenium().open( url );
+            waitPage();
+            count ++;
+        }
 
         assertTextPresent( "Move to Group" );
         String xPath = "//preceding::th/label[contains(text(),'" + projectName + "')]//following::select";

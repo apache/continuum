@@ -236,6 +236,8 @@ public class MavenTwoProjectTest
 
         assertPage( "Continuum - Project Group" );
         assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+
+        // TODO: this doesn't always seem to work, perhaps because of changes in the way icons are displayed
         // wait for project to finish checkout
         waitForProjectCheckout();
 
