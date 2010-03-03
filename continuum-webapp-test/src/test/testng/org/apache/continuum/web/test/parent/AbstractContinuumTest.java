@@ -371,44 +371,42 @@ public abstract class AbstractContinuumTest
         throws Exception
     {
         int currentIt = 1;
-        int maxIt = 10;
+        int maxIt = 120; // 2 minutes each, not including refresh time
         showProjectGroup( projectGroupName, groupId, description );
         clickButtonWithValue( "Build all projects" );
-        
+
+        int refreshInterval = 1000;
         Thread.sleep( 10000 );
         getSelenium().refresh();
         
         // check if project group is updating from SCM
         while ( isElementPresent( "//td/img[@alt='Updating']" ) )
-           {
-            Thread.sleep( 10000 );
+        {
+            Thread.sleep( refreshInterval );
             getSelenium().refresh();
             waitPage();
-            if ( currentIt > maxIt )
-                {
-                Assert.fail( "Timeout, Can't update project group from SCM" );
-                }
             currentIt++;
-           }
-        
+            if ( currentIt > maxIt )
+            {
+                Assert.fail( "Timeout, Can't update project group from SCM" );
+            }
+        }
+
         currentIt = 1;
-        Thread.sleep( 10000 );
-        getSelenium().refresh();
 
         // check if project is building, or updating
         while ( isElementPresent( "//img[@alt='Building']" ) || isElementPresent( "//img[@alt='Updating']" ) )
         {
-            Thread.sleep( 10000 );
+            Thread.sleep( refreshInterval );
             getSelenium().refresh();
             waitPage();
+            currentIt++;
             if ( currentIt > maxIt )
             {
                 Assert.fail( "Timeout, Can't build project group" );
             }
-            currentIt++;
         }
 
-        Thread.sleep( 10000 );
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
         clickLinkWithText( "Result" );
