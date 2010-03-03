@@ -3716,12 +3716,12 @@ public class DefaultContinuum
             return;
         }
 
-        for ( Project project : (List<Project>) projectGroup.getProjects() )
+        for ( Project project : projectGroup.getProjects() )
         {
-
-            if ( project.getGroupId().equals( projectToCheck.getGroupId() ) &&
-                project.getArtifactId().equals( projectToCheck.getArtifactId() ) &&
-                project.getVersion().equals( projectToCheck.getVersion() ) )
+            // projectToCheck is first in the equals check, as projectToCheck must be a Maven project and will have
+            // non-null values for each. project may be an Ant or Shell project and have null values.
+            if ( projectToCheck.getGroupId().equals( project.getGroupId() ) && projectToCheck.getArtifactId().equals(
+                project.getArtifactId() ) && projectToCheck.getVersion().equals( project.getVersion() ) )
             {
                 result.addError( ContinuumProjectBuildingResult.ERROR_DUPLICATE_PROJECTS );
                 return;
