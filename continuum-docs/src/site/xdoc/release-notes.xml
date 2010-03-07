@@ -4,63 +4,49 @@
   </properties>  
 <body>
 
-  <h2>Apache Continuum 1.3.5 Release Notes</h2>
+  <h2>Apache Continuum 1.3.6 Release Notes</h2>
   
-  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.5.</p>
+  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.6.</p>
 
   <p>To learn more about how the Continuum dev team versions releases, see our
       <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.</p>  
 
-  <h2>Release Notes - Continuum - Version 1.3.5</h2>
-
   
+  <h2>Release Notes - Continuum - Version 1.3.6</h2>
+        
   <h2>        Bug
   </h2>
   <ul>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2207'>CONTINUUM-2207</a>] -         Missing value for key 'scmResult' if build group project
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1743'>CONTINUUM-1743</a>] -         Provide better error handling if DELETE of project fails
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2318'>CONTINUUM-2318</a>] -         NPE when adding Ant/Shell Projects
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1814'>CONTINUUM-1814</a>] -         release prepare : when generate-reactor-projects can't resolve transitively dependency.
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2322'>CONTINUUM-2322</a>] -         Unable to release project using distributed build if &lt;scm&gt; is not configured in the project's pom
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2338'>CONTINUUM-2338</a>] -         unable to export user db
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2348'>CONTINUUM-2348</a>] -         Wrong subject in Mail Notification when distributed build is enabled
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2406'>CONTINUUM-2406</a>] -         Adding Ant/Shell projects with default project group as the project group name prompts 'Project group is required'
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2350'>CONTINUUM-2350</a>] -          Part of an added project's scm url is cut off 
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2437'>CONTINUUM-2437</a>] -         SCM tag field is not propagated to buildagent
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2355'>CONTINUUM-2355</a>] -         {project.projectGroup.name} in prepare build notification subject
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2452'>CONTINUUM-2452</a>] -         project builds longer with distributed build enabled
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2356'>CONTINUUM-2356</a>] -         Build order is not correct when distributed build is enabled
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2460'>CONTINUUM-2460</a>] -         Queues page no longer auto-refreshes
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2357'>CONTINUUM-2357</a>] -         Release perform error when removing M2_HOME from path
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2468'>CONTINUUM-2468</a>] -         data-management-cli-${version}-app.jar is not getting deployed
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2367'>CONTINUUM-2367</a>] -         The current build result is displayed when viewing build results with distributed builds enabled.
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2469'>CONTINUUM-2469</a>] -         The Company Name isn't shown when you hover over the Company Logo
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2377'>CONTINUUM-2377</a>] -         Build agents are not stored in continuum.xml
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2379'>CONTINUUM-2379</a>] -         document that tags are not rolled back in a release rollback
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2387'>CONTINUUM-2387</a>] -         Members tab does not show the members correctly
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2388'>CONTINUUM-2388</a>] -         Editing a build definition should use POST instead of GET
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2394'>CONTINUUM-2394</a>] -         Current build result link is wrong with distributed build enabled
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2411'>CONTINUUM-2411</a>] -         IndexOutOfBoundsException in DefaultContinuum.executeAddProjectsFromMetadataActivity
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2419'>CONTINUUM-2419</a>] -         Unable to build multiple independent projects in the same project group when distributed build is enabled
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2475'>CONTINUUM-2475</a>] -         NullPointerException while adding a Maven 2 project if there is already an Ant project in the group
   </li>
   </ul>
     
   <h2>        Improvement
   </h2>
   <ul>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1031'>CONTINUUM-1031</a>] -         Delete project performance is bad
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2282'>CONTINUUM-2282</a>] -         Fix invalid links when generating pdf of continuum-docs
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2353'>CONTINUUM-2353</a>] -         Make it clearer in the documentation how Local Repositories need to be configured in Distributed Builds
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2283'>CONTINUUM-2283</a>] -         Re-do images so they appear correctly in the continuum-docs pdf
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2365'>CONTINUUM-2365</a>] -         Provide a default configuration file for the distributed build agent
-  </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2380'>CONTINUUM-2380</a>] -         Clarify Description of Build Agent Attributes
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2448'>CONTINUUM-2448</a>] -         Update LDAP configuration documentation
   </li>
   </ul>
         
@@ -69,9 +55,14 @@
   <ul>
   <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2363'>CONTINUUM-2363</a>] -         Missing documentation for 'Arguments' field on release perform
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2374'>CONTINUUM-2374</a>] -         Configure code coverage for 1.3.x branch and trunk
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2429'>CONTINUUM-2429</a>] -         Remove untested platforms from installation docs
   </li>
-  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2414'>CONTINUUM-2414</a>] -         need to document changes to wrapper.conf on upgrade
+  </ul>
+        
+  <h2>        Wish
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2101'>CONTINUUM-2101</a>] -         PDF version of the Continuum docs
   </li>
   </ul>
 
