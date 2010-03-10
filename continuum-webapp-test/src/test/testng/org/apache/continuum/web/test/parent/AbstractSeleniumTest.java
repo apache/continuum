@@ -459,4 +459,10 @@ public abstract class AbstractSeleniumTest
     {
         getSelenium().removeSelection( locator, "label=" + text );
     }
+    
+    public void waitForCondition( String condition )
+        throws Exception
+    {
+        getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+    }
 }

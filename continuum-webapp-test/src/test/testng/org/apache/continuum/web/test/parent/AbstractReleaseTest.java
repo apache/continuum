@@ -111,18 +111,11 @@ public abstract class AbstractReleaseTest
     public void assertRelease( boolean success )
         throws Exception
     {
-        int currentIt = 1;
-        int maxIt = 20;
+        // condition for release is complete; "Done" button or "Release Error" in page is present
+        String condition = "( selenium.browserbot.getCurrentWindow().document.getElementById( 'releaseCleanup_0' ) != null || " +
+                           "selenium.browserbot.getCurrentWindow().document.body.innerHTML.search( 'Release Error' ) > 0 )";
 
-        while ( !isButtonWithValuePresent( "Done" ) && !isTextPresent( "Release Error" ) )
-        {
-            Thread.sleep( 10000 );
-            if ( currentIt > maxIt )
-            {
-                Assert.fail( "Timeout, Can't release project" );
-            }
-            currentIt++;
-        }
+        waitForCondition( condition );
 
         assertButtonWithValuePresent( "Rollback changes" );
     
