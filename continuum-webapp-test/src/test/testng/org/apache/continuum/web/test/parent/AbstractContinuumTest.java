@@ -381,6 +381,7 @@ public abstract class AbstractContinuumTest
         int refreshInterval = 1000;
         Thread.sleep( 10000 );
         getSelenium().refresh();
+        waitPage();
         
         // check if project group is updating from SCM
         while ( isElementPresent( "//td/img[@alt='Updating']" ) )
@@ -395,6 +396,9 @@ public abstract class AbstractContinuumTest
             }
         }
 
+        Thread.sleep( refreshInterval );
+        getSelenium().refresh();
+        waitPage();
         currentIt = 1;
 
         // check if project is building, or updating
@@ -544,7 +548,10 @@ public abstract class AbstractContinuumTest
             uncheckField( "alwaysBuild" );
         }
 
+        selectValue( "scheduleId", "DEFAULT_SCHEDULE" );
+
         submit();
+
         if ( groupName != null )
         {
             assertGroupBuildDefinitionPage( groupName );

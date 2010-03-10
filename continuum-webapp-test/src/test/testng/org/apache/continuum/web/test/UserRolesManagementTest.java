@@ -270,6 +270,7 @@ public class UserRolesManagementTest
         clickButtonWithValue( "Add" );
         waitAddProject( "Continuum - Project Group" );
         assertTextPresent( "ContinuumBuildQueueTestData" );
+        waitForProjectCheckout();
     }
     
     @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_AddProjectToProjectGroup" } )

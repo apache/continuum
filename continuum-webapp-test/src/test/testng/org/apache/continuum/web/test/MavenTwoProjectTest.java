@@ -283,16 +283,22 @@ public class MavenTwoProjectTest
         String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
         String BUILD_AGENT_URL = getProperty( "BUILD_AGENT_NAME2" );
 
-        enableDistributedBuilds();
+        try
+        {
+            enableDistributedBuilds();
+            addMaven2Project( M2_PROJ_GRP_NAME );
+            clickLinkWithText( M2_PROJ_GRP_NAME );
 
-        addMaven2Project( M2_PROJ_GRP_NAME );
-        clickLinkWithText( M2_PROJ_GRP_NAME );
+            assertPage( "Continuum - Project Group" );
+            //wait for project to finish checkout
+            waitForProjectCheckout();
 
-        assertPage( "Continuum - Project Group" );
-        //wait for project to finish checkout
-        waitForProjectCheckout();
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
-        disableDistributedBuilds();
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );   
+        }
+        finally
+        {
+            disableDistributedBuilds();   
+        }
     }
 
     public void testBuildMaven2ProjectWithTag()
@@ -327,17 +333,22 @@ public class MavenTwoProjectTest
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = "";
     
-        enableDistributedBuilds();
-    
-        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
-        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
-    
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
-    
-        removeProjectGroup( M2_PROJ_GRP_NAME );
-        assertLinkNotPresent( M2_PROJ_GRP_NAME );
-    
-        disableDistributedBuilds();
+        try
+        {
+            enableDistributedBuilds();
+        
+            addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+            assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+        
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+        
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
     }
 
     private void addMaven2Project( String groupName )

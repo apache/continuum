@@ -42,14 +42,21 @@ public class ReleaseTest
         String M2_PROJ_DEVELOPMENT_VERSION = getProperty( "M2_DELETE_PROJ_DEVELOPMENT_VERSION" );
 
         init();
-        enableDistributedBuilds();
-        showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
-        releasePrepareProject( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG,
-                               M2_PROJ_RELEASE_VERSION, M2_PROJ_DEVELOPMENT_VERSION, false );
-        assertPreparedReleasesFileCreated();
-        disableDistributedBuilds();
+
+        try
+        {
+            enableDistributedBuilds();
+            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickButtonWithValue( "Release" );
+            assertReleaseSuccess();
+            releasePrepareProject( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG,
+                                   M2_PROJ_RELEASE_VERSION, M2_PROJ_DEVELOPMENT_VERSION, false );
+            assertPreparedReleasesFileCreated();
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
     }
 
     @Test( dependsOnMethods = { "testReleasePrepareProjectWithInvalidUsernamePasswordInDistributedBuilds" } )
@@ -66,14 +73,21 @@ public class ReleaseTest
         String M2_PROJ_SCM_URL = getProperty( "M2_DELETE_PROJ_GRP_SCM_ROOT_URL" );
 
         init();
-        enableDistributedBuilds();
-        showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
-        releasePerformProjectWithProvideParameters( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG, 
-                                                    M2_PROJ_SCM_URL, false );
-        assertPreparedReleasesFileCreated();
-        disableDistributedBuilds();
+        
+        try
+        {
+            enableDistributedBuilds();
+            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickButtonWithValue( "Release" );
+            assertReleaseSuccess();
+            releasePerformProjectWithProvideParameters( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG, 
+                                                        M2_PROJ_SCM_URL, false );
+            assertPreparedReleasesFileCreated();
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
     }
 
     private void init()
