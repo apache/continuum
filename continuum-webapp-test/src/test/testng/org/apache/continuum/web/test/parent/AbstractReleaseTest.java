@@ -56,7 +56,7 @@ public abstract class AbstractReleaseTest
         setFieldValue( "scmTagBase", tagBase );
         setFieldValue( "goals", "clean deploy" );
         submit();
-    
+
         assertRelease( success );
     }
 
@@ -112,8 +112,7 @@ public abstract class AbstractReleaseTest
         throws Exception
     {
         // condition for release is complete; "Done" button or "Release Error" in page is present
-        String condition = "( selenium.browserbot.getCurrentWindow().document.getElementById( 'releaseCleanup_0' ) != null || " +
-                           "selenium.browserbot.getCurrentWindow().document.body.innerHTML.search( 'Release Error' ) > 0 )";
+        String condition = "( selenium.browserbot.getCurrentWindow().document.getElementById( 'releaseCleanup_0' ) != null )";
 
         waitForCondition( condition );
 
