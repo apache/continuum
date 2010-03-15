@@ -160,7 +160,7 @@ public class MavenOneProjectTest
     public void testInaccessiblePomUrl()
         throws Exception
     {
-        String pomUrl = "http://www.google.com";
+        String pomUrl = "http://localhost:9595/";
         goToAddMavenOneProjectPage();
         addMavenOneProject( pomUrl, "", "", null, null, false );
         assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );

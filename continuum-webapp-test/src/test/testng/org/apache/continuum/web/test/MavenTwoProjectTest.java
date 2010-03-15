@@ -206,7 +206,7 @@ public class MavenTwoProjectTest
     public void testInaccessiblePomUrl()
         throws Exception
     {
-        String pomUrl = "http://www.google.com";
+        String pomUrl = "http://localhost:9595/";
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
