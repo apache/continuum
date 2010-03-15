@@ -9,8 +9,8 @@
   <url>http://continuum.apache.org</url>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/simple-example</connection>
-   <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/sandbox/simple-example</developerConnection>
+    <connection>scm:svn:${svn.base.url}/trunk/simple-example</connection>
+   <developerConnection>scm:svn:${svn.base.url}/trunk/simple-example</developerConnection>
   </scm>
 
   <dependencies>

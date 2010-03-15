@@ -17,9 +17,9 @@
   </dependencies>
   
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/continuum/sandbox/continuum-build-queue-test-data</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/sandbox/continuum-build-queue-test-data</developerConnection>
-    <url>https://svn.apache.org/repos/asf/continuum/sandbox/continuum-build-queue-test-data</url>
+    <connection>scm:svn:${svn.base.url}/trunk/continuum-build-queue-test-data</connection>
+    <developerConnection>scm:svn:${svn.base.url}/trunk/continuum-build-queue-test-data</developerConnection>
+    <url>${svn.base.url}/trunk/continuum-build-queue-test-data</url>
   </scm>
 
   <build>

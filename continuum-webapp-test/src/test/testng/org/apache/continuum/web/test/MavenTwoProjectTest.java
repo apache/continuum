@@ -321,7 +321,7 @@ public class MavenTwoProjectTest
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
     
-    @Test( dependsOnMethods = { "testAddBuildAgent" } )
+    @Test( dependsOnMethods = { "testAddBuildAgent", "testBuildMaven2ProjectWithTag" } )
     public void testBuildMaven2ProjectWithTagDistributedBuild()
         throws Exception
     {

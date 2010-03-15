@@ -8,9 +8,9 @@
   <url>http://continuum.apache.org</url>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/examples/continuum-2437-example</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/sandbox/examples/continuum-2437-example</developerConnection>
-    <tag>http://svn.apache.org/repos/asf/continuum/sandbox/tags/continuum-2437-example-1.0</tag>
+    <connection>scm:svn:${svn.base.url}/trunk/continuum-2437-example</connection>
+    <developerConnection>scm:svn:${svn.base.url}/trunk/continuum-2437-example</developerConnection>
+    <tag>${svn.base.url}/tags/continuum-2437-example-1.0</tag>
   </scm>
 
   <dependencies>

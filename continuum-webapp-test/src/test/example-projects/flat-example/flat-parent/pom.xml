@@ -9,8 +9,8 @@
   <name>Flat Example</name>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-parent</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-parent</developerConnection>
+    <connection>scm:svn:${svn.base.url}/trunk/flat-example/flat-parent</connection>
+    <developerConnection>scm:svn:${svn.base.url}/trunk/flat-example/flat-parent</developerConnection>
   </scm>
 
   <modules>
