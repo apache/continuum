@@ -293,10 +293,10 @@ under the License.
                   </deployable>
                   <!-- Test resources -->
                   <deployable>
-                    <location>src/test/resources/unit</location>
+                    <location>src/test/resources/example-projects</location>
                     <type>war</type>
                     <properties>
-                      <context>unit</context>
+                      <context>example-projects</context>
                     </properties>
                   </deployable>
                 </deployables>
