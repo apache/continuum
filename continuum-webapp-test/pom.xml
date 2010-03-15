@@ -291,6 +291,14 @@ under the License.
                       <context>continuum-buildagent</context>
                     </properties>
                   </deployable>
+                  <!-- Test resources -->
+                  <deployable>
+                    <location>src/test/resources/unit</location>
+                    <type>war</type>
+                    <properties>
+                      <context>unit</context>
+                    </properties>
+                  </deployable>
                 </deployables>
               </configuration>
             </configuration>
