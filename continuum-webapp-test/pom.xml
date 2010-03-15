@@ -293,7 +293,7 @@ under the License.
                   </deployable>
                   <!-- Test resources -->
                   <deployable>
-                    <location>src/test/resources/example-projects</location>
+                    <location>src/test/example-projects</location>
                     <type>war</type>
                     <properties>
                       <context>example-projects</context>
