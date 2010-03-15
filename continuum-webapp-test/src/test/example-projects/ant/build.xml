@@ -1,0 +1,6 @@
+<project name="ant-project" default="build">
+  <target name="build">
+    <echo>Hello, Ant!</echo>
+  </target>
+</project>
+
