@@ -950,6 +950,42 @@ public abstract class AbstractContinuumTest
             currentIt++;
         }
     }
+    
+    public void waitForProjectUpdate()
+        throws Exception
+    {
+        getSelenium().refresh();
+        waitPage();
+        
+        if ( isElementPresent( "//img[@alt='Checking Out']" ) )
+        {
+            waitForProjectCheckout();
+        }
+        
+        getSelenium().refresh();
+        waitPage();
+        
+        // wait for project to finish updating
+        waitForElementPresent( "//img[@alt='Updating']", false );
+    }
+    
+    public void waitForProjectBuild()
+        throws Exception
+    {
+        getSelenium().refresh();
+        waitPage();
+        
+        if ( isElementPresent( "//img[@alt='Checking Out']" ) || isElementPresent( "//img[@alt='Updating']" ) )
+        {
+            waitForProjectUpdate();
+        }
+        
+        getSelenium().refresh();
+        waitPage();
+        
+        // wait for project to finish building
+        waitForElementPresent( "//img[@alt='Building']", false );
+    }
 
     public void createNewUser( String username, String name, String email, String password )
     {

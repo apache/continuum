@@ -53,6 +53,8 @@ public abstract class AbstractSeleniumTest
     private static Properties p;
 
     private final static String PROPERTIES_SEPARATOR = "=";
+    
+    private static String maxProjectWaitTimeInMs;
 
     /**
      * Initialize properties.
@@ -65,6 +67,7 @@ public abstract class AbstractSeleniumTest
         p.load( input );
 
         maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
+        maxProjectWaitTimeInMs = getProperty( "MAX_PROJECT_WAIT_TIME_IN_MS" );
     }
 
     /**
@@ -433,25 +436,16 @@ public abstract class AbstractSeleniumTest
             getSelenium().refresh();
         }
     }
-
-    public void waitForTextPresent( String text )
-        throws InterruptedException
+    
+    /*
+     * This will wait for the condition to be met.
+     *   * shouldBePresent - if the locator is expected or not (true or false respectively)
+     */
+    public void waitForElementPresent( String locator, boolean shoulBePresent )
+        throws Exception
     {
-        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
-        for ( int second = 0;; second++ )
-        {
-            if ( second >= 60 )
-                Assert.fail( "Timeout" );
-            try
-            {
-                if ( isTextPresent( text ) )
-                    break;
-            }
-            catch ( Exception e )
-            {
-            }
-            Thread.sleep( 1000 );
-        }
+        String condition = "selenium.isElementPresent(\"" + locator + "\") == " + shoulBePresent;
+        waitForCondition( condition );
     }
 
     public void selectForOption( String locator, String text )
