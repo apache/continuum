@@ -373,65 +373,33 @@ public abstract class AbstractContinuumTest
     public void buildProjectGroup(String projectGroupName,String groupId,String description,String projectName )
         throws Exception
     {
-        int currentIt = 1;
-        int maxIt = 120; // 2 minutes each, not including refresh time
         showProjectGroup( projectGroupName, groupId, description );
+        waitForProjectUpdate();
         clickButtonWithValue( "Build all projects" );
 
-        int refreshInterval = 1000;
-        Thread.sleep( 10000 );
+        // wait for project to finish building
+        waitForProjectBuild();
+        
         getSelenium().refresh();
         waitPage();
         
-        // check if project group is updating from SCM
-        while ( isElementPresent( "//td/img[@alt='Updating']" ) )
+        // wait for the success status of project
+        if ( !isElementPresent( "//a/img[@alt='Success']" ) )
         {
-            Thread.sleep( refreshInterval );
-            getSelenium().refresh();
-            waitPage();
-            currentIt++;
-            if ( currentIt > maxIt )
-            {
-                Assert.fail( "Timeout, Can't update project group from SCM" );
-            }
+            waitForElementPresent( "//a/img[@alt='Success']" );
         }
-
-        Thread.sleep( refreshInterval );
+        
         getSelenium().refresh();
         waitPage();
-        currentIt = 1;
-
-        // check if project is building, or updating
-        while ( isElementPresent( "//img[@alt='Building']" ) || isElementPresent( "//img[@alt='Updating']" ) )
-        {
-            Thread.sleep( refreshInterval );
-            getSelenium().refresh();
-            waitPage();
-            currentIt++;
-            if ( currentIt > maxIt )
-            {
-                Assert.fail( "Timeout, Can't build project group" );
-            }
-        }
-
-        // TODO: investigate and remove
-        // sometimes the project is still building in the later checks, even though the above has passed. This is here
-        // to help diagnose
-        if ( !isElementPresent( "//img[@alt='Success']" ) )
-        {
-            CaptureScreenShotsListener.captureScreenshotAndSource( getClass().getName() );
-        }
-
-        // TODO: investigate and remove
-        // not sure why this is needed, but the page seems to be partially loaded as the screenshot can be
-        // correct even if the link is not yet present
+        
+        // wait for the projectName link
         if ( !isLinkPresent( projectName ) )
         {
-            CaptureScreenShotsListener.captureScreenshotAndSource( getClass().getName() );
-
-            // This seems to be enough to avoid it
-            Thread.sleep( 10000 );
+            waitForElementPresent( "link=" + projectName );
         }
+
+        getSelenium().refresh();
+        waitPage();
 
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );

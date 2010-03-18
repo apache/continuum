@@ -418,23 +418,9 @@ public abstract class AbstractSeleniumTest
     }
 
     public void waitForElementPresent( String locator )
-        throws InterruptedException
+        throws Exception
     {
-        for ( int second = 0;; second++ )
-        {
-            if ( second >= 60 )
-                Assert.fail( "timeout" );
-            try
-            {
-                if ( isElementPresent( locator ) )
-                    break;
-            }
-            catch ( Exception e )
-            {
-            }
-            Thread.sleep( 1000 );
-            getSelenium().refresh();
-        }
+        waitForElementPresent( locator, true );
     }
     
     /*
