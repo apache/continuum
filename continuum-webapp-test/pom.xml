@@ -294,7 +294,7 @@ under the License.
                   </deployable>
                   <!-- Test resources -->
                   <deployable>
-                    <location>src/test/example-projects</location>
+                    <location>${basedir}/src/test/example-projects</location>
                     <type>war</type>
                     <properties>
                       <context>example-projects</context>
