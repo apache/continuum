@@ -35,6 +35,7 @@ import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
+import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
@@ -168,7 +169,20 @@ public class BuildProjectTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS,
                            getEnvironments( buildContext.getBuildDefinitionId(),
                                             getInstallationType( buildContext ) ) );
-        actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, buildContext.getLocalRepository() );
+        // CONTINUUM-2391        
+        if( buildContext.getLocalRepository() != null )
+        {
+            List<LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();        
+            for( LocalRepository local : localRepos )
+            {
+                if( local.getName().equalsIgnoreCase( buildContext.getLocalRepository() ) )
+                {
+                    actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, local.getLocation() );
+                    break;
+                }
+            }
+        }        
+        
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, buildContext.getScmResult() );
         buildContext.setActionContext( actionContext );
 

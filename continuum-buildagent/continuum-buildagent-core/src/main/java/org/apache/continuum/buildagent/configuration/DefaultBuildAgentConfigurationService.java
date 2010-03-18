@@ -26,6 +26,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.continuum.buildagent.model.Installation;
+import org.apache.continuum.buildagent.model.LocalRepository;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,6 +145,11 @@ public class DefaultBuildAgentConfigurationService
         return generalBuildAgentConfiguration.getInstallations();
     }
 
+    public List<LocalRepository> getLocalRepositories()
+    {
+        return generalBuildAgentConfiguration.getLocalRepositories();
+    }
+    
     private void loadData()
         throws BuildAgentConfigurationException
     {

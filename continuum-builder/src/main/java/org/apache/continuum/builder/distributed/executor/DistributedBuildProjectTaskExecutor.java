@@ -170,11 +170,12 @@ public class DistributedBuildProjectTaskExecutor
                                  new Date( buildResult.getStartTime() ) );
                 }
 
-                LocalRepository localRepo = project.getProjectGroup().getLocalRepository();
+                LocalRepository localRepo = project.getProjectGroup().getLocalRepository();                
 
                 if ( localRepo != null )
                 {
-                    context.put( ContinuumBuildConstant.KEY_LOCAL_REPOSITORY, localRepo.getLocation() );
+                    // CONTINUUM-2391
+                	context.put( ContinuumBuildConstant.KEY_LOCAL_REPOSITORY, localRepo.getName() );                	
                 }
                 else
                 {

@@ -105,6 +105,7 @@ public class DefaultBuildAgentConfiguration
             }
             this.generalBuildAgentConfiguration.setContinuumServerUrl( configuration.getContinuumServerUrl() );
             this.generalBuildAgentConfiguration.setInstallations( configuration.getInstallations() );
+            this.generalBuildAgentConfiguration.setLocalRepositories( configuration.getLocalRepositories() );
         }
         catch ( IOException e )
         {
@@ -153,6 +154,7 @@ public class DefaultBuildAgentConfiguration
             }
             configurationModel.setContinuumServerUrl( this.generalBuildAgentConfiguration.getContinuumServerUrl() );
             configurationModel.setInstallations( this.generalBuildAgentConfiguration.getInstallations() );
+            configurationModel.setLocalRepositories( this.generalBuildAgentConfiguration.getLocalRepositories() );
 
             ContinuumBuildAgentConfigurationModelXpp3Writer writer =
                 new ContinuumBuildAgentConfigurationModelXpp3Writer();

@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.continuum.buildagent.model.Installation;
+import org.apache.continuum.buildagent.model.LocalRepository;
 
 public class GeneralBuildAgentConfiguration
 {
@@ -33,6 +34,8 @@ public class GeneralBuildAgentConfiguration
     private String continuumServerUrl;
 
     private List<Installation> installations;
+    
+    private List<LocalRepository> localRepositories;
 
     public File getWorkingDirectory()
     {
@@ -72,5 +75,15 @@ public class GeneralBuildAgentConfiguration
     public void setInstallations( List<Installation> installations )
     {
         this.installations = installations;
+    }
+    
+    public List<LocalRepository> getLocalRepositories()
+    {
+        return localRepositories;
+    }
+
+    public void setLocalRepositories( List<LocalRepository> localRepositories )
+    {
+        this.localRepositories = localRepositories;
     }
 }
