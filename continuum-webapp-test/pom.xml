@@ -233,7 +233,7 @@ under the License.
                 <systemProperties>
                   <appserver.base>${project.build.directory}</appserver.base>
                   <derby.system.home>${project.build.directory}</derby.system.home>
-                  <svn.base.url>file://localhost/${basedir}/target/example-svn</svn.base.url>
+                  <svn.base.url>${svn.base.url}</svn.base.url>
                 </systemProperties>
                 <dependencies>
                   <dependency>
@@ -306,6 +306,7 @@ under the License.
           </plugin>
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.3</version>
             <executions>
               <execution>
                 <phase>generate-resources</phase>
@@ -321,7 +322,35 @@ under the License.
                     <copy todir="${project.build.directory}/example-svn">
                       <fileset dir="src/test/example-svn" />
                     </copy>
+                    <!-- This doesn't work, SVN doesn't like the file:/ URL it gives
+                    <makeurl file="${project.build.directory}/example-svn" property="svn.base.url"/>
+                    -->
+                    <path id="svn.repo.dir">
+                      <pathelement location="${project.build.directory}/example-svn" />
+                    </path>
+                    <pathconvert refid="svn.repo.dir" targetos="unix" property="svn.base.url"/>
+                    <echo file="${project.build.directory}/filter.properties">
+                      svn.base.url=file://localhost/${svn.base.url}
+                    </echo>
                   </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>properties-maven-plugin</artifactId>
+            <version>1.0-alpha-2</version>
+            <executions>
+              <execution>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>read-project-properties</goal>
+                </goals>
+                <configuration>
+                  <files>
+                    <file>${project.build.directory}/filter.properties</file>
+                  </files>
                 </configuration>
               </execution>
             </executions>
