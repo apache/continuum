@@ -620,22 +620,14 @@ public abstract class AbstractContinuumTest
         throws Exception
     {
         showProjectGroup( groupName, groupId, groupDescription );
+        
+        // wait for project not being used
+        waitForProjectBuild();
+        
         String id = getFieldValue( "name=projectGroupId" );
         String url = baseUrl + "/editProjectGroup.action?projectGroupId=" + id;
         getSelenium().open( url );
         waitPage();
-
-        // TODO: it would be better if the project checkout was part of the corresponding "add project" test to
-        // ensure it was in place
-        int count = 0;
-        while ( isTextPresent( "Projects that are members of this project group are still being checked out" ) &&
-            count < 120 )
-        {
-            Thread.sleep( 1000 );
-            getSelenium().open( url );
-            waitPage();
-            count ++;
-        }
 
         assertTextPresent( "Move to Group" );
         String xPath = "//preceding::th/label[contains(text(),'" + projectName + "')]//following::select";
@@ -862,7 +854,7 @@ public abstract class AbstractContinuumTest
         waitAddProject( title );
     }
 
-    public void waitAddProject(String title )
+    public void waitAddProject( String title )
         throws Exception
     {
         // the "adding project" interstitial page has an empty title, so we wait for a real title to appear
@@ -875,7 +867,8 @@ public abstract class AbstractContinuumTest
             // there's a problem with ie using waitForCondition
             while( getTitle().equals( "" ) && currentIt <= maxIt )
             {
-                Thread.sleep( 1000 );
+                getSelenium().refresh();
+                waitPage();
                 currentIt++;
             }
         }
@@ -936,19 +929,11 @@ public abstract class AbstractContinuumTest
     public void waitForProjectCheckout()
         throws Exception
     {
-        int currentIt = 1;
-        int maxIt = 10;
-        while ( isElementPresent( "//img[@alt='Checking Out']" ) )
-        {
-            Thread.sleep( 10000 );
-            getSelenium().refresh();
-            waitPage();
-            if ( currentIt > maxIt )
-            {
-                Assert.fail( "Timeout, Can't check out projects" );
-            }
-            currentIt++;
-        }
+        getSelenium().refresh();
+        waitPage();
+        
+        // wait for project to finish checking out
+        waitForElementPresent( "//img[@alt='Checking Out']", false );
     }
     
     public void waitForProjectUpdate()

@@ -461,6 +461,6 @@ public abstract class AbstractSeleniumTest
     public void waitForCondition( String condition )
         throws Exception
     {
-        getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+        getSelenium().waitForCondition( condition, maxProjectWaitTimeInMs );
     }
 }
