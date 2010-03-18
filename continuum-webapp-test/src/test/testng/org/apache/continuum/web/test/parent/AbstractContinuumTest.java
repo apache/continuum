@@ -866,8 +866,25 @@ public abstract class AbstractContinuumTest
         throws Exception
     {
         // the "adding project" interstitial page has an empty title, so we wait for a real title to appear
-        String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != '' && selenium.browserbot.getCurrentWindow().document.getElementById('footer') != null";
-        getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+
+        if ( browser.equals( "*iexplore" ) )
+        {
+            int currentIt = 1;
+            int maxIt = 20;
+
+            // there's a problem with ie using waitForCondition
+            while( getTitle().equals( "" ) && currentIt <= maxIt )
+            {
+                Thread.sleep( 1000 );
+                currentIt++;
+            }
+        }
+        else
+        {
+            String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != '' && selenium.browserbot.getCurrentWindow().document.getElementById('footer') != null";
+            getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+        }
+
         Assert.assertEquals( getTitle(), title );
     }
 

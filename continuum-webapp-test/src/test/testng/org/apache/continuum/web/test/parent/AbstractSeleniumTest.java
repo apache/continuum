@@ -44,6 +44,8 @@ public abstract class AbstractSeleniumTest
 {
     public static String baseUrl;
 
+    public static String browser;
+
     public static String maxWaitTimeInMs;
 
     private static ThreadLocal<Selenium> selenium = new ThreadLocal<Selenium>();
@@ -72,6 +74,8 @@ public abstract class AbstractSeleniumTest
         throws Exception
     {
         this.baseUrl = baseUrl;
+
+        this.browser = browser;
 
         if ( getSelenium() == null )
         {
