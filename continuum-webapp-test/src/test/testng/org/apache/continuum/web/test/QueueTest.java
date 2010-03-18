@@ -134,7 +134,7 @@ public class QueueTest
         String location = getSelenium().getLocation();
 
         //check queue page while building
-    	clickAndWait( "link=Queues" );
+    	getSelenium().open( "/continuum/admin/displayQueues!display.action" );
 	    assertPage( "Continuum - Build Queue" );
 	    assertTextPresent( "Current Build" );
 	    assertTextPresent( "Build Queue" );
