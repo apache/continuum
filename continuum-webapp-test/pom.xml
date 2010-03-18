@@ -233,7 +233,7 @@ under the License.
                 <systemProperties>
                   <appserver.base>${project.build.directory}</appserver.base>
                   <derby.system.home>${project.build.directory}</derby.system.home>
-                  <svn.base.url>file://localhost/${project.build.directory}/example-svn</svn.base.url>
+                  <svn.base.url>file://localhost/${basedir}/target/example-svn</svn.base.url>
                 </systemProperties>
                 <dependencies>
                   <dependency>
