@@ -41,8 +41,8 @@ public class BuildAgentConfigurationTest
         
         GeneralBuildAgentConfiguration generalConfig = config.getContinuumBuildAgentConfiguration();
         assertEquals( "http://localhost:9595/continuum/master-xmlrpc", generalConfig.getContinuumServerUrl() );
-        assertEquals( "/tmp/data/build-output-directory", generalConfig.getBuildOutputDirectory().getPath() );
-        assertEquals( "/tmp/data/working-directory", generalConfig.getWorkingDirectory().getPath() );        
+        assertEquals( new File( "/tmp/data/build-output-directory" ), generalConfig.getBuildOutputDirectory() );
+        assertEquals( new File( "/tmp/data/working-directory" ), generalConfig.getWorkingDirectory() );
         assertEquals( 1, generalConfig.getInstallations().size() );
         
         Installation installation = generalConfig.getInstallations().get( 0 );
@@ -108,8 +108,8 @@ public class BuildAgentConfigurationTest
         config.initialize();
         
         String expectedUrl = "http://localhost:8080/continuum/master-xmlrpc";
-        String expectedBuildOutputDir = "/tmp/data/build-output-directory";
-        String expectedWorkingDir = "/tmp/data/working-directory";
+        File expectedBuildOutputDir = new File( "/tmp/data/build-output-directory" );
+        File expectedWorkingDir = new File( "/tmp/data/working-directory" );
         
         GeneralBuildAgentConfiguration generalConfig = config.getContinuumBuildAgentConfiguration();
         
@@ -129,8 +129,8 @@ public class BuildAgentConfigurationTest
         localRepos.add( expectedLocalRepo );
         
         generalConfig.setContinuumServerUrl( expectedUrl );
-        generalConfig.setBuildOutputDirectory( new File( expectedBuildOutputDir ) );
-        generalConfig.setWorkingDirectory( new File( expectedWorkingDir ) );
+        generalConfig.setBuildOutputDirectory( expectedBuildOutputDir );
+        generalConfig.setWorkingDirectory( expectedWorkingDir );
         generalConfig.setInstallations( installations );
         generalConfig.setLocalRepositories( localRepos );
         
@@ -140,8 +140,8 @@ public class BuildAgentConfigurationTest
         
         assertTrue( configFile.exists() );
         assertEquals( expectedUrl, config.getContinuumBuildAgentConfiguration().getContinuumServerUrl() );
-        assertEquals( expectedBuildOutputDir, config.getContinuumBuildAgentConfiguration().getBuildOutputDirectory().getPath() );
-        assertEquals( expectedWorkingDir, config.getContinuumBuildAgentConfiguration().getWorkingDirectory().getPath() );
+        assertEquals( expectedBuildOutputDir, config.getContinuumBuildAgentConfiguration().getBuildOutputDirectory() );
+        assertEquals( expectedWorkingDir, config.getContinuumBuildAgentConfiguration().getWorkingDirectory() );
         assertEquals( 1, config.getContinuumBuildAgentConfiguration().getInstallations().size() );
         
         Installation installation = generalConfig.getInstallations().get( 0 );
