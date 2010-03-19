@@ -380,26 +380,17 @@ public abstract class AbstractContinuumTest
         // wait for project to finish building
         waitForProjectBuild();
         
-        getSelenium().refresh();
-        waitPage();
-        
         // wait for the success status of project
         if ( !isElementPresent( "//a/img[@alt='Success']" ) )
         {
             waitForElementPresent( "//a/img[@alt='Success']" );
         }
         
-        getSelenium().refresh();
-        waitPage();
-        
         // wait for the projectName link
         if ( !isLinkPresent( projectName ) )
         {
             waitForElementPresent( "link=" + projectName );
         }
-
-        getSelenium().refresh();
-        waitPage();
 
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
@@ -897,9 +888,6 @@ public abstract class AbstractContinuumTest
     public void waitForProjectCheckout()
         throws Exception
     {
-        getSelenium().refresh();
-        waitPage();
-        
         // wait for project to finish checking out
         waitForElementPresent( "//img[@alt='Checking Out']", false );
     }
@@ -907,16 +895,10 @@ public abstract class AbstractContinuumTest
     public void waitForProjectUpdate()
         throws Exception
     {
-        getSelenium().refresh();
-        waitPage();
-        
         if ( isElementPresent( "//img[@alt='Checking Out']" ) )
         {
             waitForProjectCheckout();
         }
-        
-        getSelenium().refresh();
-        waitPage();
         
         // wait for project to finish updating
         waitForElementPresent( "//img[@alt='Updating']", false );
@@ -925,16 +907,10 @@ public abstract class AbstractContinuumTest
     public void waitForProjectBuild()
         throws Exception
     {
-        getSelenium().refresh();
-        waitPage();
-        
         if ( isElementPresent( "//img[@alt='Checking Out']" ) || isElementPresent( "//img[@alt='Updating']" ) )
         {
             waitForProjectUpdate();
         }
-        
-        getSelenium().refresh();
-        waitPage();
         
         // wait for project to finish building
         waitForElementPresent( "//img[@alt='Building']", false );

@@ -29,7 +29,6 @@ public abstract class AbstractConfigurationTest
     public void goToConfigurationPage()
     {
         clickLinkWithText( "Configuration" );
-        waitPage();
         assertEditConfigurationPage();
     }
 
