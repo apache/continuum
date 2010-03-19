@@ -826,7 +826,6 @@ public abstract class AbstractContinuumTest
             // there's a problem with ie using waitForCondition
             while( getTitle().equals( "" ) && currentIt <= maxIt )
             {
-                getSelenium().refresh();
                 waitPage();
                 currentIt++;
             }
