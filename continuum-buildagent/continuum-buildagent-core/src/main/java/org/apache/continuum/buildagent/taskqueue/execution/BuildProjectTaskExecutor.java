@@ -169,6 +169,7 @@ public class BuildProjectTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS,
                            getEnvironments( buildContext.getBuildDefinitionId(),
                                             getInstallationType( buildContext ) ) );
+        
         // CONTINUUM-2391        
         if( buildContext.getLocalRepository() != null )
         {
@@ -550,5 +551,30 @@ public class BuildProjectTaskExecutor
         }
 
         return mavenProject;
+    }
+    
+    public void setBuildContextManager( BuildContextManager buildContextManager )
+    {
+        this.buildContextManager = buildContextManager;
+    }
+
+    public void setActionManager( ActionManager actionManager )
+    {
+        this.actionManager = actionManager;
+    }
+
+    public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
+    {
+        this.buildAgentConfigurationService = buildAgentConfigurationService;
+    }
+
+    public void setBuildAgentManager( BuildAgentManager buildAgentManager )
+    {
+        this.buildAgentManager = buildAgentManager;
+    }
+
+    public void setBuildAgentBuildExecutorManager( BuildAgentBuildExecutorManager buildAgentBuildExecutorManager )
+    {
+        this.buildAgentBuildExecutorManager = buildAgentBuildExecutorManager;
     }
 }
