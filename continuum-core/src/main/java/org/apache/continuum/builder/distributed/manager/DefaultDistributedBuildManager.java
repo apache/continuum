@@ -227,7 +227,7 @@ public class DefaultDistributedBuildManager
             // get overall distributed build queue from build agent group
             overallDistributedBuildQueue = getOverallDistributedBuildQueueByAgentGroup( projectsBuildDefinitionsMap );
         }
-        
+
         if ( overallDistributedBuildQueue == null )
         {
             overallDistributedBuildQueue = getOverallDistributedBuildQueue();
@@ -312,16 +312,20 @@ public class DefaultDistributedBuildManager
 
                 try
                 {
-                    SlaveBuildAgentTransportClient client =
-                        new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                    List<Map<String, Object>> projects = client.getProjectsInPrepareBuildQueue();
-
-                    for ( Map<String, Object> context : projects )
+                    if ( isAgentAvailable( buildAgentUrl ) )
                     {
-                        tasks.add( getPrepareBuildProjectsTask( context ) );
-                    }
+                        SlaveBuildAgentTransportClient client =
+                            new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
-                    map.put( buildAgentUrl, tasks );
+                        List<Map<String, Object>> projects = client.getProjectsInPrepareBuildQueue();
+    
+                        for ( Map<String, Object> context : projects )
+                        {
+                            tasks.add( getPrepareBuildProjectsTask( context ) );
+                        }
+    
+                        map.put( buildAgentUrl, tasks );
+                    }
                 }
                 catch ( MalformedURLException e )
                 {
@@ -348,13 +352,16 @@ public class DefaultDistributedBuildManager
             {
                 try
                 {
-                    SlaveBuildAgentTransportClient client =
-                        new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                    Map<String, Object> project = client.getProjectCurrentlyPreparingBuild();
-
-                    if ( !project.isEmpty() )
+                    if ( isAgentAvailable( buildAgentUrl ) )
                     {
-                        map.put( buildAgentUrl, getPrepareBuildProjectsTask( project ) );
+                        SlaveBuildAgentTransportClient client =
+                            new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        Map<String, Object> project = client.getProjectCurrentlyPreparingBuild();
+    
+                        if ( !project.isEmpty() )
+                        {
+                            map.put( buildAgentUrl, getPrepareBuildProjectsTask( project ) );
+                        }
                     }
                 }
                 catch ( MalformedURLException e )
@@ -381,13 +388,16 @@ public class DefaultDistributedBuildManager
             {
                 try
                 {
-                    SlaveBuildAgentTransportClient client =
-                        new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                    Map<String, Object> project = client.getProjectCurrentlyBuilding();
-
-                    if ( !project.isEmpty() )
+                    if ( isAgentAvailable( buildAgentUrl ) )
                     {
-                        map.put( buildAgentUrl, getBuildProjectTask( project ) );
+                        SlaveBuildAgentTransportClient client =
+                            new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        Map<String, Object> project = client.getProjectCurrentlyBuilding();
+    
+                        if ( !project.isEmpty() )
+                        {
+                            map.put( buildAgentUrl, getBuildProjectTask( project ) );
+                        }
                     }
                 }
                 catch ( MalformedURLException e )
@@ -417,16 +427,19 @@ public class DefaultDistributedBuildManager
 
                 try
                 {
-                    SlaveBuildAgentTransportClient client =
-                        new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                    List<Map<String, Object>> projects = client.getProjectsInBuildQueue();
-
-                    for ( Map<String, Object> context : projects )
+                    if ( isAgentAvailable( buildAgentUrl ) )
                     {
-                        tasks.add( getBuildProjectTask( context ) );
+                        SlaveBuildAgentTransportClient client =
+                            new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        List<Map<String, Object>> projects = client.getProjectsInBuildQueue();
+    
+                        for ( Map<String, Object> context : projects )
+                        {
+                            tasks.add( getBuildProjectTask( context ) );
+                        }
+    
+                        map.put( buildAgentUrl, tasks );
                     }
-
-                    map.put( buildAgentUrl, tasks );
                 }
                 catch ( MalformedURLException e )
                 {
@@ -464,9 +477,12 @@ public class DefaultDistributedBuildManager
     {
         try
         {
-            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-
-            client.cancelBuild();
+            if ( isAgentAvailable( buildAgentUrl ) )
+            {
+                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+    
+                client.cancelBuild();
+            }
         }
         catch ( MalformedURLException e )
         {
@@ -494,30 +510,33 @@ public class DefaultDistributedBuildManager
     
         try
         {
-            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-    
-            Map<String, Object> result = client.getBuildResult( projectId );
-    
-            if ( result != null )
+            if ( isAgentAvailable( buildAgentUrl ) )
             {
-                int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( result );
-    
-                Project project = projectDao.getProjectWithAllDetails( projectId );
-                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-    
-                BuildResult oldBuildResult =
-                    buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
-    
-                BuildResult buildResult = distributedBuildUtil.convertMapToBuildResult( result );
-                buildResult.setBuildDefinition( buildDefinition );
-                buildResult.setBuildNumber( project.getBuildNumber() + 1 );
-                buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( oldBuildResult, result ) );
-                buildResult.setScmResult( distributedBuildUtil.getScmResult( result ) );
-    
-                String buildOutput = ContinuumBuildConstant.getBuildOutput( result );
-    
-                map.put( ContinuumBuildConstant.KEY_BUILD_RESULT, buildResult );
-                map.put( ContinuumBuildConstant.KEY_BUILD_OUTPUT, buildOutput );
+                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+        
+                Map<String, Object> result = client.getBuildResult( projectId );
+        
+                if ( result != null )
+                {
+                    int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( result );
+        
+                    Project project = projectDao.getProjectWithAllDetails( projectId );
+                    BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+        
+                    BuildResult oldBuildResult =
+                        buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+        
+                    BuildResult buildResult = distributedBuildUtil.convertMapToBuildResult( result );
+                    buildResult.setBuildDefinition( buildDefinition );
+                    buildResult.setBuildNumber( project.getBuildNumber() + 1 );
+                    buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( oldBuildResult, result ) );
+                    buildResult.setScmResult( distributedBuildUtil.getScmResult( result ) );
+        
+                    String buildOutput = ContinuumBuildConstant.getBuildOutput( result );
+        
+                    map.put( ContinuumBuildConstant.KEY_BUILD_RESULT, buildResult );
+                    map.put( ContinuumBuildConstant.KEY_BUILD_OUTPUT, buildOutput );
+                }
             }
         }
         catch ( MalformedURLException e )
@@ -539,20 +558,22 @@ public class DefaultDistributedBuildManager
     
         try
         {
-            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-    
-            List<Map<String, String>> installationsList = client.getAvailableInstallations();
-    
-            for ( Map context : installationsList )
+            if ( isAgentAvailable( buildAgentUrl ) )
             {
-                Installation installation = new Installation();
-                installation.setName( ContinuumBuildConstant.getInstallationName( context ) );
-                installation.setType( ContinuumBuildConstant.getInstallationType( context ) );
-                installation.setVarName( ContinuumBuildConstant.getInstallationVarName( context ) );
-                installation.setVarValue( ContinuumBuildConstant.getInstallationVarValue( context ) );
-                installations.add( installation );
+                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+        
+                List<Map<String, String>> installationsList = client.getAvailableInstallations();
+        
+                for ( Map context : installationsList )
+                {
+                    Installation installation = new Installation();
+                    installation.setName( ContinuumBuildConstant.getInstallationName( context ) );
+                    installation.setType( ContinuumBuildConstant.getInstallationType( context ) );
+                    installation.setVarName( ContinuumBuildConstant.getInstallationVarName( context ) );
+                    installation.setVarValue( ContinuumBuildConstant.getInstallationVarValue( context ) );
+                    installations.add( installation );
+                }
             }
-    
             return installations;
         }
         catch ( Exception e )
@@ -582,8 +603,11 @@ public class DefaultDistributedBuildManager
                     directory = "";
                 }
     
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                return client.generateWorkingCopyContent( projectId, directory, baseUrl, imageBaseUrl );
+                if ( isAgentAvailable( buildAgentUrl ) )
+                {
+                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                    return client.generateWorkingCopyContent( projectId, directory, baseUrl, imageBaseUrl );
+                }
             }
             catch ( MalformedURLException e )
             {
@@ -613,8 +637,11 @@ public class DefaultDistributedBuildManager
     
             try
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                return client.getProjectFileContent( projectId, directory, filename );
+                if ( isAgentAvailable( buildAgentUrl ) )
+                {
+                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                    return client.getProjectFileContent( projectId, directory, filename );
+                }
             }
             catch ( MalformedURLException e )
             {
@@ -633,8 +660,11 @@ public class DefaultDistributedBuildManager
     {
         try
         {
-            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            client.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+            if ( isAgentAvailable( buildAgentUrl ) )
+            {
+                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                client.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+            }
         }
         catch ( MalformedURLException e )
         {
@@ -657,8 +687,11 @@ public class DefaultDistributedBuildManager
     {
         try
         {
-            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            client.removeFromBuildQueue( projectId, buildDefinitionId );
+            if ( isAgentAvailable( buildAgentUrl ) )
+            {
+                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                client.removeFromBuildQueue( projectId, buildDefinitionId );
+            }
         }
         catch ( MalformedURLException e )
         {
@@ -685,8 +718,11 @@ public class DefaultDistributedBuildManager
             {
                 try
                 {
-                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                    client.removeFromPrepareBuildQueue( hashCodes );
+                    if ( isAgentAvailable( buildAgentUrl ) )
+                    {
+                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        client.removeFromPrepareBuildQueue( hashCodes );
+                    }
                 }
                 catch ( MalformedURLException e )
                 {
@@ -709,8 +745,11 @@ public class DefaultDistributedBuildManager
             {
                 try
                 {
-                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                    client.removeFromBuildQueue( hashCodes );
+                    if ( isAgentAvailable( buildAgentUrl ) )
+                    {
+                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        client.removeFromBuildQueue( hashCodes );
+                    }
                 }
                 catch ( MalformedURLException e )
                 {
@@ -738,12 +777,15 @@ public class DefaultDistributedBuildManager
                 {
                     try
                     {
-                        SlaveBuildAgentTransportClient client = 
-                            new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                        
-                        if ( client.isProjectCurrentlyBuilding( projectId ) )
+                        if ( isAgentAvailable( buildAgentUrl ) )
                         {
-                            return buildAgentUrl;
+                            SlaveBuildAgentTransportClient client = 
+                                new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                            
+                            if ( client.isProjectCurrentlyBuilding( projectId ) )
+                            {
+                                return buildAgentUrl;
+                            }
                         }
                     }
                     catch ( MalformedURLException e )
@@ -831,11 +873,14 @@ public class DefaultDistributedBuildManager
                         return distributedBuildQueue;
                     }
 
-                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-
-                    if ( client.isProjectGroupInQueue( projectGroupId ) )
+                    if ( isAgentAvailable( buildAgentUrl ) )
                     {
-                        return distributedBuildQueue;
+                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+    
+                        if ( client.isProjectGroupInQueue( projectGroupId ) )
+                        {
+                            return distributedBuildQueue;
+                        }
                     }
                 }
                 catch ( TaskQueueException e )
@@ -927,19 +972,22 @@ public class DefaultDistributedBuildManager
                             {
                                 try
                                 {
-                                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                                    int agentBuildSize = client.getBuildSizeOfAgent();
-
-                                    if ( idx == 0 )
+                                    if ( isAgentAvailable( buildAgentUrl ) )
                                     {
-                                        whereToBeQueued = distributedBuildQueue;
-                                        size = agentBuildSize;
-                                    }
-
-                                    if ( agentBuildSize < size )
-                                    {
-                                        whereToBeQueued = distributedBuildQueue;
-                                        size = agentBuildSize;
+                                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                                        int agentBuildSize = client.getBuildSizeOfAgent();
+    
+                                        if ( idx == 0 )
+                                        {
+                                            whereToBeQueued = distributedBuildQueue;
+                                            size = agentBuildSize;
+                                        }
+    
+                                        if ( agentBuildSize < size )
+                                        {
+                                            whereToBeQueued = distributedBuildQueue;
+                                            size = agentBuildSize;
+                                        }
                                     }
                                 }
                                 catch ( MalformedURLException e )
@@ -983,19 +1031,22 @@ public class DefaultDistributedBuildManager
                 {
                     try
                     {
-                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-                        int agentBuildSize = client.getBuildSizeOfAgent();
-
-                        if ( idx == 0 )
+                        if ( isAgentAvailable( buildAgentUrl ) )
                         {
-                            whereToBeQueued = distributedBuildQueue;
-                            size = agentBuildSize;
-                        }
-
-                        if ( agentBuildSize < size )
-                        {
-                            whereToBeQueued = distributedBuildQueue;
-                            size = agentBuildSize;
+                            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                            int agentBuildSize = client.getBuildSizeOfAgent();
+    
+                            if ( idx == 0 )
+                            {
+                                whereToBeQueued = distributedBuildQueue;
+                                size = agentBuildSize;
+                            }
+    
+                            if ( agentBuildSize < size )
+                            {
+                                whereToBeQueued = distributedBuildQueue;
+                                size = agentBuildSize;
+                            }
                         }
                     }
                     catch ( MalformedURLException e )
@@ -1081,4 +1132,75 @@ public class DefaultDistributedBuildManager
 
         return new BuildProjectTask( projectId, buildDefinitionId, buildTrigger, null, buildDefinitionLabel, null, projectGroupId );
     }
+
+    private boolean isAgentAvailable( String buildAgentUrl )
+        throws Exception
+    {
+        try
+        {
+            SlaveBuildAgentTransportClient client =
+                new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+
+            return client.ping();
+        }
+        catch ( MalformedURLException e )
+        {
+            log.warn( "Invalid build agent url" + buildAgentUrl );
+        }
+        catch ( Exception e )
+        {
+            log.warn( "Unable to ping build agent: " + buildAgentUrl + "; disabling it..." );
+        }
+
+        // disable it
+        disableBuildAgent( buildAgentUrl );
+
+        return false;
+    }
+
+    private void disableBuildAgent( String buildAgentUrl )
+        throws Exception
+    {
+        List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
+
+        for ( BuildAgentConfiguration agent : agents )
+        {
+            if ( agent.getUrl().equals( buildAgentUrl ) )
+            {
+                agent.setEnabled( false );
+                configurationService.updateBuildAgent( agent );
+                configurationService.store();
+
+                removeDistributedBuildQueueOfAgent( buildAgentUrl );
+            }
+        }
+    }
+
+    // for unit testing
+
+    public void setOverallDistributedBuildQueues( Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues )
+    {
+        this.overallDistributedBuildQueues = overallDistributedBuildQueues;
+    }
+
+    public void setConfigurationService( ConfigurationService configurationService )
+    {
+        this.configurationService = configurationService;
+    }
+
+    public void setProjectDao( ProjectDao projectDao )
+    {
+        this.projectDao = projectDao;
+    }
+
+    public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
+    {
+        this.buildDefinitionDao = buildDefinitionDao;
+    }
+
+    public void setBuildResultDao( BuildResultDao buildResultDao )
+    {
+        this.buildResultDao = buildResultDao;
+    }
+
 }

@@ -854,6 +854,13 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
+    public boolean ping()
+    {
+        log.info( "Ping Ok" );
+
+        return Boolean.TRUE;
+    }
+
     private void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
                                  List<Map<String, String>> projects )
         throws Exception

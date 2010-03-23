@@ -114,9 +114,7 @@ public class SlaveBuildAgentTransportServer
     public Boolean ping()
         throws Exception
     {
-        log.info( "Ping ok" );
-
-        return Boolean.TRUE;
+        return continuumBuildAgentService.ping(); 
     }
 
     public Boolean cancelBuild()
