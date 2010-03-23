@@ -71,6 +71,9 @@ Understanding Distributed Builds
     Master by invoking the callback method <<<returnBuildResult()>>>, which the
     Master aggregates to provide a unified view of projects.
 
+    A <<<ping()>>> is always called before each XML-RPC invocation to check if 
+    the agent is available. If it's not, the agent will be disabled.
+
 ~~TODO: insert sequence diagram here
 
 * Setup
