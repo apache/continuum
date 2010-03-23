@@ -55,7 +55,7 @@ public abstract class AbstractBuildAgentsTest
         assertBuildAgentPage();
     }
 
-    public void addBuildAgent( String agentURL, String description, boolean success, boolean enabled )
+    public void addBuildAgent( String agentURL, String description, boolean success, boolean enabled, boolean pingOk )
     {
         setFieldValue( "saveBuildAgent_buildAgent_url", agentURL );
         setFieldValue("saveBuildAgent_buildAgent_description", description );
@@ -72,7 +72,15 @@ public abstract class AbstractBuildAgentsTest
             assertBuildAgentPage();
             assertElementPresent( "link=" + agentURL );
             clickLinkWithText( agentURL );
-            assertTextPresent( new Boolean( enabled ).toString() );
+
+            if ( pingOk )
+            {
+                assertTextPresent( "true" );
+            }
+            else
+            {
+                assertTextPresent( "false" );
+            }
         }
         else
         {
@@ -98,15 +106,32 @@ public abstract class AbstractBuildAgentsTest
         assertTextPresent( newDesc );
     }
 
+    public void enableDisableBuildAgent( String agentName, boolean enable )
+    {
+        assertFieldValue( agentName, "saveBuildAgent_buildAgent_url" );
+        
+        if ( enable )
+        {
+            checkField( "saveBuildAgent_buildAgent_enabled" );
+        }
+        else
+        {
+            uncheckField( "saveBuildAgent_buildAgent_enabled" );
+        }
+        submit();
+        assertBuildAgentPage();
+        assertTextPresent( new Boolean( enable ).toString() );
+    }
+
     public void goToAddBuildAgentGroup()
     {
-        String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
         String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
+        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
 
         goToBuildAgentPage();
         clickAndWait("editBuildAgentGroup_0"); //add button
         String[] options =
-            new String[] { "--- Available Build Agents ---", BUILD_AGENT_NAME, BUILD_AGENT_NAME2 };
+            new String[] { "--- Available Build Agents ---", BUILD_AGENT_NAME2, BUILD_AGENT_NAME3 };
         assertAddEditBuildAgentGroupPage( options, null );
     }
 

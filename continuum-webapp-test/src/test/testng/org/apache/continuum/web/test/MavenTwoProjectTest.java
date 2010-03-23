@@ -293,7 +293,10 @@ public class MavenTwoProjectTest
             //wait for project to finish checkout
             waitForProjectCheckout();
 
-            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );   
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
+
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
         }
         finally
         {

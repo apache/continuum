@@ -278,6 +278,8 @@ public class DefaultDistributedBuildManager
 
                     container.release( overallDistributedBuildQueue );
 
+                    overallDistributedBuildQueues.remove( buildAgentUrl );
+
                     log.info( "remove distributed build queue for build agent '" + buildAgentUrl + "'" );
                 }
                 catch ( TaskQueueException e )
