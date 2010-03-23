@@ -427,11 +427,26 @@ public abstract class AbstractSeleniumTest
      * This will wait for the condition to be met.
      *   * shouldBePresent - if the locator is expected or not (true or false respectively)
      */
-    public void waitForElementPresent( String locator, boolean shoulBePresent )
+    public void waitForElementPresent( String locator, boolean shouldBePresent )
         throws Exception
     {
-        String condition = "selenium.isElementPresent(\"" + locator + "\") == " + shoulBePresent;
-        waitForCondition( condition );
+        if ( browser.equals( "*iexplore" ) )
+        {
+            int currentIt = 0;
+            int maxIt = Integer.valueOf( getProperty( "WAIT_TRIES" ) );
+            String pageLoadTimeInMs = getProperty( "PAGE_LOAD_TIME_IN_MS" );
+            
+            while ( isElementPresent( locator ) != shouldBePresent && currentIt < maxIt )
+            {
+                getSelenium().waitForPageToLoad( pageLoadTimeInMs );
+                currentIt++;
+            }
+        }
+        else
+        {
+            String condition = "selenium.isElementPresent(\"" + locator + "\") == " + shouldBePresent;
+            waitForCondition( condition );
+        }
     }
 
     public void selectForOption( String locator, String text )
