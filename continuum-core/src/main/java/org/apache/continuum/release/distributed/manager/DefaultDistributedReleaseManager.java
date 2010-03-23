@@ -332,10 +332,8 @@ public class DefaultDistributedReleaseManager
         map.put( DistributedReleaseUtil.KEY_USERNAME, username );
 
         if ( repository != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY, repository.getLocation() );
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_LAYOUT, repository.getLayout() );
+        {   
+            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );         
         }
 
         try
@@ -385,10 +383,8 @@ public class DefaultDistributedReleaseManager
         map.put( DistributedReleaseUtil.KEY_USERNAME, username );
 
         if ( repository != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY, repository.getLocation() );
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_LAYOUT, repository.getLayout() );
+        {            
+            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );         
         }
 
         try
@@ -539,8 +535,8 @@ public class DefaultDistributedReleaseManager
         map.put( DistributedReleaseUtil.KEY_SCM_URL, project.getScmUrl() );
         if ( project.getProjectGroup().getLocalRepository() != null )
         {
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY,
-                     project.getProjectGroup().getLocalRepository().getLocation() );
+            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME,
+                     project.getProjectGroup().getLocalRepository().getName() );
         }
 
         return map;

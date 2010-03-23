@@ -21,6 +21,7 @@ package org.apache.continuum.buildagent.manager;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -162,6 +163,7 @@ public class DefaultBuildAgentReleaseManager
         return "";
     }
 
+    @SuppressWarnings( "unchecked" )
     public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
                                 Map repository, String username )
         throws ContinuumReleaseException
@@ -174,10 +176,19 @@ public class DefaultBuildAgentReleaseManager
 
         if ( !repository.isEmpty() )
         {
-            repo = new LocalRepository();
-            repo.setLayout( ContinuumBuildAgentUtil.getLocalRepositoryLayout( repository ) );
-            repo.setName( ContinuumBuildAgentUtil.getLocalRepositoryName( repository ) );
-            repo.setLocation( ContinuumBuildAgentUtil.getLocalRepository( repository ) );
+            List<org.apache.continuum.buildagent.model.LocalRepository>  localRepos = buildAgentConfigurationService.getLocalRepositories();
+            for( org.apache.continuum.buildagent.model.LocalRepository localRepo : localRepos )
+            {
+                if( localRepo.getName().equalsIgnoreCase( ContinuumBuildAgentUtil.getLocalRepositoryName( repository ) ) )
+                {
+                    repo = new LocalRepository();
+                    repo.setLayout( localRepo.getLayout() );
+                    repo.setName( localRepo.getName() );
+                    repo.setLocation( localRepo.getLocation() );
+                    
+                    break;
+                }   
+            }
         }
 
         File performDirectory =
@@ -267,7 +278,8 @@ public class DefaultBuildAgentReleaseManager
 
         ProjectGroup group = new ProjectGroup();
 
-        String localRepo = ContinuumBuildAgentUtil.getLocalRepository( context );
+        String localRepo = ContinuumBuildAgentUtil.getLocalRepositoryName( context );
+        
         if ( StringUtils.isBlank( localRepo ) )
         {
             group.setLocalRepository( null );
@@ -275,8 +287,16 @@ public class DefaultBuildAgentReleaseManager
         else
         {
             LocalRepository localRepository = new LocalRepository();
-            localRepository.setLocation( localRepo );
-            group.setLocalRepository( localRepository );
+            List<org.apache.continuum.buildagent.model.LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();
+            for( org.apache.continuum.buildagent.model.LocalRepository localRepoBA : localRepos )
+            {
+                if( localRepoBA.getName().equalsIgnoreCase( localRepo ) )
+                {
+                    localRepository.setLocation( localRepoBA.getLocation() );
+                    group.setLocalRepository( localRepository );
+                    break;
+                }
+            }
         }
 
         project.setProjectGroup( group );
@@ -350,5 +370,8 @@ public class DefaultBuildAgentReleaseManager
         return props;
     }
 
-
+    public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
+    {
+        this.buildAgentConfigurationService = buildAgentConfigurationService;
+    }    
 }
