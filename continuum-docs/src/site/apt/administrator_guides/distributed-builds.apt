@@ -57,7 +57,11 @@ Understanding Distributed Builds
     [[4]] If there is a Build Agent available, the Master collects the information
     necessary for the build (SCM URL, project id, etc.) and passes it when
     invoking <<<buildProjects()>>> to the Build Agent with the smallest number of
-    tasks in its queue.
+    tasks in its queue. The Master also passes the <<<name>>> of the local repository
+    of the project's project group. Make sure that a local repository with the same <<<name>>>
+    is configured in the Build Agent's configuration file since that is what will be 
+    used when the project is built in the build agent. Otherwise, it will use the 
+    local repository set in the build agent's <<<settings.xml>>> file.
 
     [[5]] In the Build Agent, the build request is processed: the build is queued and
     executed.  Upon execution, the Build Agent first performs an SCM checkout or an SCM

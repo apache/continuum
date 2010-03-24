@@ -42,6 +42,13 @@ Installing and Configuring a Build Agent
       <varValue>/Applications/apache-maven-2.0.9</varValue>
     </installation>
   </installations>
+  <localRepositories>
+    <localRepository>
+      <name>default</name>
+      <location>/home/user/.m2/repository</location>
+      <layout>default</layout>
+    </localRepository>
+  </localRepositories>
 </continuum-buildagent-configuration>
 +----------------+
 
@@ -54,7 +61,11 @@ Installing and Configuring a Build Agent
     * <<<continuumServerUrl>>> - the URL pointing to the XML-RPC context of the Continuum Master
 
     * <<<installations>>> - a list of the installations available on the Build Agent, including Maven, Ant, JDK, etc.
-
+    
+    * <<<localRepositories>>> - a list of the local repositories that will be used by the build agent when building and releasing projects. 
+    The local repository <<<name>>> must match that of the local repository configured in the Continuum Master. This configuration is 
+    only available in Continuum 1.4.0+ to fix {{{http://jira.codehaus.org/browse/CONTINUUM-2391}CONTINUUM-2391}}.
+    
   Note that all of your agents need not be identical, as there is a way to control which agent Continuum chooses by using a
   {{{../administrator_guides/build-agent-groups.html}Build Agent Group}}. In addition, you need to {{{../administrator_guides/buildEnvironment.html} configure}}
   the Build Environment from the Master in order to specify which installation to use for the build.

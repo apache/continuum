@@ -41,6 +41,9 @@ Local Repository
 [../images/localrepository-add.png]
 
 	Adding a local repository will automatically create a default {{{./purgeConfiguration.html} Purge Configuration}} for that repository.
+	
+	If you're using distributed builds, you must configure a <<<localRepository>>> with the same <<<name>>> in the build agent's configuration file where the
+	<<<location>>> is the local path to the local repository in the build agent machine. See {{{./distributed-builds.html}Distributed Builds}} for more details.
 
 * Default
 
