@@ -82,4 +82,7 @@ public interface DistributedBuildManager
 
     void removeFromBuildQueue( List<String> hashCodes )
         throws ContinuumException;
+
+    boolean isAgentAvailable( String buildAgentUrl )
+        throws ContinuumException;
 }

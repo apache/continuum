@@ -32,6 +32,7 @@ import org.apache.continuum.builder.distributed.util.DistributedBuildUtil;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -44,6 +45,7 @@ import org.apache.continuum.utils.ProjectSorter;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -1135,8 +1137,8 @@ public class DefaultDistributedBuildManager
         return new BuildProjectTask( projectId, buildDefinitionId, buildTrigger, null, buildDefinitionLabel, null, projectGroupId );
     }
 
-    private boolean isAgentAvailable( String buildAgentUrl )
-        throws Exception
+    public boolean isAgentAvailable( String buildAgentUrl )
+        throws ContinuumException
     {
         try
         {
@@ -1161,7 +1163,7 @@ public class DefaultDistributedBuildManager
     }
 
     private void disableBuildAgent( String buildAgentUrl )
-        throws Exception
+        throws ContinuumException
     {
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
@@ -1171,7 +1173,15 @@ public class DefaultDistributedBuildManager
             {
                 agent.setEnabled( false );
                 configurationService.updateBuildAgent( agent );
-                configurationService.store();
+
+                try
+                {
+                    configurationService.store();
+                }
+                catch ( Exception e )
+                {
+                    throw new ContinuumException( "Unable to disable build agent: " + buildAgentUrl, e );
+                }
 
                 removeDistributedBuildQueueOfAgent( buildAgentUrl );
             }

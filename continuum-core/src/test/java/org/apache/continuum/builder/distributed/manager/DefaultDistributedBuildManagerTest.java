@@ -92,11 +92,49 @@ public class DefaultDistributedBuildManagerTest
     {
         setUpMockOverallDistributedBuildQueues();
 
+        recordDisableOfBuildAgent();
+
+        Map<String, List<PrepareBuildProjectsTask>> prepareBuildQueues = distributedBuildManager.getProjectsInPrepareBuildQueue();
+        Map<String, List<BuildProjectTask>> buildQueues = distributedBuildManager.getProjectsInBuildQueue();
+        Map<String, PrepareBuildProjectsTask> currentPrepareBuild = distributedBuildManager.getProjectsCurrentlyPreparingBuild();
+        Map<String, BuildProjectTask> currentBuild = distributedBuildManager.getProjectsCurrentlyBuilding();
+
+        assertEquals( prepareBuildQueues.size(), 0 );
+        assertEquals( buildQueues.size(), 0 );
+        assertEquals( currentPrepareBuild.size(), 0 );
+        assertEquals( currentBuild.size(), 0 );
+
+        context.assertIsSatisfied();
+    }
+
+    public void testDisableBuildAgentWhenUnavailableToPing()
+        throws Exception
+    {
+        setUpMockOverallDistributedBuildQueues();
+
+        recordDisableOfBuildAgent();
+
+        distributedBuildManager.isAgentAvailable( TEST_BUILD_AGENT );
+
+        context.assertIsSatisfied();
+    }
+
+    private void setUpMockOverallDistributedBuildQueues()
+    {
+        Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
+            Collections.synchronizedMap( new HashMap<String, OverallDistributedBuildQueue>() );
+        overallDistributedBuildQueue = context.mock( OverallDistributedBuildQueue.class );
+
+        overallDistributedBuildQueues.put( TEST_BUILD_AGENT, overallDistributedBuildQueue );
+        distributedBuildManager.setOverallDistributedBuildQueues( overallDistributedBuildQueues );
+    }
+
+    private void recordDisableOfBuildAgent()
+        throws Exception
+    {
         context.checking( new Expectations()
         {
             {
-                //one( configurationService ).addBuildAgent( buildAgent );
-
                 one( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents )  );
 
@@ -119,28 +157,6 @@ public class DefaultDistributedBuildManagerTest
 
                 one( distributedBuildTaskQueueExecutor ).stop();
             }
-        });
-
-        Map<String, List<PrepareBuildProjectsTask>> prepareBuildQueues = distributedBuildManager.getProjectsInPrepareBuildQueue();
-        Map<String, List<BuildProjectTask>> buildQueues = distributedBuildManager.getProjectsInBuildQueue();
-        Map<String, PrepareBuildProjectsTask> currentPrepareBuild = distributedBuildManager.getProjectsCurrentlyPreparingBuild();
-        Map<String, BuildProjectTask> currentBuild = distributedBuildManager.getProjectsCurrentlyBuilding();
-
-        assertEquals( prepareBuildQueues.size(), 0 );
-        assertEquals( buildQueues.size(), 0 );
-        assertEquals( currentPrepareBuild.size(), 0 );
-        assertEquals( currentBuild.size(), 0 );
-
-        context.assertIsSatisfied();
-    }
-
-    private void setUpMockOverallDistributedBuildQueues()
-    {
-        Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
-            Collections.synchronizedMap( new HashMap<String, OverallDistributedBuildQueue>() );
-        overallDistributedBuildQueue = context.mock( OverallDistributedBuildQueue.class );
-
-        overallDistributedBuildQueues.put( TEST_BUILD_AGENT, overallDistributedBuildQueue );
-        distributedBuildManager.setOverallDistributedBuildQueues( overallDistributedBuildQueues );
+        } );
     }
 }
