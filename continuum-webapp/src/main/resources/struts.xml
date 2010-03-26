@@ -260,6 +260,7 @@
     </action>
 
     <action name="buildProject" class="buildProject">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="chain">groupSummary</result>
       <result name="to_group_page" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -341,6 +342,7 @@
     </action>
 
     <action name="buildProjectGroup" class="projectGroup" method="build">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>

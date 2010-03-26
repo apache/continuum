@@ -81,4 +81,22 @@ public class BuildEnvironmentTest
         String BUIL_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
         removeBuildEnvironment( BUIL_ENV_NAME );
     }
+
+    @Test( dependsOnMethods = { "testDeleteBuildEnvironment", "testAddBuildAgentGroupWithEmptyBuildAgent" } )
+    public void testAddBuildEnvironmentWithBuildAgentGroup()
+    {
+        try
+        {
+            enableDistributedBuilds();
+
+            String BUILD_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+            String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
+            goToAddBuildEnvironment();
+            addBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[] {}, BUILD_AGENT_GROUPNAME, true );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
 }

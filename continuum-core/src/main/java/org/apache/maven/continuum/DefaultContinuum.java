@@ -19,6 +19,8 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
@@ -759,19 +761,19 @@ public class DefaultContinuum
     // ----------------------------------------------------------------------
 
     public void buildProjects( String username )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
     	buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
     }
 
     public void buildProjectsWithBuildDefinition( int buildDefinitionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
     	buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, "" ), buildDefinitionId );
     }
 
     public void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
 
@@ -779,7 +781,7 @@ public class DefaultContinuum
     }
 
     public void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
 
@@ -794,7 +796,7 @@ public class DefaultContinuum
      * @throws ContinuumException
      */
     public void buildProjects( BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Collection<Project> projectsList = getProjectsInBuildOrder();
 
@@ -811,7 +813,7 @@ public class DefaultContinuum
      * @throws ContinuumException
      */
     public void buildProjects( BuildTrigger buildTrigger, int buildDefinitionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Collection<Project> projectsList = getProjectsInBuildOrder();
 
@@ -828,7 +830,7 @@ public class DefaultContinuum
      * @throws ContinuumException
      */
     public void buildProjectGroup( int projectGroupId, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         List<BuildDefinition> groupDefaultBDs;
 
@@ -849,7 +851,7 @@ public class DefaultContinuum
      * @throws ContinuumException
      */
     public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         if ( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
         {
@@ -874,7 +876,7 @@ public class DefaultContinuum
      */
     private void buildProjectGroupWithBuildDefinition( int projectGroupId, List<BuildDefinition> bds,
     		                                   boolean checkDefaultBuildDefinitionForProject, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         if ( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
         {
@@ -978,24 +980,43 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ), sortedScmRoot );
+        BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" );
+
+        for ( ProjectScmRoot scmRoot : sortedScmRoot )
+        {
+            try
+            {
+                prepareBuildProjects( map.get( scmRoot ), buildTrigger, scmRoot.getScmRootAddress(),
+                                      scmRoot.getProjectGroup().getId(), scmRoot.getId() );
+            }
+            catch ( NoBuildAgentException e )
+            {
+                log.error( "Unable to build projects in project group " + scmRoot.getProjectGroup().getName() 
+                           + " because there is no build agent configured" );
+            }
+            catch ( NoBuildAgentInGroupException e )
+            {
+                log.error( "Unable to build projects in project group " + scmRoot.getProjectGroup().getName() 
+                           + " because there is no build agent configured in build agent group" );
+            }
+        }
     }
 
     public void buildProject( int projectId, String username )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
     	buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
     }
 
     public void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
     	buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
     	buildProject( projectId, buildDefinitionId, buildTrigger );
     }
 
     public void buildProject( int projectId, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Project project = getProject( projectId );
         if ( isProjectInReleaseStage( project ) )
@@ -1033,7 +1054,7 @@ public class DefaultContinuum
     }
 
     public void buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Project project = getProject( projectId );
         if ( isProjectInReleaseStage( project ) )
@@ -3404,7 +3425,7 @@ public class DefaultContinuum
 
     private void prepareBuildProjects( Collection<Project> projects, List<BuildDefinition> bds,
     		                           boolean checkDefaultBuildDefinitionForProject, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
         List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
@@ -3503,7 +3524,7 @@ public class DefaultContinuum
     }
 
     private void prepareBuildProjects( Collection<Project> projects, int buildDefinitionId, BuildTrigger buildTrigger )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
         List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
@@ -3558,7 +3579,7 @@ public class DefaultContinuum
 
     private void prepareBuildProjects( Map<ProjectScmRoot, Map<Integer, Integer>> map, BuildTrigger buildTrigger,
                                        List<ProjectScmRoot> scmRoots )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         for ( ProjectScmRoot scmRoot : scmRoots )
         {
@@ -3569,7 +3590,7 @@ public class DefaultContinuum
 
     private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
                                        String scmRootAddress, int projectGroupId, int scmRootId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroup group = getProjectGroup( projectGroupId );
 

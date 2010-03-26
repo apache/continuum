@@ -83,6 +83,9 @@ public class ReleaseTest
             releasePerformProjectWithProvideParameters( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG, 
                                                         M2_PROJ_SCM_URL, false );
             assertPreparedReleasesFileCreated();
+
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
         }
         finally
         {

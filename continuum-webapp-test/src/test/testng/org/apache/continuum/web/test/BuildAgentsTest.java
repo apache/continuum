@@ -127,7 +127,7 @@ public class BuildAgentsTest
     	}
     }
 
-    @Test( dependsOnMethods = { "testProjectGroupAllBuildSuccessWithDistributedBuilds" } )
+    @Test( dependsOnMethods = { "testDeleteBuildAgent" }, enabled=false )
     public void testBuildSuccessWithDistributedBuildsAfterDisableEnableOfBuildAgent()
         throws Exception
     {
@@ -159,6 +159,9 @@ public class BuildAgentsTest
             enableDisableBuildAgent( BUILD_AGENT_NAME, true );
 
             buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
+
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
         }
         finally
         {
@@ -260,6 +263,24 @@ public class BuildAgentsTest
         {
             enableDistributedBuilds();
             removeBuildAgentGroup( BUILD_AGENT_GROUPNAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    @Test( dependsOnMethods = { "testDeleteBuildAgentGroup" } )
+    public void testAddBuildAgentGroupWithEmptyBuildAgent()
+        throws Exception
+    {
+        String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
+
+        try
+        {
+            enableDistributedBuilds();
+            goToAddBuildAgentGroup();
+            addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] {}, new String[] {}, true );
         }
         finally
         {

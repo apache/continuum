@@ -27,12 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.builder.distributed.executor.ThreadedDistributedBuildTaskQueueExecutor;
 import org.apache.continuum.builder.distributed.util.DistributedBuildUtil;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
-import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -45,7 +46,6 @@ import org.apache.continuum.utils.ProjectSorter;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
-import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -216,22 +216,31 @@ public class DefaultDistributedBuildManager
 
     public void prepareBuildProjects( Map<Integer, Integer>projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId, 
                                       String projectGroupName, String scmRootAddress, int scmRootId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
     	PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, buildTrigger,
                                                                       projectGroupId, projectGroupName, 
                                                                       scmRootAddress, scmRootId );
 
         OverallDistributedBuildQueue overallDistributedBuildQueue = getOverallDistributedBuildQueueByGroup( projectGroupId );
-
-        if ( overallDistributedBuildQueue == null )
+        
+        if ( hasBuildagentGroup( projectsBuildDefinitionsMap ) && overallDistributedBuildQueue == null )
         {
-            // get overall distributed build queue from build agent group
-            overallDistributedBuildQueue = getOverallDistributedBuildQueueByAgentGroup( projectsBuildDefinitionsMap );
+            if ( !hasBuildagentInGroup( projectsBuildDefinitionsMap ) )
+            {
+                log.warn( "No build agent configured in build agent group. Not building projects." );
+
+                throw new NoBuildAgentInGroupException( "No build agent configured in build agent group" );
+            }
+            else
+            {
+                // get overall distributed build queue from build agent group
+                overallDistributedBuildQueue = getOverallDistributedBuildQueueByAgentGroup( projectsBuildDefinitionsMap );
+            }
         }
-
-        if ( overallDistributedBuildQueue == null )
+        else if ( overallDistributedBuildQueue == null )
         {
+            // project does not have build agent group
             overallDistributedBuildQueue = getOverallDistributedBuildQueue();
         }
 
@@ -250,6 +259,8 @@ public class DefaultDistributedBuildManager
         else
         {
             log.warn( "No build agent configured. Not building projects." );
+
+            throw new NoBuildAgentException( "No build agent configured" );
         }
     }
 
@@ -968,7 +979,7 @@ public class DefaultDistributedBuildManager
                     
                     for ( String buildAgentUrl : overallDistributedBuildQueues.keySet() )
                     {
-                        if ( ( !buildAgentUrls.isEmpty() && buildAgentUrls.contains( buildAgentUrl ) ) || buildAgentUrls.isEmpty() )
+                        if ( !buildAgentUrls.isEmpty() && buildAgentUrls.contains( buildAgentUrl ) )
                         {
                             OverallDistributedBuildQueue distributedBuildQueue = overallDistributedBuildQueues.get( buildAgentUrl );
 
@@ -1004,6 +1015,7 @@ public class DefaultDistributedBuildManager
                                 }
                             }
                         }
+                        idx++;
                     }
                 }
             }
@@ -1074,12 +1086,11 @@ public class DefaultDistributedBuildManager
     private BuildAgentGroupConfiguration getBuildAgentGroup( Map<Integer, Integer> projectsAndBuildDefinitions )
         throws ContinuumException
     {
-
         if ( projectsAndBuildDefinitions == null )
         {
             return null;
         }
-
+        
         try
         {
             List<Project> projects = new ArrayList<Project>();
@@ -1186,6 +1197,20 @@ public class DefaultDistributedBuildManager
                 removeDistributedBuildQueueOfAgent( buildAgentUrl );
             }
         }
+    }
+    
+    private boolean hasBuildagentGroup( Map<Integer, Integer> projectsAndBuildDefinitionsMap )
+        throws ContinuumException
+    {
+        return getBuildAgentGroup( projectsAndBuildDefinitionsMap ) != null &&
+               getBuildAgentGroup( projectsAndBuildDefinitionsMap ).getName().length() > 0 ? true : false;
+    }
+    
+    private boolean hasBuildagentInGroup( Map<Integer, Integer> projectsAndBuildDefinitionsMap )
+        throws ContinuumException
+    {
+        return getBuildAgentGroup( projectsAndBuildDefinitionsMap ).getBuildAgents() != null &&
+               getBuildAgentGroup( projectsAndBuildDefinitionsMap ).getBuildAgents().size() > 0 ? true : false;
     }
 
     // for unit testing

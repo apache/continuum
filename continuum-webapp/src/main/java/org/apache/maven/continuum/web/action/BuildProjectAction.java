@@ -20,8 +20,11 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -61,31 +64,42 @@ public class BuildProjectAction
         
         BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, getPrincipal() );
 
-        if ( projectId > 0 )
+        try
         {
-            if ( buildDefinitionId > 0 )
+            if ( projectId > 0 )
             {
-            	getContinuum().buildProjectWithBuildDefinition( projectId, buildDefinitionId, buildTrigger );
+                if ( buildDefinitionId > 0 )
+                {
+                	getContinuum().buildProjectWithBuildDefinition( projectId, buildDefinitionId, buildTrigger );
+                }
+                else
+                {
+                	getContinuum().buildProject( projectId, buildTrigger.getUsername() );
+                }
             }
             else
             {
-            	getContinuum().buildProject( projectId, buildTrigger.getUsername() );
+                if ( buildDefinitionId > 0 )
+                {
+                	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
+                }
+                else
+                {
+                    //TODO: Check if this code is called, I don't think
+                    //If it is, it should used the projectId
+                	getContinuum().buildProjects( buildTrigger.getUsername() );
+                }
             }
         }
-        else
+        catch ( NoBuildAgentException e )
         {
-            if ( buildDefinitionId > 0 )
-            {
-            	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
-            }
-            else
-            {
-                //TODO: Check if this code is called, I don't think
-                //If it is, it should used the projectId
-            	getContinuum().buildProjects( buildTrigger.getUsername() );
-            }
+            addActionError( getText( "projectGroup.build.error.noBuildAgent" ) );
         }
-        
+        catch ( NoBuildAgentInGroupException e )
+        {
+            addActionError( getText( "projectGroup.build.error.noBuildAgentInGroup" ) );
+        }
+
         AuditLog event = new AuditLog( AuditLogConstants.FORCE_BUILD );
         event.setCurrentUser( getPrincipal() );
 
@@ -95,7 +109,7 @@ public class BuildProjectAction
             event.setCategory( AuditLogConstants.PROJECT );
             event.log();
 
-            if ( fromGroupPage )
+            if ( fromGroupPage || hasActionErrors() )
             {
                 return "to_group_page";
             }
@@ -179,7 +193,10 @@ public class BuildProjectAction
             }
             else
             {
-                projectGroupName = getContinuum().getProjectGroupByProjectId( projectId ).getName();
+                ProjectGroup projectGroup = getContinuum().getProjectGroupByProjectId( projectId );
+
+                projectGroupName = projectGroup.getName();
+                projectGroupId = projectGroup.getId();
             }
         }
 

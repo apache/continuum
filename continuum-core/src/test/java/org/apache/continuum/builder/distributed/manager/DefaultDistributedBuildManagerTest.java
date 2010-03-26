@@ -136,6 +136,16 @@ public class DefaultDistributedBuildManagerTest
         context.assertIsSatisfied();
     }
 
+    public void testBuildProjectWithoutBuildAgent()
+    {
+        
+    }
+
+    public void testBuildProjectWithBuildAgentGroupButWithoutBuildAgent()
+    {
+        
+    }
+
     private void setUpMockOverallDistributedBuildQueues()
     {
         Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =

@@ -31,6 +31,8 @@ import java.util.Map;
 
 import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -563,13 +565,24 @@ public class ProjectGroupAction
         
         BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, getPrincipal() );
 
-        if ( this.getBuildDefinitionId() == -1 )
+        try
         {
-        	getContinuum().buildProjectGroup( projectGroupId, buildTrigger );
+            if ( this.getBuildDefinitionId() == -1 )
+            {
+            	getContinuum().buildProjectGroup( projectGroupId, buildTrigger );
+            }
+            else
+            {
+            	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
+            }
         }
-        else
+        catch ( NoBuildAgentException e )
         {
-        	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
+            addActionError( getText( "projectGroup.build.error.noBuildAgent" ) );
+        }
+        catch ( NoBuildAgentInGroupException e )
+        {
+            addActionError( getText( "projectGroup.build.error.noBuildAgentInGroup" ) );
         }
 
         AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.FORCE_BUILD );
@@ -993,7 +1006,6 @@ public class ProjectGroupAction
     public String getProjectGroupName()
         throws ContinuumException
     {
-
         return getProjectGroup( projectGroupId ).getName();
     }
 

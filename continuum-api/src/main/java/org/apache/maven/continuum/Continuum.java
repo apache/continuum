@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectGroupSummary;
@@ -149,40 +151,40 @@ public interface Continuum
     List<Project> getProjectsInBuildOrder( Collection<Project> projects );
 
     void buildProjects( String username )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjects( BuildTrigger buildTrigger )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjects( BuildTrigger buildTrigger, int buildDefinitionId )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjects( Schedule schedule )
         throws ContinuumException;
 
     void buildProject( int projectId, String username )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProject( int projectId, BuildTrigger buildTrigger )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     public void buildProjectGroup( int projectGroupId, BuildTrigger buildTrigger )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId, BuildTrigger buildTrigger )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     // ----------------------------------------------------------------------
     // Build information

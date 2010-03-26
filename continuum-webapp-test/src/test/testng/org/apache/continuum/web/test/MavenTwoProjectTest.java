@@ -275,13 +275,68 @@ public class MavenTwoProjectTest
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
 
+    public void testBuildProjectGroupNoBuildAgentConfigured()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
+    
+        try
+        {
+            enableDistributedBuilds();
+            addMaven2Project( M2_PROJ_GRP_NAME );
+            clickLinkWithText( M2_PROJ_GRP_NAME );
+    
+            assertPage( "Continuum - Project Group" );
+    
+            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickButtonWithValue( "Build all projects" );
+
+            assertTextPresent( "Unable to build projects because no build agent is configured" );
+
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
     @Test( dependsOnMethods = { "testDeleteMavenTwoProject", "testAddBuildAgent" } )
     public void testProjectGroupAllBuildSuccessWithDistributedBuilds()
         throws Exception
     {
         String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
-        String BUILD_AGENT_URL = getProperty( "BUILD_AGENT_NAME2" );
+
+        try
+        {
+            enableDistributedBuilds();
+
+            addMaven2Project( M2_PROJ_GRP_NAME );
+            clickLinkWithText( M2_PROJ_GRP_NAME );
+    
+            assertPage( "Continuum - Project Group" );
+    
+            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickButtonWithValue( "Build all projects" );
+
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();   
+        }
+    }
+
+    @Test( dependsOnMethods = { "testAddBuildAgentGroupWithEmptyBuildAgent", "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    public void testProjectGroupNoBuildAgentConfiguredInBuildAgentGroup()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
+        String BUILD_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
 
         try
         {
@@ -290,17 +345,25 @@ public class MavenTwoProjectTest
             clickLinkWithText( M2_PROJ_GRP_NAME );
 
             assertPage( "Continuum - Project Group" );
-            //wait for project to finish checkout
-            waitForProjectCheckout();
 
-            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
+            goToGroupBuildDefinitionPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickImgWithAlt( "Edit" );
+            assertAddEditBuildDefinitionPage();
+            selectValue( "profileId", BUILD_ENV_NAME );
+            submit();
+            assertGroupBuildDefinitionPage( M2_PROJ_GRP_NAME );
+
+            clickLinkWithText( "Project Group Summary" );
+            clickButtonWithValue( "Build all projects" );
+
+            assertTextPresent( "Unable to build projects because no build agent is configured in the build agent group" );
 
             removeProjectGroup( M2_PROJ_GRP_NAME );
             assertLinkNotPresent( M2_PROJ_GRP_NAME );
         }
         finally
         {
-            disableDistributedBuilds();   
+            disableDistributedBuilds();
         }
     }
 
@@ -324,7 +387,7 @@ public class MavenTwoProjectTest
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
     
-    @Test( dependsOnMethods = { "testAddBuildAgent", "testBuildMaven2ProjectWithTag" } )
+    @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testBuildMaven2ProjectWithTagDistributedBuild()
         throws Exception
     {

@@ -24,7 +24,7 @@ package org.apache.continuum.web.test.parent;
  * @version $Id$
  */
 public abstract class AbstractBuildEnvironmentTest
-    extends AbstractSeleniumTest
+    extends AbstractContinuumTest
 {
     public void goToBuildEnvironmentPage()
     {
@@ -71,9 +71,36 @@ public abstract class AbstractBuildEnvironmentTest
         editBuildEnvironment( name, installations, success );
     }
 
+    public void addBuildEnvironmentWithBuildAgentGroup( String name, String[] installations, String buildAgentGroupName, boolean success )
+    {
+        setFieldValue( "profile.name", name );
+        submit();
+        editBuildEnvironmentWithBuildAgentGroup( name, installations, buildAgentGroupName, success );
+    }
+
     public void editBuildEnvironment( String name, String[] installations, boolean success )
     {
         setFieldValue( "profile.name", name );
+        for ( String i : installations )
+        {
+            selectValue( "installationId", i );
+            clickButtonWithValue( "Add" );
+        }
+        submit();
+        if ( success )
+        {
+            assertBuildEnvironmentPage();
+        }
+        else
+        {
+            assertAddBuildEnvironmentPage();
+        }
+    }
+
+    public void editBuildEnvironmentWithBuildAgentGroup( String name, String[] installations, String buildAgentGroupName, boolean success )
+    {
+        setFieldValue( "profile.name", name );
+        selectValue( "profile.buildAgentGroup", buildAgentGroupName );
         for ( String i : installations )
         {
             selectValue( "installationId", i );

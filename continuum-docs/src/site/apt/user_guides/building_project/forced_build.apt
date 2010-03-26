@@ -18,13 +18,6 @@ Force Project Build
 
     []
 
-    If there are duplicates of a project in <<another project group>> (duplicates would mean
-    another instance of a project with the same groupId, artifactId, and version),
-    all the projects are built.
-
-    However, if there are duplicates of a project in the <<same project group>>, only one (1) of the duplicated
-    projects is built.
-
     To manually build a project perform the following steps:
 
     [[1]] Click <<Show Project Groups>>.
@@ -50,5 +43,8 @@ Force Project Build
     Click on the build icon to the right of the specific build goal you want to execute.
 
     []
+    
+    *Note* In a distributed build setup, the project builds are not executed if no build agent is
+    configured in the build environment that is attached to the project's build definition.
 
     To view the results of the build, refer to {{{./build_results.html}Build Results Management}}.

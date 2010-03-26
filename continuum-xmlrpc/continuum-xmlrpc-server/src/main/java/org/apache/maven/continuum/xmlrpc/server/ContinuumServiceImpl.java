@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.SystemConfigurationDao;
@@ -590,7 +592,7 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
 
     public int addProjectToBuildQueue( int projectId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
@@ -600,7 +602,7 @@ public class ContinuumServiceImpl
     }
 
     public int addProjectToBuildQueue( int projectId, int buildDefinitionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
@@ -610,7 +612,7 @@ public class ContinuumServiceImpl
     }
 
     public int buildProject( int projectId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
@@ -620,7 +622,7 @@ public class ContinuumServiceImpl
     }
 
     public int buildProject( int projectId, int buildDefintionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
@@ -630,7 +632,7 @@ public class ContinuumServiceImpl
     }
 
     public int buildGroup( int projectGroupId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
@@ -641,7 +643,7 @@ public class ContinuumServiceImpl
     }
 
     public int buildGroup( int projectGroupId, int buildDefintionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
