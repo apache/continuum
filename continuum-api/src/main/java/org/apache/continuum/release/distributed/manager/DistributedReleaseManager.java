@@ -68,4 +68,6 @@ public interface DistributedReleaseManager
 
     List<Map<String, Object>> getAllReleasesInProgress()
         throws ContinuumReleaseException, BuildAgentConfigurationException;
+    
+    String getDefaultBuildagent( int projectId );
 }

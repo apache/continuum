@@ -307,11 +307,13 @@ public class ReleasePrepareAction
         
         String username = getPrincipal();
 
-        Map<String, String> environments = getEnvironments( profile );
+        Map<String, String> environments = new HashMap<String, String>();
 
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
+            
+            environments = getEnvironments( profile, distributedReleaseManager.getDefaultBuildagent( projectId ) );
 
             try
             {
@@ -335,6 +337,8 @@ public class ReleasePrepareAction
         }
         else
         {
+            environments = getEnvironments( profile, null );
+            
             listener = new DefaultReleaseManagerListener();
             
             listener.setUsername( username );

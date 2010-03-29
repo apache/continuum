@@ -294,7 +294,7 @@ public class ReleasePerformAction
             if ( profileId != -1 )
             {
                 Profile profile = getContinuum().getProfileService().getProfile( profileId );
-                environments = getEnvironments( profile );
+                environments = getEnvironments( profile, releaseManager.getDefaultBuildagent( projectId ) );
             }
 
             try
@@ -327,7 +327,7 @@ public class ReleasePerformAction
             if ( profileId != -1 )
             {
                 Profile profile = getContinuum().getProfileService().getProfile( profileId );
-                descriptor.setEnvironments( getEnvironments( profile ) );
+                descriptor.setEnvironments( getEnvironments( profile, null ) );
             }
     
             do

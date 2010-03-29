@@ -90,9 +90,7 @@ public class DefaultDistributedReleaseManager
     public Map getReleasePluginParameters( int projectId, String pomFilename )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
-        BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
-
-        String buildAgentUrl = buildResult.getBuildUrl();
+        String buildAgentUrl = getDefaultBuildagent( projectId );
 
         if ( !checkBuildAgent( buildAgentUrl ) )
         {
@@ -159,9 +157,7 @@ public class DefaultDistributedReleaseManager
                                   Map<String, String> developmentVersion, Map<String, String> environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
-        BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( project.getId() );
-
-        String buildAgentUrl = buildResult.getBuildUrl();
+        String buildAgentUrl = environments.get( DistributedReleaseUtil.KEY_BUILD_AGENT_URL );
 
         if ( !checkBuildAgent( buildAgentUrl ) )
         {
@@ -411,9 +407,7 @@ public class DefaultDistributedReleaseManager
                                          String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
-        BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
-
-        String buildAgentUrl = buildResult.getBuildUrl();
+        String buildAgentUrl = (String) environments.get( DistributedReleaseUtil.KEY_BUILD_AGENT_URL );
 
         if ( !checkBuildAgent( buildAgentUrl ) )
         {
@@ -594,6 +588,13 @@ public class DefaultDistributedReleaseManager
         }
 
         return releases;
+    }
+    
+    public String getDefaultBuildagent( int projectId )
+    {
+        BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
+        
+        return buildResult != null ? buildResult.getBuildUrl() : null;
     }
 
     private Map createProjectMap( Project project )
@@ -859,5 +860,12 @@ public class DefaultDistributedReleaseManager
         {
             throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
         }
+    }
+    
+    // for unit test
+    
+    public void setBuildResultDao( BuildResultDao buildResultDao )
+    {
+        this.buildResultDao = buildResultDao;
     }
 }
