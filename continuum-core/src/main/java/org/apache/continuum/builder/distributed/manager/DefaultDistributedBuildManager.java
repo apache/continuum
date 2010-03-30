@@ -996,6 +996,7 @@ public class DefaultDistributedBuildManager
                                         {
                                             whereToBeQueued = distributedBuildQueue;
                                             size = agentBuildSize;
+                                            idx++;
                                         }
     
                                         if ( agentBuildSize < size )
@@ -1015,7 +1016,6 @@ public class DefaultDistributedBuildManager
                                 }
                             }
                         }
-                        idx++;
                     }
                 }
             }
@@ -1056,6 +1056,7 @@ public class DefaultDistributedBuildManager
                             {
                                 whereToBeQueued = distributedBuildQueue;
                                 size = agentBuildSize;
+                                idx++;
                             }
     
                             if ( agentBuildSize < size )
@@ -1075,8 +1076,6 @@ public class DefaultDistributedBuildManager
                         throw new ContinuumException( "Error occurred while retrieving distributed build queue", e );
                     }
                 }
-
-                idx++;
             }
         }
 
