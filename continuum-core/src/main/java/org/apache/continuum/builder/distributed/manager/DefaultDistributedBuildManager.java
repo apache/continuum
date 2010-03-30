@@ -1202,15 +1202,19 @@ public class DefaultDistributedBuildManager
     private boolean hasBuildagentGroup( Map<Integer, Integer> projectsAndBuildDefinitionsMap )
         throws ContinuumException
     {
-        return getBuildAgentGroup( projectsAndBuildDefinitionsMap ) != null &&
-               getBuildAgentGroup( projectsAndBuildDefinitionsMap ).getName().length() > 0 ? true : false;
+        BuildAgentGroupConfiguration buildAgentGroup = getBuildAgentGroup( projectsAndBuildDefinitionsMap );
+
+        return buildAgentGroup != null &&
+               buildAgentGroup.getName().length() > 0 ? true : false;
     }
     
     private boolean hasBuildagentInGroup( Map<Integer, Integer> projectsAndBuildDefinitionsMap )
         throws ContinuumException
     {
-        return getBuildAgentGroup( projectsAndBuildDefinitionsMap ).getBuildAgents() != null &&
-               getBuildAgentGroup( projectsAndBuildDefinitionsMap ).getBuildAgents().size() > 0 ? true : false;
+        BuildAgentGroupConfiguration buildAgentGroup = getBuildAgentGroup( projectsAndBuildDefinitionsMap );
+
+        return buildAgentGroup != null &&
+               buildAgentGroup.getBuildAgents().size() > 0 ? true : false;
     }
 
     // for unit testing
