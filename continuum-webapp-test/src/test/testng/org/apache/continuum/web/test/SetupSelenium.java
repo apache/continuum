@@ -75,6 +75,7 @@ public class SetupSelenium
             assertAutenticatedPage( username );
             assertEditConfigurationPage();
             postAdminUserCreation();
+            disableDefaultSchedule();
             clickLinkWithText( "Logout" );
         }
     }
@@ -94,5 +95,17 @@ public class SetupSelenium
             setFieldValue( "baseUrl", baseUrl );
             submit();
         }
+    }
+    
+    private void disableDefaultSchedule()
+    {
+        clickLinkWithText( "Schedules" );
+        String xPath = "//preceding::td[text()='DEFAULT_SCHEDULE']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        if ( isChecked( "saveSchedule_active" ) )
+        {
+            uncheckField( "saveSchedule_active" );
+        }
+        clickButtonWithValue( "Save" );
     }
 }
