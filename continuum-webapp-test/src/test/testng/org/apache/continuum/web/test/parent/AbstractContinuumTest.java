@@ -833,7 +833,7 @@ public abstract class AbstractContinuumTest
         else
         {
             String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != '' && selenium.browserbot.getCurrentWindow().document.getElementById('footer') != null";
-            getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+            waitForCondition( condition );
         }
 
         Assert.assertEquals( getTitle(), title );

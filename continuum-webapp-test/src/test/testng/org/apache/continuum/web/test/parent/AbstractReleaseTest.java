@@ -29,7 +29,7 @@ import org.testng.Assert;
 public abstract class AbstractReleaseTest
     extends AbstractContinuumTest
 {
-    public void releasePrepareProject( String username, String password, String tagBase, String tag, String releaseVersion, String developmentVersion, boolean success )
+    public void releasePrepareProject( String username, String password, String tagBase, String tag, String releaseVersion, String developmentVersion, String buildEnv, boolean success )
         throws Exception
     {
         goToReleasePreparePage();
@@ -38,6 +38,7 @@ public abstract class AbstractReleaseTest
         setFieldValue( "scmTag", tag );
         setFieldValue( "scmTagBase", tagBase );
         setFieldValue( "prepareGoals", "clean" );
+        selectValue( "profileId", buildEnv );
         setFieldValue( "relVersions", releaseVersion );
         setFieldValue( "devVersions", developmentVersion );
         submit();
@@ -45,7 +46,7 @@ public abstract class AbstractReleaseTest
         assertRelease( success );
     }
 
-    public void releasePerformProjectWithProvideParameters( String username, String password, String tagBase, String tag, String scmUrl, boolean success )
+    public void releasePerformProjectWithProvideParameters( String username, String password, String tagBase, String tag, String scmUrl, String buildEnv, boolean success )
         throws Exception
     {
         goToReleasePerformProvideParametersPage();
@@ -55,9 +56,26 @@ public abstract class AbstractReleaseTest
         setFieldValue( "scmTag", tag );
         setFieldValue( "scmTagBase", tagBase );
         setFieldValue( "goals", "clean deploy" );
+        selectValue( "profileId", buildEnv );
         submit();
 
         assertRelease( success );
+    }
+    
+    public void releasePrepareProjectWithBuildEnvironmentSelection( String username, String password, String tagBase, String tag,
+                                                                    String releaseVersion, String developmentVersion, String buildEnv )
+        throws Exception
+    {
+        goToReleasePreparePage();
+        setFieldValue( "scmUsername", username );
+        setFieldValue( "scmPassword", password );
+        setFieldValue( "scmTag", tag );
+        setFieldValue( "scmTagBase", tagBase );
+        setFieldValue( "prepareGoals", "clean" );
+        selectValue( "profileId", buildEnv );
+        setFieldValue( "relVersions", releaseVersion );
+        setFieldValue( "devVersions", developmentVersion );
+        submit();
     }
 
     public void goToReleasePreparePage()
@@ -111,10 +129,28 @@ public abstract class AbstractReleaseTest
     public void assertRelease( boolean success )
         throws Exception
     {
+        String doneButtonLocator = "//input[@id='releaseCleanup_0']";
+        String errorTextLocator = "//h3[text()='Release Error']";
+        
         // condition for release is complete; "Done" button or "Release Error" in page is present
-        String condition = "( selenium.browserbot.getCurrentWindow().document.getElementById( 'releaseCleanup_0' ) != null )";
-
-        waitForCondition( condition );
+        if ( browser.equals( "*iexplore" ) )
+        {
+            int currentIt = 0;
+            int maxIt = Integer.valueOf( getProperty( "WAIT_TRIES" ) );
+            String pageLoadTimeInMs = getProperty( "PAGE_LOAD_TIME_IN_MS" );
+            
+            while ( ( isElementPresent( doneButtonLocator ) || isElementPresent( errorTextLocator ) ) && currentIt < maxIt )
+            {
+                getSelenium().waitForPageToLoad( pageLoadTimeInMs );
+                currentIt++;
+            }
+        }
+        else
+        {
+            String condition = "( selenium.isElementPresent(\"" + doneButtonLocator + "\") || " +
+                               "selenium.isElementPresent(\"" + errorTextLocator + "\") )";
+            waitForCondition( condition );
+        }
 
         assertButtonWithValuePresent( "Rollback changes" );
     

@@ -46,11 +46,15 @@ public class ReleaseTest
         try
         {
             enableDistributedBuilds();
+        
+            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
+            createBuildEnvAndBuildagentGroup();
+            
             showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
             clickButtonWithValue( "Release" );
             assertReleaseSuccess();
             releasePrepareProject( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG,
-                                   M2_PROJ_RELEASE_VERSION, M2_PROJ_DEVELOPMENT_VERSION, false );
+                                   M2_PROJ_RELEASE_VERSION, M2_PROJ_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV, false );
             assertPreparedReleasesFileCreated();
         }
         finally
@@ -58,8 +62,56 @@ public class ReleaseTest
             disableDistributedBuilds();
         }
     }
-
+    
+    /*
+     * Test release prepare with no build agent configured in the selected build environment.
+     */
     @Test( dependsOnMethods = { "testReleasePrepareProjectWithInvalidUsernamePasswordInDistributedBuilds" } )
+    public void testReleasePrepareProjectWithNoBuildagentInBuildEnvironment()
+        throws Exception
+    {
+        String M2_PROJECT_POM_URL = getProperty( "M2_RELEASE_POM_URL" );
+        String M2_PROJECT_NAME = getProperty( "M2_RELEASE_PROJECT_NAME" );
+        String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
+        String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
+        String M2_PROJECT_DESCRIPTION = getProperty( "M2_RELEASE_GRP_DESCRIPTION" );
+        String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
+        String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
+        String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
+        String M2_PROJECT_DEVELOPMENT_VERSION = getProperty( "M2_RELEASE_DEVELOPMENT_VERSION" );
+        String ERROR_TEXT = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
+        
+        addProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_DESCRIPTION, true );
+        addMavenTwoProject( M2_PROJECT_POM_URL, "", "", M2_PROJECT_GROUP_NAME, true );
+
+        init();
+
+        try
+        {
+            enableDistributedBuilds();
+        
+            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
+            createBuildEnvAndBuildagentGroup();
+            detachBuildagentFromGroup();
+            
+            buildProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_DESCRIPTION, M2_PROJECT_NAME );
+            
+            clickButtonWithValue( "Release" );
+            assertReleaseSuccess();
+            releasePrepareProjectWithBuildEnvironmentSelection( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
+                                                                M2_PROJECT_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
+            
+            assertTextPresent( "Release Error" );
+            assertTextPresent( ERROR_TEXT );
+        }
+        finally
+        {
+            attachBuildagentInGroup();
+            disableDistributedBuilds();
+        }
+    }
+
+    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildagentInBuildEnvironment" } )
     public void testReleasePerformUsingProvideParamtersWithDistributedBuilds()
         throws Exception
     {
@@ -77,11 +129,15 @@ public class ReleaseTest
         try
         {
             enableDistributedBuilds();
+        
+            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
+            createBuildEnvAndBuildagentGroup();
+            
             showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
             clickButtonWithValue( "Release" );
             assertReleaseSuccess();
             releasePerformProjectWithProvideParameters( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG, 
-                                                        M2_PROJ_SCM_URL, false );
+                                                        M2_PROJ_SCM_URL, M2_PROJECT_BUILD_ENV, false );
             assertPreparedReleasesFileCreated();
 
             removeProjectGroup( M2_PROJ_GRP_NAME );
@@ -100,6 +156,72 @@ public class ReleaseTest
         if ( file.exists() )
         {
             file.delete();
+        }
+    }
+    
+    private void createBuildEnvAndBuildagentGroup()
+        throws Exception
+    {
+        String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
+        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
+        
+        // add build agent group no agents
+        goToBuildAgentPage();
+        if ( !isTextPresent( M2_PROJECT_AGENT_GROUP ) )
+        {
+            clickAndWait( "//input[@id='editBuildAgentGroup_0']" );
+            setFieldValue( "saveBuildAgentGroup_buildAgentGroup_name", M2_PROJECT_AGENT_GROUP );
+            clickButtonWithValue( "Save" );
+        }
+            
+        // add build environment with build agent group
+        clickLinkWithText( "Build Environments" );
+        if ( !isTextPresent( M2_PROJECT_BUILD_ENV ) )
+        {
+            clickAndWait( "//input[@id='addBuildEnv_0']" );
+            setFieldValue( "saveBuildEnv_profile_name", M2_PROJECT_BUILD_ENV );
+            clickButtonWithValue( "Save" );
+            selectValue( "profile.buildAgentGroup", M2_PROJECT_AGENT_GROUP );
+            clickButtonWithValue( "Save" );
+        }
+        
+        // attach build agent in build agent group created
+        attachBuildagentInGroup();
+    }
+    
+    private void attachBuildagentInGroup()
+        throws Exception
+    {
+        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
+        String buildAgent = getProperty( "BUILD_AGENT_NAME2" );
+        
+        clickLinkWithText( "Build Agents" );
+        String xPath = "//preceding::td[text()='" + M2_PROJECT_AGENT_GROUP + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        
+        if ( isElementPresent( "xpath=//select[@id='saveBuildAgentGroup_buildAgentIds']/option[@value='" + buildAgent + "']" ) )
+        {
+            selectValue( "buildAgentIds", buildAgent );
+            clickLinkWithXPath( "//input[@value='->']", false );
+            submit();
+        }
+    }
+    
+    private void detachBuildagentFromGroup()
+        throws Exception
+    {
+        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
+        String buildAgent = getProperty( "BUILD_AGENT_NAME2" );
+        
+        clickLinkWithText( "Build Agents" );
+        String xPath = "//preceding::td[text()='" + M2_PROJECT_AGENT_GROUP + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        
+        if ( isElementPresent( "xpath=//select[@id='saveBuildAgentGroup_selectedBuildAgentIds']/option[@value='" + buildAgent + "']" ) )
+        {
+            selectValue( "selectedBuildAgentIds", buildAgent );
+            clickLinkWithXPath( "//input[@value='<-']", false );
+            submit();
         }
     }
 }
