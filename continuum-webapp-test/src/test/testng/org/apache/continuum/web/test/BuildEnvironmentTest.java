@@ -99,4 +99,36 @@ public class BuildEnvironmentTest
             disableDistributedBuilds();
         }
     }
+    
+    @Test( dependsOnMethods = { "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    public void testEditDuplicatedBuildEnvironmentParallelBuilds()
+    {
+        String BUILD_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+        String newName = "NEW_BUILD_ENV";
+        goToAddBuildEnvironment();
+        addBuildEnvironment( newName, new String[] {}, true );
+        goToEditBuildEnvironment( newName );
+        editBuildEnvironment( BUILD_ENV_NAME, new String[] {}, false );
+        assertTextPresent( "A Build Environment with the same name already exists" );
+    }
+    
+    @Test( dependsOnMethods = { "testEditDuplicatedBuildEnvironmentParallelBuilds" } )
+    public void testEditDuplicatedBuildEnvironmentDistributedBuilds()
+    {
+    try
+        {
+            enableDistributedBuilds();
+
+            String BUILD_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+            String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
+            String newName = "NEW_BUILD_ENV";
+            goToEditBuildEnvironment( newName );
+            editBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[] {}, BUILD_AGENT_GROUPNAME, false );
+            assertTextPresent( "A Build Environment with the same name already exists" );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
 }
