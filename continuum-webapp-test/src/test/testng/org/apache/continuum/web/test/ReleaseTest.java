@@ -98,8 +98,8 @@ public class ReleaseTest
             
             clickButtonWithValue( "Release" );
             assertReleaseSuccess();
-            releasePrepareProjectWithBuildEnvironmentSelection( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
-                                                                M2_PROJECT_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
+            releasePrepareProject( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
+                                   M2_PROJECT_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
             
             assertTextPresent( "Release Error" );
             assertTextPresent( ERROR_TEXT );
@@ -110,8 +110,91 @@ public class ReleaseTest
             disableDistributedBuilds();
         }
     }
-
+    
+    /*
+     * Test release prepare with no build agent group in the selected build environment.
+     */
     @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildagentInBuildEnvironment" } )
+    public void testReleasePrepareProjectWithNoBuildagentGroupInBuildEnvironment()
+        throws Exception
+    {
+        String M2_PROJECT_NAME = getProperty( "M2_RELEASE_PROJECT_NAME" );
+        String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
+        String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
+        String M2_PROJECT_DESCRIPTION = getProperty( "M2_RELEASE_GRP_DESCRIPTION" );
+        String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
+        String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
+        String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
+        String M2_PROJECT_DEVELOPMENT_VERSION = getProperty( "M2_RELEASE_DEVELOPMENT_VERSION" );
+        String ERROR_TEXT = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
+
+        init();
+
+        try
+        {
+            enableDistributedBuilds();
+            
+            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
+            createBuildEnvAndBuildagentGroup();
+            removeBuildagentGroupFromBuildEnv();
+            
+            showProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_GROUP_ID );
+            
+            clickButtonWithValue( "Release" );
+            assertReleaseSuccess();
+            releasePrepareProject( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
+                                   M2_PROJECT_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
+            
+            assertTextPresent( "Release Error" );
+            assertTextPresent( ERROR_TEXT );
+        }
+        finally
+        {
+            attachBuildagentGroupToBuildEnv();
+            disableDistributedBuilds();
+        }
+    }
+    
+    /*
+     * Test release prepare with no build environment selected.
+     */
+    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildagentGroupInBuildEnvironment" } )
+    public void testReleasePrepareProjectWithNoBuildEnvironment()
+        throws Exception
+    {
+        String M2_PROJECT_NAME = getProperty( "M2_RELEASE_PROJECT_NAME" );
+        String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
+        String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
+        String M2_PROJECT_DESCRIPTION = getProperty( "M2_RELEASE_GRP_DESCRIPTION" );
+        String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
+        String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
+        String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
+        String M2_PROJECT_DEVELOPMENT_VERSION = getProperty( "M2_RELEASE_DEVELOPMENT_VERSION" );
+        String ERROR_TEXT = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
+
+        init();
+
+        try
+        {
+            enableDistributedBuilds();
+            
+            showProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_GROUP_ID );
+            
+            clickButtonWithValue( "Release" );
+            assertReleaseSuccess();
+            releasePrepareProject( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
+                                   M2_PROJECT_DEVELOPMENT_VERSION, "" );
+            
+            assertTextPresent( "Release Error" );
+            assertTextPresent( ERROR_TEXT );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildEnvironment" } )
     public void testReleasePerformUsingProvideParamtersWithDistributedBuilds()
         throws Exception
     {
@@ -181,12 +264,34 @@ public class ReleaseTest
             clickAndWait( "//input[@id='addBuildEnv_0']" );
             setFieldValue( "saveBuildEnv_profile_name", M2_PROJECT_BUILD_ENV );
             clickButtonWithValue( "Save" );
-            selectValue( "profile.buildAgentGroup", M2_PROJECT_AGENT_GROUP );
-            clickButtonWithValue( "Save" );
+            attachBuildagentGroupToBuildEnv();
         }
         
         // attach build agent in build agent group created
         attachBuildagentInGroup();
+    }
+    
+    private void attachBuildagentGroupToBuildEnv()
+    {
+        String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
+        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
+        
+        clickLinkWithText( "Build Environments" );
+        String xPath = "//preceding::td[text()='" + M2_PROJECT_BUILD_ENV + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        selectValue( "profile.buildAgentGroup", M2_PROJECT_AGENT_GROUP );
+        clickButtonWithValue( "Save" );
+    }
+    
+    private void removeBuildagentGroupFromBuildEnv()
+    {
+        String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
+        
+        clickLinkWithText( "Build Environments" );
+        String xPath = "//preceding::td[text()='" + M2_PROJECT_BUILD_ENV + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        selectValue( "profile.buildAgentGroup", "" );
+        clickButtonWithValue( "Save" );
     }
     
     private void attachBuildagentInGroup()

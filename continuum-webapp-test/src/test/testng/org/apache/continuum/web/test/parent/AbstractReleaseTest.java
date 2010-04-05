@@ -62,8 +62,8 @@ public abstract class AbstractReleaseTest
         assertRelease( success );
     }
     
-    public void releasePrepareProjectWithBuildEnvironmentSelection( String username, String password, String tagBase, String tag,
-                                                                    String releaseVersion, String developmentVersion, String buildEnv )
+    public void releasePrepareProject( String username, String password, String tagBase, String tag,
+                                       String releaseVersion, String developmentVersion, String buildEnv )
         throws Exception
     {
         goToReleasePreparePage();
