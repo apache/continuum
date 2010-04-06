@@ -336,7 +336,7 @@ public class MavenTwoProjectTest
     {
         String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
-        String BUILD_ENV_NAME = getProperty( "BUIL_ENV_NAME" );
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
 
         try
         {
