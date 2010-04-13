@@ -32,6 +32,7 @@ Scheduling Project Build
     []
     
     *Note* In a distributed build setup, the project builds are not executed if no build agent is
-    configured in the build environment that is attached to the project's build definition.
+    configured or if a build agent group with no build agent, is configured in the build environment 
+    that is attached to the project's build definition.
 
     To view the results of the build, refer to {{{./build_results.html}Build Results Management}}.
