@@ -173,6 +173,11 @@ public class DefaultDistributedBuildManager
     {
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
+        if ( agents != null )
+        {
+            return;
+        }
+
         synchronized( overallDistributedBuildQueues )
         {
             for ( BuildAgentConfiguration agent : agents )
