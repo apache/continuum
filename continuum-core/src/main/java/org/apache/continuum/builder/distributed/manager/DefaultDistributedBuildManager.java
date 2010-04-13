@@ -231,8 +231,6 @@ public class DefaultDistributedBuildManager
 
         if ( overallDistributedBuildQueue == null )
         {
-            log.info( "no overall build queue by group" );
-
             if ( hasBuildagentGroup( projectsBuildDefinitionsMap ) )
             {
                 if ( !hasBuildagentInGroup( projectsBuildDefinitionsMap ) )
@@ -244,15 +242,15 @@ public class DefaultDistributedBuildManager
                 else
                 {
                     // get overall distributed build queue from build agent group
+                    log.info( "getting the least busy build agent from the build agent group" );
                     overallDistributedBuildQueue = getOverallDistributedBuildQueueByAgentGroup( projectsBuildDefinitionsMap );
-                    log.info( "got overall build queue by agent group" );
                 }
             }
             else
             {
                 // project does not have build agent group
+                log.info( "project does not have a build agent group, getting the least busy build agent" );
                 overallDistributedBuildQueue = getOverallDistributedBuildQueue();
-                log.info( "get overall build queue in all agents" );
             }
         }
 
