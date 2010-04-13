@@ -105,6 +105,9 @@ public class DefaultDistributedReleaseManager
                 return client.getReleasePluginParameters( projectId, pomFilename );
             }
 
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
+
             throw new ContinuumReleaseException( "Failed to retrieve release plugin parameters because build agent " + buildAgentUrl + " is not available" );
         }
         catch ( MalformedURLException e )
@@ -138,6 +141,9 @@ public class DefaultDistributedReleaseManager
                 SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
                 return client.processProject( projectId, pomFilename, autoVersionSubmodules );
             }
+
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
 
             throw new ContinuumReleaseException( "Failed to process project for releasing because build agent " + buildAgentUrl + " is unavailable" );
         }
@@ -181,6 +187,9 @@ public class DefaultDistributedReleaseManager
                 return releaseId;
             }
 
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
+
             throw new ContinuumReleaseException( "Failed to prepare release project because the build agent " + buildAgentUrl + " is not available" );
         }
         catch ( MalformedURLException e )
@@ -221,6 +230,9 @@ public class DefaultDistributedReleaseManager
                 return releaseResult;
             }
 
+            // call reload in case we disable a build agent
+            distributedBuildManager.reload();
+
             throw new ContinuumReleaseException( "Failed to get release result of " + releaseId + 
                                                  " because the build agent " + buildAgentUrl + " is not available" );
         }
@@ -253,6 +265,9 @@ public class DefaultDistributedReleaseManager
                 SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
                 return client.getListener( releaseId );
             }
+
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
 
             throw new ContinuumReleaseException( "Failed to get listener for " + releaseId + 
                                                  " because the build agent " + buildAgentUrl + " is not available" );
@@ -287,6 +302,9 @@ public class DefaultDistributedReleaseManager
                 client.removeListener( releaseId );
             }
 
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
+
             throw new ContinuumReleaseException( "Failed to remove listener of " + releaseId + 
                                                  " because the build agent " + buildAgentUrl + " is not available" );
         }
@@ -320,6 +338,9 @@ public class DefaultDistributedReleaseManager
                 SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
                 return client.getPreparedReleaseName( releaseId );
             }
+
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
 
             throw new ContinuumReleaseException( "Failed to get prepared release name of " + releaseId + 
                                                  " because the build agent " + buildAgentUrl + " is not available" );
@@ -387,6 +408,9 @@ public class DefaultDistributedReleaseManager
                 addReleaseInProgress( releaseId, "perform", projectId, username );
             }
 
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
+
             throw new ContinuumReleaseException( "Failed to perform release of " + releaseId + 
                                                  " because the build agent " + buildAgentUrl + " is not available" );
         }
@@ -447,6 +471,9 @@ public class DefaultDistributedReleaseManager
                 return releaseId;
             }
 
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
+
             throw new ContinuumReleaseException( "Failed to perform release because the build agent " + buildAgentUrl + " is not available" );
         }
         catch ( MalformedURLException e )
@@ -478,6 +505,9 @@ public class DefaultDistributedReleaseManager
                 SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
                 client.releaseRollback( releaseId, projectId );
             }
+
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
 
             throw new ContinuumReleaseException( "Unable to rollback release " + releaseId + 
                                                  " because the build agent " + buildAgentUrl + " is not available" );
@@ -516,6 +546,9 @@ public class DefaultDistributedReleaseManager
     
                 return result;
             }
+
+            // call reload in case we disable the build agent
+            distributedBuildManager.reload();
 
             throw new ContinuumReleaseException( "Failed to cleanup release of " + releaseId + 
                                                  " because the build agent " + buildAgentUrl + " is not available" );
@@ -585,6 +618,16 @@ public class DefaultDistributedReleaseManager
             }
 
             releasesInProgress = releasesMap;
+        }
+
+        try
+        {
+            // call reload in case we disable a build agent
+            distributedBuildManager.reload();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumReleaseException( e.getMessage(), e );
         }
 
         return releases;

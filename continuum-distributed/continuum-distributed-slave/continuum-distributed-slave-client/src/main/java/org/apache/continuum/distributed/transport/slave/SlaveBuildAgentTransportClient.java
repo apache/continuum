@@ -475,6 +475,25 @@ public class SlaveBuildAgentTransportClient
         return projects;
     }
 
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsCurrentlyPreparingBuild()
+        throws Exception
+    {
+        List<Map<String, Object>> projects;
+
+        try
+        {
+            projects = slave.getProjectsAndBuildDefinitionsCurrentlyPreparingBuild();
+            log.info( "Retrieving projects currently preparing build" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to retrieve projects currently preparing build", e );
+            throw new Exception( "Failed to retrieve projects currently preparing build", e );
+        }
+
+        return projects;
+    }
+
     public List<Map<String, Object>> getProjectsInBuildQueue()
         throws Exception
     {
@@ -513,6 +532,25 @@ public class SlaveBuildAgentTransportClient
         return projects;
     }
 
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsInPrepareBuildQueue()
+        throws Exception
+    {
+        List<Map<String, Object>> projects;
+
+        try
+        {
+            projects = slave.getProjectsAndBuildDefinitionsInPrepareBuildQueue();
+            log.info( "Retrieving projects in prepare build queue" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to retrieve projects in prepare build queue", e );
+            throw new Exception( "Failed to retrieve projects in prepare build queue", e );
+        }
+
+        return projects;
+    }
+
     public Boolean isProjectGroupInQueue( int projectGroupId )
         throws Exception
     {
@@ -527,6 +565,25 @@ public class SlaveBuildAgentTransportClient
         {
             log.error( "Failed to check if project group '" + projectGroupId + "' is in queue", e );
             throw new Exception( "Failed to check if project group '" + projectGroupId + "' is in queue", e );
+        }
+
+        return result;
+    }
+
+    public Boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectScmRootInQueue( projectScmRootId, projectIds );
+            log.info( "Checking if project scm root '" + projectScmRootId + "' is in queue" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if project scm root '" + projectScmRootId + "' is in queue", e );
+            throw new Exception( "Failed to check if project scm root '" + projectScmRootId + "' is in queue", e );
         }
 
         return result;

@@ -382,6 +382,20 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsCurrentlyPreparingBuild()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getProjectsAndBuildDefinitionsCurrentlyPreparingBuild();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects currently preparing build", e );
+            throw e;
+        }
+    }
+
     public List<Map<String, Object>> getProjectsInBuildQueue()
         throws Exception
     {
@@ -412,11 +426,33 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsInPrepareBuildQueue()
+        throws Exception
+    {
+        try
+        {
+            log.info( "Retrieving projects in prepare build queue" );
+            return continuumBuildAgentService.getProjectsAndBuildDefinitionsInPrepareBuildQueue();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects in prepare build queue", e );
+            throw e;
+        }
+    }
+
     public Boolean isProjectGroupInQueue( int projectGroupId )
         throws Exception
     {
         log.info( "Checking if project group '" + projectGroupId + "' is in queue" );
         return continuumBuildAgentService.isProjectGroupInQueue( projectGroupId );
+    }
+
+    public Boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds )
+        throws Exception
+    {
+        log.info( "Checking if project scm root '" + projectScmRootId + "' is in queue" );
+        return continuumBuildAgentService.isProjectScmRootInQueue( projectScmRootId, projectIds );
     }
 
     public Boolean isProjectCurrentlyBuilding( int projectId )

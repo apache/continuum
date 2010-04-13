@@ -97,13 +97,22 @@ public interface SlaveBuildAgentTransportService
     public List<Map<String, Object>> getProjectsInPrepareBuildQueue()
         throws Exception;
 
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsInPrepareBuildQueue()
+        throws Exception;
+
     public List<Map<String, Object>> getProjectsInBuildQueue()
         throws Exception;
 
     public Map<String, Object> getProjectCurrentlyPreparingBuild()
         throws Exception;
 
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsCurrentlyPreparingBuild()
+        throws Exception;
+
     public Boolean isProjectGroupInQueue( int projectGroupId )
+        throws Exception;
+
+    public Boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds )
         throws Exception;
 
     public Boolean isProjectCurrentlyBuilding( int projectId )

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.build.BuildTrigger;
@@ -64,7 +65,7 @@ public interface DistributedBuildManager
         throws ContinuumException;
 
     void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId,  
-                               String projectGroupName, String scmRootAddress, int scmRootId )
+                               String projectGroupName, String scmRootAddress, int scmRootId, List<ProjectScmRoot> scmRoots )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     Map<String, PrepareBuildProjectsTask> getProjectsCurrentlyPreparingBuild()
@@ -86,5 +87,17 @@ public interface DistributedBuildManager
         throws ContinuumException;
 
     boolean isAgentAvailable( String buildAgentUrl )
+        throws ContinuumException;
+
+    boolean isProjectInAnyPrepareBuildQueue( int projectId, int buildDefinitionId )
+        throws ContinuumException;
+
+    boolean isProjectInAnyBuildQueue( int projectId, int buildDefinitionId )
+        throws ContinuumException;
+
+    boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
+        throws ContinuumException;
+
+    boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws ContinuumException;
 }

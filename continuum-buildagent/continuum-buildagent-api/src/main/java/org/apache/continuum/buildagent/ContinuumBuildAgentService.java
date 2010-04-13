@@ -84,6 +84,9 @@ public interface ContinuumBuildAgentService
     List<Map<String, Object>> getProjectsInPrepareBuildQueue()
         throws ContinuumBuildAgentException;
 
+    List<Map<String, Object>> getProjectsAndBuildDefinitionsInPrepareBuildQueue()
+        throws ContinuumBuildAgentException;
+
     List<Map<String, Object>> getProjectsInBuildQueue()
         throws ContinuumBuildAgentException;
 
@@ -93,7 +96,12 @@ public interface ContinuumBuildAgentService
     Map<String, Object> getProjectCurrentlyPreparingBuild()
         throws ContinuumBuildAgentException;
 
+    List<Map<String, Object>> getProjectsAndBuildDefinitionsCurrentlyPreparingBuild()
+        throws ContinuumBuildAgentException;
+
     boolean isProjectGroupInQueue( int projectGroupId );
+
+    boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds );
 
     boolean isProjectCurrentlyBuilding( int projectId );
 

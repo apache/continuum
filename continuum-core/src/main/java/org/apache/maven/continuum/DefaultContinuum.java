@@ -945,36 +945,25 @@ public class DefaultContinuum
             {
                 for ( Integer buildDefId : buildDefIds )
                 {
-                    try
+                    if ( buildDefId != null && isProjectOkToBuild( project.getId(), buildDefId ) )
                     {
-                        if ( buildDefId != null &&
-                            !parallelBuildsManager.isInAnyBuildQueue( project.getId(), buildDefId ) &&
-                            !parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) &&
-                            !parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) &&
-                            !parallelBuildsManager.isProjectCurrentlyPreparingBuild( project.getId() ) )
+                        ProjectScmRoot scmRoot = getProjectScmRootByProject( project.getId() );
+
+                        Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
+
+                        if ( projectsAndBuildDefinitionsMap == null )
                         {
-                            ProjectScmRoot scmRoot = getProjectScmRootByProject( project.getId() );
-
-                            Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
-
-                            if ( projectsAndBuildDefinitionsMap == null )
-                            {
-                                projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
-                            }
-
-                            projectsAndBuildDefinitionsMap.put( project.getId(), buildDefId );
-
-                            map.put( scmRoot, projectsAndBuildDefinitionsMap );
-
-                            if ( !sortedScmRoot.contains( scmRoot ) )
-                            {
-                                sortedScmRoot.add( scmRoot );
-                            }
+                            projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
                         }
-                    }
-                    catch ( BuildManagerException e )
-                    {
-                        throw new ContinuumException( e.getMessage(), e );
+
+                        projectsAndBuildDefinitionsMap.put( project.getId(), buildDefId );
+
+                        map.put( scmRoot, projectsAndBuildDefinitionsMap );
+
+                        if ( !sortedScmRoot.contains( scmRoot ) )
+                        {
+                            sortedScmRoot.add( scmRoot );
+                        }
                     }
                 }
             }
@@ -987,7 +976,7 @@ public class DefaultContinuum
             try
             {
                 prepareBuildProjects( map.get( scmRoot ), buildTrigger, scmRoot.getScmRootAddress(),
-                                      scmRoot.getProjectGroup().getId(), scmRoot.getId() );
+                                      scmRoot.getProjectGroup().getId(), scmRoot.getId(), sortedScmRoot );
             }
             catch ( NoBuildAgentException e )
             {
@@ -1031,26 +1020,20 @@ public class DefaultContinuum
             throw new ContinuumException( "Project (id=" + projectId + " doens't have a default build definition." );
         }
 
-        try
+        if ( !isProjectOkToBuild( projectId, buildDef.getId() ) )
         {
-            if ( parallelBuildsManager.isInAnyBuildQueue( projectId, buildDef.getId() ) ||
-                parallelBuildsManager.isInAnyCheckoutQueue( projectId ) ||
-                parallelBuildsManager.isInPrepareBuildQueue( projectId ) )
-            {
-                return;
-            }
-        }
-        catch ( BuildManagerException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
+            return;
         }
 
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
+        List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
+        sortedScmRoot.add(scmRoot);
+
         prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, scmRoot.getScmRootAddress(),
-                              scmRoot.getProjectGroup().getId(), scmRoot.getId() );
+                              scmRoot.getProjectGroup().getId(), scmRoot.getId(), sortedScmRoot );
     }
 
     public void buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
@@ -1062,26 +1045,20 @@ public class DefaultContinuum
             throw new ContinuumException( "Project (id=" + projectId + ") is currently in release stage." );
         }
 
-        try
+        if ( !isProjectOkToBuild( projectId, buildDefinitionId ) )
         {
-            if ( parallelBuildsManager.isInAnyBuildQueue( projectId, buildDefinitionId ) ||
-                parallelBuildsManager.isInAnyCheckoutQueue( projectId ) ||
-                parallelBuildsManager.isInPrepareBuildQueue( projectId ) )
-            {
-                return;
-            }
-        }
-        catch ( BuildManagerException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
+            return;
         }
 
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( projectId, buildDefinitionId );
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
+        List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
+        sortedScmRoot.add(scmRoot);
+
         prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, scmRoot.getScmRootAddress(),
-                              scmRoot.getProjectGroup().getId(), scmRoot.getId() );
+                              scmRoot.getProjectGroup().getId(), scmRoot.getId(), sortedScmRoot );
     }
 
     public BuildResult getBuildResult( int buildId )
@@ -3434,27 +3411,6 @@ public class DefaultContinuum
         {
             int projectId = project.getId();
 
-            try
-            {
-                // check if project already in queue
-                if ( parallelBuildsManager.isInAnyBuildQueue( projectId ) ||
-                    parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) ||
-                    parallelBuildsManager.isInPrepareBuildQueue( projectId ) ||
-                    parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) )
-                {
-                    continue;
-                }
-
-                if ( parallelBuildsManager.isInAnyCheckoutQueue( projectId ) )
-                {
-                    parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
-                }
-            }
-            catch ( BuildManagerException e )
-            {
-                throw new ContinuumException( e.getMessage(), e );
-            }
-
             int buildDefId = -1;
 
             if ( bds != null )
@@ -3497,7 +3453,13 @@ public class DefaultContinuum
             if ( buildDefId == -1 )
             {
                 log.info( "Project " + projectId +
-                    " don't have a default build definition defined in the project or project group, will not be included in group prepare." );
+                    " don't have a default build definition defined in the project or project group, will not be included in group build." );
+                continue;
+            }
+
+            // check if project already in queue
+            if ( !isProjectOkToBuild( projectId, buildDefId ) )
+            {
                 continue;
             }
 
@@ -3533,44 +3495,29 @@ public class DefaultContinuum
         {
             int projectId = project.getId();
 
-            try
+            // check if project already in queue
+            if ( !isProjectOkToBuild( projectId, buildDefinitionId ) )
             {
-                // check if project already in queue
-                if ( parallelBuildsManager.isInAnyBuildQueue( projectId ) ||
-                    parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) ||
-                    parallelBuildsManager.isInPrepareBuildQueue( projectId ) ||
-                    parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) )
-                {
-                    log.info( "not building" );
-                    continue;
-                }
-
-                if ( parallelBuildsManager.isInAnyCheckoutQueue( projectId ) )
-                {
-                    parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
-                }
-
-                ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-
-                Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
-
-                if ( projectsAndBuildDefinitionsMap == null )
-                {
-                    projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
-                }
-
-                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
-
-                map.put( scmRoot, projectsAndBuildDefinitionsMap );
-
-                if ( !sortedScmRoot.contains( scmRoot ) )
-                {
-                    sortedScmRoot.add( scmRoot );
-                }
+                log.info( "not building" );
+                continue;
             }
-            catch ( BuildManagerException e )
+
+            ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
+
+            Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
+
+            if ( projectsAndBuildDefinitionsMap == null )
             {
-                throw new ContinuumException( e.getMessage(), e );
+                projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
+            }
+
+            projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
+
+            map.put( scmRoot, projectsAndBuildDefinitionsMap );
+
+            if ( !sortedScmRoot.contains( scmRoot ) )
+            {
+                    sortedScmRoot.add( scmRoot );
             }
         }
 
@@ -3584,12 +3531,12 @@ public class DefaultContinuum
         for ( ProjectScmRoot scmRoot : scmRoots )
         {
         	prepareBuildProjects( map.get( scmRoot ), buildTrigger, scmRoot.getScmRootAddress(),
-                                  scmRoot.getProjectGroup().getId(), scmRoot.getId() );
+                                  scmRoot.getProjectGroup().getId(), scmRoot.getId(), scmRoots );
         }
     }
 
     private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
-                                       String scmRootAddress, int projectGroupId, int scmRootId )
+                                       String scmRootAddress, int projectGroupId, int scmRootId, List<ProjectScmRoot> scmRoots )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroup group = getProjectGroup( projectGroupId );
@@ -3599,7 +3546,7 @@ public class DefaultContinuum
             if ( configurationService.isDistributedBuildEnabled() )
             {
             	distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, projectGroupId, 
-                                                              group.getName(), scmRootAddress, scmRootId );
+                                                              group.getName(), scmRootAddress, scmRootId, scmRoots );
             }
             else
             {
@@ -3778,6 +3725,44 @@ public class DefaultContinuum
         }
     }
 
+    private boolean isProjectOkToBuild( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
+        if ( configurationService.isDistributedBuildEnabled() )
+        {
+            if ( !distributedBuildManager.isProjectInAnyPrepareBuildQueue( projectId, buildDefinitionId ) && 
+                 !distributedBuildManager.isProjectInAnyBuildQueue( projectId, buildDefinitionId ) &&
+                 !distributedBuildManager.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId ) &&
+                 !distributedBuildManager.isProjectCurrentlyBuilding( projectId, buildDefinitionId ) )
+            {
+                return true;
+            }
+        }
+        else
+        {
+            try
+            {
+                if ( !parallelBuildsManager.isInAnyBuildQueue( projectId, buildDefinitionId ) &&
+                     !parallelBuildsManager.isInAnyCheckoutQueue( projectId ) &&
+                     !parallelBuildsManager.isInPrepareBuildQueue( projectId ) &&
+                     !parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) )
+                {
+                    if ( parallelBuildsManager.isInAnyCheckoutQueue( projectId ) )
+                    {
+                        parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
+                    }
+
+                    return true;
+                }
+            }
+            catch ( BuildManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
+        }
+
+        return false;
+    }
     void setTaskQueueManager( TaskQueueManager taskQueueManager )
     {
         this.taskQueueManager = taskQueueManager;
