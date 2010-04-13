@@ -123,7 +123,7 @@ public class DefaultDistributedBuildManager
     {
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
-        if ( agents != null )
+        if ( !agents.isEmpty() )
         {
             synchronized( overallDistributedBuildQueues )
             {
@@ -173,7 +173,7 @@ public class DefaultDistributedBuildManager
     {
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
-        if ( agents != null )
+        if ( agents.isEmpty() )
         {
             return;
         }
