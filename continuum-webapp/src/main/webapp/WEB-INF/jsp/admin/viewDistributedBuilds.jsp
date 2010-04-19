@@ -58,7 +58,7 @@
                 </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
-                <ec:column property="buildAgentUrl" title="distributedBuild.table.agentUrl"/>
+                <ec:column property="buildAgentUrl" title="distributedBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <s:url id="cancelUrl" action="cancelDistributedBuild" method="cancelDistributedBuild" namespace="/">
                     <s:param name="buildAgentUrl">${pageScope.currentBuild.buildAgentUrl}</s:param>
@@ -106,7 +106,7 @@
                 </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
-                <ec:column property="buildAgentUrl" title="distributedBuild.table.agentUrl"/>
+                <ec:column property="buildAgentUrl" title="distributedBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="removeDistributedBuildEntry" method="removeDistributedBuildEntry" namespace="/">
@@ -161,7 +161,7 @@
                   <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
-                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.agentUrl"/>
+                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.buildAgentUrl"/>
               </ec:row>
             </ec:table>
           </c:if>
@@ -198,7 +198,7 @@
                   <s:a href="%{viewUrl}">${pageScope.prepareBuildQueue.projectGroupName}</s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
-                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.agentUrl"/>
+                <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="removeDistributedPrepareBuildEntry" method="removeDistributedPrepareBuildEntry" namespace="/">
