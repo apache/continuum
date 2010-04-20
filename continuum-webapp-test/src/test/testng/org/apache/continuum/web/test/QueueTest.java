@@ -121,12 +121,11 @@ public class QueueTest
         assertTextNotPresent( BUILD_QUEUE_NAME );
     }
 
-
     @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
     public void testQueuePageWithProjectCurrentlyBuilding()
         throws Exception
     {
-    	//build a project
+    	  //build a project
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
@@ -134,19 +133,48 @@ public class QueueTest
         String location = getSelenium().getLocation();
 
         //check queue page while building
-    	getSelenium().open( "/continuum/admin/displayQueues!display.action" );
-	    assertPage( "Continuum - Build Queue" );
-	    assertTextPresent( "Current Build" );
-	    assertTextPresent( "Build Queue" );
-	    assertTextPresent( "Current Checkout" );
-	    assertTextPresent( "Checkout Queue " );
-	    assertTextPresent( "Current Prepare Build" );
-	    assertTextPresent( "Prepare Build Queue" );
-	    assertElementPresent("//table[@id='ec_table']/tbody/tr/td[4]");
-	    assertTextPresent( M2_PROJ_GRP_NAME );
-	    getSelenium().open( location );
+        getSelenium().open( "/continuum/admin/displayQueues!display.action" );
+        assertPage( "Continuum - Build Queue" );
+        assertTextPresent( "Current Build" );
+        assertTextPresent( "Build Queue" );
+        assertTextPresent( "Current Checkout" );
+        assertTextPresent( "Checkout Queue " );
+        assertTextPresent( "Current Prepare Build" );
+        assertTextPresent( "Prepare Build Queue" );
+        assertElementPresent("//table[@id='ec_table']/tbody/tr/td[4]");
+        assertTextPresent( M2_PROJ_GRP_NAME );
+        getSelenium().open( location );
         waitPage();
-	    waitForElementPresent( "//img[@alt='Success']" );
+        waitForElementPresent( "//img[@alt='Success']" );
+    }
+
+    @Test( dependsOnMethods = { "testQueuePageWithProjectCurrentlyBuilding", "testAddBuildAgent" } )
+    public void testQueuePageWithProjectCurrentlyBuildingInDistributedBuilds()
+        throws Exception
+    {
+    	  String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        
+        try
+        {
+            enableDistributedBuilds();
+            buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+
+            //check queue page while building
+            getSelenium().open( "/continuum/admin/displayQueues!display.action" );
+            assertPage( "Continuum - View Distributed Builds" );
+            assertTextPresent( "Current Build" );
+            assertTextPresent( "Build Queue" );
+            assertTextPresent( "Current Prepare Build" );
+            assertTextPresent( "Prepare Build Queue" );
+            assertTextPresent( M2_PROJ_GRP_NAME );
+            assertTextPresent( "Build Agent URL" );
+	      }
+	      finally
+	      {
+	          disableDistributedBuilds();
+	      }
     }
 
  }
