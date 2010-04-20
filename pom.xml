@@ -56,21 +56,24 @@ under the License.
         <version>2.3.1</version>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>changelog-maven-plugin</artifactId>
+        <artifactId>maven-changelog-plugin</artifactId>
+        <version>2.1</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>taglist-maven-plugin</artifactId>
+        <version>2.4</version>
       </plugin>
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.1</version>
         <configuration>
           <aggregate>true</aggregate>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.6.1</version>
         <configuration>
           <source>1.5</source>
           <aggregate>true</aggregate>
@@ -90,6 +93,7 @@ under the License.
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.4</version>
         <!-- TODO: choose appropriate rulesets -->
         <configuration>
           <targetJdk>1.5</targetJdk>
@@ -595,53 +599,53 @@ under the License.
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-model</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-api</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-commons</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-configuration</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-scm</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-store</artifactId>
         <classifier>tests</classifier>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-store</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-reports</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>      
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-core</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-test</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
@@ -656,7 +660,7 @@ under the License.
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-xmlrpc-server</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlrpc</groupId>
@@ -709,129 +713,129 @@ under the License.
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-plexus-application</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-api</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-irc</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-jabber</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-msn</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-wagon</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-release</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-security</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-webapp</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
         <type>war</type>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-legacy</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-api</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-cli</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-jdo</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-redback-jdo</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>redback-legacy</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-builder</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-buildagent-api</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-buildagent-core</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-buildagent-webapp</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
         <type>war</type>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-distributed-slave-api</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-distributed-slave-server</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-distributed-slave-client</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-distributed-master-api</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-distributed-master-server</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-distributed-master-client</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>net.sf.ehcache</groupId>
@@ -1362,7 +1366,7 @@ under the License.
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-purge</artifactId>
-        <version>${pom.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.archiva</groupId>
@@ -1609,7 +1613,7 @@ under the License.
               </descriptors>
               <tarLongFileMode>gnu</tarLongFileMode>
               <appendAssemblyId>false</appendAssemblyId>
-              <finalName>apache-continuum-${version}-src</finalName>
+              <finalName>apache-continuum-${project.version}-src</finalName>
             </configuration>
             <executions>
               <execution>
@@ -1663,7 +1667,7 @@ under the License.
 
   <properties>
     <jetty.version>6.1.19</jetty.version>
-    <continuumWebappVersion>${pom.version}</continuumWebappVersion>
+    <continuumWebappVersion>${project.version}</continuumWebappVersion>
     <maven.version>2.0.9</maven.version>
     <spring.version>2.5.6</spring.version>
     <wagon.version>1.0-beta-2</wagon.version>
