@@ -272,6 +272,9 @@ public class DefaultDistributedBuildManager
 
             throw new NoBuildAgentException( "No build agent configured" );
         }
+
+        // call in case we disabled a build agent
+        reload();
     }
 
     public void removeDistributedBuildQueueOfAgent( String buildAgentUrl )
@@ -1075,7 +1078,6 @@ public class DefaultDistributedBuildManager
     private OverallDistributedBuildQueue getOverallDistributedBuildQueueByScmRoot( ProjectScmRoot scmRoot, int projectGroupId )
         throws ContinuumException
     {
-        OverallDistributedBuildQueue overallDistributedBuildQueue = null;
         int scmRootId = scmRoot.getId();
 
         synchronized( overallDistributedBuildQueues )
@@ -1090,47 +1092,35 @@ public class DefaultDistributedBuildManager
                     {
                         if ( task.getProjectScmRootId() == scmRootId )
                         {
-                            overallDistributedBuildQueue = distributedBuildQueue;
-                            break;
+                            return distributedBuildQueue;
                         }
                     }
 
-                    if ( overallDistributedBuildQueue == null )
+                    Task task = distributedBuildQueue.getDistributedBuildTaskQueueExecutor().getCurrentTask();
+                    if ( task != null && ( (PrepareBuildProjectsTask) task ).getProjectScmRootId() == scmRootId )
                     {
-                        Task task = distributedBuildQueue.getDistributedBuildTaskQueueExecutor().getCurrentTask();
-                        if ( task != null && ( (PrepareBuildProjectsTask) task ).getProjectScmRootId() == scmRootId )
-                        {
-                            overallDistributedBuildQueue = distributedBuildQueue;
-                        }
+                        return distributedBuildQueue;
                     }
 
-                    if ( overallDistributedBuildQueue == null )
+                    if ( isAgentAvailable( buildAgentUrl ) )
                     {
-                        if ( isAgentAvailable( buildAgentUrl ) )
+                        List<Project> projects = projectDao.getProjectsInGroup( projectGroupId );
+                        List<Integer> pIds = new ArrayList<Integer>();
+
+                        for ( Project project : projects )
                         {
-                            List<Project> projects = projectDao.getProjectsInGroup( projectGroupId );
-                            List<Integer> pIds = new ArrayList<Integer>();
-                            
-                            for ( Project project : projects )
+                            if ( project.getScmUrl().startsWith( scmRoot.getScmRootAddress() ) )
                             {
-                                if ( project.getScmUrl().startsWith( scmRoot.getScmRootAddress() ) )
-                                {
-                                    pIds.add( project.getId() );
-                                }
-                            }
-
-                            SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
-
-                            if ( client.isProjectScmRootInQueue( scmRootId, pIds ) )
-                            {
-                                overallDistributedBuildQueue = distributedBuildQueue;
+                                pIds.add( project.getId() );
                             }
                         }
-                    }
 
-                    if ( overallDistributedBuildQueue != null )
-                    {
-                        break;
+                        SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+
+                        if ( client.isProjectScmRootInQueue( scmRootId, pIds ) )
+                        {
+                            return distributedBuildQueue;
+                        }
                     }
                 }
                 catch ( TaskQueueException e )
@@ -1153,10 +1143,7 @@ public class DefaultDistributedBuildManager
             }
         }
 
-        // call reload in case we disable a build agent
-        reload();
-
-        return overallDistributedBuildQueue;
+        return null;
     }
 
     private OverallDistributedBuildQueue getOverallDistributedBuildQueueByGroup( int projectGroupId, List<ProjectScmRoot> scmRoots, int scmRootId )
@@ -1276,11 +1263,9 @@ public class DefaultDistributedBuildManager
                         }
                     }
                 }
-
-                // call reload in case we disable a build agent
-                reload();
             }
         }
+
         return whereToBeQueued;
     }
 
@@ -1339,9 +1324,6 @@ public class DefaultDistributedBuildManager
                 }
             }
         }
-
-        // call reload in case we disable a build agent
-        reload();
 
         return whereToBeQueued;
     }
