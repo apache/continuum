@@ -282,20 +282,21 @@ under the License.
         <executions>
           <execution>
             <id>generate</id>
+            <phase>generate-resources</phase>
             <goals>
               <goal>descriptor</goal>
             </goals>
           </execution>
           <execution>
             <id>merge</id>
-            <!--
+            <phase>process-resources</phase>
             <configuration>
               <descriptors>
-                <descriptor>${basedir}/src/main/resources/META-INF/plexus/components.xml</descriptor>
-                <descriptor>${project.build.directory}/generated-resources/plexus/META-INF/plexus/components.xml</descriptor>
+                <descriptor>${basedir}/src/main/resources/META-INF/plexus/components-fragment.xml</descriptor>
+                <descriptor>${project.build.outputDirectory}/META-INF/plexus/components.xml</descriptor>
               </descriptors>
+              <output>${project.build.outputDirectory}/META-INF/plexus/components.xml</output>
             </configuration>
-            -->
             <goals>
               <goal>merge-descriptors</goal>
             </goals>
