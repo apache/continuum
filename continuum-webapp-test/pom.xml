@@ -400,7 +400,7 @@ under the License.
       </activation>
       <properties>
         <container.name>tomcat5x</container.name>
-        <container.url>http://apache.mirrors.redwire.net/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip</container.url>
+        <container.url>http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip</container.url>
       </properties>
     </profile>
     <profile>
