@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.continuum.builder.distributed.executor.ThreadedDistributedBuildTaskQueueExecutor;
 import org.apache.continuum.builder.distributed.stubs.SlaveBuildAgentTransportClientStub;
+import org.apache.continuum.builder.distributed.stubs.DefaultDistributedBuildManagerStub;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -526,15 +527,5 @@ public class DefaultDistributedBuildManagerTest
                 one( overallDistributedBuildQueue2 ).addToDistributedBuildQueue( with( any( Task.class ) ) );
             }
         } );
-    }
-}
-
-class DefaultDistributedBuildManagerStub
-    extends DefaultDistributedBuildManager
-{
-    @Override
-    public SlaveBuildAgentTransportService createSlaveBuildAgentTransportClientConnection( String buildAgentUrl )
-    {
-        return new SlaveBuildAgentTransportClientStub();
     }
 }
