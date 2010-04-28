@@ -22,6 +22,7 @@ package org.apache.continuum.builder.distributed.manager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -320,7 +321,7 @@ public class DefaultDistributedBuildManagerTest
     private Map<String, OverallDistributedBuildQueue> getMockOverallDistributedBuildQueues( int size )
     {
         Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
-            Collections.synchronizedMap( new HashMap<String, OverallDistributedBuildQueue>() );
+            Collections.synchronizedMap( new LinkedHashMap<String, OverallDistributedBuildQueue>() );
 
         buildAgents = new ArrayList<BuildAgentConfiguration>();
         buildAgents.add( buildAgent1 );
