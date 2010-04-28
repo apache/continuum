@@ -95,9 +95,9 @@ public class DefaultDistributedBuildManagerTest
 
     private ProjectGroup projectGroup;
 
-    private BuildDefinition buildDefinition1;
+    private BuildDefinition buildDefinition;
 
-    private BuildAgentGroupConfiguration buildAgentGroup1;
+    private BuildAgentGroupConfiguration buildAgentGroup;
 
     @Override
     public void setUp()
@@ -149,17 +149,12 @@ public class DefaultDistributedBuildManagerTest
         buildAgent2.setEnabled( true );
         buildAgent2.setUrl( TEST_BUILD_AGENT2 );
 
-        buildAgentGroup1 = new BuildAgentGroupConfiguration();
-        buildAgentGroup1.setName( TEST_BUILD_AGENT_GROUP1 );
-        buildAgentGroup1.addBuildAgent( buildAgent1 );
-        buildAgentGroup1.addBuildAgent( buildAgent2 );
-
-        Profile buildEnv1 = new Profile();
-        buildEnv1.setBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 );
-
-        buildDefinition1 = new BuildDefinition();
-        buildDefinition1.setId( 1 );
-        buildDefinition1.setProfile( buildEnv1 );
+        List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
+        buildAgents.add( buildAgent1 );
+        buildAgents.add( buildAgent2 );
+        
+        setUpBuildAgentGroup( buildAgents );
+        setupBuildDefinition();
 
         projectGroup = new ProjectGroup();
         projectGroup.setId( 1 );
@@ -183,7 +178,7 @@ public class DefaultDistributedBuildManagerTest
     public void testViewQueuesAfterBuildAgentIsLost()
         throws Exception
     {
-        distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues() );
+        distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 1 ) );
 
         recordViewQueuesAfterBuildAgentIsLost();
 
@@ -203,7 +198,7 @@ public class DefaultDistributedBuildManagerTest
     public void testDisableBuildAgentWhenUnavailableToPing()
         throws Exception
     {
-        distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues() );
+        distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 1 ) );
         
         recordDisableOfBuildAgent();
 
@@ -215,7 +210,7 @@ public class DefaultDistributedBuildManagerTest
     public void testViewQueuesWhen2BuildAgentsAreLost()
         throws Exception
     {
-        distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues2() );
+        distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 2 ) );
 
         recordViewQueuesAfter2BuildAgentsAreLost();
 
@@ -235,7 +230,7 @@ public class DefaultDistributedBuildManagerTest
     public void testBuildProjectWithBuildAgentGroupWithNoCurrentBuilds()
         throws Exception
     {
-        distributedBuildManagerStub.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues2() );
+        distributedBuildManagerStub.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 2 ) );
 
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( 1, 1 );
@@ -266,7 +261,7 @@ public class DefaultDistributedBuildManagerTest
     public void testBuildProjectWithBuildAgentGroupWithCurrentBuild()
         throws Exception
     {
-        distributedBuildManagerStub.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues2() );
+        distributedBuildManagerStub.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 2 ) );
 
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( 1, 1 );
@@ -297,7 +292,13 @@ public class DefaultDistributedBuildManagerTest
     public void testBuildProjectWithTheSecondBuildAgentAttachedToTheBuildAgentGroup()
         throws Exception
     {
-        distributedBuildManagerStub.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues3() );
+        distributedBuildManagerStub.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 2 ) );
+        
+        List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();        
+        buildAgents.add( buildAgent2 );
+        
+        setUpBuildAgentGroup( buildAgents );
+        setupBuildDefinition();
 
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( 1, 1 );
@@ -315,8 +316,8 @@ public class DefaultDistributedBuildManagerTest
 
         distributedBuildManagerStub.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, 1, "sample", "scmRootAddress", 1, scmRoots );
     }
-
-    private Map<String, OverallDistributedBuildQueue> getMockOverallDistributedBuildQueues()
+    
+    private Map<String, OverallDistributedBuildQueue> getMockOverallDistributedBuildQueues( int size )
     {
         Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
             Collections.synchronizedMap( new HashMap<String, OverallDistributedBuildQueue>() );
@@ -325,47 +326,31 @@ public class DefaultDistributedBuildManagerTest
         buildAgents.add( buildAgent1 );
 
         overallDistributedBuildQueues.put( TEST_BUILD_AGENT1, overallDistributedBuildQueue1 );
+
+        if( size == 2 )
+        {
+            buildAgents.add( buildAgent2 );
+            overallDistributedBuildQueues.put( TEST_BUILD_AGENT2, overallDistributedBuildQueue2 );
+        }
+                
         return overallDistributedBuildQueues;
     }
-
-    private Map<String, OverallDistributedBuildQueue> getMockOverallDistributedBuildQueues2()
+    
+    private void setUpBuildAgentGroup( List<BuildAgentConfiguration> buildAgents )
     {
-        Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
-            Collections.synchronizedMap( new HashMap<String, OverallDistributedBuildQueue>() );
-
-        buildAgents = new ArrayList<BuildAgentConfiguration>();
-        buildAgents.add( buildAgent1 );
-        buildAgents.add( buildAgent2 );
-
-        overallDistributedBuildQueues.put( TEST_BUILD_AGENT1, overallDistributedBuildQueue1 );
-        overallDistributedBuildQueues.put( TEST_BUILD_AGENT2, overallDistributedBuildQueue2 );
-        return overallDistributedBuildQueues;
+        buildAgentGroup = new BuildAgentGroupConfiguration();
+        buildAgentGroup.setName( TEST_BUILD_AGENT_GROUP1 );
+        buildAgentGroup.setBuildAgents( buildAgents );
     }
-
-    private Map<String, OverallDistributedBuildQueue> getMockOverallDistributedBuildQueues3()
+    
+    private void setupBuildDefinition()
     {
-
-        Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
-            Collections.synchronizedMap( new HashMap<String, OverallDistributedBuildQueue>() );
-
-        buildAgents = new ArrayList<BuildAgentConfiguration>();
-        buildAgents.add( buildAgent1 );
-        buildAgents.add( buildAgent2 );
-
-        buildAgentGroup1 = new BuildAgentGroupConfiguration();
-        buildAgentGroup1.setName( TEST_BUILD_AGENT_GROUP1 );
-        buildAgentGroup1.addBuildAgent( buildAgent2 );
-
         Profile buildEnv1 = new Profile();
         buildEnv1.setBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 );
 
-        buildDefinition1 = new BuildDefinition();
-        buildDefinition1.setId( 1 );
-        buildDefinition1.setProfile( buildEnv1 );
-
-        overallDistributedBuildQueues.put( TEST_BUILD_AGENT1, overallDistributedBuildQueue1 );
-        overallDistributedBuildQueues.put( TEST_BUILD_AGENT2, overallDistributedBuildQueue2 );
-        return overallDistributedBuildQueues;
+        buildDefinition = new BuildDefinition();
+        buildDefinition.setId( 1 );
+        buildDefinition.setProfile( buildEnv1 );
     }
 
     private void recordDisableOfBuildAgent()
@@ -468,10 +453,10 @@ public class DefaultDistributedBuildManagerTest
                 will( returnValue( project2) );
 
                 exactly( 3 ).of( buildDefinitionDao ).getBuildDefinition( 1 );
-                will( returnValue( buildDefinition1 ) );
+                will( returnValue( buildDefinition ) );
 
                 exactly( 3 ).of( configurationService ).getBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 );
-                will( returnValue( buildAgentGroup1 ) );
+                will( returnValue( buildAgentGroup ) );
 
                 one( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
@@ -516,10 +501,10 @@ public class DefaultDistributedBuildManagerTest
                 will( returnValue( project ) );
 
                 exactly( 3 ).of( buildDefinitionDao ).getBuildDefinition( 1 );
-                will( returnValue( buildDefinition1 ) );
+                will( returnValue( buildDefinition ) );
 
                 exactly( 3 ).of( configurationService ).getBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 );
-                will( returnValue( buildAgentGroup1 ) );
+                will( returnValue( buildAgentGroup ) );
 
                 one( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
