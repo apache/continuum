@@ -121,6 +121,7 @@ under the License.
           <configuration>
             <tagBase>https://svn.apache.org/repos/asf/continuum/tags</tagBase>
             <preparationGoals>clean install</preparationGoals>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
           </configuration>
         </plugin>
         <plugin>
