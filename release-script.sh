@@ -16,7 +16,6 @@ mkdir /www/people.apache.org/builds/continuum/$version
 cd /www/people.apache.org/builds/continuum/$version
 
 mkdir binaries
-(
 cd binaries
 for i in tar.gz tar.gz.asc tar.gz.md5 tar.gz.sha1 zip zip.asc zip.md5 zip.sha1
 do
@@ -62,10 +61,9 @@ do
     exit 1
   fi
 done
-)
 
+cd ..
 mkdir source
-(
 cd source
 for i in zip zip.asc zip.md5 zip.sha1
 do
@@ -75,6 +73,5 @@ do
     exit 1
   fi
 done
-)
 
 echo 'GREAT :-) '
