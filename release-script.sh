@@ -12,8 +12,8 @@ fi
 export version=$1
 export repo=$2
 
-mkdir /www/people.apache.org/builds/continuum/$1
-cd /www/people.apache.org/builds/continuum/$1
+mkdir /www/people.apache.org/builds/continuum/$version
+cd /www/people.apache.org/builds/continuum/$version
 
 mkdir binaries
 (
@@ -69,7 +69,7 @@ mkdir source
 cd source
 for i in zip zip.asc zip.md5 zip.sha1
 do
-  wget -O apache-continuum-$version-src.$i $repo/org/apache/continuum/continuum/$version/continuum-$version-src.$i
+  wget -O apache-continuum-$version-src.$i $repo/org/apache/continuum/continuum/$version/continuum-$version.$i
   if [ ! -f apache-continuum-$version-src.$i ]; then
     echo Unable to find apache-continuum-$version-src.$i
     exit 1
