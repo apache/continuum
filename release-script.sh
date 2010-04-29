@@ -53,15 +53,6 @@ do
   fi
 done
 
-for i in zip zip.asc zip.md5 zip.sha1
-do
-  wget -O apache-continuum-$version-docs.$i $repo/org/apache/continuum/continuum-docs/$version/continuum-docs-$version-docs.$i
-  if [ ! -s apache-continuum-$version-docs.$i ]; then
-    echo Unable to find apache-continuum-$version-docs.$i
-    exit 1
-  fi
-done
-
 cd ..
 mkdir source
 cd source
