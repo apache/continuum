@@ -9,8 +9,8 @@ then
   echo 'usage release-script.sh version stagingRepoUrl'
   exit
 fi
-export VER=$1
-export STAGE_REPO=$2
+export version=$1
+export repo=$2
 
 mkdir /www/people.apache.org/builds/continuum/$1
 cd /www/people.apache.org/builds/continuum/$1
