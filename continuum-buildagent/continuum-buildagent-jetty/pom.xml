@@ -22,7 +22,7 @@ under the License.
   <parent>
     <artifactId>continuum-buildagent</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.0</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
   <artifactId>continuum-buildagent-jetty</artifactId>
   <packaging>pom</packaging>
