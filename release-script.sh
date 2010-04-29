@@ -47,7 +47,7 @@ done
 
 for i in war war.asc war.md5 war.sha1
 do
-  wget -O apache-continuum-buildagent-$version.$i $repo/org/apache/continuum/continuum-webapp/$version/continuum-buildagent-webapp-$version.$i
+  wget -O apache-continuum-buildagent-$version.$i $repo/org/apache/continuum/continuum-buildagent-webapp/$version/continuum-buildagent-webapp-$version.$i
   if [ ! -f apache-continuum-buildagent-$version.$i ]; then
     echo Unable to find apache-continuum-buildagent-$version.$i
     exit 1
