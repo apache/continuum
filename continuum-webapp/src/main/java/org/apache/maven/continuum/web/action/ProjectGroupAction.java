@@ -630,6 +630,9 @@ public class ProjectGroupAction
             {
                 if ( p.getState() != ContinuumProjectState.OK )
                 {
+                    logger.info(
+                        "Attempt to release group '" + projectGroup.getName() + "' failed as project '" + p.getName() +
+                            "' is in state " + p.getState() );
                     allBuildsOk = false;
                 }
 
@@ -641,6 +644,9 @@ public class ProjectGroupAction
                     }
                     else
                     {
+                        logger.info( "Attempt to release group '" + projectGroup.getName() + "' failed as project '" +
+                            p.getName() + "' and project '" + parent.getName() + "' are both parents" );
+
                         // currently, we have no provisions for releasing 2 or more parents
                         // at the same time, this will be implemented in the future
                         addActionError( getText( "projectGroup.release.error.severalParentProjects" ) );
@@ -650,6 +656,9 @@ public class ProjectGroupAction
 
                 if ( !"maven2".equals( p.getExecutorId() ) )
                 {
+                    logger.info(
+                        "Attempt to release group '" + projectGroup.getName() + "' failed as project '" + p.getName() +
+                            "' is not a Maven 2 project (executor '" + p.getExecutorId() + "')" );
                     allMavenTwo = false;
                 }
             }
