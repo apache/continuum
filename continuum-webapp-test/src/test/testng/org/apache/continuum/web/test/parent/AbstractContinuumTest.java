@@ -395,7 +395,7 @@ public abstract class AbstractContinuumTest
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
         clickLinkWithText( "Result" );
-        assertTextPresent( "BUILD SUCCESSFUL" );
+        assertTextPresent( "BUILD SUCCESS" );
         clickLinkWithText( "Project Group Summary" );
     }
 
