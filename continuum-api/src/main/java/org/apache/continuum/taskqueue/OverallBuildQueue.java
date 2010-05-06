@@ -21,6 +21,7 @@ package org.apache.continuum.taskqueue;
 
 import java.util.List;
 
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
@@ -213,12 +214,14 @@ public interface OverallBuildQueue
      *
      * @param projectId
      * @param buildDefinitionId
-     * @param trigger
+     * @param buildTrigger
      * @param projectName
+     * @param projectGroupId
      * @return
      * @throws TaskQueueException TODO
      */
-    boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+    boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
+    		                             String projectName, int projectGroupId )
         throws TaskQueueException;
 
     /**

@@ -41,7 +41,6 @@ import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
-import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -59,7 +58,6 @@ public interface ContinuumService
      * @param projectGroupId The project group Id
      * @return List of {@link ProjectSummary}
      * @throws Exception
-     * @throws XmlRpcException
      */
     List<ProjectSummary> getProjects( int projectGroupId )
         throws Exception;

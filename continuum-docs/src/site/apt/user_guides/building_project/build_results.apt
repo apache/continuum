@@ -10,32 +10,37 @@ Build Results Management
 [../../images/build_result-2.png] Builds tab
 
     To view the result of the build:
-    
+
     [[1]] Click the link for the project group of the project you want to view - the link will be
     under the <<Name>> column.
-    
+
     [[2]] Click the build number link under the <<Build>> column of the project you want to view.
     Or you can click the project link again and click the <<Builds>> link at the top of the page, then click
-    the <<Result>> link, next to the State column.
-    
+    the <<Result>> link, next to the <<State>> column.
+
     []
-    
+
     When builds are executed frequently, deleting unnecessary and failed build results is needed.
     To delete build results, follow these steps:
 
     [[1]] Click the name of the project group.
-    
+
     [[2]] Click on the build number under the <<Build>> column. You will be directed to the build result
     page as shown below.
 
+    \ 
+
 [../../images/build_result-1.png] Build Results page
+
+    The <<Triggered by>> field displays the username of the person who forced the build. 
+    However, this field is empty when the build is triggered by a schedule.
 
     Or you can click on the name of the project that you want to delete build results from.
 
-        * Click the <<Builds>> tab. Build results list will be displayed.
-        
+        * Click the <<Builds>> tab. The build results list will be displayed.
+
         * Check the box of the build results that you want to delete.
-        
+
         []
-        
+
     [[3]] Click the <<Delete>> button.

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -227,9 +228,9 @@ public class BuildProjectTaskExecutorTest
 
         Map<String, Object> pgContext = new HashMap<String, Object>();
 
-        pgContext.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, project.getWorkingDirectory() );
+        AbstractContinuumAction.setWorkingDirectory( pgContext, project.getWorkingDirectory() );
 
-        pgContext.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
+        AbstractContinuumAction.setUnvalidatedProjectGroup( pgContext, projectGroup );
 
         actionManager.lookup( "validate-project-group" ).execute( pgContext );
 
@@ -245,8 +246,8 @@ public class BuildProjectTaskExecutorTest
 
         // projectGroup = continuumStore.addProjectGroup( projectGroup );
 
-        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), 0, project.getName(),
-                                                      buildDefinition.getDescription(), null );
+        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), new BuildTrigger( 0, "" ),
+        		                                 project.getName(), buildDefinition.getDescription(), null, projectGroupId );
 
         task.setMaxExecutionTime( maxRunTime );
 

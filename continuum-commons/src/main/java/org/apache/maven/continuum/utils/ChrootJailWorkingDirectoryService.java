@@ -20,8 +20,6 @@ package org.apache.maven.continuum.utils;
  */
 
 import java.io.File;
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -72,10 +70,5 @@ public class ChrootJailWorkingDirectoryService
         File f = new File( getChrootJailDirectory(), projectGroup.getGroupId() );
         f = new File( f, getConfigurationService().getWorkingDirectory().getPath() );
         return new File( f, Integer.toString( project.getId() ) );
-    }
-    
-    public File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects )
-    {
-        return getWorkingDirectory( project );
     }
 }

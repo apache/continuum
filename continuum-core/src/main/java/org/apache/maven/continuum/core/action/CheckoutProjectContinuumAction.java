@@ -49,6 +49,14 @@ import org.codehaus.plexus.util.StringUtils;
 public class CheckoutProjectContinuumAction
     extends AbstractContinuumAction
 {
+    private static final String KEY_SCM_USERNAME = "scmUserName";
+
+    private static final String KEY_SCM_PASSWORD = "scmUserPassword";
+
+    private static final String KEY_CHECKOUT_SCM_RESULT = "checkout-result";
+
+    private static final String KEY_PROJECT_RELATIVE_PATH = "project-relative-path";
+
     /**
      * @plexus.requirement
      */
@@ -71,7 +79,7 @@ public class CheckoutProjectContinuumAction
 
     public void execute( Map context )
         throws ContinuumStoreException
-    {
+    {   
         Project project = projectDao.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
@@ -80,6 +88,8 @@ public class CheckoutProjectContinuumAction
         {
             buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinition.getId() );
         }
+
+        int originalState = project.getState();
 
         project.setState( ContinuumProjectState.CHECKING_OUT );
 
@@ -93,16 +103,12 @@ public class CheckoutProjectContinuumAction
 
         ScmResult result;
 
-        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-        
         try
         {
-            String scmUserName = getString( context, KEY_SCM_USERNAME, project.getScmUsername() );
-            String scmPassword = getString( context, KEY_SCM_PASSWORD, project.getScmPassword() );
-            String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );            
-            
+            String scmUserName = getScmUsername( context, project.getScmUsername() );
+            String scmPassword = getScmPassword( context, project.getScmPassword() );
             ContinuumScmConfiguration config =
-                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword, scmRootUrl );
+                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
 
             String tag = config.getTag();
             getLogger().info(
@@ -110,13 +116,11 @@ public class CheckoutProjectContinuumAction
                     workingDirectory + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
 
             CheckOutScmResult checkoutResult = scm.checkout( config );
-            
             if ( StringUtils.isNotEmpty( checkoutResult.getRelativePathProjectDirectory() ) )
             {
-                context.put( AbstractContinuumAction.KEY_PROJECT_RELATIVE_PATH,
-                             checkoutResult.getRelativePathProjectDirectory() );
+                context.put( KEY_PROJECT_RELATIVE_PATH, checkoutResult.getRelativePathProjectDirectory() );
             }
-            
+
             if ( !checkoutResult.isSuccess() )
             {
                 // TODO: is it more appropriate to return this in the converted result so that it can be presented to
@@ -182,41 +186,37 @@ public class CheckoutProjectContinuumAction
         }
         finally
         {
-            String relativePath = (String) getObject( context, KEY_PROJECT_RELATIVE_PATH, "" );
+            String relativePath = getString( context, KEY_PROJECT_RELATIVE_PATH, "" );
             if ( StringUtils.isNotEmpty( relativePath ) )
             {
                 project.setRelativePath( relativePath );
             }
 
             project = projectDao.getProject( project.getId() );
-            
-            project.setState( ContinuumProjectState.CHECKEDOUT );
+
+            if ( originalState == ContinuumProjectState.NEW )
+            {
+                project.setState( ContinuumProjectState.CHECKEDOUT );
+            }
+            else
+            {
+                project.setState( originalState );
+            }
 
             projectDao.updateProject( project );
-            
-            // update state of sub-projects 
-            // if multi-module project was checked out in a single directory, these must not be null            
-            for( Project projectWithCommonScmRoot : projectsWithSimilarScmRoot )
-            {
-                projectWithCommonScmRoot = projectDao.getProject( projectWithCommonScmRoot.getId() );
-                if( projectWithCommonScmRoot != null && projectWithCommonScmRoot.getId() != project.getId() )
-                {
-                    projectWithCommonScmRoot.setState( ContinuumProjectState.CHECKEDOUT );
-                    projectDao.updateProject( projectWithCommonScmRoot );                    
-                }
-            }
+
             notifier.checkoutComplete( project, buildDefinition );
         }
 
-        context.put( KEY_CHECKOUT_SCM_RESULT, result );
-        context.put( KEY_PROJECT, project );
+        setCheckoutResult( context, result );
+        setProject( context, project );
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory,
-                                                              String scmUserName, String scmPassword, String scmRootUrl )
+                                                              String scmUserName, String scmPassword )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        config.setUrl( scmRootUrl );
+        config.setUrl( project.getScmUrl() );
         config.setUsername( scmUserName );
         config.setPassword( scmPassword );
         config.setUseCredentialsCache( project.isScmUseCache() );
@@ -281,5 +281,35 @@ public class CheckoutProjectContinuumAction
             }
         }
         return message.toString();
+    }
+
+    public static String getScmUsername( Map<String, Object> context, String defaultValue )
+    {
+        return getString( context, KEY_SCM_USERNAME, defaultValue );
+    }
+
+    public static void setScmUsername( Map<String, Object> context, String scmUsername )
+    {
+        context.put( KEY_SCM_USERNAME, scmUsername );
+    }
+
+    public static String getScmPassword( Map<String, Object> context, String defaultValue )
+    {
+        return getString( context, KEY_SCM_PASSWORD, defaultValue );
+    }
+
+    public static void setScmPassword( Map<String, Object> context, String scmPassword )
+    {
+        context.put( KEY_SCM_PASSWORD, scmPassword );
+    }
+
+    public static ScmResult getCheckoutResult( Map<String, Object> context, Object defaultValue )
+    {
+        return (ScmResult) getObject( context, KEY_CHECKOUT_SCM_RESULT, defaultValue );
+    }
+
+    public static void setCheckoutResult( Map<String, Object> context, ScmResult checkoutResult )
+    {
+        context.put( KEY_CHECKOUT_SCM_RESULT, checkoutResult );
     }
 }

@@ -33,9 +33,9 @@ public class BuildDefinitionTest
     public void testDefaultGroupBuildDefinition()
         throws Exception
     {
-        String DEFAULT_PROJ_GRP_NAME = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String DEFAULT_PROJ_GRP_ID = p.getProperty( "DEFAULT_PROJ_GRP_ID" );
-        String DEFAULT_PROJ_GRP_DESCRIPTION = p.getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
+        String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
+        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
 
         goToGroupBuildDefinitionPage( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
         String tableElement = "ec_table";
@@ -70,9 +70,9 @@ public class BuildDefinitionTest
     public void testAddInvalidGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickButtonWithValue( "Add" );
         setFieldValue( "buildFile", "" );
@@ -84,25 +84,25 @@ public class BuildDefinitionTest
     public void testBuildFromGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickImgWithAlt( "Build" );
-        assertProjectGroupsSummaryPage();
+        assertProjectGroupSummaryPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
 
     @Test( dependsOnMethods = { "testAddProjectGroup2" } )
     public void testAddDefautltGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-        String BUILD_POM_NAME = p.getProperty( "BUILD_POM_NAME" );
-        String BUILD_GOALS = p.getProperty( "BUILD_GOALS" );
-        String BUILD_ARGUMENTS = p.getProperty( "BUILD_ARGUMENTS" );
-        String BUILD_DESCRIPTION = p.getProperty( "BUILD_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
+        String BUILD_GOALS = getProperty( "BUILD_GOALS" );
+        String BUILD_ARGUMENTS = getProperty( "BUILD_ARGUMENTS" );
+        String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickButtonWithValue( "Add" );
         addEditGroupBuildDefinition( TEST2_PROJ_GRP_NAME, BUILD_POM_NAME, BUILD_GOALS, BUILD_ARGUMENTS,
@@ -113,13 +113,13 @@ public class BuildDefinitionTest
     public void testAddNotDefautltGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-        String BUILD_POM_NAME = p.getProperty( "BUILD_POM_NAME" );
-        String BUILD_GOALS = p.getProperty( "BUILD_GOALS" );
-        String BUILD_ARGUMENTS = p.getProperty( "BUILD_ARGUMENTS" );
-        String BUILD_DESCRIPTION = p.getProperty( "BUILD_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
+        String BUILD_GOALS = getProperty( "BUILD_GOALS" );
+        String BUILD_ARGUMENTS = getProperty( "BUILD_ARGUMENTS" );
+        String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickButtonWithValue( "Add" );
         addEditGroupBuildDefinition( TEST2_PROJ_GRP_NAME, BUILD_POM_NAME, BUILD_GOALS, BUILD_ARGUMENTS,
@@ -130,13 +130,13 @@ public class BuildDefinitionTest
     public void testEditGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-        String BUILD_POM_NAME = p.getProperty( "BUILD_POM_NAME" );
-        String BUILD_GOALS = p.getProperty( "BUILD_GOALS" );
-        String BUILD_ARGUMENTS = p.getProperty( "BUILD_ARGUMENTS" );
-        String BUILD_DESCRIPTION = p.getProperty( "BUILD_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
+        String BUILD_GOALS = getProperty( "BUILD_GOALS" );
+        String BUILD_ARGUMENTS = getProperty( "BUILD_ARGUMENTS" );
+        String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
         String newPom = "newpom.xml";
         String newGoals = "new goals";
         String newArguments = "new arguments";
@@ -154,11 +154,11 @@ public class BuildDefinitionTest
     public void testDeleteGroupBuildDefinition()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-        String BUILD_GOALS = p.getProperty( "BUILD_GOALS" );
-        String BUILD_DESCRIPTION = p.getProperty( "BUILD_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String BUILD_GOALS = getProperty( "BUILD_GOALS" );
+        String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         // Click in Delete Image
         clickLinkWithXPath( "(//a[contains(@href,'removeGroupBuildDefinition')])//img" );
@@ -171,12 +171,12 @@ public class BuildDefinitionTest
     public void testAddNotDefautltProjectBuildDefinition()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String BUILD_POM_NAME = p.getProperty( "BUILD_POM_NAME" );
-        String BUILD_GOALS = p.getProperty( "BUILD_GOALS" );
-        String BUILD_ARGUMENTS = p.getProperty( "BUILD_ARGUMENTS" );
-        String BUILD_DESCRIPTION = p.getProperty( "BUILD_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String BUILD_POM_NAME = getProperty( "BUILD_POM_NAME" );
+        String BUILD_GOALS = getProperty( "BUILD_GOALS" );
+        String BUILD_ARGUMENTS = getProperty( "BUILD_ARGUMENTS" );
+        String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
         addEditGroupBuildDefinition( null, BUILD_POM_NAME, BUILD_GOALS, BUILD_ARGUMENTS, BUILD_DESCRIPTION, false,
@@ -187,10 +187,10 @@ public class BuildDefinitionTest
     public void testDeleteProjectBuildDefinition()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String BUILD_GOALS = p.getProperty( "BUILD_GOALS" );
-        String BUILD_DESCRIPTION = p.getProperty( "BUILD_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String BUILD_GOALS = getProperty( "BUILD_GOALS" );
+        String BUILD_DESCRIPTION = getProperty( "BUILD_DESCRIPTION" );
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         // Click in Delete Image
         clickLinkWithXPath( "(//a[contains(@href,'removeProjectBuildDefinition')])//img" );

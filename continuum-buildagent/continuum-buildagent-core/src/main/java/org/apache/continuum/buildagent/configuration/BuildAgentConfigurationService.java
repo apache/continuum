@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.continuum.buildagent.model.Installation;
+import org.apache.continuum.buildagent.model.LocalRepository;
 
 public interface BuildAgentConfigurationService
 {
@@ -45,4 +46,6 @@ public interface BuildAgentConfigurationService
         throws BuildAgentConfigurationException;
 
     List<Installation> getAvailableInstallations();
+    
+    List<LocalRepository> getLocalRepositories();
 }

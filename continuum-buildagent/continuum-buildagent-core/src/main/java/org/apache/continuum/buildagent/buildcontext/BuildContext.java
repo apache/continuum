@@ -22,6 +22,7 @@ package org.apache.continuum.buildagent.buildcontext;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.scm.ScmResult;
 
@@ -39,6 +40,8 @@ public class BuildContext
 
     private int buildDefinitionId;
 
+    private String buildDefinitionLabel;
+
     private String buildFile;
 
     private String goals;
@@ -53,7 +56,11 @@ public class BuildContext
 
     private String scmPassword;
 
+    private String scmTag;
+
     private int trigger;
+    
+    private String username;
 
     private boolean buildFresh;
 
@@ -62,6 +69,8 @@ public class BuildContext
     private String projectGroupName;
 
     private String scmRootAddress;
+
+    private int scmRootId;
 
     private Map<String, Object> actionContext;
 
@@ -211,6 +220,16 @@ public class BuildContext
         this.scmPassword = scmPassword;
     }
 
+    public String getScmTag()
+    {
+        return scmTag;
+    }
+
+    public void setScmTag( String scmTag )
+    {
+        this.scmTag = scmTag;
+    }
+
     public int getTrigger()
     {
         return trigger;
@@ -349,5 +368,35 @@ public class BuildContext
     public int getMaxExecutionTime()
     {
         return maxExecutionTime;
+    }
+
+    public void setScmRootId( int scmRootId )
+    {
+        this.scmRootId = scmRootId;
+    }
+
+    public int getScmRootId()
+    {
+        return scmRootId;
+    }
+
+    public void setBuildDefinitionLabel( String buildDefinitionLabel )
+    {
+        this.buildDefinitionLabel = buildDefinitionLabel;
+    }
+
+    public String getBuildDefinitionLabel()
+    {
+        return buildDefinitionLabel;
+    }
+    
+    public void setUsername( String username )
+    {
+         this.username = username;
+    }
+    
+    public String getUsername()
+    {
+         return username;
     }
 }

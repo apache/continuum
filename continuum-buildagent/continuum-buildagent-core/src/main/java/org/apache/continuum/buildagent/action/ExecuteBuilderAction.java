@@ -67,6 +67,8 @@ public class ExecuteBuilderAction
         String localRepository = ContinuumBuildAgentUtil.getLocalRepository( context );
 
         int trigger = ContinuumBuildAgentUtil.getTrigger( context );
+        
+        String username = ContinuumBuildAgentUtil.getUsername( context );
 
         ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor( project.getExecutorId() );
         
@@ -81,6 +83,8 @@ public class ExecuteBuilderAction
         buildResult.setState( ContinuumProjectState.BUILDING );
 
         buildResult.setTrigger( trigger );
+        
+        buildResult.setUsername( username );
 
         buildResult.setBuildDefinition( buildDefinition );
 

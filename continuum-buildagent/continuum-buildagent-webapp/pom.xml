@@ -21,7 +21,7 @@
   <parent>
     <artifactId>continuum-buildagent</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-buildagent-webapp</artifactId>
@@ -80,6 +80,51 @@
       <artifactId>atlassian-xmlrpc-binder-server-spring</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-file</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-http-lightweight</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-ssh</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>classworlds</groupId>
+          <artifactId>classworlds</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-ssh-external</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-webdav</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
   
   <build>
@@ -91,7 +136,7 @@
           <scanIntervalSeconds>10</scanIntervalSeconds>
           <contextPath>/</contextPath>
           <stopKey>stopkey</stopKey>
-          <stopPort>9192</stopPort>
+          <stopPort>9292</stopPort>
           <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
@@ -101,11 +146,41 @@
           </connectors>
           <systemProperties>
             <systemProperty>
-              <name>CONTINUUM_BUILDAGENT_HOME</name>
+              <name>appserver.base</name>
               <value>${project.build.directory}/appserver-base</value>
             </systemProperty>
           </systemProperties>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>tomcat-maven-plugin</artifactId>
+        <configuration>
+          <path>/continuum-buildagent</path>
+          <port>9191</port>
+          <contextFile>${basedir}/src/test/tomcat/tomcat-context-continuum.xml</contextFile>
+          <systemProperties>
+            <appserver.base>${project.build.directory}/appserver-base</appserver.base>
+          </systemProperties>          
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <copy todir="${project.build.directory}/appserver-base">
+                  <fileset dir="src/appserver-base" />
+                </copy>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

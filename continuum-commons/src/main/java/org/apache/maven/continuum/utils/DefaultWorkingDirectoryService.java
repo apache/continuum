@@ -21,13 +21,9 @@ package org.apache.maven.continuum.utils;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
-import org.codehaus.plexus.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -41,8 +37,6 @@ public class DefaultWorkingDirectoryService
 {
     @Resource
     private ConfigurationService configurationService;
-    
-    private static final Logger log = LoggerFactory.getLogger( DefaultWorkingDirectoryService.class );
 
     public void setConfigurationService( ConfigurationService configurationService )
     {
@@ -60,69 +54,19 @@ public class DefaultWorkingDirectoryService
 
     public File getWorkingDirectory( Project project )
     {
-        return getWorkingDirectory( project, null, null );
-    }
-    
-    /**
-     * 
-     * @param project
-     * @param projectScmRoot
-     * @param projects projects under the same projectScmRoot
-     * @return
-     */
-    public File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects )
-    {
 //        TODO: Enable, this is what we really want
 //        ContinuumProjectGroup projectGroup = project.getProjectGroup();
 //
 //        return new File( projectGroup.getWorkingDirectory(),
 //                         project.getPath() );
-        
-        if ( project.getWorkingDirectory() == null || "".equals( project.getWorkingDirectory() ) )
-        {   
-            if ( project.isCheckedOutInSingleDirectory() && projectScmRoot != null && !"".equals( projectScmRoot ) )
-            {                
-                Project rootProject = project;
-                if( projects != null )
-                {
-                    // the root project should have the lowest id since it's always added first                    
-                    for( Project projectUnderScmRoot : projects )
-                    {
-                        if( projectUnderScmRoot.getId() < rootProject.getId() )
-                        {
-                            rootProject = projectUnderScmRoot;
-                        }
-                    }
-                }                
-                
-             // determine the path
-                String projectScmUrl = project.getScmUrl();
-                int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
-                                
-                String pathToProject = "";
-                if( indexDiff != -1 )
-                {
-                    pathToProject = projectScmUrl.substring( indexDiff );
-                }
-                
-                if( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
-                {
-                    project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + pathToProject );
-                }
-                else
-                {
-                    project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + "/" + pathToProject );
-                }                
-            }
-            else
-            {
-                project.setWorkingDirectory( Integer.toString( project.getId() ) );
-            }
+
+        if ( project.getWorkingDirectory() == null )
+        {
+            project.setWorkingDirectory( Integer.toString( project.getId() ) );
         }
 
         File workDir;
         File projectWorkingDirectory = new File( project.getWorkingDirectory() );
-        
         if ( projectWorkingDirectory.isAbsolute() )
         {
             // clean the project working directory path if it's a subdirectory of the global working directory
@@ -142,20 +86,8 @@ public class DefaultWorkingDirectoryService
         }
         else
         {
-            File baseWorkingDir = getConfigurationService().getWorkingDirectory();            
-            
-            // windows path
-            if( baseWorkingDir.getPath().indexOf( '\\' ) != -1 )
-            {
-                project.setWorkingDirectory( project.getWorkingDirectory().replace( '/', '\\' ) );
-                workDir = new File( baseWorkingDir.getPath() + "\\" + project.getWorkingDirectory() );
-            }
-            else
-            {
-                workDir = new File( baseWorkingDir, project.getWorkingDirectory() );
-            }            
+            workDir = new File( getConfigurationService().getWorkingDirectory(), project.getWorkingDirectory() );
         }
-        
         return workDir;
     }
 }

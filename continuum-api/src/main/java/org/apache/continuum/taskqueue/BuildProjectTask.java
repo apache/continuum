@@ -21,6 +21,7 @@ package org.apache.continuum.taskqueue;
 
 import java.io.Serializable;
 
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.taskqueue.Task;
 
@@ -39,7 +40,7 @@ public class BuildProjectTask
 
     private final long timestamp;
 
-    private final int trigger;
+    private BuildTrigger buildTrigger;
 
     private long maxExecutionTime;
 
@@ -49,8 +50,10 @@ public class BuildProjectTask
 
     private ScmResult scmResult;
 
-    public BuildProjectTask( int projectId, int buildDefinitionId, int trigger, String projectName,
-                             String buildDefinitionLabel, ScmResult scmResult )
+    int projectGroupId;
+
+    public BuildProjectTask( int projectId, int buildDefinitionId, BuildTrigger buildTrigger, String projectName,
+                             String buildDefinitionLabel, ScmResult scmResult, int projectGroupId )
     {
         this.projectId = projectId;
 
@@ -58,13 +61,15 @@ public class BuildProjectTask
 
         this.timestamp = System.currentTimeMillis();
 
-        this.trigger = trigger;
+        this.buildTrigger = buildTrigger;
 
         this.projectName = projectName;
 
         this.buildDefinitionLabel = buildDefinitionLabel;
 
         this.scmResult = scmResult;
+
+        this.projectGroupId = projectGroupId;
     }
 
     public int getProjectId()
@@ -82,9 +87,14 @@ public class BuildProjectTask
         return timestamp;
     }
 
-    public int getTrigger()
+    public BuildTrigger getBuildTrigger()
     {
-        return trigger;
+    	return buildTrigger;
+    }
+    
+    public void setBuildTrigger( BuildTrigger buildTrigger )
+    {
+        this.buildTrigger = buildTrigger;
     }
 
     public void setMaxExecutionTime( long maxExecutionTime )
@@ -112,6 +122,11 @@ public class BuildProjectTask
         return scmResult;
     }
 
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
+
     public boolean equals( Object obj )
     {
         if ( obj == null )
@@ -129,12 +144,12 @@ public class BuildProjectTask
         BuildProjectTask buildProjectTask = (BuildProjectTask) obj;
         return buildProjectTask.getBuildDefinitionId() == this.getBuildDefinitionId() &&
             buildProjectTask.getProjectId() == this.getProjectId() &&
-            buildProjectTask.getTrigger() == this.getTrigger();
+            buildProjectTask.getBuildTrigger().getTrigger() == this.buildTrigger.getTrigger();
     }
 
     public int hashCode()
     {
-        return this.getBuildDefinitionId() + this.getProjectId() + this.getTrigger();
+    	return this.getBuildDefinitionId() + this.getProjectId() + this.buildTrigger.getTrigger();
     }
 
     public int getHashCode()

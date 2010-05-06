@@ -21,9 +21,11 @@ package org.apache.continuum.buildagent.taskqueue.manager;
 
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -60,8 +62,24 @@ public class DefaultBuildAgentTaskQueueManager
     public void cancelBuild()
         throws TaskQueueManagerException
     {
-        removeProjectsFromBuildQueue();
-        cancelCurrentBuild();
+        Task task = getBuildTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            if ( task instanceof BuildProjectTask )
+            {
+                log.info( "Cancelling current build task of project " + ( (BuildProjectTask) task ).getProjectId() );
+                getBuildTaskQueueExecutor().cancelTask( task );
+            }
+            else
+            {
+                log.warn( "Current task not a BuildProjectTask - not cancelling" );
+            }
+        }
+        else
+        {
+            log.warn( "No task running - not cancelling" );
+        }
     }
 
     public TaskQueue getBuildQueue()
@@ -69,7 +87,7 @@ public class DefaultBuildAgentTaskQueueManager
         return buildAgentBuildQueue;
     }
 
-    public int getCurrentProjectInBuilding()
+    public int getIdOfProjectCurrentlyBuilding()
         throws TaskQueueManagerException
     {
         Task task = getBuildTaskQueueExecutor().getCurrentTask();
@@ -99,8 +117,11 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( BuildProjectTask task : queues )
                 {
-                    log.info( "remove project '" + task.getProjectName() + "' from build queue" );
-                    buildAgentBuildQueue.remove( task );
+                    if ( task != null )
+                    {
+                        log.info( "remove project '" + task.getProjectName() + "' from build queue" );
+                        buildAgentBuildQueue.remove( task );
+                    }
                 }
             }
             else
@@ -114,36 +135,25 @@ public class DefaultBuildAgentTaskQueueManager
         }
     }
 
-    private boolean cancelCurrentBuild()
-        throws TaskQueueManagerException
-    {
-        Task task = getBuildTaskQueueExecutor().getCurrentTask();
-
-        if ( task != null )
-        {
-            if ( task instanceof BuildProjectTask )
-            {
-                log.info( "Cancelling current build task" );
-                return getBuildTaskQueueExecutor().cancelTask( task );
-            }
-            else
-            {
-                log.warn( "Current task not a BuildProjectTask - not cancelling" );
-            }
-        }
-        else
-        {
-            log.warn( "No task running - not cancelling" );
-        }
-        return false;
-    }
-
     public TaskQueueExecutor getBuildTaskQueueExecutor()
         throws TaskQueueManagerException
     {
         try
         {
             return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "build-agent" );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+    }
+
+    public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "prepare-build-agent" );
         }
         catch ( ComponentLookupException e )
         {
@@ -179,7 +189,7 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( BuildProjectTask task : queues )
                 {
-                    if ( task.getProjectId() == projectId )
+                    if ( task != null && task.getProjectId() == projectId )
                     {
                         log.info( "project already in build queue" );
                         return true;
@@ -199,7 +209,7 @@ public class DefaultBuildAgentTaskQueueManager
         return false;
     }
 
-    public boolean isInPrepareBuildQueue( int projectGroupId, int trigger, String scmRootAddress )
+    public boolean isInPrepareBuildQueue( int projectGroupId, BuildTrigger buildTrigger, String scmRootAddress )
         throws TaskQueueManagerException
     {
         try
@@ -210,8 +220,9 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( PrepareBuildProjectsTask task : queues )
                 {
-                    if ( task.getProjectGroupId() == projectGroupId && task.getTrigger() == trigger &&
-                        task.getScmRootAddress().equals( scmRootAddress ) )
+                	if ( task != null && task.getProjectGroupId() == projectGroupId && 
+                             task.getBuildTrigger().getTrigger() == buildTrigger.getTrigger() &&
+                             task.getScmRootAddress().equals( scmRootAddress ) )
                     {
                         log.info( "projects already in build queue" );
                         return true;
@@ -231,9 +242,135 @@ public class DefaultBuildAgentTaskQueueManager
         return false;
     }
 
+    public List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return buildAgentPrepareBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            log.error( "Error occurred while retrieving projects in prepare build queue", e );
+            throw new TaskQueueManagerException( "Error occurred while retrieving projects in prepare build queue", e );
+        }
+    }
+
+    public List<BuildProjectTask> getProjectsInBuildQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return buildAgentBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            log.error( "Error occurred while retrieving projects in build queue", e );
+            throw new TaskQueueManagerException( "Error occurred while retrieving projects in build queue", e );
+        }
+    }
+
+    public PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
+        throws TaskQueueManagerException
+    {
+        Task task = getPrepareBuildTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            return (PrepareBuildProjectsTask) task;
+        }
+        return null;
+    }
+
+    public BuildProjectTask getCurrentProjectInBuilding()
+        throws TaskQueueManagerException
+    {
+        Task task = getBuildTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            return (BuildProjectTask) task;
+        }
+
+        return null;
+    }
+
+    public boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootId() == scmRootId )
+                {
+                    return getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void removeFromPrepareBuildQueue( int[] hashCodes )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( task != null && ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                {
+                    getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+    }
+
+    public boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws TaskQueueManagerException
+    {
+        List<BuildProjectTask> tasks = getProjectsInBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( BuildProjectTask task : tasks )
+            {
+                if ( task != null && task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                {
+                    return getBuildQueue().remove( task );
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void removeFromBuildQueue( int[] hashCodes )
+        throws TaskQueueManagerException
+    {
+        List<BuildProjectTask> tasks = getProjectsInBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( BuildProjectTask task : tasks )
+            {
+                if ( task != null && ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                {
+                    getBuildQueue().remove( task );
+                }
+            }
+        }
+    }
+
     public void contextualize( Context context )
         throws ContextException
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
+
 }

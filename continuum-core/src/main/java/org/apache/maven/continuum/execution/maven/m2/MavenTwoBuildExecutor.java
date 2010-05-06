@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -32,6 +33,7 @@ import java.util.Properties;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionUpdatePolicyConstants;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
@@ -44,6 +46,7 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -177,7 +180,8 @@ public class MavenTwoBuildExecutor
         return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
 
-    public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
+    public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,
+                                           ScmResult scmResult )
         throws ContinuumBuildExecutorException
     {
         File f = getPomFile( getBuildFileForProject( project, buildDefinition ), workingDirectory );
@@ -186,17 +190,16 @@ public class MavenTwoBuildExecutor
         {
             throw new ContinuumBuildExecutorException( "Could not find Maven project descriptor." );
         }
-
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
-
-        builderHelper.mapMetadataToProject( result, f, project );
+        boolean update = isDescriptionUpdated( buildDefinition, scmResult, project );
+        builderHelper.mapMetadataToProject( result, f, project, update );
 
         if ( result.hasErrors() )
         {
             throw new ContinuumBuildExecutorException( "Error while mapping metadata:" + result.getErrorsAsString() );
         }
     }
-
+    
     private static File getPomFile( String projectBuildFile, File workingDirectory )
     {
         File f = null;
@@ -335,7 +338,7 @@ public class MavenTwoBuildExecutor
     }
 
     @Override
-    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
+    public void backupTestFiles( Project project, int buildId )
     {
         File backupDirectory = null;
         try
@@ -350,7 +353,7 @@ public class MavenTwoBuildExecutor
         {
             log.info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
         }
-        backupTestFiles( getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ), backupDirectory );
+        backupTestFiles( getWorkingDirectory( project ), backupDirectory );
     }
 
     private void backupTestFiles( File workingDir, File backupDirectory )
@@ -395,10 +398,10 @@ public class MavenTwoBuildExecutor
         //Check if it's a recursive build
         boolean isRecursive = false;
         if (StringUtils.isNotEmpty( buildDefinition.getArguments() ) )
-            {
+        {
             isRecursive =  buildDefinition.getArguments().indexOf( "-N" ) < 0 &&
                 buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 ;
-            }
+        }
         if ( isRecursive && changes != null && !changes.isEmpty() )
         {
             if ( log.isInfoEnabled() )
@@ -410,14 +413,7 @@ public class MavenTwoBuildExecutor
 
         MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
 
-        //CONTINUUM-1815: additional check for projects recently released
-        if ( !continuumProject.getVersion().equals( project.getVersion() ) )
-        {
-            log.info( "Found changes in project's version ( maybe project was recently released ), building" );
-            return true;
-        }
-        
-        if ( changes.isEmpty() )
+        if ( changes == null || changes.isEmpty() )
         {
             if ( log.isInfoEnabled() )
             {

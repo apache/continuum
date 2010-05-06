@@ -6,51 +6,63 @@
 set -x
 if test $# -ne 2 
 then
-  echo 'usage release-script.sh version stagingRepoPath on p.a.o'
+  echo 'usage release-script.sh version stagingRepoUrl'
   exit
 fi
-export VER=$1
-export STAGE_REPO=$2
+export version=$1
+export repo=$2
 
-cd /www/people.apache.org/builds/continuum/$1
+mkdir /www/people.apache.org/builds/continuum/$version
+cd /www/people.apache.org/builds/continuum/$version
 
-find $STAGE_REPO -name "*.zip*"    -exec cp {} . \;
-find $STAGE_REPO -name "*.tar.gz*" -exec cp {} . \;
-find $STAGE_REPO -name "*.war*"    -exec cp {} . \;
-find . -name "*.asc.*" -exec rm {} \;
+mkdir binaries
+cd binaries
+for i in tar.gz tar.gz.asc tar.gz.md5 tar.gz.sha1 zip zip.asc zip.md5 zip.sha1
+do
+  wget -O apache-continuum-$version-bin.$i $repo/org/apache/continuum/continuum-jetty/$version/continuum-jetty-$version-bin.$i
+  if [ ! -s apache-continuum-$version-bin.$i ]; then
+    echo Unable to find apache-continuum-$version-bin.$i
+    exit 1
+  fi
+done
 
-mv continuum-$VER.zip apache-continuum-$VER-src.zip
-mv continuum-$VER.zip.md5 apache-continuum-$VER-src.zip.md5
-mv continuum-$VER.zip.sha1 apache-continuum-$VER-src.zip.sha1
-mv continuum-$VER.zip.asc apache-continuum-$VER-src.zip.asc
+for i in tar.gz tar.gz.asc tar.gz.md5 tar.gz.sha1 zip zip.asc zip.md5 zip.sha1
+do
+  wget -O apache-continuum-buildagent-$version-bin.$i $repo/org/apache/continuum/continuum-buildagent-jetty/$version/continuum-buildagent-jetty-$version-bin.$i
+  if [ ! -s apache-continuum-buildagent-$version-bin.$i ]; then
+    echo Unable to find apache-continuum-buildagent-$version-bin.$i
+    exit 1
+  fi
+done
 
-mv continuum-jetty-$VER-bin.tar.gz apache-continuum-$VER-bin.tar.gz
-mv continuum-jetty-$VER-bin.tar.gz.md5 apache-continuum-$VER-bin.tar.gz.md5
-mv continuum-jetty-$VER-bin.tar.gz.sha1 apache-continuum-$VER-bin.tar.gz.sha1
-mv continuum-jetty-$VER-bin.tar.gz.asc apache-continuum-$VER-bin.tar.gz.asc
+for i in war war.asc war.md5 war.sha1
+do
+  wget -O apache-continuum-$version.$i $repo/org/apache/continuum/continuum-webapp/$version/continuum-webapp-$version.$i
+  if [ ! -s apache-continuum-$version.$i ]; then
+    echo Unable to find apache-continuum-$version.$i
+    exit 1
+  fi
+done
 
-mv continuum-jetty-$VER-bin.zip apache-continuum-$VER-bin.zip
-mv continuum-jetty-$VER-bin.zip.md5 apache-continuum-$VER-bin.zip.md5
-mv continuum-jetty-$VER-bin.zip.sha1 apache-continuum-$VER-bin.zip.sha1
-mv continuum-jetty-$VER-bin.zip.asc apache-continuum-$VER-bin.zip.asc
+for i in war war.asc war.md5 war.sha1
+do
+  wget -O apache-continuum-buildagent-$version.$i $repo/org/apache/continuum/continuum-buildagent-webapp/$version/continuum-buildagent-webapp-$version.$i
+  if [ ! -s apache-continuum-buildagent-$version.$i ]; then
+    echo Unable to find apache-continuum-buildagent-$version.$i
+    exit 1
+  fi
+done
 
-mv continuum-webapp-$VER.war apache-continuum-$VER.war
-mv continuum-webapp-$VER.war.asc apache-continuum-$VER.war.asc
-mv continuum-webapp-$VER.war.md5 apache-continuum-$VER.war.md5
-mv continuum-webapp-$VER.war.sha1 apache-continuum-$VER.war.sha1
+cd ..
+mkdir source
+cd source
+for i in zip zip.asc zip.md5 zip.sha1
+do
+  wget -O apache-continuum-$version-src.$i $repo/org/apache/continuum/continuum/$version/continuum-$version.$i
+  if [ ! -s apache-continuum-$version-src.$i ]; then
+    echo Unable to find apache-continuum-$version-src.$i
+    exit 1
+  fi
+done
 
-mv continuum-buildagent-jetty-$VER-bin.tar.gz apache-continuum-buildagent-$VER-bin.tar.gz
-mv continuum-buildagent-jetty-$VER-bin.tar.gz.md5 apache-continuum-buildagent-$VER-bin.tar.gz.md5
-mv continuum-buildagent-jetty-$VER-bin.tar.gz.sha1 apache-continuum-buildagent-$VER-bin.tar.gz.sha1
-mv continuum-buildagent-jetty-$VER-bin.tar.gz.asc apache-continuum-buildagent-$VER-bin.tar.gz.asc
-
-mv continuum-buildagent-jetty-$VER-bin.zip apache-continuum-buildagent-$VER-bin.zip
-mv continuum-buildagent-jetty-$VER-bin.zip.md5 apache-continuum-buildagent-$VER-bin.zip.md5
-mv continuum-buildagent-jetty-$VER-bin.zip.sha1 apache-continuum-buildagent-$VER-bin.zip.sha1
-mv continuum-buildagent-jetty-$VER-bin.zip.asc apache-continuum-buildagent-$VER-bin.zip.asc
-
-mv continuum-buildagent-webapp-$VER.war apache-continuum-buildagent-$VER.war
-mv continuum-buildagent-webapp-$VER.war.asc apache-continuum-buildagent-$VER.war.asc
-mv continuum-buildagent-webapp-$VER.war.md5 apache-continuum-buildagent-$VER.war.md5
-mv continuum-buildagent-webapp-$VER.war.sha1 apache-continuum-buildagent-$VER.war.sha1
 echo 'GREAT :-) '

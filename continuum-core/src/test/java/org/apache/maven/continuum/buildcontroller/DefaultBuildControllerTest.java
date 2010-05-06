@@ -21,9 +21,8 @@ package org.apache.maven.continuum.buildcontroller;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
-import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
-import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -38,7 +37,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 public class DefaultBuildControllerTest
     extends AbstractContinuumTest
@@ -130,7 +128,7 @@ public class DefaultBuildControllerTest
         throws Exception
     {
         return controller.initializeBuildContext( projectId2, buildDefinitionId2,
-                                                  ContinuumProjectState.TRIGGER_SCHEDULED, new ScmResult() );
+                          new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ), new ScmResult() );
     }
 
     private BuildContext getContext( int hourOfLastExecution )
@@ -141,13 +139,6 @@ public class DefaultBuildControllerTest
         oldBuildResult.setEndTime( Calendar.getInstance().getTimeInMillis() + ( hourOfLastExecution * 3600000 ) );
         context.setOldBuildResult( oldBuildResult );
         context.setScmResult( new ScmResult() );
-        
-        Map<String, Object> actionContext = context.getActionContext();
-        ProjectScmRoot projectScmRoot = new ProjectScmRoot();
-        projectScmRoot.setId( 1 );
-        projectScmRoot.setScmRootAddress( "scm:local:src/test-projects:flat-multi-module" );
-        actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
-        
         return context;
     }
 
@@ -192,6 +183,16 @@ public class DefaultBuildControllerTest
         controller.checkProjectDependencies( context );
         assertEquals( 1, context.getModifiedDependencies().size() );
         assertTrue( controller.shouldBuild( context ) );
+    }
+
+    public void testWithNullScmResult()
+        throws Exception
+    {
+        BuildContext context = getContext( +1 );
+        context.setScmResult( null );
+        controller.checkProjectDependencies( context );
+        assertEquals( 0, context.getModifiedDependencies().size() );
+        assertFalse( controller.shouldBuild( context ) );
     }
 
     private File getWorkingDirectory()

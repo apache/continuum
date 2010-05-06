@@ -32,7 +32,7 @@
     <h3><s:text name="editSchedule.section.title"/></h3>
 
     <div class="axial">
-      <s:form action="saveSchedule" method="post" validate="true">
+      <s:form action="saveSchedule" method="post" validate="false" name="scheduleForm">
         <c:if test="${!empty actionErrors}">
           <div class="errormessage">
             <s:iterator value="actionErrors">
@@ -74,14 +74,27 @@
             </s:textfield>
     	      
             <c1:ifBuildTypeEnabled buildType="parallel">          
-              <s:optiontransferselect label="%{getText('schedule.buildqueues.label')}" name="availableBuildQueues"
-                  list="availableBuildQueues" size="8" multiple="true" emptyOption="false"
-                  doubleName="selectedBuildQueues" doubleList="selectedBuildQueues" doubleSize="8" 
-                  doubleMultiple="true" doubleEmptyOption="false"
-                  addAllToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
-  				addToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
-  				addAllToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
-  				addToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+              <s:optiontransferselect 
+                label="%{getText('schedule.buildqueues.label')}"
+                name="availableBuildQueuesIds"
+                list="availableBuildQueues"
+                listKey="id"
+                listValue="name"
+                headerKey="-1"
+                headerValue="%{getText('schedule.available.buildqueues')}"
+                multiple="true"
+                size="8"
+                emptyOption="false"
+                doubleName="selectedBuildQueuesIds"
+                doubleList="selectedBuildQueues"
+                doubleListKey="id"
+                doubleListValue="name"
+                doubleHeaderKey="-1"
+                doubleSize="8"
+                doubleMultiple="true"
+                doubleEmptyOption="false"
+                doubleHeaderValue="%{getText('schedule.available.buildqueues.used')}"
+                formName="scheduleForm"
                   />
              </c1:ifBuildTypeEnabled>   
                                        

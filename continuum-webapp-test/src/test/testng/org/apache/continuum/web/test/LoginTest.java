@@ -20,8 +20,6 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /*
@@ -31,7 +29,7 @@ import org.testng.annotations.Test;
  */
 /**
  * Based on LoginTest of Emmanuel Venisse test.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -43,7 +41,7 @@ public class LoginTest
     {
         goToLoginPage();
         getSelenium().type( "loginForm_username", "badUsername" );
-        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_PASSWORD" ) );
         getSelenium().click( "loginForm__login" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "You have entered an incorrect username and/or password" );
@@ -53,7 +51,7 @@ public class LoginTest
     public void testWithBadPassword()
     {
         goToLoginPage();
-        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
         getSelenium().type( "loginForm_password", "badPassword" );
         getSelenium().click( "loginForm__login" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
@@ -74,7 +72,7 @@ public class LoginTest
     public void testWithEmptyPassword()
     {
         goToLoginPage();
-        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
         getSelenium().click( "loginForm__login" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "You have entered an incorrect username and/or password" );
@@ -84,27 +82,12 @@ public class LoginTest
     public void testWithCorrectUsernamePassword()
     {
         goToLoginPage();
-        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
-        getSelenium().type( "loginForm_password", p.getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
         getSelenium().click( "loginForm__login" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "Edit Details" );
         assertTextPresent( "Logout" );
-        assertTextPresent( p.getProperty( "ADMIN_USERNAME" ) );
-    }
-
-    @BeforeTest
-    public void open()
-        throws Exception
-    {
-        super.open();
-    }
-
-    @Override
-    @AfterTest
-    public void close()
-        throws Exception
-    {
-        super.close();
+        assertTextPresent( getProperty( "ADMIN_USERNAME" ) );
     }
 }

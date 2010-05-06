@@ -30,10 +30,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.ComparatorUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
@@ -53,7 +57,6 @@ import org.codehaus.plexus.redback.rbac.UserAssignment;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.users.User;
-import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,6 +158,12 @@ public class ProjectGroupAction
         {
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
+        }
+        catch ( ContinuumException e )
+        {
+            addActionError( getText( "projectGroup.invalid.id", "Invalid Project Group Id: " + projectGroupId,
+                                     Integer.toString( projectGroupId ) ) );
+            return "to_summary_page";
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
@@ -296,7 +305,16 @@ public class ProjectGroupAction
 
         if ( confirmed )
         {
-            getContinuum().removeProjectGroup( projectGroupId );
+            try
+            {
+                getContinuum().removeProjectGroup( projectGroupId );
+            }
+            catch ( ContinuumException e )
+            {
+                logger.error( "Error while removing project group with id " + projectGroupId, e );
+                addActionError( getText( "projectGroup.delete.error", "Unable to remove project group",
+                                         Integer.toString( projectGroupId ) ) );
+            }
         }
         else
         {
@@ -304,7 +322,7 @@ public class ProjectGroupAction
             return CONFIRM;
         }
 
-        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.REMOVE_PROJECT_GROUP );
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.REMOVE_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();
@@ -348,7 +366,7 @@ public class ProjectGroupAction
             }
         }
 
-        for ( ProjectGroup pg : getContinuum().getAllProjectGroupsWithProjects() )
+        for ( ProjectGroup pg : getContinuum().getAllProjectGroups() )
         {
             if ( isAuthorized( projectGroup.getName() ) )
             {
@@ -467,14 +485,11 @@ public class ProjectGroupAction
 
         projectGroup.setDescription( description );
 
+        // [CONTINUUM-2228]. In select field can't select empty values.
         if ( repositoryId > 0 )
         {
             LocalRepository repository = getContinuum().getRepositoryService().getLocalRepository( repositoryId );
             projectGroup.setLocalRepository( repository );
-        }
-        else
-        {
-            projectGroup.setLocalRepository( null );
         }
 
         getContinuum().updateProjectGroup( projectGroup );
@@ -527,7 +542,7 @@ public class ProjectGroupAction
             }
         }
 
-        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.MODIFY_PROJECT_GROUP );
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.MODIFY_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();
@@ -547,17 +562,30 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
+        
+        BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, getPrincipal() );
 
-        if ( this.getBuildDefinitionId() == -1 )
+        try
         {
-            getContinuum().buildProjectGroup( projectGroupId );
+            if ( this.getBuildDefinitionId() == -1 )
+            {
+            	getContinuum().buildProjectGroup( projectGroupId, buildTrigger );
+            }
+            else
+            {
+            	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
+            }
         }
-        else
+        catch ( NoBuildAgentException e )
         {
-            getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
+            addActionError( getText( "projectGroup.build.error.noBuildAgent" ) );
+        }
+        catch ( NoBuildAgentInGroupException e )
+        {
+            addActionError( getText( "projectGroup.build.error.noBuildAgentInGroup" ) );
         }
 
-        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.FORCE_BUILD );
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.FORCE_BUILD );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();
@@ -602,6 +630,9 @@ public class ProjectGroupAction
             {
                 if ( p.getState() != ContinuumProjectState.OK )
                 {
+                    logger.info(
+                        "Attempt to release group '" + projectGroup.getName() + "' failed as project '" + p.getName() +
+                            "' is in state " + p.getState() );
                     allBuildsOk = false;
                 }
 
@@ -613,6 +644,9 @@ public class ProjectGroupAction
                     }
                     else
                     {
+                        logger.info( "Attempt to release group '" + projectGroup.getName() + "' failed as project '" +
+                            p.getName() + "' and project '" + parent.getName() + "' are both parents" );
+
                         // currently, we have no provisions for releasing 2 or more parents
                         // at the same time, this will be implemented in the future
                         addActionError( getText( "projectGroup.release.error.severalParentProjects" ) );
@@ -622,6 +656,9 @@ public class ProjectGroupAction
 
                 if ( !"maven2".equals( p.getExecutorId() ) )
                 {
+                    logger.info(
+                        "Attempt to release group '" + projectGroup.getName() + "' failed as project '" + p.getName() +
+                            "' is not a Maven 2 project (executor '" + p.getExecutorId() + "')" );
                     allMavenTwo = false;
                 }
             }
@@ -677,7 +714,9 @@ public class ProjectGroupAction
             List<String> roleNames = new ArrayList<String>();
             for ( Role r : roles )
             {
-                if ( r.getName().indexOf( projectGroup.getName() ) > -1 )
+                String projectGroupName = StringUtils.substringAfter( r.getName(), "-" ).trim();
+
+                if ( projectGroupName.equals( group.getName() ) )
                 {
                     roleNames.add( r.getName() );
                 }
@@ -976,7 +1015,6 @@ public class ProjectGroupAction
     public String getProjectGroupName()
         throws ContinuumException
     {
-
         return getProjectGroup( projectGroupId ).getName();
     }
 

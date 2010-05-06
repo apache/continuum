@@ -23,9 +23,11 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -40,7 +42,8 @@ public interface ContinuumBuildExecutor
         throws ContinuumBuildExecutorException;
 
     // TODO: rename to be clearer
-    void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
+    void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,
+                                    ScmResult scmResult )
         throws ContinuumBuildExecutorException;
 
     boolean isBuilding( Project project );
@@ -52,7 +55,7 @@ public interface ContinuumBuildExecutor
         throws ContinuumBuildExecutorException;
 
     //TODO: Move as a plugin
-    void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot );
+    void backupTestFiles( Project project, int buildId );
 
     boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
                          BuildDefinition buildDefinition )

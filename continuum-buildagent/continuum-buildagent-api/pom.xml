@@ -22,7 +22,7 @@ under the License.
   <parent>
     <groupId>org.apache.continuum</groupId>
     <artifactId>continuum-buildagent</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>continuum-buildagent-api</artifactId>
@@ -37,7 +37,8 @@ under the License.
           <models>
             <model>src/main/mdo/continuum-buildagent.xml</model>
           </models>
-          <version>1.0.0</version>
+          <useJava5>true</useJava5>
+          <version>1.1.0</version>
         </configuration>
         <executions>
           <execution>

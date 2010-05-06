@@ -35,6 +35,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -149,7 +150,8 @@ public class MavenOneBuildExecutor
 
     }
 
-    public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
+    public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,
+                                           ScmResult scmResult )
         throws ContinuumBuildExecutorException
     {
         File projectXmlFile = null;
@@ -176,7 +178,8 @@ public class MavenOneBuildExecutor
 
         try
         {
-            metadataHelper.mapMetadata( new ContinuumProjectBuildingResult(), projectXmlFile, project );
+            boolean update = isDescriptionUpdated( buildDefinition, scmResult, project );
+            metadataHelper.mapMetadata( new ContinuumProjectBuildingResult(), projectXmlFile, project, update );
         }
         catch ( MavenOneMetadataHelperException e )
         {

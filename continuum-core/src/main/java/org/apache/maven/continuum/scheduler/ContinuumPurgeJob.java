@@ -36,6 +36,8 @@ import org.quartz.JobExecutionContext;
 public class ContinuumPurgeJob
     extends AbstractJob
 {
+    public static final String PURGE_GROUP = "PURGE_GROUP";
+	
     public void execute( JobExecutionContext context )
     {
         if ( isInterrupted() )

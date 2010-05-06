@@ -82,6 +82,7 @@ public class ContinuumPropertiesReleaseDescriptorStore
         releaseDescriptor.setAdditionalArguments( properties.getProperty( "exec.additionalArguments" ) );
         releaseDescriptor.setPomFileName( properties.getProperty( "exec.pomFileName" ) );
         releaseDescriptor.setPreparationGoals( properties.getProperty( "preparationGoals" ) );
+        releaseDescriptor.setExecutable( properties.getProperty( "build.executable" ) );
 
         loadResolvedDependencies( properties, releaseDescriptor );
 
@@ -245,6 +246,12 @@ public class ContinuumPropertiesReleaseDescriptorStore
             ( config.getResolvedSnapshotDependencies().size() > 0 ) )
         {
             processResolvedDependencies( properties, config.getResolvedSnapshotDependencies() );
+        }
+
+        // executables
+        if ( config.getExecutable() != null )
+        {
+            properties.setProperty( "build.executable", config.getExecutable() );
         }
 
         OutputStream outStream = null;

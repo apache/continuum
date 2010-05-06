@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<context version="4.1.0.304">
+    <scope name="Continuum" type="Project">
+        <architecture>
+            <element name="Web Application" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="XMLRPC" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Core API" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Core" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Notifiers" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Data Management" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Store" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Model" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Builder API" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="REST" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Builder" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Configuration" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Build Queue" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Results" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Checkout" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+            <element name="Release" type="Layer">
+                <element name="Assignment" type="TypeFilter"/>
+                <stereotype name="Unrestricted"/>
+            </element>
+        </architecture>
+    </scope>
+    <scope name="External" type="External">
+        <element name="Filter" type="TypeFilter">
+            <element name="**" type="IncludeTypePattern"/>
+        </element>
+    </scope>
+    <scope name="Global" type="Global">
+        <element name="Configuration" type="Configuration">
+            <element name="CycleAnalysisAsymmetrical" type="ConfigurationSwitchDisabled"/>
+            <element name="CycleAnalysisDepthSourceFile" type="ConfigurationSwitchDisabled"/>
+        </element>
+        <element name="Filter" type="TypeFilter">
+            <element name="**" type="IncludeTypePattern"/>
+        </element>
+    </scope>
+</context>

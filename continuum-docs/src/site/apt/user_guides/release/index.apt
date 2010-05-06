@@ -1,41 +1,44 @@
  ------
  Releasing Projects
  ------
+ ------
+ 2010-02-18
+ ------
 
 Releasing Projects
 
-    The release process has two steps, {{{prepare.html}Prepare}} and {{{perform.html}Perform}}.
+    The release process has two steps, {{{./prepare.html}Prepare}} and {{{./perform.html}Perform}}.
 
     [[1]] First, it prepares your project for release by doing the following:
 
         * Checks that your project is in a "releasable" state.
-        
+
         * Updates the POMs for the new development version.
-        
+
         * Runs a test build.
-        
+
         * Generates a tag for the release.
-        
-        * Generates the artifact to be deployed, such as a jar file.
-        
+
+        * Generates the artifact to be deployed, such as a JAR file.
+
         * Generates the site and deploys it.
-        
-        * Commits the new POMs to the new development version. It will do the commit to the SCM
+
+        * Commits the new POMs with the new development version. It will do the commit to the SCM
         connection URL you specify (explained later).
-        
+
         []
-    
+
     [[2]] Then the release management system performs the release by checking out a clean copy
     of the tagged release and deploying the artifacts and site.
-    
+
     []
-    
+
 * Modifying POM for Release
 
-    The source code control system you use must be specified in your POM file in an <<<scm>>> entry
+    The source code control system you use must be specified in your POM file in an <<<\<scm\>>>> entry
     similar to the one shown here:
-    
-+----------------------------------------------------------------------------------+       
+
++----------------------------------------------------------------------------------+
         <scm>
           <connection>
             scm:svn:http://svn.apache.org/repos/asf/maven/components/trunk
@@ -46,19 +49,26 @@ Releasing Projects
           <url>http://svn.apache.org/viewcvs.cgi/maven/components/trunk</url>
         </scm>
 +---------------------------------------------------------------------------------+
-    
-    To determine what to enter for your connection URL (the "<<< \<connection\> >>>" tag) go to the link
+
+    To determine what to enter for your connection URL (the <<<\<connection\>>>> tag) go to the link
     {{http://maven.apache.org/scm/scms-overview.html}} for a list of supported SCMs and click on your
     source code control system to see the appropriate syntax for your particular software.
-    
+
     In general the format for an SCM URL is:
     <<< scm:<scm_provider><delimiter><provider_specific_part> >>>
-    
-    In the example above, the <<<scm_provider>>> is "<<<svn>>>" (Subversion). The <<<delimiter>>> is a colon.
-    And the rest of the line is the "<<<provider_specific_part>>>".
-    
+
+    In the example above, the <<<scm_provider>>> is <<<svn>>> (Subversion). The <<<delimiter>>> is a colon.
+    And the rest of the line is the <<<provider_specific_part>>>.
+
     It is important to prepare the release just before performing the release. The reason these
     processes have been separated into two steps is to allow the user to confirm that everything has been
     set correctly before the actual release. If between the prepare and performing of the release there is
     a change to the SCM tree, an error will occur causing the prepare process to restart.
-    
+
+    []
+
+* Releasing projects in a distributed build
+
+    Release will happen in the Build Agent where the last build of project occurred.
+
+    To view on-going releases from different build agents, click the <<Releases>> button under the <<Distributed Builds>> menu.

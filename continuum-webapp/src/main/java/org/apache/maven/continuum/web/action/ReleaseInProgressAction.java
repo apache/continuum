@@ -62,6 +62,8 @@ public class ReleaseInProgressAction
     private String projectGroupName = "";
 
     private ReleaseListenerSummary listenerSummary;
+    
+    private String username = "";
 
     public String execute()
         throws Exception
@@ -94,13 +96,15 @@ public class ReleaseInProgressAction
                 List<String> args = new ArrayList<String>();
                 args.add( e.getMessage() );
 
-                addActionError( getText( "releaseInProgress.error", args ) );
+                addActionError( getText( "distributedBuild.releaseInProgress.error", args ) );
                 return ERROR;
             }
 
             if ( map != null && !map.isEmpty() )
             {
                 int state = DistributedReleaseUtil.getReleaseState( map );
+                
+                username = DistributedReleaseUtil.getUsername( map );
 
                 if ( state == ContinuumReleaseManagerListener.LISTENING )
                 {
@@ -144,6 +148,8 @@ public class ReleaseInProgressAction
     
             if ( listener != null )
             {
+            	username = listener.getUsername();
+            	
                 if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
                 {
                     status = "inProgress";
@@ -212,6 +218,8 @@ public class ReleaseInProgressAction
                     listenerSummary.setCompletedPhases( DistributedReleaseUtil.getCompletedReleasePhases( map ) );
                     listenerSummary.setInProgress( DistributedReleaseUtil.getReleaseInProgress( map ) );
                     listenerSummary.setError( DistributedReleaseUtil.getReleaseError( map ) );
+                    
+                    username = DistributedReleaseUtil.getUsername( map );
     
                     if ( state == ContinuumReleaseManagerListener.FINISHED )
                     {
@@ -250,6 +258,8 @@ public class ReleaseInProgressAction
                 listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
                 listenerSummary.setInProgress( listener.getInProgress() );
                 listenerSummary.setError( listener.getError() );
+                
+                username = listener.getUsername();
 
                 if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
                 {
@@ -353,6 +363,7 @@ public class ReleaseInProgressAction
         releaseResult.setProjectGroup( projectGroup );
         releaseResult.setProject( project );
         releaseResult.setReleaseGoal( releaseGoal );
+        releaseResult.setUsername( username );
 
         String releaseName = "releases-" + result.getStartTime();
 
@@ -374,6 +385,17 @@ public class ReleaseInProgressAction
         }
 
         return releaseResult;
+    }
+    
+    public String getProjectName()
+        throws ContinuumException
+    {
+        return getProjectGroupName();
+    }
+    
+    public String getUsername()
+    {
+        return this.username;
     }
 
 }

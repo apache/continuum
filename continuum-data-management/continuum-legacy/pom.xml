@@ -22,7 +22,7 @@
   <parent>
     <artifactId>continuum-data-management</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-legacy</artifactId>
@@ -36,36 +36,19 @@
           <execution>
             <id>modello-continuum-metadata</id>
             <goals>
-              <goal>jpox-metadata-class</goal>
               <goal>java</goal>
               <goal>stax-reader</goal>
               <goal>stax-writer</goal>
             </goals>
           </execution>
-          <execution>
-            <id>jpox-jdo-mapping</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jpox-jdo-mapping-replication</id>
-            <goals>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
-              <replicationParameters>true</replicationParameters>
-            </configuration>
-          </execution>
         </executions>
         <configuration>
           <version>1.0.9</version>
           <packageWithVersion>true</packageWithVersion>
-          <model>src/main/mdo/continuum.xml</model>
+          <models>
+            <model>src/main/mdo/continuum.xml</model>
+          </models>
+          <useJava5>true</useJava5>
         </configuration>
       </plugin>
       <plugin>
@@ -83,12 +66,14 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>hack-sources</id>
-            <phase>process-sources</phase>
+            <id>hack-resources</id>
+            <phase>process-classes</phase>
             <configuration>
               <tasks>
-                <!-- Workaround for MODELLO-89 -->
-                <replace file="target/generated-sources/modello/org/apache/maven/continuum/model/project/v1_0_9/ContinuumModelloMetadata.java" token="project;" value="project.v1_0_9;" />
+                <move file="target/classes/META-INF/package.jdorepl" tofile="target/classes/META-INF/package.jdorepl109" />
+                <move file="target/classes/META-INF/package.jdo" tofile="target/classes/META-INF/package.jdo109" />
+                <delete file="target/classes/package.jdo" />
+                <delete file="target/classes/package.jdorepl" />
               </tasks>
             </configuration>
             <goals>
@@ -96,22 +81,13 @@
             </goals>
           </execution>
           <execution>
-            <id>hack-resources</id>
+            <id>copy-resources</id>
+            <!-- Need to perform the workaround for MODELLO-91 first -->
             <phase>process-classes</phase>
             <configuration>
               <tasks>
-                <!-- Workaround for MODELLO-91 -->
-                <replace dir="target/classes/META-INF" token="name=&quot;notifiertype&quot;" value="name=&quot;type&quot;" />
-                <replace dir="target/classes/META-INF" token="name=&quot;resultstate&quot;" value="name=&quot;state&quot;" />
-                <replace dir="target/classes/META-INF" token="name=&quot;resulttrigger&quot;" value="name=&quot;trigger&quot;" />
-                <replace dir="target/classes/META-INF" token="name=&quot;projectstate&quot;" value="name=&quot;state&quot;" />
-                <replace dir="target/classes/META-INF" token="name=&quot;changecomment&quot;" value="name=&quot;comment&quot;" />
-                <replace dir="target/classes/META-INF" token="name=&quot;changedate&quot;" value="name=&quot;date&quot;" />
-                <replace dir="target/classes/META-INF" token="name=&quot;scheduledelay&quot;" value="name=&quot;delay&quot;" />
-                <move file="target/classes/META-INF/package.jdorepl" tofile="target/classes/META-INF/package.jdorepl109" />
-                <move file="target/classes/META-INF/package.jdo" tofile="target/classes/META-INF/package.jdo109" />
-                <delete file="target/classes/package.jdo" />
-                <delete file="target/classes/package.jdorepl" />
+                <copy file="target/classes/META-INF/package.jdorepl109" todir="target/classes" />
+                <copy file="target/classes/META-INF/package.jdo109" todir="target/classes" />
               </tasks>
             </configuration>
             <goals>

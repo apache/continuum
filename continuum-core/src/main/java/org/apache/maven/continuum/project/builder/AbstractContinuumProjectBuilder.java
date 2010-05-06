@@ -109,6 +109,8 @@ public abstract class AbstractContinuumProjectBuilder
             URI uri = metadata.toURI();
             HttpGet httpGet = new HttpGet( uri );
 
+            httpClient.getCredentialsProvider().clear();
+
             // basic auth
             if ( username != null && password != null )
             {
@@ -127,7 +129,7 @@ public abstract class AbstractContinuumProjectBuilder
                 case 200:
                     break;
                 case 401:
-                    log.error( "Error adding project: Unauthorized " + metadata );
+                    log.error( "Error adding project: Unauthorized " + url );
                     result.addError( ContinuumProjectBuildingResult.ERROR_UNAUTHORIZED );
                     return null;
                 default:
@@ -230,38 +232,45 @@ public abstract class AbstractContinuumProjectBuilder
     protected File createMetadataFile( ContinuumProjectBuildingResult result, URL metadata, String username,
                                        String password )
     {
+        String url = metadata.toExternalForm();
+
+        if ( metadata.getProtocol().startsWith( "http" ) )
+        {
+            url = hidePasswordInUrl( url );
+        }
+
         try
         {
             return createMetadataFile( metadata, username, password, result );
         }
         catch ( FileNotFoundException e )
         {
-            log.info( "URL not found: " + metadata, e );
+            log.info( "URL not found: " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
         }
         catch ( MalformedURLException e )
         {
-            log.info( "Malformed URL: " + metadata, e );
+            log.info( "Malformed URL: " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
         catch ( URISyntaxException e )
         {
-            log.info( "Malformed URL: " + metadata, e );
+            log.info( "Malformed URL: " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
         catch ( UnknownHostException e )
         {
-            log.info( "Unknown host: " + metadata, e );
+            log.info( "Unknown host: " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN_HOST );
         }
         catch ( IOException e )
         {
-            log.warn( "Could not download the URL: " + metadata, e );
+            log.warn( "Could not download the URL: " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
         catch ( HttpException e )
         {
-            log.warn( "Could not download the URL: " + metadata, e );
+            log.warn( "Could not download the URL: " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
         return null;

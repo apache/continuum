@@ -19,21 +19,24 @@ package org.apache.continuum.web.test.parent;
  * under the License.
  */
 
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.io.IOUtils;
+import org.testng.Assert;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
-
-import org.testng.Assert;
-
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import java.util.Properties;
 
 /**
  * Based on AbstractSeleniumTestCase of Emmanuel Venisse test.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -41,41 +44,85 @@ public abstract class AbstractSeleniumTest
 {
     public static String baseUrl;
 
+    public static String browser;
+
     public static String maxWaitTimeInMs;
 
-    private static ThreadLocal<Selenium> selenium;
+    private static ThreadLocal<Selenium> selenium = new ThreadLocal<Selenium>();
 
-    public static Properties p;
+    private static Properties p;
+
+    private final static String PROPERTIES_SEPARATOR = "=";
+    
+    private static String maxProjectWaitTimeInMs;
 
     /**
-     * Initialize selenium an others properties. This method is called from BeforeSuite method of sub-class.
+     * Initialize properties.
      */
     public void open()
         throws Exception
     {
+        InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
         p = new Properties();
-        p.load( this.getClass().getClassLoader().getResourceAsStream( "testng.properties" ) );
+        p.load( input );
 
-        baseUrl = p.getProperty( "BASE_URL" );
-        maxWaitTimeInMs = p.getProperty( "MAX_WAIT_TIME_IN_MS" );
-
-        String seleniumHost = p.getProperty( "SELENIUM_HOST" );
-        int seleniumPort = Integer.parseInt( ( p.getProperty( "SELENIUM_PORT" ) ) );
-        String seleniumBrowser = p.getProperty( "SELENIUM_BROWSER" );
-        final Selenium s = new DefaultSelenium( seleniumHost, seleniumPort, seleniumBrowser, baseUrl );
-        selenium = new ThreadLocal<Selenium>()
-        {
-            protected Selenium initialValue()
-            {
-                return s;
-            }
-        };
-        getSelenium().start();
+        maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
+        maxProjectWaitTimeInMs = getProperty( "MAX_PROJECT_WAIT_TIME_IN_MS" );
     }
 
-    protected static Selenium getSelenium()
+    /**
+     * Initialize selenium
+     */
+    public void open( String baseUrl, String browser, String seleniumHost, int seleniumPort )
+        throws Exception
     {
-        return selenium.get();
+        this.baseUrl = baseUrl;
+
+        this.browser = browser;
+
+        if ( getSelenium() == null )
+        {
+            DefaultSelenium s = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
+            s.start();
+            s.setTimeout( maxWaitTimeInMs );
+            selenium.set( s );
+        }
+    }
+
+    public static Selenium getSelenium()
+    {
+        return selenium == null ? null : selenium.get();
+    }
+
+    protected String getProperty( String key )
+    {
+        return p.getProperty( key );
+    }
+
+    // TODO: look into removing this, as the issue should be fixed by upgrading the resources plugin to v2.4+
+    protected String getEscapeProperty( String key )
+    {
+        InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
+        String value = null;
+        List<String> lines;
+        try
+        {
+            lines = IOUtils.readLines( input );
+        }
+        catch ( IOException e )
+        {
+            lines = new ArrayList<String>();
+        }
+        for ( String l : lines )
+        {
+            if ( l != null && l.startsWith( key ) )
+            {
+                int indexSeparator = l.indexOf( PROPERTIES_SEPARATOR );
+                value = l.substring( indexSeparator + 1 ).trim();
+                break;
+            }
+        }
+        return value;
     }
 
     /**
@@ -84,7 +131,11 @@ public abstract class AbstractSeleniumTest
     public void close()
         throws Exception
     {
-        getSelenium().stop();
+        if ( getSelenium() != null )
+        {
+            getSelenium().stop();
+            selenium.set( null );
+        }
     }
 
     // *******************************************************
@@ -139,7 +190,7 @@ public abstract class AbstractSeleniumTest
 
     public void assertLinkNotPresent( String text )
     {
-        Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
+            Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
     }
 
     public void assertImgWithAlt( String alt )
@@ -154,6 +205,11 @@ public abstract class AbstractSeleniumTest
         locator += "img[@alt='" + alt + "']";
 
         assertElementPresent( locator );
+    }
+
+    public void assertImgWithAltNotPresent( String alt )
+    {
+        assertElementNotPresent( "//img[@alt='" + alt + "']" );
     }
 
     public void assertCellValueFromTable( String expected, String tableElement, int row, int column )
@@ -202,6 +258,7 @@ public abstract class AbstractSeleniumTest
         String[] optionsPresent = getSelenium().getSelectOptions( selectField );
         List<String> expected = Arrays.asList( options );
         List<String> present = Arrays.asList( optionsPresent );
+
         Assert.assertTrue( present.containsAll( expected ), "Options expected are not included in present options" );
     }
 
@@ -209,6 +266,7 @@ public abstract class AbstractSeleniumTest
     {
         assertElementPresent( fieldName );
         String optionsPresent = getSelenium().getSelectedLabel( value );
+
         Assert.assertEquals( optionsPresent, value );
     }
 
@@ -304,7 +362,6 @@ public abstract class AbstractSeleniumTest
 
     public void clickLinkWithLocator( String locator, boolean wait )
     {
-        assertElementPresent( locator );
         getSelenium().click( locator );
         if ( wait )
         {
@@ -352,5 +409,59 @@ public abstract class AbstractSeleniumTest
     public void assertIsNotChecked( String locator )
     {
         Assert.assertFalse( getSelenium().isChecked( locator ) );
+    }
+
+    public void clickAndWait( String locator )
+    {
+        getSelenium().click( locator );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+    }
+
+    public void waitForElementPresent( String locator )
+        throws Exception
+    {
+        waitForElementPresent( locator, true );
+    }
+    
+    /*
+     * This will wait for the condition to be met.
+     *   * shouldBePresent - if the locator is expected or not (true or false respectively)
+     */
+    public void waitForElementPresent( String locator, boolean shouldBePresent )
+        throws Exception
+    {
+        if ( browser.equals( "*iexplore" ) )
+        {
+            int currentIt = 0;
+            int maxIt = Integer.valueOf( getProperty( "WAIT_TRIES" ) );
+            String pageLoadTimeInMs = getProperty( "PAGE_LOAD_TIME_IN_MS" );
+            
+            while ( isElementPresent( locator ) != shouldBePresent && currentIt < maxIt )
+            {
+                getSelenium().waitForPageToLoad( pageLoadTimeInMs );
+                currentIt++;
+            }
+        }
+        else
+        {
+            String condition = "selenium.isElementPresent(\"" + locator + "\") == " + shouldBePresent;
+            waitForCondition( condition );
+        }
+    }
+
+    public void selectForOption( String locator, String text )
+    {
+        getSelenium().addSelection( locator, "label=" + text );
+    }
+
+    public void unselectForOption( String locator, String text )
+    {
+        getSelenium().removeSelection( locator, "label=" + text );
+    }
+    
+    public void waitForCondition( String condition )
+        throws Exception
+    {
+        getSelenium().waitForCondition( condition, maxProjectWaitTimeInMs );
     }
 }

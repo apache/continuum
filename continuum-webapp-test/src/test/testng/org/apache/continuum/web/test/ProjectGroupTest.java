@@ -20,11 +20,12 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
+import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
 import org.testng.annotations.Test;
 
 /**
  * Based on ProjectGroupTest of Emmanuel Venisse test.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -36,9 +37,9 @@ public class ProjectGroupTest
     public void testAddProjectGroup()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
 
         addProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, true );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
@@ -47,9 +48,9 @@ public class ProjectGroupTest
     public void testAddProjectGroup2()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
 
         addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, true );
         showProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
@@ -59,14 +60,16 @@ public class ProjectGroupTest
     public void testMoveProject()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String DEFAULT_PROJ_GRP_NAME = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String DEFAULT_PROJ_GRP_ID = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String DEFAULT_PROJ_GRP_DESCRIPTION = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
 
+        // TODO: need to wait for checkout to complete. Can we add a special IT type of project that doesn't require checkout?
+        //       currently we get away with it due to the usualy duration between the dependant test and this test
         // move the project of the test project group to the default project group
         moveProjectToProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME,
                                    DEFAULT_PROJ_GRP_NAME );
@@ -102,9 +105,9 @@ public class ProjectGroupTest
         final String sNewProjectName = "New Project Group Name";
         final String sNewProjectDescription = "New Project Group Description";
 
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
 
         editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, sNewProjectName,
                           sNewProjectDescription );
@@ -120,9 +123,9 @@ public class ProjectGroupTest
         throws Exception
     {
 
-        String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, " ",
                           TEST2_PROJ_GRP_DESCRIPTION );
         assertTextPresent( "Project Group Name cannot contain spaces only" );
@@ -132,11 +135,90 @@ public class ProjectGroupTest
     public void testProjectGroupAllBuildSuccess()
         throws Exception
     {
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = p.getProperty( "M2_PROJ_GRP_ID" );
-        String M2_PROJ_GRP_DESCRIPTION = p.getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
         clickButtonWithValue( "Release" );
         assertReleaseSuccess();
+    }
+
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
+    public void testDeleteProjectGroup()
+        throws Exception
+    {
+        String TEST_GRP_NAME = getProperty( "TEST_DELETE_GRP_NAME" );
+        String TEST_GRP_ID = getProperty( "TEST_DELETE_GRP_ID" );
+        String TEST_GRP_DESCRIPTION = getProperty( "TEST_DELETE_GRP_DESCRIPTION" );
+        
+        // delete group - delete icon
+        addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
+        assertLinkPresent( TEST_GRP_NAME );
+        clickLinkWithXPath( "//tbody/tr['0']/td['4']/a/img[@alt='Delete Group']" );
+        assertTextPresent( "Project Group Removal" );
+        clickButtonWithValue( "Delete" );
+        assertProjectGroupsSummaryPage();
+        assertLinkNotPresent( TEST_GRP_NAME );
+        
+        // delete group - "Delete Group" button
+        addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
+        assertLinkPresent( TEST_GRP_NAME );
+        removeProjectGroup( TEST_GRP_NAME );
+        assertLinkNotPresent( TEST_GRP_NAME );
+        assertProjectGroupsSummaryPage();
+        assertLinkNotPresent( TEST_GRP_NAME );
+    }
+
+    public void testProjectGroupMembers()
+        throws Exception
+    {
+        String GRP_NAME_ONE = getProperty( "TEST_PROJ_GRP_NAME_ONE" );
+        String GRP_ID_ONE = getProperty( "TEST_PROJ_GRP_ID_ONE" );
+        String GRP_DESCRIPTION_ONE = getProperty( "TEST_PROJ_GRP_DESCRIPTION_ONE" );
+        String GRP_NAME_TWO = getProperty( "TEST_PROJ_GRP_NAME_TWO" );
+        String GRP_ID_TWO = getProperty( "TEST_PROJ_GRP_ID_TWO" );
+        String GRP_DESCRIPTION_TWO = getProperty( "TEST_PROJ_GRP_DESCRIPTION_TWO" );
+        String GRP_NAME_THREE = getProperty( "TEST_PROJ_GRP_NAME_THREE" );
+        String GRP_ID_THREE = getProperty( "TEST_PROJ_GRP_ID_THREE" );
+        String GRP_DESCRIPTION_THREE = getProperty( "TEST_PROJ_GRP_DESCRIPTION_THREE" );
+
+        addProjectGroup( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE, true );
+        assertLinkPresent( GRP_NAME_ONE );
+
+        addProjectGroup( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO, true );
+        assertLinkPresent( GRP_NAME_TWO );
+
+        addProjectGroup( GRP_NAME_THREE, GRP_ID_THREE, GRP_DESCRIPTION_THREE, true );
+        assertLinkPresent( GRP_NAME_THREE );
+
+        createAndAddUserAsDeveloperToGroup( "username1", "user1", "user1@something.com", "password123", GRP_NAME_ONE );
+        createAndAddUserAsDeveloperToGroup( "username2", "user2", "user2@something.com", "password123", GRP_NAME_ONE );
+        createAndAddUserAsDeveloperToGroup( "username3", "user3", "user3@something.com", "password123", GRP_NAME_TWO );
+        createAndAddUserAsDeveloperToGroup( "username4", "user4", "user4@something.com", "password123", GRP_NAME_THREE );
+
+        showMembers( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE );
+        assertUserPresent( "username1", "user1", "user1@something.com" );
+        assertUserPresent( "username2", "user2", "user2@something.com" );
+        assertUserNotPresent( "username3", "user3", "user3@something.com" );
+        assertUserNotPresent( "username4", "user4", "user4@something.com" );
+
+        showMembers( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO );
+        assertUserNotPresent( "username1", "user1", "user1@something.com" );
+        assertUserNotPresent( "username2", "user2", "user2@something.com" );
+        assertUserPresent( "username3", "user3", "user3@something.com" );
+        assertUserNotPresent( "username4", "user4", "user4@something.com" );
+
+        showMembers( GRP_NAME_THREE, GRP_ID_THREE, GRP_DESCRIPTION_THREE );
+        assertUserNotPresent( "username1", "user1", "user1@something.com" );
+        assertUserNotPresent( "username2", "user2", "user2@something.com" );
+        assertUserNotPresent( "username3", "user3", "user3@something.com" );
+        assertUserPresent( "username4", "user4", "user4@something.com" );
+
+        removeProjectGroup( GRP_NAME_ONE );
+        assertLinkNotPresent( GRP_NAME_ONE );
+        removeProjectGroup( GRP_NAME_TWO );
+        assertLinkNotPresent( GRP_NAME_TWO );
+        removeProjectGroup( GRP_NAME_THREE );
+        assertLinkNotPresent( GRP_NAME_THREE );
     }
 }

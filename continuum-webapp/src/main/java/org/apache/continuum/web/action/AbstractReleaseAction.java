@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
+import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
@@ -33,7 +36,7 @@ import org.codehaus.plexus.util.StringUtils;
 public class AbstractReleaseAction
     extends ContinuumActionSupport
 {
-    protected Map<String, String> getEnvironments( Profile profile )
+    protected Map<String, String> getEnvironments( Profile profile, String defaultBuildagent )
     {
         if ( profile == null )
         {
@@ -41,6 +44,35 @@ public class AbstractReleaseAction
         }
 
         Map<String, String> envVars = new HashMap<String, String>();
+        
+        if ( defaultBuildagent != null && defaultBuildagent.length() > 0 )
+        {
+            // get buildagent to be used from the buildagent group for distributed builds setup
+            BuildAgentGroupConfiguration group = getContinuum().getConfiguration().getBuildAgentGroup( profile.getBuildAgentGroup() );
+            
+            if ( group != null )
+            {
+                List<BuildAgentConfiguration> agents = group.getBuildAgents();
+                if ( agents != null )
+                {
+                    if ( isDefaultBuildAgentEnabledInGroup( defaultBuildagent, agents ) )
+                    {
+                        envVars.put( DistributedReleaseUtil.KEY_BUILD_AGENT_URL, defaultBuildagent );
+                    }
+                    else
+                    {
+                        for ( BuildAgentConfiguration agent : agents )
+                        {
+                            if ( agent.isEnabled() == true )
+                            {
+                                envVars.put( DistributedReleaseUtil.KEY_BUILD_AGENT_URL, agent.getUrl() );
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         String javaHome = getJavaHomeValue( profile );
         if ( !StringUtils.isEmpty( javaHome ) )
@@ -60,6 +92,25 @@ public class AbstractReleaseAction
             envVars.put( installation.getVarName(), installation.getVarValue() );
         }
         return envVars;
+    }
+    
+    private boolean isDefaultBuildAgentEnabledInGroup( String defaultBuildagent, List<BuildAgentConfiguration> agents )
+    {
+        boolean isInGroup = false;
+        
+        for ( BuildAgentConfiguration agent : agents )
+        {
+            if ( agent.isEnabled() == true )
+            {
+                if ( defaultBuildagent.equals( agent.getUrl() ) )
+                {
+                    isInGroup = true;
+                    break;
+                }
+            }
+        }
+        
+        return isInGroup;
     }
 
     private String getJavaHomeValue( Profile profile )

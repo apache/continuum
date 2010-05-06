@@ -216,23 +216,24 @@ public class DefaultProfileServiceTest
     public void testupdateProfileDuplicateName()
         throws Exception
     {
-        Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        int profileId = jdk1mvn205.getId();
+        Profile profile = getProfileService().getProfile( profileId );
         assertEquals( jdk1mvn205Name, profile.getName() );
         profile.setName( jdk2mvn206Name );
 
         try
         {
             getProfileService().updateProfile( profile );
-            //commented
-            //fail( "no AlreadyExistsProfileException with duplicate name" );
+            
+            fail( "no AlreadyExistsProfileException with duplicate name" );
         }
         catch ( AlreadyExistsProfileException e )
         {
             // we must be here
         }
-        Profile getted = getProfileService().getProfile( jdk1mvn205.getId() );
+        Profile getted = getProfileService().getProfile( profileId );
         assertNotNull( getted );
-        assertEquals( jdk2mvn206Name, getted.getName() );
+        assertEquals( jdk1mvn205Name, getted.getName() );
     }
 
     public void testsetJdkInProfile()

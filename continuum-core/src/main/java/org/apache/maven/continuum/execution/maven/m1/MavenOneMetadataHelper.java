@@ -45,6 +45,6 @@ public interface MavenOneMetadataHelper
      * @throws MavenOneMetadataHelperException
      *
      */
-    void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project )
+    void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project, boolean updateDefinition)
         throws MavenOneMetadataHelperException;
 }

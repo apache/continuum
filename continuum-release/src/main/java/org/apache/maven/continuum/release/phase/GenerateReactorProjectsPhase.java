@@ -27,8 +27,6 @@ import java.util.List;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.profiles.DefaultProfileManager;
 import org.apache.maven.profiles.ProfileManager;
@@ -119,7 +117,7 @@ public class GenerateReactorProjectsPhase
         {
             ArtifactRepository repository = getLocalRepository( descriptor.getAdditionalArguments() );
 
-            project = projectBuilder.buildWithDependencies( getProjectDescriptorFile( descriptor ), repository,
+            project = projectBuilder.build( getProjectDescriptorFile( descriptor ), repository,
                                                             getProfileManager( getSettings() ) );
 
             reactorProjects.add( project );
@@ -127,14 +125,6 @@ public class GenerateReactorProjectsPhase
             addModules( reactorProjects, project, repository );
         }
         catch ( ProjectBuildingException e )
-        {
-            throw new ContinuumReleaseException( "Failed to build project.", e );
-        }
-        catch ( ArtifactNotFoundException e )
-        {
-            throw new ContinuumReleaseException( "Failed to build project.", e );
-        }
-        catch ( ArtifactResolutionException e )
         {
             throw new ContinuumReleaseException( "Failed to build project.", e );
         }
@@ -167,21 +157,13 @@ public class GenerateReactorProjectsPhase
             try
             {
                 MavenProject reactorProject =
-                    projectBuilder.buildWithDependencies( pomFile, repository, getProfileManager( getSettings() ) );
+                    projectBuilder.build( pomFile, repository, getProfileManager( getSettings() ) );
 
                 reactorProjects.add( reactorProject );
 
                 addModules( reactorProjects, reactorProject, repository );
             }
             catch ( ProjectBuildingException e )
-            {
-                throw new ContinuumReleaseException( "Failed to build project.", e );
-            }
-            catch ( ArtifactNotFoundException e )
-            {
-                throw new ContinuumReleaseException( "Failed to build project.", e );
-            }
-            catch ( ArtifactResolutionException e )
             {
                 throw new ContinuumReleaseException( "Failed to build project.", e );
             }
@@ -205,48 +187,44 @@ public class GenerateReactorProjectsPhase
         throws ContinuumReleaseException
     {
         String localRepository = null;
+        boolean found = false;
 
         if ( arguments != null )
         {
             String[] args = arguments.split( " " );
-
-            boolean shouldContinue = false;
- 
+    
             for ( String arg : args )
             {
                 if ( arg.contains( "-Dmaven.repo.local=" ) )
                 {
                     localRepository = arg.substring( arg.indexOf( "=" ) + 1 );
 
-                    if ( !localRepository.endsWith( "\"" ) )
+                    if ( localRepository.endsWith( "\"" ) )
                     {
-                        shouldContinue = true;
-                        continue;
-                    }
-                    else
-                    {
+                        localRepository = localRepository.substring( 0, localRepository.indexOf( "\"" ) );
                         break;
                     }
+
+                    found = true;
+                    continue;
                 }
-                else if ( shouldContinue )
+
+                if ( found )
                 {
                     localRepository += " " + arg;
 
-                    if ( arg.endsWith( "\"" ) )
+                    if ( localRepository.endsWith( "\"" ) )
                     {
+                        localRepository = localRepository.substring( 0, localRepository.indexOf( "\"" ) );
                         break;
                     }
                 }
             }
         }
-
+    
         if ( localRepository == null )
         {
             localRepository = getSettings().getLocalRepository();
-        }
-        else if ( localRepository.endsWith( "\"" ) )
-        {
-            localRepository = localRepository.substring( 0, localRepository.indexOf( "\"" ) );
         }
 
         return new DefaultArtifactRepository( "local-repository", "file://" + localRepository,

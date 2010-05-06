@@ -23,7 +23,7 @@ Managing Schedules
     
     [[2]] Fill in the needed information in the <<Edit Schedules>> page shown below.
 
-[../images/add_schedule.png] Adding a build schedule
+[../images/editSchedule.png] Adding a build schedule
     
         * <<Name>> The unique identifier of the schedule. This is a required field.
         
@@ -38,6 +38,10 @@ Managing Schedules
             in the defined number of seconds prior. This is useful when using CVS, since commits are
             not atomic and a developer might be committing midway through an update. It is not typically
             needed if using Subversion.
+        
+        *<<Add Build Queue>> Move build queues from the left hand list box to the right hand list box by
+            clicking the appropriate buttons in between the two list boxes. All build queues on the right
+            hand list box will be attached to the schedule.
         
         * <<Enabled>> When selected, scheduled build will be executed.
         []

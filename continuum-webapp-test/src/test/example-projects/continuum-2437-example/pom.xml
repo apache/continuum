@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.continuum.examples</groupId>
+  <artifactId>continuum-2437-example</artifactId>
+  <packaging>jar</packaging>
+  <version>1.1-SNAPSHOT</version>
+  <name>Continuum 2437 Example Project</name>
+  <url>http://continuum.apache.org</url>
+
+  <scm>
+    <connection>scm:svn:${svn.base.url}/trunk/continuum-2437-example</connection>
+    <developerConnection>scm:svn:${svn.base.url}/trunk/continuum-2437-example</developerConnection>
+    <tag>${svn.base.url}/tags/continuum-2437-example-1.0</tag>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

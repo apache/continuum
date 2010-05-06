@@ -55,14 +55,12 @@ public class DefaultProfileService
     public void updateProfile( Profile profile )
         throws ProfileException, AlreadyExistsProfileException
     {
-
         // already exists check should be done in the same transaction
         // but we assume we don't have a huge load and a lot of concurrent access ;-)
-        /*if ( alreadyExistsProfileName( profile ) )
+        if ( alreadyExistsProfileName( profile ) )
         {
             throw new AlreadyExistsProfileException( "profile with name " + profile.getName() + " already exists" );
         }
-        */
 
         try
         {
@@ -314,7 +312,8 @@ public class DefaultProfileService
     public boolean alreadyExistsProfileName( Profile profile )
         throws ProfileException
     {
-        return getProfileWithName( profile.getName() ) != null;
+        Profile storedProfile = getProfileWithName( profile.getName() );
+        return ( storedProfile != null && storedProfile.getId() != profile.getId() );
     }
 
 }

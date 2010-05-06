@@ -32,9 +32,9 @@ public class BuildEnvironmentTest
 {
     public void testAddBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         goToAddBuildEnvironment();
-        addBuildEnvironment( BUIL_ENV_NAME, new String[] {}, true );
+        addBuildEnvironment( BUILD_ENV_NAME, new String[] {}, true );
     }
 
     public void testAddInvalidBuildEnvironment()
@@ -47,8 +47,8 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditInvalidBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
-        goToEditBuildEnvironment( BUIL_ENV_NAME );
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
+        goToEditBuildEnvironment( BUILD_ENV_NAME );
         editBuildEnvironment( "", new String[] {}, false );
         assertTextPresent( "You must define a name" );
     }
@@ -56,29 +56,79 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testAddDuplicatedBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         goToAddBuildEnvironment();
-        addBuildEnvironment( BUIL_ENV_NAME, new String[] {}, false );
+        addBuildEnvironment( BUILD_ENV_NAME, new String[] {}, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         String newName = "new_name";
-        goToEditBuildEnvironment( BUIL_ENV_NAME );
+        goToEditBuildEnvironment( BUILD_ENV_NAME );
         editBuildEnvironment( newName, new String[] {}, true );
         // TODO: ADD INSTALLATIONS TO ENVIROTMENT
         goToEditBuildEnvironment( newName );
-        editBuildEnvironment( BUIL_ENV_NAME, new String[] {}, true );
+        editBuildEnvironment( BUILD_ENV_NAME, new String[] {}, true );
     }
 
     @Test( dependsOnMethods = { "testEditInvalidBuildEnvironment", "testEditBuildEnvironment",
         "testAddDuplicatedBuildEnvironment", "testEditInvalidBuildEnvironment" } )
     public void testDeleteBuildEnvironment()
     {
-        String BUIL_ENV_NAME = p.getProperty( "BUIL_ENV_NAME" );
-        removeBuildEnvironment( BUIL_ENV_NAME );
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
+        removeBuildEnvironment( BUILD_ENV_NAME );
+    }
+
+    @Test( dependsOnMethods = { "testDeleteBuildEnvironment", "testAddBuildAgentGroupWithEmptyBuildAgent" } )
+    public void testAddBuildEnvironmentWithBuildAgentGroup()
+    {
+        try
+        {
+            enableDistributedBuilds();
+
+            String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
+            String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
+            goToAddBuildEnvironment();
+            addBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[] {}, BUILD_AGENT_GROUPNAME, true );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+    
+    @Test( dependsOnMethods = { "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    public void testEditDuplicatedBuildEnvironmentParallelBuilds()
+    {
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
+        String newName = "NEW_BUILD_ENV";
+        goToAddBuildEnvironment();
+        addBuildEnvironment( newName, new String[] {}, true );
+        goToEditBuildEnvironment( newName );
+        editBuildEnvironment( BUILD_ENV_NAME, new String[] {}, false );
+        assertTextPresent( "A Build Environment with the same name already exists" );
+    }
+    
+    @Test( dependsOnMethods = { "testEditDuplicatedBuildEnvironmentParallelBuilds" } )
+    public void testEditDuplicatedBuildEnvironmentDistributedBuilds()
+    {
+    try
+        {
+            enableDistributedBuilds();
+
+            String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
+            String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
+            String newName = "NEW_BUILD_ENV";
+            goToEditBuildEnvironment( newName );
+            editBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[] {}, BUILD_AGENT_GROUPNAME, false );
+            assertTextPresent( "A Build Environment with the same name already exists" );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
     }
 }

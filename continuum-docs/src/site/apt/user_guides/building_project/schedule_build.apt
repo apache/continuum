@@ -2,14 +2,24 @@
  Scheduling Project Build
  ------
  ------
- Feb 23 2009
+ 2010-02-18
  ------
 
 Scheduling Project Build
 
-    Schedules determine the project's time interval to build. In this section,
-    how to configure a project to build on a schedule is discussed.
-    
+    Schedules determine the project's time interval to build.
+
+    When scheduled builds are triggered, there is no dependency ordering between project groups
+    and the following happens:
+
+    * Projects are updated from the SCM.
+      These are queued under the <<Prepare Build Queues>> section in <<Queues>> page.
+
+    * Builds of the projects are executed.
+      These are queued under the <<Build Queues>> in <<Queues>> page.
+
+    []
+
     To configure a scheduled build:
 
     [[1]] Create a schedule. You can refer to {{{../../administrator_guides/schedules.html} Managing Schedules}} section.
@@ -21,4 +31,8 @@ Scheduling Project Build
 
     []
     
-    To view the results of the build, refer to {{{build_results.html}Build Results Management}}.
+    *Note* In a distributed build setup, the project builds are not executed if no build agent is
+    configured or if a build agent group with no build agent, is configured in the build environment 
+    that is attached to the project's build definition.
+
+    To view the results of the build, refer to {{{./build_results.html}Build Results Management}}.

@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.utils.ContinuumUtils;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildCancelledException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
@@ -49,6 +50,8 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 public class ExecuteBuilderContinuumAction
     extends AbstractContinuumAction
 {
+    private static final String KEY_CANCELLED = "cancelled";
+
     /**
      * @plexus.requirement
      */
@@ -85,7 +88,7 @@ public class ExecuteBuilderContinuumAction
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
-        int trigger = getTrigger( context );
+        BuildTrigger buildTrigger = getBuildTrigger( context );
 
         ScmResult scmResult = getScmResult( context );
 
@@ -103,7 +106,9 @@ public class ExecuteBuilderContinuumAction
 
         buildResult.setState( ContinuumProjectState.BUILDING );
 
-        buildResult.setTrigger( trigger );
+        buildResult.setTrigger( buildTrigger.getTrigger() );
+        
+        buildResult.setUsername( buildTrigger.getUsername() );
 
         buildResult.setScmResult( scmResult );
 
@@ -113,9 +118,9 @@ public class ExecuteBuilderContinuumAction
 
         buildResultDao.addBuildResult( project, buildResult );
 
-        context.put( KEY_BUILD_ID, Integer.toString( buildResult.getId() ) );
+        AbstractContinuumAction.setBuildId( context, Integer.toString( buildResult.getId() ) );
 
-        context.put( KEY_CANCELLED, false );
+        setCancelled( context, false );
 
         buildResult = buildResultDao.getBuildResult( buildResult.getId() );
 
@@ -137,7 +142,7 @@ public class ExecuteBuilderContinuumAction
 
             buildResult.setState( ContinuumProjectState.CANCELLED );
 
-            context.put( KEY_CANCELLED, true );
+            setCancelled( context, true );
         }
         catch ( Throwable e )
         {
@@ -196,18 +201,25 @@ public class ExecuteBuilderContinuumAction
                 notifier.goalsCompleted( project, buildDefinition, buildResult );
             }
 
-            context.put( KEY_PROJECT, project );
+            AbstractContinuumAction.setProject( context, project );
 
             projectDao.updateProject( project );
 
-            String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
-            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-            
             // ----------------------------------------------------------------------
             // Backup test result files
             // ----------------------------------------------------------------------
             //TODO: Move as a plugin
-            buildExecutor.backupTestFiles( project, buildResult.getId(), projectScmRootUrl, projectsWithCommonScmRoot );
+            buildExecutor.backupTestFiles( project, buildResult.getId() );
         }
+    }
+
+    public static boolean isCancelled( Map<String, Object> context )
+    {
+        return getBoolean( context, KEY_CANCELLED );
+    }
+
+    private static void setCancelled( Map<String, Object> context, boolean cancelled )
+    {
+        context.put( KEY_CANCELLED, cancelled );
     }
 }

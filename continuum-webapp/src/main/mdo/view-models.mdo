@@ -262,7 +262,7 @@
           <required>true</required>
           <description>number of successful builds in the project group</description>
           <type>int</type>
-          <defaultValue>-1</defaultValue>
+          <defaultValue>0</defaultValue>
         </field>
         <field>
           <name>numFailures</name>
@@ -270,7 +270,7 @@
           <required>true</required>
           <description>number of failed builds in the project group</description>
           <type>int</type>
-          <defaultValue>-1</defaultValue>
+          <defaultValue>0</defaultValue>
         </field>
         <field>
           <name>numErrors</name>
@@ -278,7 +278,7 @@
           <required>true</required>
           <description>number of errored builds in the project group</description>
           <type>int</type>
-          <defaultValue>-1</defaultValue>
+          <defaultValue>0</defaultValue>
         </field>
         <field>
           <name>repositoryId</name>
@@ -495,13 +495,13 @@
       </fields>
     </class>    
     <class>
-      <name>DistributedBuildSummary</name>
+      <name>PrepareBuildSummary</name>
       <version>1.0.0+</version>
       <fields>
         <field>
-          <name>url</name>
+          <name>buildAgentUrl</name>
           <version>1.0.0</version>
-          <required>true</required>
+          <required>false</required>
           <description>URL of the build agent</description>
           <type>String</type>
         </field>
@@ -527,11 +527,17 @@
           <type>String</type>
         </field>
         <field>
-          <name>cancelEnabled</name>
+          <name>scmRootId</name>
           <version>1.0.0</version>
           <required>true</required>
-          <description>Determines if the cancel button is enabled</description>
-          <type>boolean</type>
+          <description>ID of the scm root</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>hashCode</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <type>int</type>
         </field>
       </fields>
     </class>
@@ -595,6 +601,54 @@
         </field>
         <field>
           <name>projectId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>int</type>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>DistributedBuildSummary</name>
+      <version>1.0.0+</version>
+      <fields>
+        <field>
+          <name>projectId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectGroupName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildDefinitionId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>int</type>
+        </field>
+        <field>
+          <name>buildDefinitionLabel</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildAgentUrl</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>hashCode</name>
           <version>1.0.0</version>
           <required>true</required>
           <type>int</type>

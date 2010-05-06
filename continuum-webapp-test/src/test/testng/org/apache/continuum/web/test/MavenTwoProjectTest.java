@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 /**
  * Based on AddMavenTwoProjectTest of Emmanuel Venisse test.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -33,36 +33,95 @@ public class MavenTwoProjectTest
     extends AbstractContinuumTest
 {
 
+    public void testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
+
+        removeDefaultBuildDefinitionFromTemplate( "maven2" );
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+
+        // Delete project group
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+
+        // Re-add default build definition of template
+        addDefaultBuildDefinitionFromTemplate( "maven2" );
+    }
+
+    @Test( dependsOnMethods = { "testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate" } )
     public void testAddMavenTwoProject()
         throws Exception
     {
-        String M2_POM_URL = p.getProperty( "M2_POM_URL" );
-        String M2_POM_USERNAME = p.getProperty( "M2_POM_USERNAME" );
-        String M2_POM_PASSWORD = p.getProperty( "M2_POM_PASSWORD" );
+        String M2_POM_URL = getProperty( "M2_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
 
-        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = p.getProperty( "M2_PROJ_GRP_ID" );
-        String M2_PROJ_GRP_DESCRIPTION = p.getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
+        
         // Enter values into Add Maven Two Project fields, and submit
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
         // Wait Struct Listener
         assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+    }
+
+    /**
+     * Test flat multi module project with names that start with the same letter
+     */
+    public void testAddMavenTwoProjectModuleNameWithSameLetter()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_SAME_LETTER_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+
+        String M2_PROJ_GRP_NAME = getProperty( "M2_SAME_LETTER_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_SAME_LETTER_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_SAME_LETTER_PROJ_GRP_DESCRIPTION" );
+
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_SAME_LETTER_PROJ_GRP_SCM_ROOT_URL" );
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
     }
 
     @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
 
-        String M2_POM_URL = p.getProperty( "M2_POM_URL" );
-        String M2_POM_USERNAME = p.getProperty( "M2_POM_USERNAME" );
-        String M2_POM_PASSWORD = p.getProperty( "M2_POM_PASSWORD" );
+        String M2_POM_URL = getProperty( "M2_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+        
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, TEST_PROJ_GRP_NAME, true );
 
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
+
+        assertTextPresent( TEST_PROJ_GRP_SCM_ROOT_URL );
     }
 
     /**
@@ -81,7 +140,7 @@ public class MavenTwoProjectTest
     public void testMissingScmElementPom()
         throws Exception
     {
-        String pomUrl = p.getProperty( "NOT_SCM_POM_URL" );
+        String pomUrl = getProperty( "NOT_SCM_POM_URL" );
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "Missing ''scm'' element in the POM, project Maven Two Project" );
     }
@@ -103,7 +162,7 @@ public class MavenTwoProjectTest
     public void testMissingConnectionElement()
         throws Exception
     {
-        String pomUrl = p.getProperty( "MISS_CONECT_POM_URL" );
+        String pomUrl = getProperty( "MISS_CONECT_POM_URL" );
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "Missing 'connection' sub-element in the 'scm' element in the POM." );
     }
@@ -125,7 +184,7 @@ public class MavenTwoProjectTest
     public void testMissingParentPom()
         throws Exception
     {
-        String pomUrl = p.getProperty( "MISS_PARENT_POM_URL" );
+        String pomUrl = getProperty( "MISS_PARENT_POM_URL" );
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "Missing artifact trying to build the POM. Check that its parent POM is available or add it first in Continuum." );
     }
@@ -136,7 +195,7 @@ public class MavenTwoProjectTest
     public void testMissingModules()
         throws Exception
     {
-        String pomUrl = p.getProperty( "MISS_SUBPRO_POM_URL" );
+        String pomUrl = getProperty( "MISS_SUBPRO_POM_URL" );
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "Unknown error trying to build POM." );
     }
@@ -147,7 +206,7 @@ public class MavenTwoProjectTest
     public void testInaccessiblePomUrl()
         throws Exception
     {
-        String pomUrl = "http://www.google.com";
+        String pomUrl = "http://localhost:9595/";
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
@@ -161,5 +220,213 @@ public class MavenTwoProjectTest
         goToAddMavenTwoProjectPage();
         clickButtonWithValue( "Cancel" );
         assertAboutPage();
+    }
+
+    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
+    public void testDeleteMavenTwoProject()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_DELETE_PROJ_GRP_SCM_ROOT_URL" );
+        goToProjectGroupsSummaryPage();
+        
+        // delete project - delete icon
+        addMaven2Project( M2_PROJ_GRP_NAME );
+        clickLinkWithText( M2_PROJ_GRP_NAME );
+
+        assertPage( "Continuum - Project Group" );
+        assertTextPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+
+        // TODO: this doesn't always seem to work, perhaps because of changes in the way icons are displayed
+        // wait for project to finish checkout
+        waitForProjectCheckout();
+
+        clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
+        assertTextPresent( "Delete Continuum Project" );
+        clickButtonWithValue( "Delete" );
+        assertPage( "Continuum - Project Group" );
+        assertTextNotPresent( "Unable to delete project" );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        assertTextNotPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+
+        // remove group for next test
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+
+        // delete project - "Delete Project(s)" button
+        addMaven2Project( M2_PROJ_GRP_NAME );
+        clickLinkWithText( M2_PROJ_GRP_NAME );
+
+        assertPage( "Continuum - Project Group" );
+        //wait for project to finish checkout
+        waitForProjectCheckout();
+
+        checkField( "//tbody/tr['0']/td['0']/input[@name='selectedProjects']" );
+        clickButtonWithValue( "Delete Project(s)" );
+        assertTextPresent( "Delete Continuum Projects" );
+        clickButtonWithValue( "Delete" );
+        assertPage( "Continuum - Project Group" );
+        assertTextNotPresent( "Unable to delete project" );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        assertTextNotPresent( M2_PROJ_GRP_SCM_ROOT_URL );
+
+        // remove project group
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+    }
+
+    public void testBuildProjectGroupNoBuildAgentConfigured()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
+    
+        try
+        {
+            enableDistributedBuilds();
+            addMaven2Project( M2_PROJ_GRP_NAME );
+            clickLinkWithText( M2_PROJ_GRP_NAME );
+    
+            assertPage( "Continuum - Project Group" );
+    
+            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickButtonWithValue( "Build all projects" );
+
+            assertTextPresent( "Unable to build projects because no build agent is configured" );
+
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    @Test( dependsOnMethods = { "testDeleteMavenTwoProject", "testAddBuildAgent" } )
+    public void testProjectGroupAllBuildSuccessWithDistributedBuilds()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
+
+        try
+        {
+            enableDistributedBuilds();
+
+            addMaven2Project( M2_PROJ_GRP_NAME );
+            clickLinkWithText( M2_PROJ_GRP_NAME );
+    
+            assertPage( "Continuum - Project Group" );
+    
+            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickButtonWithValue( "Build all projects" );
+
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();   
+        }
+    }
+
+    @Test( dependsOnMethods = { "testAddBuildAgentGroupWithEmptyBuildAgent", "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    public void testProjectGroupNoBuildAgentConfiguredInBuildAgentGroup()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
+        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
+
+        try
+        {
+            enableDistributedBuilds();
+            addMaven2Project( M2_PROJ_GRP_NAME );
+            clickLinkWithText( M2_PROJ_GRP_NAME );
+
+            assertPage( "Continuum - Project Group" );
+
+            goToGroupBuildDefinitionPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+            clickImgWithAlt( "Edit" );
+            assertAddEditBuildDefinitionPage();
+            selectValue( "profileId", BUILD_ENV_NAME );
+            submit();
+            assertGroupBuildDefinitionPage( M2_PROJ_GRP_NAME );
+
+            clickLinkWithText( "Project Group Summary" );
+            clickButtonWithValue( "Build all projects" );
+
+            assertTextPresent( "Unable to build projects because no build agent is configured in the build agent group" );
+
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    public void testBuildMaven2ProjectWithTag()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_PROJ_WITH_TAG_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+    
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = "";
+    
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+    
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+    
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+    }
+    
+    @Test( dependsOnMethods = { "testAddBuildAgent" } )
+    public void testBuildMaven2ProjectWithTagDistributedBuild()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_PROJ_WITH_TAG_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+    
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = "";
+    
+        try
+        {
+            enableDistributedBuilds();
+        
+            addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+            assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+        
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+        
+            removeProjectGroup( M2_PROJ_GRP_NAME );
+            assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    private void addMaven2Project( String groupName )
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_DELETE_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_DELETE_PROJ_GRP_DESCRIPTION" );
+        
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( groupName );
     }
 }

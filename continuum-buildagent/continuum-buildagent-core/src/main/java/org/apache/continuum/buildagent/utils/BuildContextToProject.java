@@ -43,6 +43,8 @@ public class BuildContextToProject
 
         project.setScmPassword( buildContext.getScmPassword() );
 
+        project.setScmTag( buildContext.getScmTag() );
+
         project.setExecutorId( buildContext.getExecutorId() );
 
         project.setState( buildContext.getProjectState() );

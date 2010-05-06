@@ -43,6 +43,8 @@ public class MailProjectNotifierEditAction
 
     private boolean committers;
 
+    private boolean developers;
+
     protected void initConfiguration( Map<String, String> configuration )
     {
         if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD ) ) )
@@ -53,6 +55,11 @@ public class MailProjectNotifierEditAction
         if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
         {
             committers = Boolean.parseBoolean( configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) );
+        }
+
+        if (StringUtils.isNotEmpty(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD)))
+        {
+            developers = Boolean.parseBoolean(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD));
         }
     }
 
@@ -66,6 +73,8 @@ public class MailProjectNotifierEditAction
         }
 
         configuration.put( AbstractContinuumNotifier.COMMITTER_FIELD, String.valueOf( committers ) );
+
+        configuration.put(AbstractContinuumNotifier.DEVELOPER_FIELD, String.valueOf(developers));
 
         notifier.setConfiguration( configuration );
     }
@@ -88,5 +97,15 @@ public class MailProjectNotifierEditAction
     public void setCommitters( boolean committers )
     {
         this.committers = committers;
+    }
+
+    public boolean isDevelopers()
+    {
+        return developers;
+    }
+
+    public void setDevelopers(boolean developers)
+    {
+        this.developers = developers;
     }
 }

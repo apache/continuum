@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 /**
  * Based on AddShellProjectTestCase of Emmanuel Venisse.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -35,19 +35,19 @@ public class ShellProjectTest
     public void testAddShellProject()
         throws Exception
     {
-        String SHELL_NAME = p.getProperty( "SHELL_NAME" );
-        String SHELL_DESCRIPTION = p.getProperty( "SHELL_DESCRIPTION" );
-        String SHELL_VERSION = p.getProperty( "SHELL_VERSION" );
-        String SHELL_TAG = p.getProperty( "SHELL_TAG" );
-        String SHELL_SCM_URL = p.getProperty( "SHELL_SCM_URL" );
-        String SHELL_SCM_USERNAME = p.getProperty( "SHELL_SCM_USERNAME" );
-        String SHELL_SCM_PASSWORD = p.getProperty( "SHELL_SCM_PASSWORD" );
-        String DEFAULT_PROJ_GRP_NAME = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String DEFAULT_PROJ_GRP_ID = p.getProperty( "DEFAULT_PROJ_GRP_ID" );
-        String DEFAULT_PROJ_GRP_DESCRIPTION = p.getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
+        String SHELL_NAME = getProperty( "SHELL_NAME" );
+        String SHELL_DESCRIPTION = getProperty( "SHELL_DESCRIPTION" );
+        String SHELL_VERSION = getProperty( "SHELL_VERSION" );
+        String SHELL_TAG = getProperty( "SHELL_TAG" );
+        String SHELL_SCM_URL = getProperty( "SHELL_SCM_URL" );
+        String SHELL_SCM_USERNAME = getProperty( "SHELL_SCM_USERNAME" );
+        String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD" );
+        String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
+        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddShellProjectPage();
         addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, true );
+                    SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, true, "shell" );
         assertProjectGroupSummaryPage( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
     }
 
@@ -62,19 +62,19 @@ public class ShellProjectTest
     }
 
     @Test( dependsOnMethods = { "testAddShellProject" } )
-    public void testAddDupliedShellProject()
+    public void testAddDuplicateShellProject()
         throws Exception
     {
-        String SHELL_NAME = p.getProperty( "SHELL_NAME" );
-        String SHELL_DESCRIPTION = p.getProperty( "SHELL_DESCRIPTION" );
-        String SHELL_VERSION = p.getProperty( "SHELL_VERSION" );
-        String SHELL_TAG = p.getProperty( "SHELL_TAG" );
-        String SHELL_SCM_URL = p.getProperty( "SHELL_SCM_URL" );
-        String SHELL_SCM_USERNAME = p.getProperty( "SHELL_SCM_USERNAME" );
-        String SHELL_SCM_PASSWORD = p.getProperty( "SHELL_SCM_PASSWORD" );
+        String SHELL_NAME = getProperty( "SHELL_NAME" );
+        String SHELL_DESCRIPTION = getProperty( "SHELL_DESCRIPTION" );
+        String SHELL_VERSION = getProperty( "SHELL_VERSION" );
+        String SHELL_TAG = getProperty( "SHELL_TAG" );
+        String SHELL_SCM_URL = getProperty( "SHELL_SCM_URL" );
+        String SHELL_SCM_USERNAME = getProperty( "SHELL_SCM_USERNAME" );
+        String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD" );
         goToAddShellProjectPage();
         addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, null, null, false );
+                    SHELL_SCM_PASSWORD, SHELL_TAG, false, null, null, false, "shell" );
         assertTextPresent( "Project name already exist" );
     }
 }

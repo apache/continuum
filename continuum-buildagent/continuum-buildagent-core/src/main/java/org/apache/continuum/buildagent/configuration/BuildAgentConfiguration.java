@@ -1,7 +1,5 @@
 package org.apache.continuum.buildagent.configuration;
 
-import java.io.File;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +19,8 @@ import java.io.File;
  * under the License.
  */
 
+import java.io.File;
+
 public interface BuildAgentConfiguration
 {
     String ROLE = BuildAgentConfiguration.class.getName();
@@ -33,13 +33,13 @@ public interface BuildAgentConfiguration
 
     void save()
         throws BuildAgentConfigurationException;
-    
+
     void save( File file )
         throws BuildAgentConfigurationException;
-    
-    void reload( )
-        throws BuildAgentConfigurationException;    
-    
+
+    void reload()
+        throws BuildAgentConfigurationException;
+
     void reload( File file )
         throws BuildAgentConfigurationException;
 }

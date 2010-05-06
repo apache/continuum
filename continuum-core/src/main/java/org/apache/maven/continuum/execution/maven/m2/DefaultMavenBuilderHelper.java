@@ -118,7 +118,7 @@ public class DefaultMavenBuilderHelper
     // MavenBuilderHelper Implementation
     // ----------------------------------------------------------------------
 
-    public void mapMetadataToProject( ContinuumProjectBuildingResult result, File metadata, Project continuumProject )
+    public void mapMetadataToProject( ContinuumProjectBuildingResult result, File metadata, Project continuumProject, boolean update )
     {
         MavenProject mavenProject = getMavenProject( result, metadata );
 
@@ -129,11 +129,11 @@ public class DefaultMavenBuilderHelper
             return;
         }
 
-        mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, false );
+        mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, update);
     }
 
     public void mapMavenProjectToContinuumProject( ContinuumProjectBuildingResult result, MavenProject mavenProject,
-                                                   Project continuumProject, boolean groupPom )
+                                                   Project continuumProject, boolean update)
     {
         if ( mavenProject == null )
         {
@@ -141,18 +141,26 @@ public class DefaultMavenBuilderHelper
             return;
         }
 
-        // ----------------------------------------------------------------------
-        // Name
-        // ----------------------------------------------------------------------
+         if (update){
+            // ----------------------------------------------------------------------
+            // Name
+            // ----------------------------------------------------------------------
+            
+            continuumProject.setName( getProjectName( mavenProject ) );
+               
+            // ----------------------------------------------------------------------
+            // Version
+            // ----------------------------------------------------------------------
+    
+            continuumProject.setVersion( getVersion( mavenProject ) );
+            
+            // ----------------------------------------------------------------------
+            // Description
+            // ----------------------------------------------------------------------
 
-        continuumProject.setName( getProjectName( mavenProject ) );
-
-        // ----------------------------------------------------------------------
-        // Description
-        // ----------------------------------------------------------------------
-
-        continuumProject.setDescription( mavenProject.getDescription() );
-
+            continuumProject.setDescription( mavenProject.getDescription() );
+         }
+         
         // ----------------------------------------------------------------------
         // SCM Url
         // ----------------------------------------------------------------------
@@ -169,12 +177,6 @@ public class DefaultMavenBuilderHelper
                 continuumProject.setScmTag( mavenProject.getScm().getTag() );
             }
         }
-
-        // ----------------------------------------------------------------------
-        // Version
-        // ----------------------------------------------------------------------
-
-        continuumProject.setVersion( getVersion( mavenProject ) );
 
         // ----------------------------------------------------------------------
         // GroupId
@@ -387,7 +389,7 @@ public class DefaultMavenBuilderHelper
 
             ProfileManager profileManager = new DefaultProfileManager( container, settings );
 
-            project = projectBuilder.build( file, getLocalRepository(), profileManager, false );
+            project = projectBuilder.build( file, getLocalRepository(), profileManager, true);
 
             if ( log.isDebugEnabled() )
             {

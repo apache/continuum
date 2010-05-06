@@ -30,6 +30,7 @@ import org.apache.maven.continuum.configuration.DefaultConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -143,7 +144,8 @@ public class ContinuumBuildExecutorTest
             return null;
         }
 
-        public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
+        public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,
+                                               ScmResult scmResult )
             throws ContinuumBuildExecutorException
         {
             // TODO Auto-generated method stub

@@ -35,6 +35,7 @@ import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
+import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
@@ -103,7 +104,7 @@ public class BuildProjectTaskExecutor
 
         int projectId = buildProjectTask.getProjectId();
 
-        log.info( "Initializing build" );
+        log.info( "Initializing build (projectId=" + projectId + ")" );
         BuildContext context = buildContextManager.getBuildContext( projectId );
         initializeBuildContext( context );
 
@@ -164,10 +165,25 @@ public class BuildProjectTaskExecutor
                            BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS,
                            getEnvironments( buildContext.getBuildDefinitionId(),
                                             getInstallationType( buildContext ) ) );
-        actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, buildContext.getLocalRepository() );
+        
+        // CONTINUUM-2391        
+        if( buildContext.getLocalRepository() != null )
+        {
+            List<LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();        
+            for( LocalRepository local : localRepos )
+            {
+                if( local.getName().equalsIgnoreCase( buildContext.getLocalRepository() ) )
+                {
+                    actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, local.getLocation() );
+                    break;
+                }
+            }
+        }        
+        
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, buildContext.getScmResult() );
         buildContext.setActionContext( actionContext );
 
@@ -205,6 +221,7 @@ public class BuildProjectTaskExecutor
         result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
         result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
+        result.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, buildResult.getState() );
         result.put( ContinuumBuildAgentUtil.KEY_START_TIME, Long.toString( buildResult.getStartTime() ) );
         result.put( ContinuumBuildAgentUtil.KEY_END_TIME, Long.toString( buildResult.getEndTime() ) );
@@ -239,6 +256,7 @@ public class BuildProjectTaskExecutor
         try
         {
             buildAgentManager.returnBuildResult( result );
+            buildContextManager.removeBuildContext( buildContext.getProjectId() );
         }
         catch ( ContinuumException e )
         {
@@ -299,6 +317,8 @@ public class BuildProjectTaskExecutor
             build.setState( ContinuumProjectState.ERROR );
 
             build.setTrigger( context.getTrigger() );
+            
+            build.setUsername( context.getUsername() );
 
             build.setStartTime( context.getBuildStartTime() );
 
@@ -400,6 +420,7 @@ public class BuildProjectTaskExecutor
         map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, context.getProjectId() );
         map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, context.getBuildDefinitionId() );
         map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, context.getTrigger() );
+        map.put( ContinuumBuildAgentUtil.KEY_USERNAME, context.getUsername() );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
         map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );
         if ( context.getLatestUpdateDate() != null )
@@ -530,5 +551,30 @@ public class BuildProjectTaskExecutor
         }
 
         return mavenProject;
+    }
+    
+    public void setBuildContextManager( BuildContextManager buildContextManager )
+    {
+        this.buildContextManager = buildContextManager;
+    }
+
+    public void setActionManager( ActionManager actionManager )
+    {
+        this.actionManager = actionManager;
+    }
+
+    public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
+    {
+        this.buildAgentConfigurationService = buildAgentConfigurationService;
+    }
+
+    public void setBuildAgentManager( BuildAgentManager buildAgentManager )
+    {
+        this.buildAgentManager = buildAgentManager;
+    }
+
+    public void setBuildAgentBuildExecutorManager( BuildAgentBuildExecutorManager buildAgentBuildExecutorManager )
+    {
+        this.buildAgentBuildExecutorManager = buildAgentBuildExecutorManager;
     }
 }

@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.continuum</groupId>
     <artifactId>continuum</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
   <artifactId>continuum-docs</artifactId>
   <name>Continuum :: Documentation</name>
@@ -31,7 +31,7 @@
   <distributionManagement>
     <site>
       <id>apache</id>
-      <url>scpexe://people.apache.org/www/continuum.apache.org/docs/${project.version}</url>
+      <url>scp://people.apache.org/www/continuum.apache.org/docs/${project.version}</url>
     </site>
   </distributionManagement>
   <build>
@@ -43,6 +43,21 @@
           <templateDirectory>${basedir}/src/site</templateDirectory>
           <template>continuum-site.vm</template>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-pdf-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>site-pdf</id>
+            <phase>site</phase>
+            <goals>
+              <goal>pdf</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -73,28 +88,4 @@
       </plugin>
     </plugins>
   </reporting>
-  <profiles>
-    <profile>
-      <id>pdf</id>
-      <build>
-          <plugins>
-            <plugin>
-              <artifactId>maven-pdf-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>site-pdf</id>
-                  <phase>site</phase>
-                  <goals>
-                    <goal>pdf</goal>
-                  </goals>
-                  <configuration>
-                    <outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </build>
-    </profile>
-  </profiles>
 </project>

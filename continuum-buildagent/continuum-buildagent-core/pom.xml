@@ -21,7 +21,7 @@ under the License.
   <parent>
     <groupId>org.apache.continuum</groupId>
     <artifactId>continuum-buildagent</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>continuum-buildagent-core</artifactId>
@@ -125,7 +125,39 @@ under the License.
     <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>jsr250-api</artifactId>
-    </dependency>      
+    </dependency>  
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>  
+    <dependency>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock-junit3</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jmock</groupId>
+      <artifactId>jmock</artifactId>
+      <scope>test</scope>
+    </dependency>  
+     <!-- dependency of jmock3 -->
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- dependency of jmock3 -->
+    <dependency>
+      <groupId>org.objenesis</groupId>
+      <artifactId>objenesis</artifactId>  
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -135,15 +167,24 @@ under the License.
         <executions>
           <execution>
             <id>generate</id>
+            <phase>generate-resources</phase>
             <goals>
               <goal>descriptor</goal>
             </goals>
           </execution>
           <execution>
             <id>merge</id>
+            <phase>process-resources</phase>
             <goals>
               <goal>merge-descriptors</goal>
             </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/main/resources/META-INF/plexus/components-fragment.xml</descriptor>
+                <descriptor>${project.build.outputDirectory}/META-INF/plexus/components.xml</descriptor>
+              </descriptors>
+              <output>${project.build.outputDirectory}/META-INF/plexus/components.xml</output>
+            </configuration>
           </execution>
         </executions>
       </plugin>

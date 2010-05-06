@@ -33,7 +33,7 @@ public interface ContinuumBuildAgentService
     Map<String, Object> getBuildResult( int projectId )
         throws ContinuumBuildAgentException;
 
-    int getProjectCurrentlyBuilding()
+    Map<String, Object> getProjectCurrentlyBuilding()
         throws ContinuumBuildAgentException;
 
     void cancelBuild()
@@ -52,7 +52,7 @@ public interface ContinuumBuildAgentService
         throws ContinuumBuildAgentException;
 
     String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                           Map<String, String> environments )
+                           Map<String, String> environments, String username )
         throws ContinuumBuildAgentException;
 
     Map<String, Object> getReleaseResult( String releaseId )
@@ -67,12 +67,12 @@ public interface ContinuumBuildAgentService
     String getPreparedReleaseName( String releaseId )
         throws ContinuumBuildAgentException;
 
-    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository, String username )
         throws ContinuumBuildAgentException;
 
     String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                   String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                  String scmTagBase, Map<String, String> environments )
+                                  String scmTagBase, Map<String, String> environments, String username )
         throws ContinuumBuildAgentException;
 
     String releaseCleanup( String releaseId )
@@ -80,4 +80,44 @@ public interface ContinuumBuildAgentService
 
     void releaseRollback( String releaseId, int projectId )
         throws ContinuumBuildAgentException;
+
+    List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws ContinuumBuildAgentException;
+
+    List<Map<String, Object>> getProjectsAndBuildDefinitionsInPrepareBuildQueue()
+        throws ContinuumBuildAgentException;
+
+    List<Map<String, Object>> getProjectsInBuildQueue()
+        throws ContinuumBuildAgentException;
+
+    int getBuildSizeOfAgent()
+        throws ContinuumBuildAgentException;
+
+    Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws ContinuumBuildAgentException;
+
+    List<Map<String, Object>> getProjectsAndBuildDefinitionsCurrentlyPreparingBuild()
+        throws ContinuumBuildAgentException;
+
+    boolean isProjectGroupInQueue( int projectGroupId );
+
+    boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds );
+
+    boolean isProjectCurrentlyBuilding( int projectId );
+
+    boolean isProjectInBuildQueue( int projectId );
+
+    boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws ContinuumBuildAgentException;
+
+    void removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws ContinuumBuildAgentException;
+
+    boolean removeFromBuildQueue( int projectId, int builddefinitonId )
+        throws ContinuumBuildAgentException;
+
+    void removeFromBuildQueue( List<String> hashCodes )
+        throws ContinuumBuildAgentException;
+
+    boolean ping();
 }

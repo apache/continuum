@@ -304,21 +304,25 @@ public class ReleasePrepareAction
         {
             profile = getContinuum().getProfileService().getProfile( profileId );
         }
+        
+        String username = getPrincipal();
 
-        Map<String, String> environments = getEnvironments( profile );
+        Map<String, String> environments = new HashMap<String, String>();
 
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
+            
+            environments = getEnvironments( profile, distributedReleaseManager.getDefaultBuildagent( projectId ) );
 
             try
             {
                 releaseId = distributedReleaseManager.releasePrepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), 
-                                                                      environments );
+                                                                      environments, username );
 
                 if ( releaseId == null )
                 {
-                    addActionError( "" );
+                    addActionError( "Failed to release project" );
                     return ERROR;
                 }
             }
@@ -333,7 +337,11 @@ public class ReleasePrepareAction
         }
         else
         {
+            environments = getEnvironments( profile, null );
+            
             listener = new DefaultReleaseManagerListener();
+            
+            listener.setUsername( username );
 
             String workingDirectory = getContinuum().getWorkingDirectory( projectId ).getPath();
 
@@ -356,10 +364,9 @@ public class ReleasePrepareAction
                                         workingDirectory, environments, executable );
         }
         
-        String resource = project.getGroupId() + ":" + project.getArtifactId() + ":" + project.getVersion();
-        AuditLog event = new AuditLog( resource, AuditLogConstants.PREPARE_RELEASE );
+        AuditLog event = new AuditLog( "Release id=" + releaseId, AuditLogConstants.PREPARE_RELEASE );
         event.setCategory( AuditLogConstants.PROJECT );
-        event.setCurrentUser( getPrincipal() );
+        event.setCurrentUser( username );
         event.log();
 
         return SUCCESS;

@@ -94,11 +94,10 @@
               results in "[continuum] BUILD SUCCESSFUL: Hello World, Build Def - Nightly Test Build"
          -->
         <buildSubjectFormat>[continuum] BUILD ${state}: ${project.projectGroup.name} - ${project.name} - ${build.buildDefinition.description}</buildSubjectFormat>
-        <prepareBuildSubjectFormat>[continuum] PREPARE BUILD ${state}: ${project.projectGroup.name}</prepareBuildSubjectFormat>
-        <includeBuildResult>true</includeBuildResult>
+        <prepareBuildSubjectFormat>[continuum] PREPARE BUILD ${state}: ${projectScmRoot.projectGroup.name}</prepareBuildSubjectFormat>
         <includeBuildSummary>true</includeBuildSummary>
         <includeTestSummary>true</includeTestSummary>
-        <includeOutput>false</includeOutput>
+        <includeBuildOutput>false</includeBuildOutput>
         <alwaysSend>false</alwaysSend>
         <!--
         Setting this propery will make Continuum send all emails to

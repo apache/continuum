@@ -1,31 +1,49 @@
  ------
  Preparing for Release
  ------
+ ------
+ 2010-02-19
+ ------
 
 Prepare for Release
 
- Navigate to the Project Group Summary and click the Release button or icon.
+ Navigate to the <<Project Group Summary>> and click the <<Release>> button or icon.
 
 [../../images/release-project-group-summary.png] Release
 
- Choose "Prepare project for release" and click "Submit"
+ Choose <<Prepare project for release>> and click <<Submit>>.
 
 [../../images/release-choose-prepare-goal.png] Release
 
- Complete the form, providing the scm tag name, etc.
+ Complete the form, providing the SCM tag name, etc.
 
- Check the 'Use edit mode' checkbox if you are using a SCM system that requires you to obtain a lock before editing.
+ Check the <<Use edit mode>> checkbox if you are using an SCM system that requires you to obtain a lock before editing.
 
- Click Submit.
+ Click <<Submit>>.
+ 
+ <<Note:>> When releasing in a {{{../../administrator_guides/distributed-builds.html} distributed builds}} setup, a <<Build environment>>
+ should be selected containing at least one enabled build agent. Furthermore, the release will not happen in the following cases:
+ 
+   * no build environment selected
+   
+   * no build agent found in the build agent group attached to the build environment
+   
+   * all build agents configured in the selected build environment are disabled
+ 
+ []
 
 [../../images/release-prepare-parameters.png] Release Prepare parameters
 
- Wait for the process to complete, then click Done.
+ Wait for the process to complete, then click <<Done>>.
+
+ <<Note:>> Hitting the <<Rollback>> button does not roll back or delete the SCM tag created during the <<<scm-tag>>> phase.
+ So when re-doing the release prepare of the same version, make sure that the tag does not exist in SVN, if so,
+ the tag should be manually deleted.
 
 [../../images/release-prepare-executing.png]
 
- You will be returned to this page to make another selection
+ You will be returned to this page to make another selection.
 
 [../../images/release-choose-perform-goal.png]
 
- To view the release prepare results, refer to {{{release_results.html}Release Results Management}}.
+ To view the release prepare results, refer to {{{./release_results.html}Release Results Management}}.

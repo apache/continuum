@@ -42,10 +42,11 @@ public interface DataManagementTool
      * Restore the database.
      *
      * @param backupDirectory the directory where the backup to restore from resides
+     * @param strict
      * @throws java.io.IOException     if there is a problem reading the backup file
      * @throws DataManagementException if there is a problem parsing the backup file
      */
-    void restoreDatabase( File backupDirectory )
+    void restoreDatabase( File backupDirectory, boolean strict )
         throws IOException, DataManagementException;
 
     /**

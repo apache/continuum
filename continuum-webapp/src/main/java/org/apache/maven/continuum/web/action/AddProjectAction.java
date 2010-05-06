@@ -87,24 +87,26 @@ public class AddProjectAction
 
     private List<BuildDefinitionTemplate> buildDefinitionTemplates;
 
+    private boolean emptyProjectGroups;
+
     public void validate()
     {
         clearErrorsAndMessages();
         try
         {
-            if ( !( projectName.trim().length() > 0 ) )
+            if ( ( projectName != null ) && !( projectName.trim().length() > 0 ) )
             {
                 addActionError( getText( "addProject.name.required" ) );
             }
-            if ( !( projectVersion.trim().length() > 0 ) )
+            if ( ( projectVersion != null ) && !( projectVersion.trim().length() > 0 ) )
             {
                 addActionError( getText( "addProject.version.required" ) );
             }
-            if ( !( projectScmUrl.trim().length() > 0 ) )
+            if ( ( projectScmUrl != null ) && !( projectScmUrl.trim().length() > 0 ) )
             {
                 addActionError( getText( "addProject.scmUrl.required" ) );
             }
-            if ( selectedProjectGroup == 0 )
+            if ( isEmptyProjectGroups() )
             {
                 addActionError( getText( "addProject.projectGroup.required" ) );
             }
@@ -148,6 +150,7 @@ public class AddProjectAction
         String projectNameTrim = projectName.trim();
         String versionTrim = projectVersion.trim();
         String scmTrim = projectScmUrl.trim();
+        //TODO: Instead of get all projects then test them, it would be better to check it directly in the DB
         for ( Project project : getContinuum().getProjects() )
         {
             // CONTINUUM-1445
@@ -190,8 +193,8 @@ public class AddProjectAction
             this.setProjectGroupId( this.getSelectedProjectGroup() );
             return "projectGroupSummary";
         }
-        
-        AuditLog event = new AuditLog( projectNameTrim, AuditLogConstants.ADD_PROJECT );
+
+        AuditLog event = new AuditLog( "Project id=" + project.getId(), AuditLogConstants.ADD_PROJECT );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();
@@ -432,5 +435,15 @@ public class AddProjectAction
     public void setProjectDescription( String projectDescription )
     {
         this.projectDescription = projectDescription;
+    }
+
+    public boolean isEmptyProjectGroups()
+    {
+        return emptyProjectGroups;
+    }
+
+    public void setEmptyProjectGroups( boolean emptyProjectGroups )
+    {
+        this.emptyProjectGroups = emptyProjectGroups;
     }
 }

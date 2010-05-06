@@ -317,12 +317,6 @@
           <version>1.1.0+</version>
           <type>String</type>
         </field>
-        <field>
-          <name>checkedOutInSingleDirectory</name>
-          <version>1.4.0+</version>
-          <type>boolean</type>
-          <defaultValue>false</defaultValue>
-        </field>
         <field jpox.mapped-by="project" jpox.fetch-groups="project-with-builds">
           <name>buildResults</name>
           <version>1.0.9+</version>
@@ -590,6 +584,11 @@
           <name>trigger</name>
           <version>1.0.9</version>
           <type>int</type>
+        </field>
+        <field>
+          <name>username</name>
+          <version>1.4.0+</version>
+          <type>String</type>
         </field>
         <field jpox.column="resultstate">
           <name>state</name>
@@ -1031,7 +1030,13 @@
           <description>
             true if this buildDefinition is a template
           </description>
-        </field>        
+        </field>
+        <field jpox.null-value="default">
+          <name>updatePolicy</name>
+          <version>1.4.0+</version>
+          <type>int</type>
+          <defaultValue>0</defaultValue>
+        </field>
       </fields>
     </class>
     <class>
@@ -1644,6 +1649,11 @@
         <field>
           <name>releaseGoal</name>
           <version>1.1.2+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>username</name>
+          <version>1.4.0+</version>
           <type>String</type>
         </field>
       </fields>

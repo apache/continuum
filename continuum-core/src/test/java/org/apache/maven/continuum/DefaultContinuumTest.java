@@ -27,20 +27,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -62,6 +64,8 @@ public class DefaultContinuumTest
     private TaskQueueManager taskQueueManager;
 
     private ProjectDao projectDao;
+
+    private BuildResultDao buildResultDao;
 
     @Override
     protected void setUp()
@@ -96,7 +100,7 @@ public class DefaultContinuumTest
         assertTrue( rootPom.exists() );
 
         ContinuumProjectBuildingResult result =
-            continuum.addMavenTwoProject( rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, -1, false );
+            continuum.addMavenTwoProject( rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, -1 );
 
         assertNotNull( result );
 
@@ -129,79 +133,8 @@ public class DefaultContinuumTest
         assertTrue( "no irc notifier", projects.containsKey( "Continuum IRC Notifier" ) );
 
         assertTrue( "no jabber notifier", projects.containsKey( "Continuum Jabber Notifier" ) );
-    }
-    
-    // handle flat multi-module projects
-    public void testAddMavenTwoProjectSetInSingleDirectory()
-        throws Exception
-    {   
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
-        
-        String url = getTestFile( "src/test-projects/flat-multi-module/parent-project/pom.xml" ).toURL().toExternalForm();
 
-        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url, -1, true, false, true, -1, true );
 
-        assertNotNull( result );
-
-        List<Project> projects = result.getProjects();
-
-        assertEquals( 3, projects.size() );     
-        
-        Project rootProject = result.getRootProject();
-        
-        assertNotNull( rootProject );
-        
-        Map<String, Project> projectsMap = new HashMap<String, Project>();
-
-        for ( Project project : getProjectDao().getAllProjectsByName() )
-        {
-            projectsMap.put( project.getName(), project );
-
-            // validate project in project group
-            assertTrue( "project not in project group",
-                        getProjectGroupDao().getProjectGroupByProjectId( project.getId() ) != null );
-        }
-        
-        assertTrue( "no module-a", projectsMap.containsKey( "module-a" ) );
-        
-        assertTrue( "no module-b", projectsMap.containsKey( "module-b" ) );
-        
-        // check if the modules were checked out in the same directory as the parent
-        ConfigurationService configurationService = ( ConfigurationService ) lookup( "configurationService" );
-        
-        File workingDir = configurationService.getWorkingDirectory();
-        
-        Project parentProject = getProjectDao().getProjectByName( "parent-project" );
-        
-        File checkoutDir = new File( workingDir, String.valueOf( parentProject.getId() ) );
-        
-        for( long delay = 0; delay <= 999999999; delay++ )
-        {
-            // wait while the project has been checked out
-        }
-        
-        assertTrue( "checkout directory of project 'parent-project' does not exist." , checkoutDir.exists() );
-        
-        assertFalse( "module-a should not have been checked out as a separate project.",
-                    new File( workingDir, String.valueOf( getProjectDao().getProjectByName( "module-a" ).getId() ) ).exists() );
-        
-        assertFalse( "module-b should not have been checked out as a separate project.",
-                    new File( workingDir, String.valueOf( getProjectDao().getProjectByName( "module-b" ).getId() ) ).exists() );
-        
-        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-a" ).exists() );
-        
-        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-b" ).exists() );
-                
-        // assert project state
-        // commented out this test case as it sometimes fails because the actual checkout hasn't finished yet so
-        //    the state hasn't been updated yet
-        /*assertEquals( "state of 'parent-project' should have been updated.", ContinuumProjectState.CHECKEDOUT, parentProject.getState() );
-        
-        assertEquals( "state of 'module-a' should have been updated.", ContinuumProjectState.CHECKEDOUT,
-                      getProjectDao().getProjectByName( "module-a" ).getState() );
-        
-        assertEquals( "state of 'module-b' should have been updated.", ContinuumProjectState.CHECKEDOUT,
-                      getProjectDao().getProjectByName( "module-b" ).getState() );*/        
     }
 
     public void testUpdateMavenTwoProject()
@@ -235,6 +168,48 @@ public class DefaultContinuumTest
         continuum.updateProject( project );
 
         project = continuum.getProject( project.getId() );
+    }
+
+    public void testRemoveMavenTwoProject()
+        throws Exception
+    {
+        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+
+        Project project = makeStubProject( "test-project" );
+
+        ProjectGroup defaultGroup = getDefaultProjectGroup();
+
+        defaultGroup.addProject( project );
+
+        getProjectGroupDao().updateProjectGroup( defaultGroup );
+
+        project = getProjectDao().getProjectByName( "test-project" );
+
+        assertNotNull ( project );
+
+        BuildResult buildResult = new BuildResult();
+
+        getBuildResultDao().addBuildResult( project, buildResult );
+
+        Collection<BuildResult> brs = continuum.getBuildResultsForProject( project.getId() );
+
+        assertEquals( "Build result of project was not added", 1, brs.size() );
+
+        // delete project
+        continuum.removeProject( project.getId() );
+
+        try
+        {
+            continuum.getProject( project.getId() );
+
+            fail( "Project was not removed" );
+        }
+        catch ( ContinuumException expected )
+        {
+            brs = continuum.getBuildResultsForProject( project.getId() );
+
+            assertEquals( "Build result of project was not removed", 0, brs.size() );
+        }
     }
 
     public void testBuildDefinitions()
@@ -319,7 +294,7 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
-        Collection projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        Collection projectGroupList = continuum.getAllProjectGroups();
 
         int projectGroupsBefore = projectGroupList.size();
 
@@ -337,7 +312,7 @@ public class DefaultContinuumTest
 
         assertEquals( "plexus", projectGroup.getGroupId() );
 
-        projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        projectGroupList = continuum.getAllProjectGroups();
 
         assertEquals( "Project group missing, should have " + ( projectGroupsBefore + 1 ) + " project groups",
                       projectGroupsBefore + 1, projectGroupList.size() );
@@ -348,7 +323,7 @@ public class DefaultContinuumTest
 
         BuildsManager buildsManager = continuum.getBuildsManager();
 
-        List<Project> projects = projectGroup.getProjects();
+        List<Project> projects = continuum.getProjectGroupWithProjects( projectGroup.getId() ).getProjects();
         int[] projectIds = new int[projects.size()];
 
         int idx = 0;
@@ -364,7 +339,7 @@ public class DefaultContinuumTest
 
         continuum.removeProjectGroup( projectGroup.getId() );
 
-        projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        projectGroupList = continuum.getAllProjectGroups();
 
         assertEquals( "Remove project group failed", projectGroupsBefore, projectGroupList.size() );
     }
@@ -377,7 +352,7 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
-        Collection projectGroupList = continuum.getAllProjectGroupsWithProjects();
+        Collection projectGroupList = continuum.getAllProjectGroups();
 
         int projectGroupsBefore = projectGroupList.size();
 
@@ -590,7 +565,7 @@ public class DefaultContinuumTest
 
         try
         {
-            continuum.buildProject( 1 );
+        	continuum.buildProject( 1, "test-user" );
             fail( "An exception should have been thrown." );
         }
         catch ( ContinuumException e )
@@ -636,7 +611,7 @@ public class DefaultContinuumTest
 
         try
         {
-            continuum.buildProjectGroup( 1 );
+        	continuum.buildProjectGroup( 1, new BuildTrigger( 1, "test-user" ) );
             fail( "An exception should have been thrown." );
         }
         catch ( ContinuumException e )
@@ -650,5 +625,10 @@ public class DefaultContinuumTest
         throws Exception
     {
         return (Continuum) lookup( Continuum.ROLE );
+    }
+
+    private BuildResultDao getBuildResultDao()
+    {
+        return (BuildResultDao) lookup( BuildResultDao.class.getName() );
     }
 }

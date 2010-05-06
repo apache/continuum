@@ -43,6 +43,8 @@ public class DefaultReleaseManagerListener
     private String error;
 
     private int state;
+    
+    private String username;
 
     public void goalStart( String name, List phases )
     {
@@ -109,5 +111,15 @@ public class DefaultReleaseManagerListener
     public int getState()
     {
         return state;
+    }
+    
+    public void setUsername( String username )
+    {
+        this.username = username;
+    }
+    
+    public String getUsername()
+    {
+        return username;
     }
 }

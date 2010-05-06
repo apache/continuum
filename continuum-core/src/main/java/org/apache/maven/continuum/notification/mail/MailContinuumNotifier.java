@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -136,11 +138,6 @@ public class MailContinuumNotifier
     /**
      * @plexus.configuration
      */
-    private boolean includeBuildResult = true;
-
-    /**
-     * @plexus.configuration
-     */
     private boolean includeBuildSummary = true;
 
     /**
@@ -151,7 +148,7 @@ public class MailContinuumNotifier
     /**
      * @plexus.configuration
      */
-    private boolean includeOutput = false;
+    private boolean includeBuildOutput = false;
 
     /**
      * Customizable mail subject.  Use any combination of literal text, project or build attributes.
@@ -170,7 +167,7 @@ public class MailContinuumNotifier
      *
      * @plexus.configuration
      */
-    private String prepareBuildSubjectFormat = "[continuum] PREPARE BUILD ${state]";
+    private String prepareBuildSubjectFormat = "[continuum] PREPARE BUILD ${state]: ${projectScmRoot.projectGroup.name}";
 
     // ----------------------------------------------------------------------
     //
@@ -254,7 +251,8 @@ public class MailContinuumNotifier
         Project project = context.getProject();
         List<ProjectNotifier> notifiers = context.getNotifiers();
         BuildResult build = context.getBuildResult();
-        String buildOutput = getBuildOutput( project, build );
+        log.error( "br state="+build.getState() );
+        log.error( "project state="+project.getState() );
         BuildDefinition buildDefinition = context.getBuildDefinition();
         ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
 
@@ -281,7 +279,7 @@ public class MailContinuumNotifier
 
         if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
         {
-            buildComplete( project, notifiers, build, buildOutput, messageId, context, buildDefinition );
+            buildComplete( project, notifiers, build, messageId, context, buildDefinition );
         }
         else if ( isPrepareBuildComplete )
         {
@@ -289,8 +287,8 @@ public class MailContinuumNotifier
         }
     }
 
-    private void buildComplete( Project project, List<ProjectNotifier> notifiers, BuildResult build, String buildOutput,
-                                String messageId, MessageContext context, BuildDefinition buildDefinition )
+    private void buildComplete( Project project, List<ProjectNotifier> notifiers, BuildResult build, String messageId,
+                                MessageContext context, BuildDefinition buildDefinition )
         throws NotificationException
     {
         BuildResult previousBuild = getPreviousBuild( project, buildDefinition, build );
@@ -307,12 +305,12 @@ public class MailContinuumNotifier
                 notifiersList.add( notifier );
             }
         }
-        buildComplete( project, notifiersList, build, previousBuild, buildOutput, messageId, context, buildDefinition );
+        buildComplete( project, notifiersList, build, previousBuild, messageId, context, buildDefinition );
     }
 
     private void buildComplete( Project project, List<ProjectNotifier> notifiers, BuildResult build,
-                                BuildResult previousBuild, String buildOutput, String messageId,
-                                MessageContext messageContext, BuildDefinition buildDefinition )
+                                BuildResult previousBuild, String messageId, MessageContext messageContext,
+                                BuildDefinition buildDefinition )
         throws NotificationException
     {
         // ----------------------------------------------------------------------
@@ -333,11 +331,11 @@ public class MailContinuumNotifier
 
             context.put( "includeTestSummary", includeTestSummary );
 
-            context.put( "includeOutput", includeOutput );
+            context.put( "includeOutput", includeBuildOutput );
 
-            if ( includeBuildResult )
+            if ( includeBuildOutput )
             {
-                context.put( "buildOutput", buildOutput );
+                context.put( "buildOutput", getBuildOutput( project, build ) );
             }
 
             if ( includeBuildSummary )
@@ -456,8 +454,6 @@ public class MailContinuumNotifier
 
             context.put( "reportUrl",
                          getReportUrl( projectScmRoot.getProjectGroup(), projectScmRoot, configurationService ) );
-
-            context.put( "projectGroup", projectScmRoot.getProjectGroup() );
 
             context.put( "projectScmRoot", projectScmRoot );
 
@@ -698,6 +694,7 @@ public class MailContinuumNotifier
 
             if ( StringUtils.isEmpty( toOverride ) )
             {
+                Set<String> listRecipents = new HashSet<String>();
                 for ( ProjectNotifier notifier : notifiers )
                 {
                     Map<String, String> conf = notifier.getConfiguration();
@@ -710,19 +707,45 @@ public class MailContinuumNotifier
                             String[] addresses = StringUtils.split( addressField, "," );
                             for ( String address : addresses )
                             {
-                                // TODO: set a proper name
-                                InternetAddress to = new InternetAddress( address.trim() );
+                                if (!listRecipents.contains(address.trim())) {
+                                    // [CONTINUUM-2281] Dont repeat addesss in recipents.
+                                    // TODO: set a proper name
+                                    InternetAddress to = new InternetAddress(address.trim());
 
-                                log.info( "Recipient: To '" + to + "'." );
-                                message.addRecipient( Message.RecipientType.TO, to );
+                                    log.info("Recipient: To '" + to + "'.");
+                                    message.addRecipient(Message.RecipientType.TO, to);
+                                    listRecipents.add(address.trim());
+                                }
                             }
 
                         }
 
-                        String committerField = (String) notifier.getConfiguration().get( COMMITTER_FIELD );
-                        if ( StringUtils.isNotEmpty( committerField ) && context.getBuildResult() != null )
+                        if (context.getBuildResult() != null)
                         {
-                            if ( Boolean.parseBoolean( committerField ) )
+                            String committerField = (String) notifier.getConfiguration().get(COMMITTER_FIELD);
+                            String developerField = (String) notifier.getConfiguration().get(DEVELOPER_FIELD);
+                            // Developers constains committers.
+                            if (StringUtils.isNotEmpty(developerField) && Boolean.parseBoolean(developerField))
+                            {
+                                List<ProjectDeveloper> developers = project.getDevelopers();
+                                if (developers == null || developers.isEmpty())
+                                {
+                                    log.warn("No developers have been configured...notifcation email will not be sent");
+                                    return;
+                                }
+                                Map<String, String> developerToEmailMap = mapDevelopersToRecipients(developers);
+                                for (String email : developerToEmailMap.values())
+                                {
+                                    if (!listRecipents.contains(email.trim()))
+                                    {
+                                        InternetAddress to = new InternetAddress(email.trim());
+                                        log.info("Recipient: To '" + to + "'.");
+                                        message.addRecipient(Message.RecipientType.TO, to);
+                                        listRecipents.add(email.trim());
+                                    }
+                                }
+                            } 
+                            else if (StringUtils.isNotEmpty(committerField) && Boolean.parseBoolean(committerField))
                             {
                                 ScmResult scmResult = context.getBuildResult().getScmResult();
                                 if ( scmResult != null && scmResult.getChanges() != null &&
@@ -743,7 +766,7 @@ public class MailContinuumNotifier
                                     for ( ChangeSet changeSet : changes )
                                     {
                                         String scmId = changeSet.getAuthor();
-                                        if ( StringUtils.isNotEmpty( scmId ) )
+                                        if (StringUtils.isNotEmpty(scmId))
                                         {
                                             String email = developerToEmailMap.get( scmId );
                                             if ( StringUtils.isEmpty( email ) )
@@ -753,13 +776,15 @@ public class MailContinuumNotifier
                                                     "no email address is defined in developers list for '" + scmId +
                                                         "' scm id." );
                                             }
-                                            else
-                                            {
+                                            else if (!listRecipents.contains(email.trim()))
+                                            {  
+                                                // [CONTINUUM-2281] Dont repeat addesss in recipents.)
                                                 // TODO: set a proper name
                                                 InternetAddress to = new InternetAddress( email.trim() );
                                                 log.info( "Recipient: To '" + to + "'." );
 
                                                 message.addRecipient( Message.RecipientType.TO, to );
+                                                listRecipents.add(email.trim());
                                             }
                                         }
                                     }

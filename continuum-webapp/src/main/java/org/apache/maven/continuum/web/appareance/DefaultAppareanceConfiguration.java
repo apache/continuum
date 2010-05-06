@@ -111,7 +111,9 @@ public class DefaultAppareanceConfiguration
         {
             confFile.getParentFile().mkdirs();
         }
-        writer.write( new FileWriter( confFile ), continuumAppearance );
+        FileWriter fileWriter = new FileWriter( confFile );
+        writer.write( fileWriter, continuumAppearance );
+        fileWriter.close();
         this.footer = footerHtmlContent;
     }
 

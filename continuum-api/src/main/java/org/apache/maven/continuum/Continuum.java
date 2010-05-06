@@ -24,8 +24,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.model.project.ProjectGroupSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
@@ -33,6 +36,7 @@ import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -63,13 +67,6 @@ public interface Continuum
 
     public ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumException;
-
-    /**
-     * Get all {@link ProjectGroup}s and their {@link Project}s
-     *
-     * @return {@link Collection} &lt;{@link ProjectGroup}>
-     */
-    public Collection<ProjectGroup> getAllProjectGroupsWithProjects();
 
     public List<ProjectGroup> getAllProjectGroupsWithBuildDetails();
 
@@ -117,6 +114,7 @@ public interface Continuum
      * @throws ContinuumException
      * @deprecated
      */
+    @Deprecated
     void checkoutProject( int projectId )
         throws ContinuumException;
 
@@ -124,11 +122,6 @@ public interface Continuum
         throws ContinuumException;
 
     Project getProjectWithBuildDetails( int projectId )
-        throws ContinuumException;
-
-    List<Project> getAllProjectsWithAllDetails( int start, int end );
-
-    Collection<Project> getAllProjects( int start, int end )
         throws ContinuumException;
 
     Collection<Project> getProjects()
@@ -141,18 +134,13 @@ public interface Continuum
 
     Map<Integer, BuildResult> getLatestBuildResults( int projectGroupId );
 
-    Map<Integer, BuildResult> getLatestBuildResults();
-
     Map<Integer, BuildResult> getBuildResultsInSuccess( int projectGroupId );
 
-    Map<Integer, BuildResult> getBuildResultsInSuccess();
+    Map<Integer, ProjectGroupSummary> getProjectsSummaryByGroups();
 
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
-
-    List<Project> getProjectsInBuildOrder()
-        throws ContinuumException;
 
     /**
      * take a collection of projects and sort for order
@@ -162,44 +150,41 @@ public interface Continuum
      */
     List<Project> getProjectsInBuildOrder( Collection<Project> projects );
 
-    void buildProjects()
-        throws ContinuumException;
-
-    void buildProjectsWithBuildDefinition( int buildDefinitionId )
-        throws ContinuumException;
+    void buildProjects( String username )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
-        throws ContinuumException;
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    void buildProjects( int trigger )
-        throws ContinuumException;
+    void buildProjects( BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    void buildProjects( int trigger, int buildDefinitionId )
-        throws ContinuumException;
+    void buildProjects( BuildTrigger buildTrigger, int buildDefinitionId )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     void buildProjects( Schedule schedule )
         throws ContinuumException;
 
-    void buildProject( int projectId )
-        throws ContinuumException;
+    void buildProject( int projectId, String username )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    void buildProject( int projectId, int trigger )
-        throws ContinuumException;
+    void buildProject( int projectId, BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId )
-        throws ContinuumException;
+    void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    void buildProject( int projectId, int buildDefinitionId, int trigger )
-        throws ContinuumException;
+    void buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    public void buildProjectGroup( int projectGroupId )
-        throws ContinuumException;
+    public void buildProjectGroup( int projectGroupId, BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId )
-        throws ContinuumException;
+    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId, BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     // ----------------------------------------------------------------------
     // Build information
@@ -337,14 +322,13 @@ public interface Continuum
      * @param useCredentialsCache      whether to use cached scm account credentials or not
      * @param loadRecursiveProjects    if multi modules project record all projects (if false only root project added)
      * @param buildDefintionTemplateId buildDefintionTemplateId
-     * @param checkoutInSingleDirector if multi module project, check out the entire project in a single directory (handle flat multi-modules)
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
                                                               boolean checkProtocol, boolean useCredentialsCache,
                                                               boolean loadRecursiveProjects,
-                                                              int buildDefintionTemplateId, boolean checkoutInSingleDirectory )
+                                                              int buildDefintionTemplateId )
         throws ContinuumException;
 
     /**
@@ -438,18 +422,21 @@ public interface Continuum
     /**
      * @deprecated
      */
+    @Deprecated
     List<BuildDefinition> getBuildDefinitions( int projectId )
         throws ContinuumException;
 
     /**
      * @deprecated
      */
+    @Deprecated
     BuildDefinition getBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException;
 
     /**
      * @deprecated
      */
+    @Deprecated
     void removeBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException;
 
@@ -526,6 +513,10 @@ public interface Continuum
 
     void removeSchedule( int scheduleId )
         throws ContinuumException;
+
+    void activePurgeSchedule( Schedule schedule );
+
+    void activeBuildDefinitionSchedule( Schedule schedule );
 
     // ----------------------------------------------------------------------
     // Working copy

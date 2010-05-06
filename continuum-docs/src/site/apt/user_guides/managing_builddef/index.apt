@@ -4,17 +4,16 @@
  Emmanuel Venisse
  Olivier Lamy
  ------
- Oct 3 2007
+ 2010-02-18
  ------
 
 Managing Build Definitions
 
     Each project or project group must have at least one attached build definition in order to build.
-    
+
     Depending on the project, you can define different values which will be used in order to build your project.
-    
-    Continuum includes some default build definitions which can be changed in the <<{{{../../administrator_guides/builddefTemplate.html}Build Definition Templates screen}}>>.
-    
-    You can add or edit build definitions at the <<{{{builddefGroup.html}Project Group level}}>> or at the <<{{{builddefProject.html}Project level}}>>.
-    
-     
+
+    Continuum includes some default build definitions which can be changed in the <<{{{../../administrator_guides/builddefTemplate.html}Build Definition Templates}}>> screen.
+
+    You can add or edit build definitions at the <<{{{./builddefGroup.html}Project Group level}}>> or at the <<{{{./builddefProject.html}Project level}}>>.
+

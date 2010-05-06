@@ -90,33 +90,31 @@ public class SlaveBuildAgentTransportServer
         try
         {
             buildResult = continuumBuildAgentService.getBuildResult( projectId );
-            log.info( "Build result for project " + projectId + " acquired." );
+            log.info( "Build result for project '" + projectId + "' acquired." );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to get build result for project " + projectId, e );
+            log.error( "Failed to get build result for project '" + projectId + "'", e );
             throw e;
         }
 
         return buildResult;
     }
 
-    public Integer getProjectCurrentlyBuilding()
+    public Map<String, Object> getProjectCurrentlyBuilding()
         throws Exception
     {
-        Integer projectId = continuumBuildAgentService.getProjectCurrentlyBuilding();
+        Map<String, Object> project = continuumBuildAgentService.getProjectCurrentlyBuilding();
 
-        log.info( "Currently building project " + projectId );
+        log.info( "Retrieving currently building project" );
 
-        return projectId;
+        return project;
     }
 
     public Boolean ping()
         throws Exception
     {
-        log.info( "Ping ok" );
-
-        return Boolean.TRUE;
+        return continuumBuildAgentService.ping(); 
     }
 
     public Boolean cancelBuild()
@@ -144,12 +142,12 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
-            return continuumBuildAgentService.generateWorkingCopyContent( projectId, directory, baseUrl,
-                                                                          imagesBaseUrl );
+            log.info( "Generate working copy content for project '" + projectId + "'" );
+            return continuumBuildAgentService.generateWorkingCopyContent( projectId, directory, baseUrl, imagesBaseUrl );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to generate working copy content", e );
+            log.error( "Failed to generate working copy content for projectId=" + projectId, e );
             throw e;
         }
     }
@@ -159,11 +157,12 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
+            log.info( "Retrieve project '" + projectId + "' file content" );
             return continuumBuildAgentService.getProjectFileContent( projectId, directory, filename );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to retrieve project file content", e );
+            log.error( "Failed to retrieve project '" + projectId + "' file content", e );
             throw e;
         }
     }
@@ -173,11 +172,12 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
+            log.info( "Retrieving release plugin parameters for project '" + projectId + "'" );
             return continuumBuildAgentService.getReleasePluginParameters( projectId, pomFilename );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to retrieve release plugin parameters", e );
+            log.error( "Failed to retrieve release plugin parameters for project '" + projectId + "'", e );
             throw e;
         }
     }
@@ -187,23 +187,25 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
+            log.info( "Processing project '" + projectId + "'" );
             return continuumBuildAgentService.processProject( projectId, pomFilename, autoVersionSubmodules );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to process project", e );
+            log.error( "Failed to process project '" + projectId + "'", e );
             throw e;
         }
     }
 
     public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                                  Map environments )
+                                  Map environments, String username )
         throws Exception
     {
         try
         {
+            log.info( "Preparing release" );
             return continuumBuildAgentService.releasePrepare( project, properties, releaseVersion, developmentVersion,
-                                                              environments );
+                                                              environments, username );
         }
         catch ( ContinuumBuildAgentException e )
         {
@@ -217,11 +219,12 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
+            log.info( "Retrieving listener for releaseId=" + releaseId );
             return continuumBuildAgentService.getListener( releaseId );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to retrieve listener state of " + releaseId, e );
+            log.error( "Failed to retrieve listener state of releaseId=" + releaseId, e );
             throw e;
         }
     }
@@ -231,11 +234,12 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
+            log.info( "Retrieving release result, releaseId=" + releaseId );
             return continuumBuildAgentService.getReleaseResult( releaseId );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to retrieve release result of " + releaseId, e );
+            log.error( "Failed to retrieve release result of releaseId=" + releaseId, e );
             throw e;
         }
     }
@@ -249,10 +253,11 @@ public class SlaveBuildAgentTransportServer
         {
             continuumBuildAgentService.removeListener( releaseId );
             result = Boolean.TRUE;
+            log.info( "Removing listener for releaseId=" + releaseId );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to remove listener of " + releaseId, e );
+            log.error( "Failed to remove listener of releaseId=" + releaseId, e );
             throw e;
         }
 
@@ -264,29 +269,31 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
+            log.info( "Retrieving prepared release name, releaseId=" + releaseId );
             return continuumBuildAgentService.getPreparedReleaseName( releaseId );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to retrieve prepared release name of " + releaseId );
+            log.error( "Failed to retrieve prepared release name of releaseId=" + releaseId );
             throw e;
         }
     }
 
     public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                   Map repository )
+                                   Map repository, String username )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            continuumBuildAgentService.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+            continuumBuildAgentService.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
             result = Boolean.TRUE;
+            log.info( "Perform release of releaseId=" + releaseId );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Unable to perform release", e );
+            log.error( "Unable to perform release of releaseId=" + releaseId, e );
             throw e;
         }
 
@@ -295,18 +302,19 @@ public class SlaveBuildAgentTransportServer
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map environments )
+                                         String scmTagBase, Map environments, String username )
         throws Exception
     {
         try
         {
+            log.info( "Perform release of scmUrl=" + scmUrl );
             return continuumBuildAgentService.releasePerformFromScm( goals, arguments, useReleaseProfile, repository,
                                                                      scmUrl, scmUsername, scmPassword, scmTag,
-                                                                     scmTagBase, environments );
+                                                                     scmTagBase, environments, username );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Unable to perform release", e );
+            log.error( "Unable to perform release of scmUrl=" + scmUrl, e );
             throw e;
         }
     }
@@ -316,11 +324,12 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
+            log.info( "Cleanup release, releaseId=" + releaseId );
             return continuumBuildAgentService.releaseCleanup( releaseId );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Unable to cleanup release of " + releaseId, e );
+            log.error( "Unable to cleanup release, releaseId=" + releaseId, e );
             throw e;
         }
     }
@@ -334,10 +343,198 @@ public class SlaveBuildAgentTransportServer
         {
             continuumBuildAgentService.releaseRollback( releaseId, projectId );
             result = Boolean.TRUE;
+            log.info( "Rollback release. releaseId=" + releaseId + ", projectId=" + projectId );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to rollback release " + releaseId, e );
+            log.error( "Failed to rollback release. releaseId=" + releaseId + ", projectId=" + projectId, e );
+            throw e;
+        }
+
+        return result;
+    }
+
+    public Integer getBuildSizeOfAgent()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getBuildSizeOfAgent();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve build size of agent", e );
+            throw e;
+        }
+    }
+
+    public Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getProjectCurrentlyPreparingBuild();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects currently preparing build", e );
+            throw e;
+        }
+    }
+
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsCurrentlyPreparingBuild()
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getProjectsAndBuildDefinitionsCurrentlyPreparingBuild();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects currently preparing build", e );
+            throw e;
+        }
+    }
+
+    public List<Map<String, Object>> getProjectsInBuildQueue()
+        throws Exception
+    {
+        try
+        {
+            log.info( "Retrieving projects in build queue" );
+            return continuumBuildAgentService.getProjectsInBuildQueue();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects in build queue", e );
+            throw e;
+        }
+    }
+
+    public List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws Exception
+    {
+        try
+        {
+            log.info( "Retrieving projects in prepare build queue" );
+            return continuumBuildAgentService.getProjectsInPrepareBuildQueue();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects in prepare build queue", e );
+            throw e;
+        }
+    }
+
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsInPrepareBuildQueue()
+        throws Exception
+    {
+        try
+        {
+            log.info( "Retrieving projects in prepare build queue" );
+            return continuumBuildAgentService.getProjectsAndBuildDefinitionsInPrepareBuildQueue();
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve projects in prepare build queue", e );
+            throw e;
+        }
+    }
+
+    public Boolean isProjectGroupInQueue( int projectGroupId )
+        throws Exception
+    {
+        log.info( "Checking if project group '" + projectGroupId + "' is in queue" );
+        return continuumBuildAgentService.isProjectGroupInQueue( projectGroupId );
+    }
+
+    public Boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds )
+        throws Exception
+    {
+        log.info( "Checking if project scm root '" + projectScmRootId + "' is in queue" );
+        return continuumBuildAgentService.isProjectScmRootInQueue( projectScmRootId, projectIds );
+    }
+
+    public Boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception
+    {
+        log.info( "Checking if project " + projectId + " is currently building in agent" );
+        return continuumBuildAgentService.isProjectCurrentlyBuilding( projectId );
+    }
+
+    public Boolean isProjectInBuildQueue( int projectId )
+        throws Exception
+    {
+        log.info( "Checking if project " + projectId + "is in build queue of agent" );
+        return continuumBuildAgentService.isProjectInBuildQueue( projectId );
+    }
+
+    public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws Exception
+    {
+        try
+        {
+            log.info( "Remove projects from prepare build queue. projectGroupId=" + projectGroupId +
+                      ", scmRootId=" + scmRootId );
+            return continuumBuildAgentService.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove projects from prepare build queue. projectGroupId=" + projectGroupId +
+                       ", scmRootId=" + scmRootId );
+            throw e;
+        }
+    }
+
+    public Boolean removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            continuumBuildAgentService.removeFromPrepareBuildQueue( hashCodes );
+            result = Boolean.TRUE;
+            log.info( "Remove projects from prepare build queue" );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove projects from prepare build queue" );
+            throw e;
+        }
+
+        return result;
+    }
+
+    public Boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws Exception
+    {
+        try
+        {
+            log.debug( "Remove project '" + projectId + "' from build queue" );
+            return continuumBuildAgentService.removeFromBuildQueue( projectId, buildDefinitionId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove project '" + projectId + "' from build queue" );
+            throw e;
+        }
+    }
+
+    public Boolean removeFromBuildQueue( List<String> hashCodes )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            continuumBuildAgentService.removeFromBuildQueue( hashCodes );
+            result = Boolean.TRUE;
+            log.info( "Remove projects from build queue" );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove projects from build queue" );
             throw e;
         }
 

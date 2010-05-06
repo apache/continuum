@@ -234,6 +234,8 @@ public class ReleasePerformAction
         Project project = getContinuum().getProject( projectId );
 
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
+        
+        String username = getPrincipal();
 
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
@@ -241,7 +243,7 @@ public class ReleasePerformAction
 
             try
             {
-                releaseManager.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository );
+                releaseManager.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository, username );
             }
             catch ( BuildAgentConfigurationException e )
             {
@@ -255,6 +257,8 @@ public class ReleasePerformAction
         else
         {
             listener = new DefaultReleaseManagerListener();
+            
+            listener.setUsername( username );
     
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
@@ -266,11 +270,10 @@ public class ReleasePerformAction
             releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener,
                                     repository );
         }
-        
-        String resource = project.getGroupId() + ":" + project.getArtifactId() + ":" + project.getVersion();
-        AuditLog event = new AuditLog( resource, AuditLogConstants.PERFORM_RELEASE );
+
+        AuditLog event = new AuditLog( "ReleaseId=" + releaseId, AuditLogConstants.PERFORM_RELEASE );
         event.setCategory( AuditLogConstants.PROJECT );
-        event.setCurrentUser( getPrincipal() );
+        event.setCurrentUser( username );
         event.log();
 
         return SUCCESS;
@@ -291,13 +294,13 @@ public class ReleasePerformAction
             if ( profileId != -1 )
             {
                 Profile profile = getContinuum().getProfileService().getProfile( profileId );
-                environments = getEnvironments( profile );
+                environments = getEnvironments( profile, releaseManager.getDefaultBuildagent( projectId ) );
             }
 
             try
             {
-                releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
-                                                      scmUsername, scmPassword, scmTag, scmTagBase, environments );
+                releaseId = releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
+                                                                  scmUsername, scmPassword, scmTag, scmTagBase, environments, getPrincipal() );
             }
             catch ( BuildAgentConfigurationException e )
             {
@@ -324,7 +327,7 @@ public class ReleasePerformAction
             if ( profileId != -1 )
             {
                 Profile profile = getContinuum().getProfileService().getProfile( profileId );
-                descriptor.setEnvironments( getEnvironments( profile ) );
+                descriptor.setEnvironments( getEnvironments( profile, null ) );
             }
     
             do

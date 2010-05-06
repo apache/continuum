@@ -21,7 +21,7 @@ under the License.
   <parent>
     <artifactId>continuum-base</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-configuration</artifactId>
@@ -36,6 +36,7 @@ under the License.
             <model>src/main/mdo/continuum-configuration.xml</model>
           </models>
           <version>1.1.1</version>
+          <useJava5>true</useJava5>
         </configuration>
         <executions>
           <execution>

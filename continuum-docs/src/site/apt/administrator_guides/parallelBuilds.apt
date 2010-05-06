@@ -1,7 +1,10 @@
  ------
  Parallel Build Queue
  ------
- 
+ ------
+ 2010-02-18
+ ------
+
 Managing Parallel Builds
 
     Since 1.3.1, Continuum can be configured to checkout and build projects in parallel or concurrently.
@@ -9,51 +12,26 @@ Managing Parallel Builds
 * Configuring Parallel Builds
 
     The number of build queues to be used when checking out or building projects can be configured in the Configuration page, via
-    the Number of Allowed Builds in Parallel field (see {{{configuration.html} Managing General Configuration}}).
+    the Number of Allowed Builds in Parallel field (see {{{./configuration.html} Managing General Configuration}}).
     The value should be greater than one (1) to be able to create a build queue aside from the default.
 
     Another thing to note is that if Distributed Builds is enabled, Parallel Builds is automatically disabled. To make it
     short, you're only allowed to use one of these functionalities at a time in the current implementation.
 
-* Adding a Build Queue
+    To configure parallel builds:
 
-    By default, there is already a DEFAULT_BUILD_QUEUE that cannot be deleted configured in Continuum. To add more build queues..
+    [[1]] Create a build queue to be used for the projects.
+          Refer to {{{./buildQueue.html} Managing Build Queues}}
 
-    Click the <<Build Queue>> link under the <<Administration>> section.
+    [[2]] Attach the build queue(s) to a build schedule.
+          Refer to {{{./schedules.html} Attaching Build Queue to a Schedule}}
 
-[../images/buildQueue.png] Build Queue
+    [[3]] Create or edit the project's build definition to use the build schedule configured with the build queue(s).
+          Refer to {{{../user_guides/managing_builddef/index.html} Managing Build Definitions}}
 
-    You will see all the build queues.
+    []
 
-[../images/listBuildQueue.png] Build Queues list
-
-    Here you can add/delete the build queue. Take note that you would only be allowed to create N number of build queues, where
-    N = the Number of Allowed Builds in Parallel set in the Configuration page.
-
-    Input the name for the build queue and save.           
-
-[../images/addBuildQueue.png] Add Parallel Build Queue
-
-* Attaching Build Queues to a Schedule
-
-    Build queues can be attached to a schedule. When a build is triggered, Continuum gets the build queues attached to the build
-    definition's associated schedule. The project build will then be queued to the build queue with the least number of tasks.
-
-    To attach build queues to a schedule:
-
-    [[1]] Click the <<Schedules>> link under the <<Administration>> section. From the schedules list page, create a new schedule
-    or edit an existing one.
-
-    [[2]] In the Add Build Queue field, move build queues from the left hand list box to the right hand list box by clicking the appropriate
-    buttons in between the two list boxes. All build queues on the right hand list box will be attached to the schedule when you click Save.
-
-[../images/editSchedule.png] Edit Schedule
-
-* Viewing Checkouts and Builds in Queues
-
-    Current checkouts and builds, and all other projects queued in the checkout and build queues can be viewed in the <<Queues>> page.
-    These executing and queued tasks can also be cancelled by clicking the corresponding Cancel icons for each task. Multiple-cancel is
-    also supported.
+    A screen similar to the following is displayed under the <<Queues>> page when the project is built (force/sheduled).
 
 [../images/parallelBuildsQueues.png] Queues
 
@@ -64,4 +42,6 @@ Managing Parallel Builds
     [[1]] Project groups cannot be built multiple times simulateously.
 
     [[2]] Concurrent build of inter-dependent projects in a group is not yet supported.
+
+    [[3]] All projects in a project group will be enqueued to the same {{{./buildQueue.html} Build Queue}}.
 

@@ -23,3 +23,7 @@ Managing Build Agent Groups
 [../images/build-agent-groups-edit.png] Add/Edit Build Agent Group
 
   Build Agent can be associated to one or more Build Agent Group
+
+  To use a Build Agent Group in a Project, you need to attach it to a build environment.
+
+  Refer to {{{./buildEnvironment.html}Attach Build Agent Group to a Build Environment}}

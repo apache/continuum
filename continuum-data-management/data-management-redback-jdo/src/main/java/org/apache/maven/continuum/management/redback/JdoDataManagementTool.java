@@ -84,7 +84,7 @@ public class JdoDataManagementTool
         toolDelegate.eraseUsersDatabase( userManager );
     }
 
-    public void restoreDatabase( File backupDirectory )
+    public void restoreDatabase( File backupDirectory, boolean strict )
         throws IOException
     {
         try

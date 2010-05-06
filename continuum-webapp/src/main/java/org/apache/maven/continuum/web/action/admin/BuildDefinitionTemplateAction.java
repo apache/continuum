@@ -24,13 +24,16 @@ import com.opensymphony.xwork2.Preparable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionUpdatePolicyConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -72,10 +75,13 @@ public class BuildDefinitionTemplateAction
 
     private List<BuildDefinition> buildDefinitions;
 
+    private Map<Integer, String> buildDefinitionUpdatePolicies;
+
     // -------------------------------------------------------
     //  Webwork Methods
     // ------------------------------------------------------- 
 
+    @Override
     public void prepare()
         throws Exception
     {
@@ -88,6 +94,14 @@ public class BuildDefinitionTemplateAction
         this.setSchedules( getContinuum().getSchedules() );
         this.setProfiles( getContinuum().getProfileService().getAllProfiles() );
         this.setBuildDefinitions( getContinuum().getBuildDefinitionService().getAllTemplates() );
+        buildDefinitionUpdatePolicies = new HashMap<Integer, String>();
+        String text = getText( "buildDefinition.updatePolicy.always" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ALWAYS, text );
+        text = getText( "buildDefinition.updatePolicy.never" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_NEVER, text );
+        text = getText( "buildDefinition.updatePolicy.newPom" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ONLY_FOR_NEW_POM,
+                                           text );
     }
 
     public String input()
@@ -136,6 +150,8 @@ public class BuildDefinitionTemplateAction
     {
         List<BuildDefinition> selectedBuildDefinitions = getBuildDefinitionsFromSelectedBuildDefinitions();
         
+        BuildDefinitionTemplate result;
+        
         AuditLog event = new AuditLog( buildDefinitionTemplate.getName(), AuditLogConstants.ADD_TEMPLATE );
         event.setCategory( AuditLogConstants.TEMPLATE );
         event.setCurrentUser( getPrincipal() );
@@ -143,15 +159,24 @@ public class BuildDefinitionTemplateAction
         if ( this.buildDefinitionTemplate.getId() > 0 )
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
-            this.getContinuum().getBuildDefinitionService().updateBuildDefinitionTemplate( buildDefinitionTemplate );
+            result = this.getContinuum().getBuildDefinitionService().updateBuildDefinitionTemplate( buildDefinitionTemplate );
             event.setAction( AuditLogConstants.MODIFY_TEMPLATE );
-            event.log();
         }
         else
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
             this.buildDefinitionTemplate =
                 this.getContinuum().getBuildDefinitionService().addBuildDefinitionTemplate( buildDefinitionTemplate );
+            result = this.buildDefinitionTemplate;
+        }
+        
+        if ( result ==  null )
+        {
+            addActionError( getText( "buildDefintionTemplate.name.exists" ) );
+            return INPUT;
+        }
+        else
+        {
             event.log();
         }
 
@@ -217,6 +242,7 @@ public class BuildDefinitionTemplateAction
     public String saveBuildDefinition()
         throws Exception
     {
+        Schedule schedule = null;
         if ( buildDefinition.getProfile() != null )
         {
             Profile profile = getContinuum().getProfileService().getProfile( buildDefinition.getProfile().getId() );
@@ -233,7 +259,8 @@ public class BuildDefinitionTemplateAction
         {
             if ( buildDefinition.getSchedule().getId() > 0 )
             {
-                buildDefinition.setSchedule( getContinuum().getSchedule( buildDefinition.getSchedule().getId() ) );
+                schedule = getContinuum().getSchedule( buildDefinition.getSchedule().getId() );
+                buildDefinition.setSchedule( schedule );
             }
         }
 
@@ -245,6 +272,11 @@ public class BuildDefinitionTemplateAction
         {
             this.buildDefinition =
                 this.getContinuum().getBuildDefinitionService().addBuildDefinition( buildDefinition );
+        }
+        
+        if ( schedule != null )
+        {
+            getContinuum().activeBuildDefinitionSchedule( schedule );
         }
 
         return SUCCESS;
@@ -381,6 +413,11 @@ public class BuildDefinitionTemplateAction
     public void setSelectedBuildDefinitionIds( List<String> selectedBuildDefinitionIds )
     {
         this.selectedBuildDefinitionIds = selectedBuildDefinitionIds;
+    }
+
+    public Map<Integer, String> getBuildDefinitionUpdatePolicies()
+    {
+        return buildDefinitionUpdatePolicies;
     }
 
 }

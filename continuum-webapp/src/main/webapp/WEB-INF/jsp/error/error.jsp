@@ -24,7 +24,6 @@
 <s:i18n name="localization.Continuum">
 <head>
   <title><s:text name="errorOccured.page.title"/></title>
-  <s:head />
   <script language=javascript type='text/javascript'>
     <!--
     var state = 'none';

@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 /**
  * Based on AddAntProjectTestCase of Emmanuel Venisse.
- * 
+ *
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -36,19 +36,19 @@ public class AntProjectTest
     public void testAddAntProject()
         throws Exception
     {
-        String ANT_NAME = p.getProperty( "ANT_NAME" );
-        String ANT_DESCRIPTION = p.getProperty( "ANT_DESCRIPTION" );
-        String ANT_VERSION = p.getProperty( "ANT_VERSION" );
-        String ANT_TAG = p.getProperty( "ANT_TAG" );
-        String ANT_SCM_URL = p.getProperty( "ANT_SCM_URL" );
-        String ANT_SCM_USERNAME = p.getProperty( "ANT_SCM_USERNAME" );
-        String ANT_SCM_PASSWORD = p.getProperty( "ANT_SCM_PASSWORD" );
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String ANT_NAME = getProperty( "ANT_NAME" );
+        String ANT_DESCRIPTION = getProperty( "ANT_DESCRIPTION" );
+        String ANT_VERSION = getProperty( "ANT_VERSION" );
+        String ANT_TAG = getProperty( "ANT_TAG" );
+        String ANT_SCM_URL = getProperty( "ANT_SCM_URL" );
+        String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
+        String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    false, TEST_PROJ_GRP_NAME, null, true );
+                    false, TEST_PROJ_GRP_NAME, null, true, "ant" );
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
     }
 
@@ -63,19 +63,19 @@ public class AntProjectTest
     }
 
     @Test( dependsOnMethods = { "testAddAntProject" } )
-    public void testAddDupliedAntProject()
+    public void testAddDuplicateAntProject()
         throws Exception
     {
-        String ANT_NAME = p.getProperty( "ANT_NAME" );
-        String ANT_DESCRIPTION = p.getProperty( "ANT_DESCRIPTION" );
-        String ANT_VERSION = p.getProperty( "ANT_VERSION" );
-        String ANT_TAG = p.getProperty( "ANT_TAG" );
-        String ANT_SCM_URL = p.getProperty( "ANT_SCM_URL" );
-        String ANT_SCM_USERNAME = p.getProperty( "ANT_SCM_USERNAME" );
-        String ANT_SCM_PASSWORD = p.getProperty( "ANT_SCM_PASSWORD" );
+        String ANT_NAME = getProperty( "ANT_NAME" );
+        String ANT_DESCRIPTION = getProperty( "ANT_DESCRIPTION" );
+        String ANT_VERSION = getProperty( "ANT_VERSION" );
+        String ANT_TAG = getProperty( "ANT_TAG" );
+        String ANT_SCM_URL = getProperty( "ANT_SCM_URL" );
+        String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
+        String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    false, null, null, false );
+                    false, null, null, false, "ant" );
         assertTextPresent( "Project name already exist" );
     }
 }

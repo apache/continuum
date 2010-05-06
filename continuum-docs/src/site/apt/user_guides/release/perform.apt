@@ -1,19 +1,27 @@
  ------
  Perform Release
  ------
+ ------
+ 2010-02-19
+ ------
 
 Perform Release
 
- Choose "Perform Release" and the version number
+ Choose <<Perform Release>> and the version number
 
 [../../images/release-choose-perform-goal.png]
 
- Fill in the form and click Submit
+ Fill in the form and click <<Submit>>
+
+ To specify a different Maven goal to execute during the release, fill in the <<Perform Goals>> field with another goal.
+ By default, the goal for this field is <<<clean deploy>>>.
+
+ To specify additional arguments during execution, fill in the <<Arguments>> field.
 
 [../../images/release-perform-parameters.png]
 
- Wait for the process to complete, then click Done.
+ Wait for the process to complete, then click <<Done>>.
 
 [../../images/release-perform-executing.png]
 
- To view the release perform results, refer to {{{release_results.html}Release Results Management}}.
+ To view the release perform results, refer to {{{./release_results.html}Release Results Management}}.

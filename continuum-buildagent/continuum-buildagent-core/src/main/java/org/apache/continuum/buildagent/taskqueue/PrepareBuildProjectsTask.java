@@ -22,6 +22,7 @@ package org.apache.continuum.buildagent.taskqueue;
 import java.util.List;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.taskqueue.Task;
 
 public class PrepareBuildProjectsTask
@@ -29,19 +30,22 @@ public class PrepareBuildProjectsTask
 {
     private final List<BuildContext> buildContexts;
 
-    private final int trigger;
+    private BuildTrigger buildTrigger;
 
     private final int projectGroupId;
 
     private final String scmRootAddress;
 
-    public PrepareBuildProjectsTask( List<BuildContext> buildContexts, int trigger, int projectGroupId,
-                                     String scmRootAddress )
+    private final int scmRootId;
+
+    public PrepareBuildProjectsTask( List<BuildContext> buildContexts, BuildTrigger buildTrigger, int projectGroupId,
+                                     String scmRootAddress, int scmRootId )
     {
         this.buildContexts = buildContexts;
-        this.trigger = trigger;
+        this.buildTrigger = buildTrigger;
         this.projectGroupId = projectGroupId;
         this.scmRootAddress = scmRootAddress;
+        this.scmRootId = scmRootId;
     }
 
     public long getMaxExecutionTime()
@@ -55,9 +59,9 @@ public class PrepareBuildProjectsTask
         return buildContexts;
     }
 
-    public int getTrigger()
+    public BuildTrigger getBuildTrigger()
     {
-        return trigger;
+    	return buildTrigger;
     }
 
     public int getProjectGroupId()
@@ -68,5 +72,15 @@ public class PrepareBuildProjectsTask
     public String getScmRootAddress()
     {
         return scmRootAddress;
+    }
+
+    public int getScmRootId()
+    {
+        return scmRootId;
+    }
+
+    public int getHashCode()
+    {
+    	return projectGroupId + scmRootId + buildTrigger.getTrigger();
     }
 }

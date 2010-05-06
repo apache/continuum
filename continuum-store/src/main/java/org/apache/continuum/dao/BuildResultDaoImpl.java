@@ -19,21 +19,21 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.springframework.stereotype.Repository;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -71,6 +71,7 @@ public class BuildResultDaoImpl
 
             project.setState( build.getState() );
 
+            //TODO: Use projectDao
             pm.makePersistent( project );
 
             tx.commit();
@@ -142,7 +143,45 @@ public class BuildResultDaoImpl
 
             if ( result != null && !result.isEmpty() )
             {
-                return (BuildResult) result.get( 0 );
+                return result.get( 0 );
+            }
+        }
+        finally
+        {
+            rollback( tx );
+        }
+        return null;
+    }
+
+    public BuildResult getLatestBuildResultForProjectWithDetails( int projectId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId" );
+
+            query.setFilter( "this.project.id == projectId && this.project.latestBuildId == this.id" );
+
+            List<BuildResult> result = (List<BuildResult>) query.execute( projectId );
+
+            result = (List<BuildResult>) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            if ( result != null && !result.isEmpty() )
+            {
+                return result.get( 0 );
             }
         }
         finally
@@ -183,7 +222,7 @@ public class BuildResultDaoImpl
 
             if ( result != null && !result.isEmpty() )
             {
-                return (BuildResult) result.get( 0 );
+                return result.get( 0 );
             }
         }
         finally
@@ -251,11 +290,6 @@ public class BuildResultDaoImpl
         return null;
     }
 
-    public Map<Integer, BuildResult> getLatestBuildResults()
-    {
-        return getLatestBuildResultsByProjectGroupId( -1 );
-    }
-
     public void removeBuildResult( BuildResult buildResult )
     {
         removeObject( buildResult );
@@ -278,9 +312,9 @@ public class BuildResultDaoImpl
 
             query.declareParameters( "Integer projectId" );
 
-            List result = (List) query.execute( projectId );
+            List<BuildResult> result = (List<BuildResult>) query.execute( projectId );
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -316,9 +350,9 @@ public class BuildResultDaoImpl
 
             query.setFilter( "this.project.id == projectId && this.buildNumber == buildNumber" );
 
-            List result = (List) query.execute( projectId, buildNumber );
+            List<BuildResult> result = (List<BuildResult>) query.execute( projectId, buildNumber );
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -403,9 +437,93 @@ public class BuildResultDaoImpl
         }
     }
 
+    public long getNbBuildResultsInSuccessForProject( int projectId, long fromDate )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, long fromDate, int state" );
+
+            query.setFilter( "this.project.id == projectId && this.startTime > fromDate && this.state == state" );
+
+            query.setResult( "count(this)" );
+
+            long result = (Long) query.execute( projectId, fromDate, ContinuumProjectState.OK );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public List<BuildResult> getBuildResultsForProjectWithDetails( int projectId, long fromDate, int tobuildResultId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+            pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+
+            Query query = pm.newQuery( extent );
+
+            String parameters = "int projectId, long fromDate";
+            String filter = "this.project.id == projectId && this.startTime > fromDate";
+
+            if ( tobuildResultId > 0 )
+            {
+                parameters += ", int buildResultId";
+                filter += " && this.id < buildResultId";
+            }
+            query.declareParameters( parameters );
+
+            query.setFilter( filter );
+
+            query.setOrdering( "this.id descending" );
+
+            List<BuildResult> result;
+
+            if ( tobuildResultId > 0 )
+            {
+                result = (List<BuildResult>) query.execute( projectId, fromDate, tobuildResultId );
+            }
+            else
+            {
+                result = (List<BuildResult>) query.execute( projectId, fromDate );
+            }
+
+            result = (List<BuildResult>) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
     public List<BuildResult> getBuildResultsForProject( int projectId )
     {
-        return getBuildResultsForProject( projectId, -1, -1 );
+        return getBuildResultsForProjectWithDetails( projectId, -1, -1 );
     }
 
     public List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex )
@@ -413,7 +531,7 @@ public class BuildResultDaoImpl
         PersistenceManager pm = getPersistenceManager();
 
         Transaction tx = pm.currentTransaction();
-        
+
         try
         {
             tx.begin();
@@ -433,9 +551,9 @@ public class BuildResultDaoImpl
                 query.setRange( startIndex, endIndex );
             }
 
-            List result = (List) query.execute( projectId );
+            List<BuildResult> result = (List<BuildResult>) query.execute( projectId );
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -446,7 +564,7 @@ public class BuildResultDaoImpl
             rollback( tx );
         }
     }
-    
+
     public List<BuildResult> getBuildResultsForProjectFromId( int projectId, long startId )
         throws ContinuumStoreException
     {
@@ -455,7 +573,7 @@ public class BuildResultDaoImpl
         Transaction tx = pm.currentTransaction();
 
         pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
-        
+
         try
         {
             tx.begin();
@@ -465,14 +583,14 @@ public class BuildResultDaoImpl
             Query query = pm.newQuery( extent );
 
             query.declareParameters( "int projectId, int buildNumber" );
-           
+
             query.setFilter( "this.project.id == projectId && this.buildNumber >= buildNumber" );
-            
+
             query.setOrdering( "this.startTime descending" );
 
-            List result = (List) query.execute( projectId, startId );
+            List<BuildResult> result = (List<BuildResult>) query.execute( projectId, startId );
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -488,13 +606,11 @@ public class BuildResultDaoImpl
         }
     }
 
-    public List<BuildResult> getBuildResultsForProject( int projectId, long fromDate )
+    public BuildResult getLatestBuildResultInSuccess( int projectId )
     {
         PersistenceManager pm = getPersistenceManager();
 
         Transaction tx = pm.currentTransaction();
-
-        pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
 
         try
         {
@@ -504,13 +620,17 @@ public class BuildResultDaoImpl
 
             Query query = pm.newQuery( extent );
 
-            query.declareParameters( "int projectId, long fromDate" );
+            query.declareParameters( "int projectId" );
 
-            query.setFilter( "this.project.id == projectId && this.startTime > fromDate" );
+            String filter = "this.project.buildNumber == this.buildNumber && this.project.id == projectId";
 
-            List result = (List) query.execute( projectId, fromDate );
+            query.setFilter( filter );
 
-            result = (List) pm.detachCopyAll( result );
+            query.setUnique( true );
+
+            BuildResult result = (BuildResult) query.execute( projectId );
+
+            result = (BuildResult) pm.detachCopy( result );
 
             tx.commit();
 
@@ -522,23 +642,52 @@ public class BuildResultDaoImpl
         }
     }
 
-    public List<BuildResult> getBuildResultsInSuccessForProject( int projectId, long fromDate )
+    private int getPreviousBuildResultIdInSuccess( int projectId, int buildResultId )
     {
-        List<BuildResult> buildResults = getBuildResultsForProject( projectId, fromDate );
+        PersistenceManager pm = getPersistenceManager();
 
-        List<BuildResult> results = new ArrayList<BuildResult>();
+        Transaction tx = pm.currentTransaction();
 
-        if ( buildResults != null )
+        try
         {
-            for ( BuildResult res : buildResults )
-            {
-                if ( res.getState() == ContinuumProjectState.OK )
-                {
-                    results.add( res );
-                }
-            }
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, int buildResultId" );
+
+            String filter = "this.id < buildResultId && this.state == " + ContinuumProjectState.OK +
+                "  && this.project.id == projectId";
+
+            query.setFilter( filter );
+
+            query.setResult( "max(this.id)" );
+
+            int result = (Integer) query.execute( projectId, buildResultId );
+
+            tx.commit();
+
+            return result;
         }
-        return results;
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )
+        throws ContinuumStoreException
+    {
+        try
+        {
+            return getBuildResult( getPreviousBuildResultIdInSuccess( projectId, buildResultId ) );
+        }
+        catch ( NullPointerException e )
+        {
+            return null;
+        }
     }
 
     public Map<Integer, BuildResult> getBuildResultsInSuccessByProjectGroupId( int projectGroupId )
@@ -599,10 +748,4 @@ public class BuildResultDaoImpl
 
         return null;
     }
-
-    public Map<Integer, BuildResult> getBuildResultsInSuccess()
-    {
-        return getBuildResultsInSuccessByProjectGroupId( -1 );
-    }
-
 }

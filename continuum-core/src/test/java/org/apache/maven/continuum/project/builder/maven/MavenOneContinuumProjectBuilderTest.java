@@ -63,7 +63,7 @@ public class MavenOneContinuumProjectBuilderTest
         bdt = service.addBuildDefinitionInTemplate( bdt, bd, false );
 
         ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata(
-            getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false, bdt, false );
+            getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false, bdt );
 
         assertOnResult( result );
 
@@ -79,7 +79,7 @@ public class MavenOneContinuumProjectBuilderTest
 
         ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata(
             getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false,
-            service.getDefaultMavenOneBuildDefinitionTemplate(), false );
+            service.getDefaultMavenOneBuildDefinitionTemplate() );
 
         assertOnResult( result );
 

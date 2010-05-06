@@ -30,8 +30,12 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeSet;
@@ -90,9 +94,14 @@ public class BuildResultAction
         // check if there are surefire results to display
         project = getContinuum().getProject( getProjectId() );
 
-        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() &&
-            project.getState() == ContinuumProjectState.BUILDING )
+        ConfigurationService configuration = getContinuum().getConfiguration();
+
+        // view build result of the current build from the distributed build agent
+        if ( configuration.isDistributedBuildEnabled() &&
+            project.getState() == ContinuumProjectState.BUILDING && getBuildId() == 0 )
         {
+            // if the project is currently building in distributed build agent, the build result will be stored in the database after the build is finished. 
+            // it's safe to assume that the build result will be null at this point
             Map<String, Object> map = distributedBuildManager.getBuildResult( project.getId() );
 
             if ( map == null )
@@ -107,6 +116,12 @@ public class BuildResultAction
                 buildResult = ContinuumBuildConstant.getBuildResult( map, null );
 
                 buildOutput = ContinuumBuildConstant.getBuildOutput( map );
+
+                if ( ServletActionContext.getRequest() != null )
+                {
+                    state =
+                        StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+                }
             }
             changeSet = null;
 
@@ -120,15 +135,18 @@ public class BuildResultAction
 
             // directory contains files ?
             File surefireReportsDirectory =
-                getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
+                configuration.getTestReportsDirectory( buildId, getProjectId() );
             File[] files = surefireReportsDirectory.listFiles();
             hasSurefireResults = files != null && files.length > 0;
             changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
             buildOutput = getBuildOutputText();
 
-            state =
-                StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+            if ( ServletActionContext.getRequest() != null )
+            {
+                state =
+                    StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+            }
 
             this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
         }
@@ -149,7 +167,32 @@ public class BuildResultAction
         }
         if ( this.isConfirmed() )
         {
-            getContinuum().removeBuildResult( buildId );
+            try
+            {
+                if ( canRemoveBuildResult( getContinuum().getBuildResult( buildId ) ) )
+                {
+                    getContinuum().removeBuildResult( buildId );
+                }
+                else
+                {
+                    addActionError( getText( "buildResult.cannot.delete" ) );
+                }
+            }
+            catch ( ContinuumException e )
+            {
+                addActionError( getText( "buildResult.delete.error", "Unable to delete build result",
+                                         new Integer( buildId ).toString() ) );
+            }
+            catch ( BuildManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
+
+            AuditLog event = new AuditLog( "Build Result id=" + buildId, AuditLogConstants.REMOVE_BUILD_RESULT );
+            event.setCategory( AuditLogConstants.BUILD_RESULT );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
+            
             return SUCCESS;
         }
 
@@ -174,7 +217,8 @@ public class BuildResultAction
     private String getBuildOutputText()
         throws ConfigurationException, IOException
     {
-        File buildOutputFile = getContinuum().getConfiguration().getBuildOutputFile( getBuildId(), getProjectId() );
+        ConfigurationService configuration = getContinuum().getConfiguration();
+        File buildOutputFile = configuration.getBuildOutputFile( getBuildId(), getProjectId() );
 
         if ( buildOutputFile.exists() )
         {
@@ -243,5 +287,11 @@ public class BuildResultAction
     public int getProjectGroupId()
     {
         return projectGroupId;
+    }
+
+    // for testing
+    public void setDistributedBuildManager( DistributedBuildManager distributedBuildManager )
+    {
+        this.distributedBuildManager = distributedBuildManager;
     }
 }

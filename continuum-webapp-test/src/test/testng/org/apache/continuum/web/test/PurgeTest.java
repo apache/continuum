@@ -32,16 +32,16 @@ public class PurgeTest
 {
     public void testAddRepositoryPurge()
     {
-        String PURGE_REPOSITORY_DESCRIPTION = p.getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
-        String PURGE_REPOSITORY_DAYS = p.getProperty( "PURGE_REPOSITORY_DAYS" );
-        String PURGE_REPOSITORY_RETETION = p.getProperty( "PURGE_REPOSITORY_RETETION" );
+        String PURGE_REPOSITORY_DESCRIPTION = getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
+        String PURGE_REPOSITORY_DAYS = getProperty( "PURGE_REPOSITORY_DAYS" );
+        String PURGE_REPOSITORY_RETETION = getProperty( "PURGE_REPOSITORY_RETETION" );
         goToAddRepositoryPurge();
         addEditRepositoryPurge( PURGE_REPOSITORY_DAYS, PURGE_REPOSITORY_RETETION, PURGE_REPOSITORY_DESCRIPTION, true );
     }
 
     public void testAddInvalidRepositoryPurge()
     {
-        String PURGE_REPOSITORY_DESCRIPTION = p.getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
+        String PURGE_REPOSITORY_DESCRIPTION = getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
         goToAddRepositoryPurge();
         addEditRepositoryPurge( "", "", PURGE_REPOSITORY_DESCRIPTION, false );
         assertTextPresent( "Retention Count must be greater than 0." );
@@ -50,9 +50,9 @@ public class PurgeTest
     @Test( dependsOnMethods = { "testAddRepositoryPurge" } )
     public void testEditRepositoryPurge()
     {
-        String PURGE_REPOSITORY_DESCRIPTION = p.getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
-        String PURGE_REPOSITORY_DAYS = p.getProperty( "PURGE_REPOSITORY_DAYS" );
-        String PURGE_REPOSITORY_RETETION = p.getProperty( "PURGE_REPOSITORY_RETETION" );
+        String PURGE_REPOSITORY_DESCRIPTION = getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
+        String PURGE_REPOSITORY_DAYS = getProperty( "PURGE_REPOSITORY_DAYS" );
+        String PURGE_REPOSITORY_RETETION = getProperty( "PURGE_REPOSITORY_RETETION" );
         String newDescription = "new_description";
         String newDays = "45";
         String newRetention = "4";
@@ -65,22 +65,22 @@ public class PurgeTest
     @Test( dependsOnMethods = { "testEditRepositoryPurge" } )
     public void testDeleteRepositoryPurge()
     {
-        String PURGE_REPOSITORY_DESCRIPTION = p.getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
+        String PURGE_REPOSITORY_DESCRIPTION = getProperty( "PURGE_REPOSITORY_DESCRIPTION" );
         removeRepositoryPurge( PURGE_REPOSITORY_DESCRIPTION );
     }
 
     public void testAddDirectoryPurge()
     {
-        String PURGE_DIRECTORY_DESCRIPTION = p.getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
-        String PURGE_DIRECTORY_DAYS = p.getProperty( "PURGE_DIRECTORY_DAYS" );
-        String PURGE_DIRECTORY_RETETION = p.getProperty( "PURGE_DIRECTORY_RETETION" );
+        String PURGE_DIRECTORY_DESCRIPTION = getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
+        String PURGE_DIRECTORY_DAYS = getProperty( "PURGE_DIRECTORY_DAYS" );
+        String PURGE_DIRECTORY_RETETION = getProperty( "PURGE_DIRECTORY_RETETION" );
         goToAddDirectoryPurge();
         addEditDirectoryPurge( PURGE_DIRECTORY_DAYS, PURGE_DIRECTORY_RETETION, PURGE_DIRECTORY_DESCRIPTION, true );
     }
 
     public void testAddInvalidDirectoryPurge()
     {
-        String PURGE_DIRECTORY_DESCRIPTION = p.getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
+        String PURGE_DIRECTORY_DESCRIPTION = getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
         goToAddDirectoryPurge();
         addEditDirectoryPurge( "", "", PURGE_DIRECTORY_DESCRIPTION, false );
         assertTextPresent( "Retention Count must be greater than 0." );
@@ -89,9 +89,9 @@ public class PurgeTest
     @Test( dependsOnMethods = { "testAddDirectoryPurge" } )
     public void testEditDirectoryPurge()
     {
-        String PURGE_DIRECTORY_DESCRIPTION = p.getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
-        String PURGE_DIRECTORY_DAYS = p.getProperty( "PURGE_DIRECTORY_DAYS" );
-        String PURGE_DIRECTORY_RETETION = p.getProperty( "PURGE_DIRECTORY_RETETION" );
+        String PURGE_DIRECTORY_DESCRIPTION = getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
+        String PURGE_DIRECTORY_DAYS = getProperty( "PURGE_DIRECTORY_DAYS" );
+        String PURGE_DIRECTORY_RETETION = getProperty( "PURGE_DIRECTORY_RETETION" );
         String newDescription = "new_description";
         String newDays = "45";
         String newRetention = "4";
@@ -104,7 +104,7 @@ public class PurgeTest
     @Test( dependsOnMethods = { "testEditDirectoryPurge" } )
     public void testDeleteDirectoryPurge()
     {
-        String PURGE_DIRECTORY_DESCRIPTION = p.getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
+        String PURGE_DIRECTORY_DESCRIPTION = getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
         removeDirectoryPurge( PURGE_DIRECTORY_DESCRIPTION );
     }
 }

@@ -195,6 +195,7 @@ public class DefaultBuildDefinitionService
             storedBuildDefinition.setProfile( buildDefinition.getProfile() );
             storedBuildDefinition.setSchedule( buildDefinition.getSchedule() );
             storedBuildDefinition.setType( buildDefinition.getType() );
+            storedBuildDefinition.setUpdatePolicy( buildDefinition.getUpdatePolicy() );
             buildDefinitionDao.storeBuildDefinition( storedBuildDefinition );
         }
         catch ( ContinuumStoreException e )
@@ -248,6 +249,7 @@ public class DefaultBuildDefinitionService
         cloned.setSchedule( buildDefinition.getSchedule() );
         cloned.setType( buildDefinition.getType() );
         cloned.setTemplate( buildDefinition.isTemplate() );
+        cloned.setUpdatePolicy( buildDefinition.getUpdatePolicy() );
         return cloned;
     }
 
@@ -489,15 +491,20 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            BuildDefinitionTemplate stored = getBuildDefinitionTemplate( buildDefinitionTemplate.getId() );
-            stored.setName( buildDefinitionTemplate.getName() );
-            stored.setBuildDefinitions( buildDefinitionTemplate.getBuildDefinitions() );
-            return buildDefinitionTemplateDao.updateBuildDefinitionTemplate( stored );
+            if ( !hasDuplicateTemplateName( buildDefinitionTemplate ) )
+            {
+                BuildDefinitionTemplate stored = getBuildDefinitionTemplate( buildDefinitionTemplate.getId() );
+                stored.setName( buildDefinitionTemplate.getName() );
+                stored.setBuildDefinitions( buildDefinitionTemplate.getBuildDefinitions() );
+                return buildDefinitionTemplateDao.updateBuildDefinitionTemplate( stored );
+            }
         }
         catch ( ContinuumStoreException e )
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
+        
+        return null;
     }
 
     public BuildDefinitionTemplate addBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
@@ -505,12 +512,17 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            return buildDefinitionTemplateDao.addBuildDefinitionTemplate( buildDefinitionTemplate );
+            if ( !hasDuplicateTemplateName( buildDefinitionTemplate ) )
+            {
+                return buildDefinitionTemplateDao.addBuildDefinitionTemplate( buildDefinitionTemplate );
+            }
         }
         catch ( ContinuumStoreException e )
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
+        
+        return null;
     }
 
     public BuildDefinitionTemplate addBuildDefinitionInTemplate( BuildDefinitionTemplate buildDefinitionTemplate,
@@ -644,5 +656,23 @@ public class DefaultBuildDefinitionService
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
+    }
+    
+    private boolean hasDuplicateTemplateName( BuildDefinitionTemplate buildDefinitionTemplate )
+        throws BuildDefinitionServiceException
+    {
+        boolean isDuplicate = false;
+        List<BuildDefinitionTemplate> allBuildDefinitionTemplate = this.getAllBuildDefinitionTemplate();
+    
+        for ( BuildDefinitionTemplate template : allBuildDefinitionTemplate )
+        {
+            String name = buildDefinitionTemplate.getName();
+            if ( ( template.getId() != buildDefinitionTemplate.getId() ) && ( template.getName().equals( name ) ) )
+            {
+                isDuplicate = true;
+                break;
+            }
+        }
+        return isDuplicate;
     }
 }

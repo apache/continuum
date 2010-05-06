@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
-    private Logger log = LoggerFactory.getLogger( AbstractContinuumPurgeExecutor.class );
-    
+    private static final Logger log = LoggerFactory.getLogger( AbstractContinuumPurgeExecutor.class );
+
     public void purge( Set<ArtifactReference> references, RepositoryManagedContent repository )
     {
         if ( references != null && !references.isEmpty() )

@@ -170,6 +170,7 @@ public abstract class AbstractBuildDefinitionContinuumAction
                 storedDefinition.setArguments( buildDefinition.getArguments() );
                 storedDefinition.setBuildFile( buildDefinition.getBuildFile() );
                 storedDefinition.setBuildFresh( buildDefinition.isBuildFresh() );
+                storedDefinition.setUpdatePolicy( buildDefinition.getUpdatePolicy() );
 
                 // special case of this is resolved in the resolveDefaultBuildDefinitionsForProjectGroup method
                 storedDefinition.setDefaultForProject( buildDefinition.isDefaultForProject() );

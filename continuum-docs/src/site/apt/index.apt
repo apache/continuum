@@ -3,60 +3,56 @@
  ------
  Emmanuel Venisse
  ------
- Oct 3 2007
+ 2010-02-18
+ ------
 
 Welcome to Apache Continuum
 
   Apache Continuum is an enterprise-ready continuous integration server with features such as automated builds,
-  release management, role-based security, and integration with popular build tools and source control management
+  release management, role-based security and integration with popular build tools and source control management
   systems. Whether you have a centralized build team or want to put control of releases in the hands of developers,
-  Continuum can help you improve quality and maintain a consistent build environment. 
+  Continuum can help you improve quality and maintain a consistent build environment.
 
-Documentation
+* Documentation
 
-* Installation/Upgrade Guides
+  * {{{./release-notes.html} Release Notes}}
 
-** {{{installation/index.html}Installation}}
+  * Installation/Upgrade Guides
 
-*** Standalone version
+    * {{{./installation/index.html}Installation}}
 
-    {{{installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
+      * Standalone version:
 
-*** Webapp
+        {{{./installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
 
-    {{{installation/tomcat.html}Tomcat}},
-    {{{installation/jetty.html}Jetty}},
-    {{{installation/jboss.html}JBoss}},
-    {{{installation/geronimo.html}Geronimo}},
-    {{{installation/glassfish.html}GlassFish}},
-    ...
+      * Webapp:
 
-** Release Notes
+        {{{./installation/tomcat.html}Tomcat}}
 
-    {{{release-notes.html} Release Notes}}
+      []
 
-** Upgrade
+    * {{{./installation/upgrade.html} How to upgrade from a previous version}}
 
-    {{{installation/upgrade.html} How to upgrade from a previous version}}
+    []
 
-* User's Guide
+  * {{{./user_guides/index.html} User's Guide}}
 
-    {{{user_guides/index.html} User's Guide}}
+  * {{{./administrator_guides/index.html} Administrator's Guide}}
 
-* Administrator's Guide
+  * {{{./developer_guides/building.html} Developer's Guide to building Continuum}}
 
-    {{{administrator_guides/index.html} Administrator's Guide}}
+  * Knowledge Base
 
-* Developer's Guide
+      {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
 
-    {{{developer_guides/building.html}Guide to building Continuum}}
+      {{{http://cwiki.apache.org/confluence/display/CONTINUUM}Wiki}}
 
-* Knowledge Base
+      {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Old Wiki}}
 
-    {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
+      {{{http://apache-continuum.blogspot.com/}Blog}}
 
-    {{{http://cwiki.apache.org/confluence/display/CONTINUUM}Wiki}}
+   []
 
-    {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Old Wiki}}
+   This documentation is also available in {{{./apache-continuum.pdf}PDF}} format.
 
-    {{{http://apache-continuum.blogspot.com/}Blog}}
+

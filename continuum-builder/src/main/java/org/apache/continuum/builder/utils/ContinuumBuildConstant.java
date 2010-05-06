@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildResult;
 
 public class ContinuumBuildConstant
@@ -37,7 +38,13 @@ public class ContinuumBuildConstant
 
     public static final String KEY_BUILD_DEFINITION_ID = "builddefinition-id";
 
+    public static final String KEY_BUILD_DEFINITION_LABEL = "builddefinition-label";
+
     public static final String KEY_TRIGGER = "trigger";
+    
+    public static final String KEY_USERNAME = "username";
+        
+    public static final String KEY_BUILD_TRIGGER = "buildTrigger";
 
     public static final String KEY_EXECUTOR_ID = "executor-id";
 
@@ -82,6 +89,8 @@ public class ContinuumBuildConstant
     public static final String KEY_PROJECT_GROUP_NAME = "project-group-name";
 
     public static final String KEY_SCM_ROOT_ADDRESS = "scm-root-address";
+
+    public static final String KEY_SCM_ROOT_ID = "scm-root-id";
 
     public static final String KEY_SCM_ERROR = "scm-error";
 
@@ -198,6 +207,17 @@ public class ContinuumBuildConstant
     {
         return getInteger( context, KEY_TRIGGER );
     }
+    
+    public static String getUsername( Map<String, Object> context )
+    {
+        return getString( context, KEY_USERNAME, "" );
+    }
+    
+    public static BuildTrigger getBuildTrigger( Map<String, Object> context )
+    {
+        BuildTrigger defaultValue = new BuildTrigger( 0, "" );
+        return (BuildTrigger) getObject( context, KEY_BUILD_TRIGGER, defaultValue );
+    }
 
     public static long getStartTime( Map<String, Object> context )
     {
@@ -289,7 +309,7 @@ public class ContinuumBuildConstant
         return getString( context, KEY_INSTALLATION_VAR_NAME );
     }
 
-    public static List<Map> getScmChanges( Map<String, Object> context )
+    public static List<Map<String, Object>> getScmChanges( Map<String, Object> context )
     {
         return getList( context, KEY_SCM_CHANGES );
     }
@@ -318,7 +338,7 @@ public class ContinuumBuildConstant
         }
     }
 
-    public static List<Map> getChangeSetFiles( Map<String, Object> context )
+    public static List<Map<String, Object>> getChangeSetFiles( Map<String, Object> context )
     {
         return getList( context, KEY_CHANGESET_FILES );
     }
@@ -379,12 +399,12 @@ public class ContinuumBuildConstant
         return getString( context, KEY_SCM_TAG );
     }
 
-    public static Map getProjectParent( Map<String, Object> context )
+    public static Map<String, Object> getProjectParent( Map<String, Object> context )
     {
         return getMap( context, KEY_PROJECT_PARENT );
     }
 
-    public static List<Map> getProjectDevelopers( Map<String, Object> context )
+    public static List<Map<String, Object>> getProjectDevelopers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEVELOPERS );
     }
@@ -404,12 +424,12 @@ public class ContinuumBuildConstant
         return getString( context, KEY_PROJECT_DEVELOPER_SCMID );
     }
 
-    public static List<Map> getProjectDependencies( Map<String, Object> context )
+    public static List<Map<String, Object>> getProjectDependencies( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEPENDENCIES );
     }
 
-    public static List<Map> getProjectNotifiers( Map<String, Object> context )
+    public static List<Map<String, Object>> getProjectNotifiers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_NOTIFIERS );
     }
@@ -464,12 +484,12 @@ public class ContinuumBuildConstant
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_WARNING );
     }
 
-    public static Map getScmResult( Map<String, Object> context )
+    public static Map<String, Object> getScmResult( Map<String, Object> context )
     {
         return getMap( context, KEY_SCM_RESULT );
     }
 
-    public static Map getMavenProject( Map<String, Object> context )
+    public static Map<String, Object> getMavenProject( Map<String, Object> context )
     {
         return getMap( context, KEY_MAVEN_PROJECT );
     }
@@ -487,6 +507,16 @@ public class ContinuumBuildConstant
     public static String getBuildAgentUrl( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_AGENT_URL );
+    }
+
+    public static int getScmRootId( Map<String, Object> context )
+    {
+        return getInteger( context, KEY_SCM_ROOT_ID );
+    }
+
+    public static String getBuildDefinitionLabel( Map<String, Object> context )
+    {
+        return getString( context, KEY_BUILD_DEFINITION_LABEL, "" );
     }
 
     // ----------------------------------------------------------------------

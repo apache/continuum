@@ -1,10 +1,5 @@
 package org.apache.continuum.distributed.transport.slave;
 
-import com.atlassian.xmlrpc.ServiceObject;
-
-import java.util.List;
-import java.util.Map;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +19,11 @@ import java.util.Map;
  * under the License.
  */
 
+import com.atlassian.xmlrpc.ServiceObject;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * SlaveBuildAgentTransportService
  */
@@ -33,10 +33,10 @@ public interface SlaveBuildAgentTransportService
     public Boolean buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws Exception;
 
-    public Map getBuildResult( int projectId )
+    public Map<String, Object> getBuildResult( int projectId )
         throws Exception;
 
-    public Integer getProjectCurrentlyBuilding()
+    public Map<String, Object> getProjectCurrentlyBuilding()
         throws Exception;
 
     public List<Map<String, String>> getAvailableInstallations()
@@ -61,7 +61,7 @@ public interface SlaveBuildAgentTransportService
         throws Exception;
 
     public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
-                                  Map environments )
+                                  Map environments, String username )
         throws Exception;
 
     public Map<String, Object> getReleaseResult( String releaseId )
@@ -77,17 +77,59 @@ public interface SlaveBuildAgentTransportService
         throws Exception;
 
     public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                   Map repository )
+                                   Map repository, String username )
         throws Exception;
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map environments )
+                                         String scmTagBase, Map environments, String username )
         throws Exception;
 
     public String releaseCleanup( String releaseId )
         throws Exception;
 
     public Boolean releaseRollback( String releaseId, int projectId )
+        throws Exception;
+
+    public Integer getBuildSizeOfAgent()
+        throws Exception;
+
+    public List<Map<String, Object>> getProjectsInPrepareBuildQueue()
+        throws Exception;
+
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsInPrepareBuildQueue()
+        throws Exception;
+
+    public List<Map<String, Object>> getProjectsInBuildQueue()
+        throws Exception;
+
+    public Map<String, Object> getProjectCurrentlyPreparingBuild()
+        throws Exception;
+
+    public List<Map<String, Object>> getProjectsAndBuildDefinitionsCurrentlyPreparingBuild()
+        throws Exception;
+
+    public Boolean isProjectGroupInQueue( int projectGroupId )
+        throws Exception;
+
+    public Boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds )
+        throws Exception;
+
+    public Boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception;
+
+    public Boolean isProjectInBuildQueue( int projectId )
+        throws Exception;
+
+    public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws Exception;
+
+    public Boolean removeFromPrepareBuildQueue( List<String> hashCodes )
+        throws Exception;
+
+    public Boolean removeFromBuildQueue( int projectId, int buildDefinitionId )
+        throws Exception;
+
+    public Boolean removeFromBuildQueue( List<String> hashCodes )
         throws Exception;
 }

@@ -33,7 +33,7 @@ public class BuildDefinitionTemplateTest
     public void testAddTemplate()
         throws Exception
     {
-        String TEMPLATE_NAME = p.getProperty( "TEMPLATE_NAME" );
+        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         goToAddTemplate();
         addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven 2 Build Definition",
             "Default Maven 1 Build Definition" }, new String[] {}, true );
@@ -51,7 +51,7 @@ public class BuildDefinitionTemplateTest
     public void testEditTemplate()
         throws Exception
     {
-        String TEMPLATE_NAME = p.getProperty( "TEMPLATE_NAME" );
+        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         String newName = "new_name";
         goToEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven 2 Build Definition",
             "Default Maven 1 Build Definition" } );
@@ -66,17 +66,17 @@ public class BuildDefinitionTemplateTest
     @Test( dependsOnMethods = { "testEditTemplate" } )
     public void testDeleteTemplate()
     {
-        String TEMPLATE_NAME = p.getProperty( "TEMPLATE_NAME" );
+        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         removeTemplate( TEMPLATE_NAME );
     }
 
     public void testAddBuildDefinitionTemplate()
         throws Exception
     {
-        String TEMPLATE_BUILD_POM_NAME = p.getProperty( "TEMPLATE_BUILD_POM_NAME" );
-        String TEMPLATE_BUILD_GOALS = p.getProperty( "TEMPLATE_BUILD_GOALS" );
-        String TEMPLATE_BUILD_ARGUMENTS = p.getProperty( "TEMPLATE_BUILD_ARGUMENTS" );
-        String TEMPLATE_BUILD_DESCRIPTION = p.getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
+        String TEMPLATE_BUILD_POM_NAME = getProperty( "TEMPLATE_BUILD_POM_NAME" );
+        String TEMPLATE_BUILD_GOALS = getProperty( "TEMPLATE_BUILD_GOALS" );
+        String TEMPLATE_BUILD_ARGUMENTS = getProperty( "TEMPLATE_BUILD_ARGUMENTS" );
+        String TEMPLATE_BUILD_DESCRIPTION = getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
         goToAddBuildDefinitionTemplate();
         addEditBuildDefinitionTemplate( TEMPLATE_BUILD_POM_NAME, TEMPLATE_BUILD_GOALS, TEMPLATE_BUILD_ARGUMENTS,
                                         TEMPLATE_BUILD_DESCRIPTION, true, true, true, true );
@@ -95,10 +95,10 @@ public class BuildDefinitionTemplateTest
     public void testEditBuildDefinitionTemplate()
         throws Exception
     {
-        String TEMPLATE_BUILD_POM_NAME = p.getProperty( "TEMPLATE_BUILD_POM_NAME" );
-        String TEMPLATE_BUILD_GOALS = p.getProperty( "TEMPLATE_BUILD_GOALS" );
-        String TEMPLATE_BUILD_ARGUMENTS = p.getProperty( "TEMPLATE_BUILD_ARGUMENTS" );
-        String TEMPLATE_BUILD_DESCRIPTION = p.getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
+        String TEMPLATE_BUILD_POM_NAME = getProperty( "TEMPLATE_BUILD_POM_NAME" );
+        String TEMPLATE_BUILD_GOALS = getProperty( "TEMPLATE_BUILD_GOALS" );
+        String TEMPLATE_BUILD_ARGUMENTS = getProperty( "TEMPLATE_BUILD_ARGUMENTS" );
+        String TEMPLATE_BUILD_DESCRIPTION = getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
         goToEditBuildDefinitionTemplate( TEMPLATE_BUILD_DESCRIPTION );
         addEditBuildDefinitionTemplate( TEMPLATE_BUILD_POM_NAME, TEMPLATE_BUILD_GOALS, TEMPLATE_BUILD_ARGUMENTS,
                                         TEMPLATE_BUILD_DESCRIPTION, false, false, false, true );
@@ -107,7 +107,7 @@ public class BuildDefinitionTemplateTest
     @Test( dependsOnMethods = { "testEditBuildDefinitionTemplate" } )
     public void testDeleteBuildDefinitionTemplate()
     {
-        String TEMPLATE_BUILD_DESCRIPTION = p.getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
+        String TEMPLATE_BUILD_DESCRIPTION = getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
         removeBuildDefinitionTemplate( TEMPLATE_BUILD_DESCRIPTION );
     }
 }

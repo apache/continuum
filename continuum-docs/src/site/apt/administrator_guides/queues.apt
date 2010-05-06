@@ -8,19 +8,30 @@
 
 Managing Queues
 
-	Click the <<Queues>> link under the <<Administration>> section
+    Current checkouts and builds, and all other projects queued in the checkout, build, and prepare build queues
+    can be viewed in the <<Queues>> page.
 
 [../images/queues.png] Queues
 
-  To display :
+    Prepare Build Queue
   
-[../images/queues-view.png] Queues View  
-	
-	You must have a <<"Manage Continuum Queues">> role for you to:
+[../images/queues-prepare.png] Prepare Build Queue
 
-    [[1]] Cancel current checkouts, current builds, queued checkouts and queued builds by clicking the  
+    Build Queues
+
+[../images/queues-view.png] Queues View  
+
+    Checkout Queue
+
+[../images/queues-checkout.png] Checkout Queue
+	
+	You must have a <<Manage Continuum Queues>> role for you to:
+
+    [[1]] Cancel current checkouts, current builds, queued prepare builds, queued checkouts and queued builds by clicking the  
 
 [../images/cancelbuild.gif] cancel build icon.
   
-    [[2]] Cancel multiple queued tasks by selecting the corresponding checkboxes of the checkouts or builds you want to cancel and
-    then click the <<Cancel Entries>> button.
+    [[2]] Cancel multiple queued tasks by selecting the corresponding checkboxes of the checkouts, builds, or project updates
+    you want to cancel and then click the <<Cancel Entries>> button.
+
+    Note: Cancelling current prepare build is not allowed to prevent data corruption.

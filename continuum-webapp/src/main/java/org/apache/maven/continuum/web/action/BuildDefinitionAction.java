@@ -28,6 +28,7 @@ import java.util.Map;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionUpdatePolicyConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -92,6 +93,10 @@ public class BuildDefinitionAction
     private String buildDefinitionType;
 
     private boolean alwaysBuild;
+    
+    private int updatePolicy = BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ALWAYS;
+    
+    private Map<Integer, String> buildDefinitionUpdatePolicies;
 
     /**
      * @plexus.requirement
@@ -127,6 +132,15 @@ public class BuildDefinitionAction
         buildDefinitionTypes.add( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
         buildDefinitionTypes.add( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
         buildDefinitionTypes.add( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
+        
+        buildDefinitionUpdatePolicies = new HashMap<Integer, String>();
+        String text = getText( "buildDefinition.updatePolicy.always" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ALWAYS, text );
+        text = getText( "buildDefinition.updatePolicy.never" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_NEVER, text );
+        text = getText( "buildDefinition.updatePolicy.newPom" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ONLY_FOR_NEW_POM,
+                                           text );
     }
 
     /**
@@ -184,6 +198,7 @@ public class BuildDefinitionAction
                 description = buildDefinition.getDescription();
                 buildDefinitionType = buildDefinition.getType();
                 alwaysBuild = buildDefinition.isAlwaysBuild();
+                updatePolicy = buildDefinition.getUpdatePolicy();
             }
             else
             {
@@ -315,7 +330,7 @@ public class BuildDefinitionAction
             return REQUIRES_AUTHORIZATION;
         }
         
-        String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+        String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
         AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
         event.setCategory( AuditLogConstants.BUILD_DEFINITION );
         event.setCurrentUser( getPrincipal() );
@@ -367,7 +382,7 @@ public class BuildDefinitionAction
 
         if ( projectId != 0 )
         {
-            String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+            String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
             AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
             event.setCategory( AuditLogConstants.BUILD_DEFINITION );
             event.setCurrentUser( getPrincipal() );
@@ -376,6 +391,11 @@ public class BuildDefinitionAction
         }
         else
         {
+            String resource = "Project Group id=" + projectGroupId + ":" + goals + " " + arguments;
+            AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+            event.setCategory( AuditLogConstants.BUILD_DEFINITION );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
             return "success_group";
         }
     }
@@ -391,7 +411,7 @@ public class BuildDefinitionAction
             {
                 getContinuum().removeBuildDefinitionFromProject( projectId, buildDefinitionId );
                 
-                String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+                String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
                 AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
                 event.setCategory( AuditLogConstants.BUILD_DEFINITION );
                 event.setCurrentUser( getPrincipal() );
@@ -425,7 +445,7 @@ public class BuildDefinitionAction
             {
                 getContinuum().removeBuildDefinitionFromProjectGroup( projectGroupId, buildDefinitionId );
                 
-                String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+                String resource = "Project Group id=" + projectGroupId + ":" +  goals + " " + arguments;
                 AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
                 event.setCategory( AuditLogConstants.BUILD_DEFINITION );
                 event.setCurrentUser( getPrincipal() );
@@ -487,6 +507,7 @@ public class BuildDefinitionAction
         buildDefinition.setDescription( description );
         buildDefinition.setType( buildDefinitionType );
         buildDefinition.setAlwaysBuild( alwaysBuild );
+        buildDefinition.setUpdatePolicy( updatePolicy );
         return buildDefinition;
     }
 
@@ -705,4 +726,18 @@ public class BuildDefinitionAction
         this.groupBuildView = groupBuildView;
     }
 
+    public int getUpdatePolicy()
+    {
+        return updatePolicy;
+    }
+
+    public void setUpdatePolicy( int updatePolicy )
+    {
+        this.updatePolicy = updatePolicy;
+    }
+
+    public Map<Integer, String> getBuildDefinitionUpdatePolicies()
+    {
+        return buildDefinitionUpdatePolicies;
+    }
 }

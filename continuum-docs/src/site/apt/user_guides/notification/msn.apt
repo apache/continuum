@@ -8,23 +8,23 @@
 
 MSN Notification
 
-  [[1]] Under Notifiers from the Project Information page, click Add.
-  
-  [[2]] On the Add Notifier form select, MSN from the pull-down menu and click Submit.
-  
+  [[1]] Under <<Notifiers>> from the <<Project Information>> page, click <<Add>>.
+
+  [[2]] On the <<Add Notifier>> form select <<MSN>> from the pull-down menu and click <<Submit>>.
+
   [[3]] On the next page, fill out the form with the following:
-  
+
     * MSN Login
-    
+
     * MSN Password
-    
+
     * MSN Recipient Address
-    
+
     []
-  
+
 [../../images/notifier-msn-add.png] Add MSN Notifier
-  
-  [[4]] Select the “Send on ...” options you want.
-  
-  [[5]] Click Save. The MSN notifier you just added will be listed under Notifiers on the Project
-  Information page along with the other notifiers you may have set up prior to this.
+
+  [[4]] Select the <<Send on ...>> options you want.
+
+  [[5]] Click <<Save>>. The MSN notifier you just added will be listed under <<Notifiers>> on the <<Project
+  Information>> page along with the other notifiers you may have set up prior to this.

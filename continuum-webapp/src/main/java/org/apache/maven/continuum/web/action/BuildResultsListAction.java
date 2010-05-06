@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -99,11 +101,17 @@ public class BuildResultsListAction
                         logger.info( "Removing BuildResult with id=" + buildId );
 
                         getContinuum().removeBuildResult( buildId );
+
+                        AuditLog event = new AuditLog( "Build Result id=" + buildId, AuditLogConstants.REMOVE_BUILD_RESULT );
+                        event.setCategory( AuditLogConstants.BUILD_RESULT );
+                        event.setCurrentUser( getPrincipal() );
+                        event.log();
                     }
                     catch ( ContinuumException e )
                     {
                         logger.error( "Error removing BuildResult with id=" + buildId );
-                        addActionError( getText( "Unable to remove BuildResult with id=" + buildId ) );
+                        addActionError( getText( "buildResult.delete.error", "Unable to delete build result",
+                                                 new Integer( buildId ).toString() ) );
                     }
                 }
             }
@@ -127,6 +135,7 @@ public class BuildResultsListAction
                         else
                         {
                             this.addActionMessage( getResourceBundle().getString( "buildResult.cannot.delete" ) );
+                            return SUCCESS;
                         }
                     }
                     catch ( BuildManagerException e )

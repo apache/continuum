@@ -38,7 +38,7 @@ public interface DistributedReleaseManager
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     String releasePrepare( Project project, Properties releaseProperties, Map<String, String> releaseVersion, 
-                           Map<String, String> developmentVersion, Map<String, String> environments )
+                           Map<String, String> developmentVersion, Map<String, String> environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     ReleaseResult getReleaseResult( String releaseId )
@@ -53,11 +53,11 @@ public interface DistributedReleaseManager
     String getPreparedReleaseName( String releaseId )
         throws ContinuumReleaseException;
 
-    void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository )
+    void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
-    void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
-                                String scmUrl, String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+    String releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
+                                  String scmUrl, String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     void releaseRollback( String releaseId, int projectId )
@@ -68,4 +68,6 @@ public interface DistributedReleaseManager
 
     List<Map<String, Object>> getAllReleasesInProgress()
         throws ContinuumReleaseException, BuildAgentConfigurationException;
+    
+    String getDefaultBuildagent( int projectId );
 }

@@ -67,17 +67,17 @@ public class MavenOneContinuumProjectBuilder
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password )
         throws ContinuumProjectBuilderException
     {
-        return buildProjectsFromMetadata( url, username, password, true, false );
+        return buildProjectsFromMetadata( url, username, password, true );
     }
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-                                                                     boolean recursiveProjects, boolean checkoutInSingleDirectory )
+                                                                     boolean recursiveProjects )
         throws ContinuumProjectBuilderException
     {
         try
         {
             return buildProjectsFromMetadata( url, username, password, recursiveProjects,
-                                              buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate(), checkoutInSingleDirectory );
+                                              buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -87,7 +87,7 @@ public class MavenOneContinuumProjectBuilder
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                      boolean recursiveProjects,
-                                                                     BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
+                                                                     BuildDefinitionTemplate buildDefinitionTemplate )
         throws ContinuumProjectBuilderException
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
@@ -105,7 +105,7 @@ public class MavenOneContinuumProjectBuilder
 
         try
         {
-            metadataHelper.mapMetadata( result, pomFile, project );
+            metadataHelper.mapMetadata( result, pomFile, project, true);
 
             if ( result.hasErrors() )
             {

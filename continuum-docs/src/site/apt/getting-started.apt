@@ -4,19 +4,19 @@
  Emmanuel Venisse
  Olivier Lamy
  ------
- Oct 5 2007
+ 2010-02-18
  ------
 
 Getting Started
 
     When you start Continuum for the first time (without an existing database), the first thing you will
-    do is create the admin account and perform the {{{administrator_guides/configuration.html}General Configuration}}.
-    
+    do is create the admin account and perform the {{{./administrator_guides/configuration.html}General Configuration}}.
+
 [images/admin-account-creation.png] Admin account creation
 
-    After admin account creation, you can log as the admin. The next thing you will see is the General Configuration
+    After the admin account has been created, you can log as the admin user. The next thing you will see is the <<General Configuration>>
     page.
 
 [images/configuration.png] General Configuration
 
-    You may also create users, {{{user_guides/managing_project/addProject.html}add projects}}, etc.
+    You may also create more users, {{{./user_guides/managing_project/addProject.html}add projects}}, etc.

@@ -1,6 +1,9 @@
  ------------------
  Distributed Builds
  ------------------
+ ------------------
+ 2010-02-22
+ ------------------
 
 Understanding Distributed Builds
 
@@ -25,19 +28,17 @@ Understanding Distributed Builds
     listens for any build requests from the Master it is
     assigned to.
 
-    There is a one-to-many relationship between the Master and the Slaves.
+    There is a one-to-many relationship between the Master and the Build Agents.
     A Master may have many Build Agents, but each Build Agent can only have one Master.
 
-    TODO: insert image here
+~~TODO: insert image here
 
 * Behavior
 
     Distributed Builds happen at the project group level of Continuum.
     When the entire project group is built in the Master, independent projects
-    (single project or multi-module project) are distributed to any available
-    registered Slave.  A Slave is said to be available when it is currently not
-    building anything as it can only attend to a single build request from the
-    Master.
+    (single project or multi-module project) are distributed to a single
+    registered Build Agent.
 
     In a project group containing a mix of projects, the distribution of work
     goes through the following steps:
@@ -47,20 +48,24 @@ Understanding Distributed Builds
     [[2]] Every independent project within the project group is identified,
     whether as a single project or a multi-module project.  Projects with
     inter-dependencies cannot be distributed separately, so multi-module
-    projects are delegated to a Slave as one build.
+    projects are delegated to a Build Agent as one build.
 
     [[3]] For each independent project, the Master iterates over the list of
-    registered Slaves and queries each if available.  The query is an XML-RPC
-    <<<ping()>>> followed by an <<<isAvailable()>>> invocation.
+    registered Build Agents and queries each if available.  The query is an XML-RPC
+    <<<ping()>>> followed by a <<<getBuildSizeOfAgent()>>> invocation.
 
-    [[4]] If a Build Agent is available, the Master collects the information
-    necessary for the build (SCM url, project id, etc.) and passes it when
-    invoking <<<buildProjects()>>>.
+    [[4]] If there is a Build Agent available, the Master collects the information
+    necessary for the build (SCM URL, project id, etc.) and passes it when
+    invoking <<<buildProjects()>>> to the Build Agent with the smallest number of
+    tasks in its queue. The Master also passes the <<<name>>> of the local repository
+    of the project's project group. Make sure that a local repository with the same <<<name>>>
+    is configured in the Build Agent's configuration file since that is what will be 
+    used when the project is built in the build agent. Otherwise, it will use the 
+    local repository set in the build agent's <<<settings.xml>>> file.
 
     [[5]] In the Build Agent, the build request is processed: the build is queued and
-    executed.  Upon execution, the Build Agent first performs an SCM checkout then
-    the actual build follows.  The SCM checkout will result in invoking a
-    <<<returnScmResult()>>> callback method in the Master.
+    executed.  Upon execution, the Build Agent first performs an SCM checkout or an SCM
+    update followed by an SCM changelog to get the latest update date, then the actual build follows.
 
     [[6]] At this point, when the build is running, the Master can invoke
     <<<cancelBuild()>>> which returns a transient build result, and
@@ -68,51 +73,61 @@ Understanding Distributed Builds
 
     [[7]] After the build, the Build Agent returns the complete build result to the
     Master by invoking the callback method <<<returnBuildResult()>>>, which the
-    Master aggregates to provide a unified view of projects
+    Master aggregates to provide a unified view of projects.
 
-    TODO: insert sequence diagram here
+    A <<<ping()>>> is always called before each XML-RPC invocation to check if 
+    the agent is available. If it's not, the agent will be disabled.
+
+~~TODO: insert sequence diagram here
 
 * Setup
 
-    * {{{../installation/build-agent.html}Install and Configure}} one or more Build Agents, then
+    * {{{../installation/build-agent.html}Install and Configure}} one or more Build Agents.
 
-    * {{{configuration.html}Enable}} the Distributed Builds option in the General Configuration, and 
+    * {{{./configuration.html}Enable}} the Distributed Builds option in the General Configuration.
 
-    * {{{build-agents.html}Add}} your Build Agents to the Continuum Master.
-  
-    * {{{build-agent-groups.html}Add}} your Build Agents to a Build Agent Group.
+    * {{{./build-agents.html}Add}} your Build Agents to the Continuum Master.
 
-    * {{{profiles.html} Add}} your Build Agent Group to Build Environment.
+    * {{{./build-agent-groups.html}Add}} your Build Agents to a Build Agent Group.
 
-    <<WARNING>> Need to have a central remote repository to store the artifacts created from the build agent so that other agents will be able to use the new artifacts.
+    * {{{./buildEnvironment.html} Add}} your Build Agent Group to a Build Environment.
+
+    * Configure a project to use that Build Environment.
+
+    * Make sure that the {{{./localRepository.html} local repository}} of the {{{./projectgroup.html} project group}} is properly configured.
+    In this case, it should point to the path of the repository where the Build Agent is installed/running.
+
+    []
+
+    <<Warning:>> You need to have a central remote repository to store the artifacts created from the Build Agent so that other agents will be able to use the new artifacts.
 
 * Limitations
 
-    * only system administrator can enable/disable distributed builds
+    * Only system administrator can enable/disable distributed builds
 
-    * releases are not supported
+    * Credentials (i.e. svn credentials) are passed along if specified, but if server cache is used it will need to be done individually on the Build Agents
 
-    * credentials (s.a. svn credentials) are passed along if specified, but if server cache is used it will need to be done individually on the slaves
+    * There is no tracking of SCM changes
 
-    * there is no tracking of scm changes
+    * The Build Agent needs a configuration web interface
 
-    * the Build Agent needs a configuration web interface
+    * All projects in a project group will be distributed to the same Build Agent
 
 * Future Enhancements
 
     * Remote builders
 
-        * Builders can be installed on remote machines, a Continuum manager will send actions to run to builders. An action can be something to run on all builders, on some of them or eventually only to an available builder if we don't want to run more than one build. Actions can be sent with JMS and builders can apply some filters if they don't want to receive all actions. With that, we can do some parallel builds but the dependency tree must be respected for the build order. To work correctly with dependencies, each builders must use a central local repository. Maybe we can use an internal Archiva.
+        * Builders can be installed on remote machines, a Continuum manager will send actions to run to builders. An action can be something to run on all builders, on some of them or eventually only to an available builder if we don't want to run more than one build. Actions can be sent with JMS and builders can apply some filters if they don't want to receive all actions. With that, we can do some parallel builds but the dependency tree must be respected for the build order. To work correctly with dependencies, each builder must use a central local repository. Maybe we can use an internal Archiva.
 
-        * With Continuum builders configured to receive all commands, users can run multi-platform build for each build definition execution
+        * With Continuum builders configured to receive all commands, users can run multi-platform build for each build definition execution.
 
-        * With Continuum builders configured to receive only some project types, users can use a different builder by project group. In this case, the build of all projects will be done quickly because commands are balanced on few servers
+        * With Continuum builders configured to receive only some project types, users can use a different builder by project group. In this case, the build of all projects will be done quickly because commands are balanced on several servers.
 
-        * With Continuum builders configured to build something when it is available, users can install few builders on several machine to balance the charge. In this case, it will be possible to run some parallel builds.
+        * With Continuum builders configured to build something when it is available, users can install builders on several machine to balance the charge. In this case, it will be possible to run some parallel builds.
 
-        * When the builder work will be done, a message will be sent to the manager to notify the end of the process.
+        * When the builders work is done, a message will be sent to the manager to notify the end of the process.
 
-        * With JMS used for the communication, we can add some listeners to create reports/statistics, log some informations
+        * With JMS used for the communication, we can add some listeners to create reports/statistics, log some information.
 
     * Policy-based distribution
 

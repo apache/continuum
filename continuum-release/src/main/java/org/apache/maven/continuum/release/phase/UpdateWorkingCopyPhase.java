@@ -22,6 +22,7 @@ package org.apache.maven.continuum.release.phase;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.ScmFileSet;
 import org.apache.maven.scm.ScmVersion;
+import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.provider.ScmProvider;
@@ -82,11 +83,26 @@ public class UpdateWorkingCopyPhase
             throw new ReleaseExecutionException( "Unable to configure SCM repository: " + e.getMessage(), e );
         }
 
-        UpdateScmResult result;
+        UpdateScmResult updateScmResult = null;
+        CheckOutScmResult checkOutScmResult = null;
+        
+        File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
+        
         try
         {
-            result = provider.update( repository, new ScmFileSet( new File( releaseDescriptor.getWorkingDirectory() ) ),
-                                      (ScmVersion) null );
+            if ( !workingDirectory.exists() )
+            {
+                workingDirectory.mkdirs();
+            }
+            
+            if( workingDirectory.listFiles().length > 1 )
+            {
+                updateScmResult = provider.update( repository, new ScmFileSet( workingDirectory ), (ScmVersion) null );
+            }
+            else
+            {
+                checkOutScmResult = provider.checkOut( repository, new ScmFileSet( workingDirectory ) );
+            }
         }
         catch ( ScmException e )
         {
@@ -94,12 +110,24 @@ public class UpdateWorkingCopyPhase
                                                  e );
         }
 
-        if ( !result.isSuccess() )
+        if ( updateScmResult != null )
         {
-            throw new ReleaseScmCommandException( "Unable to update current working copy", result );
+            if( !updateScmResult.isSuccess() )
+            {
+                throw new ReleaseScmCommandException( "Unable to update current working copy", updateScmResult );
+            }
+            
+            copyUpdated = updateScmResult.getUpdatedFiles().size() > 0;
         }
-
-        copyUpdated = ( result.getUpdatedFiles().size() > 0 );
+        else
+        {
+            if( !checkOutScmResult.isSuccess() )
+            {
+                throw new ReleaseScmCommandException( "Unable to checkout project", checkOutScmResult );
+            }
+            
+            copyUpdated = checkOutScmResult.getCheckedOutFiles().size() > 0;
+        }
 
         relResult.setResultCode( ReleaseResult.SUCCESS );
 

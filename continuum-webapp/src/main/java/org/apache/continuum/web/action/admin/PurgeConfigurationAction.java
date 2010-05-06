@@ -35,15 +35,19 @@ import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
+import org.apache.maven.continuum.web.action.ScheduleAction;
 import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Maria Catherine Tan
@@ -55,6 +59,8 @@ public class PurgeConfigurationAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
 {
+    private static final Logger logger = LoggerFactory.getLogger( PurgeConfigurationAction.class );
+
     private static final String PURGE_TYPE_REPOSITORY = "repository";
 
     private static final String PURGE_TYPE_DIRECTORY = "directory";
@@ -117,6 +123,7 @@ public class PurgeConfigurationAction
      */
     private RepositoryService repositoryService;
 
+    @Override
     public void prepare()
         throws Exception
     {
@@ -153,6 +160,7 @@ public class PurgeConfigurationAction
         directoryTypes.add( PURGE_DIRECTORY_BUILDOUTPUT );
     }
 
+    @Override
     public String input()
         throws Exception
     {
@@ -256,6 +264,11 @@ public class PurgeConfigurationAction
         if ( purgeConfig.isDefaultPurge() )
         {
             updateDefaultPurgeConfiguration();
+        }
+
+        if ( purgeConfig.isEnabled() && purgeConfig.getSchedule() != null )
+        {
+            getContinuum().activePurgeSchedule( purgeConfig.getSchedule() );
         }
 
         return SUCCESS;
@@ -379,11 +392,13 @@ public class PurgeConfigurationAction
         this.enabled = enabled;
     }
 
+    @Override
     public boolean isConfirmed()
     {
         return this.confirmed;
     }
 
+    @Override
     public void setConfirmed( boolean confirmed )
     {
         this.confirmed = confirmed;

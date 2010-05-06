@@ -68,7 +68,7 @@ public class CancelBuildAction
 
             buildsManager.cancelBuild( projectId );
 
-            AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.CANCEL_BUILD );
+            AuditLog event = new AuditLog( "Project id=" + projectId, AuditLogConstants.CANCEL_BUILD );
             event.setCategory( AuditLogConstants.PROJECT );
             event.setCurrentUser( getPrincipal() );
             event.log();

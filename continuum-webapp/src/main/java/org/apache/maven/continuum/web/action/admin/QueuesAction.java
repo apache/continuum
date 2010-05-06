@@ -20,7 +20,6 @@ package org.apache.maven.continuum.web.action.admin;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,17 +32,19 @@ import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.bean.BuildProjectQueue;
+import org.apache.maven.continuum.web.bean.CheckoutQueue;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
+import org.apache.maven.continuum.web.model.PrepareBuildSummary;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
@@ -64,6 +65,8 @@ public class QueuesAction
 
     private static final String DISTRIBUTED_BUILD_SUCCESS = "distributed-build-success";
 
+    private List<String> selectedPrepareBuildTaskHashCodes;
+
     private List<String> selectedBuildTaskHashCodes;
 
     private List<String> selectedCheckOutTaskHashCodes;
@@ -76,30 +79,31 @@ public class QueuesAction
 
     private String projectName;
 
-    private Map<String, BuildProjectTask> currentBuildProjectTasks = new HashMap<String, BuildProjectTask>();
+    private List<BuildProjectQueue> currentBuildProjectTasks = new ArrayList<BuildProjectQueue>();
 
-    private Map<String, CheckOutTask> currentCheckoutTasks = new HashMap<String, CheckOutTask>();
+    private List<CheckoutQueue> currentCheckoutTasks = new ArrayList<CheckoutQueue>();
 
-    private Map<String, List<BuildProjectTask>> buildsInQueue = new HashMap<String, List<BuildProjectTask>>();
+    private List<BuildProjectQueue> buildsInQueue = new ArrayList<BuildProjectQueue>();
 
-    private Map<String, List<CheckOutTask>> checkoutsInQueue = new HashMap<String, List<CheckOutTask>>();
+    private List<CheckoutQueue> checkoutsInQueue = new ArrayList<CheckoutQueue>();
 
-    /**
-     * @plexus.requirement
-     */
-    DistributedBuildManager distributedBuildManager;
+    private List<PrepareBuildSummary> currentPrepareBuilds = new ArrayList<PrepareBuildSummary>();
 
-    private List<DistributedBuildSummary> distributedBuildSummary;
+    private List<PrepareBuildSummary> prepareBuildQueues = new ArrayList<PrepareBuildSummary>();
 
-    private List<PrepareBuildProjectsTask> distributedBuildQueues;
+    private List<PrepareBuildSummary> currentDistributedPrepareBuilds = new ArrayList<PrepareBuildSummary>();
+
+    private List<PrepareBuildSummary> distributedPrepareBuildQueues = new ArrayList<PrepareBuildSummary>();
+
+    private List<DistributedBuildSummary> currentDistributedBuilds = new ArrayList<DistributedBuildSummary>();
+
+    private List<DistributedBuildSummary> distributedBuildQueues = new ArrayList<DistributedBuildSummary>();
 
     private String buildAgentUrl;
 
     private int projectGroupId;
 
-    private String scmRootAddress;
-
-    private List<String> selectedDistributedBuildTaskHashCodes;
+    private int scmRootId;
 
     // -----------------------------------------------------
     //  webwork
@@ -202,43 +206,116 @@ public class QueuesAction
     {
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            distributedBuildSummary = new ArrayList<DistributedBuildSummary>();
+	        // current prepare build task
+            Map<String, PrepareBuildProjectsTask> currentPrepareBuildMap = getContinuum().getDistributedBuildManager().getProjectsCurrentlyPreparingBuild();
 
-            Map<String, PrepareBuildProjectsTask> map = distributedBuildManager.getDistributedBuildProjects();
-
-            for ( String url : map.keySet() )
+            for ( String url : currentPrepareBuildMap.keySet() )
             {
-                PrepareBuildProjectsTask task = map.get( url );
+                PrepareBuildProjectsTask task = currentPrepareBuildMap.get( url );
 
                 ProjectGroup projectGroup = getContinuum().getProjectGroup( task.getProjectGroupId() );
 
-                DistributedBuildSummary summary = new DistributedBuildSummary();
-                summary.setUrl( url );
+                PrepareBuildSummary summary = new PrepareBuildSummary();
+                summary.setBuildAgentUrl( url );
                 summary.setProjectGroupId( task.getProjectGroupId() );
                 summary.setProjectGroupName( projectGroup.getName() );
                 summary.setScmRootAddress( task.getScmRootAddress() );
+                summary.setScmRootId( task.getProjectScmRootId() );
 
-                ProjectScmRoot scmRoot =
-                    getContinuum().getProjectScmRootByProjectGroupAndScmRootAddress( task.getProjectGroupId(),
-                                                                                     task.getScmRootAddress() );
-                if ( scmRoot.getState() == ContinuumProjectState.UPDATING )
-                {
-                    summary.setCancelEnabled( false );
-                }
-                else
-                {
-                    summary.setCancelEnabled( true );
-                }
-
-                distributedBuildSummary.add( summary );
+                currentDistributedPrepareBuilds.add( summary );
             }
 
-            distributedBuildQueues = aggregateQueues();
+            // current builds
+            Map<String, BuildProjectTask> currentBuildMap = getContinuum().getDistributedBuildManager().getProjectsCurrentlyBuilding();
+
+            for ( String url : currentBuildMap.keySet() )
+            {
+                BuildProjectTask task = currentBuildMap.get( url );
+
+                Project project = getContinuum().getProject( task.getProjectId() );
+
+                DistributedBuildSummary summary = new DistributedBuildSummary();
+                summary.setProjectId( project.getId() );
+                summary.setProjectName( project.getName() );
+                summary.setProjectGroupName( project.getProjectGroup().getName() );
+                summary.setBuildDefinitionId( task.getBuildDefinitionId() );
+                summary.setBuildDefinitionLabel( task.getBuildDefinitionLabel() );
+                summary.setHashCode( task.getHashCode() );
+                summary.setBuildAgentUrl( url );
+
+                currentDistributedBuilds.add( summary );
+            }
+            
+            // prepare build queues
+            Map<String, List<PrepareBuildProjectsTask>> prepareBuildMap = getContinuum().getDistributedBuildManager().getProjectsInPrepareBuildQueue();
+
+            for ( String url : prepareBuildMap.keySet() )
+            {
+                for ( PrepareBuildProjectsTask task : prepareBuildMap.get( url ) )
+                {
+                    ProjectGroup projectGroup = getContinuum().getProjectGroup( task.getProjectGroupId() );
+
+                    PrepareBuildSummary summary = new PrepareBuildSummary();
+                    summary.setBuildAgentUrl( url );
+                    summary.setProjectGroupId( task.getProjectGroupId() );
+                    summary.setProjectGroupName( projectGroup.getName() );
+                    summary.setScmRootAddress( task.getScmRootAddress() );
+                    summary.setScmRootId( task.getProjectScmRootId() );
+                    summary.setHashCode( task.getHashCode() );
+
+                    distributedPrepareBuildQueues.add( summary );
+                }
+            }
+
+            // build queues
+            Map<String, List<BuildProjectTask>> buildMap = getContinuum().getDistributedBuildManager().getProjectsInBuildQueue();
+
+            for ( String url : buildMap.keySet() )
+            {
+                for ( BuildProjectTask task : buildMap.get( url ) )
+                {
+                    DistributedBuildSummary summary = new DistributedBuildSummary();
+
+                    Project project = getContinuum().getProject( task.getProjectId() );
+
+                    summary.setProjectId( project.getId() );
+                    summary.setProjectName( project.getName() );
+                    summary.setProjectGroupName( project.getProjectGroup().getName() );
+                    summary.setBuildDefinitionId( task.getBuildDefinitionId() );
+                    summary.setBuildDefinitionLabel( task.getBuildDefinitionLabel() );
+                    summary.setHashCode( task.getHashCode() );
+                    summary.setBuildAgentUrl( url );
+
+                    distributedBuildQueues.add( summary );
+                }
+            }
 
             return DISTRIBUTED_BUILD_SUCCESS;
         }
         else
         {
+            try
+            {
+                // current prepare builds
+                PrepareBuildProjectsTask currentPrepareBuildTask = getContinuum().getBuildsManager().getCurrentProjectInPrepareBuild();
+
+                if ( currentPrepareBuildTask != null )
+                {
+                    PrepareBuildSummary s = new PrepareBuildSummary();
+                    
+                    s.setProjectGroupId( currentPrepareBuildTask.getProjectGroupId() );
+                    s.setProjectGroupName( currentPrepareBuildTask.getProjectGroupName() );
+                    s.setScmRootId( currentPrepareBuildTask.getProjectScmRootId() );
+                    s.setScmRootAddress( currentPrepareBuildTask.getScmRootAddress() );
+                    currentPrepareBuilds.add( s );
+                }
+            }
+            catch ( BuildManagerException e )
+            {
+                addActionError( e.getMessage() );
+                return ERROR;
+            }
+
             try
             {
                 // current builds
@@ -247,7 +324,33 @@ public class QueuesAction
                 for ( String key : keySet )
                 {
                     BuildProjectTask buildTask = currentBuilds.get( key );
-                    currentBuildProjectTasks.put( key, buildTask );
+                    BuildProjectQueue queue = new BuildProjectQueue();
+                    queue.setName( key );
+                    queue.setTask( buildTask );
+                    currentBuildProjectTasks.add( queue );
+                }
+            }
+            catch ( BuildManagerException e )
+            {
+                addActionError( e.getMessage() );
+                return ERROR;
+            }
+
+            try
+            {
+                // queued prepare builds
+                List<PrepareBuildProjectsTask> prepareBuilds = 
+                    getContinuum().getBuildsManager().getProjectsInPrepareBuildQueue();
+                for ( PrepareBuildProjectsTask task : prepareBuilds )
+                {
+                    PrepareBuildSummary summary = new PrepareBuildSummary();
+                    summary.setProjectGroupId( task.getProjectGroupId() );
+                    summary.setProjectGroupName( task.getProjectGroupName() );
+                    summary.setScmRootId( task.getProjectScmRootId() );
+                    summary.setScmRootAddress( task.getScmRootAddress() );
+                    summary.setHashCode( task.getHashCode() );
+
+                    prepareBuildQueues.add( summary );
                 }
             }
             catch ( BuildManagerException e )
@@ -264,12 +367,13 @@ public class QueuesAction
                 Set<String> keySet = builds.keySet();
                 for ( String key : keySet )
                 {
-                    List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
                     for ( BuildProjectTask task : builds.get( key ) )
                     {
-                        buildTasks.add( task );
+                        BuildProjectQueue queue = new BuildProjectQueue();
+                        queue.setName( key );
+                        queue.setTask( task );
+                        buildsInQueue.add( queue );
                     }
-                    buildsInQueue.put( key, buildTasks );
                 }
             }
             catch ( BuildManagerException e )
@@ -286,7 +390,10 @@ public class QueuesAction
                 for ( String key : keySet )
                 {
                     CheckOutTask checkoutTask = currentCheckouts.get( key );
-                    currentCheckoutTasks.put( key, checkoutTask );
+                    CheckoutQueue queue = new CheckoutQueue();
+                    queue.setName( key );
+                    queue.setTask( checkoutTask );
+                    currentCheckoutTasks.add( queue );
                 }
             }
             catch ( BuildManagerException e )
@@ -303,12 +410,13 @@ public class QueuesAction
                 Set<String> keySet = checkouts.keySet();
                 for ( String key : keySet )
                 {
-                    List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
                     for ( CheckOutTask task : checkouts.get( key ) )
                     {
-                        checkoutTasks.add( task );
+                        CheckoutQueue queue = new CheckoutQueue();
+                        queue.setName( key );
+                        queue.setTask( task );
+                        checkoutsInQueue.add( queue );
                     }
-                    checkoutsInQueue.put( key, checkoutTasks );
                 }
             }
             catch ( BuildManagerException e )
@@ -339,8 +447,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getBuildsManager().removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger,
-                                                                       projectName );
+        getContinuum().getBuildsManager().removeProjectFromBuildQueue( projectId, buildDefinitionId,
+        		                                     new BuildTrigger( trigger, "" ), projectName, projectGroupId );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
         getContinuum().updateProject( project );
@@ -394,6 +502,51 @@ public class QueuesAction
         return SUCCESS;
     }
 
+    public String removePrepareBuildEntry()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getBuildsManager().removeProjectFromPrepareBuildQueue( projectGroupId, scmRootId );
+        return SUCCESS;
+    }
+
+    public String removePrepareBuildEntries()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getBuildsManager().removeProjectsFromPrepareBuildQueueWithHashCodes( 
+            listToIntArray( this.selectedPrepareBuildTaskHashCodes ) );
+        return SUCCESS;
+    }
+
     public String cancelDistributedBuild()
         throws Exception
     {
@@ -412,7 +565,53 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        distributedBuildManager.cancelDistributedBuild( buildAgentUrl, projectGroupId, scmRootAddress );
+        getContinuum().getDistributedBuildManager().cancelDistributedBuild( buildAgentUrl );
+
+        return SUCCESS;
+    }
+
+    public String removeDistributedPrepareBuildEntry()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue( buildAgentUrl, projectGroupId, scmRootId );
+
+        return SUCCESS;
+    }
+
+    public String removeDistributedPrepareBuildEntries()
+        throws Exception
+    {
+        try
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue(  this.getSelectedPrepareBuildTaskHashCodes() );
 
         return SUCCESS;
     }
@@ -435,7 +634,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getTaskQueueManager().removeFromDistributedBuildQueue( projectGroupId, scmRootAddress );
+        getContinuum().getDistributedBuildManager().removeFromBuildQueue( buildAgentUrl, projectId, buildDefinitionId );
 
         return SUCCESS;
     }
@@ -458,8 +657,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getTaskQueueManager().removeTasksFromDistributedBuildQueueWithHashCodes(
-            listToIntArray( this.getSelectedDistributedBuildTaskHashCodes() ) );
+        getContinuum().getDistributedBuildManager().removeFromBuildQueue( this.getSelectedBuildTaskHashCodes() );
 
         return SUCCESS;
     }
@@ -586,54 +784,74 @@ public class QueuesAction
         this.selectedCheckOutTaskHashCodes = selectedCheckOutTaskHashCodes;
     }
 
-    public Map<String, BuildProjectTask> getCurrentBuildProjectTasks()
+    public List<BuildProjectQueue> getCurrentBuildProjectTasks()
     {
         return currentBuildProjectTasks;
     }
 
-    public void setCurrentBuildProjectTasks( Map<String, BuildProjectTask> currentBuildProjectTasks )
+    public void setCurrentBuildProjectTasks( List<BuildProjectQueue> currentBuildProjectTasks )
     {
         this.currentBuildProjectTasks = currentBuildProjectTasks;
     }
 
-    public Map<String, CheckOutTask> getCurrentCheckoutTasks()
+    public List<CheckoutQueue> getCurrentCheckoutTasks()
     {
         return currentCheckoutTasks;
     }
 
-    public void setCurrentCheckoutTasks( Map<String, CheckOutTask> currentCheckoutTasks )
+    public void setCurrentCheckoutTasks( List<CheckoutQueue> currentCheckoutTasks )
     {
         this.currentCheckoutTasks = currentCheckoutTasks;
     }
 
-    public Map<String, List<BuildProjectTask>> getBuildsInQueue()
+    public List<BuildProjectQueue> getBuildsInQueue()
     {
         return buildsInQueue;
     }
 
-    public void setBuildsInQueue( Map<String, List<BuildProjectTask>> buildsInQueue )
+    public void setBuildsInQueue( List<BuildProjectQueue> buildsInQueue )
     {
         this.buildsInQueue = buildsInQueue;
     }
 
-    public Map<String, List<CheckOutTask>> getCheckoutsInQueue()
+    public List<CheckoutQueue> getCheckoutsInQueue()
     {
         return checkoutsInQueue;
     }
 
-    public void setCheckoutsInQueue( Map<String, List<CheckOutTask>> checkoutsInQueue )
+    public void setCheckoutsInQueue( List<CheckoutQueue> checkoutsInQueue )
     {
         this.checkoutsInQueue = checkoutsInQueue;
     }
 
-    public List<DistributedBuildSummary> getDistributedBuildSummary()
+    public List<PrepareBuildSummary> getCurrentDistributedPrepareBuilds()
     {
-        return distributedBuildSummary;
+        return currentDistributedPrepareBuilds;
     }
 
-    public void setDistributedBuildSummary( List<DistributedBuildSummary> distributedBuildSummary )
+    public List<DistributedBuildSummary> getCurrentDistributedBuilds()
     {
-        this.distributedBuildSummary = distributedBuildSummary;
+        return currentDistributedBuilds;
+    }
+
+    public List<PrepareBuildSummary> getDistributedPrepareBuildQueues()
+    {
+        return distributedPrepareBuildQueues;
+    }
+
+    public List<DistributedBuildSummary> getDistributedBuildQueues()
+    {
+        return distributedBuildQueues;
+    }
+
+    public List<PrepareBuildSummary> getCurrentPrepareBuilds()
+    {
+        return currentPrepareBuilds;
+    }
+
+    public List<PrepareBuildSummary> getPrepareBuildQueues()
+    {
+        return prepareBuildQueues;
     }
 
     public String getBuildAgentUrl()
@@ -646,65 +864,23 @@ public class QueuesAction
         this.buildAgentUrl = buildAgentUrl;
     }
 
-    public List<PrepareBuildProjectsTask> getDistributedBuildQueues()
+    public void setProjectGroupId( int projectGroupId )
     {
-        return distributedBuildQueues;
+        this.projectGroupId = projectGroupId;
     }
 
-    public void setDistributedBuildQueues( List<PrepareBuildProjectsTask> distributedBuildQueues )
+    public void setScmRootId( int scmRootId )
     {
-        this.distributedBuildQueues = distributedBuildQueues;
+        this.scmRootId = scmRootId;
     }
 
-    public List<String> getSelectedDistributedBuildTaskHashCodes()
+    public void setSelectedPrepareBuildTaskHashCodes( List<String> selectedPrepareBuildTaskHashCodes )
     {
-        return selectedDistributedBuildTaskHashCodes;
+        this.selectedPrepareBuildTaskHashCodes = selectedPrepareBuildTaskHashCodes;
     }
 
-    public void setSelectedDistributedBuildTaskHashCodes( List<String> selectedDistributedBuildTaskHashCodes )
+    public List<String> getSelectedPrepareBuildTaskHashCodes()
     {
-        this.selectedDistributedBuildTaskHashCodes = selectedDistributedBuildTaskHashCodes;
-    }
-
-    public String getScmRootAddress()
-    {
-        return scmRootAddress;
-    }
-
-    public void setScmRootAddress( String scmRootAddress )
-    {
-        this.scmRootAddress = scmRootAddress;
-    }
-
-    private List<PrepareBuildProjectsTask> aggregateQueues()
-        throws TaskQueueManagerException
-    {
-        List<PrepareBuildProjectsTask> aggregatedQueues = new ArrayList<PrepareBuildProjectsTask>();
-
-        List<PrepareBuildProjectsTask> overallQueues =
-            getContinuum().getTaskQueueManager().getDistributedBuildProjectsInQueue();
-
-        Map<String, DistributedBuildTaskQueueExecutor> agentTaskQueueExecutors =
-            distributedBuildManager.getTaskQueueExecutors();
-
-        for ( String url : agentTaskQueueExecutors.keySet() )
-        {
-            try
-            {
-                logger.debug( "size of each queue snapshot " + url + " : " +
-                    agentTaskQueueExecutors.get( url ).getQueue().getQueueSnapshot().size() );
-                aggregatedQueues.addAll( agentTaskQueueExecutors.get( url ).getQueue().getQueueSnapshot() );
-            }
-            catch ( TaskQueueException e )
-            {
-                //silently ignore error
-                logger.error( "Error encountered retrieving queue snapshot from queue :" + url, e );
-            }
-        }
-
-        logger.debug( "size of agg. queue " + aggregatedQueues.size() );
-        aggregatedQueues.addAll( overallQueues );
-
-        return aggregatedQueues;
+        return selectedPrepareBuildTaskHashCodes;
     }
 }

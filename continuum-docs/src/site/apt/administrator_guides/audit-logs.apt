@@ -1,0 +1,46 @@
+ ------
+ Audit Logs
+ ------
+ Jevica Arianne B. Zurbano
+ ------
+ 23 Jul 2009
+ ------
+
+Audit Logs
+
+  Continuum's <<<logs>>> directory contains an audit log file named <<<continuum-audit.log>>>,
+  which tracks events that occur in the server.
+  For security measure, passwords are masked behind asterisks.
+
+  A typical record looks like this:
+
+----
+2009-07-22 12:27:58 - admin - BUILD_SCHEDULE BI_HOURLY - Added Build Schedule
+2009-07-22 12:28:23 - admin - BUILD_SCHEDULE BI_HOURLY - Modified Build Schedule
+2009-07-22 12:29:56 - admin - PROJECT http://svn.apache.org/repos/asf/continuum/trunk/pom.xml - Added M2 Project
+2009-07-22 12:31:00 - admin - PROJECT Project Group id=6 - Forced Project Build
+----
+
+  The space delimited records are:
+
+    * date and time (server local time)
+
+    * user that enacted the change (or guest if none)
+
+    * the project or configurations affected
+
+    * the event that occured
+
+  Currently, the following events are logged:
+
+    * add/delete of projects
+    
+    * forced project builds
+    
+    * release prepare/perform/rollback
+    
+    * add/edit/delete of schedules
+    
+    * add/edit/delete of build definition templates
+    
+    []

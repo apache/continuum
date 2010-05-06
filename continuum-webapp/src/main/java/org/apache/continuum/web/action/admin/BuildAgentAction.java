@@ -22,6 +22,8 @@ package org.apache.continuum.web.action.admin;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Installation;
@@ -51,11 +53,6 @@ public class BuildAgentAction
     implements SecureAction
 {
     private static final Logger logger = LoggerFactory.getLogger( BuildAgentAction.class );
-
-    /**
-     * @plexus.requirement
-     */
-    private DistributedBuildManager distributedBuildManager;
 
     private List<BuildAgentConfiguration> buildAgents;
 
@@ -139,7 +136,7 @@ public class BuildAgentAction
 
                 try
                 {
-                    installations = distributedBuildManager.getAvailableInstallations( buildAgent.getUrl() );
+                    installations = getContinuum().getDistributedBuildManager().getAvailableInstallations( buildAgent.getUrl() );
                 }
                 catch ( ContinuumException e )
                 {
@@ -170,14 +167,21 @@ public class BuildAgentAction
                     agent.setEnabled( buildAgent.isEnabled() );
 
                     configuration.updateBuildAgent( agent );
+                    configuration.store();
                     found = true;
                 }
             }
         }
 
+        AuditLog event = new AuditLog( "Build Agent URL=" + buildAgent.getUrl(), AuditLogConstants.MODIFY_BUILD_AGENT );
+        event.setCategory( AuditLogConstants.BUILD_AGENT );
+        event.setCurrentUser( getPrincipal() );
+
         if ( !found )
         {
             configuration.addBuildAgent( buildAgent );
+            configuration.store();
+            event.setAction( AuditLogConstants.ADD_BUILD_AGENT );
         }
         else
         {
@@ -188,7 +192,8 @@ public class BuildAgentAction
             }
         }
 
-        distributedBuildManager.reload();
+        getContinuum().getDistributedBuildManager().reload();
+        event.log();
 
         return SUCCESS;
     }
@@ -201,33 +206,45 @@ public class BuildAgentAction
             return CONFIRM;
         }
 
-        if ( distributedBuildManager.isBuildAgentBusy( buildAgent.getUrl() ) )
+        if ( getContinuum().getDistributedBuildManager().isBuildAgentBusy( buildAgent.getUrl() ) )
         {
             message = getText( "buildAgent.error.delete.busy" );
             return ERROR;
         }
-        else
-        {
-            distributedBuildManager.removeAgentFromTaskQueueExecutor( buildAgent.getUrl() );
-        }
 
         ConfigurationService configuration = getContinuum().getConfiguration();
 
-        for ( BuildAgentGroupConfiguration buildAgentGroup : configuration.getBuildAgentGroups() )
-        {
-            if ( configuration.containsBuildAgentUrl( buildAgent.getUrl(), buildAgentGroup ) )
+        if ( configuration.getBuildAgentGroups() != null )
+        {   
+            for ( BuildAgentGroupConfiguration buildAgentGroup : configuration.getBuildAgentGroups() )
             {
-                message = getText( "buildAgent.error.remove.in.use" );
-                return ERROR;
+                if ( configuration.containsBuildAgentUrl( buildAgent.getUrl(), buildAgentGroup ) )
+                {
+                    message = getText( "buildAgent.error.remove.in.use" );
+                    return ERROR;
+                }
             }
         }
 
-        for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
+        if ( configuration.getBuildAgents() != null )
         {
-            if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+            for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
             {
-                configuration.removeBuildAgent( agent );
-                return SUCCESS;
+                if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+                {
+                    getContinuum().getDistributedBuildManager().removeDistributedBuildQueueOfAgent( buildAgent.getUrl() );
+                    configuration.removeBuildAgent( agent );
+                    configuration.store();
+
+                    AuditLog event = new AuditLog( "Build Agent URL=" + agent.getUrl(), AuditLogConstants.REMOVE_BUILD_AGENT );
+                    event.setCategory( AuditLogConstants.BUILD_AGENT );
+                    event.setCurrentUser( getPrincipal() );
+                    event.log();
+
+                    getContinuum().getDistributedBuildManager().reload();
+
+                    return SUCCESS;
+                }
             }
         }
 
@@ -260,6 +277,12 @@ public class BuildAgentAction
             if ( buildAgentGroup.getName().equals( group.getName() ) )
             {
                 configuration.removeBuildAgentGroup( group );
+
+                AuditLog event = new AuditLog( "Build Agent Group=" + group.getName(), AuditLogConstants.REMOVE_BUILD_AGENT_GROUP );
+                event.setCategory( AuditLogConstants.BUILD_AGENT );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
+
                 return SUCCESS;
             }
         }
@@ -304,10 +327,15 @@ public class BuildAgentAction
             }
         }
 
+        AuditLog event = new AuditLog( "Build Agent Group=" + buildAgentGroup.getName(), AuditLogConstants.MODIFY_BUILD_AGENT_GROUP );
+        event.setCategory( AuditLogConstants.BUILD_AGENT );
+        event.setCurrentUser( getPrincipal() );
+
         if ( !found )
         {
             buildAgentGroup.setBuildAgents( selectedbuildAgents );
             configuration.addBuildAgentGroup( buildAgentGroup );
+            event.setAction( AuditLogConstants.ADD_BUILD_AGENT_GROUP );
         }
         else
         // found
@@ -324,7 +352,8 @@ public class BuildAgentAction
             }
         }
 
-        distributedBuildManager.reload();
+        getContinuum().getDistributedBuildManager().reload();
+        event.log();
 
         return SUCCESS;
     }

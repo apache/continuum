@@ -22,7 +22,7 @@
 <html>
   <s:i18n name="localization.Continuum">
     <head>
-				<META HTTP-EQUIV="refresh" CONTENT="2;url=<s:url includeParams="all"/>"/>
+				<META HTTP-EQUIV="refresh" CONTENT="2;url=<s:url includeParams="NONE"/>"/>
     </head>
     <body>
 			<img src="images/wait.gif">

@@ -67,6 +67,20 @@
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
       </interceptor-stack>
+      
+      <interceptor-stack name="storeStack">
+        <interceptor-ref name="configuredContinuumStack"/>
+        <interceptor-ref name="store">
+          <param name="operationMode">STORE</param>
+        </interceptor-ref>
+      </interceptor-stack>
+
+      <interceptor-stack name="retrieveStack">
+        <interceptor-ref name="configuredContinuumStack"/>
+        <interceptor-ref name="store">
+          <param name="operationMode">RETRIEVE</param>
+        </interceptor-ref>
+      </interceptor-stack> 
     </interceptors>
 
     <default-interceptor-ref name="configuredContinuumStack"/>
@@ -147,13 +161,17 @@
              allowing plexus-security to call out from its own set of actions
              into the application webapp, using global result names. -->
     <action name="redbackRedirect" class="redback-redirect" method="redirect">
+      <interceptor-ref name="retrieveStack"/>
       <result type="redirect-action">groupSummary</result>
+    </action>
+
+    <action name="httpError" class="httpError">
+      <result name="success">/WEB-INF/jsp/error/httpError.jsp</result>
     </action>
 
     <action name="about" class="about">
       <result name="success">/WEB-INF/jsp/about.jsp</result>
     </action>
-
 
     <action name="companyInfo" class="companyInfo">
       <result name="success">/WEB-INF/jsp/components/companyLogo.jsp</result>
@@ -167,6 +185,7 @@
     
 
     <action name="groupSummary" class="groupSummary">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/groupSummary.jsp</result>
     </action>
 
@@ -223,6 +242,7 @@
     </action>
 
     <action name="deleteProject" class="deleteProject">
+      <interceptor-ref name="storeStack"/>
       <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -231,6 +251,7 @@
     </action>
 
     <action name="ProjectsList" class="projects">
+      <interceptor-ref name="storeStack"/>
       <result name="confirmRemove">/WEB-INF/jsp/confirmDeleteProjects.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -239,6 +260,7 @@
     </action>
 
     <action name="buildProject" class="buildProject">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="chain">groupSummary</result>
       <result name="to_group_page" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -300,7 +322,11 @@
     * project group actions
     -->
     <action name="projectGroupSummary" class="projectGroup" method="summary">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/projectGroupSummary.jsp</result>
+      <result name="to_summary_page" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+      </result>
     </action>
 
     <action name="projectGroupMembers" class="projectGroup" method="members">
@@ -316,6 +342,7 @@
     </action>
 
     <action name="buildProjectGroup" class="projectGroup" method="build">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
@@ -324,6 +351,7 @@
     </action>
 
     <action name="removeProjectGroup" class="projectGroup" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="confirm">/WEB-INF/jsp/confirmGroupRemoval.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">groupSummary</param>
@@ -331,6 +359,7 @@
     </action>
     
     <action name="releaseProjectGroup" class="projectGroup" method="release">
+      <interceptor-ref name="storeStack"/>
       <result name="input" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
@@ -362,10 +391,12 @@
     *  build results, test reporting, working copy actions
     -->
     <action name="buildResults" class="buildResults">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/buildResults.jsp</result>
     </action>
     
     <action name="removeBuildResults" class="buildResults" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
@@ -374,6 +405,7 @@
     </action>
 
     <action name="buildResult" class="buildResult">
+      <interceptor-ref name="storeStack"/>
       <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
       <result name="error" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -389,6 +421,7 @@
     </action>    
     
     <action name="removeBuildResult" class="buildResult" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
@@ -404,7 +437,7 @@
       <result name="success">/WEB-INF/jsp/workingCopy.jsp</result>
       <result name="stream" type="stream">
         <param name="contentType">application/octet-stream</param>
-        <param name="contentDisposition">filename="${downloadFilename}"</param>
+        <param name="contentDisposition">attachment; filename="${downloadFilename}"</param>
         <param name="contentLength">${fileLength}</param>
       </result>
     </action>
@@ -648,6 +681,7 @@
     -->      
       
     <action name="buildEnvList" class="profileAdministration" method="list">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
     </action>   
       
@@ -661,16 +695,11 @@
     </action>
       
     <action name="deleteBuildEnv" class="profileAdministration" method="delete">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">buildEnvList</param>
         <param name="namespace">/admin</param>
         <param name="method">list</param>
-      </result>
-      <result name="error" type="redirect-action">
-        <param name="actionName">buildEnvList</param>
-        <param name="namespace">/admin</param>
-        <param name="method">list</param>
-        <param name="errorMessage">${message}</param>
       </result>
     </action>      
     
@@ -818,6 +847,18 @@
         <param name="actionName">displayQueues</param>
       </result>      
     </action>    
+
+    <action name="removePrepareBuildEntry" class="queues" method="removePrepareBuildEntry">
+	  <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+
+    <action name="removePrepareBuildEntries" class="queues" method="removePrepareBuildEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
     
     <action name="cancelDistributedBuild" class="queues" method="cancelDistributedBuild">
       <result name="success" type="redirect-action">
@@ -825,12 +866,24 @@
       </result>
     </action>
 
+    <action name="removeDistributedPrepareBuildEntry" class="queues" method="removeDistributedPrepareBuildEntry">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+
+    <action name="removeDistributedPrepareBuildEntries" class="queues" method="removeDistributedPrepareBuildEntries">
+	  <result name="success" type="redirect-action">
+	    <param name="actionName">displayQueues</param>
+	  </result>
+    </action>
+
     <action name="removeDistributedBuildEntries" class="queues" method="removeDistributedBuildEntries">
       <result name="success" type="redirect-action">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
-    
+
     <action name="removeDistributedBuildEntry" class="queues" method="removeDistributedBuildEntry">
       <result name="success" type="redirect-action">
         <param name="actionName">displayQueues</param>
@@ -867,6 +920,7 @@
     -->
     
     <action name="repositoryList" class="localRepository" method="list">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/localRepositoriesList.jsp</result>
     </action>
     
@@ -884,10 +938,7 @@
     </action>
     
     <action name="removeRepository" class="localRepository" method="remove">
-      <result name="error" type="redirect-action">
-        <param name="actionName">repositoryList</param>
-        <param name="errorMessage">${message}</param>
-      </result>
+      <interceptor-ref name="storeStack"/>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteLocalRepository.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">repositoryList</param>
@@ -895,12 +946,9 @@
     </action>
     
     <action name="purgeRepository" class="localRepository" method="doPurge">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirect-action">
         <param name="actionName">repositoryList</param>
-      </result>
-      <result name="error" type="redirect-action">
-        <param name="actionName">repositoryList</param>
-        <param name="errorMessage">${message}</param>
       </result>
     </action>
     

@@ -22,7 +22,7 @@ under the License.
   <parent>
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
   <artifactId>continuum-jetty</artifactId>
   <packaging>pom</packaging>
@@ -49,12 +49,7 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
-      <artifactId>servlet-api-2.5</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jsp-api-2.0</artifactId>
+      <artifactId>jsp-2.1-jetty</artifactId>
       <scope>runtime</scope>
     </dependency>    
     <dependency>
@@ -72,43 +67,6 @@ under the License.
       <artifactId>mail</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>ant</groupId>
-      <artifactId>ant</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-el</groupId>
-      <artifactId>commons-el</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>tomcat</groupId>
-      <artifactId>jasper-compiler</artifactId>
-      <scope>runtime</scope>
-    </dependency>    
-    <dependency>
-      <groupId>tomcat</groupId>
-      <artifactId>jasper-runtime</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>tomcat</groupId>
-      <artifactId>jasper-compiler-jdt</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>      
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -122,7 +80,6 @@ under the License.
               <mainClass>org.mortbay.start.Main</mainClass>
               <commandLineArguments>
                 <commandLineArgument>conf/jetty.xml</commandLineArgument>
-                <commandLineArgument>conf/jetty-logging.xml</commandLineArgument> 
               </commandLineArguments>
               <platforms>
                 <platform>jsw</platform>
@@ -145,15 +102,15 @@ under the License.
                     </property>
                     <property>
                       <name>wrapper.logfile</name>
-                      <value>%CONTINUUM_BASE%/logs/wrapper.log</value>
+                      <value>%CONTINUUM_BASE%/logs/wrapper.YYYYMMDD.log</value>
+                    </property>
+                    <property>
+                      <name>wrapper.logfile.rollmode</name>
+                      <value>DATE</value>
                     </property>
                     <property>
                       <name>wrapper.app.parameter.2</name>
                       <value>%CONTINUUM_BASE%/conf/jetty.xml</value>
-                    </property>
-                    <property>
-                      <name>wrapper.app.parameter.3</name>
-                      <value>%CONTINUUM_BASE%/conf/jetty-logging.xml</value>
                     </property>
                     <property>
                       <name>app.base.envvar</name>

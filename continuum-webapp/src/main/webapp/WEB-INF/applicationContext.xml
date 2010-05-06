@@ -66,7 +66,7 @@
   </bean>	
   
   <bean id="masterBuildAgentTransportServer" class="org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportServer">
-    <constructor-arg ref="distributedBuildManager"/>
+    <constructor-arg ref="distributedBuildService"/>
   </bean>
   
   <bean name="xmlrpcServicesList" class="java.util.ArrayList">

@@ -29,12 +29,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.continuum.buildagent.NoBuildAgentException;
+import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -589,63 +592,63 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
 
     public int addProjectToBuildQueue( int projectId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
+        continuum.buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
     public int addProjectToBuildQueue( int projectId, int buildDefinitionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, buildDefinitionId, ContinuumProjectState.TRIGGER_SCHEDULED );
+        continuum.buildProject( projectId, buildDefinitionId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
     public int buildProject( int projectId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId );
+        continuum.buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
     public int buildProject( int projectId, int buildDefintionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProjectWithBuildDefinition( projectId, buildDefintionId );
+        continuum.buildProjectWithBuildDefinition( projectId, buildDefintionId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
     public int buildGroup( int projectGroupId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
 
-        continuum.buildProjectGroup( projectGroupId );
+        continuum.buildProjectGroup( projectGroupId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
 
         return 0;
     }
 
     public int buildGroup( int projectGroupId, int buildDefintionId )
-        throws ContinuumException
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
 
-        continuum.buildProjectGroupWithBuildDefinition( projectGroupId, buildDefintionId );
+        continuum.buildProjectGroupWithBuildDefinition( projectGroupId, buildDefintionId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
 
         return 0;
     }

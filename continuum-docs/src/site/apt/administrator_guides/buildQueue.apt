@@ -1,0 +1,36 @@
+ ------
+ Managing Build Queues
+ ------
+ Jevica Arianne B. Zurbano
+ ------
+ May 21 2009
+ ------
+
+Managing Build Queues
+
+* Adding a Build Queue
+
+    By default, there is already a DEFAULT_BUILD_QUEUE that cannot be deleted configured in Continuum. To add more build queues..
+
+    Click the <<Build Queue>> link under the <<Administration>> section.
+
+[../images/buildQueue.png] Build Queue
+
+    You will see all the build queues.
+
+[../images/listBuildQueue.png] Build Queues list
+
+    Here you can add/delete the build queue. Take note that you would only be allowed to create N number of build queues, where
+    N = the Number of Allowed Builds in Parallel set in the Configuration page.
+
+    Input the name for the build queue and save.           
+
+[../images/addBuildQueue.png] Add Parallel Build Queue
+
+* Deleting a Build Queue
+    
+    From  the build queue page, you can delete a build queue by clicking the delete icon
+
+[../images/delete.gif] Delete icon
+
+

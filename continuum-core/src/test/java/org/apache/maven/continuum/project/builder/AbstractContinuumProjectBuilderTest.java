@@ -69,7 +69,7 @@ public abstract class AbstractContinuumProjectBuilderTest
         }
 
         public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-                                                                         boolean recursiveProjects, boolean checkoutInSingleDirectory )
+                                                                         boolean recursiveProjects )
             throws ContinuumProjectBuilderException
         {
             return null;
@@ -77,7 +77,7 @@ public abstract class AbstractContinuumProjectBuilderTest
 
         public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                          boolean recursiveProjects,
-                                                                         BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
+                                                                         BuildDefinitionTemplate buildDefinitionTemplate )
             throws ContinuumProjectBuilderException
         {
             return null;

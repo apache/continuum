@@ -49,6 +49,8 @@ public abstract class AbstractContinuumNotifier
 
     public static final String COMMITTER_FIELD = "committers";
 
+    public static final String DEVELOPER_FIELD = "developers";
+
     private static final Logger log = LoggerFactory.getLogger( AbstractContinuumNotifier.class );
 
     @Resource

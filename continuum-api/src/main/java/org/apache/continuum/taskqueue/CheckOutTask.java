@@ -20,9 +20,7 @@ package org.apache.continuum.taskqueue;
  */
 
 import java.io.File;
-import java.util.List;
 
-import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.taskqueue.Task;
 
 /**
@@ -41,13 +39,9 @@ public class CheckOutTask
     private final String scmUserName;
 
     private final String scmPassword;
-    
-    private final String scmRootUrl;
-    
-    private final List<Project> projectsWithCommonScmRoot;
 
     public CheckOutTask( int projectId, File workingDirectory, String projectName, String scmUserName,
-                         String scmPassword, String scmRootUrl, List<Project> projectsWithCommonScmRoot )
+                         String scmPassword )
     {
         this.projectId = projectId;
 
@@ -58,10 +52,6 @@ public class CheckOutTask
         this.scmUserName = scmUserName;
 
         this.scmPassword = scmPassword;
-        
-        this.scmRootUrl = scmRootUrl;
-        
-        this.projectsWithCommonScmRoot = projectsWithCommonScmRoot;
     }
 
     public int getProjectId()
@@ -99,15 +89,5 @@ public class CheckOutTask
     public int getHashCode()
     {
         return this.hashCode();
-    }
-
-    public String getScmRootUrl()
-    {
-        return scmRootUrl;
-    }
-
-    public List<Project> getProjectsWithCommonScmRoot()
-    {
-        return projectsWithCommonScmRoot;
     }
 }

@@ -19,20 +19,20 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.Profile;
-import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.util.StringUtils;
-import org.springframework.stereotype.Repository;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.util.StringUtils;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -85,9 +85,8 @@ public class InstallationDaoImpl
 
             if ( result.size() != 0 )
             {
-                for ( Iterator<Profile> iterator = result.iterator(); iterator.hasNext(); )
+                for ( Profile profile : result )
                 {
-                    Profile profile = iterator.next();
                     profile.setJdk( null );
                     pm.makePersistent( profile );
                 }
@@ -106,9 +105,8 @@ public class InstallationDaoImpl
 
             if ( result.size() != 0 )
             {
-                for ( Iterator<Profile> iterator = result.iterator(); iterator.hasNext(); )
+                for ( Profile profile : result )
                 {
-                    Profile profile = iterator.next();
                     profile.setBuilder( null );
                     pm.makePersistent( profile );
                 }

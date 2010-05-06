@@ -21,6 +21,7 @@ package org.apache.continuum.buildagent.manager;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -66,7 +67,7 @@ public class DefaultBuildAgentReleaseManager
 
     public String releasePrepare( Map<String, Object> projectMap, Map<String, Object> properties,
                                   Map<String, String> releaseVersion, Map<String, String> developmentVersion,
-                                  Map<String, String> environments )
+                                  Map<String, String> environments, String username )
         throws ContinuumReleaseException
     {
         Project project = getProject( projectMap );
@@ -74,6 +75,8 @@ public class DefaultBuildAgentReleaseManager
         Properties releaseProperties = getReleaseProperties( properties );
 
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
+        
+        listener.setUsername( username );
 
         String workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getPath();
 
@@ -118,6 +121,9 @@ public class DefaultBuildAgentReleaseManager
         if ( listener != null )
         {
             map.put( ContinuumBuildAgentUtil.KEY_RELEASE_STATE, listener.getState() );
+            
+            map.put( ContinuumBuildAgentUtil.KEY_USERNAME, listener.getUsername() );
+            
             if ( listener.getPhases() != null )
             {
                 map.put( ContinuumBuildAgentUtil.KEY_RELEASE_PHASES, listener.getPhases() );
@@ -157,20 +163,32 @@ public class DefaultBuildAgentReleaseManager
         return "";
     }
 
+    @SuppressWarnings( "unchecked" )
     public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
-                                Map repository )
+                                Map repository, String username )
         throws ContinuumReleaseException
     {
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
+        
+        listener.setUsername( username );
 
         LocalRepository repo = null;
 
         if ( !repository.isEmpty() )
         {
-            repo = new LocalRepository();
-            repo.setLayout( ContinuumBuildAgentUtil.getLocalRepositoryLayout( repository ) );
-            repo.setName( ContinuumBuildAgentUtil.getLocalRepositoryName( repository ) );
-            repo.setLocation( ContinuumBuildAgentUtil.getLocalRepository( repository ) );
+            List<org.apache.continuum.buildagent.model.LocalRepository>  localRepos = buildAgentConfigurationService.getLocalRepositories();
+            for( org.apache.continuum.buildagent.model.LocalRepository localRepo : localRepos )
+            {
+                if( localRepo.getName().equalsIgnoreCase( ContinuumBuildAgentUtil.getLocalRepositoryName( repository ) ) )
+                {
+                    repo = new LocalRepository();
+                    repo.setLayout( localRepo.getLayout() );
+                    repo.setName( localRepo.getName() );
+                    repo.setLocation( localRepo.getLocation() );
+                    
+                    break;
+                }   
+            }
         }
 
         File performDirectory =
@@ -182,7 +200,7 @@ public class DefaultBuildAgentReleaseManager
 
     public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
                                          String scmUrl, String scmUsername, String scmPassword, String scmTag,
-                                         String scmTagBase, Map<String, String> environments )
+                                         String scmTagBase, Map<String, String> environments, String username )
         throws ContinuumReleaseException
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
@@ -203,7 +221,7 @@ public class DefaultBuildAgentReleaseManager
 
         releaseManager.getPreparedReleases().put( releaseId, descriptor );
 
-        releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+        releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
 
         return releaseId;
     }
@@ -260,7 +278,8 @@ public class DefaultBuildAgentReleaseManager
 
         ProjectGroup group = new ProjectGroup();
 
-        String localRepo = ContinuumBuildAgentUtil.getLocalRepository( context );
+        String localRepo = ContinuumBuildAgentUtil.getLocalRepositoryName( context );
+        
         if ( StringUtils.isBlank( localRepo ) )
         {
             group.setLocalRepository( null );
@@ -268,8 +287,16 @@ public class DefaultBuildAgentReleaseManager
         else
         {
             LocalRepository localRepository = new LocalRepository();
-            localRepository.setLocation( localRepo );
-            group.setLocalRepository( localRepository );
+            List<org.apache.continuum.buildagent.model.LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();
+            for( org.apache.continuum.buildagent.model.LocalRepository localRepoBA : localRepos )
+            {
+                if( localRepoBA.getName().equalsIgnoreCase( localRepo ) )
+                {
+                    localRepository.setLocation( localRepoBA.getLocation() );
+                    group.setLocalRepository( localRepository );
+                    break;
+                }
+            }
         }
 
         project.setProjectGroup( group );
@@ -343,5 +370,8 @@ public class DefaultBuildAgentReleaseManager
         return props;
     }
 
-
+    public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
+    {
+        this.buildAgentConfigurationService = buildAgentConfigurationService;
+    }    
 }

@@ -20,10 +20,10 @@ package org.apache.maven.continuum.core.action;
  */
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
@@ -35,7 +35,9 @@ import org.apache.maven.continuum.utils.WorkingDirectoryService;
  */
 public class CheckWorkingDirectoryAction
     extends AbstractContinuumAction
-{   
+{
+    private static final String KEY_WORKING_DIRECTORY_EXISTS = "working-directory-exists";
+
     /**
      * @plexus.requirement
      */
@@ -50,22 +52,36 @@ public class CheckWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-        String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
-       
-        File workingDirectory =
-            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
-                                                         projectsWithCommonScmRoot );
-        
+
+        File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+
         if ( !workingDirectory.exists() )
         {
-            context.put( KEY_WORKING_DIRECTORY_EXISTS, Boolean.FALSE );
+            setWorkingDirectoryExist( context, false );
 
             return;
         }
 
         File[] files = workingDirectory.listFiles();
 
-        context.put( KEY_WORKING_DIRECTORY_EXISTS, files.length > 0 );
+        if ( files == null )
+        {
+            //workingDirectory isn't a directory but a file. Not possible in theory.
+            String msg = workingDirectory.getAbsolutePath() + " isn't a directory but a file.";
+            getLogger().error( msg );
+            throw new ContinuumException( msg );
+        }
+
+        setWorkingDirectoryExist( context, files.length > 0 );
+    }
+
+    public static boolean isWorkingDirectoryExist( Map<String, Object> context )
+    {
+        return getBoolean( context, KEY_WORKING_DIRECTORY_EXISTS );
+    }
+
+    private static void setWorkingDirectoryExist( Map<String, Object> context, boolean exists )
+    {
+        context.put( KEY_WORKING_DIRECTORY_EXISTS, exists );
     }
 }
