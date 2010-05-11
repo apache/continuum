@@ -248,7 +248,7 @@ public abstract class AbstractBuildExecutor
         throws ContinuumBuildExecutorException
     {
 
-        File workingDirectory = getWorkingDirectory( project );
+    	File workingDirectory = getWorkingDirectory( project, null, null );
 
         String actualExecutable = findExecutable( executable, defaultExecutable, resolveExecutable, workingDirectory );
 
@@ -340,7 +340,7 @@ public abstract class AbstractBuildExecutor
         return jdk.getVarValue();
     }
 
-    public void backupTestFiles( Project project, int buildId )
+    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
     {
         //Nothing to do, by default
     }
@@ -456,7 +456,7 @@ public abstract class AbstractBuildExecutor
         return Collections.EMPTY_LIST;
     }
 
-    public File getWorkingDirectory( Project project )
+    public File getWorkingDirectory( Project project, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
     {
         return getWorkingDirectoryService().getWorkingDirectory( project );
     }

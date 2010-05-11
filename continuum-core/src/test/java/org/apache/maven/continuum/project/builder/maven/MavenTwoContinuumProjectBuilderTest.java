@@ -39,6 +39,7 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -359,7 +360,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         ContinuumProjectBuildingResult result;
 
-        result = projectBuilder.buildProjectsFromMetadata( url, null, null, false, bdt );
+        result = projectBuilder.buildProjectsFromMetadata( url, null, null, false, bdt, false );
         assertFalse( result.hasErrors() );
 
         assertEquals( 5, service.getAllBuildDefinitionTemplate().size() );
@@ -390,6 +391,49 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 0, projectGroup.getProjects().size() );
     }
+    
+	public void testCreateProjectWithFlatStructure()
+	    throws Exception
+	{
+	    ContinuumProjectBuilder projectBuilder =
+	        (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
+	
+	    URL url = getTestFile( "/src/test-projects/flat-multi-module/parent-project/pom.xml" ).toURL();
+	
+	    ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( url, null, null, true, true );
+	    
+	    Project rootProject = result.getRootProject();
+	    assertEquals( "Incorrect root project", "parent-project", rootProject.getArtifactId() );
+	    
+	    List<Project> projects = result.getProjects();
+	    for( Project project : projects )
+	    {
+	        if( project.getName().equals( "parent-project" ) )
+	        {
+	            assertEquals( "Incorrect scm url for parent-project",
+	                          "scm:local:src/test-projects:flat-multi-module/parent-project", project.getScmUrl() );
+	        }
+	        else if( project.getName().equals( "module-a" ) )
+	        {
+	            assertEquals( "Incorrect scm url for parent-project",
+	                          "scm:local:src/test-projects:flat-multi-module/module-a", project.getScmUrl() );
+	        }
+	        else if ( project.getName().equals( "module-b" ) )
+	        {
+	            assertEquals( "Incorrect scm url for parent-project",
+	                          "scm:local:src/test-projects:flat-multi-module/module-b", project.getScmUrl() );
+	        }
+	        else if ( project.getName().equals( "module-d" ) )
+	        {
+	            assertEquals( "Incorrect scm url for module-d",
+	                          "scm:local:src/test-projects:flat-multi-module/module-c/module-d", project.getScmUrl() );
+	        }
+	        else
+	        {
+	            fail( "Unknown project: " + project.getName() );
+	        }
+	    }
+	}
 
     private void assertDependency( String dep, String proj, Map<String, Project> projects )
     {

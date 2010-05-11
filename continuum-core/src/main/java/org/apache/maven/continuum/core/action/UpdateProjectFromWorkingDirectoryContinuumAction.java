@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -80,9 +81,11 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
         ContinuumBuildExecutor builder = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
         ScmResult scmResult = (ScmResult) context.get( "scmResult" );
-        builder.updateProjectFromCheckOut( workingDirectoryService.getWorkingDirectory( project ), project,
-                                           buildDefinition, scmResult );
-
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+        String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+        
+        builder.updateProjectFromCheckOut( workingDirectoryService.getWorkingDirectory( project, 
+                        projectScmRootUrl, projectsWithCommonScmRoot ), project, buildDefinition, scmResult );
         // ----------------------------------------------------------------------
         // Store the new descriptor
         // ----------------------------------------------------------------------

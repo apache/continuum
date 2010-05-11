@@ -116,9 +116,15 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             notifier.checkoutStarted( project, buildDefinition );
 
-            // TODO: not sure why this is different to the context, but it all needs to change
-            File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
-            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
+            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );           
+            String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+            
+         // TODO: not sure why this is different to the context, but it all needs to change            
+            File workingDirectory =
+                workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+                                                             projectsWithCommonScmRoot );    
+            
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, projectScmRootUrl );
             config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();
             String msg =
@@ -198,10 +204,19 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         AbstractContinuumAction.setProject( context, project );
     }
 
-    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
+    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory, String scmRootUrl )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        config.setUrl( project.getScmUrl() );
+        
+        if( project.isCheckedOutInSingleDirectory() && scmRootUrl!= null && !"".equals( scmRootUrl ) )
+        {
+            config.setUrl( scmRootUrl );
+        }
+        else
+        {
+            config.setUrl( project.getScmUrl() );
+        }
+        
         config.setUsername( project.getScmUsername() );
         config.setPassword( project.getScmPassword() );
         config.setUseCredentialsCache( project.isScmUseCache() );

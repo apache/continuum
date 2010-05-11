@@ -103,13 +103,17 @@ public class CheckoutProjectContinuumAction
 
         ScmResult result;
 
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+        
         try
         {
             String scmUserName = getScmUsername( context, project.getScmUsername() );
             String scmPassword = getScmPassword( context, project.getScmPassword() );
+            String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+            
             ContinuumScmConfiguration config =
-                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
-
+            	createScmConfiguration( project, workingDirectory, scmUserName, scmPassword, scmRootUrl, isRootDirectory( context ) );
+                
             String tag = config.getTag();
             getLogger().info(
                 "Checking out project: '" + project.getName() + "', id: '" + project.getId() + "' " + "to '" +
@@ -205,6 +209,19 @@ public class CheckoutProjectContinuumAction
 
             projectDao.updateProject( project );
 
+            // update state of sub-projects 
+            // if multi-module project was checked out in a single directory, these must not be null            
+            for( Project projectWithCommonScmRoot : projectsWithCommonScmRoot )
+            {
+                projectWithCommonScmRoot = projectDao.getProject( projectWithCommonScmRoot.getId() );
+                if( projectWithCommonScmRoot != null && projectWithCommonScmRoot.getId() != project.getId() &&
+                                projectWithCommonScmRoot.getState() == ContinuumProjectState.NEW )
+                {
+                    projectWithCommonScmRoot.setState( ContinuumProjectState.CHECKEDOUT );
+                   projectDao.updateProject( projectWithCommonScmRoot );                    
+                }
+            }
+            
             notifier.checkoutComplete( project, buildDefinition );
         }
 
@@ -213,10 +230,19 @@ public class CheckoutProjectContinuumAction
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory,
-                                                              String scmUserName, String scmPassword )
+    													String scmUserName, String scmPassword, String scmRootUrl,
+    		                                                              boolean isRootDirectory )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        config.setUrl( project.getScmUrl() );
+        
+        if( project.isCheckedOutInSingleDirectory() && scmRootUrl!= null && !"".equals( scmRootUrl ) && isRootDirectory )
+        {
+            config.setUrl( scmRootUrl );
+        }
+        else
+        {
+            config.setUrl( project.getScmUrl() );
+        }
         config.setUsername( scmUserName );
         config.setPassword( scmPassword );
         config.setUseCredentialsCache( project.isScmUseCache() );

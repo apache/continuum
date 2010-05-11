@@ -322,13 +322,14 @@ public interface Continuum
      * @param useCredentialsCache      whether to use cached scm account credentials or not
      * @param loadRecursiveProjects    if multi modules project record all projects (if false only root project added)
      * @param buildDefintionTemplateId buildDefintionTemplateId
+     * @param checkoutInSingleDirectory TODO
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
                                                               boolean checkProtocol, boolean useCredentialsCache,
                                                               boolean loadRecursiveProjects,
-                                                              int buildDefintionTemplateId )
+                                                              int buildDefintionTemplateId, boolean checkoutInSingleDirectory )
         throws ContinuumException;
 
     /**

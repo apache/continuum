@@ -998,7 +998,9 @@ public class ContinuumBuildAgentServiceImpl
         {
             for ( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
             {
-                processProject( workingDirectory + "/" + modules.next().toString(), "pom.xml", autoVersionSubmodules,
+                String module = StringUtils.replace( modules.next().toString(), '\\', '/' );
+            	
+                processProject( workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules,
                                 projects );
             }
         }

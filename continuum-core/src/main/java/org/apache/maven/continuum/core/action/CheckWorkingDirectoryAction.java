@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.dao.ProjectDao;
@@ -52,8 +53,12 @@ public class CheckWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-
-        File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+        String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+       
+        File workingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+                                                         projectsWithCommonScmRoot );
 
         if ( !workingDirectory.exists() )
         {

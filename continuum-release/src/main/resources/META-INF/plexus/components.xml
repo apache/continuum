@@ -279,6 +279,21 @@
           <phase>scm-commit-rollback</phase>
           <phase>remove-scm-tag</phase>
         </rollbackPhases>
+        <!-- Set <branchPhases> even though it is not used in Continuum. Having this empty causes an NPE when cleaning up the release
+             in maven-release 2.0! -->
+        <branchPhases>
+          <phase>create-backup-poms</phase>
+          <phase>check-poms</phase>
+          <phase>scm-check-modifications</phase>
+          <phase>map-branch-versions</phase>
+          <phase>map-development-versions</phase>
+          <phase>rewrite-poms-for-branch</phase>
+          <phase>scm-commit-branch</phase>
+          <phase>scm-branch</phase>
+          <phase>rewrite-poms-for-development</phase>
+          <phase>scm-commit-release</phase>
+          <phase>end-release</phase>
+        </branchPhases>
       </configuration>
     </component>
     <component>

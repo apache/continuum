@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -40,6 +41,7 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
@@ -80,6 +82,11 @@ public class DefaultBuildController
      * @plexus.requirement
      */
     private ProjectDao projectDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     /**
      * @plexus.requirement
@@ -330,6 +337,8 @@ public class DefaultBuildController
         context.setStartTime( System.currentTimeMillis() );
 
         context.setBuildTrigger( buildTrigger );
+        
+        Map actionContext = context.getActionContext();
 
         try
         {
@@ -347,6 +356,37 @@ public class DefaultBuildController
             context.setOldBuildResult( oldBuildResult );
 
             context.setScmResult( scmResult );
+            
+            // CONTINUUM-2193
+            ProjectGroup projectGroup = project.getProjectGroup();
+            List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );
+            String projectScmUrl = project.getScmUrl();
+            String projectScmRootAddress = "";
+
+            for ( ProjectScmRoot projectScmRoot : scmRoots )
+            {
+                projectScmRootAddress = projectScmRoot.getScmRootAddress();
+                if ( projectScmUrl.startsWith( projectScmRoot.getScmRootAddress() ) )
+                {
+                    actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRoot.getScmRootAddress() );                    
+                    break;
+                }
+            }
+
+            if( project.isCheckedOutInSingleDirectory() )
+            {
+                List<Project> projectsInGroup =
+                    projectGroupDao.getProjectGroupWithProjects( projectGroup.getId() ).getProjects(); 
+                List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
+                for( Project projectInGroup : projectsInGroup )
+                {
+                    if( projectInGroup.getScmUrl().startsWith( projectScmRootAddress ) )
+                    {
+                        projectsWithCommonScmRoot.add( projectInGroup );
+                    }
+                }
+                actionContext.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projectsWithCommonScmRoot );
+            }
 
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
             // this means all changes since the project has been loaded in continuum will be in memory
@@ -362,7 +402,7 @@ public class DefaultBuildController
             throw new TaskExecutionException( "Error initializing the build context", e );
         }
 
-        Map<String, Object> actionContext = context.getActionContext();
+       // Map<String, Object> actionContext = context.getActionContext();
 
         AbstractContinuumAction.setProjectId( actionContext, projectId );
 
@@ -518,6 +558,13 @@ public class DefaultBuildController
             try
             {
                 ContinuumBuildExecutor executor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
+                
+                Map<String, Object> actionContext = context.getActionContext();
+                List<Project> projectsWithCommonScmRoot =
+                    AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot( actionContext );
+                String projectScmRootUrl =
+                    AbstractContinuumAction.getString( actionContext, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL,
+                                                       project.getScmUrl() );
 
                 if ( executor == null )
                 {
@@ -526,9 +573,11 @@ public class DefaultBuildController
                 }
                 else if ( context.getScmResult() != null )
                 {
-                    shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project,
-                                                        workingDirectoryService.getWorkingDirectory( project ),
-                                                        context.getBuildDefinition() );
+                    shouldBuild = 
+	                        executor.shouldBuild( context.getScmResult().getChanges(), project,
+	                                              workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+	                                                                                           projectsWithCommonScmRoot ),
+	                                              context.getBuildDefinition() );
                 }
             }
             catch ( Exception e )

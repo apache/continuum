@@ -41,5 +41,6 @@
   <modules>
     <module>module-A</module>
     <module>module-B</module>
+    <module>module-C/module-D</module>
   </modules>
 </project>

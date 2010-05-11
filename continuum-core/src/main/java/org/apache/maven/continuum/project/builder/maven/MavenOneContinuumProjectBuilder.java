@@ -67,17 +67,17 @@ public class MavenOneContinuumProjectBuilder
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password )
         throws ContinuumProjectBuilderException
     {
-        return buildProjectsFromMetadata( url, username, password, true );
+    	return buildProjectsFromMetadata( url, username, password, true, false );
     }
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-                                                                     boolean recursiveProjects )
+    						boolean recursiveProjects, boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
     {
         try
         {
             return buildProjectsFromMetadata( url, username, password, recursiveProjects,
-                                              buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate() );
+            				buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate(), false );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -87,7 +87,7 @@ public class MavenOneContinuumProjectBuilder
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                      boolean recursiveProjects,
-                                                                     BuildDefinitionTemplate buildDefinitionTemplate )
+                                                                     BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
