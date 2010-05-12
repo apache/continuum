@@ -1,0 +1,16 @@
+target
+*~
+*.log
+.classpath
+.project
+*.ipr
+*.iws
+*.iml
+target
+*~
+*.log
+.classpath
+.project
+*.ipr
+*.iws
+*.iml
