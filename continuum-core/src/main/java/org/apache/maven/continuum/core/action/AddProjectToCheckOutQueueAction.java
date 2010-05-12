@@ -75,7 +75,7 @@ public class AddProjectToCheckOutQueueAction
             scmPassword = CheckoutProjectContinuumAction.getScmPassword( context, null );
         }
         
-        String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, null );
+        String scmRootUrl = getProjectScmRootUrl( context, null );
         
         BuildDefinition defaultBuildDefinition = getBuildDefinition( context );
         parallelBuildsManager.checkoutProject( project.getId(), project.getName(),

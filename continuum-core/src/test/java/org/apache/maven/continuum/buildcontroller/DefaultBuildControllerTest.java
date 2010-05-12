@@ -147,7 +147,7 @@ public class DefaultBuildControllerTest
         ProjectScmRoot projectScmRoot = new ProjectScmRoot();
         projectScmRoot.setId( 1 );
         projectScmRoot.setScmRootAddress( "scm:local:src/test-projects:flat-multi-module" );
-        actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
+        AbstractContinuumAction.setProjectScmRoot( actionContext, projectScmRoot );
 
         return context;
     }

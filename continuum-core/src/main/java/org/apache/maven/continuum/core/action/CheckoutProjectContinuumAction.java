@@ -53,9 +53,9 @@ public class CheckoutProjectContinuumAction
 
     private static final String KEY_SCM_PASSWORD = "scmUserPassword";
 
-    private static final String KEY_CHECKOUT_SCM_RESULT = "checkout-result";
-
     private static final String KEY_PROJECT_RELATIVE_PATH = "project-relative-path";
+    
+    private static final String KEY_CHECKOUT_SCM_RESULT = "checkout-result";
 
     /**
      * @plexus.requirement
@@ -109,7 +109,7 @@ public class CheckoutProjectContinuumAction
         {
             String scmUserName = getScmUsername( context, project.getScmUsername() );
             String scmPassword = getScmPassword( context, project.getScmPassword() );
-            String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+            String scmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
             
             ContinuumScmConfiguration config =
             	createScmConfiguration( project, workingDirectory, scmUserName, scmPassword, scmRootUrl, isRootDirectory( context ) );
@@ -122,7 +122,7 @@ public class CheckoutProjectContinuumAction
             CheckOutScmResult checkoutResult = scm.checkout( config );
             if ( StringUtils.isNotEmpty( checkoutResult.getRelativePathProjectDirectory() ) )
             {
-                context.put( KEY_PROJECT_RELATIVE_PATH, checkoutResult.getRelativePathProjectDirectory() );
+                setProjectRelativePath( context, checkoutResult.getRelativePathProjectDirectory() );
             }
 
             if ( !checkoutResult.isSuccess() )
@@ -190,7 +190,8 @@ public class CheckoutProjectContinuumAction
         }
         finally
         {
-            String relativePath = getString( context, KEY_PROJECT_RELATIVE_PATH, "" );
+            String relativePath = getProjectRelativePath( context );
+            
             if ( StringUtils.isNotEmpty( relativePath ) )
             {
                 project.setRelativePath( relativePath );
@@ -225,7 +226,7 @@ public class CheckoutProjectContinuumAction
             notifier.checkoutComplete( project, buildDefinition );
         }
 
-        setCheckoutResult( context, result );
+        setCheckoutScmResult( context, result );
         setProject( context, project );
     }
 
@@ -328,14 +329,24 @@ public class CheckoutProjectContinuumAction
     {
         context.put( KEY_SCM_PASSWORD, scmPassword );
     }
-
-    public static ScmResult getCheckoutResult( Map<String, Object> context, Object defaultValue )
+    
+    public static String getProjectRelativePath( Map<String, Object> context )
+    {
+        return getString( context, KEY_PROJECT_RELATIVE_PATH, "" );
+    }
+    
+    public static void setProjectRelativePath( Map<String, Object> context, String projectRelativePath )
+    {
+        context.put( KEY_PROJECT_RELATIVE_PATH, projectRelativePath );
+    }
+    
+    public static ScmResult getCheckoutScmResult( Map<String, Object> context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_CHECKOUT_SCM_RESULT, defaultValue );
     }
 
-    public static void setCheckoutResult( Map<String, Object> context, ScmResult checkoutResult )
+    public static void setCheckoutScmResult( Map<String, Object> context, ScmResult scmResult )
     {
-        context.put( KEY_CHECKOUT_SCM_RESULT, checkoutResult );
+        context.put( KEY_CHECKOUT_SCM_RESULT, scmResult );
     }
 }

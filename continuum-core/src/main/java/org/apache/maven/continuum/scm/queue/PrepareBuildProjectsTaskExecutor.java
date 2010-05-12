@@ -236,7 +236,7 @@ public class PrepareBuildProjectsTaskExecutor
                 if ( projectScmUrl.startsWith( projectScmRoot.getScmRootAddress() ) )
                 {
                     AbstractContinuumAction.setProjectScmRoot( context, projectScmRoot );
-                    context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRootAddress );
+                    AbstractContinuumAction.setProjectScmRootUrl( context, projectScmRootAddress );
                     break;
                 }
             }
@@ -262,7 +262,7 @@ public class PrepareBuildProjectsTaskExecutor
                          projectsWithCommonScmRoot.add( projectInGroup );
                      }
                  }            
-                 context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projectsWithCommonScmRoot );
+                 AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context, projectsWithCommonScmRoot );
              }
             
             BuildResult oldBuildResult =
@@ -298,7 +298,7 @@ public class PrepareBuildProjectsTaskExecutor
     {
         performAction( "check-working-directory", context );
 
-        boolean workingDirectoryExists = CheckWorkingDirectoryAction.isWorkingDirectoryExist( context );
+        boolean workingDirectoryExists = CheckWorkingDirectoryAction.isWorkingDirectoryExists( context );
 
         ScmResult scmResult;
 
@@ -306,7 +306,7 @@ public class PrepareBuildProjectsTaskExecutor
         {
             performAction( "update-working-directory-from-scm", context );
 
-            scmResult = UpdateWorkingDirectoryFromScmContinuumAction.getUpdateScmResult( context );
+            scmResult = UpdateWorkingDirectoryFromScmContinuumAction.getUpdateScmResult( context, null );
         }
         else
         {
@@ -316,7 +316,7 @@ public class PrepareBuildProjectsTaskExecutor
                 project ).getAbsolutePath() );
             
             List<Project> projectsWithCommonScmRoot = AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot( context );           
-            String projectScmRootUrl = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+            String projectScmRootUrl = AbstractContinuumAction.getProjectScmRootUrl( context, project.getScmUrl() );
             String workingDir = null;
 
             if ( rootProject.getId() == project.getId() )
@@ -354,7 +354,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             performAction( "checkout-project", context );
 
-            scmResult = CheckoutProjectContinuumAction.getCheckoutResult( context, null );
+            scmResult = CheckoutProjectContinuumAction.getCheckoutScmResult( context, null );
         }
 
         // [CONTINUUM-2207] when returned scmResult is null, this causes a problem when building the project 

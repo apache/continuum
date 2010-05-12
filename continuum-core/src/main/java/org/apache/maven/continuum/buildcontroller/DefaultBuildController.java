@@ -328,6 +328,7 @@ public class DefaultBuildController
      * @return
      * @throws TaskExecutionException
      */
+    @SuppressWarnings( "unchecked" )
     protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
                                                    ScmResult scmResult )
         throws TaskExecutionException
@@ -368,7 +369,7 @@ public class DefaultBuildController
                 projectScmRootAddress = projectScmRoot.getScmRootAddress();
                 if ( projectScmUrl.startsWith( projectScmRoot.getScmRootAddress() ) )
                 {
-                    actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRoot.getScmRootAddress() );                    
+                    AbstractContinuumAction.setProjectScmRootUrl( actionContext, projectScmRoot.getScmRootAddress() );
                     break;
                 }
             }
@@ -385,7 +386,7 @@ public class DefaultBuildController
                         projectsWithCommonScmRoot.add( projectInGroup );
                     }
                 }
-                actionContext.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projectsWithCommonScmRoot );
+                AbstractContinuumAction.setListOfProjects( actionContext, projectsWithCommonScmRoot );
             }
 
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
@@ -563,8 +564,7 @@ public class DefaultBuildController
                 List<Project> projectsWithCommonScmRoot =
                     AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot( actionContext );
                 String projectScmRootUrl =
-                    AbstractContinuumAction.getString( actionContext, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL,
-                                                       project.getScmUrl() );
+                    AbstractContinuumAction.getProjectScmRootUrl( actionContext, project.getScmUrl() );
 
                 if ( executor == null )
                 {

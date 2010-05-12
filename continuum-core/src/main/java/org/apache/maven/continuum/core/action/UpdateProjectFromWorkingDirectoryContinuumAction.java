@@ -82,7 +82,7 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
 
         ScmResult scmResult = (ScmResult) context.get( "scmResult" );
         List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-        String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+        String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
         
         builder.updateProjectFromCheckOut( workingDirectoryService.getWorkingDirectory( project, 
                         projectScmRootUrl, projectsWithCommonScmRoot ), project, buildDefinition, scmResult );

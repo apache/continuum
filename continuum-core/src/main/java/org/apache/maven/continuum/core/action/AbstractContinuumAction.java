@@ -44,87 +44,58 @@ public abstract class AbstractContinuumAction
     // ----------------------------------------------------------------------
     // Keys for the values that can be in the context
     // ----------------------------------------------------------------------
-
-    // TODO: Review and fix access of constant variables used for build context!
     
-    public static final String KEY_PROJECT_ID = "project-id";
+    private static final String KEY_PROJECT_ID = "project-id";
 
-    public static final String KEY_PROJECT = "project";
+    private static final String KEY_PROJECT = "project";
 
-    public static final String KEY_PROJECTS = "projects";
+    private static final String KEY_PROJECTS = "projects";
 
-    public static final String KEY_PROJECTS_BUILD_DEFINITIONS_MAP = "projects-build-definitions";
+    private static final String KEY_PROJECTS_BUILD_DEFINITIONS_MAP = "projects-build-definitions";
 
-    public static final String KEY_BUILD_DEFINITION_TEMPLATE = "build-definition-template";
+    private static final String KEY_BUILD_DEFINITION_TEMPLATE = "build-definition-template";
 
-    public static final String KEY_BUILD_DEFINITION = "build-definition";
+    private static final String KEY_BUILD_DEFINITION = "build-definition";
 
-    public static final String KEY_BUILD_DEFINITION_ID = "build-definition-id";
+    private static final String KEY_BUILD_DEFINITION_ID = "build-definition-id";
 
-    public static final String KEY_UNVALIDATED_PROJECT = "unvalidated-project";
+    private static final String KEY_UNVALIDATED_PROJECT = "unvalidated-project";
 
-    public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
+    private static final String KEY_PROJECT_GROUP_ID = "project-group-id";
 
-    public static final String KEY_UNVALIDATED_PROJECT_GROUP = "unvalidated-project-group";
+    private static final String KEY_UNVALIDATED_PROJECT_GROUP = "unvalidated-project-group";
 
-    public static final String KEY_BUILD_ID = "build-id";
+    private static final String KEY_BUILD_ID = "build-id";
 
-    public static final String KEY_WORKING_DIRECTORY = "working-directory";
-
-    public static final String KEY_WORKING_DIRECTORY_EXISTS = "working-directory-exists";
+    private static final String KEY_WORKING_DIRECTORY = "working-directory";
     
-    public static final String KEY_CHECKOUT_SCM_RESULT = "checkout-result";
-    
-    public static final String KEY_UPDATE_SCM_RESULT = "update-result";
-    
-    public static final String KEY_UPDATE_DEPENDENCIES = "update-dependencies";
+    private static final String KEY_UPDATE_DEPENDENCIES = "update-dependencies";
 
-    public static final String KEY_BUILD_TRIGGER = "buildTrigger"; 
-    
-    public static final String KEY_FIRST_RUN = "first-run";
-
-    //public static final String KEY_OLD_BUILD_ID = "old-buildResult-id";
-
-    //public static final String KEY_SCM_RESULT_MAP = "scm-result-map";
-    
-    public static final String KEY_PROJECT_RELATIVE_PATH = "project-relative-path";
-    
-    public static final String KEY_SCM_USE_CREDENTIALS_CACHE = "useCredentialsCache";
-    
-	public static final String KEY_SCM_USERNAME = "scmUserName";
+    private static final String KEY_BUILD_TRIGGER = "buildTrigger"; 
+    	
+    private static final String KEY_SCM_RESULT = "scmResult";
 	
-	public static final String KEY_SCM_PASSWORD = "scmUserPassword";
+    private static final String KEY_OLD_SCM_RESULT = "old-scmResult";
 	
-	public static final String KEY_SCM_RESULT = "scmResult";
-	
-	public static final String KEY_OLD_SCM_RESULT = "old-scmResult";
-	
-	public static final String KEY_PROJECT_SCM_ROOT = "projectScmRoot";
+    private static final String KEY_PROJECT_SCM_ROOT = "projectScmRoot";
 	
     /**
      * SCM root url. Used in these actions add-project-to-checkout-queue, checkout-project, clean-working-directory,
      *      create-projects-from-metadata, update-project-from-working-directory, 
      *      update-working-directory-from-scm
     */
-    public static final String KEY_PROJECT_SCM_ROOT_URL = "projectScmRootUrl";
+    private static final String KEY_PROJECT_SCM_ROOT_URL = "projectScmRootUrl";
 
     /**
      * List of projects in a project group with a common scm root url.
     */
-    public static final String KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT = "projects-in-group-with-common-scm-root";
+    private static final String KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT = "projects-in-group-with-common-scm-root";
 
-    public static final String KEY_OLD_BUILD_ID = "old-buildResult-id";
+    private static final String KEY_OLD_BUILD_ID = "old-buildResult-id";
 
-    public static final String KEY_CANCELLED = "cancelled";
+    private static final String KEY_SCM_RESULT_MAP = "scm-result-map";
 
-    /**
-     * Metadata url for adding projects.
-    */
-    public static final String KEY_URL = "url";
-
-    public static final String KEY_SCM_RESULT_MAP = "scm-result-map";
-
-    public static final String KEY_ROOT_DIRECTORY = "root-directory";
+    private static final String KEY_ROOT_DIRECTORY = "root-directory";
 
     // ----------------------------------------------------------------------
     //
@@ -250,7 +221,7 @@ public abstract class AbstractContinuumAction
     {
         context.put( KEY_WORKING_DIRECTORY, workingDirectory );
     }
-
+        
     public static List<ProjectDependency> getUpdatedDependencies( Map<String, Object> context )
     {
         return getUpdatedDependencies( context, null );
@@ -331,6 +302,11 @@ public abstract class AbstractContinuumAction
     {
         return (List<Project>) getObject( context, KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, new ArrayList<Integer>() );
     }
+    
+    public static void setListOfProjectsInGroupWithCommonScmRoot( Map<String, Object> context, List<Project> projects )
+    {
+        context.put( KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projects );
+    }
 
     public static Map<Integer, BuildDefinition> getProjectsBuildDefinitionsMap( Map<String, Object> context )
     {
@@ -362,7 +338,17 @@ public abstract class AbstractContinuumAction
     {
         context.put( KEY_ROOT_DIRECTORY, isRootDirectory );
     }
-
+    
+    public static String getProjectScmRootUrl( Map<String, Object> context, String projectScmRootUrl )
+    {
+        return getString( context, KEY_PROJECT_SCM_ROOT_URL, projectScmRootUrl );
+    }
+    
+    public static void setProjectScmRootUrl( Map<String, Object> context, String projectScmRootUrl )
+    {
+        context.put( KEY_PROJECT_SCM_ROOT_URL, projectScmRootUrl );
+    }
+    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

@@ -1568,22 +1568,17 @@ public class DefaultContinuum
 
         Map<String, Object> context = new HashMap<String, Object>();
 
-        //CreateProjectsFromMetadataAction.setProjectBuilderId( context, projectBuilderId );
-        context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, projectBuilderId );
-
-        //CreateProjectsFromMetadataAction.setUrl( context, metadataUrl );
-        context.put( AbstractContinuumAction.KEY_URL, metadataUrl );
-
-        //CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, loadRecursiveProjects );
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, loadRecursiveProjects );
-
-        //StoreProjectAction.setUseScmCredentialsCache( context, useCredentialsCache );
-        context.put( AbstractContinuumAction.KEY_SCM_USE_CREDENTIALS_CACHE, useCredentialsCache );
-
-        //AbstractContinuumAction.setWorkingDirectory( context, getWorkingDirectory() );
-        context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
+        CreateProjectsFromMetadataAction.setProjectBuilderId( context, projectBuilderId );
+        
+        CreateProjectsFromMetadataAction.setUrl( context, metadataUrl );
+        
+        CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, loadRecursiveProjects );
+        
+        StoreProjectAction.setUseScmCredentialsCache( context, useCredentialsCache );
+        
+        AbstractContinuumAction.setWorkingDirectory( context, getWorkingDirectory() );
                 
-        context.put( CreateProjectsFromMetadataAction.KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY, checkoutInSingleDirectory );
+        CreateProjectsFromMetadataAction.setCheckoutProjectsInSingleDirectory( context, checkoutInSingleDirectory );
 
         // CreateProjectsFromMetadataAction will check null and use default
         if ( buildDefinitionTemplateId > 0 )
@@ -1605,10 +1600,8 @@ public class DefaultContinuum
 
         executeAction( "create-projects-from-metadata", context );
 
-        //ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
-        ContinuumProjectBuildingResult result =
-        	            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
-
+        ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
+        
         if ( log.isInfoEnabled() )
         {
             if ( result.getProjects() != null )
@@ -1682,7 +1675,7 @@ public class DefaultContinuum
             projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 
             //String url = CreateProjectsFromMetadataAction.getUrl( context );
-            String url = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, null );
+            String url = AbstractContinuumAction.getProjectScmRootUrl( context, null );
 
             List<ProjectScmRoot> scmRoots = getProjectScmRootByProjectGroup( projectGroup.getId() );
 
@@ -1766,10 +1759,10 @@ public class DefaultContinuum
                 
                 if( project != null )
                 {
-                	String scmRootUrl = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, null );
+                	String scmRootUrl = AbstractContinuumAction.getProjectScmRootUrl( context, null );
                 	context = new HashMap<String, Object>();
 
-                	context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, scmRootUrl );
+                	AbstractContinuumAction.setProjectScmRootUrl( context, scmRootUrl );
                 	
                     List<Project> projectsWithSimilarScmRoot = new ArrayList<Project>();
                     for( Project projectWithSimilarScmRoot : projects )
@@ -1777,7 +1770,7 @@ public class DefaultContinuum
                     	projectsWithSimilarScmRoot.add( projectWithSimilarScmRoot );
                     }
 
-                    context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projectsWithSimilarScmRoot );
+                    AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context, projectsWithSimilarScmRoot );
                     
                     addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context, projectGroupCreation,
                                                scmUserName, scmPassword, project );    
@@ -1815,30 +1808,31 @@ public class DefaultContinuum
                                                          projectDao.getProject( project.getId() ) );
         }
 
-        context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT, project );
+        AbstractContinuumAction.setUnvalidatedProject( context, project );
         //
         //            executeAction( "validate-project", context );
         //
         //            executeAction( "store-project", context );
         //
-        context.put( AbstractContinuumAction.KEY_PROJECT_ID, project.getId() );
+        
+        AbstractContinuumAction.setProjectId( context, project.getId() );
 
         // does the scm username & password really have to be set in the project?
         if ( !StringUtils.isEmpty( scmUserName ) )
         {
             project.setScmUsername( scmUserName );
-            context.put( AbstractContinuumAction.KEY_SCM_USERNAME, scmUserName );
+            CheckoutProjectContinuumAction.setScmUsername( context, scmUserName );
         }
         if ( !StringUtils.isEmpty( scmPassword ) )
         {
             project.setScmPassword( scmPassword );
-            context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, scmPassword );
+            CheckoutProjectContinuumAction.setScmPassword( context, scmPassword );
         }
         //FIXME
         // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup );
         // remove object data -> we don't display the project name in the build queue
-        context.put( AbstractContinuumAction.KEY_PROJECT, projectDao.getProject( project.getId() ) );
-
+        AbstractContinuumAction.setProject( context, projectDao.getProject( project.getId() ) );
+        
         BuildDefinition defaultBuildDefinition = null;
         BuildDefinitionTemplate template = null;
         if ( projectBuilderId.equals( MavenTwoContinuumProjectBuilder.ID ) )
@@ -1869,8 +1863,8 @@ public class DefaultContinuum
         else
         {
             // used by BuildManager to determine on which build queue will the project be put
-            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, defaultBuildDefinition );
-
+            AbstractContinuumAction.setBuildDefinition( context, defaultBuildDefinition );
+            
             if ( !configurationService.isDistributedBuildEnabled() )
             {
                 executeAction( "add-project-to-checkout-queue", context );

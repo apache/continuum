@@ -109,16 +109,14 @@ public class CreateProjectsFromMetadataTest
     	invokeBuildSettings();
     	
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put( AbstractContinuumAction.KEY_URL,
-		            "http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml" );
-        context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, true );
+        CreateProjectsFromMetadataAction.setUrl( context, "http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml" );
+        CreateProjectsFromMetadataAction.setProjectBuilderId( context, "id" );
+        CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, true );
         context.put( CreateProjectsFromMetadataAction.KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY, false );
 
         action.execute( context );
 
-        ContinuumProjectBuildingResult result =
-	            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
 
         assertFalse(
             "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
@@ -131,16 +129,14 @@ public class CreateProjectsFromMetadataTest
     	invokeBuildSettings();
     	
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put( AbstractContinuumAction.KEY_URL,
-            "http://svn.apache.org/repos/asf/maven/archiva/trunk/pom.xml" );
-        context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, false );
+        CreateProjectsFromMetadataAction.setUrl( context, "http://svn.apache.org/repos/asf/maven/archiva/trunk/pom.xml" );
+        CreateProjectsFromMetadataAction.setProjectBuilderId( context,  "id" );
+        CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, false );
         context.put( CreateProjectsFromMetadataAction.KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY, false );
 
         action.execute( context );
 
-        ContinuumProjectBuildingResult result =
-        	            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
 
         assertFalse(
             "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
@@ -183,22 +179,21 @@ public class CreateProjectsFromMetadataTest
                         
         // assert using scm url set in root!
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put( AbstractContinuumAction.KEY_URL,
-                     "file://" + PlexusInSpringTestCase.getBasedir() + "/src/test-projects/flat-multi-module/parent-project/pom.xml" );
-        context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, true );
+        CreateProjectsFromMetadataAction.setUrl( context, "file://" + PlexusInSpringTestCase.getBasedir()
+            + "/src/test-projects/flat-multi-module/parent-project/pom.xml" );
+        CreateProjectsFromMetadataAction.setProjectBuilderId( context, "id" );
+        CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, true );
         context.put( CreateProjectsFromMetadataAction.KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY, true );
 
         action.execute( context );
 
-        ContinuumProjectBuildingResult result =
-            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
 
         assertFalse(
             "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
             result.hasErrors() );
         assertEquals( "Incorrect SCM Root Url for flat multi-module project.",
-                      "scm:local:src/test-projects:flat-multi-module/", context.get( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL ) );
+                      "scm:local:src/test-projects:flat-multi-module/", AbstractContinuumAction.getProjectScmRootUrl( context, "" ) );
     }
 
     public void testExecuteFlatMultiModuleProjectThatStartsWithTheSameLetter()
@@ -237,16 +232,15 @@ public class CreateProjectsFromMetadataTest
         this.result.addProject( project );
 
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put( AbstractContinuumAction.KEY_URL,
-	                 "http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-parent/pom.xml" );
-	    context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
-	    context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, true );
+        CreateProjectsFromMetadataAction.setUrl( context,
+                                                 "http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/flat-parent/pom.xml" );
+        CreateProjectsFromMetadataAction.setProjectBuilderId( context,  "id" );
+        CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, true );
 	    context.put( CreateProjectsFromMetadataAction.KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY, false );
 
         action.execute( context );
 
-        ContinuumProjectBuildingResult result =
-        	            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
 
         assertFalse(
             "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
@@ -254,6 +248,6 @@ public class CreateProjectsFromMetadataTest
 
         assertEquals(
             "Wrong scm root url created", "scm:svn:http://svn.apache.org/repos/asf/continuum/sandbox/flat-example/",
-            context.get( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL ) );
+            AbstractContinuumAction.getProjectScmRootUrl( context, null ) );
     }
 }

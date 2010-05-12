@@ -53,7 +53,7 @@ public class CleanWorkingDirectoryAction
     {
         Project project = projectDao.getProject( getProjectId( context ) );
         List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );        
-        String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+        String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
 
         File workingDirectory =
         	            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,

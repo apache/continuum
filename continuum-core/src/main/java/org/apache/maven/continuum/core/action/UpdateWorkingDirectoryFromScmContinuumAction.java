@@ -117,7 +117,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             notifier.checkoutStarted( project, buildDefinition );
 
             List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );           
-            String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+            String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
             
          // TODO: not sure why this is different to the context, but it all needs to change            
             File workingDirectory =
@@ -200,7 +200,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             notifier.checkoutComplete( project, buildDefinition );
         }
 
-        context.put( KEY_UPDATE_SCM_RESULT, result );
+        setUpdateScmResult( context, result );
         AbstractContinuumAction.setProject( context, project );
     }
 
@@ -352,14 +352,14 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         }
         return message.toString();
     }
-
-    public static ScmResult getUpdateScmResult( Map<String, Object> context )
-    {
-        return getUpdateScmResult( context, null );
-    }
-
+    
     public static ScmResult getUpdateScmResult( Map<String, Object> context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_UPDATE_SCM_RESULT, defaultValue );
+    }
+    
+    public static void setUpdateScmResult( Map<String, Object> context, ScmResult scmResult )
+    {
+        context.put( KEY_UPDATE_SCM_RESULT, scmResult );
     }
 }
