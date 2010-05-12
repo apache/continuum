@@ -53,6 +53,8 @@ public class AddMavenTwoProjectAction
     public static final String FILE_SCHEME = "file:/";
 
     private boolean nonRecursiveProject;
+    
+    private boolean checkoutInSingleDirectory;
 
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
                                                         boolean scmUseCache )
@@ -104,11 +106,18 @@ public class AddMavenTwoProjectAction
             }
         }
 
+     // force set checkoutInCingleDirectory to false if adding the project as non-recursive
+        if( this.isNonRecursiveProject() )
+        {
+            this.setCheckoutInSingleDirectory( false );
+        }
+        
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
                                                         !this.isNonRecursiveProject(),
-                                                        this.getBuildDefinitionTemplateId() );
+                                                        this.getBuildDefinitionTemplateId(),
+                                                        this.isCheckoutInSingleDirectory() );
         }
 
         AuditLog event = new AuditLog( hidePasswordInUrl( pomUrl ), AuditLogConstants.ADD_M2_PROJECT );
@@ -164,5 +173,15 @@ public class AddMavenTwoProjectAction
     public void setNonRecursiveProject( boolean nonRecursiveProject )
     {
         this.nonRecursiveProject = nonRecursiveProject;
+    }
+    
+    public boolean isCheckoutInSingleDirectory()
+    {
+        return checkoutInSingleDirectory;
+    }
+
+    public void setCheckoutInSingleDirectory( boolean checkoutInSingleDirectory )
+    {
+        this.checkoutInSingleDirectory = checkoutInSingleDirectory;
     }
 }

@@ -21,9 +21,11 @@ package org.apache.maven.continuum.utils;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -54,19 +56,94 @@ public class DefaultWorkingDirectoryService
 
     public File getWorkingDirectory( Project project )
     {
+    	return getWorkingDirectory( project, null, null );
+    }
+
+    public File getWorkingDirectory( Project project, boolean shouldSet )
+    {
+        return getWorkingDirectory( project, null, null, shouldSet );
+    }
+
+    /**
+     * 
+     * @param project
+     * @param projectScmRoot
+     * @param projects projects under the same projectScmRoot
+     * @return
+     */
+    public File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects )
+    {
+        return getWorkingDirectory( project, projectScmRoot, projects, true );
+    }
+
+    /**
+     * 
+     * @param project
+     * @param projectScmRoot
+     * @param projects projects under the same projectScmRoot
+     * @param shouldSet
+     * @return
+     */
+    public File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects, boolean shouldSet )
+    {
 //        TODO: Enable, this is what we really want
 //        ContinuumProjectGroup projectGroup = project.getProjectGroup();
 //
 //        return new File( projectGroup.getWorkingDirectory(),
 //                         project.getPath() );
 
-        if ( project.getWorkingDirectory() == null )
+        String workingDirectory = project.getWorkingDirectory();
+    	
+        if ( project.getWorkingDirectory() == null || "".equals( project.getWorkingDirectory() ) )
+        {   
+            if ( project.isCheckedOutInSingleDirectory() && projectScmRoot != null && !"".equals( projectScmRoot ) )
+            {                
+                Project rootProject = project;
+                if( projects != null )
+                {
+                    // the root project should have the lowest id since it's always added first                    
+                    for( Project projectUnderScmRoot : projects )
+                    {
+                        if( projectUnderScmRoot.getId() < rootProject.getId() )
+                        {
+                            rootProject = projectUnderScmRoot;
+                        }
+                    }
+                }                
+                
+             // determine the path
+                String projectScmUrl = project.getScmUrl();
+                int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
+                                
+                String pathToProject = "";
+                if( indexDiff != -1 )
+                {
+                    pathToProject = projectScmUrl.substring( indexDiff );
+                }
+                
+                if( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
+                {
+                    workingDirectory = Integer.toString( rootProject.getId() ) + pathToProject;
+                }
+                else
+                {
+                    workingDirectory = Integer.toString( rootProject.getId() ) + File.separatorChar + pathToProject;
+                }                
+            }
+            else
+            {
+                workingDirectory = Integer.toString( project.getId() );
+            }
+        }
+    	
+        if ( shouldSet )
         {
-            project.setWorkingDirectory( Integer.toString( project.getId() ) );
+            project.setWorkingDirectory( workingDirectory );
         }
 
         File workDir;
-        File projectWorkingDirectory = new File( project.getWorkingDirectory() );
+        File projectWorkingDirectory = new File( workingDirectory );
+        
         if ( projectWorkingDirectory.isAbsolute() )
         {
             // clean the project working directory path if it's a subdirectory of the global working directory
@@ -79,15 +156,22 @@ public class DefaultWorkingDirectoryService
                 {
                     pwd = pwd.substring( 1 );
                 }
-                project.setWorkingDirectory( pwd );
+               
+                if ( shouldSet )
+                {
+                    project.setWorkingDirectory( pwd );
+                }
             }
 
             workDir = projectWorkingDirectory;
         }
         else
         {
-            workDir = new File( getConfigurationService().getWorkingDirectory(), project.getWorkingDirectory() );
+            File baseWorkingDir = getConfigurationService().getWorkingDirectory();            
+        	            
+            workDir = new File( baseWorkingDir, workingDirectory );
         }
+        
         return workDir;
     }
 }

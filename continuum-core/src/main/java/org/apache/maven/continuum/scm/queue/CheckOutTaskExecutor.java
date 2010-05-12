@@ -95,6 +95,11 @@ public class CheckOutTaskExecutor
         CheckoutProjectContinuumAction.setScmUsername( context, task.getScmUserName() );
 
         CheckoutProjectContinuumAction.setScmPassword( context, task.getScmPassword() );
+        
+        context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, task.getScmRootUrl() );
+        
+        context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT,
+                             task.getProjectsWithCommonScmRoot() );
 
         try
         {

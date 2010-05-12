@@ -435,8 +435,8 @@ public class ParallelBuildsManagerTest
         recordCheckoutProjectBuildQueuesAreEmpty();
 
         buildsManager.checkoutProject( 1, "continuum-project-test-1",
-                                       new File( getBasedir(), "/target/test-working-dir/1" ), "dummy", "dummypass",
-                                       buildDef );
+        			new File( getBasedir(), "/target/test-working-dir/1" ), null, "dummy", "dummypass",
+        			buildDef, null );
         context.assertIsSatisfied();
     }
 
@@ -452,8 +452,8 @@ public class ParallelBuildsManagerTest
         recordCheckoutProjectBuildQueuesAreEmpty();
 
         buildsManager.checkoutProject( 1, "continuum-project-test-1",
-                                       new File( getBasedir(), "/target/test-working-dir/1" ), "dummy", "dummypass",
-                                       buildDef );
+	        		new File( getBasedir(), "/target/test-working-dir/1" ), null, "dummy", "dummypass",
+	    			buildDef, null );
         context.assertIsSatisfied();
 
         // queue second project - 1st queue has 1 task while 2nd queue is empty; project should be queued in
@@ -465,7 +465,7 @@ public class ParallelBuildsManagerTest
         final List<Task> tasksInFirstCheckoutQueue = new ArrayList<Task>();
         tasksInFirstCheckoutQueue.add(
             new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-                              "dummy", "dummypass" ) );
+            			"dummy", "dummypass", null, null ) );
 
         context.checking( new Expectations()
         {
@@ -486,8 +486,8 @@ public class ParallelBuildsManagerTest
         recordAddToCheckoutQueue();
 
         buildsManager.checkoutProject( 2, "continuum-project-test-2",
-                                       new File( getBasedir(), "/target/test-working-dir/1" ), "dummy", "dummypass",
-                                       buildDef );
+	        		new File( getBasedir(), "/target/test-working-dir/1" ), null, "dummy", "dummypass",
+	    			buildDef, null );
         context.assertIsSatisfied();
 
         // queue third project - both queues have 1 task queued each; third project should be queued in 1st queue
@@ -509,8 +509,8 @@ public class ParallelBuildsManagerTest
         recordAddToCheckoutQueue();
 
         buildsManager.checkoutProject( 3, "continuum-project-test-3",
-                                       new File( getBasedir(), "/target/test-working-dir/1" ), "dummy", "dummypass",
-                                       buildDef );
+	        		new File( getBasedir(), "/target/test-working-dir/1" ), null, "dummy", "dummypass",
+	    			buildDef, null );
         context.assertIsSatisfied();
     }
 
@@ -613,7 +613,7 @@ public class ParallelBuildsManagerTest
         final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
         checkoutTasks.add(
             new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
-                              "dummy", "dummypass" ) );
+            			"dummy", "dummypass", null, null ) );
 
         final ParallelBuildsThreadedTaskQueueExecutor buildTaskQueueExecutor =
             context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "parallel-build-task-executor" );
@@ -756,7 +756,7 @@ public class ParallelBuildsManagerTest
         final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
         checkoutTasks.add(
             new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
-                              "dummy", "dummypass" ) );
+            			"dummy", "dummypass", null, null ) );
 
         try
         {
@@ -863,7 +863,7 @@ public class ParallelBuildsManagerTest
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(
             new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
-                              "dummy", "dummypass" ) );
+            			"dummy", "dummypass", null, null ) );
 
         context.checking( new Expectations()
         {

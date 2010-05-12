@@ -75,9 +75,12 @@ public class AddProjectToCheckOutQueueAction
             scmPassword = CheckoutProjectContinuumAction.getScmPassword( context, null );
         }
         
+        String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, null );
+        
         BuildDefinition defaultBuildDefinition = getBuildDefinition( context );
         parallelBuildsManager.checkoutProject( project.getId(), project.getName(),
                                                workingDirectoryService.getWorkingDirectory( project ),
-                                               scmUsername, scmPassword, defaultBuildDefinition );
+                                               scmRootUrl, scmUsername, scmPassword, defaultBuildDefinition,
+                                               getListOfProjectsInGroupWithCommonScmRoot( context ) );
     }
 }

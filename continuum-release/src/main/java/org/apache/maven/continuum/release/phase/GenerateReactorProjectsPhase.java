@@ -48,6 +48,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
@@ -150,7 +151,7 @@ public class GenerateReactorProjectsPhase
     {
         for ( Object o : project.getModules() )
         {
-            String moduleDir = o.toString();
+        	String moduleDir = StringUtils.replace( o.toString(), '\\', '/' );
 
             File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
 

@@ -55,7 +55,7 @@ public interface ContinuumBuildExecutor
         throws ContinuumBuildExecutorException;
 
     //TODO: Move as a plugin
-    void backupTestFiles( Project project, int buildId );
+    void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot );
 
     boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
                          BuildDefinition buildDefinition )

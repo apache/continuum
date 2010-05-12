@@ -204,12 +204,15 @@ public class ExecuteBuilderContinuumAction
             AbstractContinuumAction.setProject( context, project );
 
             projectDao.updateProject( project );
+            
+            String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
 
             // ----------------------------------------------------------------------
             // Backup test result files
             // ----------------------------------------------------------------------
             //TODO: Move as a plugin
-            buildExecutor.backupTestFiles( project, buildResult.getId() );
+            buildExecutor.backupTestFiles( project, buildResult.getId(), projectScmRootUrl, projectsWithCommonScmRoot );
         }
     }
 

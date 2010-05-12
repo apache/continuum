@@ -520,7 +520,9 @@ public class ReleasePrepareAction
         {
             for ( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
             {
-                processProject( workingDirectory + "/" + modules.next().toString(), "pom.xml" );
+            	String module = StringUtils.replace( modules.next().toString(), '\\', '/' );
+            	
+                processProject( workingDirectory + "/" + module, "pom.xml" );
             }
         }
     }
