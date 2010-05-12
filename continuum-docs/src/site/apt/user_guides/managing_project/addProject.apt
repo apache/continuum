@@ -39,7 +39,107 @@ Add a Project
 
   You cannot add a duplicate project (duplicates would mean another instance of a project with the same groupId, artifactId, and version) in the same Project Group.
 
-  By default, Continuum adds each sub-module POM as an individual Continuum Project. If you want to add only the root POM without sub-modules, check the <<load only root as recursive build>> field.
+  By default, Continuum adds each sub-module POM as an individual Continuum Project. Each of these Continuum projects having it's own working
+  directory. For example, you have a multi-module project with the following structure:
+
++----------------------------+
+simple-multi-module-project
+|-- module-a
+|   |-- pom.xml
+|   `-- src
+|       |-- main
+|       |   `-- java
+|       |       `-- ...
+|       `-- test
+|           `-- java
+|               `-- ...
+|-- module-b
+|   |-- pom.xml
+|   `-- src
+|       |-- main
+|       |   `-- java
+|       |       `-- ...
+|       `-- test
+|           `-- java
+|               `-- ...
+`-- pom.xml
++----------------------------+
+
+  This projec tree means that there will be three Continuum Projects added in Continuum. Let's say, the top level project was assigned
+  a <<<project id>>> of '1' when it was added in Continuum and module-a got a <<<project id>>> of '2' and module-b got a <<<project id>>> of '3'. Now in
+  Continuum's working directory, you will see these projects checked out as below. Note that their <<<project ids>>> correspond to their own
+  working directories.
+
++----------------------------+
+|-- 1
+|   |-- module-a
+|   |   |-- pom.xml
+|   |   `-- src
+|   |       |-- main
+|   |       |   `-- java
+|   |       |       `-- ...
+|   |       `-- test
+|   |           `-- java
+|   |               `-- ...
+|   |-- module-b
+|   |   |-- pom.xml
+|   |   `-- src
+|   |       |-- main
+|   |       |   `-- java
+|   |       |       `-- ...
+|   |       `-- test
+|   |           `-- java
+|   |               `-- ...
+|   `-- pom.xml
+|-- 2
+|   |-- pom.xml
+|   `-- src
+|       |-- main
+|       |   `-- java
+|       |       `-- ...
+|       `-- test
+|           `-- java
+|               `-- ...
+`-- 3
+    |-- pom.xml
+    `-- src
+        |-- main
+        |   `-- java
+        |       `-- ...
+        `-- test
+            `-- java
+                `-- ...
++----------------------------+
+
+  You can force Continuum to check out the entire project into a single directory by checking the "Checkout multi-module project
+  in single directory".
+
+  <Note:> If your project has a flat structure similar to the one below, you might want to check out
+  your project into a single directory to be able to release it in Continuum.
+
++----------------------------+
+simple-flat-multi-module
+|-- root-project
+|   `-- pom.xml
+|-- module-a
+|   |-- pom.xml
+|   `-- src
+|       |-- main
+|       |   `-- java
+|       |       `-- ...
+|       `-- test
+|           `-- java
+|               `-- ...
+`-- module-b
+   |-- pom.xml
+   `-- src
+       `-- main
+           `-- ...
++----------------------------+
+
+  If you want to add only the root POM without sub-modules, check the "load only root as recursive build" field. This field cannot be
+  used simultaneously with single directory checkout. If this is enabled, single directory checkout will be overridden even if it
+  is was ticked during project add.
 
   You can choose a <<Build Definition Template>> which will be applied to your project.  If you choose a <<Build Definition
   Template>>, the build definitions from the template will be added in addition to any build definitions that are defined

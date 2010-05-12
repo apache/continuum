@@ -67,8 +67,18 @@ Releasing Projects
 
     []
 
+
+* Releasing Projects with Flat Structure
+
+    In order to release projects with flat structure in Continuum, the project must be checked out in a single directory.
+    You can do this by checking the "Checkout multi-module project in single directory" field when you add your Maven Two
+    project in Continuum. See {{{../managing_project/addProject.html}Add a Project}} for more details.
+
+    Projects with flat structures are released in the same process described above.
+
 * Releasing projects in a distributed build
 
     Release will happen in the Build Agent where the last build of project occurred.
 
     To view on-going releases from different build agents, click the <<Releases>> button under the <<Distributed Builds>> menu.
+
