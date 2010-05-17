@@ -159,7 +159,6 @@ public class PerformReleaseTaskExecutor
             String moduleDir = o.toString();
 
             File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
-            System.out.println( pomFile.getAbsolutePath() );
 
             try
             {
@@ -227,7 +226,6 @@ public class PerformReleaseTaskExecutor
 	
 	    if ( StringUtils.isEmpty( descriptor.getWorkingDirectory() ) )
 	    {
-	    	System.out.println( "[PerformReleaseTaskExecutor] descriptors working dir is empty!" );
 	        //Perform with provided release parameters (CONTINUUM-1541)
 	        descriptor.setCheckoutDirectory( releaseTask.getBuildDirectory().getAbsolutePath() );
 	        return null;
