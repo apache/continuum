@@ -135,7 +135,8 @@ public class MavenTwoBuildExecutor
     // ContinuumBuilder Implementation
     // ----------------------------------------------------------------------
 
-    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                                List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
         throws ContinuumBuildExecutorException
     {
         String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN2_TYPE )
@@ -177,7 +178,7 @@ public class MavenTwoBuildExecutor
             setResolveExecutable( false );
         }
 
-        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments, null, null );
     }
 
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,

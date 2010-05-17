@@ -133,7 +133,7 @@ public class PrepareBuildProjectsTaskExecutor
                 projectGroupId = projectGroup.getId();
 
                 List<Project> projects = projectDao.getProjectsWithDependenciesByGroupId( projectGroupId );
-                                projectList = ProjectSorter.getSortedProjects( projects, log );
+                projectList = ProjectSorter.getSortedProjects( projects, log );
             }
 
             Project rootProject = null;
@@ -295,7 +295,7 @@ public class PrepareBuildProjectsTaskExecutor
 
     private void updateWorkingDirectory( Map<String, Object> context, Project rootProject )
         throws TaskExecutionException
-    {
+    {   
         performAction( "check-working-directory", context );
 
         boolean workingDirectoryExists = CheckWorkingDirectoryAction.isWorkingDirectoryExists( context );
@@ -349,7 +349,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             if ( rootProject.getId() != project.getId() || ( rootProject.getId() == project.getId() && !isRootDirectory( workingDir, rootProject ) ) )
             {
-                AbstractContinuumAction.setRootDirectory(context, false );
+                AbstractContinuumAction.setRootDirectory( context, false );
             }
 
             performAction( "checkout-project", context );

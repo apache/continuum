@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -81,7 +82,7 @@ public class MavenOneBuildExecutor
     // Builder Implementation
     // ----------------------------------------------------------------------
 
-    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput, List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
         throws ContinuumBuildExecutorException
     {
         String executable =
@@ -124,7 +125,7 @@ public class MavenOneBuildExecutor
             setResolveExecutable( false );
         }
 
-        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments, null, null );
     }
 
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )

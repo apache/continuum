@@ -386,7 +386,7 @@ public class DefaultBuildController
                         projectsWithCommonScmRoot.add( projectInGroup );
                     }
                 }
-                AbstractContinuumAction.setListOfProjects( actionContext, projectsWithCommonScmRoot );
+                AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( actionContext, projectsWithCommonScmRoot );
             }
 
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0

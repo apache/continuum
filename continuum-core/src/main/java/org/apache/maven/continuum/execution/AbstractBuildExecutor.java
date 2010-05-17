@@ -244,11 +244,13 @@ public abstract class AbstractBuildExecutor
     }
 
     protected ContinuumBuildExecutionResult executeShellCommand( Project project, String executable, String arguments,
-                                                                 File output, Map<String, String> environments )
+                                                                 File output, Map<String, String> environments,
+                                                                 List<Project> projectsWithCommonScmRoot,
+                                                                 String projectScmRootUrl )
         throws ContinuumBuildExecutorException
     {
 
-    	File workingDirectory = getWorkingDirectory( project, null, null );
+    	File workingDirectory = getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot );
 
         String actualExecutable = findExecutable( executable, defaultExecutable, resolveExecutable, workingDirectory );
 
@@ -453,12 +455,12 @@ public abstract class AbstractBuildExecutor
         throws ContinuumBuildExecutorException
     {
         // Not supported by this builder
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public File getWorkingDirectory( Project project, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
     {
-        return getWorkingDirectoryService().getWorkingDirectory( project );
+        return getWorkingDirectoryService().getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot );
     }
 
     public InstallationService getInstallationService()

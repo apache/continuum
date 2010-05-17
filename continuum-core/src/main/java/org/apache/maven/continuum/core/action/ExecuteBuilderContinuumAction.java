@@ -123,14 +123,19 @@ public class ExecuteBuilderContinuumAction
         setCancelled( context, false );
 
         buildResult = buildResultDao.getBuildResult( buildResult.getId() );
-
+        
+        String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+        
         try
         {
             notifier.runningGoals( project, buildDefinition, buildResult );
 
             File buildOutputFile = configurationService.getBuildOutputFile( buildResult.getId(), project.getId() );
-
-            ContinuumBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile );
+            
+            ContinuumBuildExecutionResult result =
+                buildExecutor.build( project, buildDefinition, buildOutputFile, projectsWithCommonScmRoot,
+                                     projectScmRootUrl );
 
             buildResult.setState( result.getExitCode() == 0 ? ContinuumProjectState.OK : ContinuumProjectState.FAILED );
 
@@ -205,8 +210,8 @@ public class ExecuteBuilderContinuumAction
 
             projectDao.updateProject( project );
             
-            String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
-            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+            projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
+            projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
 
             // ----------------------------------------------------------------------
             // Backup test result files
