@@ -27,6 +27,7 @@ import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.apache.maven.shared.release.env.ReleaseEnvironment;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -42,10 +43,11 @@ public class RunPerformGoalsPhase
         return releaseDescriptor.getPerformGoals();
     }
 
-    public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
-        throws ReleaseExecutionException, ReleaseFailureException
-    {
-        String additionalArguments = releaseDescriptor.getAdditionalArguments();
+    public ReleaseResult execute(ReleaseDescriptor releaseDescriptor,
+			ReleaseEnvironment releaseEnvironment, List reactorProjects)
+			throws ReleaseExecutionException, ReleaseFailureException {
+		
+    	String additionalArguments = releaseDescriptor.getAdditionalArguments();
 
         if ( releaseDescriptor.isUseReleaseProfile() )
         {
@@ -58,10 +60,10 @@ public class RunPerformGoalsPhase
                 additionalArguments = "-DperformRelease=true";
             }
         }
-
+        
         return execute( releaseDescriptor, new File( releaseDescriptor.getCheckoutDirectory() ), additionalArguments );
-    }
-
+	}
+    
     public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException, ReleaseFailureException
     {

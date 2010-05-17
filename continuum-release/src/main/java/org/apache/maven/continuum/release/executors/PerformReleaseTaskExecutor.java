@@ -41,6 +41,7 @@ import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.apache.maven.shared.release.env.DefaultReleaseEnvironment;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.context.Context;
@@ -80,7 +81,7 @@ public class PerformReleaseTaskExecutor
         descriptor.setUseReleaseProfile( performTask.isUseReleaseProfile() );
         descriptor.setPerformGoals( performTask.getGoals() );
         descriptor.setCheckoutDirectory( performTask.getBuildDirectory().getAbsolutePath() );
-
+        
         repository = performTask.getLocalRepository();
 
         List reactorProjects = null;
@@ -106,8 +107,10 @@ public class PerformReleaseTaskExecutor
 
             throw new TaskExecutionException( "Failed to build reactor projects.", e );
         }
-
-        ReleaseResult result = releaseManager.performWithResult( descriptor, settings, reactorProjects, listener );
+        
+        ReleaseResult result =
+            releaseManager.performWithResult( descriptor, new DefaultReleaseEnvironment().setSettings( settings ),
+                                              reactorProjects, listener );
         
         //override to show the actual start time
         result.setStartTime( getStartTime() );
@@ -224,6 +227,7 @@ public class PerformReleaseTaskExecutor
 	
 	    if ( StringUtils.isEmpty( descriptor.getWorkingDirectory() ) )
 	    {
+	    	System.out.println( "[PerformReleaseTaskExecutor] descriptors working dir is empty!" );
 	        //Perform with provided release parameters (CONTINUUM-1541)
 	        descriptor.setCheckoutDirectory( releaseTask.getBuildDirectory().getAbsolutePath() );
 	        return null;
