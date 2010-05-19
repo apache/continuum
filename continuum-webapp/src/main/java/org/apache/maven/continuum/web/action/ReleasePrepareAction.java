@@ -41,11 +41,11 @@ import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.versions.DefaultVersionInfo;
 import org.apache.maven.shared.release.versions.VersionInfo;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -212,7 +212,7 @@ public class ReleasePrepareAction
     {
         //TODO: Use the model reader so we'll can get the plugin configuration from parent too
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+        Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
 
         if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
         {
@@ -502,7 +502,7 @@ public class ReleasePrepareAction
         throws Exception
     {
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+        Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
 
         if ( model.getGroupId() == null )
         {
