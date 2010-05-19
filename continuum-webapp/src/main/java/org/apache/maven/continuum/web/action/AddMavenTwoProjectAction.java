@@ -21,7 +21,6 @@ package org.apache.maven.continuum.web.action;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,6 +30,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
@@ -80,7 +80,7 @@ public class AddMavenTwoProjectAction
                     filePath = filePath.substring( FILE_SCHEME.length() );
                 }
 
-                Model model = m2pomReader.read( new FileReader( filePath ) );
+                Model model = m2pomReader.read( ReaderFactory.newXmlReader( new File( filePath ) ) );
 
                 List modules = model.getModules();
 

@@ -20,7 +20,6 @@ package org.apache.continuum.buildagent;
  */
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +58,7 @@ import org.apache.maven.shared.release.versions.DefaultVersionInfo;
 import org.apache.maven.shared.release.versions.VersionInfo;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.slf4j.Logger;
@@ -319,7 +319,7 @@ public class ContinuumBuildAgentServiceImpl
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         try
         {
-            Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+            Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
 
             if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
             {
@@ -980,7 +980,7 @@ public class ContinuumBuildAgentServiceImpl
         throws Exception
     {
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+        Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
 
         if ( model.getGroupId() == null )
         {
