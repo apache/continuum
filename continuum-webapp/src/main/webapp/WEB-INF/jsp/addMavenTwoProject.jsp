@@ -81,8 +81,28 @@
                                          list="projectGroups" listKey="id" listValue="name"/>
                             </c:otherwise>
                             </c:choose>
-                            <s:checkbox label="%{getText('add.m2.project.nonRecursiveProject')}" name="nonRecursiveProject" />
-                            <s:checkbox label="%{getText('add.m2.project.checkoutInSingleDirectory')}" name="checkoutInSingleDirectory" />
+                            
+                            <s:label>
+                              <s:param name="desc">
+                                <table cellspacing="0" cellpadding="0">
+	                              <tbody>
+	                                <tr>
+	                                  <td><input name="checkoutOption" type="radio" value="checkoutInSeparateDirectories" checked /></td>
+                                      <td><s:text name="add.m2.project.checkoutInSeparateDirectories"/></td>
+	                                </tr>
+	                                <tr>
+	                                  <td><input name="checkoutOption" type="radio" value="checkoutInSingleDirectory"/></td>
+                                      <td><s:text name="add.m2.project.checkoutInSingleDirectory"/></td>
+	                                </tr>
+	                                <tr>
+	                                  <td><input name="checkoutOption" type="radio" value="nonRecursiveProject"/></td>
+                                      <td><s:text name="add.m2.project.nonRecursiveProject"/></td>
+	                                </tr>
+	                              </tbody>
+	                            </table>
+                              </s:param>
+                            </s:label>	 
+                            
                             <s:select label="%{getText('add.m2.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
                                        headerValue="%{getText('add.m2.project.defaultBuildDefinition')}"/> 

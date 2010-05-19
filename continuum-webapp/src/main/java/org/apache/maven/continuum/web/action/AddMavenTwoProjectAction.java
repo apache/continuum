@@ -51,10 +51,8 @@ public class AddMavenTwoProjectAction
     public static final String ERROR_READING_POM_EXCEPTION_MESSAGE = "Error reading POM";
 
     public static final String FILE_SCHEME = "file:/";
-
-    private boolean nonRecursiveProject;
     
-    private boolean checkoutInSingleDirectory;
+    private String checkoutOption;
 
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
                                                         boolean scmUseCache )
@@ -105,19 +103,32 @@ public class AddMavenTwoProjectAction
                 throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
             }
         }
-
-     // force set checkoutInCingleDirectory to false if adding the project as non-recursive
-        if( this.isNonRecursiveProject() )
-        {
-            this.setCheckoutInSingleDirectory( false );
-        }
         
+        boolean nonRecursiveProject;
+        boolean checkoutInSingleDirectory;
+        
+        if( "checkoutInSingleDirectory".equals( checkoutOption ) )
+        {
+            checkoutInSingleDirectory = true;
+            nonRecursiveProject = false;
+        }
+        else if( "nonRecursiveProject".equals( checkoutOption ) )
+        {
+            checkoutInSingleDirectory = false;
+            nonRecursiveProject = true;
+        }
+        else
+        {
+            checkoutInSingleDirectory = false;
+            nonRecursiveProject = false;
+        }
+
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
-                                                        !this.isNonRecursiveProject(),
+                                                        !nonRecursiveProject,
                                                         this.getBuildDefinitionTemplateId(),
-                                                        this.isCheckoutInSingleDirectory() );
+                                                        checkoutInSingleDirectory );
         }
 
         AuditLog event = new AuditLog( hidePasswordInUrl( pomUrl ), AuditLogConstants.ADD_M2_PROJECT );
@@ -132,7 +143,7 @@ public class AddMavenTwoProjectAction
         event.log();
         return result;
     }
-
+    
     /**
      * @deprecated Use {@link #getPomFile()} instead
      */
@@ -164,24 +175,14 @@ public class AddMavenTwoProjectAction
     {
         setPomUrl( pomUrl );
     }
-
-    public boolean isNonRecursiveProject()
-    {
-        return nonRecursiveProject;
-    }
-
-    public void setNonRecursiveProject( boolean nonRecursiveProject )
-    {
-        this.nonRecursiveProject = nonRecursiveProject;
-    }
     
-    public boolean isCheckoutInSingleDirectory()
+    public String getCheckoutOption()
     {
-        return checkoutInSingleDirectory;
+        return checkoutOption;
     }
 
-    public void setCheckoutInSingleDirectory( boolean checkoutInSingleDirectory )
+    public void setCheckoutOption( String checkoutOption )
     {
-        this.checkoutInSingleDirectory = checkoutInSingleDirectory;
+        this.checkoutOption = checkoutOption;
     }
 }
