@@ -50,7 +50,7 @@ public class StoreCheckOutScmResultAction
             //
             // ----------------------------------------------------------------------
 
-            ScmResult scmResult = CheckoutProjectContinuumAction.getCheckoutResult( context, null );
+            ScmResult scmResult = CheckoutProjectContinuumAction.getCheckoutScmResult( context, null );
 
             Project project = projectDao.getProject( getProjectId( context ) );
 

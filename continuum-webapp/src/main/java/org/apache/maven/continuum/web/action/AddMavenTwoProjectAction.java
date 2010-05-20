@@ -51,8 +51,8 @@ public class AddMavenTwoProjectAction
     public static final String ERROR_READING_POM_EXCEPTION_MESSAGE = "Error reading POM";
 
     public static final String FILE_SCHEME = "file:/";
-
-    private boolean nonRecursiveProject;
+    
+    private String checkoutOption;
 
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
                                                         boolean scmUseCache )
@@ -103,12 +103,32 @@ public class AddMavenTwoProjectAction
                 throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
             }
         }
+        
+        boolean nonRecursiveProject;
+        boolean checkoutInSingleDirectory;
+        
+        if( "checkoutInSingleDirectory".equals( checkoutOption ) )
+        {
+            checkoutInSingleDirectory = true;
+            nonRecursiveProject = false;
+        }
+        else if( "nonRecursiveProject".equals( checkoutOption ) )
+        {
+            checkoutInSingleDirectory = false;
+            nonRecursiveProject = true;
+        }
+        else
+        {
+            checkoutInSingleDirectory = false;
+            nonRecursiveProject = false;
+        }
 
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
-                                                        !this.isNonRecursiveProject(),
-                                                        this.getBuildDefinitionTemplateId() );
+                                                        !nonRecursiveProject,
+                                                        this.getBuildDefinitionTemplateId(),
+                                                        checkoutInSingleDirectory );
         }
 
         AuditLog event = new AuditLog( hidePasswordInUrl( pomUrl ), AuditLogConstants.ADD_M2_PROJECT );
@@ -123,7 +143,7 @@ public class AddMavenTwoProjectAction
         event.log();
         return result;
     }
-
+    
     /**
      * @deprecated Use {@link #getPomFile()} instead
      */
@@ -155,14 +175,14 @@ public class AddMavenTwoProjectAction
     {
         setPomUrl( pomUrl );
     }
-
-    public boolean isNonRecursiveProject()
+    
+    public String getCheckoutOption()
     {
-        return nonRecursiveProject;
+        return checkoutOption;
     }
 
-    public void setNonRecursiveProject( boolean nonRecursiveProject )
+    public void setCheckoutOption( String checkoutOption )
     {
-        this.nonRecursiveProject = nonRecursiveProject;
+        this.checkoutOption = checkoutOption;
     }
 }

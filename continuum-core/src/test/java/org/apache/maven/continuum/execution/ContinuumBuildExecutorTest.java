@@ -21,6 +21,7 @@ package org.apache.maven.continuum.execution;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.utils.shell.ExecutionResult;
@@ -110,7 +111,7 @@ public class ContinuumBuildExecutorTest
                 will( returnValue( result ) );
             }} );
 
-        executor.executeShellCommand( project, executable, arguments, output, environments );
+        executor.executeShellCommand( project, executable, arguments, output, environments, null, null );
 
         context.assertIsSatisfied();
     }
@@ -137,7 +138,7 @@ public class ContinuumBuildExecutorTest
             return null;
         }
 
-        public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+        public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput, List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
             throws ContinuumBuildExecutorException
         {
             // TODO Auto-generated method stub

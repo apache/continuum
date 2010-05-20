@@ -403,10 +403,11 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#checkoutProject(int, String, File, String, String, BuildDefinition)
+     * @see BuildsManager#checkoutProject(int, String, File, String, String, String, BuildDefinition, List)
      */
-    public void checkoutProject( int projectId, String projectName, File workingDirectory, String scmUsername,
-                                 String scmPassword, BuildDefinition defaultBuildDefinition )
+    public void checkoutProject( int projectId, String projectName, File workingDirectory, String scmRootUrl,
+    		                                 String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition,
+    		                                 List<Project> subProjects )
         throws BuildManagerException
     {
         try
@@ -426,7 +427,7 @@ public class ParallelBuildsManager
         OverallBuildQueue overallBuildQueue =
             getOverallBuildQueue( CHECKOUT_QUEUE, defaultBuildDefinition.getSchedule().getBuildQueues() );
         CheckOutTask checkoutTask =
-            new CheckOutTask( projectId, workingDirectory, projectName, scmUsername, scmPassword );
+        	new CheckOutTask( projectId, workingDirectory, projectName, scmUsername, scmPassword, scmRootUrl, subProjects );
         try
         {
             if ( overallBuildQueue != null )
@@ -914,7 +915,8 @@ public class ParallelBuildsManager
             {
                 BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( task.getProjectId() );
                 checkoutProject( task.getProjectId(), task.getProjectName(), task.getWorkingDirectory(),
-                                 task.getScmUserName(), task.getScmPassword(), buildDefinition );
+                		task.getScmRootUrl(), task.getScmUserName(), task.getScmPassword(), buildDefinition,
+                		task.getProjectsWithCommonScmRoot() );
             }
             catch ( ContinuumStoreException e )
             {

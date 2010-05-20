@@ -26,6 +26,7 @@ import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,8 +52,12 @@ public class CleanWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );        
+        String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
 
-        File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+        File workingDirectory =
+        	            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+        	                                                         projectsWithCommonScmRoot );
 
         if ( workingDirectory.exists() )
         {

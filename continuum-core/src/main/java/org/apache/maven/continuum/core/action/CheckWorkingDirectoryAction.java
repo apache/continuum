@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.dao.ProjectDao;
@@ -36,8 +37,6 @@ import org.apache.maven.continuum.utils.WorkingDirectoryService;
 public class CheckWorkingDirectoryAction
     extends AbstractContinuumAction
 {
-    private static final String KEY_WORKING_DIRECTORY_EXISTS = "working-directory-exists";
-
     /**
      * @plexus.requirement
      */
@@ -47,17 +46,23 @@ public class CheckWorkingDirectoryAction
      * @plexus.requirement
      */
     private ProjectDao projectDao;
+    
+    private static final String KEY_WORKING_DIRECTORY_EXISTS = "working-directory-exists";
 
     public void execute( Map context )
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-
-        File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+        String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
+       
+        File workingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+                                                         projectsWithCommonScmRoot );
 
         if ( !workingDirectory.exists() )
         {
-            setWorkingDirectoryExist( context, false );
+            setWorkingDirectoryExists( context, false );
 
             return;
         }
@@ -72,16 +77,17 @@ public class CheckWorkingDirectoryAction
             throw new ContinuumException( msg );
         }
 
-        setWorkingDirectoryExist( context, files.length > 0 );
+        setWorkingDirectoryExists( context, files.length > 0 );
+    }
+    
+    public static boolean isWorkingDirectoryExists( Map<String, Object> context )
+    {
+        return getBoolean( context, KEY_WORKING_DIRECTORY_EXISTS, false );
     }
 
-    public static boolean isWorkingDirectoryExist( Map<String, Object> context )
+    public static void setWorkingDirectoryExists( Map<String, Object> context, boolean isWorkingDirectoryExists )
     {
-        return getBoolean( context, KEY_WORKING_DIRECTORY_EXISTS );
+        context.put( KEY_WORKING_DIRECTORY_EXISTS, isWorkingDirectoryExists );
     }
 
-    private static void setWorkingDirectoryExist( Map<String, Object> context, boolean exists )
-    {
-        context.put( KEY_WORKING_DIRECTORY_EXISTS, exists );
-    }
 }

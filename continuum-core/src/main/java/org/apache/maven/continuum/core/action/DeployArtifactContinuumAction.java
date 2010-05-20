@@ -101,10 +101,14 @@ public class DeployArtifactContinuumAction
             if ( project.getState() == ContinuumProjectState.OK )
             {
                 BuildDefinition buildDefinition = getBuildDefinition( context );
+                
+                String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
+                
+                List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
 
                 List<Artifact> artifacts = buildExecutor.getDeployableArtifacts( project,
-                                                                                 workingDirectoryService.getWorkingDirectory(
-                                                                                     project ), buildDefinition );
+                									workingDirectoryService.getWorkingDirectory( 
+                									project, projectScmRootUrl, projectsWithCommonScmRoot ), buildDefinition );
 
                 LocalRepository repository = project.getProjectGroup().getLocalRepository();
 

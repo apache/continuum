@@ -92,6 +92,8 @@ public class ContinuumProjectBuildingResult
     private final Map<String, String> errors = new HashMap<String, String>();
 
     private static final String LS = System.getProperty( "line.separator" );
+    
+    private Project rootProject;
 
     public void addProject( Project project )
     {
@@ -221,5 +223,15 @@ public class ContinuumProjectBuildingResult
             message.append( LS );
         }
         return message.toString();
+    }
+
+    public Project getRootProject()
+    {
+        return rootProject;
+    }
+
+    public void setRootProject( Project rootProject )
+    {
+        this.rootProject = rootProject;
     }
 }

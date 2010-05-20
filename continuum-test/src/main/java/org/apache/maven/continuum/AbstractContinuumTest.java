@@ -32,6 +32,7 @@ import javax.jdo.PersistenceManagerFactory;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -63,6 +64,8 @@ public abstract class AbstractContinuumTest
     private ProjectGroupDao projectGroupDao;
 
     private ScheduleDao scheduleDao;
+    
+    private ProjectScmRootDao projectScmRootDao;
 
     // ----------------------------------------------------------------------
     //
@@ -81,6 +84,8 @@ public abstract class AbstractContinuumTest
         getProjectGroupDao();
 
         getScheduleDao();
+        
+        getProjectScmRootDao();
 
         setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
 
@@ -245,6 +250,15 @@ public abstract class AbstractContinuumTest
             scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
         }
         return scheduleDao;
+    }
+    
+    protected ProjectScmRootDao getProjectScmRootDao()
+    {
+        if ( projectScmRootDao == null )
+        {
+            projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
+        }
+        return projectScmRootDao;
     }
 
     // ----------------------------------------------------------------------

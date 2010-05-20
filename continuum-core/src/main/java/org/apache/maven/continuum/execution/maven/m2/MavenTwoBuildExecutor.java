@@ -135,7 +135,8 @@ public class MavenTwoBuildExecutor
     // ContinuumBuilder Implementation
     // ----------------------------------------------------------------------
 
-    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                                List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
         throws ContinuumBuildExecutorException
     {
         String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN2_TYPE )
@@ -177,7 +178,7 @@ public class MavenTwoBuildExecutor
             setResolveExecutable( false );
         }
 
-        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments, null, null );
     }
 
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,
@@ -338,7 +339,7 @@ public class MavenTwoBuildExecutor
     }
 
     @Override
-    public void backupTestFiles( Project project, int buildId )
+    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
     {
         File backupDirectory = null;
         try
@@ -353,7 +354,7 @@ public class MavenTwoBuildExecutor
         {
             log.info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
         }
-        backupTestFiles( getWorkingDirectory( project ), backupDirectory );
+        backupTestFiles( getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ), backupDirectory );
     }
 
     private void backupTestFiles( File workingDir, File backupDirectory )

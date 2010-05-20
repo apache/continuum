@@ -85,7 +85,7 @@ public class DefaultOverallBuildQueueTest
     {
         final CheckOutTask checkoutTask =
             new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-                              "dummy", "dummypass" );
+            			"dummy", "dummypass", null, null );
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
 
         context.checking( new Expectations()
@@ -108,7 +108,7 @@ public class DefaultOverallBuildQueueTest
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(
             new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-                              "dummy", "dummypass" ) );
+            			"dummy", "dummypass", null, null ) );
 
         context.checking( new Expectations()
         {
@@ -134,7 +134,7 @@ public class DefaultOverallBuildQueueTest
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(
             new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-                              "dummy", "dummypass" ) );
+            			"dummy", "dummypass", null, null ) );
 
         context.checking( new Expectations()
         {
@@ -155,7 +155,7 @@ public class DefaultOverallBuildQueueTest
     {
         final Task checkoutTask =
             new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-                              "dummy", "dummypass" );
+            			"dummy", "dummypass", null, null );
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add( checkoutTask );

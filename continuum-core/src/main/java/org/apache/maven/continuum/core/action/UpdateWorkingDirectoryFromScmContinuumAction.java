@@ -116,9 +116,15 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             notifier.checkoutStarted( project, buildDefinition );
 
-            // TODO: not sure why this is different to the context, but it all needs to change
-            File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
-            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
+            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );           
+            String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
+            
+         // TODO: not sure why this is different to the context, but it all needs to change            
+            File workingDirectory =
+                workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+                                                             projectsWithCommonScmRoot );    
+            
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, projectScmRootUrl );
             config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();
             String msg =
@@ -194,14 +200,23 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             notifier.checkoutComplete( project, buildDefinition );
         }
 
-        context.put( KEY_UPDATE_SCM_RESULT, result );
+        setUpdateScmResult( context, result );
         AbstractContinuumAction.setProject( context, project );
     }
 
-    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
+    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory, String scmRootUrl )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        config.setUrl( project.getScmUrl() );
+        
+        if( project.isCheckedOutInSingleDirectory() && scmRootUrl!= null && !"".equals( scmRootUrl ) )
+        {
+            config.setUrl( scmRootUrl );
+        }
+        else
+        {
+            config.setUrl( project.getScmUrl() );
+        }
+        
         config.setUsername( project.getScmUsername() );
         config.setPassword( project.getScmPassword() );
         config.setUseCredentialsCache( project.isScmUseCache() );
@@ -337,14 +352,14 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         }
         return message.toString();
     }
-
-    public static ScmResult getUpdateScmResult( Map<String, Object> context )
-    {
-        return getUpdateScmResult( context, null );
-    }
-
+    
     public static ScmResult getUpdateScmResult( Map<String, Object> context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_UPDATE_SCM_RESULT, defaultValue );
+    }
+    
+    public static void setUpdateScmResult( Map<String, Object> context, ScmResult scmResult )
+    {
+        context.put( KEY_UPDATE_SCM_RESULT, scmResult );
     }
 }
