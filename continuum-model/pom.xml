@@ -43,7 +43,7 @@ under the License.
           </execution>
         </executions>
         <configuration>
-          <version>1.4.0</version>
+          <version>1.4.1</version>
           <packageWithVersion>false</packageWithVersion>
           <models>
             <model>src/main/mdo/continuum.xml</model>

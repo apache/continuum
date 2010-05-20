@@ -319,7 +319,7 @@
         </field>
         <field>
           <name>checkedOutInSingleDirectory</name>
-          <version>1.4.0+</version>
+          <version>1.4.1+</version>
           <type>boolean</type>
           <defaultValue>false</defaultValue>
         </field>
