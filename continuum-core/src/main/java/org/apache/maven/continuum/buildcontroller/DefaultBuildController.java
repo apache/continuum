@@ -337,8 +337,6 @@ public class DefaultBuildController
 
         context.setStartTime( System.currentTimeMillis() );
 
-        context.setBuildTrigger( buildTrigger );
-        
         Map actionContext = context.getActionContext();
 
         try
@@ -348,6 +346,15 @@ public class DefaultBuildController
             context.setProject( project );
 
             BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+            
+            BuildTrigger newBuildTrigger = buildTrigger;
+            
+            if ( newBuildTrigger.getTrigger() == ContinuumProjectState.TRIGGER_SCHEDULED )
+            {
+                newBuildTrigger.setTriggeredBy( buildDefinition.getSchedule().getName() );
+            }
+            
+            context.setBuildTrigger( newBuildTrigger );
 
             context.setBuildDefinition( buildDefinition );
 
@@ -733,7 +740,7 @@ public class DefaultBuildController
 
         build.setTrigger( context.getBuildTrigger().getTrigger() );
         
-        build.setUsername( context.getBuildTrigger().getUsername() );
+        build.setUsername( context.getBuildTrigger().getTriggeredBy() );
 
         build.setStartTime( context.getStartTime() );
 

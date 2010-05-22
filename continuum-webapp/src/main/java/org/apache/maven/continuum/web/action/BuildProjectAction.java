@@ -74,7 +74,7 @@ public class BuildProjectAction
                 }
                 else
                 {
-                	getContinuum().buildProject( projectId, buildTrigger.getUsername() );
+                	getContinuum().buildProject( projectId, buildTrigger.getTriggeredBy() );
                 }
             }
             else
@@ -87,7 +87,7 @@ public class BuildProjectAction
                 {
                     //TODO: Check if this code is called, I don't think
                     //If it is, it should used the projectId
-                	getContinuum().buildProjects( buildTrigger.getUsername() );
+                	getContinuum().buildProjects( buildTrigger.getTriggeredBy() );
                 }
             }
         }

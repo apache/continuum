@@ -32,8 +32,8 @@ Build Results Management
 
 [../../images/build_result-1.png] Build Results page
 
-    The <<Triggered by>> field displays the username of the person who forced the build. 
-    However, this field is empty when the build is triggered by a schedule.
+    The <<Triggered by>> field displays the username of the person who forced the build,
+    or the name of the schedule if the build is triggered by a schedule.
 
     Or you can click on the name of the project that you want to delete build results from.
 

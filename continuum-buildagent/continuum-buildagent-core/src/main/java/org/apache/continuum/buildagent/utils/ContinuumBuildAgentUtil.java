@@ -361,7 +361,7 @@ public class ContinuumBuildAgentUtil
     
     public static String getUsername( Map<String, Object> context )
     {
-         return getString( context, KEY_USERNAME, "" );
+         return getString( context, KEY_USERNAME, "scheduled" );
     }
     
     public static BuildTrigger getBuildTrigger( Map<String, Object> context )

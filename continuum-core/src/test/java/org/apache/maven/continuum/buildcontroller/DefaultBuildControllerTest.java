@@ -30,6 +30,7 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 
@@ -45,7 +46,11 @@ public class DefaultBuildControllerTest
     extends AbstractContinuumTest
 {
     private DefaultBuildController controller;
-
+    
+    private static String FORCED_BUILD_USER = "TestUsername";
+    
+    private static String SCHEDULE_NAME = "TEST_SCHEDULE";
+    
     int projectId1;
 
     int projectId2;
@@ -121,23 +126,33 @@ public class DefaultBuildControllerTest
     private BuildDefinition createBuildDefinition()
     {
         BuildDefinition builddef = new BuildDefinition();
+        Schedule schedule = new Schedule();
+        schedule.setName( SCHEDULE_NAME );
+        builddef.setSchedule( schedule );
         builddef.setBuildFile( "pom.xml" );
         builddef.setGoals( "clean" );
         builddef.setDefaultForProject( true );
         return builddef;
     }
 
-    private BuildContext getContext()
+    private BuildContext getScheduledBuildContext()
         throws Exception
     {
         return controller.initializeBuildContext( projectId2, buildDefinitionId2,
-                          new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ), new ScmResult() );
+                          new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED ), new ScmResult() );
+    }
+
+    private BuildContext getForcedBuildContext()
+        throws Exception
+    {
+        return controller.initializeBuildContext( projectId2, buildDefinitionId2,
+                          new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, FORCED_BUILD_USER ), new ScmResult() );
     }
 
     private BuildContext getContext( int hourOfLastExecution )
         throws Exception
     {
-        BuildContext context = getContext();
+        BuildContext context = getScheduledBuildContext();
         BuildResult oldBuildResult = new BuildResult();
         oldBuildResult.setEndTime( Calendar.getInstance().getTimeInMillis() + ( hourOfLastExecution * 3600000 ) );
         context.setOldBuildResult( oldBuildResult );
@@ -172,7 +187,7 @@ public class DefaultBuildControllerTest
         p2.setState( ContinuumProjectState.NEW );
         getProjectDao().updateProject( p2 );
 
-        BuildContext context = getContext();
+        BuildContext context = getScheduledBuildContext();
         controller.checkProjectDependencies( context );
         assertEquals( 0, context.getModifiedDependencies().size() );
         assertTrue( controller.shouldBuild( context ) );
@@ -181,7 +196,7 @@ public class DefaultBuildControllerTest
     public void testWithNewBuildDefinition()
         throws Exception
     {
-        BuildContext context = getContext();
+        BuildContext context = getScheduledBuildContext();
         assertNull( context.getOldBuildResult() );
         assertTrue( controller.shouldBuild( context ) );
     }
@@ -203,6 +218,33 @@ public class DefaultBuildControllerTest
         controller.checkProjectDependencies( context );
         assertEquals( 0, context.getModifiedDependencies().size() );
         assertFalse( controller.shouldBuild( context ) );
+    }
+
+    public void testForcedBuildTriggeredByField()
+        throws Exception
+    {
+        BuildContext context = getForcedBuildContext();
+        assertEquals( FORCED_BUILD_USER, context.getBuildTrigger().getTriggeredBy() );
+    }
+
+    public void testScheduledBuildTriggeredByField()
+        throws Exception
+    {
+        BuildContext context = getScheduledBuildContext();
+        assertEquals( SCHEDULE_NAME, context.getBuildTrigger().getTriggeredBy() );
+    }
+
+    public void testScheduledBuildTriggeredByField_UsernameProvided()
+        throws Exception
+    {
+        BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "test-user" );
+        
+        BuildContext context = controller.initializeBuildContext( projectId2, buildDefinitionId2,
+                                                                  buildTrigger, new ScmResult() );
+        
+        String contextTriggeredBy = context.getBuildTrigger().getTriggeredBy();
+        assertFalse( "test-user".equals( contextTriggeredBy ) );
+        assertEquals( SCHEDULE_NAME, contextTriggeredBy );
     }
 
     private File getWorkingDirectory()

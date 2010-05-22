@@ -229,7 +229,16 @@ public class DistributedBuildProjectTaskExecutor
                     context.put( ContinuumBuildConstant.KEY_ARGUMENTS, buildDef.getArguments() );
                 }
                 context.put( ContinuumBuildConstant.KEY_TRIGGER, buildTrigger.getTrigger() );
-                context.put( ContinuumBuildConstant.KEY_USERNAME, buildTrigger.getUsername() );
+                
+                if ( buildTrigger.getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
+                {
+                    context.put( ContinuumBuildConstant.KEY_USERNAME, buildTrigger.getTriggeredBy() );
+                }
+                else
+                {
+                    context.put( ContinuumBuildConstant.KEY_USERNAME, buildDef.getSchedule().getName() );
+                }
+                
                 context.put( ContinuumBuildConstant.KEY_BUILD_FRESH, buildDef.isBuildFresh() );
                 context.put( ContinuumBuildConstant.KEY_ALWAYS_BUILD, buildDef.isAlwaysBuild() );
                 context.put( ContinuumBuildConstant.KEY_OLD_SCM_CHANGES,
@@ -283,7 +292,7 @@ public class DistributedBuildProjectTaskExecutor
                         buildResult.setError( error );
                         buildResult.setState( ContinuumProjectState.ERROR );
                         buildResult.setTrigger( task.getBuildTrigger().getTrigger() );
-                        buildResult.setUsername( task.getBuildTrigger().getUsername() );
+                        buildResult.setUsername( task.getBuildTrigger().getTriggeredBy() );
                         buildResult.setStartTime( startTime );
                         buildResult.setEndTime( endTime );
 

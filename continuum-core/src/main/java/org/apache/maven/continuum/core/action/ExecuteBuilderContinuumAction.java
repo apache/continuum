@@ -108,7 +108,7 @@ public class ExecuteBuilderContinuumAction
 
         buildResult.setTrigger( buildTrigger.getTrigger() );
         
-        buildResult.setUsername( buildTrigger.getUsername() );
+        buildResult.setUsername( buildTrigger.getTriggeredBy() );
 
         buildResult.setScmResult( scmResult );
 
