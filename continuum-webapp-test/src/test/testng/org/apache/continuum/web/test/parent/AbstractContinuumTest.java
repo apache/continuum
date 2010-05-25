@@ -1067,4 +1067,42 @@ public abstract class AbstractContinuumTest
         assertTextPresent("Build Agent Groups");
         assertButtonWithValuePresent( "Add" );
     }
+
+    // ////////////////////////////////////
+    // Reports
+    // ////////////////////////////////////
+
+    public void goToProjectBuildsReport()
+    {
+        clickLinkWithText( "Project Builds" );
+        assertViewBuildsReportPage();
+    }
+
+    public void assertViewBuildsReportPage()
+    {
+        assertPage( "Continuum - Project Builds Report" );
+        assertTextPresent( "Start Date" );
+        assertElementPresent( "startDate" );
+        assertTextPresent( "End Date" );
+        assertElementPresent( "endDate" );
+        assertTextPresent( "Triggered By" );
+        assertElementPresent( "triggeredBy" );
+        assertTextPresent( "Build Status" );
+        assertElementPresent( "buildStatus" );
+        assertTextPresent( "Row Count" );
+        assertElementPresent( "rowCount" );
+        assertButtonWithValuePresent( "View Report" );
+        assertTextPresent( "Results" );
+    }
+    
+    public void assertProjectBuildReport()
+    {
+        assertTextPresent( "Project Group" );
+        assertTextPresent( "Project" );
+        assertTextPresent( "Build Date" );
+        assertTextPresent( "Triggered By" );
+        assertTextPresent( "Build Status" );
+        assertTextPresent( "Prev" );
+        assertTextPresent( "Next" );
+    }
 }

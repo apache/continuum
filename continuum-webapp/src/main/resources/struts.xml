@@ -624,6 +624,15 @@
     <action name="viewReleases" class="distributedRelease" method="list">
       <result name="success">/WEB-INF/jsp/releases.jsp</result>
     </action>
+    
+    <action name="viewProjectBuildsReport" class="projectBuildsReport" method="init">
+      <result name="success">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
+    </action>
+
+    <action name="generateProjectBuildsReport" class="projectBuildsReport">
+      <result name="input">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
+      <result name="success">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
+    </action>
   </package>
 
   <!--

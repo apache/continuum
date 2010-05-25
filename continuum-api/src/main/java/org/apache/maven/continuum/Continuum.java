@@ -210,6 +210,8 @@ public interface Continuum
     void removeBuildResult( int buildId )
         throws ContinuumException;
 
+    List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy );
+
     // ----------------------------------------------------------------------
     // Projects
     // ----------------------------------------------------------------------

@@ -23,7 +23,8 @@
               <project id="1"></project>
               <id>1</id>
               <buildNumber>1</buildNumber>
-              <state>1</state>
+              <username>user</username>
+              <state>2</state>
               <trigger>1</trigger>
               <startTime>1239794961904</startTime>
               <endTime>1239794962904</endTime>
@@ -80,7 +81,8 @@
               <project id="1"></project>
               <id>2</id>
               <buildNumber>2</buildNumber>
-              <state>2</state>
+              <username>schedule</username>
+              <state>3</state>
               <trigger>2</trigger>
               <startTime>1239794963904</startTime>
               <endTime>1239794964904</endTime>
@@ -200,8 +202,9 @@
               <project id="2"></project>
               <id>3</id>
               <buildNumber>3</buildNumber>
-              <state>3</state>
-              <trigger>3</trigger>
+              <username>schedule</username>
+              <state>2</state>
+              <trigger>2</trigger>
               <startTime>1239794965904</startTime>
               <endTime>1239794966904</endTime>
               <error>error3</error>

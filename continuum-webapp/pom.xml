@@ -105,7 +105,7 @@ under the License.
               <models>
                 <model>src/main/mdo/view-models.mdo</model>
               </models>
-              <version>1.0.0</version>
+              <version>1.4.1</version>
             </configuration>
             <goals>
               <goal>java</goal>

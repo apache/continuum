@@ -101,6 +101,7 @@ import org.springframework.beans.BeanUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -584,6 +585,11 @@ public class DefaultContinuum
         List<BuildResult> builds = buildResultDao.getBuildResultByBuildNumber( projectId, buildNumber );
 
         return ( builds.isEmpty() ? null : builds.get( 0 ) );
+    }
+
+    public List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy )
+    {
+        return buildResultDao.getBuildResultsInRange( fromDate, toDate, state, triggeredBy );
     }
 
     // ----------------------------------------------------------------------

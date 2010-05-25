@@ -49,6 +49,7 @@ under the License.
         <include name="mavenOneProject" />
         <include name="antProject"/>
         <include name="shellProject"/>
+        <include name="report"/>
         <include name="agent"/>
         <include name="release"/>
         <include name="buildDefinition" />

@@ -200,6 +200,11 @@
           <name>continuum-manage-parallel-builds</name>
           <description>Continuum Manage Parallel Builds</description>
         </operation>
+        <operation>
+          <id>continuum-view-report</id>
+          <name>continuum-view-report</name>
+          <description>Continuum View Report</description>
+        </operation>
       </operations>
       <roles>
         <role>
@@ -614,6 +619,12 @@
               <id>continuum-view-queues</id>
               <name>Continuum View Queues</name>
               <operation>continuum-view-queues</operation>
+              <resource>global</resource>
+            </permission>
+            <permission>
+              <id>continuum-view-report</id>
+              <name>Continuum View Report</name>
+              <operation>continuum-view-report</operation>
               <resource>global</resource>
             </permission>
           </permissions>  	  

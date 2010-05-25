@@ -1399,6 +1399,33 @@ public class ContinuumStoreTest
 
 	}
 
+    public void testGetBuildResultsInRange()
+        throws Exception
+    {
+        List<BuildResult> results = buildResultDao.getBuildResultsInRange( 0, 0, 0, null );	    
+        assertEquals( "check number of build results returned", 3, results.size() );
+
+        results = buildResultDao.getBuildResultsInRange( 0, 0, 2, null );
+        assertEquals( "check number of build results returned with state == OK", 2, results.size() );
+
+        results = buildResultDao.getBuildResultsInRange( 0, 0, 0, "user" );
+        assertEquals( "check number of build results returned with triggeredBy == user", 1, results.size() );
+	    
+        results = buildResultDao.getBuildResultsInRange( 0, 0, 0, "schedule" );
+        assertEquals( "check number of build results returned with triggeredBy == schedule", 2, results.size() );
+        
+        results = buildResultDao.getBuildResultsInRange( 0, 0, 2, "schedule" );
+        assertEquals( "check number of build results returned with state == Ok and triggeredBy == schedule", 1, results.size() );
+
+        results = buildResultDao.getBuildResultsInRange( 0, 0, 3, "user" );
+        assertEquals( "check number of build results returned with state == Failed and triggeredBy == user", 0, results.size() );
+
+        results = buildResultDao.getBuildResultsInRange( baseTime, baseTime + 2000, 0, null );
+        assertEquals( "check number of build results returned with startDate and endDate", 2, results.size() );
+
+        results = buildResultDao.getBuildResultsInRange( baseTime, baseTime, 0, null );
+        assertEquals( "check number of build results returned with the same startDate and endDate", 1, results.size() );
+    }
     // ----------------------------------------------------------------------
     //  HELPER METHODS
     // ----------------------------------------------------------------------

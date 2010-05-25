@@ -127,4 +127,6 @@ public class ContinuumRoleConstants
     public static final String CONTINUUM_VIEW_RELEASE = "continuum-view-release";
 
     public static final String CONTINUUM_MANAGE_PARALLEL_BUILDS = "continuum-manage-parallel-builds";
+
+    public static final String CONTINUUM_VIEW_REPORT = "continuum-view-report";
 }

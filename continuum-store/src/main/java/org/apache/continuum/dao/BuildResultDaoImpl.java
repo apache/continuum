@@ -748,4 +748,83 @@ public class BuildResultDaoImpl
 
         return null;
     }
+
+    @SuppressWarnings( "unchecked" )
+    public List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            String parameters = "";
+            String filter = "";
+
+            Map params = new HashMap();
+
+            int ctr = 0;
+            if ( state > 0 )
+            {
+                params.put( "state", state );
+                ctr++;
+                parameters += "int state, ";
+                filter += "this.state == state && ";
+            }
+
+            if ( triggeredBy != null && !triggeredBy.equals( "" ) )
+            {
+                params.put( "triggeredBy", triggeredBy );
+                ctr++;
+                query.declareImports( "import java.lang.String" );
+                parameters += "String triggeredBy, ";
+                filter += "this.username == triggeredBy && ";
+            }
+
+            if ( fromDate > 0 )
+            {
+                params.put( "fromDate", fromDate );
+                ctr++;
+                parameters += "long fromDate, ";
+                filter += "this.startTime >= fromDate && ";
+            }
+
+            if ( toDate > 0 )
+            {
+                params.put( "toDate", toDate );
+                ctr++;
+                parameters += "long toDate";
+                filter += "this.startTime <= toDate";
+            }
+
+            if ( filter.endsWith( "&& " ) )
+            {
+                filter = filter.substring( 0, filter.length() - 3 );
+                parameters = parameters.substring( 0, parameters.length() - 2 );
+            }
+
+            query.declareParameters( parameters );
+            query.setFilter( filter );
+
+            List<BuildResult> result = (List<BuildResult>) query.executeWithMap( params );
+
+            result = (List<BuildResult>) pm.detachCopyAll( result );
+            
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
 }

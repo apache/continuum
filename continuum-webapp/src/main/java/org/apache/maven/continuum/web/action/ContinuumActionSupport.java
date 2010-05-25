@@ -485,6 +485,12 @@ public class ContinuumActionSupport
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_REPOSITORIES );
     }
 
+    protected void checkViewReportsAuthorization()
+        throws AuthorizationRequiredException
+    {
+        checkAuthorization( ContinuumRoleConstants.CONTINUUM_VIEW_REPORT );
+    }
+    
     /**
      * Get the security session
      *
@@ -561,5 +567,5 @@ public class ContinuumActionSupport
             principal = "unknown-user";
         }
         return principal;
-    }    
+    }
 }

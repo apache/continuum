@@ -39,7 +39,6 @@
           <s:text name="menu.continuum.showProjectGroups"/>
         </s:a>
       </div>
- 
     </div>
   </div>
 
@@ -177,6 +176,22 @@
       </div>
     </div>
   </redback:ifAnyAuthorized>
+
+  <redback:ifAuthorized permission="continuum-view-report">
+    <div id="projectmenu" class="toolgroup">
+      <div class="label">
+        <s:text name="menu.reports"/>
+      </div>
+      <div>
+        <div class="body">
+          <s:url id="viewProjectBuildsReportUrl" action="viewProjectBuildsReport" method="init" namespace="/" includeParams="none"/>
+          <s:a href="%{viewProjectBuildsReportUrl}">
+            <s:text name="menu.reports.projectBuilds"/>
+          </s:a> 
+        </div>
+      </div>
+    </div>
+  </redback:ifAuthorized>
 
   <c1:ifBuildTypeEnabled buildType="distributed">
     <redback:ifAnyAuthorized permissions="continuum-manage-distributed-builds,continuum-view-release">

@@ -100,4 +100,6 @@ public interface BuildResultDao
                                                         long endIndex );
 
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
+
+    List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy );
 }
