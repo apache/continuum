@@ -138,7 +138,7 @@ public class ProjectGroupTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
         clickButtonWithValue( "Release" );
         assertReleaseSuccess();
     }

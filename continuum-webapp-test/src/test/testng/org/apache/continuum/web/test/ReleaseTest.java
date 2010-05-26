@@ -94,7 +94,7 @@ public class ReleaseTest
             createBuildEnvAndBuildagentGroup();
             detachBuildagentFromGroup();
             
-            buildProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_DESCRIPTION, M2_PROJECT_NAME );
+            buildProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_DESCRIPTION, M2_PROJECT_NAME, true );
             
             clickButtonWithValue( "Release" );
             assertReleaseSuccess();

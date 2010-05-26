@@ -370,7 +370,7 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "Cancel" );
     }
 
-    public void buildProjectGroup(String projectGroupName,String groupId,String description,String projectName )
+    public void buildProjectGroup(String projectGroupName,String groupId,String description,String projectName, boolean success )
         throws Exception
     {
         showProjectGroup( projectGroupName, groupId, description );
@@ -381,9 +381,19 @@ public abstract class AbstractContinuumTest
         waitForProjectBuild();
         
         // wait for the success status of project
-        if ( !isElementPresent( "//a/img[@alt='Success']" ) )
+        if ( success )
         {
-            waitForElementPresent( "//a/img[@alt='Success']" );
+            if ( !isElementPresent( "//a/img[@alt='Success']" ) )
+            {
+                waitForElementPresent( "//a/img[@alt='Success']" );
+            }
+        }
+        else
+        {
+            if ( !isElementPresent( "//a/img[@alt='Failed']" ) )
+            {
+                waitForElementPresent( "//a/img[@alt='Failed']" );
+            }
         }
         
         // wait for the projectName link
@@ -395,7 +405,15 @@ public abstract class AbstractContinuumTest
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
         clickLinkWithText( "Result" );
-        assertTextPresent( "BUILD SUCCESS" );
+        
+        if ( success )
+        {
+            assertTextPresent( "BUILD SUCCESS" );
+        }
+        else
+        {
+            assertTextPresent( "BUILD FAILURE" );
+        }
         clickLinkWithText( "Project Group Summary" );
     }
 
@@ -1095,7 +1113,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Results" );
     }
     
-    public void assertProjectBuildReport()
+    public void assertProjectBuildReportWithResult()
     {
         assertTextPresent( "Project Group" );
         assertTextPresent( "Project" );
@@ -1104,5 +1122,13 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Build Status" );
         assertTextPresent( "Prev" );
         assertTextPresent( "Next" );
+    }
+
+    public void assertProjectBuildReportWithNoResult()
+    {
+        assertTextNotPresent( "Build Date" );
+        assertTextNotPresent( "Prev" );
+        assertTextNotPresent( "Next" );
+        assertTextPresent( "No Results Found" );
     }
 }

@@ -27,12 +27,115 @@ public class ReportTest
     extends AbstractContinuumTest
 {
     @Test( dependsOnMethods = { "testProjectGroupAllBuildSuccess" } )
-    public void testViewBuildsReport()
+    public void testViewBuildsReportWithSuccessfulBuild()
         throws Exception
-    {
+    {        
         goToProjectBuildsReport();
+        selectValue( "buildStatus", "Ok" );
         clickButtonWithValue( "View Report" );
 
-        assertProjectBuildReport();
+        assertProjectBuildReportWithResult();
+        assertTextPresent( getProperty( "M2_PROJ_GRP_NAME" ) );
+        assertImgWithAlt( "Success" );
+    }
+
+    /*@Test( dependsOnMethods = { "testProjectGroupAllBuildSuccess" } )
+    public void testBuildsReportPagination()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        
+        for ( int ctr = 0; ctr < 10; ctr++ )
+        {
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
+            clickButtonWithValue( "Release" );
+            assertReleaseSuccess();
+        }
+
+        goToProjectBuildsReport();
+        setFieldValue( "rowCount", "10" );
+        clickButtonWithValue( "View Report" );
+
+        assertProjectBuildReportWithResult();
+        assertLinkNotPresent( "Prev" );
+        assertLinkNotPresent( "1" );
+        assertLinkPresent( "2" );
+        assertLinkPresent( "Next" );
+
+        clickLinkWithText( "2" );
+        assertProjectBuildReportWithResult();
+        assertLinkNotPresent( "Next" );
+        assertLinkNotPresent( "2" );
+        assertLinkPresent( "1" );
+        assertLinkPresent( "Prev" );
+
+        clickLinkWithText( "Prev" );
+        assertProjectBuildReportWithResult();
+        assertLinkNotPresent( "Prev" );
+        assertLinkNotPresent( "1" );
+        assertLinkPresent( "2" );
+        assertLinkPresent( "Next" );
+    }*/
+
+    @Test
+    public void testBuildsReportWithInvalidRowCount()
+    {
+        goToProjectBuildsReport();
+        setFieldValue( "rowCount", "1" );
+        clickButtonWithValue( "View Report" );
+
+        assertProjectBuildReportWithNoResult();
+        assertTextPresent( "Row count must be larger than 10" );
+    }
+
+    @Test
+    public void testBuildsReportWithInvalidDates()
+    {
+        goToProjectBuildsReport();
+        setFieldValue( "startDate", "05/25/2010" );
+        setFieldValue( "endDate", "05/24/2010" );
+        clickButtonWithValue( "View Report" );
+
+        assertProjectBuildReportWithNoResult();
+        assertTextPresent( "Start Date must be earlier than the End Date" );
+    }
+
+    @Test
+    public void testViewBuildsReportWithFailedBuild()
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_FAILING_PROJ_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+
+        String M2_PROJ_GRP_NAME = getProperty( "M2_FAILING_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_FAILING_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_FAILING_PROJ_DESCRIPTION" );
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+
+        
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, false );
+
+        goToProjectBuildsReport();
+        selectValue( "buildStatus", "Failed" );
+        clickButtonWithValue( "View Report" );
+
+        assertProjectBuildReportWithResult();
+        assertImgWithAlt( "Failed" );
+        assertTextPresent( M2_PROJ_GRP_NAME );
+    }
+
+    @Test
+    public void testViewBuildsReportWithErrorBuild()
+    {
+        goToProjectBuildsReport();
+        selectValue( "buildStatus", "Error" );
+        clickButtonWithValue( "View Report" );
+
+        assertProjectBuildReportWithNoResult();
     }
 }

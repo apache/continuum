@@ -276,7 +276,7 @@ public class UserRolesManagementTest
     @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_AddProjectToProjectGroup" } )
     public void testContinuumGroupProjectAdmin_BuildProject() throws Exception
     {
-        buildProjectGroup( "Test Group", "Test Group", "testing project group", "ContinuumBuildQueueTestData" );
+        buildProjectGroup( "Test Group", "Test Group", "testing project group", "ContinuumBuildQueueTestData", true );
     }
 
     @Test( dependsOnMethods = { "testContinuumGroupProjectAdmin_BuildProject" } )

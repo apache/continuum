@@ -280,7 +280,7 @@ public class MavenTwoProjectTest
     {
         String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
-    
+
         try
         {
             enableDistributedBuilds();
@@ -322,7 +322,7 @@ public class MavenTwoProjectTest
             showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
             clickButtonWithValue( "Build all projects" );
 
-            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME, true );
         }
         finally
         {
@@ -381,7 +381,7 @@ public class MavenTwoProjectTest
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
         assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
     
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
     
         removeProjectGroup( M2_PROJ_GRP_NAME );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
@@ -406,7 +406,7 @@ public class MavenTwoProjectTest
             addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
             assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
         
-            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
         
             removeProjectGroup( M2_PROJ_GRP_NAME );
             assertLinkNotPresent( M2_PROJ_GRP_NAME );

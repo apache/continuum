@@ -176,6 +176,9 @@
           </ec:row>
         </ec:table>
       </c:if>
+      <c:if test="${empty projectBuilds}">
+        <s:text name="projectBuilds.report.noResult"/>
+      </c:if>
     </div>
   </body>
   </s:i18n>

@@ -158,7 +158,7 @@ public class BuildAgentsTest
             goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
             enableDisableBuildAgent( BUILD_AGENT_NAME, true );
 
-            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME );
+            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME, true );
 
             removeProjectGroup( M2_PROJ_GRP_NAME );
             assertLinkNotPresent( M2_PROJ_GRP_NAME );
