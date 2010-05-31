@@ -21,6 +21,7 @@ package org.apache.continuum.web.action;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -115,7 +116,15 @@ public class ViewBuildsReportAction
     
             if ( !StringUtils.isEmpty( endDate ) )
             {
-                toDate = DateUtils.parseDate( endDate, datePatterns ).getTime();
+                Date toDateInDateFormat = DateUtils.parseDate( endDate, datePatterns );
+                
+                Calendar toDateCal = Calendar.getInstance();
+                toDateCal.setTime( toDateInDateFormat );
+                toDateCal.set( Calendar.HOUR_OF_DAY, 23 );
+                toDateCal.set( Calendar.MINUTE, 59 );
+                toDateCal.set( Calendar.SECOND, 59 );
+                
+                toDate = toDateCal.getTimeInMillis();
             }
         }
         catch ( ParseException e )
