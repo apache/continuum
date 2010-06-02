@@ -22,6 +22,7 @@ package org.apache.continuum.web.action;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -142,11 +143,12 @@ public class ViewBuildsReportAction
         if ( rowCount < 10 )
         {
             // TODO: move to validation framework
-            addFieldError( "rowCount", "Row count must be larger than 10." );
+            addFieldError( "rowCount", "Row count should be at least 10." );
             return INPUT;
         }
 
         List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( fromDate, toDate, buildStatus, triggeredBy );
+        projectBuilds = Collections.emptyList();
 
         if ( buildResults != null && !buildResults.isEmpty() )
         {
