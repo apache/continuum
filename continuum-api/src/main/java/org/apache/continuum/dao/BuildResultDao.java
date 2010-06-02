@@ -101,5 +101,5 @@ public interface BuildResultDao
 
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 
-    List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy );
+    List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy, int projectGroupId );
 }

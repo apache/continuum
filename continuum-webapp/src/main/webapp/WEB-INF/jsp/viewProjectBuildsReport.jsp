@@ -42,6 +42,7 @@
           $('#triggeredBy').val('')
           $('#rowCount').val('30')
           $("#buildStatus option[value='0']").attr('selected', 'selected')
+          $("#projectGroupId option[value='0']").attr('selected', 'selected')
         });
       });
     </script>
@@ -64,6 +65,7 @@
       
       <div class="axial">
         <table>
+            <s:select label="%{getText('projectBuilds.report.project.group')}" name="projectGroupId" id="projectGroupId" list="projectGroups"/>
             <s:textfield label="%{getText('projectBuilds.report.startDate')}" name="startDate" id="startDate" size="20"/>
             <s:textfield label="%{getText('projectBuilds.report.endDate')}" name="endDate" id="endDate" size="20"/>
             <s:select label="%{getText('projectBuilds.report.buildStatus')}" name="buildStatus" id="buildStatus" list="buildStatuses"/>
@@ -80,12 +82,13 @@
     </p>
 
     <c:if test="${projectBuilds != null}">
-     	<div id="h3">
+      <div id="h3">
      	  <h3>Results</h3>
      	  <c:choose>
        	  <c:when test="${not empty projectBuilds}">
             <c:set var="prevPageUrl">
               <s:url action="generateProjectBuildsReport">    
+                <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
                 <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
                 <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
                 <s:param name="rowCount" value="%{#attr.rowCount}"/>
@@ -96,6 +99,7 @@
             </c:set>
             <c:set var="nextPageUrl">
               <s:url action="generateProjectBuildsReport">    
+                <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
                 <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
                 <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
                 <s:param name="rowCount" value="%{#attr.rowCount}"/>
@@ -143,8 +147,9 @@
                 <c:when test="${i != (page - 1)}">
                   <c:set var="specificPageUrl">
                     <s:url action="generateProjectBuildsReport">    
+                      <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
                       <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
-                	  <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
+                      <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
                       <s:param name="rowCount" value="%{#attr.rowCount}"/>
                       <s:param name="startDate" value="%{#attr.startDate}"/>                      
                       <s:param name="endDate" value="%{#attr.endDate}"/>          

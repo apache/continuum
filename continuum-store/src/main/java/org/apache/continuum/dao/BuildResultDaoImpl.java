@@ -748,9 +748,9 @@ public class BuildResultDaoImpl
 
         return null;
     }
-
+    
     @SuppressWarnings( "unchecked" )
-    public List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy )
+    public List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy, int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -772,12 +772,21 @@ public class BuildResultDaoImpl
             Map params = new HashMap();
 
             int ctr = 0;
+            
             if ( state > 0 )
             {
                 params.put( "state", state );
                 ctr++;
                 parameters += "int state, ";
                 filter += "this.state == state && ";
+            }
+
+            if ( projectGroupId > 0 )
+            {
+                params.put( "projectGroupId", projectGroupId );
+                ctr++;
+                parameters += "int projectGroupId, ";
+                filter += "this.project.projectGroup.id == projectGroupId && ";
             }
 
             if ( triggeredBy != null && !triggeredBy.equals( "" ) )
@@ -804,11 +813,11 @@ public class BuildResultDaoImpl
                 parameters += "long toDate";
                 filter += "this.startTime <= toDate";
             }
-
+            
             if ( filter.endsWith( "&& " ) )
             {
-                filter = filter.substring( 0, filter.length() - 3 );
-                parameters = parameters.substring( 0, parameters.length() - 2 );
+               filter = filter.substring( 0, filter.length() - 3 );
+               parameters = parameters.substring( 0, parameters.length() - 2 );
             }
 
             query.declareParameters( parameters );

@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -50,6 +51,8 @@ public class ViewBuildsReportAction
     private String startDate = "";
 
     private String endDate = "";
+    
+    private int projectGroupId;
 
     private int rowCount = 30;
 
@@ -58,6 +61,8 @@ public class ViewBuildsReportAction
     private int numPages;
 
     private Map<Integer, String> buildStatuses;
+    
+    private Map<Integer, String> projectGroups;
 
     private List<ProjectBuildsSummary> projectBuilds;
 
@@ -69,12 +74,24 @@ public class ViewBuildsReportAction
         throws Exception
     {
         super.prepare();
-
+        
         buildStatuses = new LinkedHashMap<Integer, String>();
         buildStatuses.put( 0, "ALL" );
         buildStatuses.put( ContinuumProjectState.OK, "Ok" );
         buildStatuses.put( ContinuumProjectState.FAILED, "Failed" );
-        buildStatuses.put( ContinuumProjectState.ERROR, "Error" );    
+        buildStatuses.put( ContinuumProjectState.ERROR, "Error" );
+        
+        projectGroups = new LinkedHashMap<Integer, String>();
+        projectGroups.put( 0, "ALL" );
+        
+        List<ProjectGroup> groups = getContinuum().getAllProjectGroups();
+        if ( groups != null )
+        {
+            for ( ProjectGroup group : groups )
+            {
+                projectGroups.put( group.getId(),  group.getName() );
+            }
+        }
     }
 
     public String init()
@@ -147,7 +164,7 @@ public class ViewBuildsReportAction
             return INPUT;
         }
 
-        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( fromDate, toDate, buildStatus, triggeredBy );
+        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus, triggeredBy );
         projectBuilds = Collections.emptyList();
 
         if ( buildResults != null && !buildResults.isEmpty() )
@@ -215,6 +232,16 @@ public class ViewBuildsReportAction
         this.buildStatus = buildStatus;
     }
 
+    public int getProjectGroupId()
+    {
+        return this.projectGroupId;
+    }
+
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
+    }
+
     public String getTriggeredBy()
     {
         return this.triggeredBy;
@@ -258,6 +285,11 @@ public class ViewBuildsReportAction
     public Map<Integer, String> getBuildStatuses()
     {
         return buildStatuses;
+    }
+
+    public Map<Integer, String> getProjectGroups()
+    {
+        return projectGroups;
     }
 
     public List<ProjectBuildsSummary> getProjectBuilds()
