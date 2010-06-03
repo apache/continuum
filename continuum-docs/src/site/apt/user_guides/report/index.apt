@@ -30,6 +30,10 @@ Project Builds Report
     Default value is <<<30>>> and the minimum required row count is <<<10>>>.
   
   []
+  
+  To generate the report, click the <<View Report>> button.
+  
+  To restore the default values of the fields, click the <<Reset>> button.
 
 * Project Builds Report Sample
 

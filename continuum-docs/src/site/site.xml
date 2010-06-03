@@ -69,6 +69,7 @@
           <item name="Perform Project Release" href="user_guides/release/perform.html"/>
           <item name="Release Results Management" href="user_guides/release/release_results.html"/>
         </item>
+        <item name="Project Builds Report" href="user_guides/report/index.html"/>
       </item>
 
       <item name="Administrator's Guides" href="administrator_guides/index.html" collapse="true">
