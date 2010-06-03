@@ -1,0 +1,36 @@
+ ------
+ Project Builds Report
+ ------
+ Jevica Arianne B. Zurbano
+ ------
+ 03 June 2010
+ ------
+
+Project Builds Report
+
+  Project Builds Report page displays project builds and its information provided with search criteria.
+  
+[../../images/projectBuildsReport.png] Builds Report Page
+  
+  Searching using the default values of the fields will display all the project builds.
+  
+  Search Criteria:
+  
+  * <<Project Group>> - selected from the list of existing project groups.
+    Default value is <<<ALL>>>.
+  
+  * <<Date>> of the build (the start and/or end dates of the build)
+  
+  * <<Build Status>> - selected from the list which can be <<<ALL>>>, <<<Ok>>>, <<<Failed>>>, or <<<Error>>>.
+    Default value is <<<ALL>>>.
+    
+  * <<Triggered By>> - user or build schedule which triggered the build.
+  
+  * <<Row Count>> - sets the display of the number of build results to be displayed in a result page.
+    Default value is <<<30>>> and the minimum required row count is <<<10>>>.
+  
+  []
+
+* Project Builds Report Sample
+
+[../../images/projectBuildsReportResults.png] Project Builds Report
