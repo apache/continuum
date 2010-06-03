@@ -51,3 +51,6 @@ Local Repository
 
     The default local repository location comes from the settings of the user running Continuum.  The location cannot be
     edited within Continuum, but can be changed by specifying it in <<<~/.m2/settings.xml>>>.
+    
+    On Windows 7, you can pass the argument <<<-Duser.home=C:\Users\\\<Username\>\\>>> to the JVM explicitly. Since running Continuum as an Administrator
+    will give you a different <<<user.home>>> value.
