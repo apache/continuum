@@ -24,6 +24,21 @@
   <s:i18n name="localization.Continuum">
     <head>
         <title><s:text name="buildDefinition.page.title"/></title>
+        <script language="javascript">
+          function setAlwaysBuild()
+          {
+              if ( document.saveBuildDefinition.buildFresh.checked == true )
+              {
+                  document.saveBuildDefinition.alwaysBuild.checked = true;
+                  document.saveBuildDefinition.alwaysBuild.disabled = true;
+              }
+              else
+              {
+                  document.saveBuildDefinition.alwaysBuild.checked = false;
+                  document.saveBuildDefinition.alwaysBuild.disabled = false;
+              }
+          }
+        </script>
     </head>
     <body>
       <div id="axial" class="h3">
@@ -65,14 +80,21 @@
                     </s:else>
     
                     <s:textfield label="%{getText('buildDefinition.arguments.label')}" name="arguments"/>
-                    <s:checkbox label="%{getText('buildDefinition.buildFresh.label')}" name="buildFresh" value="buildFresh" fieldValue="true"/>
-                    <s:checkbox label="%{getText('buildDefinition.alwaysBuild.label')}" name="alwaysBuild" />
+                    <s:checkbox label="%{getText('buildDefinition.buildFresh.label')}" id="buildFresh" name="buildFresh" value="buildFresh" fieldValue="true" onclick="setAlwaysBuild();"/>
+                    <c:choose>
+                    <c:when test="${buildFresh == true}">
+                      <s:checkbox label="%{getText('buildDefinition.alwaysBuild.label')}" id="alwaysBuild" name="alwaysBuild" value="true" disabled="true"/>
+                    </c:when>
+                    <c:otherwise>
+                      <s:checkbox label="%{getText('buildDefinition.alwaysBuild.label')}" id="alwaysBuild" name="alwaysBuild"/>
+                    </c:otherwise>
+                    </c:choose>
                     <c:choose>
                     <c:when test="${defaultBuildDefinition == true}">
                       <s:label label="%{getText('buildDefinition.defaultForProject.label')}" value="true"/>
                     </c:when>
                     <c:otherwise>
-                      <s:checkbox label="%{getText('buildDefinition.defaultForProject.label')}"  name="defaultBuildDefinition" value="defaultBuildDefinition" fieldValue="true"/>
+                      <s:checkbox label="%{getText('buildDefinition.defaultForProject.label')}" name="defaultBuildDefinition" value="defaultBuildDefinition" fieldValue="true"/>
                     </c:otherwise>
                     </c:choose>
                     <s:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedules"/>

@@ -106,7 +106,7 @@ public class BuildDefinitionTest
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickButtonWithValue( "Add" );
         addEditGroupBuildDefinition( TEST2_PROJ_GRP_NAME, BUILD_POM_NAME, BUILD_GOALS, BUILD_ARGUMENTS,
-                                     BUILD_DESCRIPTION, true, true, true );
+                                     BUILD_DESCRIPTION, true, false, true );
     }
 
     @Test( dependsOnMethods = { "testAddProjectGroup2" } )
@@ -148,6 +148,9 @@ public class BuildDefinitionTest
         clickImgWithAlt( "Edit" );
         addEditGroupBuildDefinition( TEST2_PROJ_GRP_NAME, BUILD_POM_NAME, BUILD_GOALS, BUILD_ARGUMENTS,
                                      BUILD_DESCRIPTION, true, true, false );
+        clickImgWithAlt( "Edit" );
+        addEditGroupBuildDefinition( TEST2_PROJ_GRP_NAME, BUILD_POM_NAME, BUILD_GOALS, BUILD_ARGUMENTS,
+                                     BUILD_DESCRIPTION, false, true, false );
     }
 
     @Test( dependsOnMethods = { "testEditGroupBuildDefinition" } )

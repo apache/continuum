@@ -411,6 +411,11 @@ public abstract class AbstractSeleniumTest
         Assert.assertFalse( getSelenium().isChecked( locator ) );
     }
 
+    public void click( String locator )
+    {
+        getSelenium().click( locator );
+    }
+
     public void clickAndWait( String locator )
     {
         getSelenium().click( locator );
@@ -463,5 +468,15 @@ public abstract class AbstractSeleniumTest
         throws Exception
     {
         getSelenium().waitForCondition( condition, maxProjectWaitTimeInMs );
+    }
+
+    public void assertEnabled( String locator )
+    {
+        Assert.assertTrue( getSelenium().isEditable( locator ), "'" + locator + "' is disabled" );
+    }
+
+    public void assertDisabled( String locator )
+    {
+        Assert.assertFalse( getSelenium().isEditable( locator ), "'" + locator + "' is enabled" );
     }
 }
