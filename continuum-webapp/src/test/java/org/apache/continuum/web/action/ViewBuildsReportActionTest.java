@@ -178,6 +178,6 @@ public class ViewBuildsReportActionTest
         String result = "Project Group,Project Name,Build Date,Triggered By,Build Status\n" +
                         "Test Group,Test Project," + buildDate + ",test-admin,Ok\n";
         
-        assertTrue( report.equals( result ) );
+        assertEquals( report, result );
     }
 }
