@@ -37,4 +37,6 @@ Project Builds Report
 
 * Project Builds Report Sample
 
+  To export the builds report to a CSV file, click the link <<Export to CSV>>
+
 [../../images/projectBuildsReportResults.png] Project Builds Report

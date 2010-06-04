@@ -86,8 +86,8 @@ public class ReportTest
         setFieldValue( "rowCount", "1" );
         clickButtonWithValue( "View Report" );
 
-        assertProjectBuildReportWithNoResult();
-        assertTextPresent( "Row count must be larger than 10" );
+        assertProjectBuildReportWithFieldError();
+        assertTextPresent( "Row count should be at least 10." );
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ReportTest
         setFieldValue( "endDate", "05/24/2010" );
         clickButtonWithValue( "View Report" );
 
-        assertProjectBuildReportWithNoResult();
+        assertProjectBuildReportWithFieldError();
         assertTextPresent( "Start Date must be earlier than the End Date" );
     }
 

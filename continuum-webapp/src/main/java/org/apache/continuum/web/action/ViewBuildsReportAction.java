@@ -19,6 +19,10 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -65,6 +70,10 @@ public class ViewBuildsReportAction
     private Map<Integer, String> projectGroups;
 
     private List<ProjectBuildsSummary> projectBuilds;
+
+    private InputStream inputStream;
+    
+    public static final String SEND_FILE = "send-file";
 
     private static final String[] datePatterns =
         new String[]{"MM/dd/yy", "MM/dd/yyyy", "MMMMM/dd/yyyy", "MMMMM/dd/yy", "dd MMMMM yyyy", "dd/MM/yy",
@@ -170,7 +179,7 @@ public class ViewBuildsReportAction
         if ( buildResults != null && !buildResults.isEmpty() )
         {
             projectBuilds = mapBuildResultsToProjectBuildsSummaries( buildResults );
-    
+
             int extraPage = ( projectBuilds.size() % rowCount ) != 0 ? 1 : 0;
             numPages = ( projectBuilds.size() / rowCount ) + extraPage;
     
@@ -182,17 +191,122 @@ public class ViewBuildsReportAction
             }
     
             int start = rowCount * ( page - 1 );
-            int end = ( start + rowCount ) - 1;
+            int end = ( start + rowCount );
     
             if ( end > projectBuilds.size() )
             {
-                end = projectBuilds.size() - 1;
+                end = projectBuilds.size();
             }
 
-            projectBuilds = projectBuilds.subList( start, end + 1 );
+            projectBuilds = projectBuilds.subList( start, end );
         }
 
         return SUCCESS;
+    }
+    
+    /*
+     * Export Builds Report to .csv
+     */
+    public String downloadBuildsReport()
+    {
+        try
+        {
+            checkViewReportsAuthorization();
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+
+        long fromDate = 0;
+        long toDate = 0;
+
+        try
+        {
+            if ( !StringUtils.isEmpty( startDate ) )
+            {
+                fromDate = DateUtils.parseDate( startDate, datePatterns ).getTime();
+            }
+            
+            if ( !StringUtils.isEmpty( endDate ) )
+            {
+                Date toDateInDateFormat = DateUtils.parseDate( endDate, datePatterns );
+                
+                Calendar toDateCal = Calendar.getInstance();
+                toDateCal.setTime( toDateInDateFormat );
+                toDateCal.set( Calendar.HOUR_OF_DAY, 23 );
+                toDateCal.set( Calendar.MINUTE, 59 );
+                toDateCal.set( Calendar.SECOND, 59 );
+                
+                toDate = toDateCal.getTimeInMillis();
+            }
+        }
+        catch ( ParseException e )
+        {
+            addActionError( "Error parsing date(s): " + e.getMessage() );
+            return ERROR;
+        }
+
+        if ( fromDate != 0 && toDate != 0 && new Date( fromDate ).after( new Date( toDate ) ) )
+        {
+            addFieldError( "startDate", "Start Date must be earlier than the End Date" );
+            return INPUT;
+        }
+
+        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus, triggeredBy );
+        List<ProjectBuildsSummary> builds = Collections.emptyList();
+        
+        StringBuffer input = new StringBuffer( "Project Group,Project Name,Build Date,Triggered By,Build Status\n" );
+
+        if ( buildResults != null && !buildResults.isEmpty() )
+        {
+            builds = mapBuildResultsToProjectBuildsSummaries( buildResults );
+            
+            for ( ProjectBuildsSummary build : builds )
+            {
+                input.append( build.getProjectGroupName() ).append( "," );
+                input.append( build.getProjectName() ).append( "," );
+                
+                input.append( new Date( build.getBuildDate() ) ).append( "," );
+                
+                input.append( build.getBuildTriggeredBy() ).append( "," );
+                
+                String status;
+                switch ( build.getBuildState() )
+                {
+                    case 2: status = "Ok";
+                            break;
+                    case 3: status = "Failed";
+                            break;
+                    case 4: status = "Error";
+                            break;
+                    case 6: status = "Building";
+                            break;
+                    case 7: status = "Checking Out";
+                            break;
+                    case 8: status = "Updating";
+                            break;
+                    default: status = "";
+                }
+                input.append( status );
+                input.append( "\n" );
+            }
+        }
+        
+        StringReader reader = new StringReader( input.toString() );
+
+        try
+        {
+            inputStream = new ByteArrayInputStream( IOUtils.toByteArray( reader ) );
+        }
+        catch ( IOException e )
+        {
+            addActionError( "Error occurred while generating CSV file." );
+            return ERROR;
+        }
+
+        return SEND_FILE;
     }
 
     private List<ProjectBuildsSummary> mapBuildResultsToProjectBuildsSummaries( List<BuildResult> buildResults )
@@ -310,6 +424,11 @@ public class ViewBuildsReportAction
     public int getNumPages()
     {
         return numPages;
+    }
+
+    public InputStream getInputStream()
+    {
+        return inputStream;
     }
 
     private boolean isAuthorized( String projectGroupName )

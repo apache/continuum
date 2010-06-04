@@ -1126,6 +1126,8 @@ public abstract class AbstractContinuumTest
     public void assertViewBuildsReportPage()
     {
         assertPage( "Continuum - Project Builds Report" );
+        assertTextPresent( "Project Group" );
+        assertElementPresent( "projectGroupId" );
         assertTextPresent( "Start Date" );
         assertElementPresent( "startDate" );
         assertTextPresent( "End Date" );
@@ -1137,18 +1139,22 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Row Count" );
         assertElementPresent( "rowCount" );
         assertButtonWithValuePresent( "View Report" );
-        assertTextPresent( "Results" );
+        assertTextNotPresent( "Results" );
+        assertTextNotPresent( "No Results Found" );
+        assertTextNotPresent( "Export to CSV" );
     }
     
     public void assertProjectBuildReportWithResult()
     {
+        assertTextPresent( "Results" );
         assertTextPresent( "Project Group" );
-        assertTextPresent( "Project" );
+        assertTextPresent( "Project Name" );
         assertTextPresent( "Build Date" );
         assertTextPresent( "Triggered By" );
         assertTextPresent( "Build Status" );
         assertTextPresent( "Prev" );
         assertTextPresent( "Next" );
+        assertTextPresent( "Export to CSV" );
     }
 
     public void assertProjectBuildReportWithNoResult()
@@ -1156,6 +1162,18 @@ public abstract class AbstractContinuumTest
         assertTextNotPresent( "Build Date" );
         assertTextNotPresent( "Prev" );
         assertTextNotPresent( "Next" );
+        assertTextNotPresent( "Export to CSV" );
+        assertTextPresent( "Results" );
         assertTextPresent( "No Results Found" );
+    }
+
+    public void assertProjectBuildReportWithFieldError()
+    {
+        assertTextNotPresent( "Build Date" );
+        assertTextNotPresent( "Prev" );
+        assertTextNotPresent( "Next" );
+        assertTextNotPresent( "Export to CSV" );
+        assertTextNotPresent( "Results" );
+        assertTextNotPresent( "No Results Found" );
     }
 }

@@ -86,66 +86,23 @@
      	  <h3>Results</h3>
      	  <c:choose>
        	  <c:when test="${not empty projectBuilds}">
-            <c:set var="prevPageUrl">
-              <s:url action="generateProjectBuildsReport">    
-                <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
-                <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
-                <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
-                <s:param name="rowCount" value="%{#attr.rowCount}"/>
-                <s:param name="startDate" value="%{#attr.startDate}"/>                      
-                <s:param name="endDate" value="%{#attr.endDate}"/>
-                <s:param name="page" value="%{#attr.page - 1}"/>
-              </s:url>
-            </c:set>
-            <c:set var="nextPageUrl">
-              <s:url action="generateProjectBuildsReport">    
-                <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
-                <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
-                <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
-                <s:param name="rowCount" value="%{#attr.rowCount}"/>
-                <s:param name="startDate" value="%{#attr.startDate}"/>                      
-                <s:param name="endDate" value="%{#attr.endDate}"/>          
-                <s:param name="page" value="%{#attr.page + 1}"/>
-              </s:url>
-            </c:set>
-            <c:choose>
-              <c:when test="${page == 1}">                               
-                <s:text name="projectBuilds.report.prev"/>
-              </c:when>
-              <c:otherwise>
-                <a href="${prevPageUrl}">
-                  <s:text name="projectBuilds.report.prev"/>
-                </a>
-              </c:otherwise>
-            </c:choose>
-
-            <c:choose>
-              <c:when test="${numPages > 11}">
-                <c:choose>
-                  <c:when test="${(page - 5) < 0}">
-                    <c:set var="beginVal">0</c:set>
-                    <c:set var="endVal">10</c:set> 
-                  </c:when>			        
-                  <c:when test="${(page + 5) > (numPages - 1)}">
-                    <c:set var="beginVal">${(numPages - 1) - 10}</c:set>
-                    <c:set var="endVal">${numPages - 1}</c:set>
-                  </c:when>
-                  <c:otherwise>
-                    <c:set var="beginVal">${page - 5}</c:set>
-                    <c:set var="endVal">${page + 5}</c:set>
-                  </c:otherwise>
-                </c:choose>  
-              </c:when>
-              <c:otherwise>
-                <c:set var="beginVal">0</c:set>
-                <c:set var="endVal">${numPages - 1}</c:set>
-              </c:otherwise>
-            </c:choose>
-
-            <c:forEach var="i" begin="${beginVal}" end="${endVal}">      
-              <c:choose>                   			    
-                <c:when test="${i != (page - 1)}">
-                  <c:set var="specificPageUrl">
+       	    
+       	    <table>
+         	    <tr>
+           	    <td>
+             	    <%-- Pagination --%>
+                  <c:set var="prevPageUrl">
+                    <s:url action="generateProjectBuildsReport">    
+                      <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
+                      <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
+                      <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
+                      <s:param name="rowCount" value="%{#attr.rowCount}"/>
+                      <s:param name="startDate" value="%{#attr.startDate}"/>                      
+                      <s:param name="endDate" value="%{#attr.endDate}"/>
+                      <s:param name="page" value="%{#attr.page - 1}"/>
+                    </s:url>
+                  </c:set>
+                  <c:set var="nextPageUrl">
                     <s:url action="generateProjectBuildsReport">    
                       <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
                       <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
@@ -153,27 +110,89 @@
                       <s:param name="rowCount" value="%{#attr.rowCount}"/>
                       <s:param name="startDate" value="%{#attr.startDate}"/>                      
                       <s:param name="endDate" value="%{#attr.endDate}"/>          
-                      <s:param name="page" value="%{#attr.i + 1}"/>
+                      <s:param name="page" value="%{#attr.page + 1}"/>
                     </s:url>
                   </c:set>
-                  <a href="${specificPageUrl}">${i + 1}</a>
-                </c:when>
-                <c:otherwise>		
-                  <b>${i + 1}</b>   
-                </c:otherwise>				  			    
-              </c:choose>      
-            </c:forEach>
+                  <c:choose>
+                    <c:when test="${page == 1}">                               
+                      <s:text name="projectBuilds.report.prev"/>
+                    </c:when>
+                    <c:otherwise>
+                      <a href="${prevPageUrl}">
+                        <s:text name="projectBuilds.report.prev"/>
+                      </a>
+                    </c:otherwise>
+                  </c:choose>
 
-            <c:choose>
-              <c:when test="${page == numPages}">
-                <s:text name="projectBuilds.report.next"/>
-              </c:when>
-      	      <c:otherwise>
-                <a href="${nextPageUrl}">
-                  <s:text name="projectBuilds.report.next"/>
-                </a>
-              </c:otherwise>   
-            </c:choose>
+                  <c:choose>
+                    <c:when test="${numPages > 11}">
+                      <c:choose>
+                        <c:when test="${(page - 5) < 0}">
+                          <c:set var="beginVal">0</c:set>
+                          <c:set var="endVal">10</c:set> 
+                        </c:when>			        
+                        <c:when test="${(page + 5) > (numPages - 1)}">
+                          <c:set var="beginVal">${(numPages - 1) - 10}</c:set>
+                          <c:set var="endVal">${numPages - 1}</c:set>
+                        </c:when>
+                        <c:otherwise>
+                          <c:set var="beginVal">${page - 5}</c:set>
+                          <c:set var="endVal">${page + 5}</c:set>
+                        </c:otherwise>
+                      </c:choose>  
+                    </c:when>
+                    <c:otherwise>
+                      <c:set var="beginVal">0</c:set>
+                      <c:set var="endVal">${numPages - 1}</c:set>
+                    </c:otherwise>
+                  </c:choose>
+
+                  <c:forEach var="i" begin="${beginVal}" end="${endVal}">      
+                    <c:choose>                   			    
+                      <c:when test="${i != (page - 1)}">
+                        <c:set var="specificPageUrl">
+                          <s:url action="generateProjectBuildsReport">    
+                            <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
+                            <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
+                            <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
+                            <s:param name="rowCount" value="%{#attr.rowCount}"/>
+                            <s:param name="startDate" value="%{#attr.startDate}"/>                      
+                            <s:param name="endDate" value="%{#attr.endDate}"/>          
+                            <s:param name="page" value="%{#attr.i + 1}"/>
+                          </s:url>
+                        </c:set>
+                        <a href="${specificPageUrl}">${i + 1}</a>
+                      </c:when>
+                      <c:otherwise>		
+                        <b>${i + 1}</b>   
+                      </c:otherwise>				  			    
+                    </c:choose>      
+                  </c:forEach>
+
+                  <c:choose>
+                    <c:when test="${page == numPages}">
+                      <s:text name="projectBuilds.report.next"/>
+                    </c:when>
+            	      <c:otherwise>
+                      <a href="${nextPageUrl}">
+                        <s:text name="projectBuilds.report.next"/>
+                      </a>
+                    </c:otherwise>   
+                  </c:choose>
+           	    </td>
+           	    <td>
+                  <%-- Export to CSV link --%>
+                  <s:url id="downloadProjectBuildsReportUrl" action="downloadProjectBuildsReport" namespace="/">
+                    <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
+                    <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
+                    <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
+                    <s:param name="startDate" value="%{#attr.startDate}"/>
+                    <s:param name="endDate" value="%{#attr.endDate}"/>
+                  </s:url>
+                  <s:a href="%{downloadProjectBuildsReportUrl}">Export to CSV</s:a>
+                </td>
+              </tr>
+            </table>
 
             <s:set name="projectBuilds" value="projectBuilds" scope="request"/>
             <ec:table items="projectBuilds"
