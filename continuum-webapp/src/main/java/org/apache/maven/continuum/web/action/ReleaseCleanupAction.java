@@ -76,7 +76,7 @@ public class ReleaseCleanupAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
                 addActionError( getText( "releaseCleanup.error", args ) );

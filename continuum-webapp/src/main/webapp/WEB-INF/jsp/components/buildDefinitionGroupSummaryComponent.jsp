@@ -121,7 +121,7 @@
     <div class="functnbar3">
       <s:form action="buildDefinition" method="post">
         <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
-        <s:submit value="%{getText('add')}"/>
+        <s:submit value="%{getText('add')}" theme="simple"/>
       </s:form>
     </div>
   </redback:ifAuthorized>

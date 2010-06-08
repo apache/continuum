@@ -25,6 +25,7 @@ import java.util.HashMap;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -32,10 +33,9 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.action.stub.BuildResultActionStub;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 public class BuildResultActionTest
-    extends MockObjectTestCase
+    extends AbstractActionTest
 {
     private BuildResultActionStub action;
 
@@ -48,7 +48,10 @@ public class BuildResultActionTest
     private Mock buildsManager;
 
     protected void setUp()
+        throws Exception
     {
+        super.setUp();
+
         action = new BuildResultActionStub();
         continuum = mock( Continuum.class );
         configurationService = mock( ConfigurationService.class );

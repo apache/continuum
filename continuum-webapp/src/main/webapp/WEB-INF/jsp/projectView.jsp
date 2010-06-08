@@ -88,7 +88,7 @@
           <s:form action="buildDefinition" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
-            <s:submit value="%{getText('add')}"/>
+            <s:submit value="%{getText('add')}" theme="simple"/>
           </s:form>
           </redback:ifAuthorized>
         </div>
@@ -162,7 +162,7 @@
           <s:form action="addProjectNotifier!default.action" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
-            <s:submit value="%{getText('add')}"/>
+            <s:submit value="%{getText('add')}" theme="simple"/>
           </s:form>
           </redback:ifAuthorized>
         </div>

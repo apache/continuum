@@ -175,7 +175,7 @@ public class ReleasePrepareAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePrepare.input.error", args ) );
@@ -194,7 +194,7 @@ public class ReleasePrepareAction
             }
             catch ( Exception e )
             {   
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
                 addActionError( getText( "releasePrepare.input.error", args ) );
@@ -328,7 +328,7 @@ public class ReleasePrepareAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePrepare.release.error", args ) );
@@ -432,7 +432,7 @@ public class ReleasePrepareAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                addActionError( "" );
+                addActionError( "Failed to retrieve listener for release: " + releaseId );
                 return "";
             }
                 

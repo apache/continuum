@@ -123,7 +123,7 @@ public class ReleasePerformAction
         }
         catch ( BuildAgentConfigurationException e )
         {
-            List<String> args = new ArrayList<String>();
+            List<Object> args = new ArrayList<Object>();
             args.add( e.getMessage() );
 
             addActionError( getText( "distributedBuild.releasePerform.input.error", args ) ) ;
@@ -157,7 +157,7 @@ public class ReleasePerformAction
         }
         catch ( BuildAgentConfigurationException e )
         {
-            List<String> args = new ArrayList<String>();
+            List<Object> args = new ArrayList<Object>();
             args.add( e.getMessage() );
 
             addActionError( getText( "distributedBuild.releasePerform.input.error", args ) ) ;
@@ -247,7 +247,7 @@ public class ReleasePerformAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePerform.release.error", args ) );
@@ -304,7 +304,7 @@ public class ReleasePerformAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePerform.release.error", args ) );

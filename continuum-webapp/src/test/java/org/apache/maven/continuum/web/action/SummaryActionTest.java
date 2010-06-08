@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -35,10 +36,9 @@ import org.apache.maven.continuum.web.action.stub.SummaryActionStub;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 public class SummaryActionTest
-    extends MockObjectTestCase
+    extends AbstractActionTest
 {
     private SummaryActionStub action;
 
@@ -49,7 +49,10 @@ public class SummaryActionTest
     private Mock buildsManager;
 
     protected void setUp()
+        throws Exception
     {
+        super.setUp();
+
         action = new SummaryActionStub();
 
         continuum = mock( Continuum.class );

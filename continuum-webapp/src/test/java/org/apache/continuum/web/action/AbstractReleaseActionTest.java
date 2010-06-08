@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.web.action;
+package org.apache.continuum.web.action;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -31,10 +31,9 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Profile;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 public class AbstractReleaseActionTest
-    extends MockObjectTestCase
+    extends AbstractActionTest
 {
     private ReleaseActionStub action;
 
@@ -47,6 +46,8 @@ public class AbstractReleaseActionTest
     protected void setUp()
         throws Exception
     {
+        super.setUp();
+
         continuumMock = mock( Continuum.class );
         configurationServiceMock = mock( ConfigurationService.class );
 

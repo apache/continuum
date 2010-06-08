@@ -26,7 +26,7 @@ import org.apache.maven.continuum.web.components.SubmitCancel;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**

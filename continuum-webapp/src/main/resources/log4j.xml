@@ -105,8 +105,17 @@
     <level value="error"/>
   </logger>
 
-  <logger name="com.opensymphony.xwork2.util.OgnlUtil">
+  <logger name="com.opensymphony.xwork2.ognl.OgnlUtil">
     <level value="error"/>
+  </logger>
+
+  <logger name="org.apache.struts2.util.TextProviderHelper">
+    <level value="error"/>
+  </logger>
+
+  <!-- Related https://issues.apache.org/struts/browse/WW-1714 -->
+  <logger name="com.opensymphony.xwork2.ObjectFactory">
+    <level value="fatal"/>
   </logger>
 
   <logger name="JPOX">

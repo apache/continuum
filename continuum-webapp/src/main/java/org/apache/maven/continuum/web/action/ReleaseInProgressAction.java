@@ -93,7 +93,7 @@ public class ReleaseInProgressAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releaseInProgress.error", args ) );
@@ -239,7 +239,7 @@ public class ReleaseInProgressAction
             }
             catch ( BuildAgentConfigurationException e )
             {
-                List<String> args = new ArrayList<String>();
+                List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
                 
                 addActionError( getText( "releaseViewResult.error", args ) );

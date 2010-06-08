@@ -25,14 +25,14 @@ import java.util.List;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
+import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.continuum.web.action.admin.BuildAgentAction;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 public class BuildAgentActionTest
-    extends MockObjectTestCase
+    extends AbstractActionTest
 {
     private BuildAgentAction action;
 
@@ -47,6 +47,8 @@ public class BuildAgentActionTest
     protected void setUp()
         throws Exception
     {
+        super.setUp();
+
         action = new BuildAgentAction();
         continuumMock = mock( Continuum.class );
         configurationServiceMock = mock( ConfigurationService.class );

@@ -30,12 +30,11 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.Continuum;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 import com.opensymphony.xwork2.Action;
 
 public class ViewBuildsReportActionTest
-    extends MockObjectTestCase
+    extends AbstractActionTest
 {
     private ViewBuildsReportActionStub action;
 

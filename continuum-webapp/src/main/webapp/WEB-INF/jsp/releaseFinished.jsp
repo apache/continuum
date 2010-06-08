@@ -70,14 +70,14 @@
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
               <s:hidden name="releaseGoal"/>
-              <s:submit value="%{getText('rollback')}"/>
+              <s:submit value="%{getText('rollback')}" theme="simple"/>
             </s:form>
           </td>
           <td>
             <s:form action="releaseCleanup" method="post">
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
-              <s:submit value="%{getText('done')}"/>
+              <s:submit value="%{getText('done')}" theme="simple"/>
             </s:form>
           </td>
         </tr>

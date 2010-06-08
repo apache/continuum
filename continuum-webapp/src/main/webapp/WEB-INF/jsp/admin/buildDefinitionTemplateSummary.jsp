@@ -68,7 +68,7 @@
       </ec:table> 
       <div class="functnbar3">
         <s:form action="buildDefinitionTemplate!input.action" method="post">
-          <s:submit value="%{getText('add')}"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>      
       <h3>
@@ -117,7 +117,7 @@
       
       <div class="functnbar3">
         <s:form action="buildDefinitionAsTemplate!inputBuildDefinition.action" method="post">
-          <s:submit value="%{getText('add')}"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>           
       

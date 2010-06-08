@@ -73,7 +73,7 @@
             <s:textfield label="%{getText('projectBuilds.report.rowCount')}" name="rowCount" id="rowCount" size="10"/>
         </table>
         <div class="functnbar3">
-          <s:submit value="%{getText('projectBuilds.report.view')}" />
+          <s:submit value="%{getText('projectBuilds.report.view')}" theme="simple" />
           <input type="button" id="resetFilter" value="<s:text name='projectBuilds.report.button.reset' />" />
         </div>
       </div>

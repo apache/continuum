@@ -93,59 +93,59 @@
       <result name="requires-authorization">/WEB-INF/jsp/error/authorizationError.jsp</result>
 
 
-      <result name="continuum-configuration-required" type="redirect-action">
+      <result name="continuum-configuration-required" type="redirectAction">
         <param name="actionName">configuration</param>
         <param name="namespace">/admin</param>
         <param name="method">input</param>
       </result>
 
       <!-- The following security-* result names arrive from the plexus-security package -->
-      <result name="security-login-success" type="redirect-action">
+      <result name="security-login-success" type="redirectAction">
         <param name="actionName">groupSummary</param>
         <param name="namespace">/</param>
       </result>
-      <result name="security-login-cancel" type="redirect-action">
+      <result name="security-login-cancel" type="redirectAction">
         <param name="actionName">groupSummary</param>
         <param name="namespace">/</param>
       </result>
-      <result name="security-login-locked" type="redirect-action">
+      <result name="security-login-locked" type="redirectAction">
         <param name="actionName">groupSummary</param>
         <param name="namespace">/</param>
         <param name="infoMessage">Account Locked</param>
       </result>
-      <result name="security-logout" type="redirect-action">
+      <result name="security-logout" type="redirectAction">
         <param name="actionName">groupSummary</param>
         <param name="namespace">/</param>
       </result>
-      <result name="requires-authentication" type="redirect-action">
+      <result name="requires-authentication" type="redirectAction">
         <param name="actionName">login</param>
         <param name="namespace">/security</param>
       </result>
-      <result name="security-register-success" type="redirect-action">
+      <result name="security-register-success" type="redirectAction">
         <param name="actionName">groupSummary</param>
         <param name="namespace">/security</param>
       </result>
-      <result name="security-register-cancel" type="redirect-action">
-        <param name="actionName">groupSummary</param>
-        <param name="namespace">/</param>
-      </result>
-      <result name="security-account-success" type="redirect-action">
+      <result name="security-register-cancel" type="redirectAction">
         <param name="actionName">groupSummary</param>
         <param name="namespace">/</param>
       </result>
-      <result name="security-account-cancel" type="redirect-action">
+      <result name="security-account-success" type="redirectAction">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/</param>
+      </result>
+      <result name="security-account-cancel" type="redirectAction">
         <param name="actionName">login</param>
         <param name="namespace">/security</param>
       </result>
-      <result name="security-admin-user-created" type="redirect-action">
+      <result name="security-admin-user-created" type="redirectAction">
         <param name="actionName">login</param>
         <param name="namespace">/security</param>
       </result>
-      <result name="security-admin-user-needed" type="redirect-action">
+      <result name="security-admin-user-needed" type="redirectAction">
         <param name="actionName">addadmin</param>
         <param name="namespace">/security</param>
       </result>
-      <result name="security-must-change-password" type="redirect-action">
+      <result name="security-must-change-password" type="redirectAction">
         <param name="actionName">password</param>
         <param name="namespace">/security</param>
       </result>
@@ -162,7 +162,7 @@
              into the application webapp, using global result names. -->
     <action name="redbackRedirect" class="redback-redirect" method="redirect">
       <interceptor-ref name="retrieveStack"/>
-      <result type="redirect-action">groupSummary</result>
+      <result type="redirectAction">groupSummary</result>
     </action>
 
     <action name="httpError" class="httpError">
@@ -203,7 +203,7 @@
       <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>     
       <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
-      <result name="projectGroupSummary" type="redirect-action">
+      <result name="projectGroupSummary" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -219,7 +219,7 @@
       <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
       <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
-      <result name="projectGroupSummary" type="redirect-action">
+      <result name="projectGroupSummary" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -235,7 +235,7 @@
       <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
       <result name="input" type="chain">addProjectInput</result>
       <result name="success" type="chain">groupSummary</result>
-      <result name="projectGroupSummary" type="redirect-action">
+      <result name="projectGroupSummary" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -244,7 +244,7 @@
     <action name="deleteProject" class="deleteProject">
       <interceptor-ref name="storeStack"/>
       <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -253,7 +253,7 @@
     <action name="ProjectsList" class="projects">
       <interceptor-ref name="storeStack"/>
       <result name="confirmRemove">/WEB-INF/jsp/confirmDeleteProjects.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -262,7 +262,7 @@
     <action name="buildProject" class="buildProject">
       <interceptor-ref name="storeStack"/>
       <result name="success" type="chain">groupSummary</result>
-      <result name="to_group_page" type="redirect-action">
+      <result name="to_group_page" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -291,7 +291,7 @@
 
     <action name="saveBuildDefinition" class="buildDefinition" method="saveBuildDefinition">
       <result name="input">/WEB-INF/jsp/buildDefinitionEdit.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectView</param>
         <param name="projectId">${projectId}</param>
       </result>
@@ -324,7 +324,7 @@
     <action name="projectGroupSummary" class="projectGroup" method="summary">
       <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/projectGroupSummary.jsp</result>
-      <result name="to_summary_page" type="redirect-action">
+      <result name="to_summary_page" type="redirectAction">
         <param name="actionName">groupSummary</param>
       </result>
     </action>
@@ -343,7 +343,7 @@
 
     <action name="buildProjectGroup" class="projectGroup" method="build">
       <interceptor-ref name="storeStack"/>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -353,18 +353,18 @@
     <action name="removeProjectGroup" class="projectGroup" method="remove">
       <interceptor-ref name="storeStack"/>
       <result name="confirm">/WEB-INF/jsp/confirmGroupRemoval.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">groupSummary</param>
       </result>
     </action>
     
     <action name="releaseProjectGroup" class="projectGroup" method="release">
       <interceptor-ref name="storeStack"/>
-      <result name="input" type="redirect-action">
+      <result name="input" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">releasePromptGoal</param>
         <param name="projectId">${releaseProjectId}</param>
       </result>
@@ -372,7 +372,7 @@
 
     <action name="addProjectGroup" class="addProjectGroup">
       <result name="input">/WEB-INF/jsp/projectGroupAdd.jsp</result>
-      <result name="success" type="redirect-action">groupSummary</result>
+      <result name="success" type="redirectAction">groupSummary</result>
     </action>
 
     <action name="editProjectGroup" class="projectGroup" method="edit">
@@ -381,7 +381,7 @@
 
     <action name="saveProjectGroup" class="projectGroup" method="save">
       <result name="input">/WEB-INF/jsp/projectGroupEdit.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -397,7 +397,7 @@
     
     <action name="removeBuildResults" class="buildResults" method="remove">
       <interceptor-ref name="storeStack"/>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
       </result>
@@ -407,7 +407,7 @@
     <action name="buildResult" class="buildResult">
       <interceptor-ref name="storeStack"/>
       <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
-      <result name="error" type="redirect-action">
+      <result name="error" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -422,7 +422,7 @@
     
     <action name="removeBuildResult" class="buildResult" method="remove">
       <interceptor-ref name="storeStack"/>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
       </result>
@@ -481,14 +481,14 @@
     </action>
     
     <action name="cancelBuilds" class="cancelBuild" method="cancelBuilds">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
     </action>    
 
     <action name="cancelGroupBuild" class="cancelBuild" method="cancelGroupBuild">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -499,7 +499,7 @@
     -->
     <action name="releasePromptGoal" class="releaseProject" method="promptReleaseGoal">
       <result name="success">/WEB-INF/jsp/releaseProject.jsp</result>
-      <result name="releaseOutputDir-required" type="redirect-action">
+      <result name="releaseOutputDir-required" type="redirectAction">
         <param name="actionName">configuration</param>
         <param name="namespace">/admin</param>
         <param name="method">input</param>
@@ -508,16 +508,16 @@
     </action>
 
     <action name="releaseProject" class="releaseProject">
-      <result name="prepareRelease" type="redirect-action">
+      <result name="prepareRelease" type="redirectAction">
         <param name="actionName">releasePrepareInput</param>
         <param name="projectId">${projectId}</param>
       </result>
-      <result name="performRelease" type="redirect-action">
+      <result name="performRelease" type="redirectAction">
         <param name="actionName">releasePerformInput</param>
         <param name="projectId">${projectId}</param>
         <param name="releaseId">${preparedReleaseId}</param>
       </result>
-      <result name="performReleaseFromScm" type="redirect-action">
+      <result name="performReleaseFromScm" type="redirectAction">
         <param name="actionName">releasePerformFromScmInput</param>
         <param name="projectId">${projectId}</param>
       </result>
@@ -530,7 +530,7 @@
 
     <action name="releasePrepare" class="releasePrepare">
       <result name="input" type="chain">releasePrepareInput</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
@@ -546,7 +546,7 @@
 
     <action name="releasePerform" class="releasePerform">
       <result name="input" type="chain">releasePerformInput</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
@@ -562,7 +562,7 @@
 
     <action name="releasePerformFromScm" class="releasePerform" method="executeFromScm">
       <result name="input">/WEB-INF/jsp/releasePerformFromScm.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">releaseInProgress</param>
         <param name="projectId">${projectId}</param>
         <param name="releaseId">${releaseId}</param>
@@ -583,7 +583,7 @@
     </action>
 
     <action name="releaseRollback" class="releaseRollback">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">releaseCleanup</param>
         <param name="projectId">${projectId}</param>
         <param name="releaseId">${releaseId}</param>
@@ -593,7 +593,7 @@
 
     <action name="releaseCleanup" class="releaseCleanup">
       <result name="prepareFinished" type="chain">releasePromptGoal</result>
-      <result name="performFinished" type="redirect-action">
+      <result name="performFinished" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -615,7 +615,7 @@
 
     <action name="removeReleaseResults" class="releaseResult" method="remove">
       <result name="confirm">/WEB-INF/jsp/confirmReleaseResultsRemoval.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupReleaseResults</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -676,7 +676,7 @@
 
     <action name="saveAppearance" class="configureAppearance">
       <result name="input">/WEB-INF/jsp/admin/editAppearance.jsp</result>
-      <result type="redirect-action">
+      <result type="redirectAction">
         <param name="actionName">configureAppearance</param>
         <param name="namespace">/admin</param>
       </result>
@@ -688,7 +688,7 @@
 
     <action name="saveCompanyPom" class="editPom">
       <result name="input">/WEB-INF/jsp/admin/editPom.jsp</result>
-      <result type="redirect-action">
+      <result type="redirectAction">
         <param name="actionName">configureAppearance</param>
         <param name="namespace">/admin</param>
       </result>
@@ -714,7 +714,7 @@
       
     <action name="deleteBuildEnv" class="profileAdministration" method="delete">
       <interceptor-ref name="storeStack"/>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildEnvList</param>
         <param name="namespace">/admin</param>
         <param name="method">list</param>
@@ -759,7 +759,7 @@
       
     <action name="saveInstallation" class="installation" method="save">
       <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
-      <result name="success" type="redirect-action">installationsList</result>
+      <result name="success" type="redirectAction">installationsList</result>
     </action> 
     
     <action name="deleteInstallation" class="installation" method="delete">
@@ -786,14 +786,14 @@
     </action>
 
     <action name="deleteDefinitionTemplate" class="buildDefinitionTemplates" method="delete">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>        
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionTemplate.jsp</result>
     </action>
     
     <action name="saveBuildDefinitionTemplate" class="buildDefinitionTemplates" method="save">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
@@ -805,21 +805,21 @@
     </action>
     
     <action name="saveBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
     </action>
 
     <action name="buildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
     </action>
               
     <action name="deleteBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="deleteBuildDefinition">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionAsTemplate.jsp</result>
@@ -831,79 +831,79 @@
     </action>
     
     <action name="removeBuildQueueEntry" class="queues" method="remove">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>      
     </action>   
     
     <action name="removeBuildQueueEntries" class="queues" method="removeBuildEntries">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>      
     </action>    
     
     <action name="cancelCurrentBuildTask" class="queues" method="cancelCurrent">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>      
     </action> 
     
     <action name="removeCheckoutQueueEntry" class="queues" method="removeCheckout">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>      
     </action>
     
     <action name="cancelCurrentQueueTask" class="queues" method="cancelCurrentCheckout">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>      
     </action>    
     
     <action name="removeCheckoutQueueEntries" class="queues" method="removeCheckoutEntries">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>      
     </action>    
 
     <action name="removePrepareBuildEntry" class="queues" method="removePrepareBuildEntry">
-	  <result name="success" type="redirect-action">
+	  <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
 
     <action name="removePrepareBuildEntries" class="queues" method="removePrepareBuildEntries">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
     
     <action name="cancelDistributedBuild" class="queues" method="cancelDistributedBuild">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
 
     <action name="removeDistributedPrepareBuildEntry" class="queues" method="removeDistributedPrepareBuildEntry">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
 
     <action name="removeDistributedPrepareBuildEntries" class="queues" method="removeDistributedPrepareBuildEntries">
-	  <result name="success" type="redirect-action">
+	  <result name="success" type="redirectAction">
 	    <param name="actionName">displayQueues</param>
 	  </result>
     </action>
 
     <action name="removeDistributedBuildEntries" class="queues" method="removeDistributedBuildEntries">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
 
     <action name="removeDistributedBuildEntry" class="queues" method="removeDistributedBuildEntry">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
@@ -923,12 +923,12 @@
     <action name="saveBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="save">
       <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
-      <result name="success" type="redirect-action">buildQueueList</result>
+      <result name="success" type="redirectAction">buildQueueList</result>
     </action> 
     
     <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="delete">
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildQueue.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildQueueList</param>
       </result>    
     </action>  
@@ -950,7 +950,7 @@
     <action name="saveRepository" class="localRepository" method="save">
       <result name="error">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">repositoryList</param>
       </result>
     </action>
@@ -958,14 +958,14 @@
     <action name="removeRepository" class="localRepository" method="remove">
       <interceptor-ref name="storeStack"/>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteLocalRepository.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">repositoryList</param>
       </result>
     </action>
     
     <action name="purgeRepository" class="localRepository" method="doPurge">
       <interceptor-ref name="storeStack"/>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">repositoryList</param>
       </result>
     </action>
@@ -985,27 +985,27 @@
     
     <action name="savePurgeConfig" class="purgeConfiguration" method="save">
       <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
       </result>
     </action>
     
     <action name="removePurgeConfig" class="purgeConfiguration" method="remove">
-      <result name="error" type="redirect-action">
+      <result name="error" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
         <param name="errorMessage">${message}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeletePurgeConfiguration.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
       </result>
     </action>
     
     <action name="doPurge" class="purgeConfiguration" method="purge">
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
       </result>
-      <result name="error" type="redirect-action">
+      <result name="error" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
         <param name="errorMessage">${message}</param>
       </result>
@@ -1023,18 +1023,18 @@
     <action name="saveBuildAgent" class="buildAgent" method="save">
       <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildAgentList</param>
       </result>
     </action>
     
     <action name="deleteBuildAgent" class="buildAgent" method="delete">
-      <result name="error" type="redirect-action">
+      <result name="error" type="redirectAction">
         <param name="actionName">buildAgentList</param>
         <param name="errorMessage">${message}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgent.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildAgentList</param>
       </result>
     </action>
@@ -1044,12 +1044,12 @@
     </action>
 
     <action name="deleteBuildAgentGroup" class="buildAgent" method="deleteGroup">
-      <result name="error" type="redirect-action">
+      <result name="error" type="redirectAction">
         <param name="actionName">buildAgentList</param>
         <param name="errorMessage">${message}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgentGroup.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildAgentList</param>
       </result>
     </action>
@@ -1062,7 +1062,7 @@
     <action name="saveBuildAgentGroup" class="buildAgent" method="saveGroup">
       <result name="input">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
-      <result name="success" type="redirect-action">
+      <result name="success" type="redirectAction">
         <param name="actionName">buildAgentList</param>
       </result>
     </action>

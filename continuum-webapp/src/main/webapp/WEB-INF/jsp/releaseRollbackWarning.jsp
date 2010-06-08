@@ -34,7 +34,7 @@
             <s:form action="releaseRollback" method="post">
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
-              <s:submit value="%{getText('rollback')}"/>
+              <s:submit value="%{getText('rollback')}" theme="simple"/>
             </s:form>
           </td>
           <td>
@@ -42,7 +42,7 @@
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
               <s:hidden name="releaseGoal"/>
-              <s:submit value="%{getText('cancel')}"/>
+              <s:submit value="%{getText('cancel')}" theme="simple"/>
             </s:form>
           </td>
         </tr>

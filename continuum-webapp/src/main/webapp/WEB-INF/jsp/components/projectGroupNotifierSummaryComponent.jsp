@@ -77,7 +77,7 @@
       <s:url id="addUrl" action="addProjectGroupNotifier" namespace="/"  includeContext="false" includeParams="none" />
       <s:form action="%{addUrl}" method="post">
         <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
-        <s:submit value="%{getText('add')}"/>
+        <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
     </div>
   </redback:ifAuthorized>

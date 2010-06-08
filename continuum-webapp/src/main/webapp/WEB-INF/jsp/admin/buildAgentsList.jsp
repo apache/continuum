@@ -73,7 +73,7 @@
       </div>
       <div class="functnbar3">
         <s:form name="addBuildAgent" action="editBuildAgent" method="post">
-          <s:submit value="%{getText('add')}"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>
       <div id="h3">
@@ -118,7 +118,7 @@
       </div>
       <div class="functnbar3">
         <s:form name="addBuildAgentGroup" action="editBuildAgentGroup" method="post">
-          <s:submit value="%{getText('add')}"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>
     </body>

@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.web.action.stub.AddProjectActionStub;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 /**
  * Test for {@link AddProjectAction}
@@ -36,14 +36,17 @@ import org.jmock.MockObjectTestCase;
  * @author <a href="mailto:jzurbano@apache.org">jzurbano</a>
  */
 public class AddProjectActionTest
-    extends MockObjectTestCase
+    extends AbstractActionTest
 {
-    private final AddProjectActionStub action;
+    private AddProjectActionStub action;
 
-    private final Mock continuumMock;
+    private Mock continuumMock;
 
-    public AddProjectActionTest()
+    protected void setUp()
+        throws Exception
     {
+        super.setUp();
+
         action = new AddProjectActionStub();
         continuumMock = new Mock( Continuum.class );
         action.setContinuum( (Continuum) continuumMock.proxy() );

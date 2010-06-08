@@ -19,10 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 /**
  * Test for {@link ReleasePrepareAction}
@@ -31,14 +31,17 @@ import org.jmock.MockObjectTestCase;
  * @version $Id$
  */
 public class ReleasePrepareActionTest
-    extends MockObjectTestCase
+    extends AbstractActionTest
 {
-    private final ReleasePrepareAction action;
+    private ReleasePrepareAction action;
 
-    private final Mock continuumMock;
+    private Mock continuumMock;
 
-    public ReleasePrepareActionTest()
+    protected void setUp()
+        throws Exception
     {
+        super.setUp();
+
         action = new ReleasePrepareAction();
         continuumMock = new Mock( Continuum.class );
         //securitySessionMock = new Mock( SecuritySession.class );

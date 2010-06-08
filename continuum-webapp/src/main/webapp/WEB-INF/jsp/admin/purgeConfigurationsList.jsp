@@ -91,7 +91,7 @@
       <div class="functnbar3">
         <s:form name="addRepoPurgeConfig" action="editPurgeConfig" method="post">
           <s:hidden name="purgeType" value="repository"/>
-          <s:submit value="%{getText('add')}"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>
         
@@ -139,7 +139,7 @@
       <div class="functnbar3">
         <s:form name="addDirPurgeConfig" action="editPurgeConfig" method="post">
           <s:hidden name="purgeType" value="directory"/>
-          <s:submit value="%{getText('add')}"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>
     </body>
