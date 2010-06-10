@@ -21,6 +21,7 @@ package org.apache.maven.continuum;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -210,7 +211,7 @@ public interface Continuum
     void removeBuildResult( int buildId )
         throws ContinuumException;
 
-    List<BuildResult> getBuildResultsInRange( int projectGroupId, long fromDate, long toDate, int state, String triggeredBy );
+    List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state, String triggeredBy );
 
     // ----------------------------------------------------------------------
     // Projects

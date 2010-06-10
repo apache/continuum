@@ -131,28 +131,13 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        long fromDate = 0;
-        long toDate = 0;
+        Date fromDate = null;
+        Date toDate = null;
 
         try
         {
-            if ( !StringUtils.isEmpty( startDate ) )
-            {
-                fromDate = DateUtils.parseDate( startDate, datePatterns ).getTime();
-            }
-    
-            if ( !StringUtils.isEmpty( endDate ) )
-            {
-                Date toDateInDateFormat = DateUtils.parseDate( endDate, datePatterns );
-                
-                Calendar toDateCal = Calendar.getInstance();
-                toDateCal.setTime( toDateInDateFormat );
-                toDateCal.set( Calendar.HOUR_OF_DAY, 23 );
-                toDateCal.set( Calendar.MINUTE, 59 );
-                toDateCal.set( Calendar.SECOND, 59 );
-                
-                toDate = toDateCal.getTimeInMillis();
-            }
+            fromDate = getStartDateInDateFormat();
+            toDate = getEndDateInDateFormat();
         }
         catch ( ParseException e )
         {
@@ -160,7 +145,7 @@ public class ViewBuildsReportAction
             return ERROR;
         }
 
-        if ( fromDate != 0 && toDate != 0 && new Date( fromDate ).after( new Date( toDate ) ) )
+        if ( fromDate != null && toDate != null && fromDate.after( toDate ) )
         {
             addFieldError( "startDate", "Start Date must be earlier than the End Date" );
             return INPUT;
@@ -219,28 +204,13 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        long fromDate = 0;
-        long toDate = 0;
+        Date fromDate = null;
+        Date toDate = null;
 
         try
         {
-            if ( !StringUtils.isEmpty( startDate ) )
-            {
-                fromDate = DateUtils.parseDate( startDate, datePatterns ).getTime();
-            }
-            
-            if ( !StringUtils.isEmpty( endDate ) )
-            {
-                Date toDateInDateFormat = DateUtils.parseDate( endDate, datePatterns );
-                
-                Calendar toDateCal = Calendar.getInstance();
-                toDateCal.setTime( toDateInDateFormat );
-                toDateCal.set( Calendar.HOUR_OF_DAY, 23 );
-                toDateCal.set( Calendar.MINUTE, 59 );
-                toDateCal.set( Calendar.SECOND, 59 );
-                
-                toDate = toDateCal.getTimeInMillis();
-            }
+            fromDate = getStartDateInDateFormat();
+            toDate = getEndDateInDateFormat();
         }
         catch ( ParseException e )
         {
@@ -248,7 +218,7 @@ public class ViewBuildsReportAction
             return ERROR;
         }
 
-        if ( fromDate != 0 && toDate != 0 && new Date( fromDate ).after( new Date( toDate ) ) )
+        if ( fromDate != null && toDate != null && fromDate.after( toDate ) )
         {
             addFieldError( "startDate", "Start Date must be earlier than the End Date" );
             return INPUT;
@@ -334,6 +304,32 @@ public class ViewBuildsReportAction
         }
 
         return buildsSummary;
+    }
+
+    private Date getStartDateInDateFormat()
+        throws ParseException
+    {
+        Date date = null;
+
+        if ( !StringUtils.isEmpty( startDate ) )
+        {
+            date = DateUtils.parseDate( startDate, datePatterns );
+        }
+
+        return date;
+    }
+
+    private Date getEndDateInDateFormat()
+        throws ParseException
+    {
+        Date date = null;
+
+        if ( !StringUtils.isEmpty( endDate ) )
+        {
+            date = DateUtils.parseDate( endDate, datePatterns );
+        }
+
+        return date;
     }
 
     public int getBuildStatus()

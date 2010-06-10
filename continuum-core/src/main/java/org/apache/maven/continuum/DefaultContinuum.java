@@ -105,6 +105,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -587,7 +588,7 @@ public class DefaultContinuum
         return ( builds.isEmpty() ? null : builds.get( 0 ) );
     }
 
-    public List<BuildResult> getBuildResultsInRange( int projectGroupId, long fromDate, long toDate, int state, String triggeredBy )
+    public List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state, String triggeredBy )
     {
         return buildResultDao.getBuildResultsInRange( fromDate, toDate, state, triggeredBy, projectGroupId );
     }

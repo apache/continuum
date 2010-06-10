@@ -19,6 +19,7 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -101,5 +102,5 @@ public interface BuildResultDao
 
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 
-    List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy, int projectGroupId );
+    List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy, int projectGroupId );
 }

@@ -60,6 +60,8 @@ import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -346,7 +348,13 @@ public abstract class AbstractContinuumStoreTestCase
 
         // TODO: simplify by deep copying the relationships in createTest... ?
         baseTime = System.currentTimeMillis();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime( new Date( baseTime ) );
+        cal.add( Calendar.DAY_OF_MONTH, 1 );
         
+        long newTime = cal.getTimeInMillis();
+
         // successful forced build
         testBuildResult1 = createTestBuildResult( 1, true, 2, 1, "error1", 1, baseTime, baseTime + 1000, "user" );
         BuildResult buildResult1 = createTestBuildResult( testBuildResult1 );
@@ -360,12 +368,15 @@ public abstract class AbstractContinuumStoreTestCase
         testProject1.addBuildResult( buildResult1 );
 
         // failed scheduled build
-        testBuildResult2 = createTestBuildResult( 2, false, 3, 2, "error2", 2, baseTime + 2000, baseTime + 3000, "schedule" );
+        testBuildResult2 = createTestBuildResult( 2, false, 3, 2, "error2", 2, newTime, newTime + 3000, "schedule" );
         BuildResult buildResult2 = createTestBuildResult( testBuildResult2 );
         testProject1.addBuildResult( buildResult2 );
 
+        cal.add( Calendar.DAY_OF_MONTH, 2 );
+        newTime = cal.getTimeInMillis();
+
         // successful scheduled build
-        testBuildResult3 = createTestBuildResult( 2, true, 2, 3, "error3", 3, baseTime + 4000, baseTime + 5000, "schedule" );
+        testBuildResult3 = createTestBuildResult( 2, true, 2, 3, "error3", 3, newTime, newTime + 5000, "schedule" );
         BuildResult buildResult3 = createTestBuildResult( testBuildResult3 );
         scmResult = createTestScmResult( "commandOutput3", "providerMessage3", true, "3" );
         buildResult3.setScmResult( scmResult );

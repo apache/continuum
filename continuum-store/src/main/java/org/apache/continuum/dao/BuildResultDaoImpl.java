@@ -19,6 +19,8 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -750,7 +752,7 @@ public class BuildResultDaoImpl
     }
     
     @SuppressWarnings( "unchecked" )
-    public List<BuildResult> getBuildResultsInRange( long fromDate, long toDate, int state, String triggeredBy, int projectGroupId )
+    public List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy, int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -798,20 +800,24 @@ public class BuildResultDaoImpl
                 filter += "this.username == triggeredBy && ";
             }
 
-            if ( fromDate > 0 )
+            if ( fromDate != null )
             {
-                params.put( "fromDate", fromDate );
+                params.put( "fromDate", fromDate.getTime() );
                 ctr++;
                 parameters += "long fromDate, ";
                 filter += "this.startTime >= fromDate && ";
             }
 
-            if ( toDate > 0 )
+            if ( toDate != null )
             {
-                params.put( "toDate", toDate );
+                Calendar cal = Calendar.getInstance();
+                cal.setTime( toDate );
+                cal.add( Calendar.DAY_OF_MONTH, 1 );
+
+                params.put( "toDate", cal.getTimeInMillis() );
                 ctr++;
                 parameters += "long toDate";
-                filter += "this.startTime <= toDate";
+                filter += "this.startTime < toDate";
             }
             
             if ( filter.endsWith( "&& " ) )

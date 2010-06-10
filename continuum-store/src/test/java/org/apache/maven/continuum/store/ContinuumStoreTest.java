@@ -45,7 +45,9 @@ import org.apache.maven.continuum.model.system.Profile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1402,34 +1404,38 @@ public class ContinuumStoreTest
     public void testGetBuildResultsInRange()
         throws Exception
     {
-        List<BuildResult> results = buildResultDao.getBuildResultsInRange( 0, 0, 0, null, 0 );	    
+        List<BuildResult> results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 0 );	    
         assertEquals( "check number of build results returned", 3, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( 0, 0, 2, null, 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 2, null, 0 );
         assertEquals( "check number of build results returned with state == OK", 2, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( 0, 0, 0, "user", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, "user", 0 );
         assertEquals( "check number of build results returned with triggeredBy == user", 1, results.size() );
 	    
-        results = buildResultDao.getBuildResultsInRange( 0, 0, 0, "schedule", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, "schedule", 0 );
         assertEquals( "check number of build results returned with triggeredBy == schedule", 2, results.size() );
         
-        results = buildResultDao.getBuildResultsInRange( 0, 0, 2, "schedule", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 2, "schedule", 0 );
         assertEquals( "check number of build results returned with state == Ok and triggeredBy == schedule", 1, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( 0, 0, 3, "user", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 3, "user", 0 );
         assertEquals( "check number of build results returned with state == Failed and triggeredBy == user", 0, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( baseTime, baseTime + 2000, 0, null, 0 );
+        Calendar cal = Calendar.getInstance();
+        cal.setTime( new Date( baseTime ) );
+        cal.add( Calendar.DAY_OF_MONTH, 1 );
+
+        results = buildResultDao.getBuildResultsInRange( new Date( baseTime ), cal.getTime(), 0, null, 0 );
         assertEquals( "check number of build results returned with startDate and endDate", 2, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( baseTime, baseTime, 0, null, 0 );
+        results = buildResultDao.getBuildResultsInRange( new Date( baseTime ), new Date( baseTime ), 0, null, 0 );
         assertEquals( "check number of build results returned with the same startDate and endDate", 1, results.size() );
         
-        results = buildResultDao.getBuildResultsInRange( 0, 0, 0, null, 1 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 1 );
         assertEquals( "check number of build results returned with an existing group id", 3, results.size() );
         
-        results = buildResultDao.getBuildResultsInRange( 0, 0, 0, null, 2 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 2 );
         assertEquals( "check number of build results returned with non-existing group id", 0, results.size() );
     }
     // ----------------------------------------------------------------------
