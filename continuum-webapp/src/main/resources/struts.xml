@@ -21,6 +21,8 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd"> 
 
 <struts>
+  <constant name="struts.action.extension" value="action" />
+
   <include file="struts-default.xml"/>
 
   <!-- Include plexus-security xwork configurations. -->
