@@ -251,8 +251,17 @@ public class MailContinuumNotifier
         Project project = context.getProject();
         List<ProjectNotifier> notifiers = context.getNotifiers();
         BuildResult build = context.getBuildResult();
-        log.error( "br state="+build.getState() );
-        log.error( "project state="+project.getState() );
+
+        if ( build != null )
+        {
+            log.error( "br state="+build.getState() );
+        }
+
+        if ( project != null )
+        {
+            log.error( "project state="+project.getState() );
+        }
+
         BuildDefinition buildDefinition = context.getBuildDefinition();
         ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
 
