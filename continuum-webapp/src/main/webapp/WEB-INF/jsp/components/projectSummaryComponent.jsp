@@ -44,7 +44,6 @@
 
   <form id="projectsForm" action="ProjectsList.action" method="post">
     <input type="hidden" name="methodToCall" value="" />
-    <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
     <input type="hidden" name="buildDefinitionId" value="-1" />
   <ec:table items="projects"
             var="project"
@@ -235,6 +234,7 @@
           <tr>
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
                 <s:select theme="simple" name="buildDef" list="buildDefinitions"
                            listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"
                            onchange="$('projectsForm').buildDefinitionId.value=$('buildDef').value" />

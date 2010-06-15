@@ -40,7 +40,6 @@
       <h3><s:text name="projectGroup.releaseResults.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
       
       <form id="releaseResultsForm" action="removeReleaseResults.action" method="post">
-        <s:hidden name="projectGroupId"/>
         <ec:table items="releaseResults"
                 var="result"
                 showExports="false"
@@ -84,6 +83,7 @@
                 <tr>
                   <td>
                     <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+                      <s:hidden name="projectGroupId"/>
                       <input type="button" name="delete-release-results" value="<s:text name="delete"/>" onclick="document.forms.releaseResultsForm.submit();" />
                     </redback:ifAuthorized>
                   </td>
