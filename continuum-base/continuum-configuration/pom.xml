@@ -94,7 +94,7 @@ under the License.
       <scope>runtime</scope>
     </dependency>      
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
+      <groupId>org.codehaus.redback</groupId>
       <artifactId>plexus-spring</artifactId>
       <scope>test</scope>
     </dependency>

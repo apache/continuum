@@ -74,7 +74,7 @@ under the License.
       <artifactId>plexus-utils</artifactId>
     </dependency>    
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
+      <groupId>org.codehaus.redback</groupId>
       <artifactId>plexus-spring</artifactId>
       <scope>test</scope>
     </dependency>    
