@@ -211,6 +211,7 @@
               test="${projectIdle}">
             <s:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
               <s:param name="projectId">${project.id}</s:param>
+              <s:param name="projectGroupId">${project.projectGroupId}</s:param>
             </s:url>
             <s:a href="%{deleteProjectUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
