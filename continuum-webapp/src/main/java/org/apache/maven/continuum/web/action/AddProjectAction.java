@@ -138,6 +138,7 @@ public class AddProjectAction
         throws ContinuumException
     {
         initializeProjectGroupName();
+        initializeActionContext();
 
         try
         {
