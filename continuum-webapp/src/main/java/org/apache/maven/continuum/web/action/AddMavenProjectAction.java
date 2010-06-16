@@ -41,6 +41,13 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.codehaus.plexus.util.StringUtils;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
+
 /**
  * Action to add a Maven project to Continuum, either Maven 1 or Maven 2.
  *
@@ -105,6 +112,21 @@ public abstract class AddMavenProjectAction
         {
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
+        }
+
+        // ctan: hack for WW-3161
+        if ( ActionContext.getContext() == null )
+        {
+            // This fix allow initialization of ActionContext.getContext() to avoid NPE
+
+            ConfigurationManager configurationManager = new ConfigurationManager();
+            configurationManager.addContainerProvider( new XWorkConfigurationProvider() );
+            com.opensymphony.xwork2.config.Configuration config = configurationManager.getConfiguration();
+            Container container = config.getContainer();
+    
+            ValueStack stack = container.getInstance( ValueStackFactory.class ).createValueStack();
+            stack.getContext().put( ActionContext.CONTAINER, container );
+            ActionContext.setContext( new ActionContext( stack.getContext() ) );
         }
 
         boolean checkProtocol = true;
