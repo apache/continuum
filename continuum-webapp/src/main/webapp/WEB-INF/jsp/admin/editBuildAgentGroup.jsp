@@ -74,7 +74,12 @@
                         doubleHeaderValue="%{getText('buildAgentGroup.available.buildAgents.used')}" 
                         doubleMultiple="true" 
                         doubleEmptyOption="false"
-                        formName="buildAgentGroup" />
+                        formName="buildAgentGroup"
+                        addAllToRightOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_selectedBuildAgentIds'), 'key', '-1');"
+                        addToRightOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_buildAgentIds'), 'key', '-1');selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_selectedBuildAgentIds'), 'key', '-1');"
+                        addAllToLeftOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_buildAgentIds'), 'key', '-1');"
+                        addToLeftOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_buildAgentIds'), 'key', '-1');selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_selectedBuildAgentIds'), 'key', '-1');"
+                        />
                 </table>
               </c:when>
               <c:otherwise>

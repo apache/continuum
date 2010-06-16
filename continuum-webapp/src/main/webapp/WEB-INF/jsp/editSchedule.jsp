@@ -95,7 +95,11 @@
                 doubleEmptyOption="false"
                 doubleHeaderValue="%{getText('schedule.available.buildqueues.used')}"
                 formName="scheduleForm"
-                  />
+                addAllToRightOnclick="selectAllOptionsExceptSome(document.getElementById('saveSchedule_selectedBuildQueuesIds'), 'key', '-1');"
+                addToRightOnclick="selectAllOptionsExceptSome(document.getElementById('saveSchedule_availableBuildQueuesIds'), 'key', '-1');selectAllOptionsExceptSome(document.getElementById('saveSchedule_selectedBuildQueuesIds'), 'key', '-1');"
+                addAllToLeftOnclick="selectAllOptionsExceptSome(document.getElementById('saveSchedule_availableBuildQueuesIds'), 'key', '-1');"
+                addToLeftOnclick="selectAllOptionsExceptSome(document.getElementById('saveSchedule_availableBuildQueuesIds'), 'key', '-1');selectAllOptionsExceptSome(document.getElementById('saveSchedule_selectedBuildQueuesIds'), 'key', '-1');"
+                />
              </c1:ifBuildTypeEnabled>   
                                        
             <s:checkbox label="%{getText('schedule.enabled.label')}" name="active" value="active" fieldValue="true">

@@ -64,7 +64,12 @@
                         doubleHeaderValue="%{getText('buildDefinitionTemplate.available.builddefinitions.used')}" 
                         doubleMultiple="true" 
                         doubleEmptyOption="false"
-                        formName="buildDefinitionTemplate" />                    
+                        formName="buildDefinitionTemplate"
+                        addAllToRightOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildDefinitionTemplate_selectedBuildDefinitionIds'), 'key', '-1');"
+                        addToRightOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildDefinitionTemplate_buildDefinitionIds'), 'key', '-1');selectAllOptionsExceptSome(document.getElementById('saveBuildDefinitionTemplate_selectedBuildDefinitionIds'), 'key', '-1');"
+                        addAllToLeftOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildDefinitionTemplate_buildDefinitionIds'), 'key', '-1');"
+                        addToLeftOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildDefinitionTemplate_buildDefinitionIds'), 'key', '-1');selectAllOptionsExceptSome(document.getElementById('saveBuildDefinitionTemplate_selectedBuildDefinitionIds'), 'key', '-1');"
+                        />
                   </tbody>
                 </table>
                 <div class="functnbar3">
