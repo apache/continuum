@@ -59,6 +59,7 @@
       <p>
         <s:url id="releaseViewResultUrl" action="releaseViewResult" namespace="/">
           <s:param name="releaseId" value="releaseId"/>
+          <s:param name="projectId" value="projectId"/>
         </s:url>
         <s:a href="%{releaseViewResultUrl}"><s:text name="releaseInProgress.viewOutput"/></s:a>
       </p>
