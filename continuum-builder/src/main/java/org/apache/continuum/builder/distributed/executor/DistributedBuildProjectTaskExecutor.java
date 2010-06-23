@@ -218,7 +218,15 @@ public class DistributedBuildProjectTaskExecutor
                 context.put( ContinuumBuildConstant.KEY_BUILD_DEFINITION_LABEL, buildDefinitionLabel );
                 
                 context.put( ContinuumBuildConstant.KEY_BUILD_FILE, buildDef.getBuildFile() );
-                context.put( ContinuumBuildConstant.KEY_GOALS, buildDef.getGoals() );
+                
+                if( buildDef.getGoals() == null )
+                {
+                    context.put( ContinuumBuildConstant.KEY_GOALS, "" ); 
+                }
+                else
+                {
+                    context.put( ContinuumBuildConstant.KEY_GOALS, buildDef.getGoals() );   
+                }
 
                 if ( buildDef.getArguments() == null )
                 {

@@ -405,15 +405,19 @@ public abstract class AbstractContinuumTest
         clickLinkWithText( projectName );
         clickLinkWithText( "Builds" );
         clickLinkWithText( "Result" );
-        
+
+        assertPage( "Continuum - Build result" );
+        assertTextPresent( "Build result for " + projectName );
+
         if ( success )
         {
-            assertTextPresent( "BUILD SUCCESS" );
+            assertImgWithAlt( "Success" );
         }
         else
         {
-            assertTextPresent( "BUILD FAILURE" );
+            assertImgWithAlt( "Failed" );
         }
+
         clickLinkWithText( "Project Group Summary" );
     }
 

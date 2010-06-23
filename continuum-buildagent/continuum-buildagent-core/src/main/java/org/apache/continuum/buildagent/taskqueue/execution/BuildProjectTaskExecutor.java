@@ -410,7 +410,7 @@ public class BuildProjectTaskExecutor
             return BuildAgentInstallationService.ANT_TYPE;
         }
 
-        return null;
+        return "";
     }
 
     private boolean shouldBuild( BuildContext context )
@@ -422,7 +422,12 @@ public class BuildProjectTaskExecutor
         map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, context.getTrigger() );
         map.put( ContinuumBuildAgentUtil.KEY_USERNAME, context.getUsername() );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
-        map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );
+        
+        if( context.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) )
+        {
+            map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );    
+        }
+        
         if ( context.getLatestUpdateDate() != null )
         {
             map.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, context.getLatestUpdateDate() );
