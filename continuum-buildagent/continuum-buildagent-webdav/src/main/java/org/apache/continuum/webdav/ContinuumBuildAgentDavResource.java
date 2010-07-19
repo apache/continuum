@@ -98,7 +98,7 @@ public class ContinuumBuildAgentDavResource
     {
     }
 
-    public void addMember( DavResource davResource, InputContext arg1 )
+    public void addMember( DavResource davResource, InputContext inputContext )
         throws DavException
     {
         throw new UnsupportedOperationException( "Not supported" );
