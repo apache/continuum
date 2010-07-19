@@ -32,6 +32,7 @@ under the License.
   <modules>
     <module>continuum-buildagent-api</module>
     <module>continuum-buildagent-core</module>
+    <module>continuum-buildagent-webdav</module>
     <module>continuum-buildagent-webapp</module>
     <module>continuum-buildagent-jetty</module>
   </modules>

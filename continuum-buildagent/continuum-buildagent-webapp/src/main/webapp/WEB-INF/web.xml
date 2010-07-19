@@ -64,8 +64,22 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
+  <servlet>
+    <servlet-name>WorkingCopyServlet</servlet-name>
+    <servlet-class>
+      org.apache.continuum.webdav.WorkingCopyServlet
+    </servlet-class>
+    <!-- Loading this on startup so as to take advantage of configuration listeners -->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>SlaveXmlRpcServlet</servlet-name>
     <url-pattern>/xmlrpc</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>WorkingCopyServlet</servlet-name>
+    <url-pattern>/workingcopy/*</url-pattern>
   </servlet-mapping>
 </web-app>

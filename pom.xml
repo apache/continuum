@@ -665,6 +665,11 @@ under the License.
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-buildagent-webdav</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.xmlrpc</groupId>
         <artifactId>xmlrpc-client</artifactId>
         <version>${xmlrpc.version}</version>
@@ -1592,6 +1597,34 @@ under the License.
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging-api</artifactId>
         <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>1.5.2</version>
+      </dependency>
+      <dependency> 
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>jackrabbit-webdav</artifactId>
+        <version>1.5.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>httpunit</groupId>
+        <artifactId>httpunit</artifactId>
+        <version>1.6.2</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
