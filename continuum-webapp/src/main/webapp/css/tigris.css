@@ -278,7 +278,7 @@ body .grid td {
 }
 
 .warningmessage {
-  height: 48px;
+  height: auto;
   background-position: 0px 0px;
   background-color: white;
   border: 0px 0px 0px 0px;
