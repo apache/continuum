@@ -194,6 +194,11 @@ public class ContinuumBuildAgentDavResource
         return null;
     }
 
+    public String getLogicalResource()
+    {
+        return logicalResource;
+    }
+
     public DavResourceIterator getMembers()
     {
         List<DavResource> list = new ArrayList<DavResource>();
@@ -225,6 +230,11 @@ public class ContinuumBuildAgentDavResource
         }
 
         return new DavResourceIteratorImpl( list );
+    }
+
+    public MimetypesFileTypeMap getMimeTypes()
+    {
+        return mimeTypes;
     }
 
     public long getModificationTime()
@@ -335,11 +345,6 @@ public class ContinuumBuildAgentDavResource
             {
                 IOUtils.closeQuietly( is );
             }
-        }
-        else if ( outputContext.hasStream() )
-        {
-            IndexWriter writer = new IndexWriter( this, localResource, logicalResource );
-            writer.write( outputContext );
         }
     }
 

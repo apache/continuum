@@ -37,6 +37,9 @@ import org.apache.jackrabbit.webdav.DavSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @plexus.component role="org.apache.continuum.webdav.ContinuumBuildAgentDavResourceFactory"
+ */
 public class ContinuumBuildAgentDavResourceFactory
     implements DavResourceFactory
 {
@@ -79,9 +82,7 @@ public class ContinuumBuildAgentDavResourceFactory
         }
         else
         {
-            DavResource resource = new ContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource,
-                                                                       davSession, continuumLocator, this, mimeTypes );
-            return resource;
+            return createResource( resourceFile, logicalResource, davSession, continuumLocator );
         }
     }
 
@@ -114,16 +115,18 @@ public class ContinuumBuildAgentDavResourceFactory
         }
         else
         {
-            DavResource resource = new ContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource,
-                                                                       request.getDavSession(), continuumLocator, this,
-                                                                       mimeTypes );
-            return resource;
+            return createResource( resourceFile, logicalResource, request.getDavSession(), continuumLocator );
         }
     }
 
     public BuildAgentConfigurationService getBuildAgentConfigurationService()
     {
         return buildAgentConfigurationService;
+    }
+
+    public MimetypesFileTypeMap getMimeTypes()
+    {
+        return mimeTypes;
     }
 
     public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
@@ -161,5 +164,12 @@ public class ContinuumBuildAgentDavResourceFactory
         File workingDir = buildAgentConfigurationService.getWorkingDirectory( projectId );
 
         return new File( workingDir, logicalResource );
+    }
+
+    protected DavResource createResource( File resourceFile, String logicalResource, DavSession session,
+                                          ContinuumBuildAgentDavResourceLocator locator )
+    {
+        return new ContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource, session, 
+                                                   locator, this, mimeTypes );
     }
 }

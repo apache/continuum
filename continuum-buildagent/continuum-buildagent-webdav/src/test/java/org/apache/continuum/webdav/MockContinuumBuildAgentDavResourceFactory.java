@@ -22,6 +22,9 @@ package org.apache.continuum.webdav;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.jackrabbit.webdav.DavResource;
+import org.apache.jackrabbit.webdav.DavSession;
+
 public class MockContinuumBuildAgentDavResourceFactory
     extends ContinuumBuildAgentDavResourceFactory
 {
@@ -29,6 +32,14 @@ public class MockContinuumBuildAgentDavResourceFactory
     protected File getResourceFile( int projectId, String logicalResource )
     {
         return new File( getWorkingDirectory( projectId ), logicalResource );
+    }
+
+    @Override
+    protected DavResource createResource( File resourceFile, String logicalResource, DavSession session,
+                                          ContinuumBuildAgentDavResourceLocator locator )
+    {
+        return new MockContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource, session, 
+                                                       locator, this, getMimeTypes() );
     }
 
     private File getWorkingDirectory( int projectId )

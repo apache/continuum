@@ -52,15 +52,15 @@ public class IndexWriter
 
     public void write( OutputContext outputContext )
     {
-        outputContext.setModificationTime(new Date().getTime());
-        outputContext.setContentType("text/html");
-        outputContext.setETag("");
+        outputContext.setModificationTime( new Date().getTime() );
+        outputContext.setContentType( "text/html" );
+        outputContext.setETag( "" );
         if ( outputContext.hasStream() )
         {
             PrintWriter writer = new PrintWriter( outputContext.getOutputStream() );
             writeDocumentStart( writer );
-            writeHyperlinks(writer);
-            writeDocumentEnd(writer);
+            writeHyperlinks( writer );
+            writeDocumentEnd( writer );
             writer.flush();
             writer.close();
         }
