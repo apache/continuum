@@ -24,6 +24,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -321,6 +322,12 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.buildProject( projectId, buildDefinitionId );
+    }
+
+    public int buildProject( int projectId, BuildTrigger buildTrigger )
+        throws Exception
+    {
+        return continuum.buildProject( projectId, buildTrigger );
     }
 
     public int buildGroup( int projectGroupId )

@@ -31,6 +31,12 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.continuum</groupId>
+          <artifactId>continuum-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>

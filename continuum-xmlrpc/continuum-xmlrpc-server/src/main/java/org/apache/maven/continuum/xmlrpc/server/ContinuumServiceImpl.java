@@ -591,6 +591,7 @@ public class ContinuumServiceImpl
     // Building
     // ----------------------------------------------------------------------
 
+    // TODO: delete this since it does exactly the same as buildProject( int projectId )
     public int addProjectToBuildQueue( int projectId )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
@@ -601,6 +602,7 @@ public class ContinuumServiceImpl
         return 0;
     }
 
+    // TODO: delete this since it does exactly the same as buildProject( int projectId, int buildDefinitionId );
     public int addProjectToBuildQueue( int projectId, int buildDefinitionId )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
@@ -628,6 +630,16 @@ public class ContinuumServiceImpl
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
         continuum.buildProjectWithBuildDefinition( projectId, buildDefintionId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        return 0;
+    }
+
+    public int buildProject( int projectId, BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
+    {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
+
+        continuum.buildProject( projectId, buildTrigger );
         return 0;
     }
 

@@ -27,6 +27,13 @@ under the License.
   <artifactId>continuum-xmlrpc-api</artifactId>
   <name>Continuum :: XMLRPC :: API</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-api</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>

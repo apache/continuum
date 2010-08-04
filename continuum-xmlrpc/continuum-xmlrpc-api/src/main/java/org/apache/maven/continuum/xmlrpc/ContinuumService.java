@@ -22,6 +22,7 @@ package org.apache.maven.continuum.xmlrpc;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -537,6 +538,17 @@ public interface ContinuumService
      * @throws Exception
      */
     int buildProject( int projectId, int buildDefinitionId )
+        throws Exception;
+
+    /**
+     * Forced build the project
+     * 
+     * @param projectId         The project id
+     * @param buildTrigger      The build trigger
+     * @return
+     * @throws Exception
+     */
+    int buildProject( int projectId, BuildTrigger buildTrigger )
         throws Exception;
 
     /**
