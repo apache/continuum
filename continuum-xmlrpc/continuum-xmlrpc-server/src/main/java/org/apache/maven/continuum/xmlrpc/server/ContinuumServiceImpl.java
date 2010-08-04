@@ -44,6 +44,7 @@ import org.apache.continuum.xmlrpc.repository.LocalRepository;
 import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.profile.ProfileException;
@@ -747,6 +748,32 @@ public class ContinuumServiceImpl
         checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
         ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url, projectGroupId );
+        return populateAddingResult( result );
+    }
+
+    public AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkoutInSingleDirectory )
+        throws ContinuumException
+    {
+        checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
+        ContinuumProjectBuildingResult result = null;
+        try
+        {
+            result =
+                continuum.addMavenTwoProject(
+                                              url,
+                                              projectGroupId,
+                                              true, // checkProtocol
+                                              false, // useCredentialsCache
+                                              true, // recursiveProjects
+                                              continuum.getBuildDefinitionService().getDefaultMavenTwoBuildDefinitionTemplate().getId(),
+                                              checkoutInSingleDirectory );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+
         return populateAddingResult( result );
     }
 
@@ -2320,6 +2347,12 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.addMavenTwoProject( url, projectGroupId ) );
+    }
+
+    public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkoutInSingleDirectory )
+        throws Exception
+    {
+        return serializeObject( this.addMavenTwoProject( url, projectGroupId, checkoutInSingleDirectory ) );
     }
 
     public Map<String, Object> addProjectGroupRPC( String groupName, String groupId, String description )

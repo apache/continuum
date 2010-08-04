@@ -392,6 +392,12 @@ public class ContinuumXmlRpcClient
         return continuum.addMavenTwoProject( url, projectGroupId );
     }
 
+    public AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkoutInSingleDirectory )
+        throws Exception
+    {
+        return continuum.addMavenTwoProject( url, projectGroupId, checkoutInSingleDirectory );
+    }
+
     // ----------------------------------------------------------------------
     // Maven 1.x projects
     // ----------------------------------------------------------------------
@@ -701,6 +707,12 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.addMavenTwoProjectRPC( url, projectGroupId );
+    }
+
+    public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkoutInSingleDirectory )
+        throws Exception
+    {
+        return continuum.addMavenTwoProjectRPC( url, projectGroupId, checkoutInSingleDirectory );
     }
 
     public Map<String, Object> addProjectGroupRPC( String groupName, String groupId, String description )
