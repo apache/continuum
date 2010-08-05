@@ -256,4 +256,9 @@
       <b-hint>org.apache.maven.continuum.model.project.Project</b-hint>
     </field>
   </mapping>
+
+  <mapping>
+    <class-a>org.apache.continuum.xmlrpc.utils.BuildTrigger</class-a>
+    <class-b>org.apache.continuum.utils.build.BuildTrigger</class-b>
+  </mapping>
 </mappings>

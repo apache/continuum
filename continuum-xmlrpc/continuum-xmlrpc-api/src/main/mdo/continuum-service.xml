@@ -1407,5 +1407,22 @@
         </field>
       </fields>
     </class> 
+    <class>
+      <name>BuildTrigger</name>
+      <version>1.4.1+</version>
+      <packageName>org.apache.continuum.xmlrpc.utils</packageName>
+      <fields>
+        <field>
+          <name>trigger</name>
+          <version>1.4.1+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>triggeredBy</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
   </classes>
 </model>

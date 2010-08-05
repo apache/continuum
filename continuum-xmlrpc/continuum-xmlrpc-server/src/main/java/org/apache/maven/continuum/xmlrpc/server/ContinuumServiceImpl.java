@@ -37,11 +37,11 @@ import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
 import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -599,7 +599,8 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProject( projectId, 
+                                new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
@@ -610,7 +611,8 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, buildDefinitionId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProject( projectId, buildDefinitionId, 
+                                new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
@@ -620,7 +622,8 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProject( projectId, 
+                                new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
@@ -630,7 +633,8 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProjectWithBuildDefinition( projectId, buildDefintionId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProjectWithBuildDefinition( projectId, buildDefintionId, 
+                                                   new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
@@ -640,7 +644,9 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, buildTrigger );
+        org.apache.continuum.utils.build.BuildTrigger bd = populateBuildTrigger( buildTrigger );
+
+        continuum.buildProject( projectId, bd );
         return 0;
     }
 
@@ -650,7 +656,8 @@ public class ContinuumServiceImpl
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
 
-        continuum.buildProjectGroup( projectGroupId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProjectGroup( projectGroupId, 
+                                     new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
 
         return 0;
     }
@@ -661,7 +668,8 @@ public class ContinuumServiceImpl
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
 
-        continuum.buildProjectGroupWithBuildDefinition( projectGroupId, buildDefintionId, new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProjectGroupWithBuildDefinition( projectGroupId, buildDefintionId, 
+                                                        new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
 
         return 0;
     }
@@ -1910,6 +1918,17 @@ public class ContinuumServiceImpl
         repo.setLocation( repository.getLocation() );
         repo.setName( repository.getName() );
         return repo;
+    }
+
+    private org.apache.continuum.utils.build.BuildTrigger populateBuildTrigger( BuildTrigger buildTrigger )
+    {
+        if ( buildTrigger == null )
+        {
+            return null;
+        }
+
+        return new org.apache.continuum.utils.build.BuildTrigger( buildTrigger.getTrigger(),
+                                                                  buildTrigger.getTriggeredBy() );
     }
 
     private Map<String, Object> serializeObject( Object o, final String... ignore )
