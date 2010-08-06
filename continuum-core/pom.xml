@@ -310,6 +310,8 @@ under the License.
           <excludes>
             <!-- this test only test cancelling Taskqueue implementation from plexus-task -->
             <exclude>**/BuildProjectTaskExecutorTest.*</exclude>
+            <!-- CONTINUUM-2559 -->
+            <exclude>**/MailContinuumNotifierTest.*</exclude>
           </excludes>
         </configuration>        
       </plugin>
