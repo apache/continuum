@@ -172,6 +172,7 @@ public class DefaultInstallationServiceTest
         assertNotNull( infos );
     }
 
+/* CONTINUUM-2559 - test may fail even in a valid environment
     public void testgetMvnVersionWithCommonMethod()
         throws Exception
     {
@@ -180,6 +181,7 @@ public class DefaultInstallationServiceTest
         List<String> infos = installationService.getExecutorConfiguratorVersion( null, java, null );
         assertNotNull( infos );
     }
+*/
 
     public void testAddInstallationAutomaticProfile()
         throws Exception
