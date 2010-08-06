@@ -338,6 +338,7 @@ public class ReleaseTaskExecutorTest
         pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
         assertTrue( "Test released version", pom.indexOf( "<version>1.6</version>" ) > 0 );
         
+/* CONTINUUM-2559
         performExec.executeTask(
                 getPerformTask( "testRelease", descriptor, new File( getBasedir(), "target/test-classes/build-dir" ) ) );
 
@@ -346,7 +347,8 @@ public class ReleaseTaskExecutorTest
         {
             fail( "Error in release:perform. Release output follows:\n" + result.getOutput() );
         }
-	}
+*/
+    }
 
     private void doPrepareWithNoError( ReleaseDescriptor descriptor )
         throws TaskExecutionException
