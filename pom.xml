@@ -304,8 +304,10 @@ under the License.
     <module>continuum-distributed</module>
     <module>continuum-builder</module>
   </modules>
-  <!-- TODO: confirm whether these are needed -->
   <repositories>
+    <!-- only needed for these two artifacts that can't be redistributed
+         javax.transaction:jta:jar:1.0.1B
+         javax.resource:connector:jar:1.0
     <repository>
       <id>maven2-repository.dev.java.net</id>
       <name>Java.net Repository for Maven</name>
@@ -317,18 +319,7 @@ under the License.
         <enabled>false</enabled>
       </snapshots>      
     </repository>
-    <repository>
-      <id>maven1-repository.dev.java.net</id>
-      <name>Java.net Repository for Maven 1</name>
-      <url>http://download.java.net/maven/1/</url>
-      <layout>legacy</layout>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>      
-    </repository>    
+    -->
     <!-- remove when parent is released -->
     <repository>
       <id>apache.snapshots</id>
@@ -340,7 +331,7 @@ under the License.
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-    </repository>    
+    </repository>
     <repository>
       <id>codehaus.snapshots</id>
       <name>Codehaus Snapshot Repository</name>
