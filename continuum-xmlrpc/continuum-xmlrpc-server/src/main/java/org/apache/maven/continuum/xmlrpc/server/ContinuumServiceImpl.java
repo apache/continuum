@@ -1060,6 +1060,19 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
 
 
+    public boolean isProjectInPrepareBuildQueue( int projectId )
+        throws ContinuumException
+    {
+        try
+        {
+            return parallelBuildsManager.isInPrepareBuildQueue( projectId );
+        }
+        catch ( BuildManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
+
     public boolean isProjectInBuildingQueue( int projectId )
         throws ContinuumException
     {

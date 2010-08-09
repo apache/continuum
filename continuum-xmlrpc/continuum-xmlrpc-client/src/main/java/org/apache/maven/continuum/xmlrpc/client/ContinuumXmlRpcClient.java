@@ -510,6 +510,11 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
     // Queue
     // ----------------------------------------------------------------------
+    public boolean isProjectInPrepareBuildQueue( int projectId )
+        throws Exception
+    {
+        return continuum.isProjectInPrepareBuildQueue( projectId );
+    }
 
     public List<BuildProjectTask> getProjectsInBuildQueue()
         throws Exception

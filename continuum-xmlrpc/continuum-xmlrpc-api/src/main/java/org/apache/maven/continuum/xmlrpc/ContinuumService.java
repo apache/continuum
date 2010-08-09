@@ -1031,9 +1031,18 @@ public interface ContinuumService
 
 
     /**
-     * Return true is the project is in building queue.
+     * Return true if the project is in prepare build queue
+     * 
+     *  @param projectId The project id
+     *  @throws ContinuumException
+     */
+    boolean isProjectInPrepareBuildQueue( int projectId )
+        throws Exception;
+
+    /**
+     * Return true if the project is in building queue.
      *
-     * @param projectGroupId The project group id
+     * @param projectId The project id
      * @throws ContinuumException
      */
     boolean isProjectInBuildingQueue( int projectId )
