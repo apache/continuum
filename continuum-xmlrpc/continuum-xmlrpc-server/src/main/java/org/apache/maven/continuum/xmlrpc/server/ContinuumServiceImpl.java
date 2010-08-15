@@ -785,6 +785,34 @@ public class ContinuumServiceImpl
         return populateAddingResult( result );
     }
 
+    public AddingResult addMavenTwoProjectAsSingleProject( String url, int projectGroupId )
+        throws Exception
+    {
+        checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
+        ContinuumProjectBuildingResult result = null;
+        try
+        {
+            result =
+                continuum.addMavenTwoProject(
+                                              url,
+                                              projectGroupId,
+                                              true, // checkProtocol
+                                              false, // useCredentialsCache
+                                              false, // recursiveProjects
+                                              continuum.getBuildDefinitionService().getDefaultMavenTwoBuildDefinitionTemplate().getId(),
+                                              true );  // a multi-module project added as a single project is always checked out
+                                                       // in a single directory, regardless the value set for checkoutInSingleDirectory
+                                                       // variable
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+
+        return populateAddingResult( result );
+    }
+
     // ----------------------------------------------------------------------
     // Maven 1.x projects
     // ----------------------------------------------------------------------
@@ -2385,6 +2413,12 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.addMavenTwoProject( url, projectGroupId, checkoutInSingleDirectory ) );
+    }
+
+    public Map<String,Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.addMavenTwoProjectAsSingleProject( url, projectGroupId ) );
     }
 
     public Map<String, Object> addProjectGroupRPC( String groupName, String groupId, String description )

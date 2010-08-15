@@ -737,6 +737,33 @@ public interface ContinuumService
     Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkoutInSingleDirectory )
         throws Exception;
 
+    /**
+     * Add a maven 2.x multi-module project from a url and add it to Continuum as a single project instead of
+     * as multiple projects (one project per module).
+     *
+     * To add a multi-module project with its modules as separate Continuum projects,
+     * use ContinuumService#addMavenTwoProject( String url, int projectGroupId, boolean checkoutInSingleDirectory)
+     * instead.
+     *
+     * @param url
+     * @param projectGroupId
+     * @return
+     * @throws Exception
+     */
+    AddingResult addMavenTwoProjectAsSingleProject( String url, int projectGroupId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param url
+     * @param projectGroupId
+     * @return
+     * @throws Exception
+     */
+    Map<String,Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
+        throws Exception;
+
     // ----------------------------------------------------------------------
     // Maven 1.x projects
     // ----------------------------------------------------------------------
