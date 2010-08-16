@@ -435,6 +435,67 @@ public class MavenTwoContinuumProjectBuilderTest
 	    }
 	}
 
+    // CONTINUUM-2563
+    public void testCreateMultiModuleProjectLoadRecursiveProjectsIsFalse()
+        throws Exception
+    {
+        ContinuumProjectBuilder projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
+
+        URL url = getClass().getClassLoader().getResource( "projects/continuum/pom.xml" );
+
+        ContinuumProjectBuildingResult result =
+            projectBuilder.buildProjectsFromMetadata( url, null, null, false, false );
+
+        assertNotNull( result );
+
+        // ----------------------------------------------------------------------
+        // Assert the project group built
+        // ----------------------------------------------------------------------
+
+        assertNotNull( result.getProjectGroups() );
+
+        assertEquals( 1, result.getProjectGroups().size() );
+
+        ProjectGroup projectGroup = result.getProjectGroups().iterator().next();
+
+        assertEquals( "projectGroup.groupId", "org.apache.maven.continuum", projectGroup.getGroupId() );
+
+        assertEquals( "projectGroup.name", "Continuum Parent Project", projectGroup.getName() );
+
+        assertEquals( "projectGroup.description", "Continuum Project Description", projectGroup.getDescription() );
+
+        // ----------------------------------------------------------------------
+        // Assert the projects built
+        // ----------------------------------------------------------------------
+
+        assertNotNull( result.getProjects() );
+
+        assertEquals( 1, result.getProjects().size() );
+
+        Map<String, Project> projects = new HashMap<String, Project>();
+
+        Project project = result.getProjects().iterator().next();
+        assertNotNull( project.getName() );
+        assertNotNull( project.getDescription() );
+        projects.put( project.getName(), project );
+
+        assertMavenTwoProject( "Continuum Parent Project", projects );
+
+        // assert the default project build definition
+        List<BuildDefinition> buildDefs = project.getBuildDefinitions();
+        assertEquals( 1, buildDefs.size() );
+        for ( BuildDefinition buildDef : buildDefs )
+        {
+            if ( buildDef.isDefaultForProject() )
+            {
+                assertEquals( "--batch-mode ", buildDef.getArguments() );
+                assertEquals( "clean install", buildDef.getGoals() );
+                assertEquals( "pom.xml", buildDef.getBuildFile() );
+            }
+        }
+    }
+
     private void assertDependency( String dep, String proj, Map<String, Project> projects )
     {
         Project p = projects.get( proj );

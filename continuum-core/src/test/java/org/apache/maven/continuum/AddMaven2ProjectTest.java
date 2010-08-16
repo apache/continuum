@@ -212,7 +212,7 @@ public class AddMaven2ProjectTest
         assertNotNull( project );
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
         log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
-        assertEquals( 0, project.getBuildDefinitions().size() );
+        assertEquals( 1, project.getBuildDefinitions().size() );
         pg = result.getProjectGroups().get( 0 );
 
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );

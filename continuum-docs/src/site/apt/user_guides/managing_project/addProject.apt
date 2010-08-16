@@ -137,7 +137,14 @@ simple-flat-multi-module
            `-- ...
 +----------------------------+
 
-  If you want to add only the root POM without sub-modules, select the <<load only root as recursive build>> radio box. 
+  If you want to add the multi-module project as a single Continuum project, select the <<load only root as recursive build>>
+  radio box.
+
+  For a project or POM that was added as a single Continuum project and as it's own project group, the <<<--non-recursive>>>
+  flag in the default project group build definition will be removed. But if the project or POM was added as a single
+  Continuum project to an already existing project group, a project level build definition with the <<<--non-recursive>>> flag
+  stripped from the <<<arguments>>> field will be created for the project and will be set as the project's default build definition.
+  See {{{http://jira.codehaus.org/browse/CONTINUUM-2563} CONTINUUM-2563}} for the related issue.
 
   You can choose a <<Build Definition Template>> which will be applied to your project.  If you choose a <<Build Definition
   Template>>, the build definitions from the template will be added in addition to any build definitions that are defined

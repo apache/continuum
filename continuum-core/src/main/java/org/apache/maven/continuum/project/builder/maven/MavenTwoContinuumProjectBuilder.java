@@ -171,9 +171,11 @@ public class MavenTwoContinuumProjectBuilder
             }
         }
         log.debug( "groupPom " + groupPom );
+
+        ProjectGroup projectGroup = null;
         if ( groupPom )
         {
-            ProjectGroup projectGroup = buildProjectGroup( mavenProject, result );
+            projectGroup = buildProjectGroup( mavenProject, result );
 
             // project groups have the top lvl build definition which is the default build defintion for the sub
             // projects
@@ -269,9 +271,41 @@ public class MavenTwoContinuumProjectBuilder
             {
                 continuumProject.setScmTag( mavenProject.getScm().getTag() );
             }
+
+            // CONTINUUM-2563
+            if ( !loadRecursiveProjects )
+            {
+                // should only contain 1 project group
+                ProjectGroup pg = result.getProjectGroups().iterator().next();
+                if ( pg.equals( projectGroup ) )
+                {
+                    List<BuildDefinition> pgBuildDefs = pg.getBuildDefinitions();
+                    for ( BuildDefinition bD : pgBuildDefs )
+                    {
+                        if ( bD.isDefaultForProject() )
+                        {
+                            // create a default build definition at the project
+                            // level
+                            BuildDefinition projectBuildDef = buildDefinitionService.cloneBuildDefinition( bD );
+                            projectBuildDef.setDefaultForProject( true );
+
+                            String arguments = projectBuildDef.getArguments().replace( "--non-recursive", "" );
+                            arguments = arguments.replace( "-N", "" );
+                            projectBuildDef.setArguments( arguments );
+
+                            log.info( "Adding default build definition for project '" + continuumProject.getName()
+                                + "' without '--non-recursive' flag." );
+
+                            continuumProject.addBuildDefinition( projectBuildDef );
+
+                            break;
+                        }
+                    }
+                }
+            }
+
             result.addProject( continuumProject, MavenTwoBuildExecutor.ID );
-            
-                        
+
 	        if( checkoutInSingleDirectory && rootProject == null )
 	        {
 	            rootProject = continuumProject;

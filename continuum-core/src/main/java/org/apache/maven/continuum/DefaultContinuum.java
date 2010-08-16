@@ -101,7 +101,6 @@ import org.springframework.beans.BeanUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -110,7 +109,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1756,8 +1754,12 @@ public class DefaultContinuum
                 for ( Project project : projects )
                 {
                 	context = new HashMap<String, Object>();
+
+                    Project fetchedProject = projectDao.getProjectWithBuildDetails( project.getId() );
+
             	    addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context,
-            				                                               projectGroupCreation, scmUserName, scmPassword, project );    
+            				                                               projectGroupCreation, scmUserName, scmPassword, project,
+                                                                           isDefaultProjectBuildDefSet( fetchedProject ) );
                 }
             }
             else
@@ -1778,9 +1780,11 @@ public class DefaultContinuum
                     }
 
                     AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context, projectsWithSimilarScmRoot );
-                    
+
+                    Project fetchedProject = projectDao.getProjectWithBuildDetails( project.getId() );
+
                     addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context, projectGroupCreation,
-                                               scmUserName, scmPassword, project );    
+                                               scmUserName, scmPassword, project, isDefaultProjectBuildDefSet( fetchedProject ) );
                 }
             }
         }
@@ -1801,15 +1805,29 @@ public class DefaultContinuum
         }
         return result;
     }
-    
+
+    private boolean isDefaultProjectBuildDefSet( Project project )
+    {
+        for ( BuildDefinition bd : project.getBuildDefinitions() )
+        {
+            if ( bd.isDefaultForProject() )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void addProjectToCheckoutQueue( String projectBuilderId, int buildDefinitionTemplateId,
                                             Map<String, Object> context, boolean projectGroupCreation,
-                                            String scmUserName, String scmPassword, Project project )
+                                            String scmUserName, String scmPassword, Project project,
+                                            boolean defaultProjectBuildDefSet )
         throws BuildDefinitionServiceException, ContinuumStoreException, ContinuumException
     {
         // CONTINUUM-1953 olamy : attached buildDefs from template here
         // if no group creation
-        if ( !projectGroupCreation && buildDefinitionTemplateId > 0 )
+        if ( !projectGroupCreation && buildDefinitionTemplateId > 0 && !defaultProjectBuildDefSet )
         {
             buildDefinitionService.addTemplateInProject( buildDefinitionTemplateId,
                                                          projectDao.getProject( project.getId() ) );
