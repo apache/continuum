@@ -27,6 +27,7 @@ import com.atlassian.xmlrpc.DefaultBinder;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -258,7 +259,7 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+    public String releasePrepare( Map project, Properties properties, Map releaseVersion, Map developmentVersion,
                                   Map environments, String username )
         throws Exception
     {

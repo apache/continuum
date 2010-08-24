@@ -218,6 +218,8 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_PREPARE_GOALS = "preparation-goals";
 
+    public static final String KEY_PERFORM_GOALS = "perform-goals";
+
     public static final String KEY_SCM_COMMENT_PREFIX = "scm-comment-prefix";
 
     public static final String KEY_AUTO_VERSION_SUBMODULES = "auto-version-submodules";
@@ -506,6 +508,11 @@ public class ContinuumBuildAgentUtil
     public static String getPrepareGoals( Map<String, Object> context )
     {
         return getString( context, KEY_PREPARE_GOALS, "" );
+    }
+
+    public static String getPerformGoals( Map<String, Object> context )
+    {
+        return getString( context, KEY_PERFORM_GOALS, "" );
     }
 
     public static String getUseEditMode( Map<String, Object> context )

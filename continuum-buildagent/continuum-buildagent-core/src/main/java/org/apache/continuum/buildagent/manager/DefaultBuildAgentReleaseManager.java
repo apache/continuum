@@ -65,14 +65,12 @@ public class DefaultBuildAgentReleaseManager
      */
     BuildAgentInstallationService buildAgentInstallationService;
 
-    public String releasePrepare( Map<String, Object> projectMap, Map<String, Object> properties,
+    public String releasePrepare( Map<String, Object> projectMap, Properties releaseProperties,
                                   Map<String, String> releaseVersion, Map<String, String> developmentVersion,
                                   Map<String, String> environments, String username )
         throws ContinuumReleaseException
     {
         Project project = getProject( projectMap );
-
-        Properties releaseProperties = getReleaseProperties( properties );
 
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
         
@@ -302,72 +300,6 @@ public class DefaultBuildAgentReleaseManager
         project.setProjectGroup( group );
 
         return project;
-    }
-
-    private Properties getReleaseProperties( Map<String, Object> context )
-    {
-        Properties props = new Properties();
-
-        String prop = ContinuumBuildAgentUtil.getScmUsername( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "username", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getScmPassword( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "password", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getScmTagBase( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "tagBase", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getScmCommentPrefix( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "commentPrefix", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getScmTag( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "tag", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getPrepareGoals( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "prepareGoals", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getArguments( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "arguments", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getUseEditMode( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "useEditMode", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getAddSchema( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "addSchema", prop );
-        }
-
-        prop = ContinuumBuildAgentUtil.getAutoVersionSubmodules( context );
-        if ( StringUtils.isNotBlank( prop ) )
-        {
-            props.put( "autoVersionSubmodules", prop );
-        }
-        return props;
     }
 
     public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )

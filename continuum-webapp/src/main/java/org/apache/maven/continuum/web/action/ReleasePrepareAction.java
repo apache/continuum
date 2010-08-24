@@ -553,30 +553,30 @@ public class ReleasePrepareAction
 
         if ( StringUtils.isNotEmpty( scmUsername ) )
         {
-            p.setProperty( "username", scmUsername );
+            p.setProperty( "scm-username", scmUsername );
         }
 
         if ( StringUtils.isNotEmpty( scmPassword ) )
         {
-            p.setProperty( "password", scmPassword );
+            p.setProperty( "scm-password", scmPassword );
         }
 
         if ( StringUtils.isNotEmpty( scmTagBase ) )
         {
-            p.setProperty( "tagBase", scmTagBase );
+            p.setProperty( "scm-tagbase", scmTagBase );
         }
 
         if ( StringUtils.isNotEmpty( scmCommentPrefix ) )
         {
-            p.setProperty( "commentPrefix", scmCommentPrefix );
+            p.setProperty( "scm-comment-prefix", scmCommentPrefix );
         }
 
-        p.setProperty( "tag", scmTag );
-        p.setProperty( "prepareGoals", prepareGoals );
+        p.setProperty( "scm-tag", scmTag );
+        p.setProperty( "preparation-goals", prepareGoals );
         p.setProperty( "arguments", arguments );
-        p.setProperty( "useEditMode", Boolean.toString( scmUseEditMode ) );
-        p.setProperty( "addSchema", Boolean.toString( addSchema ) );
-        p.setProperty( "autoVersionSubmodules", Boolean.toString( autoVersionSubmodules ) );
+        p.setProperty( "use-edit-mode", Boolean.toString( scmUseEditMode ) );
+        p.setProperty( "add-schema", Boolean.toString( addSchema ) );
+        p.setProperty( "auto-version-submodules", Boolean.toString( autoVersionSubmodules ) );
 
         return p;
     }

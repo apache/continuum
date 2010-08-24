@@ -21,6 +21,7 @@ package org.apache.continuum.buildagent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public interface ContinuumBuildAgentService
 {
@@ -51,7 +52,7 @@ public interface ContinuumBuildAgentService
     List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
         throws ContinuumBuildAgentException;
 
-    String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+    String releasePrepare( Map project, Properties properties, Map releaseVersion, Map developmentVersion,
                            Map<String, String> environments, String username )
         throws ContinuumBuildAgentException;
 

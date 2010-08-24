@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -439,11 +440,11 @@ public class ContinuumBuildAgentServiceImpl
                                     goals += "site-deploy";
                                 }
 
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_GOALS, goals );
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PERFORM_GOALS, goals );
                             }
                             else
                             {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_GOALS, "" );
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PERFORM_GOALS, "" );
                             }
                         }
                     }
@@ -477,7 +478,7 @@ public class ContinuumBuildAgentServiceImpl
         return projects;
     }
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+    public String releasePrepare( Map project, Properties properties, Map releaseVersion, Map developmentVersion,
                                   Map<String, String> environments, String username )
         throws ContinuumBuildAgentException
     {

@@ -124,7 +124,7 @@ public class DefaultContinuumReleaseManager
         if ( listener == null )
         {
             listener = new DefaultReleaseManagerListener();
-            listener.setUsername( releaseProperties.getProperty( "releaseBy" ) );
+            listener.setUsername( releaseProperties.getProperty( "release-by" ) );
         }
 
         getListeners().put( releaseId, listener );
@@ -266,17 +266,17 @@ public class DefaultContinuumReleaseManager
         descriptor.setScmSourceUrl( project.getScmUrl() );
 
         //required properties
-        descriptor.setScmReleaseLabel( releaseProperties.getProperty( "tag" ) );
-        descriptor.setScmTagBase( releaseProperties.getProperty( "tagBase" ) );
+        descriptor.setScmReleaseLabel( releaseProperties.getProperty( "scm-tag" ) );
+        descriptor.setScmTagBase( releaseProperties.getProperty( "scm-tagbase" ) );
         descriptor.setReleaseVersions( relVersions );
         descriptor.setDevelopmentVersions( devVersions );
-        descriptor.setPreparationGoals( releaseProperties.getProperty( "prepareGoals" ) );
+        descriptor.setPreparationGoals( releaseProperties.getProperty( "preparation-goals" ) );
         descriptor.setAdditionalArguments( releaseProperties.getProperty( "arguments" ) );
-        descriptor.setAddSchema( Boolean.valueOf( releaseProperties.getProperty( "addSchema" ) ) );
+        descriptor.setAddSchema( Boolean.valueOf( releaseProperties.getProperty( "add-schema" ) ) );
         descriptor.setAutoVersionSubmodules(
-            Boolean.valueOf( releaseProperties.getProperty( "autoVersionSubmodules" ) ) );
+            Boolean.valueOf( releaseProperties.getProperty( "auto-version-submodules" ) ) );
 
-        String useEditMode = releaseProperties.getProperty( "useEditMode" );
+        String useEditMode = releaseProperties.getProperty( "use-edit-mode" );
         if ( BooleanUtils.toBoolean( useEditMode ) )
         {
             descriptor.setScmUseEditMode( Boolean.valueOf( useEditMode ) );
@@ -300,21 +300,21 @@ public class DefaultContinuumReleaseManager
         }
 
         //other properties
-        if ( releaseProperties.containsKey( "username" ) )
+        if ( releaseProperties.containsKey( "scm-username" ) )
         {
-            descriptor.setScmUsername( releaseProperties.getProperty( "username" ) );
+            descriptor.setScmUsername( releaseProperties.getProperty( "scm-username" ) );
         }
-        if ( releaseProperties.containsKey( "password" ) )
+        if ( releaseProperties.containsKey( "scm-password" ) )
         {
-            descriptor.setScmPassword( releaseProperties.getProperty( "password" ) );
+            descriptor.setScmPassword( releaseProperties.getProperty( "scm-password" ) );
         }
-        if ( releaseProperties.containsKey( "commentPrefix" ) )
+        if ( releaseProperties.containsKey( "scm-comment-prefix" ) )
         {
-            descriptor.setScmCommentPrefix( releaseProperties.getProperty( "commentPrefix" ) );
+            descriptor.setScmCommentPrefix( releaseProperties.getProperty( "scm-comment-prefix" ) );
         }
-        if ( releaseProperties.containsKey( "useReleaseProfile" ) )
+        if ( releaseProperties.containsKey( "use-release-profile" ) )
         {
-            descriptor.setUseReleaseProfile( Boolean.valueOf( releaseProperties.getProperty( "useReleaseProfile" ) ) );
+            descriptor.setUseReleaseProfile( Boolean.valueOf( releaseProperties.getProperty( "use-release-profile" ) ) );
         }
 
         //forced properties
@@ -325,7 +325,7 @@ public class DefaultContinuumReleaseManager
         descriptor.setExecutable( executable );
 
         //release by
-        descriptor.setReleaseBy( releaseProperties.getProperty( "releaseBy" ) );
+        descriptor.setReleaseBy( releaseProperties.getProperty( "release-by" ) );
 
         return descriptor;
     }
@@ -466,6 +466,25 @@ public class DefaultContinuumReleaseManager
                         if ( configuration != null )
                         {
                             params.put( "add-schema", Boolean.valueOf( configuration.getValue() ) );
+                        }
+
+                        configuration = dom.getChild( "useReleaseProfile" );
+                        if ( configuration != null )
+                        {
+                            params.put( "use-release-profile", Boolean.valueOf( configuration.getValue() ) );
+                        }
+
+                        configuration = dom.getChild( "goals" );
+                        if ( configuration != null )
+                        {
+                            String goals = configuration.getValue();
+                            if ( model.getDistributionManagement() != null &&
+                                model.getDistributionManagement().getSite() != null )
+                            {
+                                goals += " site-deploy";
+                            }
+
+                            params.put( "perform-goals", goals );
                         }
                     }
                 }

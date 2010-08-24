@@ -23,6 +23,7 @@ import com.atlassian.xmlrpc.ServiceObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * SlaveBuildAgentTransportService
@@ -60,7 +61,7 @@ public interface SlaveBuildAgentTransportService
     public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
         throws Exception;
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+    public String releasePrepare( Map project, Properties properties, Map releaseVersion, Map developmentVersion,
                                   Map environments, String username )
         throws Exception;
 

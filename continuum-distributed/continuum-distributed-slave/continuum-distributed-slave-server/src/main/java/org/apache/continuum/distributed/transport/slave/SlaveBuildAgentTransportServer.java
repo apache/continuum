@@ -21,6 +21,7 @@ package org.apache.continuum.distributed.transport.slave;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.continuum.buildagent.ContinuumBuildAgentException;
 import org.apache.continuum.buildagent.ContinuumBuildAgentService;
@@ -197,7 +198,7 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+    public String releasePrepare( Map project, Properties properties, Map releaseVersion, Map developmentVersion,
                                   Map environments, String username )
         throws Exception
     {

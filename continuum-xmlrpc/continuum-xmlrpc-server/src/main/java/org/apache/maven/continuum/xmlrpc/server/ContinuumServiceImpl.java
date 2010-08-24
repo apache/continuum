@@ -2793,7 +2793,7 @@ public class ContinuumServiceImpl
                     }
                 }
 
-                releaseProperties.setProperty( "releaseBy", username );
+                releaseProperties.setProperty( "release-by", username );
                 return continuum.getReleaseManager().prepare( project, releaseProperties, releaseVersions, developmentVersions, null, 
                                                               continuum.getWorkingDirectory( projectId ).getPath(), environments, executable );
             }

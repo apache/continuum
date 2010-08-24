@@ -177,7 +177,7 @@ public class DefaultDistributedReleaseManager
                 SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
     
                 String releaseId =
-                    client.releasePrepare( createProjectMap( project ), createPropertiesMap( releaseProperties ),
+                    client.releasePrepare( createProjectMap( project ), releaseProperties,
                                            releaseVersion, developmentVersion, environments, username );
     
                 addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ), "prepare" );
@@ -652,73 +652,6 @@ public class DefaultDistributedReleaseManager
         {
             map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME,
                      project.getProjectGroup().getLocalRepository().getName() );
-        }
-
-        return map;
-    }
-
-    private Map<String, String> createPropertiesMap( Properties properties )
-    {
-        Map<String, String> map = new HashMap<String, String>();
-
-        String prop = properties.getProperty( "username" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_SCM_USERNAME, prop );
-        }
-
-        prop = properties.getProperty( "password" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_SCM_PASSWORD, prop );
-        }
-
-        prop = properties.getProperty( "tagBase" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_SCM_TAGBASE, prop );
-        }
-
-        prop = properties.getProperty( "commentPrefix" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_SCM_COMMENT_PREFIX, prop );
-        }
-
-        prop = properties.getProperty( "tag" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_SCM_TAG, prop );
-        }
-
-        prop = properties.getProperty( "prepareGoals" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_PREPARE_GOALS, prop );
-        }
-
-        prop = properties.getProperty( "arguments" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_ARGUMENTS, prop );
-        }
-
-        prop = properties.getProperty( "useEditMode" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_USE_EDIT_MODE, prop );
-        }
-
-        prop = properties.getProperty( "addSchema" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_ADD_SCHEMA, prop );
-        }
-
-        prop = properties.getProperty( "autoVersionSubmodules" );
-        if ( prop != null )
-        {
-            map.put( DistributedReleaseUtil.KEY_AUTO_VERSION_SUBMODULES, prop );
         }
 
         return map;

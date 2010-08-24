@@ -175,47 +175,21 @@ public class ReleasePerformAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        //TODO: Use the model reader so we'll can get the plugin configuration from parent too
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
+        Map<String, Object> params = getContinuum().getReleaseManager().getReleasePluginParameters( workingDirectory, pomFilename );
 
-        if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
+        if ( params.get( "use-release-profile" ) != null )
         {
-            for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
-            {
-                if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
-                    plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
-                {
-                    Xpp3Dom dom = (Xpp3Dom) plugin.getConfiguration();
+            useReleaseProfile = (Boolean) params.get( "use-release-profile" );
+        }
 
-                    if ( dom != null )
-                    {
-                        Xpp3Dom configuration = dom.getChild( "useReleaseProfile" );
-                        if ( configuration != null )
-                        {
-                            useReleaseProfile = Boolean.valueOf( configuration.getValue() );
-                        }
+        if ( params.get( "perform-goals" ) != null )
+        {
+            goals = (String) params.get( "perform-goals" );
+        }
 
-                        configuration = dom.getChild( "goals" );
-                        if ( configuration != null )
-                        {
-                            goals = configuration.getValue();
-                            if ( model.getDistributionManagement() != null &&
-                                model.getDistributionManagement().getSite() != null )
-                            {
-                                goals += " site-deploy";
-                            }
-                        }
-
-                        configuration = dom.getChild( "arguments" );
-                        if ( configuration != null )
-                        {
-                            arguments = configuration.getValue();
-                        }
-
-                    }
-                }
-            }
+        if ( params.get( "arguments" ) != null )
+        {
+            arguments = (String) params.get( "arguments" );
         }
     }
 
@@ -367,7 +341,7 @@ public class ReleasePerformAction
     {
         useReleaseProfile = DistributedReleaseUtil.getUseReleaseProfile( context, useReleaseProfile );
 
-        goals = DistributedReleaseUtil.getGoals( context, goals );
+        goals = DistributedReleaseUtil.getPerformGoals( context, goals );
 
         arguments = DistributedReleaseUtil.getArguments( context, "" );
     }

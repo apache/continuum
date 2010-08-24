@@ -20,6 +20,7 @@ package org.apache.continuum.buildagent.manager;
  */
 
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.shared.release.ReleaseResult;
@@ -28,7 +29,7 @@ public interface BuildAgentReleaseManager
 {
     String ROLE = BuildAgentReleaseManager.class.getName();
 
-    String releasePrepare( Map<String, Object> project, Map<String, Object> properties,
+    String releasePrepare( Map<String, Object> project, Properties properties,
                            Map<String, String> releaseVersion, Map<String, String> developmentVersion,
                            Map<String, String> environments, String username )
         throws ContinuumReleaseException;

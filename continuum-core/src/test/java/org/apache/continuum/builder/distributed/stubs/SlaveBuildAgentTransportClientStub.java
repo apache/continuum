@@ -21,6 +21,7 @@ package org.apache.continuum.builder.distributed.stubs;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 
@@ -195,7 +196,7 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+    public String releasePrepare( Map project, Properties properties, Map releaseVersion, Map developmentVersion,
                                   Map environments, String username )
         throws Exception
     {

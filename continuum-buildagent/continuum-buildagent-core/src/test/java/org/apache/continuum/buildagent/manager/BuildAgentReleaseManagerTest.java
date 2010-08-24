@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.model.LocalRepository;
@@ -91,7 +92,7 @@ public class BuildAgentReleaseManagerTest
 
         try
         {
-            releaseManager.releasePrepare( createProjectMap(), createPropertiesMap(), createReleaseVersionMap(),
+            releaseManager.releasePrepare( createProjectMap(), createProperties(), createReleaseVersionMap(),
                                            createDevVersionMap(), createEnvironmentsMap(), "user" );
         }
         catch ( ContinuumReleaseException e )
@@ -122,7 +123,7 @@ public class BuildAgentReleaseManagerTest
 
         try
         {
-            releaseManager.releasePrepare( map, createPropertiesMap(), createReleaseVersionMap(),
+            releaseManager.releasePrepare( map, createProperties(), createReleaseVersionMap(),
                                            createDevVersionMap(), createEnvironmentsMap(), "user" );
         }
         catch ( ContinuumReleaseException e )
@@ -278,9 +279,9 @@ public class BuildAgentReleaseManagerTest
         return releaseVersion;
     }
 
-    private Map<String, Object> createPropertiesMap()
+    private Properties createProperties()
     {
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Properties properties = new Properties();
         properties.put( ContinuumBuildAgentUtil.KEY_SCM_USERNAME, "scmusername" );
         properties.put( ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, "scmpassword" );
         properties.put( ContinuumBuildAgentUtil.KEY_SCM_TAGBASE,
