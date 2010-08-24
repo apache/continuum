@@ -1532,4 +1532,13 @@ public interface ContinuumService
      */
     int releaseRollback( int projectId, String releaseId )
         throws Exception;
+
+    /**
+     * Get release plugin parameters
+     * 
+     * @param projectId
+     * @return
+     */
+    Map<String, Object> getReleasePluginParameters( int projectId )
+        throws Exception;
 }

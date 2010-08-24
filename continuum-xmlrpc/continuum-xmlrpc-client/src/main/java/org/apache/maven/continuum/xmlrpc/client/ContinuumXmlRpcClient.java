@@ -1187,4 +1187,10 @@ public class ContinuumXmlRpcClient
     {
         return continuum.releaseRollback( projectId, releaseId );
     }
+
+    public Map<String, Object> getReleasePluginParameters( int projectId )
+        throws Exception
+    {
+        return continuum.getReleasePluginParameters( projectId );
+    }
 }

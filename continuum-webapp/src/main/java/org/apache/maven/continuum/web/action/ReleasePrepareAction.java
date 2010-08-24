@@ -210,71 +210,42 @@ public class ReleasePrepareAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        //TODO: Use the model reader so we'll can get the plugin configuration from parent too
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
+        Map<String, Object> params = getContinuum().getReleaseManager().getReleasePluginParameters( workingDirectory, pomFilename );
 
-        if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
+        // TODO: use constants for this
+        if ( params.get( "scm-tag" ) != null )
         {
-            for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
-            {
-                if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
-                    plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
-                {
-                    Xpp3Dom dom = (Xpp3Dom) plugin.getConfiguration();
+            scmTag = (String) params.get( "scm-tag" );
+        }
 
-                    if ( dom != null )
-                    {
-                        Xpp3Dom configuration = dom.getChild( "releaseLabel" );
-                        if ( configuration != null )
-                        {
-                            scmTag = configuration.getValue();
-                        }
+        if ( params.get( "scm-tagbase" ) != null )
+        {
+            scmTagBase = (String) params.get( "scm-tagbase" );
+        }
 
-                        configuration = dom.getChild( "tag" );
-                        if ( configuration != null )
-                        {
-                            scmTag = configuration.getValue();
-                        }
+        if ( params.get( "preparation-goals" ) != null )
+        {
+            prepareGoals = (String) params.get( "preparation-goals" );
+        }
 
-                        configuration = dom.getChild( "tagBase" );
-                        if ( configuration != null )
-                        {
-                            scmTagBase = configuration.getValue();
-                        }
+        if ( params.get( "arguments" ) != null )
+        {
+            arguments = (String) params.get( "arguments" );
+        }
 
-                        configuration = dom.getChild( "preparationGoals" );
-                        if ( configuration != null )
-                        {
-                            prepareGoals = configuration.getValue();
-                        }
+        if ( params.get( "scm-comment-prefix" ) != null )
+        {
+            scmCommentPrefix = (String) params.get( "scm-comment-prefix" );
+        }
 
-                        configuration = dom.getChild( "arguments" );
-                        if ( configuration != null )
-                        {
-                            arguments = configuration.getValue();
-                        }
+        if ( params.get( "auto-version-submodules" ) != null )
+        {
+            autoVersionSubmodules = (Boolean) params.get( "auto-version-submodules" );
+        }
 
-                        configuration = dom.getChild( "scmCommentPrefix" );
-                        if ( configuration != null )
-                        {
-                            scmCommentPrefix = configuration.getValue();
-                        }
-
-                        configuration = dom.getChild( "autoVersionSubmodules" );
-                        if ( configuration != null )
-                        {
-                            autoVersionSubmodules = Boolean.valueOf( configuration.getValue() );
-                        }
-
-                        configuration = dom.getChild( "addSchema" );
-                        if ( configuration != null )
-                        {
-                            addSchema = Boolean.valueOf( configuration.getValue() );
-                        }
-                    }
-                }
-            }
+        if ( params.get( "add-schema" ) != null )
+        {
+            addSchema = (Boolean) params.get( "add-schema" );
         }
     }
 

@@ -2911,6 +2911,30 @@ public class ContinuumServiceImpl
             throw new Exception( "Unable to rollback the release for '" + releaseId + "'" );
         }
     }
+
+    public Map<String, Object> getReleasePluginParameters( int projectId )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        if ( project != null )
+        {
+            checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                return continuum.getDistributedReleaseManager().getReleasePluginParameters( projectId, "pom.xml" );
+            }
+            else
+            {
+                return continuum.getReleaseManager().getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(), "pom.xml" );
+            }
+        }
+        else
+        {
+            throw new Exception( "Unable to get release plugin parameters for project with id " + projectId );
+        }
+    }
+
     private ReleaseListenerSummary processListenerMap( Map context )
     {
         ReleaseListenerSummary listenerSummary = new ReleaseListenerSummary();

@@ -152,4 +152,15 @@ public interface ContinuumReleaseManager
      * @return
      */
     ReleaseListenerSummary getListener( String releaseId );
+
+    /**
+     * Get the release plugin parameters
+     * 
+     * @param workingDirectory
+     * @param pomFilename
+     * @return
+     * @throws ContinuumReleaseException
+     */
+    Map<String, Object> getReleasePluginParameters( String workingDirectory, String pomFilename )
+        throws ContinuumReleaseException;
 }
