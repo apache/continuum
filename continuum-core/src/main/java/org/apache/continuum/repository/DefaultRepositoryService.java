@@ -216,6 +216,23 @@ public class DefaultRepositoryService
         }
     }
 
+    public LocalRepository getLocalRepositoryByName( String repositoryName )
+        throws RepositoryServiceException
+    {
+        try
+        {
+            return localRepositoryDao.getLocalRepositoryByName( repositoryName );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            throw new RepositoryServiceException( "No repository found with name: " + repositoryName, e );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new RepositoryServiceException( "Unable to retrieve local repository: " + repositoryName, e );
+        }
+    }
+
     private void removePurgeConfigurationsOfRepository( int repositoryId )
         throws RepositoryServiceException
     {

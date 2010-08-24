@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
+import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
@@ -38,7 +39,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.continuum.web.model.ReleaseListenerSummary;
 import org.apache.maven.shared.release.ReleaseResult;
 
 /**
@@ -144,17 +144,17 @@ public class ReleaseInProgressAction
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
     
-            listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
-    
-            if ( listener != null )
+            listenerSummary = releaseManager.getListener( releaseId );
+
+            if ( listenerSummary != null )
             {
-            	username = listener.getUsername();
+            	username = listenerSummary.getUsername();
             	
-                if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
+                if ( listenerSummary.getState() == ContinuumReleaseManagerListener.LISTENING )
                 {
                     status = "inProgress";
                 }
-                else if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+                else if ( listenerSummary.getState() == ContinuumReleaseManagerListener.FINISHED )
                 {
                     status = SUCCESS;
                 }
@@ -162,11 +162,6 @@ public class ReleaseInProgressAction
                 {
                     status = "initialized";
                 }
-
-                listenerSummary.setPhases( listener.getPhases() );
-                listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
-                listenerSummary.setInProgress( listener.getInProgress() );
-                listenerSummary.setError( listener.getError() );
             }
             else
             {
@@ -250,18 +245,13 @@ public class ReleaseInProgressAction
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
     
-            listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+            listenerSummary = releaseManager.getListener( releaseId );
     
-            if ( listener != null )
-            {
-                listenerSummary.setPhases( listener.getPhases() );
-                listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
-                listenerSummary.setInProgress( listener.getInProgress() );
-                listenerSummary.setError( listener.getError() );
-                
-                username = listener.getUsername();
+            if ( listenerSummary != null )
+            {                
+                username = listenerSummary.getUsername();
 
-                if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+                if ( listenerSummary.getState() == ContinuumReleaseManagerListener.FINISHED )
                 {
                     result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
     

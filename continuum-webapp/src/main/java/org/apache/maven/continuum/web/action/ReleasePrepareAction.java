@@ -20,6 +20,7 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
+import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.web.action.AbstractReleaseAction;
@@ -33,7 +34,6 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.continuum.web.model.ReleaseListenerSummary;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -467,11 +467,11 @@ public class ReleasePrepareAction
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
     
-            listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+            listenerSummary = releaseManager.getListener( releaseId );
     
-            if ( listener != null )
+            if ( listenerSummary != null )
             {
-                if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+                if ( listenerSummary.getState() == ContinuumReleaseManagerListener.FINISHED )
                 {
                     releaseManager.getListeners().remove( releaseId );
     
@@ -483,11 +483,6 @@ public class ReleasePrepareAction
                 {
                     status = "inProgress";
                 }
-
-                listenerSummary.setPhases( listener.getPhases() );
-                listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
-                listenerSummary.setInProgress( listener.getInProgress() );
-                listenerSummary.setError( listener.getError() );
             }
             else
             {

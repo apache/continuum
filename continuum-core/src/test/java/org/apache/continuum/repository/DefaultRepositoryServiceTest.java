@@ -91,6 +91,14 @@ public class DefaultRepositoryServiceTest
         assertEquals( "check # repositories", 1, repositories.size() );
         assertTrue( "check if repository was added", repositories.contains( repository ) );
 
+        LocalRepository repo = repositoryService.getLocalRepositoryByName( "DefaultRepo" );
+        assertNotNull( repo );
+        assertEquals( "check if repository name is the same", repository.getName(), repo.getName() );
+
+        repo = repositoryService.getLocalRepositoryByLocation( repository.getLocation() );
+        assertNotNull( repo );
+        assertEquals( "check if repository location is the same", repository.getLocation(), repo.getLocation() );
+
         ProjectGroup retrievedGroup = getDefaultProjectGroup();
         assertNotNull( retrievedGroup.getLocalRepository() );
         assertEquals( "check if repository is the same", repository, retrievedGroup.getLocalRepository() );

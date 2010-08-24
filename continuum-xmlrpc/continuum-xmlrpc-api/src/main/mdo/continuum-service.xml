@@ -1424,5 +1424,47 @@
         </field>
       </fields>
     </class>
+    <class>
+      <name>ReleaseListenerSummary</name>
+      <version>1.4.1+</version>
+      <fields>
+        <field>
+          <name>phases</name>
+          <version>1.4.1+</version>
+          <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>completedPhases</name>
+          <version>1.4.1+</version>
+          <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>inProgress</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>state</name>
+          <version>1.4.1+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>error</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>username</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
   </classes>
 </model>

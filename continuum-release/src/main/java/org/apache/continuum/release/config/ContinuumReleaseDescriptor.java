@@ -34,6 +34,8 @@ public class ContinuumReleaseDescriptor
 
     private String executable;
 
+    private String releaseBy;
+
     public void addEnvironment( String name, String value )
     {
         getEnvironments().put( name, value );
@@ -76,5 +78,15 @@ public class ContinuumReleaseDescriptor
     public void setExecutable( String executable )
     {
         this.executable = executable;
+    }
+
+    public String getReleaseBy()
+    {
+        return releaseBy;
+    }
+
+    public void setReleaseBy( String releaseBy )
+    {
+        this.releaseBy = releaseBy;
     }
 }

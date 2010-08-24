@@ -19,9 +19,9 @@ package org.apache.maven.continuum.release;
  * under the License.
  */
 
+import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.system.Profile;
 
 import java.io.File;
 import java.util.Map;
@@ -146,4 +146,10 @@ public interface ContinuumReleaseManager
      */
     String sanitizeTagName( String scmUrl, String tagName )
         throws Exception;
+
+    /**
+     * @param releaseId
+     * @return
+     */
+    ReleaseListenerSummary getListener( String releaseId );
 }

@@ -98,4 +98,14 @@ public interface RepositoryService
      */
     LocalRepository getLocalRepository( int repositoryId )
         throws RepositoryServiceException;
+
+    /**
+     * Retrieve local repository
+     * 
+     * @param repositoryName
+     * @return
+     * @throws RepositoryServiceException
+     */
+    LocalRepository getLocalRepositoryByName( String repositoryName )
+        throws RepositoryServiceException;
 }

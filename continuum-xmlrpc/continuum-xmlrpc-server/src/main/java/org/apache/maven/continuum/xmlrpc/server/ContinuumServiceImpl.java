@@ -19,6 +19,7 @@ package org.apache.maven.continuum.xmlrpc.server;
  * under the License.
  */
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.continuum.buildagent.NoBuildAgentException;
@@ -47,6 +49,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -63,6 +66,7 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
@@ -2759,5 +2763,199 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.getAllLocalRepositories() );
+    }
+
+    public String releasePrepare( int projectId, Properties releaseProperties, Map<String, String> releaseVersions,
+                                Map<String, String> developmentVersions, Map<String, String> environments, String username )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        if ( project != null )
+        {
+            checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                return continuum.getDistributedReleaseManager().releasePrepare( project, releaseProperties, releaseVersions, 
+                                                                                developmentVersions, environments, username );
+            }
+            else
+            {
+                String executable = null;
+
+                if ( environments != null )
+                {
+                    String m2Home = environments.get( continuum.getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
+                    if ( StringUtils.isNotEmpty( m2Home ) )
+                    {
+                        executable = m2Home + File.separator + "bin" + File.separator + executable;
+                    }
+                }
+
+                releaseProperties.setProperty( "releaseBy", username );
+                return continuum.getReleaseManager().prepare( project, releaseProperties, releaseVersions, developmentVersions, null, 
+                                                              continuum.getWorkingDirectory( projectId ).getPath(), environments, executable );
+            }
+        }
+        else
+        {
+            throw new Exception( "Unable to prepare release project with id : " + projectId + " because it doesn't exist" );
+        }
+    }
+
+    public int releasePerform( int projectId, String releaseId, String goals, String arguments,
+                               boolean useReleaseProfile, String repositoryName, String username )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        if ( project != null )
+        {
+            checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+
+            org.apache.continuum.model.repository.LocalRepository repository = continuum.getRepositoryService().getLocalRepositoryByName( repositoryName );
+
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                continuum.getDistributedReleaseManager().releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository, username );
+            }
+            else
+            {
+                File performDirectory = new File( continuum.getConfiguration().getWorkingDirectory(),
+                                                  "releases-" + System.currentTimeMillis() );
+                performDirectory.mkdirs();
+
+                continuum.getReleaseManager().perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, null, repository );
+            }
+
+            return 0;
+        }
+        else
+        {
+            throw new Exception( "Unable to perform release project with id : " + projectId + " because it doesn't exist" );
+        }
+    }
+
+    public ReleaseListenerSummary getListener( int projectId, String releaseId )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        if ( project != null )
+        {
+            checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                Map map = continuum.getDistributedReleaseManager().getListener( releaseId );
+                return processListenerMap( map );
+            }
+            else
+            {
+                return populateReleaseListenerSummary( continuum.getReleaseManager().getListener( releaseId ) );
+            }
+        }
+        else
+        {
+            throw new Exception( "Unable to get release listener for '" + releaseId + "'" );
+        }
+    }
+
+    public int releaseCleanup( int projectId, String releaseId )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        if ( project != null )
+        {
+            checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                continuum.getDistributedReleaseManager().releaseCleanup( releaseId );
+            }
+            else
+            {
+                continuum.getReleaseManager().getReleaseResults().remove( releaseId );
+                continuum.getReleaseManager().getListeners().remove( releaseId );
+            }
+    
+            return 0;
+        }
+        else
+        {
+            throw new Exception( "Unable to do release cleanup for release '" + releaseId + "'" );
+        }
+    }
+
+    public int releaseRollback( int projectId, String releaseId )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        if ( project != null )
+        {
+            checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                continuum.getDistributedReleaseManager().releaseRollback( releaseId, projectId );
+            }
+            else
+            {
+                continuum.getReleaseManager().rollback( releaseId, continuum.getWorkingDirectory( projectId ).getPath(), null );
+            }
+            return 0;
+        }
+        else
+        {
+            throw new Exception( "Unable to rollback the release for '" + releaseId + "'" );
+        }
+    }
+    private ReleaseListenerSummary processListenerMap( Map context )
+    {
+        ReleaseListenerSummary listenerSummary = new ReleaseListenerSummary();
+        Object value = context.get( "release-in-progress" );
+        if ( value != null )
+        {
+            listenerSummary.setInProgress( (String) value );
+        }
+
+        value = context.get( "release-error" );
+        if ( value != null )
+        {
+            listenerSummary.setError( (String) value );
+        }
+
+        value = context.get( "username" );
+        if ( value != null )
+        {
+            listenerSummary.setUsername( (String) value );
+        }
+
+        value = context.get( "state" );
+        if ( value != null )
+        {
+            listenerSummary.setState( (Integer) value );
+        }
+
+        value = context.get( "release-phases" );
+        if ( value != null )
+        {
+            listenerSummary.setPhases( (List<String>) value );
+        }
+
+        value = context.get( "completed-release-phases" );
+        if ( value != null )
+        {
+            listenerSummary.setPhases( (List<String>) value );
+        }
+
+        return listenerSummary;
+    }
+
+    private ReleaseListenerSummary populateReleaseListenerSummary( org.apache.continuum.model.release.ReleaseListenerSummary 
+                                                                   listener )
+    {
+        return (ReleaseListenerSummary) mapper.map( listener, ReleaseListenerSummary.class );
     }
 }

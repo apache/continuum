@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.maven.continuum.model.project.Project;
@@ -111,6 +112,12 @@ public class DefaultContinuumReleaseManager
             getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, environments, workingDirectory,
                                   executable );
 
+        if ( listener == null )
+        {
+            listener = new DefaultReleaseManagerListener();
+            listener.setUsername( releaseProperties.getProperty( "releaseBy" ) );
+        }
+
         getListeners().put( releaseId, listener );
 
         try
@@ -150,7 +157,6 @@ public class DefaultContinuumReleaseManager
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor = readReleaseDescriptor( workingDirectory );
-
         perform( releaseId, descriptor, buildDirectory, goals, arguments, useReleaseProfile, listener, null );
     }
 
@@ -162,6 +168,15 @@ public class DefaultContinuumReleaseManager
         if ( descriptor != null )
         {
             descriptor.setAdditionalArguments( arguments );
+        }
+
+        if ( listener == null )
+        {
+            listener = new DefaultReleaseManagerListener();
+            if ( descriptor instanceof ContinuumReleaseDescriptor )
+            {
+                listener.setUsername( ( (ContinuumReleaseDescriptor) descriptor ).getReleaseBy() );
+            }
         }
 
         try
@@ -182,6 +197,15 @@ public class DefaultContinuumReleaseManager
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor = readReleaseDescriptor( workingDirectory );
+
+        if ( listener == null )
+        {
+            listener = new DefaultReleaseManagerListener();
+            if ( descriptor instanceof ContinuumReleaseDescriptor )
+            {
+                listener.setUsername( ( (ContinuumReleaseDescriptor) descriptor ).getReleaseBy() );
+            }
+        }
 
         rollback( releaseId, descriptor, listener );
     }
@@ -291,6 +315,9 @@ public class DefaultContinuumReleaseManager
         descriptor.setEnvironments( environments );
         descriptor.setExecutable( executable );
 
+        //release by
+        descriptor.setReleaseBy( releaseProperties.getProperty( "releaseBy" ) );
+
         return descriptor;
     }
 
@@ -328,5 +355,26 @@ public class DefaultContinuumReleaseManager
         ScmRepository scmRepo = scmManager.makeScmRepository( scmUrl );
         ScmProvider scmProvider = scmManager.getProviderByRepository( scmRepo );
         return scmProvider.sanitizeTagName( tagName );
+    }
+
+    public ReleaseListenerSummary getListener( String releaseId )
+    {
+        ContinuumReleaseManagerListener listener = (ContinuumReleaseManagerListener) getListeners().get( releaseId );
+
+        if ( listener != null )
+        {
+            ReleaseListenerSummary listenerSummary = new ReleaseListenerSummary();
+            listenerSummary.setGoalName( listener.getGoalName() );
+            listenerSummary.setError( listener.getError() );
+            listenerSummary.setInProgress( listener.getInProgress() );
+            listenerSummary.setState( listener.getState() );
+            listenerSummary.setPhases( listener.getPhases() );
+            listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
+            listenerSummary.setUsername( listener.getUsername() );
+    
+            return listenerSummary;
+        }
+
+        return null;
     }
 }

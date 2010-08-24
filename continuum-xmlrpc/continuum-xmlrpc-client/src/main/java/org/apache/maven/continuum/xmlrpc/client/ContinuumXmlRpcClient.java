@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
@@ -42,6 +43,7 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
@@ -1151,5 +1153,38 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.getAllLocalRepositoriesRPC();
+    }
+
+    public int releasePerform( int projectId, String releaseId, String goals, String arguments,
+                                boolean useReleaseProfile, String repositoryName, String username )
+        throws Exception
+    {
+        return continuum.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repositoryName, username );
+    }
+
+    public String releasePrepare( int projectId, Properties releaseProperties, Map<String, String> releaseVersions,
+                                Map<String, String> developmentVersions, Map<String, String> environments,
+                                String username )
+        throws Exception
+    {
+        return continuum.releasePrepare( projectId, releaseProperties, releaseVersions, developmentVersions, environments, username );
+    }
+
+    public ReleaseListenerSummary getListener( int projectId, String releaseId )
+        throws Exception
+    {
+        return continuum.getListener( projectId, releaseId );
+    }
+
+    public int releaseCleanup( int projectId, String releaseId )
+        throws Exception
+    {
+        return continuum.releaseCleanup( projectId, releaseId );
+    }
+
+    public int releaseRollback( int projectId, String releaseId )
+        throws Exception
+    {
+        return continuum.releaseRollback( projectId, releaseId );
     }
 }

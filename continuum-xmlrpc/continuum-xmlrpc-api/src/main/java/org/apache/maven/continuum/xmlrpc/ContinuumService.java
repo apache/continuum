@@ -21,6 +21,7 @@ package org.apache.maven.continuum.xmlrpc;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
@@ -38,6 +39,7 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
@@ -1463,5 +1465,71 @@ public interface ContinuumService
      * @throws Exception
      */
     String getReleaseOutput( int releaseId )
+        throws Exception;
+
+    /**
+     * Release prepare a project
+     * 
+     * @param projectId
+     * @param releaseProperties
+     * @param releaseVersions
+     * @param developmentVersions
+     * @param environments
+     * @param username
+     * @return The release id
+     * @throws Exception
+     */
+    String releasePrepare( int projectId, Properties releaseProperties, Map<String, String> releaseVersions,
+                         Map<String, String> developmentVersions, Map<String, String> environments, String username )
+        throws Exception;
+
+    /**
+     * Release perform a project
+     * 
+     * @param projectId
+     * @param releaseId
+     * @param goals
+     * @param arguments
+     * @param useReleaseProfile
+     * @param repositoryName
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    int releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, 
+                         String repositoryName, String username )
+        throws Exception;
+
+    /**
+     * Get release listener
+     * 
+     * @param projectId
+     * @param releaseId
+     * @return
+     * @throws Exception
+     */
+    ReleaseListenerSummary getListener( int projectId, String releaseId )
+        throws Exception;
+
+    /**
+     * Cleanup the release
+     * 
+     * @param projectId
+     * @param releaseId
+     * @return
+     * @throws Exception
+     */
+    int releaseCleanup( int projectId, String releaseId )
+        throws Exception;
+
+    /**
+     * Rollback a release
+     * 
+     * @param projectId
+     * @param releaseId
+     * @return
+     * @throws Exception
+     */
+    int releaseRollback( int projectId, String releaseId )
         throws Exception;
 }

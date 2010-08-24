@@ -542,42 +542,6 @@
       </fields>
     </class>
     <class>
-      <name>ReleaseListenerSummary</name>
-      <version>1.0.0+</version>
-      <fields>
-        <field>
-          <name>phases</name>
-          <version>1.0.0+</version>
-          <required>true</required>
-          <description>Release Phases</description>
-          <association>
-            <type>String</type>
-            <multiplicity>*</multiplicity>
-          </association>
-        </field>
-        <field>
-          <name>completedPhases</name>
-          <version>1.0.0+</version>
-          <description>Completed release phases</description>
-          <association>
-            <type>String</type>
-            <multiplicity>*</multiplicity>
-          </association>
-        </field>
-        <field>
-          <name>inProgress</name>
-          <version>1.0.0+</version>
-          <description>Release phase in progress</description> 
-          <type>String</type>
-        </field>
-        <field>
-          <name>error</name>
-          <version>1.0.0+</version>
-          <type>String</type>
-        </field>
-      </fields>
-    </class>
-    <class>
       <name>DistributedReleaseSummary</name>
       <version>1.0.0+</version>
       <fields>

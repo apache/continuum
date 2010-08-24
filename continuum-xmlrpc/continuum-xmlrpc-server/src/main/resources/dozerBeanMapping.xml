@@ -261,4 +261,9 @@
     <class-a>org.apache.continuum.xmlrpc.utils.BuildTrigger</class-a>
     <class-b>org.apache.continuum.utils.build.BuildTrigger</class-b>
   </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary</class-a>
+    <class-b>org.apache.continuum.model.release.ReleaseListenerSummary</class-b>
+  </mapping>
 </mappings>
