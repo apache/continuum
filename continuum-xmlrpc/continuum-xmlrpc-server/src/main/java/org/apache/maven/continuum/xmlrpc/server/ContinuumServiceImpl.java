@@ -71,6 +71,7 @@ import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
+import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
@@ -2921,14 +2922,63 @@ public class ContinuumServiceImpl
         if ( project != null )
         {
             checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+            Map<String, Object> params;
+
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                return continuum.getDistributedReleaseManager().getReleasePluginParameters( projectId, "pom.xml" );
+                params = continuum.getDistributedReleaseManager().getReleasePluginParameters( projectId, "pom.xml" );
             }
             else
             {
-                return continuum.getReleaseManager().getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(), "pom.xml" );
+                params = continuum.getReleaseManager().getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(), "pom.xml" );
             }
+
+            // set scm tag and scm tag base if no values yet
+            // scm tag
+            if ( params.get( "scm-tag") == null )
+            {
+                String scmTag;
+                if ( project.getScmTag() != null )
+                {
+                    scmTag = project.getScmTag();
+                }
+                else
+                {
+                    String version = project.getVersion();
+                    int idx = version.indexOf( "-SNAPSHOT" );
+
+                    if ( idx >= 0 )
+                    {
+                        // strip the snapshot version suffix
+                        scmTag = project.getArtifactId() + "-" + version.substring( 0, idx );
+                    }
+                    else
+                    {
+                        scmTag = project.getArtifactId() + "-" + version;
+                    }
+                }
+
+                continuum.getReleaseManager().sanitizeTagName( project.getScmUrl(), scmTag );
+                params.put( "scm-tag", scmTag );
+            }
+
+            // scm tagbase
+            if ( params.get( "scm-tagbase") == null )
+            {
+                if ( project.getScmUrl().startsWith( "scm:svn" ) )
+                {
+                    String scmTagBase = new SvnScmProviderRepository( project.getScmUrl(), project.getScmUsername(), 
+                                                                      project.getScmPassword() ).getTagBase();
+                    // strip the Maven scm protocol prefix
+                    params.put( "scm-tagbase", scmTagBase.substring( "scm:svn".length() + 1 ) );
+                }
+                else
+                {
+                    params.put( "scm-tagbase", "" );
+                }
+            }
+
+            return params;
         }
         else
         {
