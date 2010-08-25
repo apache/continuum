@@ -2903,6 +2903,7 @@ public class ContinuumServiceImpl
             else
             {
                 continuum.getReleaseManager().rollback( releaseId, continuum.getWorkingDirectory( projectId ).getPath(), null );
+                continuum.getReleaseManager().getPreparedReleases().remove( releaseId );
             }
             return 0;
         }
