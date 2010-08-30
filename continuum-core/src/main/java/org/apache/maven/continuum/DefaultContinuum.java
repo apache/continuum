@@ -102,6 +102,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -2579,6 +2580,7 @@ public class DefaultContinuum
         }
 
         String[] files = workingDirectory.list();
+		Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
 
         if ( files != null )
         {
