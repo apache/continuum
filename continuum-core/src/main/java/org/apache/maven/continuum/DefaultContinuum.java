@@ -2580,7 +2580,7 @@ public class DefaultContinuum
         }
 
         String[] files = workingDirectory.list();
-		Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+        Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
 
         if ( files != null )
         {
