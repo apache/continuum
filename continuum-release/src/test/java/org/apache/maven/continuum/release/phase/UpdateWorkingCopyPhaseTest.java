@@ -111,7 +111,7 @@ public class UpdateWorkingCopyPhaseTest
         
         // create release descriptor
         ContinuumReleaseDescriptor releaseDescriptor = new ContinuumReleaseDescriptor();
-        releaseDescriptor.setScmSourceUrl( "scm:svn:file://" + projectUrl );
+        releaseDescriptor.setScmSourceUrl( "scm:svn:file://localhost/" + projectUrl );
         releaseDescriptor.setWorkingDirectory( workingDirPath );
         
         return releaseDescriptor;
