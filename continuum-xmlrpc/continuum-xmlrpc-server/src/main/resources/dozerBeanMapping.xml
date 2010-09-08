@@ -246,13 +246,13 @@
     <field>
       <a>projectGroup</a>
       <b>projectGroup</b>
-      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectGroup</a-hint>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary</a-hint>
       <b-hint>org.apache.maven.continuum.model.project.ProjectGroup</b-hint>
     </field>
     <field>
       <a>project</a>
       <b>project</b>
-      <a-hint>org.apache.maven.continuum.xmlrpc.project.Project</a-hint>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectSummary</a-hint>
       <b-hint>org.apache.maven.continuum.model.project.Project</b-hint>
     </field>
   </mapping>
