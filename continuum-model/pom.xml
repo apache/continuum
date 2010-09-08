@@ -47,6 +47,7 @@ under the License.
           <packageWithVersion>false</packageWithVersion>
           <models>
             <model>src/main/mdo/continuum.xml</model>
+            <model>src/main/mdo/prepared-releases.mdo</model>
           </models>
           <useJava5>true</useJava5>
         </configuration>

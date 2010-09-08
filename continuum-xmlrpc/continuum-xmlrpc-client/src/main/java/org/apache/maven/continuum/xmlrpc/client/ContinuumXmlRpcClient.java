@@ -1182,6 +1182,12 @@ public class ContinuumXmlRpcClient
         return continuum.releaseCleanup( projectId, releaseId );
     }
 
+    public int releaseCleanup( int projectId, String releaseId, String releaseType )
+        throws Exception
+    {
+        return continuum.releaseCleanup( projectId, releaseId, releaseType );
+    }
+
     public int releaseRollback( int projectId, String releaseId )
         throws Exception
     {

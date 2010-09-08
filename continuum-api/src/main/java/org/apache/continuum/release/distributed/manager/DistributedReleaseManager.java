@@ -25,9 +25,11 @@ import java.util.Properties;
 
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.release.model.PreparedRelease;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.shared.release.ReleaseResult;
+
 
 public interface DistributedReleaseManager
 {
@@ -70,4 +72,7 @@ public interface DistributedReleaseManager
         throws ContinuumReleaseException, BuildAgentConfigurationException;
     
     String getDefaultBuildagent( int projectId );
+
+    PreparedRelease getPreparedRelease( String releaseId, String releaseType )
+        throws ContinuumReleaseException;
 }

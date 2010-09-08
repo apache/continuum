@@ -1523,6 +1523,18 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Cleanup the release
+     * 
+     * @param projectId
+     * @param releaseId
+     * @param releaseType
+     * @return
+     * @throws Exception
+     */
+    int releaseCleanup( int projectId, String releaseId, String releaseType )
+        throws Exception;
+
+    /**
      * Rollback a release
      * 
      * @param projectId

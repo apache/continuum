@@ -38,6 +38,7 @@ import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
+import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.repository.RepositoryServiceException;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
@@ -72,6 +73,7 @@ import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
+import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
@@ -2866,11 +2868,19 @@ public class ContinuumServiceImpl
     public int releaseCleanup( int projectId, String releaseId )
         throws Exception
     {
+        return releaseCleanup( projectId, releaseId, null );
+    }
+
+    public int releaseCleanup( int projectId, String releaseId, String releaseType )
+        throws Exception
+    {
         org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
 
         if ( project != null )
         {
             checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+            continuum.addContinuumReleaseResult( projectId, releaseId, releaseType );
+
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
                 continuum.getDistributedReleaseManager().releaseCleanup( releaseId );

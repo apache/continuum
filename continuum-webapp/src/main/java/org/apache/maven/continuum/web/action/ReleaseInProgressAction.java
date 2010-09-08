@@ -19,23 +19,15 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
-import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.configuration.ConfigurationException;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -121,13 +113,7 @@ public class ReleaseInProgressAction
     
                 if ( status.equals( SUCCESS ) )
                 {
-                    ReleaseResult result = releaseManager.getReleaseResult( releaseId );
-    
-                    if ( result != null && getContinuum().getContinuumReleaseResult( projectId, releaseGoal, result.getStartTime(), result.getEndTime() ) == null )
-                    {
-                        ContinuumReleaseResult releaseResult = createContinuumReleaseResult( result );
-                        getContinuum().addContinuumReleaseResult( releaseResult );
-                    }
+                    getContinuum().addContinuumReleaseResult( projectId, releaseId, releaseGoal );
                 }
 
                 listenerSummary.setPhases( DistributedReleaseUtil.getReleasePhases( map ) );
@@ -170,13 +156,7 @@ public class ReleaseInProgressAction
 
             if ( status.equals( SUCCESS ) )
             {
-                ReleaseResult result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
-
-                if ( result != null && getContinuum().getContinuumReleaseResult( projectId, releaseGoal, result.getStartTime(), result.getEndTime() ) == null )
-                {
-                    ContinuumReleaseResult releaseResult = createContinuumReleaseResult( result );
-                    getContinuum().addContinuumReleaseResult( releaseResult );
-                }
+                getContinuum().addContinuumReleaseResult( projectId, releaseId, releaseGoal );
             }
         }
 
@@ -340,43 +320,6 @@ public class ReleaseInProgressAction
         this.listenerSummary = listenerSummary;
     }
 
-    private ContinuumReleaseResult createContinuumReleaseResult( ReleaseResult result )
-        throws ContinuumException
-    {
-        ContinuumReleaseResult releaseResult = new ContinuumReleaseResult();
-        releaseResult.setStartTime( result.getStartTime() );
-        releaseResult.setEndTime( result.getEndTime() );
-        releaseResult.setResultCode( result.getResultCode() );
-
-        Project project = getContinuum().getProject( projectId );
-        ProjectGroup projectGroup = project.getProjectGroup();
-        releaseResult.setProjectGroup( projectGroup );
-        releaseResult.setProject( project );
-        releaseResult.setReleaseGoal( releaseGoal );
-        releaseResult.setUsername( username );
-
-        String releaseName = "releases-" + result.getStartTime();
-
-        try
-        {
-            File logFile = getContinuum().getConfiguration().getReleaseOutputFile( projectGroup.getId(), releaseName );
-
-            PrintWriter writer = new PrintWriter( new FileWriter( logFile ) );
-            writer.write( result.getOutput() );
-            writer.close();
-        }
-        catch ( ConfigurationException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
-        }
-        catch ( IOException e )
-        {
-            throw new ContinuumException( "Unable to write output to file", e );
-        }
-
-        return releaseResult;
-    }
-    
     public String getProjectName()
         throws ContinuumException
     {

@@ -26,6 +26,7 @@ import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -41,7 +42,9 @@ import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
+import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
+import org.apache.continuum.release.model.PreparedRelease;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
@@ -78,11 +81,13 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenOneContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
+import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUrlValidator;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.action.Action;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
@@ -99,8 +104,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -3180,6 +3187,88 @@ public class DefaultContinuum
     public BuildDefinitionService getBuildDefinitionService()
     {
         return buildDefinitionService;
+    }
+
+    public ContinuumReleaseResult addContinuumReleaseResult( int projectId, String releaseId, String releaseType )
+        throws ContinuumException
+    {
+        ReleaseResult result;
+        String releaseBy = "";
+
+        if ( getConfiguration().isDistributedBuildEnabled() )
+        {
+            try
+            {
+                result = (ReleaseResult) distributedReleaseManager.getReleaseResult( releaseId );
+                PreparedRelease preparedRelease = distributedReleaseManager.getPreparedRelease( releaseId, releaseType );
+                if ( preparedRelease != null )
+                {
+                    releaseBy = preparedRelease.getReleaseBy();
+                }
+            }
+            catch ( ContinuumReleaseException e )
+            {
+                throw new ContinuumException( "Failed to release project: " + projectId, e );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                throw new ContinuumException( "Failed to release project: " + projectId, e );
+            }
+        }
+        else
+        {
+            result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
+            ContinuumReleaseDescriptor descriptor = (ContinuumReleaseDescriptor) releaseManager.getPreparedReleases().get( releaseId );
+            if ( descriptor != null )
+            {
+                releaseBy = descriptor.getReleaseBy();
+            }
+        }
+
+        if ( result != null && getContinuumReleaseResult( projectId, releaseType, result.getStartTime(), result.getEndTime() ) == null )
+        {
+            ContinuumReleaseResult releaseResult = createContinuumReleaseResult( projectId, releaseType, result, releaseBy );
+            return addContinuumReleaseResult( releaseResult );
+        }
+
+        return null;
+    }
+
+    private ContinuumReleaseResult createContinuumReleaseResult( int projectId, String releaseGoals, ReleaseResult result, String releaseBy )
+        throws ContinuumException
+    {
+        ContinuumReleaseResult releaseResult = new ContinuumReleaseResult();
+        releaseResult.setStartTime( result.getStartTime() );
+        releaseResult.setEndTime( result.getEndTime() );
+        releaseResult.setResultCode( result.getResultCode() );
+    
+        Project project = getProject( projectId );
+        ProjectGroup projectGroup = project.getProjectGroup();
+        releaseResult.setProjectGroup( projectGroup );
+        releaseResult.setProject( project );
+        releaseResult.setReleaseGoal( releaseGoals );
+        releaseResult.setUsername( releaseBy );
+    
+        String releaseName = "releases-" + result.getStartTime();
+    
+        try
+        {
+            File logFile = getConfiguration().getReleaseOutputFile( projectGroup.getId(), releaseName );
+    
+            PrintWriter writer = new PrintWriter( new FileWriter( logFile ) );
+            writer.write( result.getOutput() );
+            writer.close();
+        }
+        catch ( ConfigurationException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumException( "Unable to write output to file", e );
+        }
+    
+        return releaseResult;
     }
 
     public ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )

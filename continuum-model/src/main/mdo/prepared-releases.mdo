@@ -75,6 +75,20 @@
           <description>type of release. possible values are "prepare" or "perform"</description>
           <type>String</type>
         </field>
+        <field>
+          <name>releaseGoals</name>
+          <version>1.4.1+</version>
+          <required>true</required>
+          <description>release goals</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>releaseBy</name>
+          <version>1.4.1+</version>
+          <required>true</required>
+          <description>release by</description>
+          <type>String</type>
+        </field>
       </fields>
     </class>
   </classes>

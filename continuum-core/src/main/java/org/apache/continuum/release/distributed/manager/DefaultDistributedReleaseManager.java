@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
@@ -41,8 +43,8 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.model.PreparedRelease;
 import org.apache.continuum.release.model.PreparedReleaseModel;
-import org.apache.continuum.release.model.io.xpp3.ContinuumPrepareReleasesModelXpp3Reader;
-import org.apache.continuum.release.model.io.xpp3.ContinuumPrepareReleasesModelXpp3Writer;
+import org.apache.continuum.release.model.io.stax.ContinuumPrepareReleasesModelStaxReader;
+import org.apache.continuum.release.model.io.stax.ContinuumPrepareReleasesModelStaxWriter;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -180,7 +182,7 @@ public class DefaultDistributedReleaseManager
                     client.releasePrepare( createProjectMap( project ), releaseProperties,
                                            releaseVersion, developmentVersion, environments, username );
     
-                addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ), "prepare" );
+                addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ), "prepare", releaseProperties.getProperty( "preparation-goals" ), username );
     
                 addReleaseInProgress( releaseId, "prepare", project.getId(), username );
     
@@ -465,7 +467,7 @@ public class DefaultDistributedReleaseManager
                     client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername,
                                                   scmPassword, scmTag, scmTagBase, environments, username );
     
-                addReleasePrepare( releaseId, buildAgentUrl, scmTag, "perform" );
+                addReleasePrepare( releaseId, buildAgentUrl, scmTag, "perform", goals, username );
                 addReleaseInProgress( releaseId, "perform", projectId, username );
     
                 return releaseId;
@@ -640,6 +642,23 @@ public class DefaultDistributedReleaseManager
         return buildResult != null ? buildResult.getBuildUrl() : null;
     }
 
+    public PreparedRelease getPreparedRelease( String releaseId, String releaseType )
+        throws ContinuumReleaseException
+    {
+        List<PreparedRelease> releases = getPreparedReleases();
+
+        for ( PreparedRelease release : releases )
+        {
+            if ( release.getReleaseId().equals( releaseId ) &&
+                            release.getReleaseType().equals( releaseType ) )
+            {
+                return release;
+            }
+        }
+
+        return null;
+    }
+
     private Map createProjectMap( Project project )
     {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -668,7 +687,7 @@ public class DefaultDistributedReleaseManager
             try
             {
                 fis = new FileInputStream( file );
-                ContinuumPrepareReleasesModelXpp3Reader reader = new ContinuumPrepareReleasesModelXpp3Reader();
+                ContinuumPrepareReleasesModelStaxReader reader = new ContinuumPrepareReleasesModelStaxReader();
                 PreparedReleaseModel model = reader.read( new InputStreamReader( fis ) );
 
                 return model.getPreparedReleases();
@@ -678,7 +697,7 @@ public class DefaultDistributedReleaseManager
                 log.error( e.getMessage(), e );
                 throw new ContinuumReleaseException( "Unable to get prepared releases", e );
             }
-            catch ( XmlPullParserException e )
+            catch ( XMLStreamException e )
             {
                 log.error( e.getMessage(), e );
                 throw new ContinuumReleaseException( e.getMessage(), e );
@@ -695,7 +714,8 @@ public class DefaultDistributedReleaseManager
         return null;
     }
 
-    private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName, String releaseType )
+    private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName, String releaseType, 
+                                    String releaseGoals, String username )
         throws ContinuumReleaseException
     {
         PreparedRelease release = new PreparedRelease();
@@ -703,6 +723,8 @@ public class DefaultDistributedReleaseManager
         release.setBuildAgentUrl( buildAgentUrl );
         release.setReleaseName( releaseName );
         release.setReleaseType( releaseType );
+        release.setReleaseGoals( releaseGoals );
+        release.setReleaseBy( username );
 
         List<PreparedRelease> preparedReleases = getPreparedReleases();
 
@@ -826,13 +848,17 @@ public class DefaultDistributedReleaseManager
 
         try
         {
-            ContinuumPrepareReleasesModelXpp3Writer writer = new ContinuumPrepareReleasesModelXpp3Writer();
+            ContinuumPrepareReleasesModelStaxWriter writer = new ContinuumPrepareReleasesModelStaxWriter();
             FileWriter fileWriter = new FileWriter( file );
             writer.write( fileWriter, model );
             fileWriter.flush();
             fileWriter.close();
         }
         catch ( IOException e )
+        {
+            throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
+        }
+        catch ( XMLStreamException e )
         {
             throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
         }

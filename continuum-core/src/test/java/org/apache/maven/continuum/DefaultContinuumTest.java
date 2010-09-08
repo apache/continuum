@@ -32,6 +32,7 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.utils.build.BuildTrigger;
@@ -45,6 +46,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.shared.release.ReleaseResult;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
@@ -641,37 +643,40 @@ public class DefaultContinuumTest
     {
         Continuum continuum = getContinuum();
 
-        ProjectGroup defaultProjectGroup =
-            continuum.getProjectGroupByGroupId( ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID );
-
+        Project project = makeStubProject( "test-project" );
+        ProjectGroup defaultGroup = getDefaultProjectGroup();
+        defaultGroup.addProject( project );
+        getProjectGroupDao().updateProjectGroup( defaultGroup );
+        project = getProjectDao().getProjectByName( "test-project" );
+        assertNotNull ( project );
         assertEquals( 0, continuum.getAllContinuumReleaseResults().size() );
 
-        ContinuumReleaseResult releaseResult = new ContinuumReleaseResult();
-        releaseResult.setStartTime( System.currentTimeMillis() );
+        ReleaseResult result = new ReleaseResult();
+        result.setStartTime( System.currentTimeMillis() );
+        result.setEndTime( System.currentTimeMillis() );
+        result.setResultCode( 200 );
+        result.appendOutput( "Error in release" );
 
-        File logFile = continuum.getConfiguration().getReleaseOutputFile( defaultProjectGroup.getId(),
-                                                                          "releases-" + releaseResult.getStartTime() );
-        logFile.mkdirs();
+        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
+        descriptor.setPreparationGoals( "clean" );
+        descriptor.setReleaseBy( "admin" );
 
-        assertTrue( logFile.exists() );
+        continuum.getReleaseManager().getReleaseResults().put( "test-release-id", result );
+        continuum.getReleaseManager().getPreparedReleases().put( "test-release-id", descriptor );
 
-        releaseResult.setResultCode( 0 );
-        releaseResult.setEndTime( System.currentTimeMillis() );
-        releaseResult.setProjectGroup( defaultProjectGroup );
+        ContinuumReleaseResult releaseResult = continuum.addContinuumReleaseResult( project.getId(), "test-release-id", "prepare" );
 
         releaseResult = continuum.addContinuumReleaseResult( releaseResult );
 
         List<ContinuumReleaseResult> releaseResults =
-            continuum.getContinuumReleaseResultsByProjectGroup( defaultProjectGroup.getId() );
+            continuum.getContinuumReleaseResultsByProjectGroup( defaultGroup.getId() );
         assertEquals( 1, releaseResults.size() );
         assertEquals( releaseResult, releaseResults.get( 0 ) );
 
         continuum.removeContinuumReleaseResult( releaseResult.getId() );
         assertEquals( 0, continuum.getAllContinuumReleaseResults().size() );
-        assertFalse( logFile.exists() );
-        assertEquals( defaultProjectGroup,
+        assertEquals( defaultGroup,
                       continuum.getProjectGroupByGroupId( ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
-
     }
 
     public void testBuildProjectWhileProjectIsInReleaseStage()

@@ -620,6 +620,9 @@ public interface Continuum
     public void startup()
         throws ContinuumException;
 
+    ContinuumReleaseResult addContinuumReleaseResult( int projectId, String releaseId, String releaseType )
+        throws ContinuumException;
+
     ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )
         throws ContinuumException;
 
