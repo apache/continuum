@@ -104,46 +104,53 @@ public class BuildProjectTaskExecutor
 
         int projectId = buildProjectTask.getProjectId();
 
-        log.info( "Initializing build (projectId=" + projectId + ")" );
-        BuildContext context = buildContextManager.getBuildContext( projectId );
-        initializeBuildContext( context );
-
-        if ( !checkScmResult( context ) )
-        {
-            log.info( "Error updating from SCM, not building" );
-            return;
-        }
-
-        log.info( "Checking if project '" + context.getProjectName() + "' should build" );
-        if ( !shouldBuild( context ) )
-        {
-            return;
-        }
-
-        log.info( "Starting build of " + context.getProjectName() );
-        startBuild( context );
-
         try
         {
+            log.info( "Initializing build (projectId=" + projectId + ")" );
+            BuildContext context = buildContextManager.getBuildContext( projectId );
+            initializeBuildContext( context );
+    
+            if ( !checkScmResult( context ) )
+            {
+                log.info( "Error updating from SCM, not building" );
+                return;
+            }
+    
+            log.info( "Checking if project '" + context.getProjectName() + "' should build" );
+            if ( !shouldBuild( context ) )
+            {
+                return;
+            }
+    
+            log.info( "Starting build of " + context.getProjectName() );
+            startBuild( context );
+    
             try
             {
-                performAction( "update-project-from-agent-working-directory", context );
+                try
+                {
+                    performAction( "update-project-from-agent-working-directory", context );
+                }
+                catch ( TaskExecutionException e )
+                {
+                    updateBuildResult( context, ContinuumBuildAgentUtil.throwableToString( e ) );
+    
+                    //just log the error but don't stop the build from progressing in order not to suppress any build result messages there
+                    log.error( "Error executing action update-project-from-agent-working-directory '", e );
+                }
+    
+                performAction( "execute-agent-builder", context );
+    
+                updateBuildResult( context, null );
             }
-            catch ( TaskExecutionException e )
+            finally
             {
-                updateBuildResult( context, ContinuumBuildAgentUtil.throwableToString( e ) );
-
-                //just log the error but don't stop the build from progressing in order not to suppress any build result messages there
-                log.error( "Error executing action update-project-from-agent-working-directory '", e );
+                endBuild( context );
             }
-
-            performAction( "execute-agent-builder", context );
-
-            updateBuildResult( context, null );
         }
-        finally
+        catch ( TaskExecutionException e )
         {
-            endBuild( context );
+            log.error( "Error while trying to build the project {}: {}", projectId, e.getMessage() );
         }
     }
 

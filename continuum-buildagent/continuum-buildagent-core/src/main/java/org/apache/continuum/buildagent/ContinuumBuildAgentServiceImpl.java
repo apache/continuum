@@ -776,26 +776,19 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
-
-            if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
-            {
-                return true;
-            }
-
-            BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
-
-            if ( currentBuildTask != null && currentBuildTask.getProjectGroupId() == projectGroupId )
-            {
-                return true;
-            }
-
             for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
             {
                 if ( task.getProjectGroupId() == projectGroupId )
                 {
                     return true;
                 }
+            }
+
+            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+
+            if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
+            {
+                return true;
             }
 
             for ( BuildProjectTask task : buildAgentTaskQueueManager.getProjectsInBuildQueue() )
@@ -805,6 +798,13 @@ public class ContinuumBuildAgentServiceImpl
                     return true;
                 }
             }
+
+            BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
+
+            if ( currentBuildTask != null && currentBuildTask.getProjectGroupId() == projectGroupId )
+            {
+                return true;
+            }            
         }
         catch ( TaskQueueManagerException e )
         {
@@ -864,6 +864,45 @@ public class ContinuumBuildAgentServiceImpl
         catch ( TaskQueueManagerException e )
         {
             log.error( "Error while checking if project scm root " + projectScmRootId + " is queued in agent", e);
+        }
+
+        return false;
+    }
+
+    public boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )
+    {
+        try
+        {
+            for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
+            {
+                if ( task.getProjectGroupId() == projectGroupId )
+                {
+                    return true;
+                }
+            }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error while checking if project group " + projectGroupId + " is in prepare build queue in agent", e);
+        }
+
+        return false;
+    }
+
+    public boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId )
+    {
+        try
+        {
+            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+
+            if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
+            {
+                return true;
+            }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error while checking if project group " + projectGroupId + " is currently preparing build in agent", e);
         }
 
         return false;

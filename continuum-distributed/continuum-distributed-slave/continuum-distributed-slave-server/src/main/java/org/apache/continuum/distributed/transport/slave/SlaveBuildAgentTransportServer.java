@@ -470,6 +470,20 @@ public class SlaveBuildAgentTransportServer
         return continuumBuildAgentService.isProjectInBuildQueue( projectId );
     }
 
+    public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )
+        throws Exception
+    {
+        log.info( "Checking if project group '" + projectGroupId + "' is in prepare build queue" );
+        return continuumBuildAgentService.isProjectGroupInPrepareBuildQueue( projectGroupId );
+    }
+
+    public Boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId )
+        throws Exception
+    {
+        log.info( "Checking if project group '" + projectGroupId + "' is currently preparing build" );
+        return continuumBuildAgentService.isProjectGroupCurrentlyPreparingBuild( projectGroupId );
+    }
+
     public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
         throws Exception
     {

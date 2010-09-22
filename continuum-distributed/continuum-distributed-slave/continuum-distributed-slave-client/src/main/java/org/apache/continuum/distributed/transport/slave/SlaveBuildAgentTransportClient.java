@@ -628,6 +628,44 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
+    public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectGroupInPrepareBuildQueue( projectGroupId );
+            log.info( "Checking if projectGroup " + projectGroupId + "is in prepare build queue of agent" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if projectGroup " + projectGroupId + " is in prepare build queue of agent", e );
+            throw new Exception( "Failed to check if projectGroup " + projectGroupId + " is in prepare build queue of agent", e );
+        }
+
+        return result;
+    }
+
+    public Boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectGroupCurrentlyPreparingBuild( projectGroupId );
+            log.info( "Checking if projectGroup " + projectGroupId + "is currently preparing build" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if projectGroup " + projectGroupId + " is currently preparing build", e );
+            throw new Exception( "Failed to check if projectGroup " + projectGroupId + " is currently preparing build", e );
+        }
+
+        return result;
+    }
+
     public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
         throws Exception
     {

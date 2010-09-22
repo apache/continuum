@@ -122,6 +122,12 @@ public interface SlaveBuildAgentTransportService
     public Boolean isProjectInBuildQueue( int projectId )
         throws Exception;
 
+    public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )
+        throws Exception;
+
+    public Boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId )
+        throws Exception;
+
     public Boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
         throws Exception;
 

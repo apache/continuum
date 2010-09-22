@@ -260,4 +260,18 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
+    public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )
+        throws Exception
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId )
+        throws Exception
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

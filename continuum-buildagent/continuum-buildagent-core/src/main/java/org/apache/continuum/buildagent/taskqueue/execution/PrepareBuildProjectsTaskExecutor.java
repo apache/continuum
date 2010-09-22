@@ -78,64 +78,71 @@ public class PrepareBuildProjectsTaskExecutor
 
         Map<String, Object> context = null;
 
-        if ( buildContexts != null && buildContexts.size() > 0 )
+        try
         {
-            try
+            if ( buildContexts != null && buildContexts.size() > 0 )
             {
-                for ( BuildContext buildContext : buildContexts )
+                try
                 {
-                    BuildDefinition buildDef = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
-
-                    log.info( "Check scm root state" );
-                    if ( !checkProjectScmRoot( context ) )
+                    for ( BuildContext buildContext : buildContexts )
                     {
-                        break;
-                    }
-
-                    log.info( "Starting prepare build" );
-                    startPrepareBuild( buildContext );
-
-                    log.info( "Initializing prepare build" );
-                    initializeActionContext( buildContext );
-
-                    try
-                    {
-                        if ( buildDef.isBuildFresh() )
+                        BuildDefinition buildDef = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
+    
+                        log.info( "Check scm root state" );
+                        if ( !checkProjectScmRoot( context ) )
                         {
-                            log.info( "Clean up working directory" );
-                            cleanWorkingDirectory( buildContext );
+                            break;
                         }
-
-                        log.info( "Updating working directory" );
-                        updateWorkingDirectory( buildContext );
-
-                        log.info( "Merging SCM results" );
-                        //CONTINUUM-1393
-                        if ( !buildDef.isBuildFresh() )
+    
+                        log.info( "Starting prepare build" );
+                        startPrepareBuild( buildContext );
+    
+                        log.info( "Initializing prepare build" );
+                        initializeActionContext( buildContext );
+    
+                        try
                         {
-                            mergeScmResults( buildContext );
+                            if ( buildDef.isBuildFresh() )
+                            {
+                                log.info( "Clean up working directory" );
+                                cleanWorkingDirectory( buildContext );
+                            }
+    
+                            log.info( "Updating working directory" );
+                            updateWorkingDirectory( buildContext );
+    
+                            log.info( "Merging SCM results" );
+                            //CONTINUUM-1393
+                            if ( !buildDef.isBuildFresh() )
+                            {
+                                mergeScmResults( buildContext );
+                            }
                         }
-                    }
-                    finally
-                    {
-                        endProjectPrepareBuild( buildContext );
-                        context = buildContext.getActionContext();
+                        finally
+                        {
+                            endProjectPrepareBuild( buildContext );
+                            context = buildContext.getActionContext();
+                        }
                     }
                 }
+                finally
+                {
+                    endPrepareBuild( context );
+                }
+    
+                if ( checkProjectScmRoot( context ) )
+                {
+                    buildProjects( buildContexts );
+                }
             }
-            finally
+            else
             {
-                endPrepareBuild( context );
-            }
-
-            if ( checkProjectScmRoot( context ) )
-            {
-                buildProjects( buildContexts );
+                throw new TaskExecutionException( "No project build context" );
             }
         }
-        else
+        catch ( TaskExecutionException e )
         {
-            throw new TaskExecutionException( "No project build context" );
+            log.error( "Error while preparing build of project: {}", e.getMessage() );
         }
     }
 
