@@ -112,7 +112,6 @@ public class BuildProjectTaskExecutor
     
             if ( !checkScmResult( context ) )
             {
-                log.info( "Error updating from SCM, not building" );
                 return;
             }
     
@@ -199,8 +198,17 @@ public class BuildProjectTaskExecutor
 
     private boolean checkScmResult( BuildContext buildContext )
     {
-        return !( buildContext.getScmResult() == null || !buildContext.getScmResult().isSuccess() );
-
+        if ( buildContext.getScmResult() == null )
+        {
+            log.info( "Error updating from SCM, SCM result is null, not building" );
+            return false;
+        }
+        else if ( !buildContext.getScmResult().isSuccess() )
+        {
+            log.info( "Error updating from SCM, SCM result has errors, not building" );
+            return false;
+        }
+        return true;
     }
 
     private void startBuild( BuildContext buildContext )
