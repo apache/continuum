@@ -780,6 +780,7 @@ public class ContinuumBuildAgentServiceImpl
             {
                 if ( task.getProjectGroupId() == projectGroupId )
                 {
+                    log.debug( "projectGroup {} is in prepare build queue", projectGroupId );
                     return true;
                 }
             }
@@ -788,6 +789,7 @@ public class ContinuumBuildAgentServiceImpl
 
             if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
             {
+                log.debug( "projectGroup {} is currently preparing build", projectGroupId );
                 return true;
             }
 
@@ -795,6 +797,7 @@ public class ContinuumBuildAgentServiceImpl
             {
                 if ( task.getProjectGroupId() == projectGroupId )
                 {
+                    log.debug( "projectGroup {} is in build queue", projectGroupId );
                     return true;
                 }
             }
@@ -803,6 +806,7 @@ public class ContinuumBuildAgentServiceImpl
 
             if ( currentBuildTask != null && currentBuildTask.getProjectGroupId() == projectGroupId )
             {
+                log.debug( "projectGroup {} is currently building", projectGroupId );
                 return true;
             }            
         }
