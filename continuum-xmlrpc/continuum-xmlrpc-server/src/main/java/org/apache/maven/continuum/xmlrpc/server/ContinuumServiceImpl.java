@@ -38,7 +38,6 @@ import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
-import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.repository.RepositoryServiceException;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
@@ -2879,7 +2878,7 @@ public class ContinuumServiceImpl
         if ( project != null )
         {
             checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
-            continuum.addContinuumReleaseResult( projectId, releaseId, releaseType );
+            org.apache.continuum.model.release.ContinuumReleaseResult result = continuum.addContinuumReleaseResult( projectId, releaseId, releaseType );
 
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
@@ -2891,7 +2890,7 @@ public class ContinuumServiceImpl
                 continuum.getReleaseManager().getListeners().remove( releaseId );
             }
     
-            return 0;
+            return result != null ? result.getId() : 0;
         }
         else
         {
