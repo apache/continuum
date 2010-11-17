@@ -853,7 +853,7 @@ public class DefaultDistributedBuildManager
                             int pid = ContinuumBuildConstant.getProjectId( context );
                             int buildId = ContinuumBuildConstant.getBuildDefinitionId( context );
 
-                            if ( pid == projectId && buildId == buildDefinitionId )
+                            if ( pid == projectId && ( buildId == buildDefinitionId || buildDefinitionId == -1 ) )
                             {
                                 found = true;
                                 break;
@@ -900,7 +900,8 @@ public class DefaultDistributedBuildManager
         {
             for ( BuildProjectTask task : map.get( url ) )
             {
-                if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                if ( task.getProjectId() == projectId && 
+                   ( buildDefinitionId == -1 || task.getBuildDefinitionId() == buildDefinitionId ) )
                 {
                     return true;
                 }
@@ -931,7 +932,7 @@ public class DefaultDistributedBuildManager
                             int pid = ContinuumBuildConstant.getProjectId( context );
                             int buildId = ContinuumBuildConstant.getBuildDefinitionId( context );
     
-                            if ( pid == projectId && buildId == buildDefinitionId )
+                            if ( pid == projectId && ( buildDefinitionId == -1 || buildId == buildDefinitionId ) )
                             {
                                 found = true;
                                 break;
@@ -977,7 +978,8 @@ public class DefaultDistributedBuildManager
         {
             BuildProjectTask task = map.get( url );
 
-            if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+            if ( task.getProjectId() == projectId && 
+               ( buildDefinitionId == -1 || task.getBuildDefinitionId() == buildDefinitionId ) )
             {
                 return true;
             }

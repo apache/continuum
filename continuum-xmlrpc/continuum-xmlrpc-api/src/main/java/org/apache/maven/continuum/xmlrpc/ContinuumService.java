@@ -1078,6 +1078,25 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Return true if the project is currently preparing build
+     * 
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    boolean isProjectCurrentlyPreparingBuild( int projectId )
+        throws Exception;
+
+    /**
+     * Return true if the project is currently building
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception;
+
+    /**
      * Return projects building queue.
      *
      * @throws ContinuumException

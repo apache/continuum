@@ -536,6 +536,18 @@ public class ContinuumXmlRpcClient
         return continuum.isProjectInBuildingQueue( projectId );
     }
 
+    public boolean isProjectCurrentlyPreparingBuild( int projectId )
+        throws Exception
+    {
+        return continuum.isProjectCurrentlyPreparingBuild( projectId );
+    }
+
+    public boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception
+    {
+        return continuum.isProjectCurrentlyBuilding( projectId );
+    }
+
     public int removeProjectsFromBuildingQueue( int[] projectsId )
         throws Exception
     {

@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.SystemConfigurationDao;
@@ -110,6 +111,11 @@ public class ContinuumServiceImpl
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private DistributedBuildManager distributedBuildManager;
 
     public boolean ping()
         throws ContinuumException
@@ -693,7 +699,12 @@ public class ContinuumServiceImpl
         org.apache.maven.continuum.model.project.BuildResult buildResult =
             continuum.getLatestBuildResultForProject( projectId );
 
-        return getBuildResult( projectId, buildResult.getId() );
+        if ( buildResult != null )
+        {
+            return getBuildResult( projectId, buildResult.getId() );
+        }
+
+        return null;
     }
 
     public BuildResult getBuildResult( int projectId, int buildId )
@@ -1099,7 +1110,14 @@ public class ContinuumServiceImpl
     {
         try
         {
-            return parallelBuildsManager.isInPrepareBuildQueue( projectId );
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                return distributedBuildManager.isProjectInAnyPrepareBuildQueue( projectId, -1 );
+            }
+            else
+            {
+                return parallelBuildsManager.isInPrepareBuildQueue( projectId );
+            }
         }
         catch ( BuildManagerException e )
         {
@@ -1112,7 +1130,54 @@ public class ContinuumServiceImpl
     {
         try
         {
-            return parallelBuildsManager.isInAnyBuildQueue( projectId );
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                return distributedBuildManager.isProjectInAnyBuildQueue( projectId, -1 );
+            }
+            else
+            {
+                return parallelBuildsManager.isInAnyBuildQueue( projectId );
+            }
+        }
+        catch ( BuildManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
+
+    public boolean isProjectCurrentlyPreparingBuild( int projectId )
+        throws ContinuumException
+    {
+        try
+        {
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                return distributedBuildManager.isProjectCurrentlyPreparingBuild( projectId, -1 );
+            }
+            else
+            {
+                return parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId );
+            }
+        }
+        catch ( BuildManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
+
+    public boolean isProjectCurrentlyBuilding( int projectId )
+        throws ContinuumException
+    {
+        try
+        {
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                return distributedBuildManager.isProjectInAnyBuildQueue( projectId, -1 );
+            }
+            else
+            {
+                return parallelBuildsManager.isProjectInAnyCurrentBuild( projectId );
+            }
         }
         catch ( BuildManagerException e )
         {
