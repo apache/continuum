@@ -1172,7 +1172,7 @@ public class ContinuumServiceImpl
         {
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                return distributedBuildManager.isProjectInAnyBuildQueue( projectId, -1 );
+                return distributedBuildManager.isProjectCurrentlyBuilding( projectId, -1 );
             }
             else
             {
