@@ -583,15 +583,30 @@ public class ReleasePrepareAction
 
     private void getReleasePluginParameters( Map context )
     {
-        scmTag = DistributedReleaseUtil.getScmTag( context, scmTag );
+        if ( StringUtils.isNotEmpty( DistributedReleaseUtil.getScmTag( context, scmTag ) ) )
+        {
+            scmTag = DistributedReleaseUtil.getScmTag( context, scmTag );
+        }
 
-        scmTagBase = DistributedReleaseUtil.getScmTagBase( context, scmTagBase );
+        if ( StringUtils.isNotEmpty( DistributedReleaseUtil.getScmTagBase( context, scmTagBase ) ) )
+        {
+            scmTagBase = DistributedReleaseUtil.getScmTagBase( context, scmTagBase );
+        }
 
-        prepareGoals = DistributedReleaseUtil.getPrepareGoals( context, prepareGoals );
+        if ( StringUtils.isNotEmpty( DistributedReleaseUtil.getPrepareGoals( context, prepareGoals ) ) )
+        {
+            prepareGoals = DistributedReleaseUtil.getPrepareGoals( context, prepareGoals );
+        }
 
-        arguments = DistributedReleaseUtil.getArguments( context, "" );
+        if ( StringUtils.isNotEmpty( DistributedReleaseUtil.getArguments( context, "" ) ) )
+        {
+            arguments = DistributedReleaseUtil.getArguments( context, "" );
+        }
 
-        scmCommentPrefix = DistributedReleaseUtil.getScmCommentPrefix( context, "" );
+        if ( StringUtils.isNotEmpty( DistributedReleaseUtil.getScmCommentPrefix( context, "" ) ) )
+        {
+            scmCommentPrefix = DistributedReleaseUtil.getScmCommentPrefix( context, "" );
+        }
 
         autoVersionSubmodules = DistributedReleaseUtil.getAutoVersionSubmodules( context, false );
 

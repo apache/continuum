@@ -40,6 +40,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.util.ReaderFactory;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
@@ -341,9 +342,15 @@ public class ReleasePerformAction
     {
         useReleaseProfile = DistributedReleaseUtil.getUseReleaseProfile( context, useReleaseProfile );
 
-        goals = DistributedReleaseUtil.getPerformGoals( context, goals );
+        if ( StringUtils.isNotEmpty( DistributedReleaseUtil.getPerformGoals( context, goals ) ) )
+        {
+            goals = DistributedReleaseUtil.getPerformGoals( context, goals );
+        }
 
-        arguments = DistributedReleaseUtil.getArguments( context, "" );
+        if ( StringUtils.isNotEmpty( DistributedReleaseUtil.getArguments( context, "" ) ) )
+        {
+            arguments = DistributedReleaseUtil.getArguments( context, "" );
+        }
     }
 
     public String getReleaseId()
