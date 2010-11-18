@@ -409,12 +409,14 @@ public class DefaultDistributedReleaseManager
     
                 addReleaseInProgress( releaseId, "perform", projectId, username );
             }
+            else
+            {
+                // call reload in case we disable the build agent
+                distributedBuildManager.reload();
 
-            // call reload in case we disable the build agent
-            distributedBuildManager.reload();
-
-            throw new ContinuumReleaseException( "Failed to perform release of " + releaseId + 
-                                                 " because the build agent " + buildAgentUrl + " is not available" );
+                throw new ContinuumReleaseException( "Failed to perform release of " + releaseId + 
+                                                     " because the build agent " + buildAgentUrl + " is not available" );
+            }
         }
         catch ( MalformedURLException e )
         {

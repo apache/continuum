@@ -73,7 +73,6 @@ import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
-import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
@@ -3009,7 +3008,7 @@ public class ContinuumServiceImpl
 
             // set scm tag and scm tag base if no values yet
             // scm tag
-            if ( params.get( "scm-tag") == null )
+            if ( StringUtils.isBlank( (String) params.get( "scm-tag" ) ) )
             {
                 String scmTag;
                 if ( project.getScmTag() != null )
@@ -3037,7 +3036,7 @@ public class ContinuumServiceImpl
             }
 
             // scm tagbase
-            if ( params.get( "scm-tagbase") == null )
+            if ( StringUtils.isBlank( (String) params.get( "scm-tagbase") ) )
             {
                 if ( project.getScmUrl().startsWith( "scm:svn" ) )
                 {
@@ -3090,13 +3089,13 @@ public class ContinuumServiceImpl
         value = context.get( "release-phases" );
         if ( value != null )
         {
-            listenerSummary.setPhases( (List<String>) value );
+            listenerSummary.setPhases( getList( value ) );
         }
 
         value = context.get( "completed-release-phases" );
         if ( value != null )
         {
-            listenerSummary.setPhases( (List<String>) value );
+            listenerSummary.setCompletedPhases( getList( value ) );
         }
 
         return listenerSummary;
@@ -3106,5 +3105,29 @@ public class ContinuumServiceImpl
                                                                    listener )
     {
         return (ReleaseListenerSummary) mapper.map( listener, ReleaseListenerSummary.class );
+    }
+
+    private List getList( Object obj )
+    {
+        List<Object> list = new ArrayList<Object>();
+
+        if ( obj instanceof Object[] )
+        {
+            Object[] objA = (Object[]) obj;
+
+            list.addAll( Arrays.asList( objA ) );
+        }
+        else
+        {
+            list = (List<Object>) obj;
+        }
+
+        return list;
+    }
+
+    // testing
+    public void setContinuum( Continuum continuum )
+    {
+        this.continuum = continuum;
     }
 }
