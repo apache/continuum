@@ -11,11 +11,11 @@ Add a Project
 
 ~~%{toc|section=0}
 
-* {Maven 2 project}
+* {Maven (2.0+) project}
 
-  From the menu, choose the <<Maven 2.0.x Project>> entry
+  From the menu, choose the <<Maven Project>> entry
 
-[../../images/add-m2-project-menu.png] Add a Maven 2 project
+[../../images/add-m2-project-menu.png] Add a Maven project
 
   The <<<pom.xml>>> file must be available through one of the following protocols: http, https, or ftp.
 
@@ -27,7 +27,7 @@ Add a Project
 
   <<Note:>> This doesn't support multi module projects.
 
-[../../images/add-m2-project.png] Add a Maven 2 project
+[../../images/add-m2-project.png] Add a Maven project
 
   You can supply a username and password if the POM URL requires authentication.  This information will be stored in the database in plain text and reused later for SCM checkouts and updates.
 

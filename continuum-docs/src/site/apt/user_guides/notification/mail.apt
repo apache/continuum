@@ -8,7 +8,7 @@
 
 Mail Notification
 
-  If you are using Maven 2, email notifiers configured in <<<pom.xml>>> will be automatically added, and you may
+  If you are using Maven 2.0+, email notifiers configured in <<<pom.xml>>> will be automatically added, and you may
   have as many as you need.
 
 +-------------------------------+

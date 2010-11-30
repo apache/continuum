@@ -47,7 +47,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         clickSubmitWithLocator( "buildDefinitionTemplate_0" );
         String[] options =
             new String[] { "--- Available Build Definitions ---", "Default Ant Build Definition",
-                "Default Maven 1 Build Definition", "Default Maven 2 Build Definition",
+                "Default Maven 1 Build Definition", "Default Maven Build Definition",
                 "Default Shell Build Definition" };
         assertAddEditTemplatePage( options, null );
     }

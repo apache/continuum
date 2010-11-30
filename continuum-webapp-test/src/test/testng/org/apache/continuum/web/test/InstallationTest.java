@@ -43,7 +43,7 @@ public class InstallationTest
         String INSTALL_TOOL_MAVEN_NAME = getProperty( "INSTALL_TOOL_MAVEN_NAME" );
 		String INSTALL_TOOL_MAVEN_PATH = isWindows() ? getProperty( "INSTALL_TOOL_MAVEN_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_MAVEN_PATH" );
 		goToAddInstallationTool();
-		addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven 2", INSTALL_TOOL_MAVEN_PATH, true, true, true );
+		addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven", INSTALL_TOOL_MAVEN_PATH, true, true, true );
 		// TODO: Validate build environment
 		
     }

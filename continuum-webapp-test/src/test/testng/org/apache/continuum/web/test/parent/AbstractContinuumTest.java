@@ -645,11 +645,11 @@ public abstract class AbstractContinuumTest
     }
 
     // ////////////////////////////////////
-    // Maven 2.0.x Project
+    // Maven 2.0+ Project
     // ////////////////////////////////////
     public void goToAddMavenTwoProjectPage()
     {
-        clickLinkWithText( "Maven 2.0.x Project" );
+        clickLinkWithText( "Maven Project" );
 
         assertAddMavenTwoProjectPage();
     }
@@ -691,7 +691,7 @@ public abstract class AbstractContinuumTest
         }
         else
         {
-            title = "Continuum - Add Maven 2 Project";
+            title = "Continuum - Add Maven Project";
         }
         waitAddProject( title );
     }
@@ -741,7 +741,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId", new String[] { "Default", "Default Ant Template",
-            "Default Maven 1 Template", "Default Maven 2 Template", "Default Shell Template" } );
+            "Default Maven 1 Template", "Default Maven Template", "Default Shell Template" } );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -819,7 +819,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId", new String[] { "Default", "Default Ant Template",
-            "Default Maven 1 Template", "Default Maven 2 Template", "Default Shell Template" } );
+            "Default Maven 1 Template", "Default Maven Template", "Default Shell Template" } );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -1011,7 +1011,7 @@ public abstract class AbstractContinuumTest
 
         if ( "maven2".equals( type ) )
         {
-            selectForOption( "saveBuildDefinitionTemplate_buildDefinitionIds", "Default Maven 2 Build Definition" );
+            selectForOption( "saveBuildDefinitionTemplate_buildDefinitionIds", "Default Maven Build Definition" );
         }
         else if ( "maven1".equals( type ) )
         {
@@ -1061,12 +1061,12 @@ public abstract class AbstractContinuumTest
         assertPage( "Continuum - Build Definition Templates" );
         assertTextPresent( "Default Ant Template" );
         assertTextPresent( "Default Maven 1 Template" );
-        assertTextPresent( "Default Maven 2 Template" );
+        assertTextPresent( "Default Maven Template" );
         assertTextPresent( "Default Shell Template" );
         assertTextPresent( "Available Build Definitions" );
         assertTextPresent( "Default Ant Build Definition" );
         assertTextPresent( "Default Maven 1 Build Definition" );
-        assertTextPresent( "Default Maven 2 Build Definition" );
+        assertTextPresent( "Default Maven Build Definition" );
         assertTextPresent( "Default Shell Build Definition" );
     }
     

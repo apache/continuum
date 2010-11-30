@@ -33,7 +33,7 @@ Guide to building Continuum
 
     * JDK 5 or greater
 
-    * Maven 2
+    * Maven 2.0.7 or greater
 	
 ** Building
 

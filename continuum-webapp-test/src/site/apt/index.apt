@@ -294,9 +294,9 @@ mvn clean install -Dexisting-container
 
 	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/ProjectGroupTest.java}Project Groups}}
 	
-	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/MavenOneProjectTest.java}Maven 1.0.X Projects}}
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/MavenOneProjectTest.java}Maven 1.x Projects}}
 	
-	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/MavenTwoProjectTest.java}Maven 2.0.X Projects}}
+	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/MavenTwoProjectTest.java}Maven Projects}}
 	
 	* {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp-test/src/test/testng/org/apache/continuum/web/test/AntProjectTest.java}Ant Projects}}
 	

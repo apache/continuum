@@ -327,7 +327,7 @@ public class UserRolesManagementTest
         }
         else
         {
-            title = "Continuum - Add Maven 2 Project";
+            title = "Continuum - Add Maven Project";
         }
         waitAddProject( title );
 	// build the project added in the project group

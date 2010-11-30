@@ -35,7 +35,7 @@ public class BuildDefinitionTemplateTest
     {
         String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         goToAddTemplate();
-        addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven 2 Build Definition",
+        addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven Build Definition",
             "Default Maven 1 Build Definition" }, new String[] {}, true );
     }
 
@@ -53,13 +53,13 @@ public class BuildDefinitionTemplateTest
     {
         String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         String newName = "new_name";
-        goToEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven 2 Build Definition",
+        goToEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven Build Definition",
             "Default Maven 1 Build Definition" } );
         addEditTemplate( newName, new String[] { "Default Shell Build Definition" },
-                         new String[] { "Default Maven 2 Build Definition" }, true );
+                         new String[] { "Default Maven Build Definition" }, true );
         goToEditTemplate( newName,
                           new String[] { "Default Maven 1 Build Definition", "Default Shell Build Definition" } );
-        addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven 2 Build Definition" },
+        addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven Build Definition" },
                          new String[] { "Default Shell Build Definition" }, true );
     }
 

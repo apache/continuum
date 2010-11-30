@@ -58,7 +58,7 @@ public class BuildDefinitionTest
         assertCellValueFromTable( "GROUP", tableElement, 1, 5 );
         assertCellValueFromTable( "false", tableElement, 1, 6 );
         assertCellValueFromTable( "true", tableElement, 1, 7 );
-        assertCellValueFromTable( "Default Maven 2 Build Definition", tableElement, 1, 8 );
+        assertCellValueFromTable( "Default Maven Build Definition", tableElement, 1, 8 );
         assertCellValueFromTable( "maven2", tableElement, 1, 9 );
         assertCellValueFromTable( "false", tableElement, 1, 10 );
         assertImgWithAlt( "Edit" );

@@ -83,7 +83,7 @@ public abstract class AbstractInstallationTest
         assertTextPresent( "Name" );
         assertElementPresent( "installation.name" );
         assertTextPresent( "Type" );
-        assertOptionPresent( "installation.type", new String[] { "JDK", "Maven 2", "Maven 1", "ANT" } );
+        assertOptionPresent( "installation.type", new String[] { "JDK", "Maven", "Maven 1", "ANT" } );
         assertTextPresent( "Value/Path" );
         assertElementPresent( "installation.varValue" );
         assertButtonWithValuePresent( "Save" );

@@ -658,7 +658,7 @@ public class ProjectGroupAction
                 {
                     logger.info(
                         "Attempt to release group '" + projectGroup.getName() + "' failed as project '" + p.getName() +
-                            "' is not a Maven 2 project (executor '" + p.getExecutorId() + "')" );
+                            "' is not a Maven project (executor '" + p.getExecutorId() + "')" );
                     allMavenTwo = false;
                 }
             }

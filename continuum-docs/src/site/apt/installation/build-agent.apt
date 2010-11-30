@@ -37,7 +37,7 @@ Installing and Configuring a Build Agent
   <continuumServerUrl>http://builds.example.com:8080/continuum/master-xmlrpc</continuumServerUrl>
   <installations>
     <installation>
-      <name>Maven 2 Home</name>
+      <name>Maven Home</name>
       <type>maven2</type>
       <varValue>/Applications/apache-maven-2.0.9</varValue>
     </installation>

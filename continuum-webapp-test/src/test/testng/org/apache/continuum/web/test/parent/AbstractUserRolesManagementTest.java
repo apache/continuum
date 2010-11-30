@@ -116,7 +116,7 @@ public abstract class AbstractUserRolesManagementTest
 	{
 		if( role == "System Administrator" )
     	{
-    		String navMenu = "About,Show Project Groups,Maven 2.0.x Project,Maven 1.x Project,Ant Project,Shell Project,Local Repositories,Purge Configurations,Schedules,Installations,Build Environments,Queues,Build Definition Templates,Configuration,Appearance,Users,Roles,Build Queue";
+    		String navMenu = "About,Show Project Groups,Maven Project,Maven 1.x Project,Ant Project,Shell Project,Local Repositories,Purge Configurations,Schedules,Installations,Build Environments,Queues,Build Definition Templates,Configuration,Appearance,Users,Roles,Build Queue";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
@@ -130,7 +130,7 @@ public abstract class AbstractUserRolesManagementTest
     	}
     	else if( role == "Continuum Group Project Administrator" )
     	{
-    		String navMenu = "About,Show Project Groups,Maven 2.0.x Project,Maven 1.x Project,Ant Project,Shell Project,Schedules,Queues,Users,Roles";
+    		String navMenu = "About,Show Project Groups,Maven Project,Maven 1.x Project,Ant Project,Shell Project,Schedules,Queues,Users,Roles";
     		String[] arrayNavMenu = navMenu.split( "," );
     		for( String navmenu : arrayNavMenu )
     			assertLinkPresent( navmenu );
@@ -237,7 +237,7 @@ public abstract class AbstractUserRolesManagementTest
     {
         assertLinkPresent( "About" );
         assertLinkPresent( "Show Project Groups" );
-        assertLinkPresent( "Maven 2.0.x Project" );
+        assertLinkPresent( "Maven Project" );
         assertLinkPresent( "Maven 1.x Project" );
         assertLinkPresent( "Ant Project" );
         assertLinkPresent( "Shell Project" );

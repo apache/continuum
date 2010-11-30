@@ -355,7 +355,7 @@ public class DefaultBuildDefinitionService
         log.info( "create default MavenTwoBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
-        template.setName( "Default Maven 2 Template" );
+        template.setName( "Default Maven Template" );
         template.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
 
         template = addBuildDefinitionTemplate( template );
@@ -374,7 +374,7 @@ public class DefaultBuildDefinitionService
 
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
 
-        bd.setDescription( "Default Maven 2 Build Definition" );
+        bd.setDescription( "Default Maven Build Definition" );
 
         bd.setTemplate( true );
 
