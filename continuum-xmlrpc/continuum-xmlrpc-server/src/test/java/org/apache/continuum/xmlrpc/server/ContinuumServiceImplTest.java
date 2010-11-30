@@ -18,8 +18,6 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 
-import com.sun.tools.javac.code.Attribute.Array;
-
 public class ContinuumServiceImplTest
     extends PlexusInSpringTestCase
 {
