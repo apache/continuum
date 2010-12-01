@@ -353,13 +353,14 @@ public class DefaultConfigurationService
     }
 
     public boolean isDistributedBuildEnabled()
-    {
-        return systemConf.isDistributedBuildEnabled();
+    {   
+        return generalConfiguration.isDistributedBuildEnabled();
     }
 
     public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
     {
         systemConf.setDistributedBuildEnabled( distributedBuildEnabled );
+        generalConfiguration.setDistributedBuildEnabled( distributedBuildEnabled );
     }
 
     public void addBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
@@ -709,10 +710,9 @@ public class DefaultConfigurationService
             if ( systemConf == null )
             {
                 systemConf = new SystemConfiguration();
-
                 systemConf = getSystemConfigurationDao().addSystemConfiguration( systemConf );
             }
-
+            
             loaded = true;
         }
         catch ( ContinuumStoreException e )
@@ -732,6 +732,7 @@ public class DefaultConfigurationService
         throws ConfigurationStoringException, ContinuumConfigurationException
     {
         configuration.setGeneralConfiguration( generalConfiguration );
+        
         configuration.save();
         try
         {

@@ -126,6 +126,7 @@ public class DefaultContinuumConfiguration
 
             this.generalConfiguration.setNumberOfBuildsInParallel( configuration.getNumberOfBuildsInParallel() );
             this.generalConfiguration.setBaseUrl( configuration.getBaseUrl() );
+            
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
             {
                 // TODO take care if file exists ?
@@ -158,6 +159,10 @@ public class DefaultContinuumConfiguration
                 this.generalConfiguration.setReleaseOutputDirectory(
                     new File( configuration.getReleaseOutputDirectory() ) );
             }
+            
+            // set the configuration for diistributedBuildEnabled
+            this.generalConfiguration.setDistributedBuildEnabled( configuration.isDistributedBuildEnabled() );
+            
             if ( configuration.getBuildAgents() != null )
             {
                 List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
@@ -261,6 +266,10 @@ public class DefaultContinuumConfiguration
                 configurationModel.setReleaseOutputDirectory(
                     this.generalConfiguration.getReleaseOutputDirectory().getPath() );
             }
+            
+            // set configuration for distributedBuildEnabled.
+            configurationModel.setDistributedBuildEnabled( this.generalConfiguration.isDistributedBuildEnabled() );
+            
             if ( this.generalConfiguration.getBuildAgents() != null )
             {
                 List<org.apache.continuum.configuration.model.BuildAgentConfiguration> buildAgents =

@@ -69,13 +69,14 @@ public class TestDefaultContinuumConfiguration
         assertNotNull( generalConfiguration.getBaseUrl() );
         assertEquals( "http://test", generalConfiguration.getBaseUrl() );
         assertEquals( new File( "myBuildOutputDir" ), generalConfiguration.getBuildOutputDirectory() );
+        assertTrue( generalConfiguration.isDistributedBuildEnabled() );
         assertNotNull( generalConfiguration.getBuildAgents() );
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgentConfig =
             generalConfiguration.getBuildAgents().get( 0 );
         assertEquals( "http://buildagent/xmlrpc", buildAgentConfig.getUrl() );
         assertEquals( "linux", buildAgentConfig.getDescription() );
         assertTrue( buildAgentConfig.isEnabled() );
-
+        
         // agent group tests        
         assertNotNull( "agent group", generalConfiguration.getBuildAgentGroups() );
         BuildAgentGroupConfiguration buildAgentGroupConfig = generalConfiguration.getBuildAgentGroups().get( 0 );
@@ -123,6 +124,7 @@ public class TestDefaultContinuumConfiguration
         List<BuildAgentGroupConfiguration> buildAgentGroups = new ArrayList<BuildAgentGroupConfiguration>();
         buildAgentGroups.add( buildAgentGroupConfiguration );
 
+        generalConfiguration.setDistributedBuildEnabled( false );
         generalConfiguration.setBuildAgents( buildAgents );
         generalConfiguration.setBuildAgentGroups( buildAgentGroups );
         configuration.setGeneralConfiguration( generalConfiguration );
@@ -159,6 +161,7 @@ public class TestDefaultContinuumConfiguration
         assertEquals( "http://buildagent-node-2/test",
                       configuration.getGeneralConfiguration().getBuildAgentGroups().get( 0 ).getBuildAgents().get(
                           1 ).getUrl() );
+        assertFalse( configuration.getGeneralConfiguration().isDistributedBuildEnabled() );
         log.info( "generalConfiguration " + configuration.getGeneralConfiguration().toString() );
     }
 }

@@ -48,6 +48,8 @@ public class GeneralConfiguration
     private List<BuildAgentConfiguration> buildAgents;
     
     private List<BuildAgentGroupConfiguration> buildAgentGroups;
+    
+    private boolean distributedBuildEnabled;
 
     public GeneralConfiguration()
     {
@@ -148,5 +150,15 @@ public class GeneralConfiguration
     public void setBuildAgentGroups( List<BuildAgentGroupConfiguration> buildAgentGroups )
     {
         this.buildAgentGroups = buildAgentGroups;
+    }
+
+    public boolean isDistributedBuildEnabled()
+    {
+        return distributedBuildEnabled;
+    }
+
+    public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+    {
+        this.distributedBuildEnabled = distributedBuildEnabled;
     }
 }

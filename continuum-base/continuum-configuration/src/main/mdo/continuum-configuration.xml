@@ -72,6 +72,11 @@
           <type>int</type>
         </field>
         <field>
+          <name>distributedBuildEnabled</name>
+          <version>1.4.1+</version>
+          <type>boolean</type>
+        </field>
+        <field>
           <name>buildAgents</name>
           <version>1.1.0+</version>
           <association>
