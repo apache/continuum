@@ -1189,8 +1189,17 @@ public class ContinuumServiceImpl
     {
         try
         {
-            Map<String, List<org.apache.continuum.taskqueue.BuildProjectTask>> buildTasks =
-                parallelBuildsManager.getProjectsInBuildQueues();
+            Map<String, List<org.apache.continuum.taskqueue.BuildProjectTask>> buildTasks;
+            
+            if( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                buildTasks = distributedBuildManager.getProjectsInBuildQueue();
+            }
+            else
+            {
+                buildTasks = parallelBuildsManager.getProjectsInBuildQueues();
+            }
+                
             Set<String> keys = buildTasks.keySet();
             List<org.apache.continuum.taskqueue.BuildProjectTask> convertedTasks =
                 new ArrayList<org.apache.continuum.taskqueue.BuildProjectTask>();
