@@ -266,4 +266,9 @@
     <class-a>org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary</class-a>
     <class-b>org.apache.continuum.model.release.ReleaseListenerSummary</class-b>
   </mapping>
+  
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration</class-a>
+    <class-b>org.apache.continuum.configuration.BuildAgentConfiguration</class-b>
+  </mapping>
 </mappings>

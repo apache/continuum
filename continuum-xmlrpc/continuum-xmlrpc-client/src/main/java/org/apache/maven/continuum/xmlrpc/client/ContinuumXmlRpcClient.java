@@ -32,6 +32,7 @@ import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildProjectTask;
@@ -698,6 +699,41 @@ public class ContinuumXmlRpcClient
         return continuum.getAllLocalRepositories();
     }
 
+    // ----------------------------------------------------------------------
+    // ConfigurationService
+    // ----------------------------------------------------------------------
+
+    public BuildAgentConfiguration addBuildAgent( BuildAgentConfiguration buildAgentConfiguration )
+        throws Exception
+    {
+        return continuum.addBuildAgent( buildAgentConfiguration );
+    }
+
+    public BuildAgentConfiguration getBuildAgent( String url )
+
+    {
+        return continuum.getBuildAgent( url );
+    }
+
+    public BuildAgentConfiguration updateBuildAgent( BuildAgentConfiguration buildAgentConfiguration )
+        throws Exception
+
+    {
+        return continuum.updateBuildAgent( buildAgentConfiguration );
+    }
+
+    public boolean removeBuildAgent( String url )
+        throws Exception
+
+    {
+        return continuum.removeBuildAgent( url );
+    }
+
+    public List<BuildAgentConfiguration> getAllBuildAgents()
+    {
+        return continuum.getAllBuildAgents();
+    }
+
     public Map<String, Object> addAntProjectRPC( Map<String, Object> project, int projectGroupId )
         throws Exception
     {
@@ -740,7 +776,7 @@ public class ContinuumXmlRpcClient
         return continuum.addMavenTwoProjectRPC( url, projectGroupId, checkoutInSingleDirectory );
     }
 
-    public Map<String,Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
+    public Map<String, Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
         throws Exception
     {
         return continuum.addMavenTwoProjectAsSingleProjectRPC( url, projectGroupId );
@@ -896,8 +932,7 @@ public class ContinuumXmlRpcClient
         return continuum.removeBuildResultRPC( br );
     }
 
-    public Map<String, Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId,
-                                                                        Map<String, Object> buildDef )
+    public Map<String, Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId, Map<String, Object> buildDef )
         throws Exception
     {
         return continuum.updateBuildDefinitionForProjectGroupRPC( projectGroupId, buildDef );
@@ -1167,19 +1202,45 @@ public class ContinuumXmlRpcClient
         return continuum.getAllLocalRepositoriesRPC();
     }
 
-    public int releasePerform( int projectId, String releaseId, String goals, String arguments,
-                                boolean useReleaseProfile, String repositoryName, String username )
+    public Map<String, Object> addBuildAgentRPC( Map<String, Object> buildAgentConfiguration )
         throws Exception
     {
-        return continuum.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repositoryName, username );
+        return continuum.addBuildAgentRPC( buildAgentConfiguration );
+    }
+
+    public Map<String, Object> getBuildAgentRPC( String url )
+
+    {
+        return continuum.getBuildAgentRPC( url );
+    }
+
+    public Map<String, Object> updateBuildAgentRPC( Map<String, Object> buildAgentConfiguration )
+        throws Exception
+
+    {
+        return continuum.updateBuildAgentRPC( buildAgentConfiguration );
+    }
+
+    public List<Object> getAllBuildAgentsRPC()
+    {
+        return continuum.getAllBuildAgentsRPC();
+    }
+
+    public int releasePerform( int projectId, String releaseId, String goals, String arguments,
+                               boolean useReleaseProfile, String repositoryName, String username )
+        throws Exception
+    {
+        return continuum.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repositoryName,
+                                         username );
     }
 
     public String releasePrepare( int projectId, Properties releaseProperties, Map<String, String> releaseVersions,
-                                Map<String, String> developmentVersions, Map<String, String> environments,
-                                String username )
+                                  Map<String, String> developmentVersions, Map<String, String> environments,
+                                  String username )
         throws Exception
     {
-        return continuum.releasePrepare( projectId, releaseProperties, releaseVersions, developmentVersions, environments, username );
+        return continuum.releasePrepare( projectId, releaseProperties, releaseVersions, developmentVersions,
+                                         environments, username );
     }
 
     public ReleaseListenerSummary getListener( int projectId, String releaseId )
@@ -1211,4 +1272,5 @@ public class ContinuumXmlRpcClient
     {
         return continuum.getReleasePluginParameters( projectId );
     }
+
 }

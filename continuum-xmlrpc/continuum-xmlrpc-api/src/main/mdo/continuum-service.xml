@@ -1471,5 +1471,27 @@
         </field>
       </fields>
     </class>
+    <class>
+      <name>BuildAgentConfiguration</name>
+      <version>1.4.1+</version>
+      <packageName>org.apache.maven.continuum.xmlrpc.project</packageName>
+      <fields>
+        <field>
+          <name>url</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>        
+        <field>
+          <name>enabled</name>
+          <version>1.4.1+</version>
+          <type>boolean</type>
+        </field>
+      </fields>
+    </class>    
   </classes>
 </model>

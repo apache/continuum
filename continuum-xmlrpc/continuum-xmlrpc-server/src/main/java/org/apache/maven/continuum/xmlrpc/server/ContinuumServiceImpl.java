@@ -36,6 +36,9 @@ import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
@@ -48,6 +51,9 @@ import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.configuration.ConfigurationException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -57,6 +63,7 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildProjectTask;
@@ -166,7 +173,6 @@ public class ContinuumServiceImpl
         return populateProject( project );
     }
 
-
     public int removeProject( int projectId )
         throws ContinuumException
     {
@@ -231,8 +237,7 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         ProjectGroup result = null;
-        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId )
-            ;
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId );
         try
         {
             if ( isAuthorized( ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION, projectGroup.getName() ) )
@@ -286,8 +291,7 @@ public class ContinuumServiceImpl
     private ProjectGroupSummary getPGSummary( int projectGroupId )
         throws ContinuumException
     {
-        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId )
-            ;
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId );
 
         checkViewProjectGroupAuthorization( projectGroup.getName() );
         return populateProjectGroupSummary( projectGroup );
@@ -298,8 +302,7 @@ public class ContinuumServiceImpl
     {
         checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
-        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId )
-            ;
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId );
         return populateProjectGroupSummary( projectGroup );
     }
 
@@ -610,8 +613,10 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, 
-                                new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProject( projectId,
+                                new org.apache.continuum.utils.build.BuildTrigger(
+                                                                                   ContinuumProjectState.TRIGGER_SCHEDULED,
+                                                                                   "" ) );
         return 0;
     }
 
@@ -622,8 +627,11 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, buildDefinitionId, 
-                                new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProject( projectId,
+                                buildDefinitionId,
+                                new org.apache.continuum.utils.build.BuildTrigger(
+                                                                                   ContinuumProjectState.TRIGGER_SCHEDULED,
+                                                                                   "" ) );
         return 0;
     }
 
@@ -633,8 +641,10 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, 
-                                new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProject( projectId,
+                                new org.apache.continuum.utils.build.BuildTrigger(
+                                                                                   ContinuumProjectState.TRIGGER_SCHEDULED,
+                                                                                   "" ) );
         return 0;
     }
 
@@ -644,8 +654,11 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProjectWithBuildDefinition( projectId, buildDefintionId, 
-                                                   new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProjectWithBuildDefinition( projectId,
+                                                   buildDefintionId,
+                                                   new org.apache.continuum.utils.build.BuildTrigger(
+                                                                                                      ContinuumProjectState.TRIGGER_SCHEDULED,
+                                                                                                      "" ) );
         return 0;
     }
 
@@ -667,8 +680,10 @@ public class ContinuumServiceImpl
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
 
-        continuum.buildProjectGroup( projectGroupId, 
-                                     new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProjectGroup( projectGroupId,
+                                     new org.apache.continuum.utils.build.BuildTrigger(
+                                                                                        ContinuumProjectState.TRIGGER_SCHEDULED,
+                                                                                        "" ) );
 
         return 0;
     }
@@ -679,8 +694,11 @@ public class ContinuumServiceImpl
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
 
-        continuum.buildProjectGroupWithBuildDefinition( projectGroupId, buildDefintionId, 
-                                                        new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
+        continuum.buildProjectGroupWithBuildDefinition( projectGroupId,
+                                                        buildDefintionId,
+                                                        new org.apache.continuum.utils.build.BuildTrigger(
+                                                                                                           ContinuumProjectState.TRIGGER_SCHEDULED,
+                                                                                                           "" ) );
 
         return 0;
     }
@@ -738,8 +756,7 @@ public class ContinuumServiceImpl
     public int removeBuildResult( BuildResult br )
         throws ContinuumException
     {
-        checkModifyProjectGroupAuthorization(
-            getProjectSummary( br.getProject().getId() ).getProjectGroup().getName() );
+        checkModifyProjectGroupAuthorization( getProjectSummary( br.getProject().getId() ).getProjectGroup().getName() );
         continuum.removeBuildResult( br.getId() );
         return 0;
     }
@@ -784,8 +801,7 @@ public class ContinuumServiceImpl
         try
         {
             result =
-                continuum.addMavenTwoProject(
-                                              url,
+                continuum.addMavenTwoProject( url,
                                               projectGroupId,
                                               true, // checkProtocol
                                               false, // useCredentialsCache
@@ -810,16 +826,17 @@ public class ContinuumServiceImpl
         try
         {
             result =
-                continuum.addMavenTwoProject(
-                                              url,
+                continuum.addMavenTwoProject( url,
                                               projectGroupId,
                                               true, // checkProtocol
                                               false, // useCredentialsCache
                                               false, // recursiveProjects
                                               continuum.getBuildDefinitionService().getDefaultMavenTwoBuildDefinitionTemplate().getId(),
-                                              true );  // a multi-module project added as a single project is always checked out
-                                                       // in a single directory, regardless the value set for checkoutInSingleDirectory
-                                                       // variable
+                                              true ); // a multi-module project added as a single project is always
+                                                      // checked out
+                                                      // in a single directory, regardless the value set for
+                                                      // checkoutInSingleDirectory
+                                                      // variable
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -852,8 +869,9 @@ public class ContinuumServiceImpl
         checkAddProjectGroupAuthorization();
         org.apache.maven.continuum.model.project.Project newProject =
             new org.apache.maven.continuum.model.project.Project();
-        int projectId = continuum.addProject( populateProject( project, newProject ),
-                                              ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR, projectGroupId );
+        int projectId =
+            continuum.addProject( populateProject( project, newProject ),
+                                  ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR, projectGroupId );
         return getProjectSummary( projectId );
     }
 
@@ -867,8 +885,9 @@ public class ContinuumServiceImpl
         checkAddProjectGroupAuthorization();
         org.apache.maven.continuum.model.project.Project newProject =
             new org.apache.maven.continuum.model.project.Project();
-        int projectId = continuum.addProject( populateProject( project, newProject ),
-                                              ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR, projectGroupId );
+        int projectId =
+            continuum.addProject( populateProject( project, newProject ),
+                                  ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR, projectGroupId );
         return getProjectSummary( projectId );
     }
 
@@ -1038,8 +1057,8 @@ public class ContinuumServiceImpl
         {
             org.apache.maven.continuum.model.system.Installation newInstallation =
                 new org.apache.maven.continuum.model.system.Installation();
-            return populateInstallation(
-                continuum.getInstallationService().add( populateInstallation( installation, newInstallation ) ) );
+            return populateInstallation( continuum.getInstallationService().add( populateInstallation( installation,
+                                                                                                       newInstallation ) ) );
         }
         catch ( InstallationException e )
         {
@@ -1102,7 +1121,6 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
     // Queue
     // ----------------------------------------------------------------------
-
 
     public boolean isProjectInPrepareBuildQueue( int projectId )
         throws ContinuumException
@@ -1303,8 +1321,8 @@ public class ContinuumServiceImpl
         {
             org.apache.continuum.model.repository.RepositoryPurgeConfiguration newPurge =
                 new org.apache.continuum.model.repository.RepositoryPurgeConfiguration();
-            return populateRepositoryPurgeConfiguration( continuum.getPurgeConfigurationService().
-                addRepositoryPurgeConfiguration( populateRepositoryPurgeConfiguration( repoPurge, newPurge ) ) );
+            return populateRepositoryPurgeConfiguration( continuum.getPurgeConfigurationService().addRepositoryPurgeConfiguration( populateRepositoryPurgeConfiguration( repoPurge,
+                                                                                                                                                                         newPurge ) ) );
         }
         catch ( RepositoryServiceException e )
         {
@@ -1325,8 +1343,8 @@ public class ContinuumServiceImpl
         {
             org.apache.continuum.model.repository.RepositoryPurgeConfiguration purge =
                 new org.apache.continuum.model.repository.RepositoryPurgeConfiguration();
-            continuum.getPurgeConfigurationService().updateRepositoryPurgeConfiguration(
-                populateRepositoryPurgeConfiguration( repoPurge, purge ) );
+            continuum.getPurgeConfigurationService().updateRepositoryPurgeConfiguration( populateRepositoryPurgeConfiguration( repoPurge,
+                                                                                                                               purge ) );
             return 0;
         }
         catch ( RepositoryServiceException e )
@@ -1383,8 +1401,7 @@ public class ContinuumServiceImpl
         List<RepositoryPurgeConfiguration> r = new ArrayList<RepositoryPurgeConfiguration>();
         for ( Object repoPurgeConfig : repoPurgeConfigs )
         {
-            r.add( populateRepositoryPurgeConfiguration(
-                (org.apache.continuum.model.repository.RepositoryPurgeConfiguration) repoPurgeConfig ) );
+            r.add( populateRepositoryPurgeConfiguration( (org.apache.continuum.model.repository.RepositoryPurgeConfiguration) repoPurgeConfig ) );
         }
         return r;
     }
@@ -1398,8 +1415,8 @@ public class ContinuumServiceImpl
         {
             org.apache.continuum.model.repository.DirectoryPurgeConfiguration newPurge =
                 new org.apache.continuum.model.repository.DirectoryPurgeConfiguration();
-            return populateDirectoryPurgeConfiguration( continuum.getPurgeConfigurationService().
-                addDirectoryPurgeConfiguration( populateDirectoryPurgeConfiguration( dirPurge, newPurge ) ) );
+            return populateDirectoryPurgeConfiguration( continuum.getPurgeConfigurationService().addDirectoryPurgeConfiguration( populateDirectoryPurgeConfiguration( dirPurge,
+                                                                                                                                                                      newPurge ) ) );
         }
         catch ( RepositoryServiceException e )
         {
@@ -1420,8 +1437,8 @@ public class ContinuumServiceImpl
         {
             org.apache.continuum.model.repository.DirectoryPurgeConfiguration purge =
                 new org.apache.continuum.model.repository.DirectoryPurgeConfiguration();
-            continuum.getPurgeConfigurationService().updateDirectoryPurgeConfiguration(
-                populateDirectoryPurgeConfiguration( dirPurge, purge ) );
+            continuum.getPurgeConfigurationService().updateDirectoryPurgeConfiguration( populateDirectoryPurgeConfiguration( dirPurge,
+                                                                                                                             purge ) );
             return 0;
         }
         catch ( RepositoryServiceException e )
@@ -1478,8 +1495,7 @@ public class ContinuumServiceImpl
         List<DirectoryPurgeConfiguration> d = new ArrayList<DirectoryPurgeConfiguration>();
         for ( Object dirPurgeConfig : dirPurgeConfigs )
         {
-            d.add( populateDirectoryPurgeConfiguration(
-                (org.apache.continuum.model.repository.DirectoryPurgeConfiguration) dirPurgeConfig ) );
+            d.add( populateDirectoryPurgeConfiguration( (org.apache.continuum.model.repository.DirectoryPurgeConfiguration) dirPurgeConfig ) );
         }
         return d;
     }
@@ -1539,8 +1555,8 @@ public class ContinuumServiceImpl
         {
             org.apache.continuum.model.repository.LocalRepository newRepository =
                 new org.apache.continuum.model.repository.LocalRepository();
-            return populateLocalRepository( continuum.getRepositoryService().addLocalRepository(
-                populateLocalRepository( repository, newRepository ) ) );
+            return populateLocalRepository( continuum.getRepositoryService().addLocalRepository( populateLocalRepository( repository,
+                                                                                                                          newRepository ) ) );
         }
         catch ( RepositoryServiceException e )
         {
@@ -1612,11 +1628,136 @@ public class ContinuumServiceImpl
     }
 
     // ----------------------------------------------------------------------
+    // ConfigurationService
+    // ----------------------------------------------------------------------
+
+    public BuildAgentConfiguration addBuildAgent( BuildAgentConfiguration buildAgentConfiguration )
+        throws ConfigurationException, ConfigurationStoringException, ContinuumConfigurationException
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+
+        if ( buildAgentConfiguration == null )
+        {
+            return null;
+        }
+        try
+        {
+            configurationService.addBuildAgent( populateBuildAgent( buildAgentConfiguration ) );
+            configurationService.store();
+            return populateBuildAgent( configurationService.getBuildAgent( buildAgentConfiguration.getUrl() ) );
+        }
+        catch ( ConfigurationException e )
+        {
+            throw new ConfigurationException( "Error in adding buildAgent", e );
+        }
+    }
+
+    public BuildAgentConfiguration getBuildAgent( String url )
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
+            configurationService.getBuildAgent( url );
+        BuildAgentConfiguration buildAgentConfiguration = buildAgent != null ? populateBuildAgent( buildAgent ) : null;
+        return buildAgentConfiguration;
+    }
+
+    public BuildAgentConfiguration updateBuildAgent( BuildAgentConfiguration buildAgentConfiguration )
+        throws ConfigurationStoringException, ContinuumConfigurationException
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
+            configurationService.getBuildAgent( buildAgentConfiguration.getUrl() );
+        BuildAgentConfiguration buildAgentConfigurationToUpdate =
+            buildAgent != null ? populateBuildAgent( buildAgent ) : null;
+
+        if ( buildAgentConfigurationToUpdate != null )
+        {
+            buildAgentConfigurationToUpdate.setDescription( buildAgentConfiguration.getDescription() );
+            buildAgentConfigurationToUpdate.setEnabled( buildAgentConfiguration.isEnabled() );
+            configurationService.updateBuildAgent( populateBuildAgent( buildAgentConfigurationToUpdate ) );
+            configurationService.store();
+            return populateBuildAgent( configurationService.getBuildAgent( buildAgentConfiguration.getUrl() ) );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public boolean removeBuildAgent( String url )
+        throws BuildAgentConfigurationException, ConfigurationStoringException, ContinuumConfigurationException,
+        ContinuumException
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+
+        boolean SUCCESS = false;
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
+            configurationService.getBuildAgent( url );
+        BuildAgentConfiguration buildAgentConfiguration =
+            buildAgent != null ? populateBuildAgent( buildAgent ) : null;
+        if ( buildAgentConfiguration != null )
+        {
+            if ( continuum.getDistributedBuildManager().isBuildAgentBusy( buildAgentConfiguration.getUrl() ) )
+            {
+                throw new BuildAgentConfigurationException( "Cannot delete build agent because it's busy at the moment" );
+            }
+
+            if ( configurationService.getBuildAgentGroups() != null )
+            {
+                for ( BuildAgentGroupConfiguration buildAgentGroup : configurationService.getBuildAgentGroups() )
+                {
+                    if ( configurationService.containsBuildAgentUrl( buildAgentConfiguration.getUrl(), buildAgentGroup ) )
+                    {
+                        throw new BuildAgentConfigurationException(
+                                                                    "Cannot delete build agent because it's in use at the moment" );
+                    }
+                }
+            }
+
+            try
+            {
+                continuum.getDistributedBuildManager().removeDistributedBuildQueueOfAgent( buildAgentConfiguration.getUrl() );
+                configurationService.removeBuildAgent( populateBuildAgent( buildAgentConfiguration ) );
+                configurationService.store();
+                SUCCESS = true;
+            }
+            catch ( ContinuumException e )
+            {
+                throw new ContinuumException( "Error when removing build agent in build queue", e );
+            }
+
+        }
+        else
+        {
+            throw new BuildAgentConfigurationException( "Build agent does not exist." );
+        }
+
+        return SUCCESS;
+    }
+
+    public List<BuildAgentConfiguration> getAllBuildAgents()
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+
+        List<org.apache.continuum.configuration.BuildAgentConfiguration> buildAgents =
+            configurationService.getBuildAgents();
+        List<BuildAgentConfiguration> buildAgentConfigurations = new ArrayList<BuildAgentConfiguration>();
+
+        if ( buildAgents != null )
+        {
+            for ( org.apache.continuum.configuration.BuildAgentConfiguration buildAgent : buildAgents )
+            {
+                buildAgentConfigurations.add( populateBuildAgent( buildAgent ) );
+            }
+        }
+        return buildAgentConfigurations;
+    }
+
+    // ----------------------------------------------------------------------
     // Converters
     // ----------------------------------------------------------------------
 
-    private List<BuildProjectTask> populateBuildProjectTaskList(
-        List<org.apache.continuum.taskqueue.BuildProjectTask> buildProjectTasks )
+    private List<BuildProjectTask> populateBuildProjectTaskList( List<org.apache.continuum.taskqueue.BuildProjectTask> buildProjectTasks )
     {
         List<BuildProjectTask> responses = new ArrayList<BuildProjectTask>();
         for ( org.apache.continuum.taskqueue.BuildProjectTask buildProjectTask : buildProjectTasks )
@@ -1679,14 +1820,13 @@ public class ContinuumServiceImpl
         return (ProjectNotifier) mapper.map( notifier, ProjectNotifier.class );
     }
 
-    private ProjectGroupSummary populateProjectGroupSummary(
-        org.apache.maven.continuum.model.project.ProjectGroup group )
+    private ProjectGroupSummary populateProjectGroupSummary( org.apache.maven.continuum.model.project.ProjectGroup group )
     {
         return (ProjectGroupSummary) mapper.map( group, ProjectGroupSummary.class );
     }
 
-    private org.apache.maven.continuum.model.project.ProjectGroup populateProjectGroupSummary(
-        ProjectGroupSummary group, org.apache.maven.continuum.model.project.ProjectGroup g )
+    private org.apache.maven.continuum.model.project.ProjectGroup populateProjectGroupSummary( ProjectGroupSummary group,
+                                                                                               org.apache.maven.continuum.model.project.ProjectGroup g )
     {
         if ( group == null )
         {
@@ -1703,14 +1843,12 @@ public class ContinuumServiceImpl
         return g;
     }
 
-    private ProjectGroup populateProjectGroupWithAllDetails(
-        org.apache.maven.continuum.model.project.ProjectGroup group )
+    private ProjectGroup populateProjectGroupWithAllDetails( org.apache.maven.continuum.model.project.ProjectGroup group )
     {
         return (ProjectGroup) mapper.map( group, ProjectGroup.class );
     }
 
-    private BuildResultSummary populateBuildResultSummary(
-        org.apache.maven.continuum.model.project.BuildResult buildResult )
+    private BuildResultSummary populateBuildResultSummary( org.apache.maven.continuum.model.project.BuildResult buildResult )
     {
         return (BuildResultSummary) mapper.map( buildResult, BuildResultSummary.class );
     }
@@ -1780,8 +1918,8 @@ public class ContinuumServiceImpl
         bd.setId( buildDef.getId() );
         if ( buildDef.getProfile() != null )
         {
-            bd.setProfile( populateProfile( buildDef.getProfile(), continuum.getProfileService().getProfile(
-                buildDef.getProfile().getId() ) ) );
+            bd.setProfile( populateProfile( buildDef.getProfile(),
+                                            continuum.getProfileService().getProfile( buildDef.getProfile().getId() ) ) );
         }
         else
         {
@@ -1789,8 +1927,8 @@ public class ContinuumServiceImpl
         }
         if ( buildDef.getSchedule() != null )
         {
-            bd.setSchedule(
-                populateSchedule( buildDef.getSchedule(), continuum.getSchedule( buildDef.getSchedule().getId() ) ) );
+            bd.setSchedule( populateSchedule( buildDef.getSchedule(),
+                                              continuum.getSchedule( buildDef.getSchedule().getId() ) ) );
         }
         else
         {
@@ -1800,8 +1938,7 @@ public class ContinuumServiceImpl
         return bd;
     }
 
-    private BuildDefinitionTemplate populateBuildDefinitionTemplate(
-        org.apache.maven.continuum.model.project.BuildDefinitionTemplate bdt )
+    private BuildDefinitionTemplate populateBuildDefinitionTemplate( org.apache.maven.continuum.model.project.BuildDefinitionTemplate bdt )
     {
         return (BuildDefinitionTemplate) mapper.map( bdt, BuildDefinitionTemplate.class );
     }
@@ -1913,27 +2050,23 @@ public class ContinuumServiceImpl
         return (Installation) mapper.map( install, Installation.class );
     }
 
-    private SystemConfiguration populateSystemConfiguration(
-        org.apache.maven.continuum.model.system.SystemConfiguration sysConf )
+    private SystemConfiguration populateSystemConfiguration( org.apache.maven.continuum.model.system.SystemConfiguration sysConf )
     {
         return (SystemConfiguration) mapper.map( sysConf, SystemConfiguration.class );
     }
 
-    private ContinuumReleaseResult populateReleaseResult(
-        org.apache.continuum.model.release.ContinuumReleaseResult releaseResult )
+    private ContinuumReleaseResult populateReleaseResult( org.apache.continuum.model.release.ContinuumReleaseResult releaseResult )
     {
         return (ContinuumReleaseResult) mapper.map( releaseResult, ContinuumReleaseResult.class );
     }
 
-    private RepositoryPurgeConfiguration populateRepositoryPurgeConfiguration(
-        org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurgeConfig )
+    private RepositoryPurgeConfiguration populateRepositoryPurgeConfiguration( org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurgeConfig )
     {
         return (RepositoryPurgeConfiguration) mapper.map( repoPurgeConfig, RepositoryPurgeConfiguration.class );
     }
 
-    private org.apache.continuum.model.repository.RepositoryPurgeConfiguration populateRepositoryPurgeConfiguration(
-        RepositoryPurgeConfiguration repoPurgeConfig,
-        org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurge )
+    private org.apache.continuum.model.repository.RepositoryPurgeConfiguration populateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurgeConfig,
+                                                                                                                     org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurge )
         throws RepositoryServiceException, ContinuumException
     {
         if ( repoPurgeConfig == null )
@@ -1950,9 +2083,8 @@ public class ContinuumServiceImpl
         repoPurge.setRetentionCount( repoPurgeConfig.getRetentionCount() );
         if ( repoPurgeConfig.getRepository() != null )
         {
-            repoPurge.setRepository(
-                populateLocalRepository( repoPurgeConfig.getRepository(), continuum.getRepositoryService().
-                    getLocalRepository( repoPurgeConfig.getRepository().getId() ) ) );
+            repoPurge.setRepository( populateLocalRepository( repoPurgeConfig.getRepository(),
+                                                              continuum.getRepositoryService().getLocalRepository( repoPurgeConfig.getRepository().getId() ) ) );
         }
         else
         {
@@ -1971,15 +2103,13 @@ public class ContinuumServiceImpl
         return repoPurge;
     }
 
-    private DirectoryPurgeConfiguration populateDirectoryPurgeConfiguration(
-        org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurgeConfig )
+    private DirectoryPurgeConfiguration populateDirectoryPurgeConfiguration( org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurgeConfig )
     {
         return (DirectoryPurgeConfiguration) mapper.map( dirPurgeConfig, DirectoryPurgeConfiguration.class );
     }
 
-    private org.apache.continuum.model.repository.DirectoryPurgeConfiguration populateDirectoryPurgeConfiguration(
-        DirectoryPurgeConfiguration dirPurgeConfig,
-        org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurge )
+    private org.apache.continuum.model.repository.DirectoryPurgeConfiguration populateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurgeConfig,
+                                                                                                                   org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurge )
         throws RepositoryServiceException, ContinuumException
     {
         if ( dirPurgeConfig == null )
@@ -2020,8 +2150,7 @@ public class ContinuumServiceImpl
         return dirPurge;
     }
 
-    private LocalRepository populateLocalRepository(
-        org.apache.continuum.model.repository.LocalRepository localRepository )
+    private LocalRepository populateLocalRepository( org.apache.continuum.model.repository.LocalRepository localRepository )
     {
         return (LocalRepository) mapper.map( localRepository, LocalRepository.class );
     }
@@ -2049,6 +2178,25 @@ public class ContinuumServiceImpl
 
         return new org.apache.continuum.utils.build.BuildTrigger( buildTrigger.getTrigger(),
                                                                   buildTrigger.getTriggeredBy() );
+    }
+
+    private org.apache.continuum.configuration.BuildAgentConfiguration populateBuildAgent( BuildAgentConfiguration buildAgent )
+    {
+        if ( buildAgent == null )
+        {
+            return null;
+        }
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgentConfiguration =
+            new org.apache.continuum.configuration.BuildAgentConfiguration();
+        buildAgentConfiguration.setUrl( buildAgent.getUrl() );
+        buildAgentConfiguration.setDescription( buildAgent.getDescription() );
+        buildAgentConfiguration.setEnabled( buildAgent.isEnabled() );
+        return buildAgentConfiguration;
+    }
+
+    private BuildAgentConfiguration populateBuildAgent( org.apache.continuum.configuration.BuildAgentConfiguration buildAgent )
+    {
+        return (BuildAgentConfiguration) mapper.map( buildAgent, BuildAgentConfiguration.class );
     }
 
     private Map<String, Object> serializeObject( Object o, final String... ignore )
@@ -2459,15 +2607,15 @@ public class ContinuumServiceImpl
     public Map<String, Object> addBuildDefinitionToProjectGroupRPC( int projectGroupId, Map<String, Object> buildDef )
         throws Exception
     {
-        return serializeObject(
-            this.addBuildDefinitionToProjectGroup( projectGroupId, (BuildDefinition) unserializeObject( buildDef ) ) );
+        return serializeObject( this.addBuildDefinitionToProjectGroup( projectGroupId,
+                                                                       (BuildDefinition) unserializeObject( buildDef ) ) );
     }
 
     public Map<String, Object> addBuildDefinitionToProjectRPC( int projectId, Map<String, Object> buildDef )
         throws Exception
     {
-        return serializeObject(
-            this.addBuildDefinitionToProject( projectId, (BuildDefinition) unserializeObject( buildDef ) ) );
+        return serializeObject( this.addBuildDefinitionToProject( projectId,
+                                                                  (BuildDefinition) unserializeObject( buildDef ) ) );
     }
 
     public Map<String, Object> addMavenOneProjectRPC( String url, int projectGroupId )
@@ -2494,7 +2642,7 @@ public class ContinuumServiceImpl
         return serializeObject( this.addMavenTwoProject( url, projectGroupId, checkoutInSingleDirectory ) );
     }
 
-    public Map<String,Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
+    public Map<String, Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
         throws Exception
     {
         return serializeObject( this.addMavenTwoProjectAsSingleProject( url, projectGroupId ) );
@@ -2650,20 +2798,18 @@ public class ContinuumServiceImpl
         return serializeObject( this.removeBuildResult( (BuildResult) unserializeObject( br ) ) );
     }
 
-    public Map<String, Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId,
-                                                                        Map<String, Object> buildDef )
+    public Map<String, Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId, Map<String, Object> buildDef )
         throws Exception
     {
         return serializeObject( this.updateBuildDefinitionForProjectGroup( projectGroupId,
-                                                                           (BuildDefinition) unserializeObject(
-                                                                               buildDef ) ) );
+                                                                           (BuildDefinition) unserializeObject( buildDef ) ) );
     }
 
     public Map<String, Object> updateBuildDefinitionForProjectRPC( int projectId, Map<String, Object> buildDef )
         throws Exception
     {
-        return serializeObject(
-            this.updateBuildDefinitionForProject( projectId, (BuildDefinition) unserializeObject( buildDef ) ) );
+        return serializeObject( this.updateBuildDefinitionForProject( projectId,
+                                                                      (BuildDefinition) unserializeObject( buildDef ) ) );
     }
 
     public Map<String, Object> updateProjectRPC( Map<String, Object> project )
@@ -2699,8 +2845,8 @@ public class ContinuumServiceImpl
     public Map<String, Object> updateGroupNotifierRPC( int projectgroupid, Map<String, Object> newNotifier )
         throws Exception
     {
-        return serializeObject(
-            this.updateGroupNotifier( projectgroupid, (ProjectNotifier) unserializeObject( newNotifier ) ) );
+        return serializeObject( this.updateGroupNotifier( projectgroupid,
+                                                          (ProjectNotifier) unserializeObject( newNotifier ) ) );
     }
 
     public Map<String, Object> updateNotifierRPC( int projectid, Map<String, Object> newNotifier )
@@ -2712,8 +2858,8 @@ public class ContinuumServiceImpl
     public Map<String, Object> addGroupNotifierRPC( int projectgroupid, Map<String, Object> newNotifier )
         throws Exception
     {
-        return serializeObject(
-            this.addGroupNotifier( projectgroupid, (ProjectNotifier) unserializeObject( newNotifier ) ) );
+        return serializeObject( this.addGroupNotifier( projectgroupid,
+                                                       (ProjectNotifier) unserializeObject( newNotifier ) ) );
     }
 
     public Map<String, Object> addNotifierRPC( int projectid, Map<String, Object> newNotifier )
@@ -2767,15 +2913,13 @@ public class ContinuumServiceImpl
     public Map<String, Object> addRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
         throws Exception
     {
-        return serializeObject(
-            this.addRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) unserializeObject( repoPurge ) ) );
+        return serializeObject( this.addRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) unserializeObject( repoPurge ) ) );
     }
 
     public int updateRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
         throws Exception
     {
-        return serializeObject(
-            this.updateRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) unserializeObject( repoPurge ) ) );
+        return serializeObject( this.updateRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) unserializeObject( repoPurge ) ) );
     }
 
     public Map<String, Object> getRepositoryPurgeConfigurationRPC( int repoPurgeId )
@@ -2793,15 +2937,13 @@ public class ContinuumServiceImpl
     public Map<String, Object> addDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
         throws Exception
     {
-        return serializeObject(
-            this.addDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) unserializeObject( dirPurge ) ) );
+        return serializeObject( this.addDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) unserializeObject( dirPurge ) ) );
     }
 
     public int updateDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
         throws Exception
     {
-        return serializeObject(
-            this.updateDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) unserializeObject( dirPurge ) ) );
+        return serializeObject( this.updateDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) unserializeObject( dirPurge ) ) );
     }
 
     public Map<String, Object> getDirectoryPurgeConfigurationRPC( int dirPurgeId )
@@ -2840,8 +2982,31 @@ public class ContinuumServiceImpl
         return serializeObject( this.getAllLocalRepositories() );
     }
 
+    public Map<String, Object> addBuildAgentRPC( Map<String, Object> buildAgentConfiguration )
+        throws Exception
+    {
+        return serializeObject( this.addBuildAgent( (BuildAgentConfiguration) unserializeObject( buildAgentConfiguration ) ) );
+    }
+
+    public Map<String, Object> getBuildAgentRPC( String url )
+    {
+        return serializeObject( this.getBuildAgent( url ) );
+    }
+
+    public Map<String, Object> updateBuildAgentRPC( Map<String, Object> buildAgentConfiguration )
+        throws ConfigurationStoringException, ContinuumConfigurationException
+    {
+        return serializeObject( this.updateBuildAgent( (BuildAgentConfiguration) unserializeObject( buildAgentConfiguration ) ) );
+    }
+
+    public List<Object> getAllBuildAgentsRPC()
+    {
+        return serializeObject( this.getAllBuildAgents() );
+    }
+
     public String releasePrepare( int projectId, Properties releaseProperties, Map<String, String> releaseVersions,
-                                Map<String, String> developmentVersions, Map<String, String> environments, String username )
+                                  Map<String, String> developmentVersions, Map<String, String> environments,
+                                  String username )
         throws Exception
     {
         org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
@@ -2852,8 +3017,9 @@ public class ContinuumServiceImpl
 
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                return continuum.getDistributedReleaseManager().releasePrepare( project, releaseProperties, releaseVersions, 
-                                                                                developmentVersions, environments, username );
+                return continuum.getDistributedReleaseManager().releasePrepare( project, releaseProperties,
+                                                                                releaseVersions, developmentVersions,
+                                                                                environments, username );
             }
             else
             {
@@ -2861,7 +3027,8 @@ public class ContinuumServiceImpl
 
                 if ( environments != null )
                 {
-                    String m2Home = environments.get( continuum.getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
+                    String m2Home =
+                        environments.get( continuum.getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
                     if ( StringUtils.isNotEmpty( m2Home ) )
                     {
                         executable = m2Home + File.separator + "bin" + File.separator + executable;
@@ -2869,13 +3036,16 @@ public class ContinuumServiceImpl
                 }
 
                 releaseProperties.setProperty( "release-by", username );
-                return continuum.getReleaseManager().prepare( project, releaseProperties, releaseVersions, developmentVersions, null, 
-                                                              continuum.getWorkingDirectory( projectId ).getPath(), environments, executable );
+                return continuum.getReleaseManager().prepare( project, releaseProperties, releaseVersions,
+                                                              developmentVersions, null,
+                                                              continuum.getWorkingDirectory( projectId ).getPath(),
+                                                              environments, executable );
             }
         }
         else
         {
-            throw new Exception( "Unable to prepare release project with id : " + projectId + " because it doesn't exist" );
+            throw new Exception( "Unable to prepare release project with id : " + projectId
+                + " because it doesn't exist" );
         }
     }
 
@@ -2889,26 +3059,31 @@ public class ContinuumServiceImpl
         {
             checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
 
-            org.apache.continuum.model.repository.LocalRepository repository = continuum.getRepositoryService().getLocalRepositoryByName( repositoryName );
+            org.apache.continuum.model.repository.LocalRepository repository =
+                continuum.getRepositoryService().getLocalRepositoryByName( repositoryName );
 
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                continuum.getDistributedReleaseManager().releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository, username );
+                continuum.getDistributedReleaseManager().releasePerform( projectId, releaseId, goals, arguments,
+                                                                         useReleaseProfile, repository, username );
             }
             else
             {
-                File performDirectory = new File( continuum.getConfiguration().getWorkingDirectory(),
-                                                  "releases-" + System.currentTimeMillis() );
+                File performDirectory =
+                    new File( continuum.getConfiguration().getWorkingDirectory(), "releases-"
+                        + System.currentTimeMillis() );
                 performDirectory.mkdirs();
 
-                continuum.getReleaseManager().perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, null, repository );
+                continuum.getReleaseManager().perform( releaseId, performDirectory, goals, arguments,
+                                                       useReleaseProfile, null, repository );
             }
 
             return 0;
         }
         else
         {
-            throw new Exception( "Unable to perform release project with id : " + projectId + " because it doesn't exist" );
+            throw new Exception( "Unable to perform release project with id : " + projectId
+                + " because it doesn't exist" );
         }
     }
 
@@ -2951,7 +3126,8 @@ public class ContinuumServiceImpl
         if ( project != null )
         {
             checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
-            org.apache.continuum.model.release.ContinuumReleaseResult result = continuum.addContinuumReleaseResult( projectId, releaseId, releaseType );
+            org.apache.continuum.model.release.ContinuumReleaseResult result =
+                continuum.addContinuumReleaseResult( projectId, releaseId, releaseType );
 
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
@@ -2962,7 +3138,7 @@ public class ContinuumServiceImpl
                 continuum.getReleaseManager().getReleaseResults().remove( releaseId );
                 continuum.getReleaseManager().getListeners().remove( releaseId );
             }
-    
+
             return result != null ? result.getId() : 0;
         }
         else
@@ -2985,7 +3161,8 @@ public class ContinuumServiceImpl
             }
             else
             {
-                continuum.getReleaseManager().rollback( releaseId, continuum.getWorkingDirectory( projectId ).getPath(), null );
+                continuum.getReleaseManager().rollback( releaseId,
+                                                        continuum.getWorkingDirectory( projectId ).getPath(), null );
                 continuum.getReleaseManager().getPreparedReleases().remove( releaseId );
             }
             return 0;
@@ -3012,7 +3189,9 @@ public class ContinuumServiceImpl
             }
             else
             {
-                params = continuum.getReleaseManager().getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(), "pom.xml" );
+                params =
+                    continuum.getReleaseManager().getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
+                                                                              "pom.xml" );
             }
 
             // set scm tag and scm tag base if no values yet
@@ -3045,12 +3224,13 @@ public class ContinuumServiceImpl
             }
 
             // scm tagbase
-            if ( StringUtils.isBlank( (String) params.get( "scm-tagbase") ) )
+            if ( StringUtils.isBlank( (String) params.get( "scm-tagbase" ) ) )
             {
                 if ( project.getScmUrl().startsWith( "scm:svn" ) )
                 {
-                    String scmTagBase = new SvnScmProviderRepository( project.getScmUrl(), project.getScmUsername(), 
-                                                                      project.getScmPassword() ).getTagBase();
+                    String scmTagBase =
+                        new SvnScmProviderRepository( project.getScmUrl(), project.getScmUsername(),
+                                                      project.getScmPassword() ).getTagBase();
                     // strip the Maven scm protocol prefix
                     params.put( "scm-tagbase", scmTagBase.substring( "scm:svn".length() + 1 ) );
                 }
@@ -3110,8 +3290,7 @@ public class ContinuumServiceImpl
         return listenerSummary;
     }
 
-    private ReleaseListenerSummary populateReleaseListenerSummary( org.apache.continuum.model.release.ReleaseListenerSummary 
-                                                                   listener )
+    private ReleaseListenerSummary populateReleaseListenerSummary( org.apache.continuum.model.release.ReleaseListenerSummary listener )
     {
         return (ReleaseListenerSummary) mapper.map( listener, ReleaseListenerSummary.class );
     }
@@ -3139,4 +3318,5 @@ public class ContinuumServiceImpl
     {
         this.continuum = continuum;
     }
+
 }
