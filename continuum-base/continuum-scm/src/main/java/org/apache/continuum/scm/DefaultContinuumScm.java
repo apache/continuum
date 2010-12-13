@@ -21,6 +21,8 @@ package org.apache.continuum.scm;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -144,6 +146,7 @@ public class DefaultContinuumScm
         throws ScmException
     {
         ScmVersion scmVersion = getScmVersion( configuration );
+        Date startDate = null;
 
         // TODO: probably need to base this from a working directory in the main configuration
         File workingDirectory = configuration.getWorkingDirectory();
@@ -154,7 +157,17 @@ public class DefaultContinuumScm
 
         ScmFileSet fileSet = new ScmFileSet( workingDirectory );
 
-        result = scmManager.changeLog( repository, fileSet, scmVersion, scmVersion );
+        if ( scmVersion == null || StringUtils.isBlank( scmVersion.getName() ) )
+        {
+            // let's get the start date instead
+            startDate = getScmStartDate( configuration );
+
+            result = scmManager.changeLog( repository, fileSet, startDate, null, 0, null, null );
+        }
+        else
+        {
+            result = scmManager.changeLog( repository, fileSet, scmVersion, scmVersion );
+        }
 
         return result;
     }
@@ -204,6 +217,21 @@ public class DefaultContinuumScm
         }
 
         return repository;
+    }
+
+    private Date getScmStartDate( ContinuumScmConfiguration configuration )
+    {
+        Date startDate = configuration.getLatestUpdateDate();
+
+        if ( startDate == null )
+        {
+            // start date defaults to January 1, 1970
+            Calendar cal = Calendar.getInstance();
+            cal.set( 1970, Calendar.JANUARY, 1 );
+            startDate = cal.getTime();
+        }
+
+        return startDate;
     }
 
     public ScmManager getScmManager()

@@ -22,7 +22,6 @@ package org.apache.continuum.buildagent.buildcontext;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.scm.ScmResult;
 

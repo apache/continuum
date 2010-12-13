@@ -167,7 +167,7 @@ public class DistributedBuildProjectTaskExecutor
                 if ( buildResult != null )
                 {
                     context.put( ContinuumBuildConstant.KEY_LATEST_UPDATE_DATE,
-                                 new Date( buildResult.getStartTime() ) );
+                                 new Date( buildResult.getLastChangedDate() ) );
                 }
 
                 LocalRepository localRepo = project.getProjectGroup().getLocalRepository();                

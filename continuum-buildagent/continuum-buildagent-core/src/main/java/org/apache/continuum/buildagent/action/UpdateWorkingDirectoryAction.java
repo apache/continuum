@@ -125,7 +125,15 @@ public class UpdateWorkingDirectoryAction
         }
 
         context.put( ContinuumBuildAgentUtil.KEY_UPDATE_SCM_RESULT, result );
-        context.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, getLatestUpdateDate( result ) );
+
+        Date latestUpdateDate = getLatestUpdateDate( result );
+
+        if ( latestUpdateDate == null )
+        {
+            latestUpdateDate = ContinuumBuildAgentUtil.getLatestUpdateDate( context );
+        }
+
+        context.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, latestUpdateDate );
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )

@@ -60,6 +60,7 @@ public class ChangeLogProjectAction
         {
             File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
+            config.setLatestUpdateDate( ContinuumBuildAgentUtil.getLatestUpdateDate( context ) );
             getLogger().info( "Getting changeLog of project: " + project.getName() );
             ChangeLogScmResult changeLogResult = scm.changeLog( config );
 
@@ -91,6 +92,7 @@ public class ChangeLogProjectAction
         config.setUseCredentialsCache( project.isScmUseCache() );
         config.setWorkingDirectory( workingDirectory );
         config.setTag( project.getScmTag() );
+
         return config;
     }
 
@@ -122,5 +124,15 @@ public class ChangeLogProjectAction
         }
 
         return null;
+    }
+
+    public void setScm( ContinuumScm scm )
+    {
+        this.scm = scm;
+    }
+
+    public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
+    {
+        this.buildAgentConfigurationService = buildAgentConfigurationService;
     }
 }

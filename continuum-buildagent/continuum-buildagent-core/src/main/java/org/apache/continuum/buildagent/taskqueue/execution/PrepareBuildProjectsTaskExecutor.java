@@ -222,14 +222,6 @@ public class PrepareBuildProjectsTaskExecutor
             scmResult = ContinuumBuildAgentUtil.getUpdateScmResult( actionContext, null );
 
             date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
-
-            if ( date == null )
-            {
-                // try to get latest update date from change log because sometimes date in the changefile is 0
-                performAction( "changelog-agent-project", buildContext );
-
-                date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
-            }
         }
         else
         {
