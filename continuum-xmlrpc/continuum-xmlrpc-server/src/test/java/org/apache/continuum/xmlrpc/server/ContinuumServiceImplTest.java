@@ -10,6 +10,7 @@ import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.server.ContinuumServiceImpl;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
@@ -134,6 +135,41 @@ public class ContinuumServiceImplTest
         assertNotNull( summary );
         assertEquals( "incomplete-phase", summary.getPhases().get( 0 ) );
         assertEquals( "completed-phase", summary.getCompletedPhases().get( 0 ) );
+    }
+    
+    public void testPopulateBuildDefinition()
+        throws Exception
+    {
+        ContinuumServiceImplStub continuumServiceStub = new ContinuumServiceImplStub();
+        
+        BuildDefinition buildDef = createBuildDefinition();
+        org.apache.maven.continuum.model.project.BuildDefinition buildDefinition = new org.apache.maven.continuum.model.project.BuildDefinition();
+        
+        buildDefinition = continuumServiceStub.getBuildDefinition( buildDef, buildDefinition );
+        
+        assertEquals( buildDef.getArguments(), buildDefinition.getArguments() );
+        assertEquals( buildDef.getBuildFile(), buildDefinition.getBuildFile() );
+        assertEquals( buildDef.getDescription(), buildDefinition.getDescription() );
+        assertEquals( buildDef.getGoals(), buildDefinition.getGoals() );
+        assertEquals( buildDef.getType(), buildDefinition.getType() );
+        assertEquals( buildDef.isAlwaysBuild(), buildDefinition.isAlwaysBuild() );
+        assertEquals( buildDef.isBuildFresh(), buildDefinition.isBuildFresh() );
+        assertEquals( buildDef.isDefaultForProject(), buildDefinition.isDefaultForProject() );
+    }
+    
+    private BuildDefinition createBuildDefinition()
+    {
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setArguments( "--batch-mode" );
+        buildDef.setBuildFile( "pom.xml" );
+        buildDef.setType( "maven2" );
+        buildDef.setBuildFresh( false );
+        buildDef.setAlwaysBuild( true );
+        buildDef.setDefaultForProject( true );
+        buildDef.setGoals( "clean install" );
+        buildDef.setDescription( "Test Build Definition" );
+        
+        return buildDef;
     }
 
     private Map<String, Object> getListenerMap()

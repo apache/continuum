@@ -1899,7 +1899,7 @@ public class ContinuumServiceImpl
         return (BuildDefinition) mapper.map( buildDef, BuildDefinition.class );
     }
 
-    private org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition( BuildDefinition buildDef,
+    protected org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition( BuildDefinition buildDef,
                                                                                               org.apache.maven.continuum.model.project.BuildDefinition bd )
         throws ProfileException, ContinuumException
     {
@@ -1933,6 +1933,11 @@ public class ContinuumServiceImpl
         else
         {
             bd.setSchedule( null );
+        }
+        
+        if( StringUtils.isNotEmpty( buildDef.getDescription() ) )
+        {
+            bd.setDescription( buildDef.getDescription() );
         }
 
         return bd;
