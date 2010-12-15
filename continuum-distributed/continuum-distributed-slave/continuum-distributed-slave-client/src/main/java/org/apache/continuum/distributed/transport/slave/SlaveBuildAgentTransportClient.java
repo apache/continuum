@@ -744,4 +744,19 @@ public class SlaveBuildAgentTransportClient
 
         return result;
     }
+
+    public String getBuildAgentPlatform()
+    throws Exception
+    {
+    
+        try
+        {
+            return slave.getBuildAgentPlatform();
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to return build agent platform", e );
+            throw new Exception( "Failed to return build agent platform", e );
+        }
+    }
 }

@@ -555,4 +555,10 @@ public class SlaveBuildAgentTransportServer
 
         return result;
     }
+
+    public String getBuildAgentPlatform()
+        throws Exception
+    {
+        return continuumBuildAgentService.getBuildAgentPlatform();
+    }
 }

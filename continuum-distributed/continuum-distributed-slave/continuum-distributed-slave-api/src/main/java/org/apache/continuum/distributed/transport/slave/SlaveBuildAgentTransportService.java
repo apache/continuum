@@ -139,4 +139,13 @@ public interface SlaveBuildAgentTransportService
 
     public Boolean removeFromBuildQueue( List<String> hashCodes )
         throws Exception;
+    
+    /**
+     * Get build agent's platform.
+     * 
+     * @return The operating system name of the build agent
+     * @throws Exception
+     */
+    public String getBuildAgentPlatform()
+        throws Exception;
 }

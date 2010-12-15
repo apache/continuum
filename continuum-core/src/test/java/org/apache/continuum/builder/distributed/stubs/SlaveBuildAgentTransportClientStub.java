@@ -274,4 +274,10 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
+    public String getBuildAgentPlatform()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

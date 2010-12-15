@@ -1019,6 +1019,20 @@ public class ContinuumBuildAgentServiceImpl
         return Boolean.TRUE;
     }
 
+    public String getBuildAgentPlatform() 
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            return System.getProperty( "os.name" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error in when trying to get build agent's platform", e );
+            throw new ContinuumBuildAgentException( "Error in when trying to get build agent's platform", e );
+        }
+    }
+
     private void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
                                  List<Map<String, String>> projects )
         throws Exception

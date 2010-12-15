@@ -125,4 +125,13 @@ public interface ContinuumBuildAgentService
         throws ContinuumBuildAgentException;
 
     boolean ping();
+    
+    /**
+     * Get build agent's platform.
+     * 
+     * @return The operating system name of the build agent
+     * @throws Exception
+     */
+    String getBuildAgentPlatform()
+        throws ContinuumBuildAgentException;
 }
