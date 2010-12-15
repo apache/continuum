@@ -32,7 +32,9 @@ import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
+import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.model.LocalRepository;
+import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -97,22 +99,16 @@ public class BuildProjectTaskExecutorTest
 
         final List<LocalRepository> localRepos = new ArrayList<LocalRepository>();
 
-        LocalRepository localRepo = new LocalRepository();
-        localRepo.setName( "temp" );
-        localRepo.setLocation( "/tmp/.m2/repository" );
-        localRepo.setLayout( "default" );
-
+        LocalRepository localRepo = createLocalRepository( "temp", "/tmp/.m2/repository", "default" );
         localRepos.add( localRepo );
 
-        localRepo = new LocalRepository();
-        localRepo.setName( "default" );
-        localRepo.setLocation( "/home/user/.m2/repository" );
-        localRepo.setLayout( "default" );
-
+        localRepo = createLocalRepository( "default", "/home/user/.m2/repository", "default" );
         localRepos.add( localRepo );
 
-        final Map<String, String> buildEnvironments = new HashMap<String, String>();
-        buildEnvironments.put( "M2_HOME", "/tmp/apache-maven-2.2.1" );
+        final Map<String, String> masterBuildEnvironments = new HashMap<String, String>();
+        masterBuildEnvironments.put( "M2_HOME", "/tmp/apache-maven-2.2.1" );
+
+        final List<Installation> slaveBuildEnvironments = new ArrayList<Installation>();
 
         final ContinuumAgentBuildExecutor executor = context.mock( ContinuumAgentBuildExecutor.class );
         final File workingDir = new File( "/tmp/data/working-directory/project-test" );
@@ -126,7 +122,98 @@ public class BuildProjectTaskExecutorTest
                 will( returnValue( buildContext ) );
 
                 one( buildAgentManager ).getEnvironments( 1, "maven2" );
-                will( returnValue( buildEnvironments ) );
+                will( returnValue( masterBuildEnvironments ) );
+
+                one( buildAgentConfigurationService ).getAvailableInstallations();
+                will( returnValue( slaveBuildEnvironments ) );
+
+                one( buildAgentConfigurationService ).getLocalRepositories();
+                will( returnValue( localRepos ) );
+
+                one( buildAgentManager ).shouldBuild( with( any( Map.class ) ) );
+                will( returnValue( true ) );
+
+                one( buildAgentBuildExecutorManager ).getBuildExecutor( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+                will( returnValue( executor ) );
+
+                one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
+                will( returnValue( workingDir ) );
+
+                one( executor ).getMavenProject( with( any( File.class ) ), with( any( BuildDefinition.class ) ) );
+                will( returnValue( project ) );
+
+                one( buildAgentManager ).startProjectBuild( 1 );
+
+                one( buildAgentConfigurationService ).getBuildOutputFile( 1 );
+                will( returnValue( outputFile ) );
+
+                one( buildAgentManager ).returnBuildResult( with( any( Map.class ) ) );
+
+                one( buildContextManager ).removeBuildContext( 1 );
+            }
+        } );
+
+        try
+        {
+            buildProjectExecutor.executeTask( createBuildProjectTask() );
+        }
+        catch ( Exception e )
+        {
+            fail( "An exception should not have been thrown!" );
+        }
+    }
+
+    public void testBuildProjectWithConfiguredInstallationsFromBuildAgent()
+        throws Exception
+    {
+        BuildProjectTaskExecutor buildProjectExecutor =
+            (BuildProjectTaskExecutor) lookup( TaskExecutor.class, "build-agent" );
+
+        buildProjectExecutor.setBuildAgentBuildExecutorManager( buildAgentBuildExecutorManager );
+
+        buildProjectExecutor.setBuildAgentConfigurationService( buildAgentConfigurationService );
+
+        buildProjectExecutor.setBuildContextManager( buildContextManager );
+
+        buildProjectExecutor.setBuildAgentManager( buildAgentManager );
+
+        final BuildContext buildContext = createBuildContext();
+
+        final List<LocalRepository> localRepos = new ArrayList<LocalRepository>();
+
+        LocalRepository localRepo = createLocalRepository( "temp", "/tmp/.m2/repository", "default" );
+        localRepos.add( localRepo );
+
+        localRepo = createLocalRepository( "default", "/home/user/.m2/repository", "default" );
+        localRepos.add( localRepo );
+
+        final Map<String, String> masterBuildEnvironments = new HashMap<String, String>();
+        masterBuildEnvironments.put( "M2_HOME", "/tmp/apache-maven-2.2.1" );
+
+        final List<Installation> slaveBuildEnvironments = new ArrayList<Installation>();
+
+        Installation slaveBuildEnvironment = createInstallation( "M2_HOME", "/home/user/apache-maven-2.2.1" );
+        slaveBuildEnvironments.add( slaveBuildEnvironment );
+
+        slaveBuildEnvironment = createInstallation( "EXTRA_VAR", "/home/user/extra" );
+        slaveBuildEnvironments.add( slaveBuildEnvironment );
+
+        final ContinuumAgentBuildExecutor executor = context.mock( ContinuumAgentBuildExecutor.class );
+        final File workingDir = new File( "/tmp/data/working-directory/project-test" );
+        final MavenProject project = new MavenProject();
+        final File outputFile = new File( "/tmp/data/build-output-directory/output.txt" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildContextManager ).getBuildContext( 1 );
+                will( returnValue( buildContext ) );
+
+                one( buildAgentManager ).getEnvironments( 1, "maven2" );
+                will( returnValue( masterBuildEnvironments ) );
+
+                one( buildAgentConfigurationService ).getAvailableInstallations();
+                will( returnValue( slaveBuildEnvironments ) );
 
                 one( buildAgentConfigurationService ).getLocalRepositories();
                 will( returnValue( localRepos ) );
@@ -158,6 +245,103 @@ public class BuildProjectTaskExecutorTest
         try
         {
             buildProjectExecutor.executeTask( createBuildProjectTask() );
+
+            Map<String, String> environments =
+                (Map<String, String>) buildContext.getActionContext().get( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS );
+            assertEquals( 2, environments.size() );
+            assertTrue( environments.containsKey( "M2_HOME" ) );
+            assertTrue( environments.containsKey( "EXTRA_VAR" ) );
+            // shows that build agent's environment variables overwrites Continuum Master's environment variables
+            assertEquals( "/home/user/apache-maven-2.2.1", environments.get( "M2_HOME" ) );
+            assertEquals( "/home/user/extra", environments.get( "EXTRA_VAR" ) );
+        }
+        catch ( Exception e )
+        {
+            fail( "An exception should not have been thrown!" );
+        }
+    }
+
+    public void testBuildProjectWithNoConfiguredInstallationsFromBuildAgent()
+        throws Exception
+    {
+        BuildProjectTaskExecutor buildProjectExecutor =
+            (BuildProjectTaskExecutor) lookup( TaskExecutor.class, "build-agent" );
+
+        buildProjectExecutor.setBuildAgentBuildExecutorManager( buildAgentBuildExecutorManager );
+
+        buildProjectExecutor.setBuildAgentConfigurationService( buildAgentConfigurationService );
+
+        buildProjectExecutor.setBuildContextManager( buildContextManager );
+
+        buildProjectExecutor.setBuildAgentManager( buildAgentManager );
+
+        final BuildContext buildContext = createBuildContext();
+
+        final List<LocalRepository> localRepos = new ArrayList<LocalRepository>();
+
+        LocalRepository localRepo = createLocalRepository( "temp", "/tmp/.m2/repository", "default" );
+        localRepos.add( localRepo );
+
+        localRepo = createLocalRepository( "default", "/home/user/.m2/repository", "default" );
+        localRepos.add( localRepo );
+
+        final Map<String, String> masterBuildEnvironments = new HashMap<String, String>();
+        masterBuildEnvironments.put( "M2_HOME", "/tmp/apache-maven-2.2.1" );
+
+        final List<Installation> slaveBuildEnvironments = new ArrayList<Installation>();
+
+        final ContinuumAgentBuildExecutor executor = context.mock( ContinuumAgentBuildExecutor.class );
+        final File workingDir = new File( "/tmp/data/working-directory/project-test" );
+        final MavenProject project = new MavenProject();
+        final File outputFile = new File( "/tmp/data/build-output-directory/output.txt" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildContextManager ).getBuildContext( 1 );
+                will( returnValue( buildContext ) );
+
+                one( buildAgentManager ).getEnvironments( 1, "maven2" );
+                will( returnValue( masterBuildEnvironments ) );
+
+                one( buildAgentConfigurationService ).getAvailableInstallations();
+                will( returnValue( slaveBuildEnvironments ) );
+
+                one( buildAgentConfigurationService ).getLocalRepositories();
+                will( returnValue( localRepos ) );
+
+                one( buildAgentManager ).shouldBuild( with( any( Map.class ) ) );
+                will( returnValue( true ) );
+
+                one( buildAgentBuildExecutorManager ).getBuildExecutor( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+                will( returnValue( executor ) );
+
+                one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
+                will( returnValue( workingDir ) );
+
+                one( executor ).getMavenProject( with( any( File.class ) ), with( any( BuildDefinition.class ) ) );
+                will( returnValue( project ) );
+
+                one( buildAgentManager ).startProjectBuild( 1 );
+
+                one( buildAgentConfigurationService ).getBuildOutputFile( 1 );
+                will( returnValue( outputFile ) );
+
+                one( buildAgentManager ).returnBuildResult( with( any( Map.class ) ) );
+
+                one( buildContextManager ).removeBuildContext( 1 );
+            }
+        } );
+
+        try
+        {
+            buildProjectExecutor.executeTask( createBuildProjectTask() );
+
+            Map<String, String> environments =
+                (Map<String, String>) buildContext.getActionContext().get( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS );
+            assertEquals( 1, environments.size() );
+            assertTrue( environments.containsKey( "M2_HOME" ) );
+            assertEquals( "/tmp/apache-maven-2.2.1", environments.get( "M2_HOME" ) );
         }
         catch ( Exception e )
         {
@@ -209,5 +393,22 @@ public class BuildProjectTaskExecutorTest
         context.setScmTag( "scm:svn:http://svn.example.com/repos/dummy/tags" );
 
         return context;
+    }
+
+    private LocalRepository createLocalRepository( String name, String locataion, String layout )
+    {
+        LocalRepository localRepository = new LocalRepository();
+        localRepository.setName( name );
+        localRepository.setLocation( locataion );
+        localRepository.setLayout( layout );
+        return localRepository;
+    }
+
+    private Installation createInstallation( String varName, String varValue )
+    {
+        Installation installation = new Installation();
+        installation.setVarName( varName );
+        installation.setVarValue( varValue );
+        return installation;
     }
 }

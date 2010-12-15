@@ -35,6 +35,7 @@ import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
+import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
@@ -398,7 +399,17 @@ public class BuildProjectTaskExecutor
     {
         try
         {
-            return buildAgentManager.getEnvironments( buildDefinitionId, installationType );
+            // get environments from Master (Continuum)
+            Map<String, String> environments = buildAgentManager.getEnvironments( buildDefinitionId, installationType );
+
+            // get environments from Slave (Build Agent)
+            for ( Installation installation : buildAgentConfigurationService.getAvailableInstallations() )
+            {
+                // combine environments (Master and Slave); Slave's environments overwrite Master's environments
+                environments.put( installation.getVarName(), installation.getVarValue() );
+            }
+
+            return environments;
         }
         catch ( ContinuumException e )
         {
