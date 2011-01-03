@@ -497,6 +497,12 @@ public class ContinuumXmlRpcClient
         return continuum.getInstallation( installationId );
     }
 
+    public List<Installation> getBuildAgentInstallations( String url )
+        throws Exception
+    {
+        return continuum.getBuildAgentInstallations( url );
+    }
+
     // ----------------------------------------------------------------------
     // SystemConfiguration
     // ----------------------------------------------------------------------
@@ -852,6 +858,12 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.getInstallationsRPC();
+    }
+
+    public List<Object> getBuildAgentInstallationsRPC( String url )
+        throws Exception
+    {
+        return continuum.getBuildAgentInstallationsRPC( url );
     }
 
     public Map<String, Object> getLatestBuildResultRPC( int projectId )
@@ -1272,5 +1284,4 @@ public class ContinuumXmlRpcClient
     {
         return continuum.getReleasePluginParameters( projectId );
     }
-
 }

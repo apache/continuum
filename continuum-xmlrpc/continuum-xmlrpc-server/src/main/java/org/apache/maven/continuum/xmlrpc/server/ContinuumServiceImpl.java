@@ -1034,6 +1034,26 @@ public class ContinuumServiceImpl
         }
     }
 
+    public List<Installation> getBuildAgentInstallations( String url )
+        throws ContinuumException
+    {
+        try
+        {
+            List<org.apache.maven.continuum.model.system.Installation> buildAgentInstallations = distributedBuildManager.getAvailableInstallations( url );
+
+            List<Installation> convertedBuildAgentInstallations = new ArrayList<Installation>();
+            for ( Object buildAgentInstallation : buildAgentInstallations )
+            {
+                convertedBuildAgentInstallations.add( populateInstallation( (org.apache.maven.continuum.model.system.Installation) buildAgentInstallation ) );
+            }
+            return convertedBuildAgentInstallations;
+        }
+        catch (Exception e)
+        {
+            throw new ContinuumException( "Can't load installations", e );
+        }
+    }
+
     public Installation getInstallation( int installationId )
         throws ContinuumException
     {
@@ -2723,6 +2743,12 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.getInstallations() );
+    }
+
+    public List<Object> getBuildAgentInstallationsRPC( String url )
+        throws Exception
+    {
+        return serializeObject( this.getBuildAgentInstallations( url ) );
     }
 
     public Map<String, Object> getLatestBuildResultRPC( int projectId )

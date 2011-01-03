@@ -1028,6 +1028,26 @@ public interface ContinuumService
     Map<String, Object> getInstallationRPC( int installationId )
         throws Exception;
 
+    /**
+     * Return the installations list defined by this URL.
+     * 
+     * @param url The build agent URL
+     * @return The installations list.
+     * @throws Exception
+     */
+    List<Installation> getBuildAgentInstallations(String url)
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param url The build agent URL
+     * @return The installations list.
+     * @throws Exception
+     */
+    List<Object> getBuildAgentInstallationsRPC(String url)
+        throws Exception;
+
     Installation addInstallation( Installation installation )
         throws Exception;
 
