@@ -1491,6 +1491,11 @@
           <version>1.4.1+</version>
           <type>boolean</type>
         </field>
+        <field>
+          <name>platform</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
       </fields>
     </class>    
   </classes>

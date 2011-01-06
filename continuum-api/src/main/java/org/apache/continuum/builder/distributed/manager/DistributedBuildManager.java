@@ -48,6 +48,9 @@ public interface DistributedBuildManager
 
     List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException;
+    
+    String getBuildAgentPlatform( String buildAgentUrl )
+        throws ContinuumException;
 
     Map<String, List<PrepareBuildProjectsTask>> getProjectsInPrepareBuildQueue()
         throws ContinuumException;

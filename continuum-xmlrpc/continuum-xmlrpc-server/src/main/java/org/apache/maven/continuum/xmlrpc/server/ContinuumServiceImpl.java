@@ -84,6 +84,8 @@ import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
 import net.sf.dozer.util.mapping.MapperIF;
@@ -98,6 +100,8 @@ public class ContinuumServiceImpl
 {
     private static final MapperIF mapper = DozerBeanMapperSingletonWrapper.getInstance();
 
+    private final Logger logger = LoggerFactory.getLogger( ContinuumServiceImpl.class );
+    
     /**
      * @plexus.requirement
      */
@@ -2221,7 +2225,19 @@ public class ContinuumServiceImpl
 
     private BuildAgentConfiguration populateBuildAgent( org.apache.continuum.configuration.BuildAgentConfiguration buildAgent )
     {
-        return (BuildAgentConfiguration) mapper.map( buildAgent, BuildAgentConfiguration.class );
+        BuildAgentConfiguration buildAgentConfiguration =
+            (BuildAgentConfiguration) mapper.map( buildAgent, BuildAgentConfiguration.class );
+        try
+        {
+            buildAgentConfiguration.setPlatform( distributedBuildManager.getBuildAgentPlatform( buildAgentConfiguration.getUrl() ) );
+            return buildAgentConfiguration;
+        }
+        catch ( ContinuumException e )
+        {
+            logger.warn( "Unable to connect to build agent " + buildAgentConfiguration.getUrl() + "." , e );
+            buildAgentConfiguration.setPlatform( "" );
+            return buildAgentConfiguration;
+        }
     }
 
     private Map<String, Object> serializeObject( Object o, final String... ignore )

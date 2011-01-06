@@ -595,6 +595,28 @@ public class DefaultDistributedBuildManager
         return map;
     }
 
+    public String getBuildAgentPlatform( String buildAgentUrl )
+        throws ContinuumException
+    {
+        try
+        {
+            String platform = "";
+            if ( isAgentAvailable( buildAgentUrl ) )
+            {
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                platform = client.getBuildAgentPlatform();
+            }
+            // call reload in case we disable the build agent
+            reload();
+            return platform;
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "Unable to get platform of build agent", e );
+        }
+    }
+
+    
     public List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException
     {

@@ -318,6 +318,40 @@ public class DefaultDistributedBuildManagerTest
         distributedBuildManagerStub.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, 1, "sample", "scmRootAddress", 1, scmRoots );
     }
     
+    public void testGetBuildAgentPlatform()
+        throws Exception
+    {
+        distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 1 ) );
+        context.checking( new Expectations()
+        {
+            {
+                exactly( 2 ).of( configurationService ).getBuildAgents();
+                will( returnValue( buildAgents ) );
+
+                one( configurationService ).updateBuildAgent( buildAgent1 );
+                one( configurationService ).store();
+
+                exactly( 2 ).of( overallDistributedBuildQueue1 ).getDistributedBuildTaskQueueExecutor();
+                will( returnValue( distributedBuildTaskQueueExecutor ) );
+                
+                one( distributedBuildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( null ) );
+
+                one( overallDistributedBuildQueue1 ).getProjectsInQueue();
+                will( returnValue( new ArrayList<PrepareBuildProjectsTask>() ) );
+
+                one( overallDistributedBuildQueue1 ).getDistributedBuildQueue();
+                will( returnValue( distributedBuildQueue ) );
+
+                one( distributedBuildQueue ).removeAll( new ArrayList<PrepareBuildProjectsTask>() );
+
+                one( distributedBuildTaskQueueExecutor ).stop();
+            }
+        } );
+        assertEquals( distributedBuildManager.getBuildAgentPlatform( TEST_BUILD_AGENT1 ), "" );
+        context.assertIsSatisfied();
+    }
+    
     private Map<String, OverallDistributedBuildQueue> getMockOverallDistributedBuildQueues( int size )
     {
         Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
