@@ -1032,7 +1032,7 @@ public class DefaultContinuum
 
         if ( buildDef == null )
         {
-            throw new ContinuumException( "Project (id=" + projectId + " doens't have a default build definition." );
+            throw new ContinuumException( "Project (id=" + projectId + ") doesn't have a default build definition." );
         }
 
         if ( !isProjectOkToBuild( projectId, buildDef.getId() ) )
@@ -2188,12 +2188,12 @@ public class DefaultContinuum
         catch ( ContinuumObjectNotFoundException cne )
         {
             throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
+                ") doesn't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
         catch ( ContinuumStoreException cse )
         {
             throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
+                ") doesn't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
     }
 
