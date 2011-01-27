@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -45,6 +46,8 @@ import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStore;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
+import org.apache.maven.shared.release.versions.DefaultVersionInfo;
+import org.apache.maven.shared.release.versions.VersionInfo;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
@@ -385,111 +388,5 @@ public class DefaultContinuumReleaseManager
         }
 
         return null;
-    }
-
-    public Map<String, Object> getReleasePluginParameters( String workingDirectory, String pomFilename )
-        throws ContinuumReleaseException
-    {
-        Map<String, Object> params = new HashMap<String, Object>();
-
-        // TODO: Use the model reader so we'll can get the plugin configuration from parent too
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model;
-        try
-        {
-            model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
-        }
-        catch ( IOException e )
-        {
-            throw new ContinuumReleaseException( "Failed to read pom file to get the release plugin parameters: " + pomFilename );
-        }
-        catch ( XmlPullParserException e )
-        {
-            throw new ContinuumReleaseException( "Failed to parse pom file to get the release plugin parameters: " + pomFilename );
-        }
-
-        if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
-        {
-            for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
-            {
-                if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
-                    plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
-                {
-                    Xpp3Dom dom = (Xpp3Dom) plugin.getConfiguration();
-
-                    // TODO: use constants
-                    if ( dom != null )
-                    {
-                        Xpp3Dom configuration = dom.getChild( "releaseLabel" );
-                        if ( configuration != null )
-                        {
-                            params.put( "scm-tag", configuration.getValue() );
-                        }
-
-                        configuration = dom.getChild( "tag" );
-                        if ( configuration != null )
-                        {
-                            params.put( "scm-tag", configuration.getValue() );
-                        }
-
-                        configuration = dom.getChild( "tagBase" );
-                        if ( configuration != null )
-                        {
-                            params.put( "scm-tagbase", configuration.getValue() );
-                        }
-
-                        configuration = dom.getChild( "preparationGoals" );
-                        if ( configuration != null )
-                        {
-                            params.put( "preparation-goals", configuration.getValue() );
-                        }
-
-                        configuration = dom.getChild( "arguments" );
-                        if ( configuration != null )
-                        {
-                            params.put( "arguments", configuration.getValue() );
-                        }
-
-                        configuration = dom.getChild( "scmCommentPrefix" );
-                        if ( configuration != null )
-                        {
-                            params.put( "scm-comment-prefix", configuration.getValue() );
-                        }
-
-                        configuration = dom.getChild( "autoVersionSubmodules" );
-                        if ( configuration != null )
-                        {
-                            params.put( "auto-version-submodules", Boolean.valueOf( configuration.getValue() ) );
-                        }
-
-                        configuration = dom.getChild( "addSchema" );
-                        if ( configuration != null )
-                        {
-                            params.put( "add-schema", Boolean.valueOf( configuration.getValue() ) );
-                        }
-
-                        configuration = dom.getChild( "useReleaseProfile" );
-                        if ( configuration != null )
-                        {
-                            params.put( "use-release-profile", Boolean.valueOf( configuration.getValue() ) );
-                        }
-
-                        configuration = dom.getChild( "goals" );
-                        if ( configuration != null )
-                        {
-                            String goals = configuration.getValue();
-                            if ( model.getDistributionManagement() != null &&
-                                model.getDistributionManagement().getSite() != null )
-                            {
-                                goals += " site-deploy";
-                            }
-
-                            params.put( "perform-goals", goals );
-                        }
-                    }
-                }
-            }
-        }
-        return params;
     }
 }

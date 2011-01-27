@@ -44,6 +44,7 @@ import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.continuum.utils.release.ReleaseUtil;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.scm.ChangeFile;
@@ -313,150 +314,16 @@ public class ContinuumBuildAgentServiceImpl
     public Map<String, Object> getReleasePluginParameters( int projectId, String pomFilename )
         throws ContinuumBuildAgentException
     {
-        Map<String, Object> releaseParameters = new HashMap<String, Object>();
-
         String workingDirectory = buildAgentConfigurationService.getWorkingDirectory( projectId ).getPath();
 
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
         try
         {
-            Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
-
-            if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
-            {
-                for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
-                {
-                    if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
-                        plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
-                    {
-                        Xpp3Dom dom = (Xpp3Dom) plugin.getConfiguration();
-
-                        if ( dom != null )
-                        {
-                            Xpp3Dom configuration = dom.getChild( "releaseLabel" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, configuration.getValue() );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, "" );
-                            }
-
-                            configuration = dom.getChild( "tag" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, configuration.getValue() );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, "" );
-                            }
-
-                            configuration = dom.getChild( "tagBase" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAGBASE,
-                                                       configuration.getValue() );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAGBASE, "" );
-                            }
-
-                            configuration = dom.getChild( "preparationGoals" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PREPARE_GOALS,
-                                                       configuration.getValue() );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PREPARE_GOALS, "" );
-                            }
-
-                            configuration = dom.getChild( "arguments" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ARGUMENTS,
-                                                       configuration.getValue() );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ARGUMENTS, "" );
-                            }
-
-                            configuration = dom.getChild( "scmCommentPrefix" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_COMMENT_PREFIX,
-                                                       configuration.getValue() );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_COMMENT_PREFIX, "" );
-                            }
-
-                            configuration = dom.getChild( "autoVersionSubmodules" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_AUTO_VERSION_SUBMODULES,
-                                                       Boolean.valueOf( configuration.getValue() ) );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_AUTO_VERSION_SUBMODULES, false );
-                            }
-
-                            configuration = dom.getChild( "addSchema" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ADD_SCHEMA,
-                                                       Boolean.valueOf( configuration.getValue() ) );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ADD_SCHEMA, false );
-                            }
-
-                            configuration = dom.getChild( "useReleaseProfile" );
-                            if ( configuration != null )
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_USE_RELEASE_PROFILE,
-                                                       Boolean.valueOf( configuration.getValue() ) );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_USE_RELEASE_PROFILE, false );
-                            }
-
-                            configuration = dom.getChild( "goals" );
-                            if ( configuration != null )
-                            {
-                                String goals = configuration.getValue();
-                                if ( model.getDistributionManagement() != null &&
-                                    model.getDistributionManagement().getSite() != null )
-                                {
-                                    goals += "site-deploy";
-                                }
-
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PERFORM_GOALS, goals );
-                            }
-                            else
-                            {
-                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PERFORM_GOALS, "" );
-                            }
-                        }
-                    }
-                }
-            }
+            return ReleaseUtil.getReleasePluginParameters( workingDirectory, pomFilename );
         }
         catch ( Exception e )
         {
             throw new ContinuumBuildAgentException( "Error getting release plugin parameters from pom file", e );
         }
-
-        return releaseParameters;
     }
 
     public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
@@ -468,7 +335,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            processProject( workingDirectory, pomFilename, autoVersionSubmodules, projects );
+            ReleaseUtil.processProject( workingDirectory, pomFilename, autoVersionSubmodules, projects );
         }
         catch ( Exception e )
         {
@@ -1031,58 +898,6 @@ public class ContinuumBuildAgentServiceImpl
             log.error( "Error in when trying to get build agent's platform", e );
             throw new ContinuumBuildAgentException( "Error in when trying to get build agent's platform", e );
         }
-    }
-
-    private void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
-                                 List<Map<String, String>> projects )
-        throws Exception
-    {
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
-
-        if ( model.getGroupId() == null )
-        {
-            model.setGroupId( model.getParent().getGroupId() );
-        }
-
-        if ( model.getVersion() == null )
-        {
-            model.setVersion( model.getParent().getVersion() );
-        }
-
-        setProperties( model, projects );
-
-        if ( !autoVersionSubmodules )
-        {
-            for ( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
-            {
-                String module = StringUtils.replace( modules.next().toString(), '\\', '/' );
-            	
-                processProject( workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules,
-                                projects );
-            }
-        }
-    }
-
-    private void setProperties( Model model, List<Map<String, String>> projects )
-        throws Exception
-    {
-        Map<String, String> params = new HashMap<String, String>();
-
-        params.put( "key", model.getGroupId() + ":" + model.getArtifactId() );
-
-        if ( model.getName() == null )
-        {
-            model.setName( model.getArtifactId() );
-        }
-        params.put( "name", model.getName() );
-
-        VersionInfo version = new DefaultVersionInfo( model.getVersion() );
-
-        params.put( "release", version.getReleaseVersionString() );
-        params.put( "dev", version.getNextVersion().getSnapshotVersionString() );
-
-        projects.add( params );
     }
 
     private List<BuildContext> initializeBuildContext( List<Map<String, Object>> projectsBuildContext )

@@ -43,6 +43,7 @@ import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
+import org.apache.continuum.utils.release.ReleaseUtil;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -3236,9 +3237,8 @@ public class ContinuumServiceImpl
             }
             else
             {
-                params =
-                    continuum.getReleaseManager().getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
-                                                                              "pom.xml" );
+                params = ReleaseUtil.getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
+                                                                 "pom.xml" );
             }
 
             // set scm tag and scm tag base if no values yet
@@ -3288,6 +3288,35 @@ public class ContinuumServiceImpl
             }
 
             return params;
+        }
+        else
+        {
+            throw new Exception( "Unable to get release plugin parameters for project with id " + projectId );
+        }
+    }
+
+    public List<Map<String, String>> getProjectReleaseAndDevelopmentVersions( int projectId, String pomFilename, 
+                                                                              boolean autoVersionSubmodules )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        if ( project != null )
+        {
+            checkBuildProjectInGroupAuthorization( project.getProjectGroup().getName() );
+            List<Map<String, String>> projects = new ArrayList<Map<String, String>>();
+
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                projects = continuum.getDistributedReleaseManager().processProject( projectId, pomFilename, autoVersionSubmodules );
+            }
+            else
+            {
+                ReleaseUtil.processProject( continuum.getWorkingDirectory( projectId ).getPath(), pomFilename,
+                                            autoVersionSubmodules, projects );
+            }
+
+            return projects;
         }
         else
         {

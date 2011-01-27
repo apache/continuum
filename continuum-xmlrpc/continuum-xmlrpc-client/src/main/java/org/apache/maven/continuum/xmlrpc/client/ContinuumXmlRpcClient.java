@@ -1284,4 +1284,11 @@ public class ContinuumXmlRpcClient
     {
         return continuum.getReleasePluginParameters( projectId );
     }
+
+    public List<Map<String, String>> getProjectReleaseAndDevelopmentVersions( int projectId, String pomFilename,
+                                                                              boolean autoVersionSubmodules )
+        throws Exception
+    {
+        return continuum.getProjectReleaseAndDevelopmentVersions( projectId, pomFilename, autoVersionSubmodules );
+    }
 }

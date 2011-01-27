@@ -1592,6 +1592,9 @@ public interface ContinuumService
     Map<String, Object> getReleasePluginParameters( int projectId )
         throws Exception;
 
+    List<Map<String, String>> getProjectReleaseAndDevelopmentVersions( int projectId, String pomFilename, boolean autoVersionSubmodules )
+        throws Exception;
+
     /**
      * Add/Register build agent to Continuum Master
      * 

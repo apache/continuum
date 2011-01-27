@@ -24,6 +24,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
+import org.apache.continuum.utils.release.ReleaseUtil;
 import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -176,7 +177,7 @@ public class ReleasePerformAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = getContinuum().getReleaseManager().getReleasePluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = ReleaseUtil.getReleasePluginParameters( workingDirectory, pomFilename );
 
         if ( params.get( "use-release-profile" ) != null )
         {

@@ -23,6 +23,7 @@ import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
+import org.apache.continuum.utils.release.ReleaseUtil;
 import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -190,7 +191,7 @@ public class ReleasePrepareAction
         
                 getReleasePluginParameters( workingDirectory, "pom.xml" );
         
-                processProject( workingDirectory, "pom.xml" );
+                ReleaseUtil.processProject( workingDirectory, "pom.xml", autoVersionSubmodules, projects );
             }
             catch ( Exception e )
             {   
@@ -210,7 +211,7 @@ public class ReleasePrepareAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = getContinuum().getReleaseManager().getReleasePluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = ReleaseUtil.getReleasePluginParameters( workingDirectory, pomFilename );
 
         // TODO: use constants for this
         if ( params.get( "scm-tag" ) != null )
@@ -462,56 +463,6 @@ public class ReleasePrepareAction
         }
 
         return status;
-    }
-
-    private void processProject( String workingDirectory, String pomFilename )
-        throws Exception
-    {
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
-
-        if ( model.getGroupId() == null )
-        {
-            model.setGroupId( model.getParent().getGroupId() );
-        }
-
-        if ( model.getVersion() == null )
-        {
-            model.setVersion( model.getParent().getVersion() );
-        }
-
-        setProperties( model );
-
-        if ( !autoVersionSubmodules )
-        {
-            for ( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
-            {
-            	String module = StringUtils.replace( modules.next().toString(), '\\', '/' );
-            	
-                processProject( workingDirectory + "/" + module, "pom.xml" );
-            }
-        }
-    }
-
-    private void setProperties( Model model )
-        throws Exception
-    {
-        Map<String, String> params = new HashMap<String, String>();
-
-        params.put( "key", model.getGroupId() + ":" + model.getArtifactId() );
-
-        if ( model.getName() == null )
-        {
-            model.setName( model.getArtifactId() );
-        }
-        params.put( "name", model.getName() );
-
-        VersionInfo version = new DefaultVersionInfo( model.getVersion() );
-
-        params.put( "release", version.getReleaseVersionString() );
-        params.put( "dev", version.getNextVersion().getSnapshotVersionString() );
-
-        projects.add( params );
     }
 
     private Map<String, String> getDevVersionMap()
