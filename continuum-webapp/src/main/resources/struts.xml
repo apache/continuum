@@ -42,7 +42,9 @@
         <interceptor-ref name="redbackForceAdminUser"/>
         <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
-        <interceptor-ref name="redbackSecureActions"/>
+        <interceptor-ref name="redbackSecureActions">
+          <param name="enableReferrerCheck">false</param>
+        </interceptor-ref>
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="continuumConfigurationCheck"/>
         <interceptor-ref name="validation">
@@ -59,7 +61,9 @@
         <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
         <interceptor-ref name="redbackPolicyEnforcement"/>
-        <interceptor-ref name="redbackSecureActions"/>
+        <interceptor-ref name="redbackSecureActions">
+          <param name="enableReferrerCheck">false</param>
+        </interceptor-ref>
         <interceptor-ref name="validation">
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
