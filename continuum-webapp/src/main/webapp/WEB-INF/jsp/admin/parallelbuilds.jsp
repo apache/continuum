@@ -37,6 +37,7 @@
       <c:if test="${not empty buildQueueList}">
       <ec:table items="buildQueueList"
               var="buildQueue"
+              autoIncludeParameters="false"
               showExports="false"
               showPagination="false"
               showStatusBar="false"

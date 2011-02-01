@@ -41,6 +41,7 @@
         <s:set name="repoPurgeConfigs" value="repoPurgeConfigs" scope="request"/>
         <ec:table items="repoPurgeConfigs"
                   var="repoPurge"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
@@ -100,6 +101,7 @@
         <s:set name="dirPurgeConfigs" value="dirPurgeConfigs" scope="request"/>
         <ec:table items="dirPurgeConfigs"
                   var="dirPurge"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"

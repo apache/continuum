@@ -31,6 +31,7 @@
         <s:set name="schedules" value="schedules" scope="request"/>
         <ec:table items="schedules"
                   var="schedule"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"

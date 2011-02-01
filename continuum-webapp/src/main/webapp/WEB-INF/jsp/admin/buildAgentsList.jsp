@@ -38,6 +38,7 @@
         <s:set name="buildAgents" value="buildAgents" scope="request"/>
         <ec:table items="buildAgents"
                   var="buildAgent"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
@@ -81,6 +82,7 @@
         <s:set name="buildAgentGroups" value="buildAgentGroups" scope="request"/>
         <ec:table items="buildAgentGroups"
                   var="buildAgentGroup"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"

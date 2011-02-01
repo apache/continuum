@@ -36,6 +36,7 @@
       </h3>
       <ec:table items="templates"
                 var="template"
+                autoIncludeParameters="false"
                 showExports="false"
                 showPagination="false"
                 showStatusBar="false"
@@ -76,6 +77,7 @@
       </h3>
       <ec:table items="buildDefinitionSummaries"
                 var="buildDefinitionSummary"
+                autoIncludeParameters="false"
                 showExports="false"
                 showPagination="false"
                 showStatusBar="false"

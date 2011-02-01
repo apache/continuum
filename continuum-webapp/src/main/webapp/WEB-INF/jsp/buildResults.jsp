@@ -54,6 +54,7 @@
           <s:set name="buildResults" value="buildResults" scope="request"/>
           <ec:table items="buildResults"
                     var="buildResult"
+                    autoIncludeParameters="false"
                     showExports="false"
                     showPagination="false"
                     showStatusBar="false"

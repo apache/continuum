@@ -36,6 +36,7 @@
     <c:if test="${not empty installations}">
     <ec:table items="installations"
               var="installation"
+              autoIncludeParameters="false"
               showExports="false"
               showPagination="false"
               showStatusBar="false"

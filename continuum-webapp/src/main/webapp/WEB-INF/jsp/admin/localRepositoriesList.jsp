@@ -38,6 +38,7 @@
         <s:set name="repositories" value="repositories" scope="request"/>
         <ec:table items="repositories"
                   var="repository"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"

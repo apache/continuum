@@ -43,6 +43,7 @@
         <s:hidden name="projectGroupId"/>
         <ec:table items="releaseResults"
                 var="result"
+                autoIncludeParameters="false"
                 showExports="false"
                 showPagination="false"
                 showStatusBar="false"

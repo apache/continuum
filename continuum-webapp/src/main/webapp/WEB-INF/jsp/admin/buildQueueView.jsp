@@ -38,6 +38,7 @@
           <c:if test="${not empty currentBuildProjectTasks}">
             <s:set name="currentBuildProjectTasks" value="currentBuildProjectTasks" scope="request"/>
             <ec:table items="currentBuildProjectTasks"
+                      autoIncludeParameters="false"
                       var="queue"
                       showExports="false"
                       showPagination="false"
@@ -82,6 +83,7 @@
             <s:set name="buildsInQueue" value="buildsInQueue" scope="request"/>
             <ec:table items="buildsInQueue"
                       var="queue"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
@@ -148,6 +150,7 @@
             <s:set name="currentCheckoutTasks" value="currentCheckoutTasks" scope="request"/>
             <ec:table items="currentCheckoutTasks"
                       var="queue"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
@@ -190,6 +193,7 @@
             <s:set name="checkoutsInQueue" value="checkoutsInQueue" scope="request"/>
             <ec:table items="checkoutsInQueue"
                       var="queue"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
@@ -250,6 +254,7 @@
             <s:set name="currentPrepareBuilds" value="currentPrepareBuilds" scope="request"/>
             <ec:table items="currentPrepareBuilds"
                       var="currentPrepareBuild"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
@@ -281,6 +286,7 @@
             <s:set name="prepareBuildQueues" value="prepareBuildQueues" scope="request"/>
             <ec:table items="prepareBuildQueues"
                       var="prepareBuildQueue"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"

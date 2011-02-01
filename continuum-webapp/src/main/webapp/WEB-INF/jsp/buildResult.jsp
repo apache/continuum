@@ -95,6 +95,7 @@
         <s:if test="buildResult.scmResult.changes != null && buildResult.scmResult.changes.size() > 0">
             <s:set name="changes" value="buildResult.scmResult.changes" scope="request"/>
             <ec:table items="changes"
+                      autoIncludeParameters="false"
                       var="change"
                       showExports="false"
                       showPagination="false"
@@ -121,6 +122,7 @@
             <h4><s:text name="buildResult.changesSinceLastSuccess"/></h4>
             <s:set name="changes" value="changesSinceLastSuccess" scope="request"/>
             <ec:table items="changes"
+                      autoIncludeParameters="false"
                       var="change"
                       showExports="false"
                       showPagination="false"
@@ -145,6 +147,7 @@
             <s:set name="dependencies" value="buildResult.modifiedDependencies" scope="request"/>
             <ec:table items="dependencies"
                       var="dep"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
