@@ -401,7 +401,9 @@ under the License.
       </activation>
       <properties>
         <container.name>tomcat5x</container.name>
-        <container.url>http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip</container.url>
+        <container.url>
+          http://archive.apache.org/dist/tomcat/tomcat-5/v${tomcat5x.version}/bin/apache-tomcat-${tomcat5x.version}.zip
+        </container.url>
       </properties>
     </profile>
     <profile>
@@ -512,5 +514,6 @@ under the License.
   </profiles>
   <properties>
     <cargo.installs.directory>${basedir}/cargo-installs</cargo.installs.directory>
+    <tomcat5x.version>5.5.27</tomcat5x.version>
   </properties>
 </project>
