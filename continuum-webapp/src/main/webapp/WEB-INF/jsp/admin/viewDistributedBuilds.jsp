@@ -44,6 +44,7 @@
             <s:set name="currentDistributedBuilds" value="currentDistributedBuilds" scope="request"/>
             <ec:table items="currentDistributedBuilds"
                       var="currentBuild"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
@@ -86,6 +87,7 @@
           <c:if test="${not empty distributedBuildQueues}">
             <s:set name="distributedBuildQueues" value="distributedBuildQueues" scope="request"/>
             <ec:table items="distributedBuildQueues"
+                      autoIncludeParameters="false"
                       var="buildQueue"
                       showExports="false"
                       showPagination="false"
@@ -148,6 +150,7 @@
             <s:set name="currentDistributedPrepareBuilds" value="currentDistributedPrepareBuilds" scope="request"/>
             <ec:table items="currentDistributedPrepareBuilds"
                       var="currentPrepareBuild"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
@@ -180,6 +183,7 @@
             <s:set name="distributedPrepareBuildQueues" value="distributedPrepareBuildQueues" scope="request"/>
             <ec:table items="distributedPrepareBuildQueues"
                       var="prepareBuildQueue"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"

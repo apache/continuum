@@ -41,6 +41,7 @@
         <h3><s:text name="viewBuildAgent.installations.title"/></h3>
         <ec:table items="installations"
 				  var="installation"
+          autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"

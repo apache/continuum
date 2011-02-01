@@ -28,6 +28,7 @@
   <c:if test="${not empty projectGroupNotifierSummaries}">
   <ec:table items="projectGroupNotifierSummaries"
             var="projectGroupNotifierSummary"
+            autoIncludeParameters="false"
             showExports="false"
             showPagination="false"
             showStatusBar="false"
@@ -86,6 +87,7 @@
     <h3><s:text name="projectGroupNotifierSummaryComponent.projectNotifiers"/></h3>
     <ec:table items="projectNotifierSummaries"
               var="projectNotifierSummary"
+              autoIncludeParameters="false"
               showExports="false"
               showPagination="false"
               showStatusBar="false"

@@ -98,6 +98,7 @@
           <s:set name="notifiers" value="project.notifiers" scope="request"/>
           <ec:table items="notifiers"
                     var="notifier"
+                    autoIncludeParameters="false"
                     showExports="false"
                     showPagination="false"
                     showStatusBar="false"
@@ -171,6 +172,7 @@
         <s:set name="dependencies" value="project.dependencies" scope="request"/>
         <ec:table items="dependencies"
                   var="dep"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
@@ -186,6 +188,7 @@
         <h3><s:text name="projectView.developers"/></h3>
         <s:set name="developers" value="project.developers" scope="request"/>
         <ec:table items="developers"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"

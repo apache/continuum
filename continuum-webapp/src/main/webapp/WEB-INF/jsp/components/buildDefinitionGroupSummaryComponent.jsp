@@ -29,6 +29,7 @@
   <c:if test="${not empty groupBuildDefinitionSummaries}">
   <ec:table items="groupBuildDefinitionSummaries"
             var="buildDefinitionSummary"
+            autoIncludeParameters="false"
             showExports="false"
             showPagination="false"
             showStatusBar="false"
@@ -131,6 +132,7 @@
 
   <ec:table items="projectBuildDefinitionSummaries"
             var="buildDefinitionSummary"
+            autoIncludeParameters="false"
             showExports="false"
             showPagination="false"
             showStatusBar="false"

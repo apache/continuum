@@ -42,6 +42,7 @@
       <form id="releaseResultsForm" action="removeReleaseResults.action" method="post">
         <ec:table items="releaseResults"
                 var="result"
+                autoIncludeParameters="false"
                 showExports="false"
                 showPagination="false"
                 showStatusBar="false"

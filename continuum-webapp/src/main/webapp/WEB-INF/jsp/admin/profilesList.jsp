@@ -44,6 +44,7 @@
     <c:if test="${not empty profiles}">
     <ec:table items="profiles"
               var="profile"
+              autoIncludeParameters="false"
               showExports="false"
               showPagination="false"
               showStatusBar="false"

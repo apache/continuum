@@ -47,6 +47,7 @@
     <input type="hidden" name="buildDefinitionId" value="-1" />
   <ec:table items="projects"
             var="project"
+            autoIncludeParameters="false"
             showExports="false"
             showPagination="false"
             showStatusBar="false"

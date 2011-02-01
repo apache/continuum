@@ -55,6 +55,7 @@
 
     <ec:table items="groups"
               var="group"
+              autoIncludeParameters="false"
               showExports="false"
               showPagination="false"
               showStatusBar="false"

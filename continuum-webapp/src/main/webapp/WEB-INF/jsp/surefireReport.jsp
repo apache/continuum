@@ -43,6 +43,7 @@
         <h4><s:text name="surefireReport.summary"/></h4>
         <ec:table items="testSummaryList"
                   var="summary"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
@@ -60,6 +61,7 @@
         <h4><s:text name="surefireReport.packageList"/></h4>
         <ec:table items="testPackageList"
                   var="report"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
@@ -81,6 +83,7 @@
           <h5><a name="<s:property value="name"/>"><s:property value="name"/></a></h5>
           <ec:table items="children"
                     var="report"
+                    autoIncludeParameters="false"
                     showExports="false"
                     showPagination="false"
                     showStatusBar="false"
@@ -116,6 +119,7 @@
             <h5><a name="<s:property value="id"/>"><s:property value="name"/></a></h5>
             <ec:table items="children"
                       var="testCase"
+                      autoIncludeParameters="false"
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"

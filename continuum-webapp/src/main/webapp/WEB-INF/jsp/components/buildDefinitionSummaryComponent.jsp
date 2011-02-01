@@ -26,6 +26,7 @@
 <s:i18n name="localization.Continuum">
   <ec:table items="allBuildDefinitionSummaries"
             var="buildDefinitionSummary"
+            autoIncludeParameters="false"
             showExports="false"
             showPagination="false"
             showStatusBar="false"

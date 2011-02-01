@@ -39,6 +39,7 @@
         <s:set name="releasesSummary" value="releasesSummary" scope="request"/>
         <ec:table items="releasesSummary"
                   var="releaseSummary"
+                  autoIncludeParameters="false"
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"

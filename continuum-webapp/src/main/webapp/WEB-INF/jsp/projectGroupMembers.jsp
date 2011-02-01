@@ -45,6 +45,7 @@
 
     <ec:table items="groupProjects"
               var="project"
+              autoIncludeParameters="false"
               showExports="false"
               showPagination="false"
               showStatusBar="false"
