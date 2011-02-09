@@ -31,7 +31,6 @@ import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -184,6 +183,8 @@ public class PrepareBuildProjectsTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, buildContext.getLatestUpdateDate() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_USERNAME, buildContext.getScmUsername() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, buildContext.getScmPassword() );
 
         buildContext.setActionContext( actionContext );
     }
