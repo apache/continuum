@@ -68,9 +68,9 @@ public class CheckoutProjectAction
         try
         {
             String scmUserName =
-                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_USERNAME, "" );
+                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_USERNAME, project.getScmUsername() );
             String scmPassword =
-                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, "" );
+                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, project.getScmPassword() );
 
             ContinuumScmConfiguration config =
                 createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );

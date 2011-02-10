@@ -410,7 +410,14 @@ public abstract class AbstractBuildExecutor
             for ( ProjectDeveloper developer : developers )
             {
                 Map<String, String> map = new HashMap<String, String>();
-                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_NAME, developer.getName() );
+                if ( StringUtils.isNotEmpty( developer.getName() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_NAME, developer.getName() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_NAME, "" );
+                }
                 if ( StringUtils.isNotEmpty( developer.getEmail() ) )
                 {
                 	map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, developer.getEmail() );
@@ -477,9 +484,23 @@ public abstract class AbstractBuildExecutor
             for ( ProjectDependency dependency : dependencies )
             {
                 Map<String, Object> map = new HashMap<String, Object>();
-                map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, dependency.getGroupId() );
-                map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, dependency.getArtifactId() );
-                if ( StringUtils.isNotBlank( dependency.getVersion() ) )
+                if ( StringUtils.isNotEmpty( dependency.getGroupId() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, dependency.getGroupId() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, "" );
+                }
+                if ( StringUtils.isNotEmpty( dependency.getArtifactId() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, dependency.getArtifactId() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, "" );
+                }
+                if ( StringUtils.isNotEmpty( dependency.getVersion() ) )
                 {
                     map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, dependency.getVersion() );
                 }
