@@ -141,6 +141,7 @@ public class ReleaseTaskExecutorTest
         releaseSimpleProjectWithNextVersion();
         releasePerformWithExecutableInDescriptor();
         releaseProjectWithDependencyOfCustomPackagingType();
+        releaseProjectWithProfile();
     }
 
     public void releaseSimpleProjectWithNextVersion()
@@ -348,6 +349,54 @@ public class ReleaseTaskExecutorTest
             fail( "Error in release:perform. Release output follows:\n" + result.getOutput() );
         }
 */
+    }
+
+    // CONTINUUM-2610
+    public void releaseProjectWithProfile()
+        throws Exception
+    {
+        String scmPath = new File( getBasedir(), "target/scm-test/continuum-2610" ).getAbsolutePath().replace( '\\', '/' );
+        File workDir = new File( getBasedir(), "target/test-classes/continuum-2610" );
+        FileUtils.deleteDirectory( workDir );
+        File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
+        FileUtils.deleteDirectory( testDir );
+
+        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
+        descriptor.setInteractive( false );
+        descriptor.setScmSourceUrl( "scm:svn:file://localhost/" + scmPath + "/trunk" );
+        descriptor.setWorkingDirectory( workDir.getAbsolutePath() );
+        descriptor.setAdditionalArguments( "-Pall" );
+
+        ScmRepository repository = getScmRepositorty( descriptor.getScmSourceUrl() );
+        ScmFileSet fileSet = new ScmFileSet( workDir );
+        scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
+
+        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        assertTrue( "Test root dev version", pom.indexOf( "<version>1.0-SNAPSHOT</version>" ) > 0 );
+        String moduleAPom = FileUtils.fileRead( new File( workDir, "module-A/pom.xml" ) );
+        assertTrue( "Test module A dev version", moduleAPom.indexOf( "<version>1.0-SNAPSHOT</version>" ) > 0 );
+        String moduleBPom = FileUtils.fileRead( new File( workDir, "module-B/pom.xml" ) );
+        assertTrue( "Test module B dev version", moduleBPom.indexOf( "<version>1.0-SNAPSHOT</version>" ) > 0 );
+
+        doPrepareWithNoError( descriptor );
+
+        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        assertTrue( "Test root version increment", pom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
+        moduleAPom = FileUtils.fileRead( new File( workDir, "module-A/pom.xml" ) );
+        assertTrue( "Test module A version increment", moduleAPom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
+        moduleBPom = FileUtils.fileRead( new File( workDir, "module-B/pom.xml" ) );
+        assertTrue( "Test module B version increment", moduleBPom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
+
+        repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/continuum-2610-1.0" );
+        fileSet = new ScmFileSet( testDir );
+        scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
+
+        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        assertTrue( "Test root released version", pom.indexOf( "<version>1.0</version>" ) > 0 );
+        moduleAPom = FileUtils.fileRead( new File( testDir, "module-A/pom.xml" ) );
+        assertTrue( "Test module A released version", moduleAPom.indexOf( "<version>1.0</version>" ) > 0 );
+        moduleBPom = FileUtils.fileRead( new File( testDir, "module-B/pom.xml" ) );
+        assertTrue( "Test module B released version", moduleBPom.indexOf( "<version>1.0</version>" ) > 0 );
     }
 
     private void doPrepareWithNoError( ReleaseDescriptor descriptor )

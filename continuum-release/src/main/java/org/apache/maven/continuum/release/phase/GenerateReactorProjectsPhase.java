@@ -23,7 +23,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
@@ -67,6 +75,10 @@ public class GenerateReactorProjectsPhase
     private MavenSettingsBuilder settingsBuilder;
 
     private PlexusContainer container;
+
+    private static final char SET_SYSTEM_PROPERTY = 'D';
+
+    private static final char ACTIVATE_PROFILES = 'P';
 
     public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException, ReleaseFailureException
@@ -116,14 +128,25 @@ public class GenerateReactorProjectsPhase
         MavenProject project;
         try
         {
-            ArtifactRepository repository = getLocalRepository( descriptor.getAdditionalArguments() );
+            String arguments = descriptor.getAdditionalArguments();
+            ArtifactRepository repository = getLocalRepository( arguments );
+            ProfileManager profileManager = getProfileManager( getSettings() );
+
+            if ( arguments != null )
+            {
+                activateProfiles( arguments, profileManager );
+            }
 
             project = projectBuilder.build( getProjectDescriptorFile( descriptor ), repository,
-                                                            getProfileManager( getSettings() ) );
+                                            profileManager );
 
             reactorProjects.add( project );
 
             addModules( reactorProjects, project, repository );
+        }
+        catch ( ParseException e )
+        {
+            throw new ContinuumReleaseException( "Unable to parse arguments.", e );
         }
         catch ( ProjectBuildingException e )
         {
@@ -234,7 +257,8 @@ public class GenerateReactorProjectsPhase
 
     private ProfileManager getProfileManager( Settings settings )
     {
-        return new DefaultProfileManager( container, settings );
+        Properties props = new Properties();
+        return new DefaultProfileManager( container, settings, props );
     }
 
     private Settings getSettings()
@@ -254,6 +278,59 @@ public class GenerateReactorProjectsPhase
         }
     }
 
+    @SuppressWarnings( "static-access" )
+    private void activateProfiles( String arguments, ProfileManager profileManager )
+        throws ParseException
+    {
+        CommandLineParser parser = new GnuParser();
+
+        Options options = new Options();
+
+        options.addOption( OptionBuilder.withLongOpt( "activate-profiles" )
+                                    .withDescription( "Comma-delimited list of profiles to activate" )
+                                    .hasArg()
+                                    .create( ACTIVATE_PROFILES ) );
+
+        options.addOption( OptionBuilder.withLongOpt( "define" )
+                           .hasArg()
+                           .withDescription( "Define a system property" )
+                           .create( SET_SYSTEM_PROPERTY ) );
+
+        String[] args = StringUtils.split( arguments );
+
+        CommandLine commandLine = parser.parse( options, args );
+
+        if ( commandLine.hasOption( ACTIVATE_PROFILES ) )
+        {
+            String [] profileOptionValues = commandLine.getOptionValues( ACTIVATE_PROFILES );
+
+            if ( profileOptionValues != null )
+            {
+                for ( int i = 0; i < profileOptionValues.length; ++i )
+                {
+                    StringTokenizer profileTokens = new StringTokenizer( profileOptionValues[i], "," );
+
+                    while ( profileTokens.hasMoreTokens() )
+                    {
+                        String profileAction = profileTokens.nextToken().trim();
+
+                        if ( profileAction.startsWith( "-" ) || profileAction.startsWith( "!" ) )
+                        {
+                            profileManager.explicitlyDeactivate( profileAction.substring( 1 ) );
+                        }
+                        else if ( profileAction.startsWith( "+" ) )
+                        {
+                            profileManager.explicitlyActivate( profileAction.substring( 1 ) );
+                        }
+                        else
+                        {
+                            profileManager.explicitlyActivate( profileAction );
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 	public void contextualize(Context context) throws ContextException {
 		container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);

@@ -110,7 +110,7 @@ public class DefaultBuildAgentConfigurationService
             }
             else
             {
-                return "There are no output for this build.";
+                return "There is no output for this build.";
             }
         }
         catch ( IOException e )
