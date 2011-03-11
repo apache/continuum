@@ -850,6 +850,33 @@ public class ContinuumServiceImpl
 
         return populateAddingResult( result );
     }
+    
+    public AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkProtocol,
+                                            boolean useCredentialsCache, boolean recursiveProjects,
+                                            boolean checkoutInSingleDirectory )
+        throws Exception
+    {
+        checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
+        ContinuumProjectBuildingResult result = null;
+        try
+        {
+            result =
+                continuum.addMavenTwoProject( url,
+                                              projectGroupId,
+                                              checkProtocol,
+                                              useCredentialsCache,
+                                              recursiveProjects,
+                                              continuum.getBuildDefinitionService().getDefaultMavenTwoBuildDefinitionTemplate().getId(),
+                                              checkoutInSingleDirectory );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+
+        return populateAddingResult( result );
+    }
 
     // ----------------------------------------------------------------------
     // Maven 1.x projects
@@ -2688,6 +2715,15 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.addMavenTwoProjectAsSingleProject( url, projectGroupId ) );
+    }
+    
+    public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkProtocol,
+                                                      boolean useCredentialsCache, boolean recursiveProjects,
+                                                      boolean checkoutInSingleDirectory )
+        throws Exception
+    {
+        return serializeObject( this.addMavenTwoProject( url, projectGroupId, checkProtocol, useCredentialsCache,
+                                                         recursiveProjects, checkoutInSingleDirectory ) );
     }
 
     public Map<String, Object> addProjectGroupRPC( String groupName, String groupId, String description )

@@ -759,12 +759,47 @@ public interface ContinuumService
      * 
      * @param url
      * @param projectGroupId
-     * @return
+     * @return 
      * @throws Exception
      */
     Map<String, Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
         throws Exception;
+    
+    /**
+     * Add a maven 2.x multi-module project from a url
+     * 
+     * @param url The POM url
+     * @param projectGroupId The id of the group where projects will be stored
+     * @param checkProtocol Determines whether the protocol will be checked
+     * @param useCredentialsCache Determines whether user credentials will be cached
+     * @param recursiveProjects Determines whether to load recursive projects
+     * @param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
+     * @return The result of the action with the list of projects created
+     * @throws Exception
+     */
+    AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkProtocol,
+                                     boolean useCredentialsCache, boolean recursiveProjects,
+                                     boolean checkoutInSingleDirectory )
+        throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param url The POM url
+     * @param projectGroupId The id of the group where projects will be stored
+     * @param checkProtocol Determines whether the protocol will be checked
+     * @param useCredentialsCache Determines whether user credentials will be cached
+     * @param recursiveProjects Determines whether to load recursive projects
+     * @param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
+     * @return The result of the action with the list of projects created as RPC value
+     * @throws Exception
+     */
+    Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkProtocol,
+                                               boolean useCredentialsCache, boolean recursiveProjects,
+                                               boolean checkoutInSingleDirectory )
+        throws Exception;
+    
+    
     // ----------------------------------------------------------------------
     // Maven 1.x projects
     // ----------------------------------------------------------------------
