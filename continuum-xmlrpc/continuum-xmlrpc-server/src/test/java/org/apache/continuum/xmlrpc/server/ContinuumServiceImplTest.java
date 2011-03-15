@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
+import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
+import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.server.ContinuumServiceImpl;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
@@ -71,7 +73,7 @@ public class ContinuumServiceImplTest
     {
         params = new HashMap<String, Object>();
         params.put( "scm-tag", "" );
-        params.put( "scm-tagbase", "" );    
+        params.put( "scm-tagbase", "" );
 
         context.checking( new Expectations()
         {
@@ -157,6 +159,35 @@ public class ContinuumServiceImplTest
         assertEquals( buildDef.isDefaultForProject(), buildDefinition.isDefaultForProject() );
     }
     
+    public void testBuildProjectWithBuildTrigger()
+        throws Exception
+    {
+        final ProjectGroup projectGroup = new ProjectGroup();
+        projectGroup.setName( "test-group" );
+        
+        BuildTrigger buildTrigger = new BuildTrigger();
+        buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
+        buildTrigger.setTriggeredBy( "username" );
+
+        BuildDefinition buildDef = createBuildDefinition();
+        buildDef.setId( 1 );
+    
+        context.checking( new Expectations()
+        {
+            {
+                atLeast( 1 ).of( continuum ).getProject( project.getId() );
+                will( returnValue( project ) );
+                
+                atLeast( 1 ).of( continuum ).getProjectGroupByProjectId( project.getId() );
+                will( returnValue( projectGroup ) );
+            }
+        });
+    
+        int result = continuumService.buildProject( project.getId(), buildDef.getId(), buildTrigger );
+        assertEquals( 0, result );
+    
+    }
+    
     private BuildDefinition createBuildDefinition()
     {
         BuildDefinition buildDef = new BuildDefinition();
@@ -175,7 +206,7 @@ public class ContinuumServiceImplTest
     private Map<String, Object> getListenerMap()
     {
         Map<String, Object> map = new HashMap<String, Object>();
- 
+        
         map.put( "release-phases", Arrays.asList( "incomplete-phase" ) );
         map.put( "completed-release-phases", Arrays.asList( "completed-phase" ) );
         return map;

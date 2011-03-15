@@ -653,29 +653,38 @@ public class ContinuumServiceImpl
         return 0;
     }
 
-    public int buildProject( int projectId, int buildDefintionId )
+    public int buildProject( int projectId, int buildDefinitionId )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
-
-        continuum.buildProjectWithBuildDefinition( projectId,
-                                                   buildDefintionId,
-                                                   new org.apache.continuum.utils.build.BuildTrigger(
-                                                                                                      ContinuumProjectState.TRIGGER_SCHEDULED,
-                                                                                                      "" ) );
+        
+        buildProjectWithBuildDefinition( projectId, buildDefinitionId,
+                                         new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
     }
 
-    public int buildProject( int projectId, BuildTrigger buildTrigger )
+    public int buildProject( int projectId, BuildTrigger xmlrpcBuildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        org.apache.continuum.utils.build.BuildTrigger bd = populateBuildTrigger( buildTrigger );
+        org.apache.continuum.utils.build.BuildTrigger buildTrigger = populateBuildTrigger( xmlrpcBuildTrigger );
 
-        continuum.buildProject( projectId, bd );
+        continuum.buildProject( projectId, buildTrigger );
+        return 0;
+    }
+    
+    public int buildProject( int projectId, int buildDefinitionId, BuildTrigger xmlrpcBuildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
+    {
+        ProjectSummary projectSummary = getProjectSummary( projectId );
+        checkBuildProjectInGroupAuthorization( projectSummary.getProjectGroup().getName() );
+
+        org.apache.continuum.utils.build.BuildTrigger buildTrigger = populateBuildTrigger( xmlrpcBuildTrigger );
+        buildProjectWithBuildDefinition( projectId, buildDefinitionId, buildTrigger );
+        
         return 0;
     }
 
@@ -693,14 +702,14 @@ public class ContinuumServiceImpl
         return 0;
     }
 
-    public int buildGroup( int projectGroupId, int buildDefintionId )
+    public int buildGroup( int projectGroupId, int buildDefinitionId )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
         checkBuildProjectInGroupAuthorization( pg.getName() );
 
         continuum.buildProjectGroupWithBuildDefinition( projectGroupId,
-                                                        buildDefintionId,
+                                                        buildDefinitionId,
                                                         new org.apache.continuum.utils.build.BuildTrigger(
                                                                                                            ContinuumProjectState.TRIGGER_SCHEDULED,
                                                                                                            "" ) );
@@ -1261,7 +1270,7 @@ public class ContinuumServiceImpl
         {
             Map<String, List<org.apache.continuum.taskqueue.BuildProjectTask>> buildTasks;
             
-            if( continuum.getConfiguration().isDistributedBuildEnabled() )
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
                 buildTasks = distributedBuildManager.getProjectsInBuildQueue();
             }
@@ -1719,8 +1728,7 @@ public class ContinuumServiceImpl
         ConfigurationService configurationService = continuum.getConfiguration();
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
             configurationService.getBuildAgent( buildAgentConfiguration.getUrl() );
-        BuildAgentConfiguration buildAgentConfigurationToUpdate =
-            buildAgent != null ? populateBuildAgent( buildAgent ) : null;
+        BuildAgentConfiguration buildAgentConfigurationToUpdate = buildAgent != null ? populateBuildAgent( buildAgent ) : null;
 
         if ( buildAgentConfigurationToUpdate != null )
         {
@@ -1952,7 +1960,7 @@ public class ContinuumServiceImpl
     }
 
     protected org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition( BuildDefinition buildDef,
-                                                                                              org.apache.maven.continuum.model.project.BuildDefinition bd )
+                                                                                                org.apache.maven.continuum.model.project.BuildDefinition bd )
         throws ProfileException, ContinuumException
     {
         if ( buildDef == null )
@@ -1987,12 +1995,18 @@ public class ContinuumServiceImpl
             bd.setSchedule( null );
         }
         
-        if( StringUtils.isNotEmpty( buildDef.getDescription() ) )
+        if ( StringUtils.isNotEmpty( buildDef.getDescription() ) )
         {
             bd.setDescription( buildDef.getDescription() );
         }
 
         return bd;
+    }
+    
+    protected void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, org.apache.continuum.utils.build.BuildTrigger buildTrigger )
+        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
+    {
+        continuum.buildProjectWithBuildDefinition( projectId, buildDefinitionId, buildTrigger );
     }
 
     private BuildDefinitionTemplate populateBuildDefinitionTemplate( org.apache.maven.continuum.model.project.BuildDefinitionTemplate bdt )
@@ -2262,7 +2276,7 @@ public class ContinuumServiceImpl
         }
         catch ( ContinuumException e )
         {
-            logger.warn( "Unable to connect to build agent " + buildAgentConfiguration.getUrl() + "." , e );
+            logger.warn( "Unable to connect to build agent " + buildAgentConfiguration.getUrl() + ".", e );
             buildAgentConfiguration.setPlatform( "" );
             return buildAgentConfiguration;
         }
@@ -3331,7 +3345,7 @@ public class ContinuumServiceImpl
         }
     }
 
-    public List<Map<String, String>> getProjectReleaseAndDevelopmentVersions( int projectId, String pomFilename, 
+    public List<Map<String, String>> getProjectReleaseAndDevelopmentVersions( int projectId, String pomFilename,
                                                                               boolean autoVersionSubmodules )
         throws Exception
     {

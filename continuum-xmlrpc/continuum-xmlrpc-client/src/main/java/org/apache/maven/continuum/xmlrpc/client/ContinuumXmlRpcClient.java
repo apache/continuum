@@ -332,6 +332,12 @@ public class ContinuumXmlRpcClient
     {
         return continuum.buildProject( projectId, buildTrigger );
     }
+    
+    public int buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
+        throws Exception
+    {
+        return continuum.buildProject( projectId, buildDefinitionId, buildTrigger );
+    }
 
     public int buildGroup( int projectGroupId )
         throws Exception

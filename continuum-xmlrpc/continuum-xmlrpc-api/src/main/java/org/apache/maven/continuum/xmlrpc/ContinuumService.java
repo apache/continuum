@@ -399,7 +399,7 @@ public interface ContinuumService
      * Update a project build definition.
      * 
      * @param projectId The project id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the updated build definition
      * @throws Exception
      */
@@ -410,7 +410,7 @@ public interface ContinuumService
      * Same method but compatible with standard XMLRPC
      * 
      * @param projectId The project id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the updated build definition as RPC value
      * @throws Exception
      */
@@ -421,7 +421,7 @@ public interface ContinuumService
      * Update a project group build definition.
      * 
      * @param projectGroupId The project group id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the updated build definition
      * @throws Exception
      */
@@ -432,7 +432,7 @@ public interface ContinuumService
      * Same method but compatible with standard XMLRPC
      * 
      * @param projectGroupId The project group id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the updated build definition as RPC value
      * @throws Exception
      */
@@ -443,7 +443,7 @@ public interface ContinuumService
      * Add a project build definition.
      * 
      * @param projectId The project id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the added build definition
      * @throws Exception
      */
@@ -454,7 +454,7 @@ public interface ContinuumService
      * Same method but compatible with standard XMLRPC
      * 
      * @param projectId The project id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the added build definition as RPC value
      * @throws Exception
      */
@@ -465,7 +465,7 @@ public interface ContinuumService
      * Add a project group buildDefinition.
      * 
      * @param projectGroupId The project group id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the build definition added
      * @throws Exception
      */
@@ -476,7 +476,7 @@ public interface ContinuumService
      * Same method but compatible with standard XMLRPC
      * 
      * @param projectGroupId The project group id
-     * @param buildDef The build defintion to update
+     * @param buildDef The build definition to update
      * @return the added build definition as RPC value
      * @throws Exception
      */
@@ -552,6 +552,18 @@ public interface ContinuumService
      * @throws Exception
      */
     int buildProject( int projectId, BuildTrigger buildTrigger )
+        throws Exception;
+    
+    /**
+     * Forced build the project
+     * 
+     * @param projectId The project id
+     * @param buildDefinitionId The build definition id
+     * @param buildTrigger The build trigger
+     * @return
+     * @throws Exception
+     */
+    int buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
         throws Exception;
 
     /**
@@ -1070,7 +1082,7 @@ public interface ContinuumService
      * @return The installations list.
      * @throws Exception
      */
-    List<Installation> getBuildAgentInstallations(String url)
+    List<Installation> getBuildAgentInstallations( String url )
         throws Exception;
 
     /**
