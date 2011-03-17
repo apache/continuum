@@ -1055,6 +1055,54 @@ public class DefaultDistributedBuildManager
         return agentUrl;
     }
 
+    public String getBuildAgentUrl( int projectId )
+        throws ContinuumException
+    {
+        String agentUrl = null;
+
+        synchronized( overallDistributedBuildQueues )
+        {
+            for ( String buildAgentUrl : overallDistributedBuildQueues.keySet() )
+            {
+                OverallDistributedBuildQueue overallDistributedBuildQueue = 
+                    overallDistributedBuildQueues.get( buildAgentUrl );
+    
+                if ( overallDistributedBuildQueue != null )
+                {
+                    try
+                    {
+                        if ( isAgentAvailable( buildAgentUrl ) )
+                        {
+                            SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                            
+                            if ( client.isProjectGroupCurrentlyPreparingBuild( projectId ) ||
+                                client.isProjectCurrentlyBuilding( projectId ) ||
+                                client.isProjectGroupInPrepareBuildQueue( projectId ) ||
+                                client.isProjectInBuildQueue( projectId ) )
+                            {
+                                agentUrl = buildAgentUrl;
+                                break;
+                            }
+                        }
+                    }
+                    catch ( MalformedURLException e )
+                    {
+                        log.warn( "Unable to check if project " + projectId + " is currently queued or processed in agent: Invalid build agent url" + buildAgentUrl );
+                    }
+                    catch ( Exception e )
+                    {
+                        log.warn( "Unable to check if project " + projectId + " is currently queued or processed in agent", e );
+                    }
+                }
+            }
+        }
+
+        // call reload in case we disable a build agent
+        reload();
+
+        return agentUrl;
+    }
+
     private void createDistributedBuildQueueForAgent( String buildAgentUrl )
         throws ComponentLookupException
     {

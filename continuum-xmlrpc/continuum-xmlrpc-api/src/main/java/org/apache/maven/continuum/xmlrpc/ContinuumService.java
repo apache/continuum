@@ -1189,6 +1189,16 @@ public interface ContinuumService
     boolean cancelCurrentBuild()
         throws Exception;
 
+    /**
+     * Cancel a project build
+     * 
+     * @param projectId the project id
+     * @return
+     * @throws Exception
+     */
+    boolean cancelBuild( int projectId )
+        throws Exception;
+
     // ----------------------------------------------------------------------
     // TODO:Users
     // ----------------------------------------------------------------------

@@ -40,6 +40,7 @@ import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
@@ -102,7 +103,7 @@ public class ContinuumServiceImpl
     private static final MapperIF mapper = DozerBeanMapperSingletonWrapper.getInstance();
 
     private final Logger logger = LoggerFactory.getLogger( ContinuumServiceImpl.class );
-    
+
     /**
      * @plexus.requirement
      */
@@ -658,7 +659,7 @@ public class ContinuumServiceImpl
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
-        
+
         buildProjectWithBuildDefinition( projectId, buildDefinitionId,
                                          new org.apache.continuum.utils.build.BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" ) );
         return 0;
@@ -675,7 +676,7 @@ public class ContinuumServiceImpl
         continuum.buildProject( projectId, buildTrigger );
         return 0;
     }
-    
+
     public int buildProject( int projectId, int buildDefinitionId, BuildTrigger xmlrpcBuildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
@@ -684,7 +685,7 @@ public class ContinuumServiceImpl
 
         org.apache.continuum.utils.build.BuildTrigger buildTrigger = populateBuildTrigger( xmlrpcBuildTrigger );
         buildProjectWithBuildDefinition( projectId, buildDefinitionId, buildTrigger );
-        
+
         return 0;
     }
 
@@ -859,7 +860,7 @@ public class ContinuumServiceImpl
 
         return populateAddingResult( result );
     }
-    
+
     public AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkProtocol,
                                             boolean useCredentialsCache, boolean recursiveProjects,
                                             boolean checkoutInSingleDirectory )
@@ -1269,7 +1270,7 @@ public class ContinuumServiceImpl
         try
         {
             Map<String, List<org.apache.continuum.taskqueue.BuildProjectTask>> buildTasks;
-            
+
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
                 buildTasks = distributedBuildManager.getProjectsInBuildQueue();
@@ -1278,7 +1279,7 @@ public class ContinuumServiceImpl
             {
                 buildTasks = parallelBuildsManager.getProjectsInBuildQueues();
             }
-                
+
             Set<String> keys = buildTasks.keySet();
             List<org.apache.continuum.taskqueue.BuildProjectTask> convertedTasks =
                 new ArrayList<org.apache.continuum.taskqueue.BuildProjectTask>();
@@ -1317,6 +1318,105 @@ public class ContinuumServiceImpl
         try
         {
             return parallelBuildsManager.cancelAllBuilds();
+        }
+        catch ( BuildManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
+
+    public boolean cancelBuild( int projectId )
+        throws ContinuumException
+    {
+        checkManageQueuesAuthorization();
+        try
+        {
+            if ( continuum.getConfiguration().isDistributedBuildEnabled() )
+            {
+                DistributedBuildManager dbm = continuum.getDistributedBuildManager();
+
+                String buildAgentUrl = dbm.getBuildAgentUrl( projectId );
+
+                // wait if already preparing
+                if ( dbm.isProjectCurrentlyPreparingBuild( projectId, -1 ) )
+                {
+                    while ( dbm.isProjectCurrentlyPreparingBuild( projectId, -1 ) )
+                    {
+                        try
+                        {
+                            Thread.sleep( 1000 );
+                        }
+                        catch ( InterruptedException e )
+                        {
+                            // do nothing
+                        }
+                    }
+                }
+
+                if ( dbm.isProjectInAnyPrepareBuildQueue( projectId, -1 ) )
+                {
+                    if ( buildAgentUrl != null )
+                    {
+                        ProjectScmRoot scmRoot = continuum.getProjectScmRootByProject( projectId );
+                        dbm.removeFromPrepareBuildQueue( buildAgentUrl, scmRoot.getProjectGroup().getId(),
+                                                         scmRoot.getId() );
+                    }
+                }
+                else if ( dbm.isProjectInAnyBuildQueue( projectId, -1 ) )
+                {
+                    dbm.removeFromBuildQueue( buildAgentUrl, projectId, -1 );
+                }
+                else if ( dbm.isProjectCurrentlyBuilding( projectId, -1 ) )
+                {
+                    if ( buildAgentUrl != null )
+                    {
+                        dbm.cancelDistributedBuild( buildAgentUrl );
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                // if currently preparing build or being checked out, wait until done
+                if ( parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) ||
+                    parallelBuildsManager.isProjectCurrentlyBeingCheckedOut( projectId ) )
+                {
+                    while ( parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) ||
+                        parallelBuildsManager.isProjectCurrentlyBeingCheckedOut( projectId ) )
+                    {
+                        try
+                        {
+                            Thread.sleep( 1000 );
+                        }
+                        catch ( InterruptedException e )
+                        {
+                            // do nothing
+                        }
+                    }
+                }
+
+                if ( parallelBuildsManager.isInPrepareBuildQueue( projectId ) )
+                {
+                    ProjectScmRoot scmRoot = continuum.getProjectScmRootByProject( projectId );
+                    parallelBuildsManager.removeProjectFromPrepareBuildQueue( scmRoot.getProjectGroup().getId(),
+                                                                              scmRoot.getId() );
+                }
+                else if ( parallelBuildsManager.isInAnyCheckoutQueue( projectId ) )
+                {
+                    parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
+                }
+                else if ( parallelBuildsManager.isInAnyBuildQueue( projectId ) )
+                {
+                    parallelBuildsManager.removeProjectFromBuildQueue( projectId );
+                }
+                else if ( parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) )
+                {
+                    return parallelBuildsManager.cancelBuild( projectId );
+                }
+
+                return true;
+            }
         }
         catch ( BuildManagerException e )
         {
@@ -1994,7 +2094,7 @@ public class ContinuumServiceImpl
         {
             bd.setSchedule( null );
         }
-        
+
         if ( StringUtils.isNotEmpty( buildDef.getDescription() ) )
         {
             bd.setDescription( buildDef.getDescription() );
@@ -2002,7 +2102,7 @@ public class ContinuumServiceImpl
 
         return bd;
     }
-    
+
     protected void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, org.apache.continuum.utils.build.BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
@@ -2730,7 +2830,7 @@ public class ContinuumServiceImpl
     {
         return serializeObject( this.addMavenTwoProjectAsSingleProject( url, projectGroupId ) );
     }
-    
+
     public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkProtocol,
                                                       boolean useCredentialsCache, boolean recursiveProjects,
                                                       boolean checkoutInSingleDirectory )

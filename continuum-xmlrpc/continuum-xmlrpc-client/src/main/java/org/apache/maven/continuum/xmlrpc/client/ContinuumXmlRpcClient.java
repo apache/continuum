@@ -583,6 +583,12 @@ public class ContinuumXmlRpcClient
         return continuum.cancelCurrentBuild();
     }
 
+    public boolean cancelBuild( int projectId )
+        throws Exception
+    {
+        return continuum.cancelBuild( projectId );
+    }
+
     // ----------------------------------------------------------------------
     // Release Result
     // ----------------------------------------------------------------------
