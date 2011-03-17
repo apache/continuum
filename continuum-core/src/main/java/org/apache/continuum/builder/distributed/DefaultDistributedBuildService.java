@@ -221,6 +221,7 @@ public class DefaultDistributedBuildService
         try
         {
             Project project = projectDao.getProject( projectId );
+            project.setOldState( project.getState() );
             project.setState( ContinuumProjectState.BUILDING );
             projectDao.updateProject( project );
         }
