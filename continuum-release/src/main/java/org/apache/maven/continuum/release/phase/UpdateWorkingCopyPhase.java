@@ -19,13 +19,21 @@ package org.apache.maven.continuum.release.phase;
  * under the License.
  */
 
+import java.io.File;
+import java.util.List;
+
+import org.apache.maven.scm.ScmBranch;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.ScmFileSet;
 import org.apache.maven.scm.ScmVersion;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.apache.maven.scm.manager.plexus.PlexusLogger;
 import org.apache.maven.scm.provider.ScmProvider;
+import org.apache.maven.scm.provider.ScmProviderRepository;
+import org.apache.maven.scm.provider.git.gitexe.command.branch.GitBranchCommand;
+import org.apache.maven.scm.provider.git.repository.GitScmProviderRepository;
 import org.apache.maven.scm.repository.ScmRepository;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.apache.maven.settings.Settings;
@@ -38,9 +46,6 @@ import org.apache.maven.shared.release.phase.AbstractReleasePhase;
 import org.apache.maven.shared.release.scm.ReleaseScmCommandException;
 import org.apache.maven.shared.release.scm.ReleaseScmRepositoryException;
 import org.apache.maven.shared.release.scm.ScmRepositoryConfigurator;
-
-import java.io.File;
-import java.util.List;
 
 /**
  * Update working copy
@@ -87,6 +92,7 @@ public class UpdateWorkingCopyPhase
         CheckOutScmResult checkOutScmResult = null;
         
         File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
+        ScmFileSet workingDirSet = new ScmFileSet( workingDirectory );
         
         try
         {
@@ -95,13 +101,27 @@ public class UpdateWorkingCopyPhase
                 workingDirectory.mkdirs();
             }
             
+            ScmVersion scmTag = null;
+
+            ScmProviderRepository providerRepo = repository.getProviderRepository();
+
+            // FIXME: This should be handled by the maven-scm git provider
+            if ( providerRepo instanceof GitScmProviderRepository )
+            {
+                String branchName =
+                    GitBranchCommand.getCurrentBranch( new PlexusLogger(getLogger()), (GitScmProviderRepository) providerRepo,
+                                                       workingDirSet );
+                scmTag = new ScmBranch( branchName );
+            }
+
             if( workingDirectory.listFiles().length > 1 )
             {
-                updateScmResult = provider.update( repository, new ScmFileSet( workingDirectory ), (ScmVersion) null );
+                updateScmResult = provider.update( repository, workingDirSet, scmTag );
             }
             else
             {
                 checkOutScmResult = provider.checkOut( repository, new ScmFileSet( workingDirectory ) );
+                checkOutScmResult = provider.checkOut( repository, workingDirSet, scmTag );
             }
         }
         catch ( ScmException e )

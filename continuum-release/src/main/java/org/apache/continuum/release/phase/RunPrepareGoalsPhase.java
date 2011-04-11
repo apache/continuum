@@ -22,7 +22,6 @@ package org.apache.continuum.release.phase;
 import java.io.File;
 import java.util.List;
 
-import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseResult;
@@ -50,7 +49,8 @@ public class RunPrepareGoalsPhase
                 releaseDescriptor.getAdditionalArguments() );
 	}
 
-    public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
+    public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
+                                   List reactorProjects )
         throws ReleaseExecutionException, ReleaseFailureException
     {
         ReleaseResult result = new ReleaseResult();
@@ -58,7 +58,7 @@ public class RunPrepareGoalsPhase
         logInfo( result, "Executing preparation goals - since this is simulation mode it is running against the " +
             "original project, not the rewritten ones" );
 
-        execute( releaseDescriptor, settings, reactorProjects );
+        execute( releaseDescriptor, releaseEnvironment, reactorProjects );
 
         return result;
     }
