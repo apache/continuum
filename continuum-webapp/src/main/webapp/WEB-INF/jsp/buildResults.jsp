@@ -51,6 +51,7 @@
         <form id="buildResultsForm" action="removeBuildResults.action" method="post">
           <s:hidden name="projectGroupId"/>
           <s:hidden name="projectId"/>
+          <s:token/>
           <s:set name="buildResults" value="buildResults" scope="request"/>
           <ec:table items="buildResults"
                     var="buildResult"

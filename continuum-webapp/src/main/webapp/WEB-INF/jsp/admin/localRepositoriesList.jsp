@@ -76,8 +76,11 @@
               </c:choose>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
+                <s:token/>
                 <s:url id="removeRepositoryUrl" action="removeRepository">
                   <s:param name="repository.id">${pageScope.repository.id}</s:param>
+                  <s:param name="struts.token.name">struts.token</s:param>
+                  <s:param name="struts.token"><s:property value="struts.token"/></s:param>
                 </s:url>
                 <c:choose>
                   <c:when test="${repository.name == 'DEFAULT'}">

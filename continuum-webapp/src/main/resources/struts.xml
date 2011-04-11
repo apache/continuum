@@ -47,6 +47,9 @@
         </interceptor-ref>
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="continuumConfigurationCheck"/>
+        <interceptor-ref name="tokenSession">
+          <param name="excludeMethods">*</param>
+        </interceptor-ref>
         <interceptor-ref name="validation">
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
@@ -153,6 +156,8 @@
         <param name="actionName">password</param>
         <param name="namespace">/security</param>
       </result>
+
+      <result name="invalid.token">/WEB-INF/jsp/redback/invalidToken.jsp</result>
     </global-results>
 
     <global-exception-mappings>
@@ -246,7 +251,9 @@
     </action>
 
     <action name="deleteProject" class="deleteProject">
-      <interceptor-ref name="storeStack"/>
+      <interceptor-ref name="storeStack">
+        <param name="tokenSession.includeMethods">*</param>
+      </interceptor-ref>
       <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
@@ -309,6 +316,9 @@
     <action name="removeProjectBuildDefinition" class="buildDefinition" method="removeFromProject">
       <result name="confirm">/WEB-INF/jsp/deleteBuildDefinition.jsp</result>
       <result name="success" type="chain">projectView</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">removeFromProject</param>
+      </interceptor-ref>
     </action>
 
     <action name="saveGroupBuildDefinition" class="buildDefinition" method="saveToGroup">
@@ -318,6 +328,9 @@
     <action name="removeGroupBuildDefinition" class="buildDefinition" method="removeFromProjectGroup">
       <result name="confirm">/WEB-INF/jsp/confirmBuildDefinitionRemoval.jsp</result>
       <result name="success" type="chain">projectGroupBuildDefinition</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">removeFromProjectGroup</param>
+      </interceptor-ref>
     </action>
 
 
@@ -353,7 +366,9 @@
     </action>
 
     <action name="removeProjectGroup" class="projectGroup" method="remove">
-      <interceptor-ref name="storeStack"/>
+      <interceptor-ref name="storeStack">
+        <param name="tokenSession.includeMethods">remove</param>
+      </interceptor-ref>
       <result name="confirm">/WEB-INF/jsp/confirmGroupRemoval.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">groupSummary</param>
@@ -423,7 +438,9 @@
     </action>    
     
     <action name="removeBuildResult" class="buildResult" method="remove">
-      <interceptor-ref name="storeStack"/>
+      <interceptor-ref name="storeStack">
+        <param name="tokenSession.includeMethods">remove</param>
+      </interceptor-ref>
       <result name="success" type="redirect-action">
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
@@ -472,10 +489,14 @@
       <result name="success" type="chain">schedules</result>
       <result name="error" type="chain">schedule</result>
     </action>
+    
     <action name="removeSchedule" class="schedule" method="remove">
       <result name="confirm">/WEB-INF/jsp/confirmScheduleRemoval.jsp</result>
       <result name="success" type="chain">schedules</result>
       <result name="error" type="chain">schedule</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">remove</param>
+      </interceptor-ref>
     </action>
 
     <action name="cancelBuild" class="cancelBuild">
@@ -621,6 +642,9 @@
         <param name="actionName">projectGroupReleaseResults</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">remove</param>
+      </interceptor-ref>
     </action>
 
     <action name="viewReleases" class="distributedRelease" method="list">
@@ -652,6 +676,9 @@
     <action name="saveFooter" class="configureFooter" method="saveFooter">
       <result name="input">/WEB-INF/jsp/admin/appearance.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/appearance.jsp</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">saveFooter</param>
+      </interceptor-ref>
     </action>    
       
     <action name="editAppearance" class="configureAppearance" method="input">
@@ -676,6 +703,9 @@
         <param name="actionName">configureAppearance</param>
         <param name="namespace">/admin</param>
       </result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">execute</param>
+      </interceptor-ref>
     </action>
       
     <!--
@@ -697,7 +727,9 @@
     </action>
       
     <action name="deleteBuildEnv" class="profileAdministration" method="delete">
-      <interceptor-ref name="storeStack"/>
+      <interceptor-ref name="storeStack">
+        <param name="tokenSession.includeMethods">delete</param>
+      </interceptor-ref>
       <result name="success" type="redirect-action">
         <param name="actionName">buildEnvList</param>
         <param name="namespace">/admin</param>
@@ -722,7 +754,7 @@
     
     <action name="removeBuildEnvInstallation" class="profileAdministration" method="removeInstallation">
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
-      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
       
     <!--
@@ -774,6 +806,9 @@
         <param name="actionName">buildDefinitionTemplates.action</param>        
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionTemplate.jsp</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">delete</param>
+      </interceptor-ref>
     </action>
     
     <action name="saveBuildDefinitionTemplate" class="buildDefinitionTemplates" method="save">
@@ -914,8 +949,11 @@
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildQueue.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">buildQueueList</param>
-      </result>    
-    </action>  
+      </result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">delete</param>
+      </interceptor-ref>
+    </action>
             
     <!--
     * Local Repository actions
@@ -940,7 +978,9 @@
     </action>
     
     <action name="removeRepository" class="localRepository" method="remove">
-      <interceptor-ref name="storeStack"/>
+      <interceptor-ref name="storeStack">
+        <param name="tokenSession.includeMethods">remove</param>
+      </interceptor-ref>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteLocalRepository.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">repositoryList</param>
@@ -983,6 +1023,9 @@
       <result name="success" type="redirect-action">
         <param name="actionName">purgeConfigList</param>
       </result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">remove</param>
+      </interceptor-ref>
     </action>
     
     <action name="doPurge" class="purgeConfiguration" method="purge">
@@ -1021,6 +1064,9 @@
       <result name="success" type="redirect-action">
         <param name="actionName">buildAgentList</param>
       </result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">delete</param>
+      </interceptor-ref>
     </action>
     
     <action name="viewBuildAgent" class="buildAgent" method="view">
@@ -1036,6 +1082,9 @@
       <result name="success" type="redirect-action">
         <param name="actionName">buildAgentList</param>
       </result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">deleteGroup</param>
+      </interceptor-ref>
     </action>
 
     <action name="editBuildAgentGroup" class="buildAgent" method="inputGroup">
@@ -1099,6 +1148,9 @@
       <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
       <result name="success" type="chain">projectView</result>
       <result name="to_group_page" type="chain">projectGroupNotifier</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">execute</param>
+      </interceptor-ref>
     </action>
 
     <action name="addProjectNotifier" class="addProjectNotifier" method="doDefault">
@@ -1175,6 +1227,9 @@
     <action name="deleteProjectGroupNotifier" class="deleteGroupNotifier">
       <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
       <result name="success" type="chain">projectGroupNotifier</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">execute</param>
+      </interceptor-ref>
     </action>
 
     <action name="addProjectGroupNotifier" class="addGroupNotifier" method="doDefault">

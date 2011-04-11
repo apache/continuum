@@ -88,9 +88,12 @@
             <c:choose>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
+                <s:token/>  
                 <s:url id="removeProjectUrl" action="deleteProject!default.action">
                   <s:param name="projectId">${pageScope.project.id}</s:param>
                   <s:param name="projectName">${pageScope.project.name}</s:param>
+                  <s:param name="struts.token.name">struts.token</s:param>
+                  <s:param name="struts.token"><s:property value="struts.token"/></s:param>
                 </s:url>
                 <s:a href="%{removeProjectUrl}">
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">

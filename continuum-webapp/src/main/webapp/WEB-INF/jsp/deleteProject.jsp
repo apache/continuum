@@ -39,6 +39,7 @@
         </div>
         <div class="functnbar3">
           <s:form action="deleteProject.action" method="post">
+            <s:token/>
             <s:hidden name="projectId"/>
             <s:hidden name="projectGroupId"/>
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>

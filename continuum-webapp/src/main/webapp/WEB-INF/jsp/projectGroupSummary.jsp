@@ -173,6 +173,7 @@
                 <form action="removeProjectGroup.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                   <input type="submit" name="remove" value="<s:text name="projectGroup.deleteGroup"/>"/>
+                  <s:token/>
                 </form>
               </redback:ifAuthorized>
             </td>

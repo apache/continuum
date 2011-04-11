@@ -99,10 +99,13 @@
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
           </c:when>
           <c:otherwise>
+            <s:token/>
             <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
               <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
               <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
               <s:param name="confirmed" value="false"/>
+              <s:param name="struts.token.name">struts.token</s:param>
+              <s:param name="struts.token"><s:property value="struts.token"/></s:param> 
             </s:url>
             <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
@@ -202,10 +205,13 @@
       </ec:column>
       <ec:column property="removeAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+          <s:token/>
           <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
             <s:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</s:param>
             <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
             <s:param name="confirmed" value="false"/>
+            <s:param name="struts.token.name">struts.token</s:param>
+            <s:param name="struts.token"><s:property value="struts.token"/></s:param>
           </s:url>
           <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">

@@ -30,6 +30,7 @@
         <h3><s:text name="deleteRepository.section.title"/></h3>
         <div class="axial">
         <s:form action="removeRepository" method="post">
+          <s:token/>
           <s:hidden name="repository.id"/>
           <s:hidden name="confirmed" value="true"/>
           <s:actionerror/>

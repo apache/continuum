@@ -47,10 +47,13 @@
         <ec:column property="name" title="Name" style="white-space: nowrap" />
            
         <ec:column property="id" title="&nbsp;" width="1%">
-          <c:if test="${buildQueue.id != 1}"> 
+          <c:if test="${buildQueue.id != 1}">
+            <s:token/>
             <s:url id="deleteBuildQueueUrl" action="deleteBuildQueue">
               <s:param name="buildQueue.id">${pageScope.buildQueue.id}</s:param>
               <s:param name="buildQueue.name">${pageScope.buildQueue.name}</s:param>
+              <s:param name="struts.token.name">struts.token</s:param>
+              <s:param name="struts.token"><s:property value="struts.token"/></s:param>
             </s:url>          
             <s:a href="%{deleteBuildQueueUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />

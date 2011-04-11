@@ -29,6 +29,7 @@
         <h3><s:text name="deleteSchedule.section.title"/></h3>
         <div class="axial">
         <s:form action="removeSchedule" method="post">
+          <s:token/>
           <s:hidden name="id"/>
           <s:hidden name="confirmed" value="true"/>
           <s:actionerror/>

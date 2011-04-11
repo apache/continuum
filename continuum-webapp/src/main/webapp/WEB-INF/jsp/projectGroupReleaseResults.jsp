@@ -40,6 +40,7 @@
       <h3><s:text name="projectGroup.releaseResults.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
       
       <form id="releaseResultsForm" action="removeReleaseResults.action" method="post">
+        <s:token/>
         <s:hidden name="projectGroupId"/>
         <ec:table items="releaseResults"
                 var="result"

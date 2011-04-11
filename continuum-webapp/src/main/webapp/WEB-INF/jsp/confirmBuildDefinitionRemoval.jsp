@@ -41,6 +41,7 @@
         </div>
         <div class="functnbar3">
           <s:form action="removeGroupBuildDefinition">
+            <s:token/>
             <s:hidden name="buildDefinitionId"/>
             <s:hidden name="projectGroupId"/>
             <s:hidden name="projectId"/>
