@@ -39,6 +39,7 @@
         </div>
         <div class="functnbar3">
           <s:form action="deleteDefinitionTemplate" method="post">
+            <s:token/>
             <s:hidden name="buildDefinitionTemplate.id"/>
             <s:hidden name="confirmed" value="true"/>
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>

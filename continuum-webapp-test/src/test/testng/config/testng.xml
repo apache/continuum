@@ -64,6 +64,7 @@ under the License.
         <include name="buildEnvironment" />
         <include name="buildDefinitionTemplate" />
         <include name="userroles"/>
+        <include name="csrf"/>
       </run>
     </groups>
     <packages>

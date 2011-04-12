@@ -41,6 +41,7 @@
         
         <div class="functnbar3">
           <s:form action="removeReleaseResults" method="post">
+            <s:token/>
             <s:iterator value="selectedReleaseResults">
               <input type="hidden" value="<s:property/>" name="selectedReleaseResults"/>
             </s:iterator>

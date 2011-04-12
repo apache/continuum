@@ -40,6 +40,7 @@
         </div>
         <div class="functnbar3">
           <s:form action="removeProjectBuildDefinition.action" method="post">
+            <s:token/>
             <s:hidden name="projectId"/>
             <s:hidden name="buildDefinitionId"/>
             <s:hidden name="confirmed" value="true"/>

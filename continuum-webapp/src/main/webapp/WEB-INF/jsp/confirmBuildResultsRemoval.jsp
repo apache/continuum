@@ -44,6 +44,7 @@
           <c:set var="action" value="removeBuildResults.action" />
         </s:else>
         <form action="${action}" method="post">
+          <s:token/>
           <s:hidden name="projectGroupId"/>
           <s:hidden name="projectId"/>
           <s:hidden name="buildId"/>

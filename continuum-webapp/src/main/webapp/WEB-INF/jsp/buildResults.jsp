@@ -49,6 +49,7 @@
         </c:if>
     
         <form id="buildResultsForm" action="removeBuildResults.action" method="post">
+          <s:token/>
           <s:set name="buildResults" value="buildResults" scope="request"/>
           <ec:table items="buildResults"
                     var="buildResult"

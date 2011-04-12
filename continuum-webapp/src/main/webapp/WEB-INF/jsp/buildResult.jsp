@@ -80,6 +80,7 @@
                   <form action="removeBuildResult.action">
                     <input type="hidden" name="projectId" value="<s:property value="projectId"/>"/>
                     <input type="hidden" name="buildId" value="<s:property value="buildId"/>"/>
+                    <s:token/>
                     <s:if test="canDelete">
                       <input type="submit" name="delete-project" value="<s:text name="delete"/>"/>
                     </s:if>

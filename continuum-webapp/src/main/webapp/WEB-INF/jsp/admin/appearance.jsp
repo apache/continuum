@@ -94,6 +94,7 @@
   </c:choose>
 </c:if>
 <s:form action="saveFooter!saveFooter.action" method="get" namespace="/admin">
+  <s:token/>
   <div id="axial" class="h3">
     <h3><s:text name="appearance.footerContent"/></h3>
     <div class="axial">

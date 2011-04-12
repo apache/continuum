@@ -30,6 +30,7 @@
         <h3><s:text name="deletePurgeConfiguration.section.title"/></h3>
         <div class="axial">
         <s:form action="removePurgeConfig" method="post">
+          <s:token/>
           <s:hidden name="purgeConfigId"/>
           <s:hidden name="confirmed" value="true"/>
           <s:actionerror/>

@@ -31,6 +31,7 @@
         <s:form action="removeProjectGroup" method="post">
           <s:hidden name="projectGroupId"/>
           <s:hidden name="confirmed" value="true"/>
+          <s:token/>
           <s:actionerror/>
 
           <div class="warningmessage">

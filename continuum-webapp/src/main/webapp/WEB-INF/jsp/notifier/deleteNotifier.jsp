@@ -41,6 +41,7 @@
         <div class="functnbar3">
           <s:if test="projectId == -1">
             <s:form action="deleteProjectGroupNotifier.action" method="post">
+              <s:token/>
               <s:hidden name="notifierId"/>
               <s:hidden name="projectGroupId" />
               <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
@@ -48,6 +49,7 @@
           </s:if>
           <s:else>
             <s:form action="deleteProjectNotifier.action" method="post">
+              <s:token/>            
               <s:hidden name="notifierId"/>
               <s:hidden name="projectId"/>
               <s:hidden name="projectGroupId" />

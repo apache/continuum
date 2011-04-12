@@ -40,6 +40,7 @@
         </div>
         <div class="functnbar3">
           <s:form action="deleteBuildAgent!delete.action" method="post">
+            <s:token/>
             <input type="hidden" name="buildAgent.url" value="${buildAgent.url}" />
             <s:hidden name="confirmed" value="true"/>
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
