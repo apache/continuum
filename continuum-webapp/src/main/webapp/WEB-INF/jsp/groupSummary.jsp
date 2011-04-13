@@ -21,6 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 <s:i18n name="localization.Continuum">
@@ -33,7 +34,7 @@
   <div id="h3">
 
     <s:if test="infoMessage != null">
-       <p>${infoMessage}</p>
+       <p><c:out value="${infoMessage}"/></p>
     </s:if>
     <s:else>
        <h3><s:text name="groups.page.section.title"/></h3>
@@ -63,13 +64,18 @@
               filterable="false">
       <ec:row highlightRow="true">
         <ec:column property="name" title="groups.table.name" width="40%" style="white-space: nowrap">
-          <a href="<s:url  action="projectGroupSummary" namespace="/"><s:param name="projectGroupId">${group.id}</s:param></s:url>">${group.name}</a>
+          <s:url id="projectGroupSummaryUrl" action="projectGroupSummary" namespace="/">
+            <s:param name="projectGroupId">
+              <c:out value="${group.id}" />
+            </s:param>
+          </s:url>
+          <a href="${fn:escapeXml(projectGroupSummaryUrl)}"><c:out value="${group.name}"/></a>
         </ec:column>
         <ec:column property="groupId" title="groups.table.groupId" width="40%"/>
         <ec:column property="buildGroupNowAction" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
+          <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(group.name)}">
             <s:url id="buildProjectGroupUrl" action="buildProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId">${group.id}</s:param>
+              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
               <s:param name="buildDefinitionId" value="-1"/>
               <s:param name="fromSummaryPage" value="true"/>
             </s:url>
@@ -82,9 +88,9 @@
           </redback:elseAuthorized>
         </ec:column>
         <ec:column property="releaseProjectGroupAction" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
+          <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(group.name)}">
             <s:url id="releaseProjectGroupUrl" action="releaseProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId">${group.id}</s:param>
+              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
             </s:url>
             <s:a href="%{releaseProjectGroupUrl}">
               <img src="<s:url value='/images/releaseproject.gif'/>" alt="<s:text name="projectGroup.releaseNow"/>" title="<s:text name="projectGroup.releaseNow"/>" border="0">
@@ -95,10 +101,10 @@
           </redback:elseAuthorized>
         </ec:column>
         <ec:column property="removeProjectGroupAction" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-remove-group" resource="${group.name}">
+          <redback:ifAuthorized permission="continuum-remove-group" resource="${fn:escapeXml(group.name)}">
             <s:token/>
             <s:url id="removeProjectGroupUrl" action="removeProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId">${group.id}</s:param>
+              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
               <s:param name="struts.token.name">struts.token</s:param>
               <s:param name="struts.token"><s:property value="struts.token"/></s:param>
             </s:url>

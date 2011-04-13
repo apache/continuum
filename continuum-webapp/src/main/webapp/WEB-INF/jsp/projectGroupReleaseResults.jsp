@@ -23,6 +23,7 @@
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -37,7 +38,7 @@
         <s:param name="tabName" value="'ReleaseResults'"/>
       </s:action>
     
-      <h3><s:text name="projectGroup.releaseResults.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
+      <h3><s:text name="projectGroup.releaseResults.section.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
       
       <form id="releaseResultsForm" action="removeReleaseResults.action" method="post">
         <s:token/>
@@ -50,9 +51,9 @@
                 filterable="false"
                 sortable="false">
           <ec:row highlightRow="true">
-            <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+            <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
               <ec:column alias="selectedReleaseResults" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
-                <input type="checkbox" name="selectedReleaseResults" value="${result.id}" />
+                <input type="checkbox" name="selectedReleaseResults" value="<c:out value="${result.id}"/>" />
               </ec:column>
             </redback:ifAuthorized>
             <ec:column property="project.name" title="releaseResults.project"/>
@@ -71,8 +72,8 @@
             </ec:column>
             <ec:column property="actions" title="&nbsp;">
                <s:url id="viewReleaseResultUrl" action="viewReleaseResult">
-                 <s:param name="releaseResultId">${pageScope.result.id}</s:param>
-                 <s:param name="projectGroupId">${projectGroupId}</s:param>
+                 <s:param name="releaseResultId"><c:out value="${pageScope.result.id}"/></s:param>
+                 <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
                </s:url>
                <s:a href="%{viewReleaseResultUrl}"><s:text name="releaseResults.viewResult"/></s:a>
              </ec:column>
@@ -84,7 +85,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+                    <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
                       <s:hidden name="projectGroupId"/>
                       <input type="button" name="delete-release-results" value="<s:text name="delete"/>" onclick="document.forms.releaseResultsForm.submit();" />
                     </redback:ifAuthorized>

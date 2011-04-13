@@ -22,6 +22,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <s:i18n name="localization.Continuum">
 <c:if test="${not empty projects}">
@@ -30,11 +31,11 @@
   <table>
     <tr>
       <td>
-          <s:text name="projectGroup.buildsStatut.success"/> : ${groupSummary.numSuccesses}
+          <s:text name="projectGroup.buildsStatut.success"/> : <c:out value="${groupSummary.numSuccesses}"/>
           &nbsp;<img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" alt="<s:text name="projectGroup.buildsStatut.success"/>">
-          &nbsp; <s:text name="projectGroup.buildsStatut.errors"/> : ${groupSummary.numErrors}
+          &nbsp; <s:text name="projectGroup.buildsStatut.errors"/> : <c:out value="${groupSummary.numErrors}"/>
           &nbsp;<img src="<s:url value='/images/icon_error_sml.gif' includeParams="none"/>" alt="<s:text name="projectGroup.buildsStatut.errors"/>">
-          &nbsp; <s:text name="projectGroup.buildsStatut.failures"/> : ${groupSummary.numFailures}
+          &nbsp; <s:text name="projectGroup.buildsStatut.failures"/> : <c:out value="${groupSummary.numFailures}"/>
           &nbsp;<img src="<s:url value='/images/icon_warning_sml.gif' includeParams="none"/>" alt="<s:text name="projectGroup.buildsStatut.failures"/>">
       <td>      
     </tr>
@@ -61,37 +62,37 @@
       <%-- placed here for reusability --%>
       <c:set var="projectIdle" value="${!project.inBuildingQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 7 or project.state gt 8 ) }" scope="request"/>
 
-      <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+      <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
         <ec:column alias="selectedProjects" title=" " style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
-          <input type="checkbox" name="selectedProjects" value="${project.id}" />
+          <input type="checkbox" name="selectedProjects" value="<c:out value="${project.id}"/>" />
         </ec:column>
       </redback:ifAuthorized>
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
       <ec:column property="name" title="summary.projectTable.name" width="50%">
         <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-          <s:param name="projectId">${project.id}</s:param>
+          <s:param name="projectId"><c:out value="${project.id}"/></s:param>
         </s:url>
-        <s:a href="%{projectUrl}">${pageScope.project.name}</s:a>
+        <s:a href="%{projectUrl}"><c:out value="${pageScope.project.name}"/></s:a>
       </ec:column>
       <ec:column property="version" title="summary.projectTable.version" width="12%"/>
       <ec:column property="buildNumber" title="summary.projectTable.build" width="2%" style="text-align: center">
         <c:choose>
           <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId gt 0}">
-            <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
+            <redback:ifAuthorized permission="continuum-view-group" resource="${fn:escapeXml(projectGroupName)}">
               <s:url id="buildResult" action="buildResult">
-                <s:param name="projecGroupId">${project.projectGroupId}</s:param>
-                <s:param name="projectId">${project.id}</s:param>
-                <s:param name="projectName">${project.name}</s:param>
-                <s:param name="buildId">${project.buildInSuccessId}</s:param>
+                <s:param name="projecGroupId"><c:out value="${project.projectGroupId}"/></s:param>
+                <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+                <s:param name="projectName"><c:out value="${project.name}"/></s:param>
+                <s:param name="buildId"><c:out value="${project.buildInSuccessId}"/></s:param>
               </s:url>
-              <s:a href="%{buildResult}">${project.buildNumber}</s:a>
+              <s:a href="%{buildResult}"><c:out value="${project.buildNumber}"/></s:a>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-              ${project.buildNumber}
+              <c:out value="${project.buildNumber}"/>
             </redback:elseAuthorized>
           </c:when>
           <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId lt 0}">
-              ${project.buildNumber}
+              <c:out value="${project.buildNumber}"/>
           </c:when>
           <c:otherwise>
             &nbsp;
@@ -105,12 +106,12 @@
             <img src="<s:url value='/images/inqueue.gif' includeParams="none"/>" alt="<s:text name="legend.queuedBuild"/>" title="<s:text name="legend.queuedBuild"/>" border="0">
           </c:when>
           <c:otherwise>
-            <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
+            <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroupName)}">
               <c:choose>
                 <c:when test="${projectIdle}">
                   <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
-                    <s:param name="projectId">${project.id}</s:param>
-                    <s:param name="projectGroupId">${project.projectGroupId}</s:param>
+                    <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+                    <s:param name="projectGroupId"><c:out value="${project.projectGroupId}"/></s:param>
                     <s:param name="fromGroupPage" value="true"/>
                   </s:url>
                   <s:a href="%{buildProjectUrl}">
@@ -119,8 +120,8 @@
                 </c:when>
                 <c:otherwise>
                   <s:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
-                    <s:param name="projectId">${project.id}</s:param>
-                    <s:param name="projectGroupId">${project.projectGroupId}</s:param>
+                    <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+                    <s:param name="projectGroupId"><c:out value="${project.projectGroupId}"/></s:param>
                   </s:url>
                   <c:choose>
                     <c:when test="${project.state != 8}">
@@ -149,12 +150,12 @@
         </c:choose>
       </ec:column>
       <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-view-group" resource="${fn:escapeXml(projectGroupName)}">
         <c:choose>
           <c:when test="${pageScope.project.latestBuildId > 0}">
             <s:url id="buildResultsUrl" action="buildResults" namespace="/">
-              <s:param name="projectId">${project.id}</s:param>
-              <s:param name="projectName">${project.name}</s:param>
+              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+              <s:param name="projectName"><c:out value="${project.name}"/></s:param>
             </s:url>
             <s:a href="%{buildResultsUrl}"><img src="<s:url value='/images/buildhistory.gif' includeParams="none"/>" alt="<s:text name="legend.buildHistory"/>" title="<s:text name="legend.buildHistory"/>" border="0"></s:a>
           </c:when>
@@ -168,11 +169,11 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="workingCopyAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-view-group" resource="${fn:escapeXml(projectGroupName)}">
         <c:choose>
           <c:when test="${pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4 || pageScope.project.state == 6}">
             <s:url id="workingCopyUrl" action="workingCopy" namespace="/">
-              <s:param name="projectId">${project.id}</s:param>
+              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
             </s:url>
             <s:a href="%{workingCopyUrl}"><img src="<s:url value='/images/workingcopy.gif' includeParams="none"/>" alt="<s:text name="legend.workingCopy"/>" title="<s:text name="legend.workingCopy"/>" border="0"></s:a>
           </c:when>
@@ -186,11 +187,11 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="releaseAction" title="&nbsp;" width="1%" sortable="false">
-        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroupName)}">
         <c:choose>
           <c:when test="${pageScope.project.state == 2 && pageScope.project.projectType == 'maven2'}">
             <s:url id="releaseProjectUrl" action="releasePromptGoal" namespace="/">
-              <s:param name="projectId">${project.id}</s:param>
+              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
             </s:url>
             <s:a href="%{releaseProjectUrl}">
               <img src="<s:url value='/images/releaseproject.gif' includeParams="none"/>" alt="<s:text name="legend.release"/>" title="<s:text name="legend.release"/>" border="0"/>
@@ -206,13 +207,13 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
         <c:choose>
           <c:when
               test="${projectIdle}">
             <s:token/>
             <s:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
-              <s:param name="projectId">${project.id}</s:param>
+              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
               <s:param name="struts.token.name">struts.token</s:param>
               <s:param name="struts.token"><s:property value="struts.token"/></s:param>
             </s:url>
@@ -237,8 +238,8 @@
         <tbody>
           <tr>
             <td>
-              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+                <input type="hidden" name="projectGroupId" value="<c:out value="${projectGroupId}"/>" />
                 <s:select theme="simple" name="buildDef" list="buildDefinitions"
                            listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"
                            onchange="$('projectsForm').buildDefinitionId.value=$('buildDef').value" />

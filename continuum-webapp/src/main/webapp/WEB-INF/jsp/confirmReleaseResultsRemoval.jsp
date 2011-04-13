@@ -45,7 +45,7 @@
             <s:iterator value="selectedReleaseResults">
               <input type="hidden" value="<s:property/>" name="selectedReleaseResults"/>
             </s:iterator>
-            <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
+            <input type="hidden" name="projectGroupId" value="<c:out value="${projectGroupId}"/>" />
             <s:hidden name="confirmed" value="true"/>
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
           </s:form>

@@ -41,7 +41,7 @@
         <div class="functnbar3">
           <s:form action="deleteBuildAgentGroup!deleteGroup.action" method="post">
             <s:token/>
-            <input type="hidden" name="buildAgentGroup.name" value="${buildAgentGroup.name}" />
+            <input type="hidden" name="buildAgentGroup.name" value="<c:out value="${buildAgentGroup.name}"/>" />
             <s:hidden name="confirmed" value="true"/>
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
           </s:form>

@@ -51,12 +51,12 @@
             <ec:column property="repository.name" title="purgeConfigs.table.repository">
               <redback:ifAuthorized permission="continuum-manage-repositories">
                 <s:url id="editRepositoryUrl" action="editRepository" namespace="/admin" includeParams="none">
-                  <s:param name="repository.id">${pageScope.repoPurge.repository.id}</s:param>
+                  <s:param name="repository.id"><c:out value="${pageScope.repoPurge.repository.id}"/></s:param>
                 </s:url>
-                <s:a href="%{editRepositoryUrl}">${pageScope.repoPurge.repository.name}</s:a>
+                <s:a href="%{editRepositoryUrl}"><c:out value="${pageScope.repoPurge.repository.name}"/></s:a>
               </redback:ifAuthorized>
               <redback:elseAuthorized>
-                ${pageScope.repoPurge.repository.name}
+                <c:out value="${pageScope.repoPurge.repository.name}"/>
               </redback:elseAuthorized>
             </ec:column>
             <ec:column property="daysOlder" title="purgeConfigs.table.daysOlder"/>
@@ -69,21 +69,21 @@
             <ec:column property="description" title="purgeConfigs.table.description"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editPurgeConfigUrl" action="editPurgeConfig">
-                  <s:param name="purgeConfigId">${pageScope.repoPurge.id}</s:param>
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.repoPurge.id}"/></s:param>
                 </s:url>
                 <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
                 <s:url id="purgeUrl" action="doPurge">
-                  <s:param name="purgeConfigId">${pageScope.repoPurge.id}</s:param>
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.repoPurge.id}"/></s:param>
                 </s:url>
                 <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
                 <s:token/>
                 <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
-                  <s:param name="purgeConfigId">${pageScope.repoPurge.id}</s:param>
-                  <s:param name="description">${pageScope.repoPurge.description}</s:param>
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.repoPurge.id}"/></s:param>
+                  <s:param name="description"><c:out value="${pageScope.repoPurge.description}"/></s:param>
                   <s:param name="struts.token.name">struts.token</s:param>
                   <s:param name="struts.token"><s:property value="struts.token"/></s:param>
                 </s:url>
@@ -121,21 +121,21 @@
             <ec:column property="description" title="purgeConfigs.table.description"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editPurgeConfigUrl" action="editPurgeConfig">
-                  <s:param name="purgeConfigId">${pageScope.dirPurge.id}</s:param>
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
                 </s:url>
                 <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
                 <s:url id="purgeUrl" action="doPurge">
-                  <s:param name="purgeConfigId">${pageScope.dirPurge.id}</s:param>
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
                 </s:url>
                 <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
                 <s:token/>
                 <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
-                  <s:param name="purgeConfigId">${pageScope.dirPurge.id}</s:param>
-                  <s:param name="description">${pageScope.dirPurge.description}</s:param>
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
+                  <s:param name="description"><c:out value="${pageScope.dirPurge.description}"/></s:param>
                   <s:param name="struts.token.name">struts.token</s:param>
                   <s:param name="struts.token"><s:property value="struts.token"/></s:param>
                 </s:url>

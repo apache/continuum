@@ -22,6 +22,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -35,7 +36,7 @@
           <jsp:param name="tab" value="view"/>
         </jsp:include>
 
-        <h3><s:text name="projectView.section.title"><s:param>${project.name}</s:param></s:text></h3>
+        <h3><s:text name="projectView.section.title"><s:param><c:out value="${project.name}"/></s:param></s:text></h3>
 
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
@@ -45,13 +46,13 @@
             <c1:data label="%{getText('projectView.project.scmUrl')}" name="project.scmUrl"/>
             <c1:data label="%{getText('projectView.project.scmTag')}" name="project.scmTag"/>
             <s:url id="projectGroupSummaryUrl" value="/projectGroupSummary.action">
-                <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
+                <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
             </s:url>
             <c1:data label="%{getText('projectView.project.group')}" name="project.projectGroup.name" valueLink="%{'${projectGroupSummaryUrl}'}"/>
             <c1:data label="%{getText('projectView.project.lastBuildDateTime')}" name="lastBuildDateTime" />
           </table>
 
-          <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+          <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -79,12 +80,12 @@
         <h3><s:text name="projectView.buildDefinitions"/></h3>
 
         <s:action name="buildDefinitionSummary" id="summary" namespace="component" executeResult="true">
-          <s:param name="projectId">${project.id}</s:param>
-          <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
+          <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+          <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
         </s:action>
 
         <div class="functnbar3">
-           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+           <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
           <s:form action="buildDefinition" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
@@ -110,14 +111,14 @@
               <ec:column property="events" title="projectView.notifier.events" cell="org.apache.maven.continuum.web.view.projectview.NotifierEventCell"/>
               <ec:column property="from" title="projectView.notifier.from" cell="org.apache.maven.continuum.web.view.projectview.NotifierFromCell"/>
               <ec:column property="editAction" title="&nbsp;" width="1%">
-                <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
-                        <s:param name="notifierId">${notifier.id}</s:param>
-                        <s:param name="projectId" value="project.id"/>
-                        <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
-                        <s:param name="notifierType">${notifier.type}</s:param>
+                        <s:param name="notifierId"><c:out value="${notifier.id}"/></s:param>
+                        <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+                        <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
+                        <s:param name="notifierType"><c:out value="${notifier.type}"/></s:param>
                       </s:url>
                       <s:a href="%{editUrl}">
                         <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
@@ -133,14 +134,14 @@
                 </redback:elseAuthorized>
               </ec:column>
               <ec:column property="deleteAction" title="&nbsp;" width="1%">
-                <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
-                        <s:param name="projectId" value="project.id"/>
-                        <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
-                        <s:param name="notifierType">${notifier.type}</s:param>
-                        <s:param name="notifierId">${notifier.id}</s:param>
+                        <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+                        <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
+                        <s:param name="notifierType"><c:out value="${notifier.type}"/></s:param>
+                        <s:param name="notifierId"><c:out value="${notifier.id}"/></s:param>
                     </s:url>
                     <s:a href="%{removeUrl}">
                       <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
@@ -159,7 +160,7 @@
           </ec:table>
         </c:if>
         <div class="functnbar3">
-           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+           <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
           <s:form action="addProjectNotifier!default.action" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>

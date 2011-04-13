@@ -46,7 +46,7 @@
           <ec:column property="name" title="buildDefinition.template.name"/>
           <ec:column property="editAction" title="&nbsp;" width="1%">
             <s:url id="editUrl" action="editBuildDefinitionTemplate" method="edit" namespace="/">
-              <s:param name="buildDefinitionTemplate.id">${pageScope.template.id}</s:param>
+              <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
             </s:url>
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
           </ec:column>  
@@ -59,8 +59,8 @@
             <c:otherwise>
               <s:token/>
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
-                <s:param name="buildDefinitionTemplate.id">${pageScope.template.id}</s:param>
-                <s:param name="buildDefinitionTemplate.name">${pageScope.template.name}</s:param>
+                <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
+                <s:param name="buildDefinitionTemplate.name"><c:out value="${pageScope.template.name}"/></s:param>
                 <s:param name="struts.token.name">struts.token</s:param>
                 <s:param name="struts.token"><s:property value="struts.token"/></s:param>
               </s:url>
@@ -99,7 +99,7 @@
           <ec:column property="type" title="buildDefinition.template.buildDefinition.type"/>
           <ec:column property="editAction" title="&nbsp;" width="1%">
             <s:url id="editUrl" action="editBuildDefinitionAsTemplate" method="editBuildDefinition" namespace="/">
-              <s:param name="buildDefinition.id">${pageScope.buildDefinitionSummary.id}</s:param>
+              <s:param name="buildDefinition.id"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             </s:url>
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
           </ec:column>          
@@ -110,8 +110,8 @@
             </c:when>
             <c:otherwise>
               <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" method="deleteBuildDefinition" namespace="/">
-                <s:param name="buildDefinition.id">${pageScope.buildDefinitionSummary.id}</s:param>
-                <s:param name="buildDefinition.description">${pageScope.buildDefinitionSummary.description}</s:param>
+                <s:param name="buildDefinition.id"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+                <s:param name="buildDefinition.description"><c:out value="${pageScope.buildDefinitionSummary.description}"/></s:param>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </c:otherwise>

@@ -20,6 +20,7 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <div>
   <p style="border-top: 1px solid transparent; border-bottom: 1px solid #DFDEDE;">
@@ -43,13 +44,13 @@
         <s:param name="projectGroupId" value="project.projectGroup.id"/>
     </s:url>
 
-    <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${projectGroupSummaryUrl}"><s:text name="projectGroup.tab.summary"/></a>
+    <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${fn:escapeXml(projectGroupSummaryUrl)}"><s:text name="projectGroup.tab.summary"/></a>
     <c:choose>
       <c:when test="${param.tab == 'view'}">
         <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="info"/></b>
       </c:when>
       <c:otherwise>
-        <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${viewUrl}"><s:text name="info"/></a>
+        <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${fn:escapeXml(viewUrl)}"><s:text name="info"/></a>
       </c:otherwise>
     </c:choose>
 
@@ -58,7 +59,7 @@
         <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="builds"/></b>
       </c:when>
       <c:otherwise>
-        <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${buildResultsUrl}"><s:text name="builds"/></a>
+        <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${fn:escapeXml(buildResultsUrl)}"><s:text name="builds"/></a>
       </c:otherwise>
     </c:choose>
 
@@ -67,7 +68,7 @@
         <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="workingCopy"/></b>
       </c:when>
       <c:otherwise>
-        <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${workingCopyUrl}"><s:text name="workingCopy"/></a>
+        <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${fn:escapeXml(workingCopyUrl)}"><s:text name="workingCopy"/></a>
       </c:otherwise>
     </c:choose>
 

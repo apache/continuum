@@ -48,11 +48,11 @@
           <ec:row>
             <ec:column property="releaseId" title="releaseSummary.table.releaseId">
               <s:url id="viewReleaseUrl" action="releaseInProgress">
-                <s:param name="releaseId">${pageScope.releaseSummary.releaseId}</s:param>
-                <s:param name="projectId">${pageScope.releaseSummary.projectId}</s:param>
-                <s:param name="releaseGoal">${pageScope.releaseSummary.releaseGoal}</s:param>
+                <s:param name="releaseId"><c:out value="${pageScope.releaseSummary.releaseId}"/></s:param>
+                <s:param name="projectId"><c:out value="${pageScope.releaseSummary.projectId}"/></s:param>
+                <s:param name="releaseGoal"><c:out value="${pageScope.releaseSummary.releaseGoal}"/></s:param>
               </s:url>
-              <s:a href="%{viewReleaseUrl}">${pageScope.releaseSummary.releaseId}</s:a>
+              <s:a href="%{viewReleaseUrl}"><c:out value="${pageScope.releaseSummary.releaseId}"/></s:a>
             </ec:column>
             <ec:column property="releaseGoal" title="releaseSummary.table.releaseGoal"/>
             <ec:column property="buildAgentUrl" title="releaseSummary.table.buildAgentUrl"/>

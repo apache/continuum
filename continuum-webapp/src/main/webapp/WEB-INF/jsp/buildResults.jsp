@@ -21,6 +21,8 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -60,9 +62,9 @@
                     filterable="false"
                     sortable="false">
             <ec:row highlightRow="true">
-              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
                 <ec:column alias="selectedBuildResults" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
-                  <input type="checkbox" name="selectedBuildResults" value="${buildResult.id}" />
+                  <input type="checkbox" name="selectedBuildResults" value="<c:out value="${buildResult.id}"/>" />
                 </ec:column>
               </redback:ifAuthorized>
               <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">
@@ -75,10 +77,10 @@
               <ec:column property="duration" title="&nbsp;">
                 <c:choose>
                   <c:when test="${buildResult.endTime gt 0}">
-                    <s:text name="buildResults.duration"/> : ${buildResult.durationTime}
+                    <s:text name="buildResults.duration"/> : <c:out value="${buildResult.durationTime}"/>
                   </c:when>
                   <c:otherwise>
-                    <s:text name="buildResults.startedSince"/> : ${buildResult.elapsedTime}
+                    <s:text name="buildResults.startedSince"/> : <c:out value="${buildResult.elapsedTime}"/>
                   </c:otherwise>
                 </c:choose>
               </ec:column>
@@ -86,10 +88,10 @@
               <ec:column property="buildDefinition.description" title="buildResults.buildDefinition.description" />
               <ec:column property="actions" title="&nbsp;">
                 <s:url id="buildResultUrl" action="buildResult">
-                  <s:param name="projectId">${projectId}</s:param>
-                  <s:param name="projectName">${projectName}</s:param>
-                  <s:param name="buildId">${buildResult.id}</s:param>
-                  <s:param name="projectGroupId">${projectGroupId}</s:param>
+                  <s:param name="projectId"><c:out value="${projectId}"/></s:param>
+                  <s:param name="projectName"><c:out value="${projectName}"/></s:param>
+                  <s:param name="buildId"><c:out value="${buildResult.id}"/></s:param>
+                  <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
                 </s:url>
                 <s:a href="%{buildResultUrl}"><s:text name="buildResults.result"/></s:a>
               </ec:column>
@@ -101,7 +103,7 @@
                 <tbody>
                   <tr>
                     <td>
-                      <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                      <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
                         <s:hidden name="projectGroupId"/>
                         <s:hidden name="projectId"/>
                         <input type="button" name="delete-project" value="<s:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />

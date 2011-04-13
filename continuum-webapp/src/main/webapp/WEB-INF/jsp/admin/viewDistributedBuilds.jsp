@@ -53,16 +53,16 @@
               <ec:row>
                 <ec:column property="projectUrl" title="distributedBuild.table.projectName">
                   <s:url id="viewUrl" action="buildResults">
-                    <s:param name="projectId">${pageScope.currentBuild.projectId}</s:param>
+                    <s:param name="projectId"><c:out value="${pageScope.currentBuild.projectId}"/></s:param>
                   </s:url>
-                  <s:a href="%{viewUrl}">${pageScope.currentBuild.projectName}</s:a>
+                  <s:a href="%{viewUrl}"><c:out value="${pageScope.currentBuild.projectName}"/></s:a>
                 </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <s:url id="cancelUrl" action="cancelDistributedBuild" method="cancelDistributedBuild" namespace="/">
-                    <s:param name="buildAgentUrl">${pageScope.currentBuild.buildAgentUrl}</s:param>
+                    <s:param name="buildAgentUrl"><c:out value="${pageScope.currentBuild.buildAgentUrl}"/></s:param>
                   </s:url>
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
@@ -97,14 +97,14 @@
               <ec:row>
                 <redback:ifAuthorized permission="continuum-manage-queues">
                   <ec:column alias="selectedBuildTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
-                    <input type="checkbox" name="selectedBuildTaskHashCodes" value="${pageScope.buildQueue.hashCode}" />
+                    <input type="checkbox" name="selectedBuildTaskHashCodes" value="<c:out value="${pageScope.buildQueue.hashCode}"/>" />
                   </ec:column>              
                 </redback:ifAuthorized>
                 <ec:column property="projectUrl" title="distributedBuild.table.projectName">
                   <s:url id="viewUrl" action="buildResults">
-                    <s:param name="projectId">${pageScope.buildQueue.projectId}</s:param>
+                    <s:param name="projectId"><c:out value="${pageScope.buildQueue.projectId}"/></s:param>
                   </s:url>
-                  <s:a href="%{viewUrl}">${pageScope.buildQueue.projectName}</s:a>
+                  <s:a href="%{viewUrl}"><c:out value="${pageScope.buildQueue.projectName}"/></s:a>
                 </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
@@ -112,9 +112,9 @@
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="removeDistributedBuildEntry" method="removeDistributedBuildEntry" namespace="/">
-                      <s:param name="projectId">${pageScope.buildQueue.projectId}</s:param>
-                      <s:param name="buildDefinitionId">${pageScope.buildQueue.buildDefinitionId}</s:param>
-                      <s:param name="buildAgentUrl">${pageScope.buildQueue.buildAgentUrl}</s:param>
+                      <s:param name="projectId"><c:out value="${pageScope.buildQueue.projectId}"/></s:param>
+                      <s:param name="buildDefinitionId"><c:out value="${pageScope.buildQueue.buildDefinitionId}"/></s:param>
+                      <s:param name="buildAgentUrl"><c:out value="${pageScope.buildQueue.buildAgentUrl}"/></s:param>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
                   </redback:ifAuthorized>
@@ -159,9 +159,9 @@
               <ec:row>
                 <ec:column property="projectGroupUrl" title="distributedPrepareBuild.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
-                    <s:param name="projectGroupId">${pageScope.currentPrepareBuild.projectGroupId}</s:param>
+                    <s:param name="projectGroupId"><c:out value="${pageScope.currentPrepareBuild.projectGroupId}"/></s:param>
                   </s:url>
-                  <s:a href="%{viewUrl}">${pageScope.currentPrepareBuild.projectGroupName}</s:a>
+                  <s:a href="%{viewUrl}"><c:out value="${pageScope.currentPrepareBuild.projectGroupName}"/></s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
                 <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.buildAgentUrl"/>
@@ -192,23 +192,23 @@
               <ec:row>
                 <redback:ifAuthorized permission="continuum-manage-queues">
                   <ec:column alias="selectedPrepareBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
-                    <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
+                    <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="<c:out value="${pageScope.prepareBuildQueue.hashCode}"/>" />
                   </ec:column>              
                 </redback:ifAuthorized>
                 <ec:column property="projectGroupUrl" title="distributedPrepareBuild.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
-                    <s:param name="projectGroupId">${pageScope.prepareBuildQueue.projectGroupId}</s:param>
+                    <s:param name="projectGroupId"><c:out value="${pageScope.prepareBuildQueue.projectGroupId}"/></s:param>
                   </s:url>
-                  <s:a href="%{viewUrl}">${pageScope.prepareBuildQueue.projectGroupName}</s:a>
+                  <s:a href="%{viewUrl}"><c:out value="${pageScope.prepareBuildQueue.projectGroupName}"/></s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="distributedPrepareBuild.table.scmRootAddress"/>
                 <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="removeDistributedPrepareBuildEntry" method="removeDistributedPrepareBuildEntry" namespace="/">
-                      <s:param name="projectGroupId">${pageScope.prepareBuildQueue.projectGroupId}</s:param>
-                      <s:param name="scmRootId">${pageScope.prepareBuildQueue.scmRootId}</s:param>
-                      <s:param name="buildAgentUrl">${pageScope.prepareBuildQueue.buildAgentUrl}</s:param>
+                      <s:param name="projectGroupId"><c:out value="${pageScope.prepareBuildQueue.projectGroupId}"/></s:param>
+                      <s:param name="scmRootId"><c:out value="${pageScope.prepareBuildQueue.scmRootId}"/></s:param>
+                      <s:param name="buildAgentUrl"><c:out value="${pageScope.prepareBuildQueue.buildAgentUrl}"/></s:param>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
                   </redback:ifAuthorized>

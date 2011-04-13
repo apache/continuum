@@ -47,15 +47,15 @@
           <ec:row>
             <ec:column property="url" title="buildAgents.table.url">
               <s:url id="viewBuildAgentUrl" action="viewBuildAgent">
-                <s:param name="buildAgent.url">${pageScope.buildAgent.url}</s:param>
+                <s:param name="buildAgent.url"><c:out value="${pageScope.buildAgent.url}"/></s:param>
               </s:url>
-              <s:a href="%{viewBuildAgentUrl}">${pageScope.buildAgent.url}</s:a>
+              <s:a href="%{viewBuildAgentUrl}"><c:out value="${pageScope.buildAgent.url}"/></s:a>
             </ec:column>
             <ec:column property="enabled" title="buildAgents.table.enabled"/>
             <ec:column property="description" title="buildAgents.table.description"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
               <s:url id="editBuildAgentUrl" action="editBuildAgent">
-                <s:param name="buildAgent.url">${pageScope.buildAgent.url}</s:param>
+                <s:param name="buildAgent.url"><c:out value="${pageScope.buildAgent.url}"/></s:param>
               </s:url>
               <s:a href="%{editBuildAgentUrl}">
                 <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"/>
@@ -64,7 +64,7 @@
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
               <s:token/>
               <s:url id="removeBuildAgentUrl" action="deleteBuildAgent">
-                <s:param name="buildAgent.url">${pageScope.buildAgent.url}</s:param>
+                <s:param name="buildAgent.url"><c:out value="${pageScope.buildAgent.url}"/></s:param>
                 <s:param name="struts.token.name">struts.token</s:param>
                 <s:param name="struts.token"><s:property value="struts.token"/></s:param>
               </s:url>
@@ -104,7 +104,7 @@
             </ec:column>
             <ec:column property="editActions" title="&nbsp;" width="1%">
               <s:url id="editBuildAgentGroupUrl" action="editBuildAgentGroup">
-                <s:param name="buildAgentGroup.name">${pageScope.buildAgentGroup.name}</s:param>
+                <s:param name="buildAgentGroup.name"><c:out value="${pageScope.buildAgentGroup.name}"/></s:param>
               </s:url>
               <s:a href="%{editBuildAgentGroupUrl}">
                 <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"/>
@@ -113,7 +113,7 @@
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
               <s:token/>
               <s:url id="removeBuildAgentGroupUrl" action="deleteBuildAgentGroup">
-                <s:param name="buildAgentGroup.name">${pageScope.buildAgentGroup.name}</s:param>
+                <s:param name="buildAgentGroup.name"><c:out value="${pageScope.buildAgentGroup.name}"/></s:param>
                 <s:param name="struts.token.name">struts.token</s:param>
                 <s:param name="struts.token"><s:property value="struts.token"/></s:param>
               </s:url>
