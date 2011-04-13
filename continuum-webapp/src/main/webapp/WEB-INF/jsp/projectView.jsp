@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -52,7 +51,7 @@
             <c1:data label="%{getText('projectView.project.lastBuildDateTime')}" name="lastBuildDateTime" />
           </table>
 
-          <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
+          <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -85,7 +84,7 @@
         </s:action>
 
         <div class="functnbar3">
-           <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
+           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <s:form action="buildDefinition" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
@@ -111,7 +110,7 @@
               <ec:column property="events" title="projectView.notifier.events" cell="org.apache.maven.continuum.web.view.projectview.NotifierEventCell"/>
               <ec:column property="from" title="projectView.notifier.from" cell="org.apache.maven.continuum.web.view.projectview.NotifierFromCell"/>
               <ec:column property="editAction" title="&nbsp;" width="1%">
-                <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
@@ -134,7 +133,7 @@
                 </redback:elseAuthorized>
               </ec:column>
               <ec:column property="deleteAction" title="&nbsp;" width="1%">
-                <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
@@ -160,7 +159,7 @@
           </ec:table>
         </c:if>
         <div class="functnbar3">
-           <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(project.projectGroup.name)}">
+           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <s:form action="addProjectNotifier!default.action" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>

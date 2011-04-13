@@ -23,7 +23,6 @@
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -51,7 +50,7 @@
                 filterable="false"
                 sortable="false">
           <ec:row highlightRow="true">
-            <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+            <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
               <ec:column alias="selectedReleaseResults" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
                 <input type="checkbox" name="selectedReleaseResults" value="<c:out value="${result.id}"/>" />
               </ec:column>
@@ -85,7 +84,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+                    <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
                       <s:hidden name="projectGroupId"/>
                       <input type="button" name="delete-release-results" value="<s:text name="delete"/>" onclick="document.forms.releaseResultsForm.submit();" />
                     </redback:ifAuthorized>

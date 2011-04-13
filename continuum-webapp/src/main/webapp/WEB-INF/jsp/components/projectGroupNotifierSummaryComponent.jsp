@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <s:i18n name="localization.Continuum">
 
   <h3><s:text name="projectGroupNotifierSummaryComponent.groupNotifiers"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
@@ -41,7 +40,7 @@
       <ec:column property="events" title="projectView.notifier.events"/>
       <!-- ec:column property="sender" title="projectView.notifier.sender"/ -->
       <ec:column property="editActions" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
           <s:url id="editUrl" action="editProjectGroupNotifier" namespace="/">
             <s:param name="projectGroupId"><c:out value="${pageScope.projectGroupNotifierSummary.projectGroupId}"/></s:param>
             <s:param name="notifierId"><c:out value="${pageScope.projectGroupNotifierSummary.id}"/></s:param>
@@ -56,7 +55,7 @@
         </redback:elseAuthorized>
       </ec:column>    
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
           <s:url id="removeUrl" action="deleteProjectGroupNotifier!default.action" namespace="/">
             <s:param name="projectGroupId"><c:out value="${pageScope.projectGroupNotifierSummary.projectGroupId}"/></s:param>
             <s:param name="notifierId"><c:out value="${pageScope.projectGroupNotifierSummary.id}"/></s:param>
@@ -74,7 +73,7 @@
   </ec:table>
   </c:if>
 
-  <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+  <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
     <div class="functnbar3">
       <s:url id="addUrl" action="addProjectGroupNotifier" namespace="/"  includeContext="false" includeParams="none" />
       <s:form action="%{addUrl}" method="post">
@@ -106,7 +105,7 @@
         <ec:column property="events" title="projectView.notifier.events"/>
         <!-- ec:column property="sender" title="projectView.notifier.sender"/ -->
         <ec:column property="editActions" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+          <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
                 <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
@@ -130,7 +129,7 @@
           </redback:elseAuthorized>
         </ec:column>
         <ec:column property="deleteActions" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+          <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
                 <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">

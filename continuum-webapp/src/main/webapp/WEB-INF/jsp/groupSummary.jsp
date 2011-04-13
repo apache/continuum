@@ -21,7 +21,6 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 <s:i18n name="localization.Continuum">
@@ -69,11 +68,11 @@
               <c:out value="${group.id}" />
             </s:param>
           </s:url>
-          <a href="${fn:escapeXml(projectGroupSummaryUrl)}"><c:out value="${group.name}"/></a>
+          <a href="${projectGroupSummaryUrl}"><c:out value="${group.name}"/></a>
         </ec:column>
         <ec:column property="groupId" title="groups.table.groupId" width="40%"/>
         <ec:column property="buildGroupNowAction" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(group.name)}">
+          <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="buildProjectGroupUrl" action="buildProjectGroup" namespace="/" includeParams="none">
               <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
               <s:param name="buildDefinitionId" value="-1"/>
@@ -88,7 +87,7 @@
           </redback:elseAuthorized>
         </ec:column>
         <ec:column property="releaseProjectGroupAction" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(group.name)}">
+          <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="releaseProjectGroupUrl" action="releaseProjectGroup" namespace="/" includeParams="none">
               <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
             </s:url>
@@ -101,7 +100,7 @@
           </redback:elseAuthorized>
         </ec:column>
         <ec:column property="removeProjectGroupAction" title="&nbsp;" width="1%">
-          <redback:ifAuthorized permission="continuum-remove-group" resource="${fn:escapeXml(group.name)}">
+          <redback:ifAuthorized permission="continuum-remove-group" resource="${group.name}">
             <s:token/>
             <s:url id="removeProjectGroupUrl" action="removeProjectGroup" namespace="/" includeParams="none">
               <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>

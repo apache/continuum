@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <s:i18n name="localization.Continuum">
 
@@ -64,7 +63,7 @@
       <ec:column property="type" title="projectView.buildDefinition.type"/>
       <ec:column property="alwaysBuild" title="projectView.buildDefinition.alwaysBuild"/>
       <ec:column property="buildAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <s:url id="buildUrl" action="buildProject" namespace="/">
             <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
@@ -78,7 +77,7 @@
       </ec:column>
       <ec:column property="editActions" title="&nbsp;" width="1%">
         <center>
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
           <s:url id="editUrl" action="buildDefinition" method="input" namespace="/" includeParams="none">
             <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
@@ -94,7 +93,7 @@
       </ec:column>    
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <center>
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
           <c:choose>
           <c:when test="${pageScope.buildDefinitionSummary.isDefault == true}">
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
@@ -122,7 +121,7 @@
     </ec:row>
   </ec:table>
   </c:if>
-  <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+  <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
     <div class="functnbar3">
       <s:form action="buildDefinition" method="post">
         <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
@@ -176,7 +175,7 @@
       <ec:column property="type" title="projectView.buildDefinition.type"/>
       <ec:column property="alwaysBuild" title="projectView.buildDefinition.alwaysBuild"/>
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
@@ -190,7 +189,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="editAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
           <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
@@ -205,7 +204,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="removeAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
           <s:token/>
           <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>

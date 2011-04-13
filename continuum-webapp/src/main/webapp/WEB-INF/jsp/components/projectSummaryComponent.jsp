@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <s:i18n name="localization.Continuum">
 <c:if test="${not empty projects}">
@@ -62,7 +61,7 @@
       <%-- placed here for reusability --%>
       <c:set var="projectIdle" value="${!project.inBuildingQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 7 or project.state gt 8 ) }" scope="request"/>
 
-      <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+      <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <ec:column alias="selectedProjects" title=" " style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
           <input type="checkbox" name="selectedProjects" value="<c:out value="${project.id}"/>" />
         </ec:column>
@@ -78,7 +77,7 @@
       <ec:column property="buildNumber" title="summary.projectTable.build" width="2%" style="text-align: center">
         <c:choose>
           <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId gt 0}">
-            <redback:ifAuthorized permission="continuum-view-group" resource="${fn:escapeXml(projectGroupName)}">
+            <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
               <s:url id="buildResult" action="buildResult">
                 <s:param name="projecGroupId"><c:out value="${project.projectGroupId}"/></s:param>
                 <s:param name="projectId"><c:out value="${project.id}"/></s:param>
@@ -106,7 +105,7 @@
             <img src="<s:url value='/images/inqueue.gif' includeParams="none"/>" alt="<s:text name="legend.queuedBuild"/>" title="<s:text name="legend.queuedBuild"/>" border="0">
           </c:when>
           <c:otherwise>
-            <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroupName)}">
+            <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
               <c:choose>
                 <c:when test="${projectIdle}">
                   <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
@@ -150,7 +149,7 @@
         </c:choose>
       </ec:column>
       <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-view-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
         <c:choose>
           <c:when test="${pageScope.project.latestBuildId > 0}">
             <s:url id="buildResultsUrl" action="buildResults" namespace="/">
@@ -169,7 +168,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="workingCopyAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-view-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
         <c:choose>
           <c:when test="${pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4 || pageScope.project.state == 6}">
             <s:url id="workingCopyUrl" action="workingCopy" namespace="/">
@@ -187,7 +186,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="releaseAction" title="&nbsp;" width="1%" sortable="false">
-        <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
         <c:choose>
           <c:when test="${pageScope.project.state == 2 && pageScope.project.projectType == 'maven2'}">
             <s:url id="releaseProjectUrl" action="releasePromptGoal" namespace="/">
@@ -207,7 +206,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
-        <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <c:choose>
           <c:when
               test="${projectIdle}">
@@ -238,7 +237,7 @@
         <tbody>
           <tr>
             <td>
-              <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                 <input type="hidden" name="projectGroupId" value="<c:out value="${projectGroupId}"/>" />
                 <s:select theme="simple" name="buildDef" list="buildDefinitions"
                            listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"

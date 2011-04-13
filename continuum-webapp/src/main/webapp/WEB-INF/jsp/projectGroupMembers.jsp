@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -61,7 +60,7 @@
         </ec:column>
         <ec:column property="editAction" title="&nbsp;" width="1%" sortable="false">
           <center>
-            <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+            <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
@@ -85,7 +84,7 @@
         </ec:column>
         <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
           <center>
-            <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+            <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">

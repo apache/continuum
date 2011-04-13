@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <s:i18n name="localization.Continuum">
   <ec:table items="allBuildDefinitionSummaries"
@@ -55,7 +54,7 @@
       <ec:column property="description" title="projectView.buildDefinition.description"/>
       <ec:column property="type" title="projectView.buildDefinition.type"/>      
       <ec:column property="buildAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroupName)}">
+        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <s:url id="buildProjectUrl" action="buildProject" namespace="/">
             <s:param name="projectId"><c:out value="${projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
@@ -71,7 +70,7 @@
         <%-- if the from is PROJECT then render the links differently --%>
         <c:choose>
           <c:when test="${pageScope.buildDefinitionSummary.from=='PROJECT'}">
-            <redback:ifAuthorized permission="continuum-modify-project-build-definition" resource="${fn:escapeXml(projectGroupName)}">
+            <redback:ifAuthorized permission="continuum-modify-project-build-definition" resource="${projectGroupName}">
               <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
                 <s:param name="projectId"><c:out value="${projectId}"/></s:param>
                 <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
@@ -83,7 +82,7 @@
             </redback:elseAuthorized>
           </c:when>
           <c:otherwise>
-            <redback:ifAuthorized permission="continuum-modify-group-build-definition" resource="${fn:escapeXml(projectGroupName)}">
+            <redback:ifAuthorized permission="continuum-modify-group-build-definition" resource="${projectGroupName}">
               <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
                 <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
                 <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
@@ -101,7 +100,7 @@
         <%-- if the from is PROJECT then render the links differently --%>
          <c:choose>
           <c:when test="${pageScope.buildDefinitionSummary.from=='PROJECT'}">
-            <redback:ifAuthorized permission="continuum-remove-project-build-definition" resource="${fn:escapeXml(projectGroupName)}">
+            <redback:ifAuthorized permission="continuum-remove-project-build-definition" resource="${projectGroupName}">
               <s:token/>
               <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
                 <s:param name="projectId"><c:out value="${projectId}"/></s:param>
@@ -117,7 +116,7 @@
             </redback:elseAuthorized>
           </c:when>
           <c:otherwise>
-            <redback:ifAuthorized permission="continuum-remove-group-build-definition" resource="${fn:escapeXml(projectGroupName)}">
+            <redback:ifAuthorized permission="continuum-remove-group-build-definition" resource="${projectGroupName}">
               <c:choose>              
                 <c:when test="${buildDefinitionSummary.id == defaultGroupDefinitionId || buildDefinitionSummary.isDefault}">                
                   <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />

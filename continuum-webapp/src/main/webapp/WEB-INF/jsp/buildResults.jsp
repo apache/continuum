@@ -21,7 +21,6 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -62,7 +61,7 @@
                     filterable="false"
                     sortable="false">
             <ec:row highlightRow="true">
-              <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                 <ec:column alias="selectedBuildResults" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
                   <input type="checkbox" name="selectedBuildResults" value="<c:out value="${buildResult.id}"/>" />
                 </ec:column>
@@ -103,7 +102,7 @@
                 <tbody>
                   <tr>
                     <td>
-                      <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+                      <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                         <s:hidden name="projectGroupId"/>
                         <s:hidden name="projectId"/>
                         <input type="button" name="delete-project" value="<s:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />

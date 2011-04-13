@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib prefix="c1" uri="continuum" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -78,7 +77,7 @@
             <tbody>
             <tr>
               <td>
-                <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroupName)}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                   <form action="removeBuildResult.action">
                     <input type="hidden" name="projectId" value="<s:property value="projectId"/>"/>
                     <input type="hidden" name="buildId" value="<s:property value="buildId"/>"/>

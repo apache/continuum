@@ -22,7 +22,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 
@@ -92,7 +91,7 @@
         <c1:data label="%{getText('projectGroup.repository.label')}" name="projectGroup.localRepository.name"/>
         <s:if test="url != null">
             <s:url id="projectHomepageUrl" value="%{url}" includeContext="false" includeParams="none"/>
-        	<c1:data label="%{getText('projectGroup.url.label')}" name="url" valueLink="%{'${fn:escapeXml(projectHomepageUrl)}'}"/>  
+        	<c1:data label="%{getText('projectGroup.url.label')}" name="url" valueLink="%{'${projectHomepageUrl}'}"/>  
         </s:if>
       </table>
     </div>
@@ -112,7 +111,7 @@
       </ec:row>
     </ec:table>
 
-    <redback:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${fn:escapeXml(projectGroup.name)}">
+    <redback:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${projectGroup.name}">
       <h3><s:text name="projectGroup.actions.title"/></h3>
 
       <c:if test="${!empty actionErrors}">
@@ -128,7 +127,7 @@
           <tr>
             <td>
               <table>
-                <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroup.name)}">
+                <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
                   <form action="buildProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                     <s:select theme="simple" name="buildDefinitionId" list="buildDefinitions"
@@ -139,7 +138,7 @@
               </table>
             </td>
             <td>
-              <redback:ifAuthorized permission="continuum-modify-group" resource="${fn:escapeXml(projectGroup.name)}">
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
                 <form action="editProjectGroup.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                   <input type="submit" name="edit" value="<s:text name="edit"/>"/>
@@ -147,7 +146,7 @@
               </redback:ifAuthorized>
             </td>
             <td>
-              <redback:ifAuthorized permission="continuum-build-group" resource="${fn:escapeXml(projectGroup.name)}">
+              <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
                 <form action="releaseProjectGroup.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                   <input type="submit" name="release" value="<s:text name="release"/>"/>
@@ -155,7 +154,7 @@
               </redback:ifAuthorized>
             </td>
             <td>
-              <redback:ifAnyAuthorized permissions="continuum-add-project-to-group" resource="${fn:escapeXml(projectGroup.name)}">
+              <redback:ifAnyAuthorized permissions="continuum-add-project-to-group" resource="${projectGroup.name}">
                 <s:form name="addNewProject">
                   <s:hidden name="disableGroupSelection" value="true"/>
                   <s:hidden name="selectedProjectGroup" value="%{projectGroup.id}"/>
@@ -170,7 +169,7 @@
               </redback:ifAnyAuthorized>
             </td>
             <td>
-              <redback:ifAuthorized permission="continuum-remove-group" resource="${fn:escapeXml(projectGroup.name)}">
+              <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
                 <form action="removeProjectGroup.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                   <input type="submit" name="remove" value="<s:text name="projectGroup.deleteGroup"/>"/>
@@ -178,7 +177,7 @@
               </redback:ifAuthorized>
             </td>
             <td>
-              <redback:ifAuthorized permission="continuum-build-project-in-group" resource="${fn:escapeXml(projectGroup.name)}">
+              <redback:ifAuthorized permission="continuum-build-project-in-group" resource="${projectGroup.name}">
                 <form action="cancelGroupBuild.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                   <input type="submit" name="cancel" value="<s:text name="projectGroup.cancelGroupBuild"/>"/>
