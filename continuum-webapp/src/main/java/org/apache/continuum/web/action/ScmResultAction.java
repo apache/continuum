@@ -5,7 +5,6 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
-import org.codehaus.plexus.util.StringUtils;
 
 import org.apache.struts2.ServletActionContext;
 
@@ -78,11 +77,8 @@ public class ScmResultAction
    public String getProjectGroupName()
        throws ContinuumException
     {
-       if ( StringUtils.isEmpty( projectGroupName ) )
-       {
-           projectGroupName = getContinuum().getProjectGroup( getProjectGroupId() ).getName();
-       }
-    
+       projectGroupName = getContinuum().getProjectGroup( getProjectGroupId() ).getName();
+
        return projectGroupName;
     }
    

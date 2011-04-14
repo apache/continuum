@@ -35,7 +35,6 @@ import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
-import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;

@@ -52,6 +52,25 @@ public class BuildAgentsTest
         }
     }
 
+    public void testAddBuildAgentWithXSS()
+    {
+        try
+        {
+            String invalidUrl = "http://sampleagent/<script>alert('gotcha')</script>";
+            String invalidDescription = "blah blah <script>alert('gotcha')</script> blah blah";
+            enableDistributedBuilds();
+            goToAddBuildAgent();
+            addBuildAgent( invalidUrl, invalidDescription, false, true, false );
+
+            assertTextPresent( "Build agent url is invalid." );
+            assertTextPresent( "Build agent description contains invalid characters." );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
     @Test( dependsOnMethods = { "testEditBuildAgent" } )
     public void testAddAnExistingBuildAgent()
     {

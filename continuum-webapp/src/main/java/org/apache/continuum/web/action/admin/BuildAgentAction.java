@@ -21,7 +21,6 @@ package org.apache.continuum.web.action.admin;
 
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
-import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
@@ -41,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -88,11 +86,13 @@ public class BuildAgentAction
     {
         if ( buildAgent != null && !StringUtils.isBlank( buildAgent.getUrl() ) )
         {
+            String buildAgentUrl = buildAgent.getUrl();
+
             List<BuildAgentConfiguration> agents = getContinuum().getConfiguration().getBuildAgents();
 
             for ( BuildAgentConfiguration agent : agents )
             {
-                if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+                if ( agent.getUrl().equals( buildAgentUrl ) )
                 {
                     buildAgent = agent;
                     type = "edit";
@@ -128,22 +128,26 @@ public class BuildAgentAction
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
 
-        for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
+        if ( buildAgent != null )
         {
-            if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+            String buildAgentUrl = buildAgent.getUrl();
+            for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
             {
-                buildAgent = agent;
-
-                try
+                if ( agent.getUrl().equals( buildAgentUrl ) )
                 {
-                    installations = getContinuum().getDistributedBuildManager().getAvailableInstallations( buildAgent.getUrl() );
+                    buildAgent = agent;
+    
+                    try
+                    {
+                        installations = getContinuum().getDistributedBuildManager().getAvailableInstallations( buildAgentUrl );
+                    }
+                    catch ( ContinuumException e )
+                    {
+                        logger.error( "Unable to retrieve installations of build agent '" + agent.getUrl() + "'", e );
+                    }
+    
+                    break;
                 }
-                catch ( ContinuumException e )
-                {
-                    logger.error( "Unable to retrieve installations of build agent '" + agent.getUrl() + "'", e );
-                }
-
-                break;
             }
         }
 
@@ -161,7 +165,7 @@ public class BuildAgentAction
         {
             for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
             {
-                if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+                if ( agent.getUrl().equals( buildAgent.getUrl() ) )
                 {
                     agent.setDescription( buildAgent.getDescription() );
                     agent.setEnabled( buildAgent.isEnabled() );
@@ -365,16 +369,18 @@ public class BuildAgentAction
 
         if ( buildAgentGroup != null && !StringUtils.isBlank( buildAgentGroup.getName() ) )
         {
+            String buildAgentGroupName = buildAgentGroup.getName();
+
             List<BuildAgentGroupConfiguration> agentGroups = configuration.getBuildAgentGroups();
 
             for ( BuildAgentGroupConfiguration group : agentGroups )
             {
-                if ( buildAgentGroup.getName().equals( group.getName() ) )
+                if ( group.getName().equals( buildAgentGroupName ) )
                 {
                     buildAgentGroup = group;
                     typeGroup = "edit";
 
-                    this.buildAgentGroup = configuration.getBuildAgentGroup( buildAgentGroup.getName() );
+                    this.buildAgentGroup = configuration.getBuildAgentGroup( buildAgentGroupName );
                     this.buildAgents = configuration.getBuildAgents();
 
                     this.selectedBuildAgentIds = new ArrayList<String>();

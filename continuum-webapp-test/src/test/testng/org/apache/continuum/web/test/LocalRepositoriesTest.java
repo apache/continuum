@@ -46,6 +46,17 @@ public class LocalRepositoriesTest
         assertTextPresent( "You must define a local repository directory." );
     }
 
+    public void testAddLocalRepositoryWithXSS()
+    {
+        String invalidName = "Repo <script>alert('gotcha')</script> name";
+        String invalidLocation = "/Users/continuum/<script>alert('gotcha')</script>/dir";
+
+        goToAddLocalRepository();
+        addEditLocalRepository( invalidName, invalidLocation, false );
+        assertTextPresent( "Local repository name contains invalid characters." );
+        assertTextPresent( "Local repository location contains invalid characters." );
+    }
+
     @Test( dependsOnMethods = { "testAddLocalRepository" } )
     public void testAddDuplicatedLocalRepository()
     {
