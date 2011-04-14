@@ -26,5 +26,9 @@
     <field-validator type="requiredstring">
       <message key="buildqueue.name.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
+      <message key="buildqueue.name.invalid"/>
+    </field-validator>
   </field>
 </validators>

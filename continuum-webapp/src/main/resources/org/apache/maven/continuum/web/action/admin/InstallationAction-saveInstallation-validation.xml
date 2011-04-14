@@ -26,16 +26,27 @@
     <field-validator type="requiredstring">
       <message key="installation.name.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
+      <message key="installation.name.invalid"/>
+    </field-validator>
+  </field>
+  <field name="installation.varName">
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z][A-Za-z0-9_]*]]></param>
+      <message key="installation.varName.invalid"/>
+    </field-validator>
   </field>
   <field name="installation.varValue">
     <field-validator type="requiredstring">
       <message key="installation.varValue.required"/>
     </field-validator>
-  </field>  
-  <field name="installation.varValue">
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.:=\\/\s\-]*]]></param>
+      <message key="installation.varValue.invalid"/>
+    </field-validator>
     <field-validator type="installationValidator">
       <message key="installation.varValue.version.failed"/>
     </field-validator>
-  </field>    
-    
+  </field>
 </validators>

@@ -24,7 +24,11 @@
 <validators>
   <field name="buildDefinitionTemplate.name">
     <field-validator type="requiredstring">
-      <message key="buildDefintionTemplate.name.required"/>
+      <message key="buildDefinitionTemplate.name.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
+      <message key="buildDefinitionTemplate.name.invalid"/>
     </field-validator>
   </field>
 </validators>

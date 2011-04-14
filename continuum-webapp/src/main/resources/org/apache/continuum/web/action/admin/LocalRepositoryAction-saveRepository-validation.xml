@@ -27,7 +27,7 @@
       <message key="repository.name.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.\s-]*]]></param>
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
       <message key="repository.name.invalid"/>
     </field-validator>
   </field>
@@ -36,7 +36,7 @@
       <message key="repository.location.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.:\\/\s-]*]]></param>
+      <param name="expression"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
       <message key="repository.location.invalid"/>
     </field-validator>
   </field>

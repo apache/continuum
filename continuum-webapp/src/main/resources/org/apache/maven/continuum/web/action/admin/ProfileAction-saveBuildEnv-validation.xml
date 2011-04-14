@@ -16,24 +16,19 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-  
+
 <!DOCTYPE validators PUBLIC
     "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
     "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
 
 <validators>
-  <field name="buildAgent.url">
+  <field name="profile.name">
     <field-validator type="requiredstring">
-      <message key="buildAgent.url.required"/>
+      <message key="profile.name.required"/>
     </field-validator>
-    <field-validator type="url">
-      <message key="buildAgent.url.invalid"/>
-    </field-validator>
-  </field>
-  <field name="buildAgent.description">
     <field-validator type="regex">
       <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
-      <message key="buildAgent.description.invalid"/>
+      <message key="profile.name.invalid"/>
     </field-validator>
   </field>
 </validators>

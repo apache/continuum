@@ -45,10 +45,18 @@
     <field-validator type="requiredstring">
       <message key="appearance.groupId.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9.]*]]></param>
+      <message key="appearance.groupId.invalid"/>
+    </field-validator>
   </field>
   <field name="companyPom.artifactId">
     <field-validator type="requiredstring">
       <message key="appearance.artifactId.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9.]*]]></param>
+      <message key="appearance.artifactId.invalid"/>
     </field-validator>
   </field>
 </validators>
