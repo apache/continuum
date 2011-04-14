@@ -52,7 +52,7 @@
           <ec:row highlightRow="true">
             <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
               <ec:column alias="selectedReleaseResults" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
-                <input type="checkbox" name="selectedReleaseResults" value="<c:out value="${result.id}"/>" />
+                <input type="checkbox" name="selectedReleaseResults" value="${result.id}" />
               </ec:column>
             </redback:ifAuthorized>
             <ec:column property="project.name" title="releaseResults.project"/>

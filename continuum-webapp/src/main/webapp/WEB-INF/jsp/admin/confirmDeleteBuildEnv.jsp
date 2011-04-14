@@ -40,7 +40,7 @@
         <div class="functnbar3">
           <s:form action="deleteBuildEnv!delete.action" method="post">
             <s:token/>
-            <input type="hidden" name="profile.id" value="<c:out value="${profile.id}"/>" />
+            <input type="hidden" name="profile.id" value="${profile.id}" />
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
           </s:form>
         </div>

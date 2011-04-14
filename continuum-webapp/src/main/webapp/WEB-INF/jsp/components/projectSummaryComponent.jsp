@@ -63,7 +63,7 @@
 
       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <ec:column alias="selectedProjects" title=" " style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
-          <input type="checkbox" name="selectedProjects" value="<c:out value="${project.id}"/>" />
+          <input type="checkbox" name="selectedProjects" value="${project.id}" />
         </ec:column>
       </redback:ifAuthorized>
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
@@ -238,7 +238,7 @@
           <tr>
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                <input type="hidden" name="projectGroupId" value="<c:out value="${projectGroupId}"/>" />
+                <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
                 <s:select theme="simple" name="buildDef" list="buildDefinitions"
                            listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"
                            onchange="$('projectsForm').buildDefinitionId.value=$('buildDef').value" />

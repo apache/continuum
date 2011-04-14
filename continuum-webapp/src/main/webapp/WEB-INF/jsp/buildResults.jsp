@@ -63,7 +63,7 @@
             <ec:row highlightRow="true">
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                 <ec:column alias="selectedBuildResults" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
-                  <input type="checkbox" name="selectedBuildResults" value="<c:out value="${buildResult.id}"/>" />
+                  <input type="checkbox" name="selectedBuildResults" value="${buildResult.id}" />
                 </ec:column>
               </redback:ifAuthorized>
               <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">

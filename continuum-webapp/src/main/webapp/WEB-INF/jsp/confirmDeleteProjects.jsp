@@ -42,7 +42,7 @@
             <s:iterator value="selectedProjects">
               <input type="hidden" value="<s:property/>" name="selectedProjects"/>
             </s:iterator>
-            <input type="hidden" name="projectGroupId" value="<c:out value="${projectGroupId}"/>" />
+            <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
             <input type="hidden" name="methodToCall" value="remove" />
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
           </s:form>

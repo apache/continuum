@@ -92,7 +92,7 @@
               <ec:row>
                 <redback:ifAuthorized permission="continuum-manage-queues">
                   <ec:column alias="selectedBuildTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
-                    <input type="checkbox" name="selectedBuildTaskHashCodes" value="<c:out value="${queue.task.hashCode}"/>" />
+                    <input type="checkbox" name="selectedBuildTaskHashCodes" value="${queue.task.hashCode}" />
                   </ec:column>
                 </redback:ifAuthorized>
                 <ec:column property="name" title="buildQueue.currentTask.buildQueue" width="29%"/>
@@ -202,7 +202,7 @@
               <ec:row>
                 <redback:ifAuthorized permission="continuum-manage-queues">
                   <ec:column alias="selectedCheckOutTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
-                    <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="<c:out value="${queue.task.hashCode}"/>" />
+                    <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${queue.task.hashCode}" />
                   </ec:column>
                 </redback:ifAuthorized>
                 <ec:column property="name" title="checkoutQueue.currentTask.buildQueue" width="29%"/>
@@ -295,7 +295,7 @@
               <ec:row>
                 <redback:ifAuthorized permission="continuum-manage-queues">
                   <ec:column alias="selectedPrepareBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
-                    <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="<c:out value="${pageScope.prepareBuildQueue.hashCode}"/>" />
+                    <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
                   </ec:column>             
                 </redback:ifAuthorized>
                 <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
