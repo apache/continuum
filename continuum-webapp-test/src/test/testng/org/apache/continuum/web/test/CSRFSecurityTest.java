@@ -53,14 +53,13 @@ public class CSRFSecurityTest
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
 
-    /*
     public void testCSRFRemoveProjectGroup()
     {
         getSelenium().open( baseUrl );
         getSelenium().open( baseUrl + "/removeProjectGroup.action?projectGroupId=2" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
-    } */
+    } 
 
     public void testCSRFRemoveBuildResult()
     {

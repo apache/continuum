@@ -101,6 +101,7 @@
               <s:param name="projectGroupId">${group.id}</s:param>
               <s:param name="struts.token.name">struts.token</s:param>
               <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+              <s:param name="explicitCSRFCheck">false</s:param>
             </s:url>
             <s:a href="%{removeProjectGroupUrl}">
               <img src="<s:url value='/images/delete.gif'/>" alt="<s:text name="projectGroup.deleteGroup"/>" title="<s:text name="projectGroup.deleteGroup"/>" border="0">
