@@ -71,6 +71,20 @@ public class BuildAgentsTest
         }
     }
 
+    public void testViewBuildAgentInstallationXSS()
+    {
+        getSelenium().open( baseUrl + "/security/viewBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        assertFalse( getSelenium().isAlertPresent() );
+        assertTextPresent( "<script>alert('xss')</script>" );
+    }
+
+    public void testEditBuildAgentXSS()
+    {
+        getSelenium().open( baseUrl + "/security/editBuildAgent.action?buildAgent.url=test<script>alert('xss')</script>" );
+        assertFalse( getSelenium().isAlertPresent() );
+        assertTextPresent( "test&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;" );
+    }
+
     @Test( dependsOnMethods = { "testEditBuildAgent" } )
     public void testAddAnExistingBuildAgent()
     {
@@ -189,6 +203,28 @@ public class BuildAgentsTest
     }
 
 //TESTS FOR BUILD AGENT GROUPS
+
+    public void testAddBuildAgentGroupXSS()
+    {
+        try
+        {
+            enableDistributedBuilds();
+            goToAddBuildAgentGroup();
+            addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[] {}, false );
+            assertTextPresent( "Build agent group name contains invalid characters" );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    public void testEditBuildAgentGroupXSS()
+    {
+        getSelenium().open( baseUrl + "/security/editBuildAgentGroup.action?buildAgentGroup.name=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        assertFalse( getSelenium().isAlertPresent() );
+        assertTextPresent( "test&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;" );
+    }
 
     @Test( dependsOnMethods = { "testAddBuildAgent", "testDeleteBuildAgent" } )
     public void testAddBuildAgentGroup()

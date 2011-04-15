@@ -84,4 +84,17 @@ public class ConfigurationTest
         setMaxBuildQueue( 0 );
         assertTextPresent( "Number of Allowed Builds in Parallel must be greater than zero" );
     }
+
+    public void testSetConfigurationWithXSS()
+    {
+        String invalidString = "<script>alert('gotcha')</script>";
+        goToConfigurationPage();
+        submitConfiguration( invalidString, invalidString, invalidString, invalidString, 
+                             invalidString, invalidString, true, false );
+        assertTextPresent( "Working directory contains invalid characters." );
+        assertTextPresent( "Build output directory contains invalid characters." );
+        assertTextPresent( "Release output directory contains invalid characters." );
+        assertTextPresent( "Deployment repository directory contains invalid characters." );
+        assertTextPresent( "You must define a valid URL." );
+    }
 }
