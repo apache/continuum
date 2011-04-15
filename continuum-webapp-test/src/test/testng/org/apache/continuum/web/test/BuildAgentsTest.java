@@ -22,6 +22,7 @@ package org.apache.continuum.web.test;
 //import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
 import org.testng.annotations.Test;
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
+import org.testng.Assert;
 
 @Test( groups = { "agent" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
 public class BuildAgentsTest
@@ -74,15 +75,14 @@ public class BuildAgentsTest
     public void testViewBuildAgentInstallationXSS()
     {
         getSelenium().open( baseUrl + "/security/viewBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
-        assertFalse( getSelenium().isAlertPresent() );
+        Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "<script>alert('xss')</script>" );
     }
 
     public void testEditBuildAgentXSS()
     {
-        getSelenium().open( baseUrl + "/security/editBuildAgent.action?buildAgent.url=test<script>alert('xss')</script>" );
-        assertFalse( getSelenium().isAlertPresent() );
-        assertTextPresent( "test&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;" );
+        getSelenium().open( baseUrl + "/security/editBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        Assert.assertFalse( getSelenium().isAlertPresent() );
     }
 
     @Test( dependsOnMethods = { "testEditBuildAgent" } )
@@ -204,7 +204,9 @@ public class BuildAgentsTest
 
 //TESTS FOR BUILD AGENT GROUPS
 
+    @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testAddBuildAgentGroupXSS()
+        throws Exception
     {
         try
         {
@@ -222,8 +224,7 @@ public class BuildAgentsTest
     public void testEditBuildAgentGroupXSS()
     {
         getSelenium().open( baseUrl + "/security/editBuildAgentGroup.action?buildAgentGroup.name=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
-        assertFalse( getSelenium().isAlertPresent() );
-        assertTextPresent( "test&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;" );
+        Assert.assertFalse( getSelenium().isAlertPresent() );
     }
 
     @Test( dependsOnMethods = { "testAddBuildAgent", "testDeleteBuildAgent" } )
