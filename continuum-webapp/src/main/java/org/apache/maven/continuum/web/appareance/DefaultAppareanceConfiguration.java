@@ -31,6 +31,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +106,9 @@ public class DefaultAppareanceConfiguration
     public void saveFooter( String footerHtmlContent )
         throws IOException
     {
-        continuumAppearance.setFooter( footerHtmlContent );
+        String safeFooterHtmlContent = Jsoup.clean( footerHtmlContent, Whitelist.basic() );
+
+        continuumAppearance.setFooter( safeFooterHtmlContent );
         ContinuumAppearanceModelsXpp3Writer writer = new ContinuumAppearanceModelsXpp3Writer();
         File confFile = getAppearanceConfigurationFile();
         if ( !confFile.exists() )
@@ -114,7 +118,7 @@ public class DefaultAppareanceConfiguration
         FileWriter fileWriter = new FileWriter( confFile );
         writer.write( fileWriter, continuumAppearance );
         fileWriter.close();
-        this.footer = footerHtmlContent;
+        this.footer = safeFooterHtmlContent;
     }
 
 
