@@ -50,6 +50,29 @@ public class ShellProjectTest
                     SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, true, "shell" );
         assertProjectGroupSummaryPage( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
     }
+    
+    public void testAddShellProjectWithInvalidValues()
+        throws Exception
+    {
+        String SHELL_NAME = "!@#$<>?etc";
+        String SHELL_DESCRIPTION = "![]<>'^&etc";
+        String SHELL_VERSION = "<>whitespaces!#etc";
+        String SHELL_TAG = "!<>*%etc";
+        String SHELL_SCM_URL = "!<>*%etc";
+        String SHELL_SCM_USERNAME = getProperty( "SHELL_SCM_USERNAME" );
+        String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD" );
+        String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
+        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
+        goToAddShellProjectPage();
+        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
+                    SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, false, "shell" );
+        assertTextPresent( "Name contains invalid characters." );
+        assertTextPresent( "Description contains invalid characters." );
+        assertTextPresent( "Version contains invalid characters." );
+        assertTextPresent( "SCM Url contains invalid characters." );
+        assertTextPresent( "SCM Tag contains invalid characters." );
+    }
 
     public void testSubmitEmptyForm()
     {

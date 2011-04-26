@@ -37,6 +37,16 @@ public class InstallationTest
 		goToAddInstallationTool();
 		addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
     }
+    
+    public void testAddJdkToolWithoutBuildEnvironmentWithInvalidValues()
+    {
+        String INSTALL_TOOL_JDK_NAME = "!@#$<>?etc";
+        String INSTALL_TOOL_JDK_PATH = "!@#$<>?etc";
+        goToAddInstallationTool();
+        addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
+        assertTextPresent( "Installation name contains invalid characters." );
+        assertTextPresent( "Installation value contains invalid characters." );
+    }
 
     public void testAddMavenToolWithBuildEnvironment()
     {
@@ -65,6 +75,18 @@ public class InstallationTest
         String INSTALL_VAR_PATH = "path";
         goToAddInstallationVariable();
         addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, false, true );
+    }
+    
+    public void testAddInstallationVariableWithoutBuildEnvironmentWithInvalidValues()
+    {
+        String INSTALL_VAR_NAME = "!@#$<>?etc";
+        String INSTALL_VAR_VARIABLE_NAME = "!@#$<>?etc";
+        String INSTALL_VAR_PATH = "!@#$<>?etc";
+        goToAddInstallationVariable();
+        addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, false, false );
+        assertTextPresent( "Installation name contains invalid characters." );
+        assertTextPresent( "Environment variable name contains invalid characters." );
+        assertTextPresent( "Installation value contains invalid characters." );
     }
 
     public void testAddInvalidInstallationTool()

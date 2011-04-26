@@ -2,6 +2,7 @@ package org.apache.continuum.web.util;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.codehaus.plexus.util.StringUtils;
@@ -85,6 +86,7 @@ public final class GenerateRecipentNotifier
         {
             recipent = configuration.get( "url" );
         }
-        return recipent;
+        // escape the characters, it may contain characters possible for an XSS attack
+        return StringEscapeUtils.escapeXml( recipent );
     }
 }

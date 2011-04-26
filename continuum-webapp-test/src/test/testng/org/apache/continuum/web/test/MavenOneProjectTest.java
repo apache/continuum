@@ -199,12 +199,12 @@ public class MavenOneProjectTest
         clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
         assertTextPresent( "Delete Continuum Project" );
         clickButtonWithValue( "Delete" );
-        assertPage( "Continuum - Project Group" );
-        assertLinkNotPresent( M1_PROJ_GRP_NAME );
+        assertProjectGroupsSummaryPage();
+        clickLinkWithText( M1_PROJ_GRP_NAME );
         
         // remove group for next test
         removeProjectGroup( M1_PROJ_GRP_NAME );
-        
+        /*
         // delete project - "Delete Project(s)" button
         addMaven1Project( M1_PROJ_GRP_NAME );
         clickLinkWithText( M1_PROJ_GRP_NAME );
@@ -218,7 +218,7 @@ public class MavenOneProjectTest
         if ( !isExisting )
         {
             removeProjectGroup( M1_PROJ_GRP_NAME );
-        }
+        }*/
     }
     
     private void addMaven1Project( String groupName )

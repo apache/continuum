@@ -55,6 +55,19 @@ public class ProjectGroupTest
         addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, true );
         showProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
+    
+    public void testAddProjectGroupWithInvalidValues()
+        throws Exception
+    {
+        String TEST2_PROJ_GRP_NAME = "!@#$<>?etch";
+        String TEST2_PROJ_GRP_ID = "-!@#<>etc";
+        String TEST2_PROJ_GRP_DESCRIPTION = "![]<>'^&etc";
+        
+        addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, false );
+        assertTextPresent( "Name contains invalid characters." );
+        assertTextPresent( "Id contains invalid characters." );
+        assertTextPresent( "Description contains invalid characters." );
+    }
 
     @Test( dependsOnMethods = { "testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup" } )
     public void testMoveProject()
@@ -129,6 +142,21 @@ public class ProjectGroupTest
         editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, " ",
                           TEST2_PROJ_GRP_DESCRIPTION );
         assertTextPresent( "Project Group Name cannot contain spaces only" );
+    }
+    
+    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    public void testEditProjectGroupWithXSS()
+        throws Exception
+    {
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        String NEW_PROJ_GRP_NAME = "<script>alert('XSS')</script>";
+        String NEW_PROJ_GRP_DESCRIPTION = "<script>alert('XSS')</script>";
+        editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, NEW_PROJ_GRP_NAME,
+                          NEW_PROJ_GRP_DESCRIPTION );
+        assertTextPresent( "Name contains invalid characters." );
+        assertTextPresent( "Description contains invalid characters." );
     }
 
     @Test( dependsOnMethods = { "testAddMavenTwoProject" } )

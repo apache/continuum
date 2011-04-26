@@ -27,6 +27,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryServiceException;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
+import org.apache.continuum.web.util.RegexPatternConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -62,8 +63,8 @@ public class AddProjectGroupAction
     }
 
     public void validate()
-    {
-        clearErrorsAndMessages();
+    {   
+        clearErrorsAndMessages();       
         if ( name != null && name.equals( "" ) )
         {
             addActionError( getText( "projectGroup.error.name.required" ) );
@@ -71,6 +72,10 @@ public class AddProjectGroupAction
         else if ( name != null && name.trim().equals( "" ) )
         {
             addActionError( getText( "projectGroup.error.name.cannot.be.spaces" ) );
+        }
+        else if ( name != null && !name.trim().matches( RegexPatternConstants.NAME_REGEX ) )
+        {
+            addActionError( getText( "projectGroup.error.name.invalid" ) );
         }
         else if ( name != null && !name.equals( "" ) )
         {
@@ -91,6 +96,10 @@ public class AddProjectGroupAction
         {
             addActionError( getText( "projectGroup.error.groupId.cannot.be.spaces" ) );
         }
+        else if ( groupId != null && !groupId.trim().matches( RegexPatternConstants.GROUP_ID_REGEX ))
+        {
+            addActionError( getText( "projectGroup.error.groupId.invalid" ) );
+        }
         else
         {
             try
@@ -105,6 +114,10 @@ public class AddProjectGroupAction
                 //since we want to add a new project group, we should be getting
                 //this exception
             }
+        }
+        if( description != null && !description.trim().matches( RegexPatternConstants.DESCRIPTION_REGEX ))
+        {
+            addActionError( getText( "projectGroup.error.description.invalid" ) );
         }
     }
 
@@ -122,9 +135,9 @@ public class AddProjectGroupAction
 
         ProjectGroup projectGroup = new ProjectGroup();
 
-        projectGroup.setName( name );
+        projectGroup.setName( name.trim() );
 
-        projectGroup.setGroupId( groupId );
+        projectGroup.setGroupId( groupId.trim() );
 
         projectGroup.setDescription( description );
 

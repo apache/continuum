@@ -39,6 +39,17 @@ public class NotifierTest
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addMailNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MAIL_NOTIFIER_ADDRESS, true );
     }
+    
+    public void testAddValidMailProjectNotifierWithInvalidValue()
+        throws Exception
+    {
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MAIL_NOTIFIER_ADDRESS = "<script>alert('xss')</script>";
+        goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
+        addMailNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MAIL_NOTIFIER_ADDRESS, false );
+        assertTextPresent( "Address is invalid" );
+    }
 
     @Test( dependsOnMethods = { "testAddValidMailProjectNotifier" } )
     public void testEditValidMailProjectNotifier()
@@ -135,6 +146,19 @@ public class NotifierTest
         addIrcNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, IRC_NOTIFIER_HOST, IRC_NOTIFIER_CHANNEL, true );
     }
 
+    public void testAddProjectNotifierWithInvalidValues()
+        throws Exception
+    {
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String IRC_NOTIFIER_HOST = "!@#$<>?etc";
+        String IRC_NOTIFIER_CHANNEL = "!@#$<>?etc";
+        goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
+        addIrcNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, IRC_NOTIFIER_HOST, IRC_NOTIFIER_CHANNEL, false );
+        assertTextPresent( "Host contains invalid character" );
+        assertTextPresent( "Channel contains invalid character" );
+    }
+
     @Test( dependsOnMethods = { "testAddValidIrcProjectNotifier" } )
     public void testEditValidIrcProjectNotifier()
         throws Exception
@@ -171,6 +195,8 @@ public class NotifierTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addIrcNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", false );
+        assertTextPresent( "Host is required" );
+        assertTextPresent( "Channel is required" );
     }
 
     public void testAddValidIrcGroupNotifier()
@@ -226,6 +252,8 @@ public class NotifierTest
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addIrcNotifier( TEST_PROJ_GRP_NAME, null, "", "", false );
+        assertTextPresent( "Host is required" );
+        assertTextPresent( "Channel is required" );
     }
 
     public void testAddValidJabberProjectNotifier()
@@ -240,6 +268,22 @@ public class NotifierTest
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addJabberNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, JABBER_NOTIFIER_HOST, JABBER_NOTIFIER_LOGIN,
                            JABBER_NOTIFIER_PASSWORD, JABBER_NOTIFIER_ADDRESS, true );
+    }
+    
+    public void testAddJabberProjectNotifierWithInvalidValues()
+        throws Exception
+    {
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String JABBER_NOTIFIER_HOST = "!@#$<>?etc";
+        String JABBER_NOTIFIER_LOGIN = getProperty( "JABBER_NOTIFIER_LOGIN" );
+        String JABBER_NOTIFIER_PASSWORD = getProperty( "JABBER_NOTIFIER_PASSWORD" );
+        String JABBER_NOTIFIER_ADDRESS = "!@#$<>?etc";
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
+        addJabberNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, JABBER_NOTIFIER_HOST, JABBER_NOTIFIER_LOGIN,
+                           JABBER_NOTIFIER_PASSWORD, JABBER_NOTIFIER_ADDRESS, false );
+        assertTextPresent( "Host contains invalid characters" );
+        assertTextPresent( "Address is invalid" );
     }
 
     @Test( dependsOnMethods = { "testAddValidJabberProjectNotifier" } )
@@ -284,6 +328,10 @@ public class NotifierTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addJabberNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", "", "", false );
+        assertTextPresent( "Host is required" );
+        assertTextPresent( "Login is required" );
+        assertTextPresent( "Password is required" );
+        assertTextPresent( "Address is required" );
     }
 
     public void testAddValidJabberGroupNotifier()
@@ -350,6 +398,10 @@ public class NotifierTest
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addJabberNotifier( TEST_PROJ_GRP_NAME, null, "", "", "", "", false );
+        assertTextPresent( "Host is required" );
+        assertTextPresent( "Login is required" );
+        assertTextPresent( "Password is required" );
+        assertTextPresent( "Address is required" );
     }
 
     public void testAddValidMsnProjectNotifier()
@@ -363,6 +415,20 @@ public class NotifierTest
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addMsnNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MSN_NOTIFIER_LOGIN, MSN_NOTIFIER_PASSWORD,
                         MSN_NOTIFIER_ADDRESS, true );
+    }
+
+    public void testAddMsnProjectNotifierWithInvalidValues()
+        throws Exception
+    {
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String MSN_NOTIFIER_ADDRESS = "!@#$<>?etc";
+        String MSN_NOTIFIER_LOGIN = getProperty( "MSN_NOTIFIER_LOGIN" );
+        String MSN_NOTIFIER_PASSWORD = getProperty( "MSN_NOTIFIER_PASSWORD" );
+        goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
+        addMsnNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, MSN_NOTIFIER_LOGIN, MSN_NOTIFIER_PASSWORD,
+                        MSN_NOTIFIER_ADDRESS, false );
+        assertTextPresent( "Address is invalid" );
     }
 
     @Test( dependsOnMethods = { "testAddValidMsnProjectNotifier" } )
@@ -404,6 +470,9 @@ public class NotifierTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addMsnNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", "", false );
+        assertTextPresent( "Login is required" );
+        assertTextPresent( "Password is required" );
+        assertTextPresent( "Address is required" );
     }
 
     public void testAddValidMsnGroupNotifier()
@@ -464,6 +533,9 @@ public class NotifierTest
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addMsnNotifier( TEST_PROJ_GRP_NAME, null, "", "", "", false );
+        assertTextPresent( "Login is required" );
+        assertTextPresent( "Password is required" );
+        assertTextPresent( "Address is required" );
     }
 
     public void testAddValidWagonProjectNotifier()
@@ -475,6 +547,18 @@ public class NotifierTest
         String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addWagonNotifierPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, true );
+    }
+    
+    public void testAddInvalidURLWagonProjectNotifier()
+        throws Exception
+    {
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String WAGON_NOTIFIER_URL = "!@#$<>?etc";
+        String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
+        goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
+        addWagonNotifierPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, false );
+        assertTextPresent( "Destination URL is invalid" );
     }
 
     @Test( dependsOnMethods = { "testAddValidWagonProjectNotifier" } )
@@ -513,6 +597,8 @@ public class NotifierTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         goToProjectNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         addWagonNotifierPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, "", "", false );
+        assertTextPresent( "Destination URL is required" );
+        assertTextPresent( "Server Id is required" );
     }
 
     public void testAddValidWagonGroupNotifier()
@@ -568,6 +654,8 @@ public class NotifierTest
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         goToGroupNotifier( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         addWagonNotifierPage( TEST_PROJ_GRP_NAME, null, "", "", false );
+        assertTextPresent( "Destination URL is required" );
+        assertTextPresent( "Server Id is required" );
     }
 
     @Test( dependsOnMethods = { "testEditValidMailGroupNotifier", "testEditInvalidMailGroupNotifier" } )

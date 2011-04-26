@@ -244,15 +244,14 @@ public class MavenTwoProjectTest
         clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
         assertTextPresent( "Delete Continuum Project" );
         clickButtonWithValue( "Delete" );
-        assertPage( "Continuum - Project Group" );
-        assertTextNotPresent( "Unable to delete project" );
+        assertProjectGroupsSummaryPage();
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
         assertTextNotPresent( M2_PROJ_GRP_SCM_ROOT_URL );
 
         // remove group for next test
         removeProjectGroup( M2_PROJ_GRP_NAME );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
-
+/*
         // delete project - "Delete Project(s)" button
         addMaven2Project( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
@@ -272,7 +271,7 @@ public class MavenTwoProjectTest
 
         // remove project group
         removeProjectGroup( M2_PROJ_GRP_NAME );
-        assertLinkNotPresent( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );*/
     }
 
     public void testBuildProjectGroupNoBuildAgentConfigured()

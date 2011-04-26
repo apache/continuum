@@ -1,5 +1,7 @@
 package org.apache.continuum.web.test.parent;
 
+import java.net.URLEncoder;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -44,8 +46,9 @@ public abstract class AbstractBuildAgentsTest
     }
 
     public void removeBuildAgent( String agentName )
+        throws Exception
     {
-        clickLinkWithXPath( "(//a[contains(@href,'deleteBuildAgent.action') and contains(@href, '" + agentName + "')])//img" );
+        clickLinkWithXPath( "//a[contains(@href,'deleteBuildAgent.action') and contains(@href, '" + URLEncoder.encode( agentName, "UTF-8" ) + "')]/img" );
         assertPage("Continuum - Delete Build Agent");
         assertTextPresent( "Delete Build Agent" );
         assertTextPresent( "Are you sure you want to delete build agent " + agentName + " ?" );

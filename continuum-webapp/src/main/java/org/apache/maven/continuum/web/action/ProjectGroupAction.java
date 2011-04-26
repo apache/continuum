@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.ComparatorUtils;
@@ -44,6 +45,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
+import org.apache.continuum.web.util.RegexPatternConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -211,7 +213,7 @@ public class ProjectGroupAction
         }
 
         if ( projectGroup != null )
-        {
+        {   
             if ( projectGroup.getProjects() != null && projectGroup.getProjects().size() > 0 )
             {
                 int nbMaven2Projects = 0;
@@ -482,7 +484,7 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-
+        
         if ( name != null )
         {
             if ( name.equals( "" ) )
@@ -492,6 +494,10 @@ public class ProjectGroupAction
             else if ( name.trim().equals( "" ) )
             {
                 addActionError( getText( "projectGroup.error.name.cannot.be.spaces" ) );
+            }
+            else if ( !name.trim().matches( RegexPatternConstants.NAME_REGEX ) )
+            {
+                addActionError( getText( "projectGroup.error.name.invalid" ) );
             }
             else
             {
@@ -504,11 +510,15 @@ public class ProjectGroupAction
                     }
                 }
             }
-            if ( hasActionErrors() )
-            {
-                initialize();
-                return INPUT;
-            }
+        }
+        if ( description != null && !description.trim().matches( RegexPatternConstants.DESCRIPTION_REGEX ) )
+        {
+            addActionError( getText( "projectGroup.error.description.invalid" ) );
+        }
+        if ( hasActionErrors() )
+        {
+            initialize();
+            return INPUT;
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );

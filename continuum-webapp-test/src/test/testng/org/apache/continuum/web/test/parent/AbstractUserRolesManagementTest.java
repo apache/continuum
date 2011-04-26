@@ -76,7 +76,7 @@ public abstract class AbstractUserRolesManagementTest
 	{
 		assertPage( "[Admin] User Edit" );
 		assertTextPresent( "[Admin] User Roles" );
-		String userRoles = "Username,Full Name,Email,redback-xwork-integration-core,Redback XWork Integration Security Core,Guest,Registered User,System Administrator,User Administrator,Continuum Group Project Administrator,Continuum Group Project Developer,Continuum Group Project User,Continuum Manage Build Environments,Continuum Manage Build Templates,Continuum Manage Installations,Continuum Manage Local Repositories,Continuum Manage Purging,Continuum Manage Queues,Continuum Manage Scheduling,Project Administrator,Project Developer,Project User,Default Project Group";
+		String userRoles = "Username,Full Name,Email,Guest,Registered User,System Administrator,User Administrator,Continuum Group Project Administrator,Continuum Group Project Developer,Continuum Group Project User,Continuum Manage Build Environments,Continuum Manage Build Templates,Continuum Manage Installations,Continuum Manage Local Repositories,Continuum Manage Purging,Continuum Manage Queues,Continuum Manage Scheduling,Project Administrator,Project Developer,Project User,Default Project Group";
 		String[] arrayUserRoles = userRoles.split( "," );
 			for ( String userroles : arrayUserRoles )
 				assertTextPresent( userroles );

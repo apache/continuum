@@ -127,6 +127,7 @@ public class BuildAgentsTest
 
     @Test( dependsOnMethods = { "testAddAnExistingBuildAgent" } )
     public void testDeleteBuildAgent()
+        throws Exception
     {
         try
         {
@@ -302,7 +303,7 @@ public class BuildAgentsTest
             enableDistributedBuilds();
             goToAddBuildAgentGroup();
             addEditBuildAgentGroup( "", new String[] {}, new String[] {}, false );
-            assertTextPresent( "Build agent group name required." );
+            assertTextPresent( "Build agent group name is required." );
         }
         finally
         {

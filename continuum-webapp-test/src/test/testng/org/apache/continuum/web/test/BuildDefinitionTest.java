@@ -79,6 +79,22 @@ public class BuildDefinitionTest
         clickButtonWithValue( "Save" );
         assertTextPresent( "Build file is required and cannot contain spaces only" );
     }
+    
+    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    public void testAddGroupBuildDefinitionWithXSS()
+        throws Exception
+    {
+        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
+        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
+        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
+        clickButtonWithValue( "Add" );
+        setFieldValue( "buildFile", "<script>alert('xss')</script>" );
+        setFieldValue( "description", "<script>alert('xss')</script>" );
+        clickButtonWithValue( "Save" );
+        assertTextPresent( "Build file contains invalid characters." );
+        assertTextPresent( "Description contains invalid characters." );
+    }
 
     @Test( dependsOnMethods = { "testAddProjectGroup2" } )
     public void testBuildFromGroupBuildDefinition()

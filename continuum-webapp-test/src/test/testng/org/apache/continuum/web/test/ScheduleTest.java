@@ -69,6 +69,28 @@ public class ScheduleTest
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true, true );
     }
+    
+    @Test( dependsOnMethods = { "testAddScheduleNoBuildQueueToBeUsed" } )
+    public void testAddScheduleWithInvalidValues()
+    {
+        String SCHEDULE_NAME = "!@#$<>?etc";
+        String SCHEDULE_DESCRIPTION = "![]<>'^&etc";
+        String SCHEDULE_EXPR_SECOND = getProperty( "SCHEDULE_EXPR_SECOND" );
+        String SCHEDULE_EXPR_MINUTE = getProperty( "SCHEDULE_EXPR_MINUTE" );
+        String SCHEDULE_EXPR_HOUR = getProperty( "SCHEDULE_EXPR_HOUR" );
+        String SCHEDULE_EXPR_DAY_MONTH = getProperty( "SCHEDULE_EXPR_DAY_MONTH" );
+        String SCHEDULE_EXPR_MONTH = getProperty( "SCHEDULE_EXPR_MONTH" );
+        String SCHEDULE_EXPR_DAY_WEEK = getProperty( "SCHEDULE_EXPR_DAY_WEEK" );
+        String SCHEDULE_EXPR_YEAR = getProperty( "SCHEDULE_EXPR_YEAR" );
+        String SCHEDULE_MAX_TIME = getProperty( "SCHEDULE_MAX_TIME" );
+        String SCHEDULE_PERIOD = getProperty( "SCHEDULE_PERIOD" );
+        goToAddSchedule();
+        addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
+                         SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
+                         SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true, false );
+        assertTextPresent( "Name contains invalid characters." );
+        assertTextPresent( "Description contains invalid characters." );
+    }
 
     public void testAddInvalidSchedule()
     {
