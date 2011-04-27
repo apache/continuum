@@ -23,6 +23,7 @@ import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,7 +136,9 @@ public class DeleteProjectAction
             }
             else
             {
-                projectGroupName = getContinuum().getProjectGroupByProjectId( projectId ).getName();
+                ProjectGroup group = getContinuum().getProjectGroupByProjectId( projectId );
+                projectGroupName = group.getName();
+                projectGroupId = group.getId();
             }
         }
 
