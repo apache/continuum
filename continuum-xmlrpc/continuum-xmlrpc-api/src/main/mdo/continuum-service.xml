@@ -1497,6 +1497,49 @@
           <type>String</type>
         </field>
       </fields>
+    </class>
+
+    <class>
+      <name>ProjectScmRoot</name>
+      <version>1.4.1+</version>
+      <packageName>org.apache.maven.continuum.xmlrpc.project</packageName>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.4.1+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
+          <name>scmRootAddress</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+          <required>true</required>
+        </field>
+        <field>
+          <name>oldState</name>
+          <version>1.4.1+</version>
+          <type>int</type>
+        </field>
+        <field jpox.column="scmRootState">
+          <name>state</name>
+          <version>1.4.1+</version>
+          <type>int</type>
+        </field>
+        <field stash.maxSize="8192">
+          <name>error</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectGroup</name>
+          <version>1.4.1+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>ProjectGroup</type>
+          </association>
+          <required>true</required>
+        </field>
+      </fields>
     </class>    
   </classes>
 </model>

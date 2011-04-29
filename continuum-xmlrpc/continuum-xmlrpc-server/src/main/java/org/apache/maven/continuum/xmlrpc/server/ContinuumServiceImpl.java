@@ -40,7 +40,6 @@ import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.SystemConfigurationDao;
-import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
@@ -75,6 +74,7 @@ import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
+import org.apache.maven.continuum.xmlrpc.project.ProjectScmRoot;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
@@ -719,6 +719,41 @@ public class ContinuumServiceImpl
     }
 
     // ----------------------------------------------------------------------
+    // SCM roots
+    // ----------------------------------------------------------------------
+
+    public List<ProjectScmRoot> getProjectScmRootByProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
+        List<org.apache.continuum.model.project.ProjectScmRoot> projectScmRoots =
+            continuum.getProjectScmRootByProjectGroup( projectGroupId );
+
+        List<ProjectScmRoot> result = new ArrayList<ProjectScmRoot>( projectScmRoots.size() );
+        if ( projectScmRoots != null )
+        {
+            for ( org.apache.continuum.model.project.ProjectScmRoot projectScmRoot : projectScmRoots )
+            {
+                result.add( populateProjectScmRoot( projectScmRoot ) );
+            }
+        }
+
+        return result;
+    }
+
+    public ProjectScmRoot getProjectScmRootByProject( int projectId )
+        throws ContinuumException
+    {
+        org.apache.continuum.model.project.ProjectScmRoot projectScmRoot =
+            continuum.getProjectScmRootByProject( projectId );
+
+        checkViewProjectGroupAuthorization( projectScmRoot.getProjectGroup().getName() );
+
+        return populateProjectScmRoot( projectScmRoot );
+    }
+
+    // ----------------------------------------------------------------------
     // Build Results
     // ----------------------------------------------------------------------
 
@@ -1357,7 +1392,8 @@ public class ContinuumServiceImpl
                 {
                     if ( buildAgentUrl != null )
                     {
-                        ProjectScmRoot scmRoot = continuum.getProjectScmRootByProject( projectId );
+                        org.apache.continuum.model.project.ProjectScmRoot scmRoot =
+                            continuum.getProjectScmRootByProject( projectId );
                         dbm.removeFromPrepareBuildQueue( buildAgentUrl, scmRoot.getProjectGroup().getId(),
                                                          scmRoot.getId() );
                     }
@@ -1398,7 +1434,8 @@ public class ContinuumServiceImpl
 
                 if ( parallelBuildsManager.isInPrepareBuildQueue( projectId ) )
                 {
-                    ProjectScmRoot scmRoot = continuum.getProjectScmRootByProject( projectId );
+                    org.apache.continuum.model.project.ProjectScmRoot scmRoot =
+                        continuum.getProjectScmRootByProject( projectId );
                     parallelBuildsManager.removeProjectFromPrepareBuildQueue( scmRoot.getProjectGroup().getId(),
                                                                               scmRoot.getId() );
                 }
@@ -1936,6 +1973,11 @@ public class ContinuumServiceImpl
     private Project populateProject( org.apache.maven.continuum.model.project.Project project )
     {
         return (Project) mapper.map( project, Project.class );
+    }
+
+    private ProjectScmRoot populateProjectScmRoot( org.apache.continuum.model.project.ProjectScmRoot projectScmRoot )
+    {
+        return (ProjectScmRoot) mapper.map( projectScmRoot, ProjectScmRoot.class );
     }
 
     private org.apache.maven.continuum.model.project.Project populateProject( ProjectSummary projectSummary,
@@ -3544,5 +3586,4 @@ public class ContinuumServiceImpl
     {
         this.continuum = continuum;
     }
-
 }

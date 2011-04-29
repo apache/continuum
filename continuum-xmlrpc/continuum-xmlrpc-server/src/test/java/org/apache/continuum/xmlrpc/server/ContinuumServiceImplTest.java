@@ -1,9 +1,12 @@
 package org.apache.continuum.xmlrpc.server;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.Continuum;
@@ -187,7 +190,81 @@ public class ContinuumServiceImplTest
         assertEquals( 0, result );
     
     }
-    
+
+    public void testGetProjectScmRootByProjectGroup()
+        throws Exception
+    {
+        final ProjectGroup projectGroup = new ProjectGroup();
+        projectGroup.setName( "test-group" );
+        projectGroup.setId( 1 );
+
+        final List<ProjectScmRoot> scmRoots = new ArrayList<ProjectScmRoot>();
+
+        ProjectScmRoot scmRoot = new ProjectScmRoot();
+        scmRoot.setState( 1 );
+        scmRoot.setOldState( 3 );
+        scmRoot.setScmRootAddress( "address1" );
+        scmRoot.setProjectGroup( projectGroup );
+        scmRoots.add( scmRoot );
+
+        scmRoot = new ProjectScmRoot();
+        scmRoot.setState( 2 );
+        scmRoot.setOldState( 4 );
+        scmRoot.setScmRootAddress( "address2" );
+        scmRoot.setProjectGroup( projectGroup );
+        scmRoots.add( scmRoot );
+
+        context.checking( new Expectations()
+        {
+            {
+                atLeast( 1 ).of( continuum ).getProjectScmRootByProjectGroup( projectGroup.getId() );
+                will( returnValue( scmRoots ) );
+
+                atLeast( 1 ).of( continuum ).getProjectGroup( projectGroup.getId() );
+                will( returnValue( projectGroup ) );
+            }
+        } );
+
+        List<org.apache.maven.continuum.xmlrpc.project.ProjectScmRoot> projectScmRoots =
+            continuumService.getProjectScmRootByProjectGroup( projectGroup.getId() );
+        assertEquals( 2, projectScmRoots.size() );
+        assertEquals( 1, projectScmRoots.get( 0 ).getState() );
+        assertEquals( 2, projectScmRoots.get( 1 ).getState() );
+    }
+
+    public void testGetProjectScmRootByProject()
+        throws Exception
+    {
+        final ProjectGroup projectGroup = new ProjectGroup();
+        projectGroup.setName( "test-group" );
+        projectGroup.setId( 1 );
+
+        final int projectId = 1;
+
+        final ProjectScmRoot scmRoot = new ProjectScmRoot();
+        scmRoot.setState( 1 );
+        scmRoot.setOldState( 3 );
+        scmRoot.setScmRootAddress( "address1" );
+        scmRoot.setProjectGroup( projectGroup );
+
+        context.checking( new Expectations()
+        {
+            {
+                atLeast( 1 ).of( continuum ).getProjectScmRootByProject( projectId );
+                will( returnValue( scmRoot ) );
+            }
+        } );
+
+        org.apache.maven.continuum.xmlrpc.project.ProjectScmRoot projectScmRoot =
+            continuumService.getProjectScmRootByProject( projectId );
+        assertNotNull( projectScmRoot );
+        assertEquals( 1, projectScmRoot.getState() );
+        assertEquals( 3, projectScmRoot.getOldState() );
+        assertEquals( "address1", projectScmRoot.getScmRootAddress() );
+        assertEquals( projectGroup.getName(), projectScmRoot.getProjectGroup().getName() );
+        assertEquals( projectGroup.getId(), projectScmRoot.getProjectGroup().getId() );
+    }
+
     private BuildDefinition createBuildDefinition()
     {
         BuildDefinition buildDef = new BuildDefinition();

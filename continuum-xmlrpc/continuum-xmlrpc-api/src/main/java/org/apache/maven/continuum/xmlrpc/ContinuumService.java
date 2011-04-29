@@ -39,6 +39,7 @@ import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
+import org.apache.maven.continuum.xmlrpc.project.ProjectScmRoot;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
@@ -583,6 +584,30 @@ public interface ContinuumService
      * @throws Exception
      */
     int buildGroup( int projectGroupId, int buildDefinitionId )
+        throws Exception;
+
+    // ----------------------------------------------------------------------
+    // SCM roots
+    // ----------------------------------------------------------------------
+
+    /**
+     * Get the SCM roots for all projects in a project group
+     * 
+     * @param projectGroupId the project group id
+     * @return
+     * @throws Exception
+     */
+    List<ProjectScmRoot> getProjectScmRootByProjectGroup( int projectGroupId )
+        throws Exception;
+
+    /**
+     * Get the SCM root for a specific project
+     * 
+     * @param projectId the project id
+     * @return
+     * @throws Exception
+     */
+    ProjectScmRoot getProjectScmRootByProject( int projectId )
         throws Exception;
 
     // ----------------------------------------------------------------------
