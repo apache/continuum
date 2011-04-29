@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
@@ -243,6 +244,10 @@ public class BuildDefinitionTemplateAction
         throws Exception
     {
         Schedule schedule = null;
+
+        // need to escape xml to prevent xss attacks
+        buildDefinition.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( buildDefinition.getDescription() ) ) );
+
         if ( buildDefinition.getProfile() != null )
         {
             Profile profile = getContinuum().getProfileService().getProfile( buildDefinition.getProfile().getId() );

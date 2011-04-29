@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.ComparatorUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
@@ -45,7 +46,6 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
-import org.apache.continuum.web.util.RegexPatternConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -169,6 +169,14 @@ public class ProjectGroupAction
         randomizer = new SecureRandom();
     }
 
+    public void prepare()
+        throws Exception
+    {
+        super.prepare();
+    
+        repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
+    }
+    
     public String summary()
         throws ContinuumException
     {
@@ -484,37 +492,15 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        
-        if ( name != null )
+
+        for ( ProjectGroup projectGroup : getContinuum().getAllProjectGroups() )
         {
-            if ( name.equals( "" ) )
+            if ( name.equals( projectGroup.getName() ) && projectGroup.getId() != projectGroupId )
             {
-                addActionError( getText( "projectGroup.error.name.required" ) );
-            }
-            else if ( name.trim().equals( "" ) )
-            {
-                addActionError( getText( "projectGroup.error.name.cannot.be.spaces" ) );
-            }
-            else if ( !name.trim().matches( RegexPatternConstants.NAME_REGEX ) )
-            {
-                addActionError( getText( "projectGroup.error.name.invalid" ) );
-            }
-            else
-            {
-                name = name.trim();
-                for ( ProjectGroup projectGroup : getContinuum().getAllProjectGroups() )
-                {
-                    if ( name.equals( projectGroup.getName() ) && projectGroup.getId() != projectGroupId )
-                    {
-                        addActionError( getText( "projectGroup.error.name.already.exists" ) );
-                    }
-                }
+                addActionError( getText( "projectGroup.error.name.already.exists" ) );
             }
         }
-        if ( description != null && !description.trim().matches( RegexPatternConstants.DESCRIPTION_REGEX ) )
-        {
-            addActionError( getText( "projectGroup.error.description.invalid" ) );
-        }
+
         if ( hasActionErrors() )
         {
             initialize();
@@ -544,7 +530,7 @@ public class ProjectGroupAction
 
         }
 
-        projectGroup.setDescription( description );
+        projectGroup.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( description ) ) );
 
         // [CONTINUUM-2228]. In select field can't select empty values.
         if ( repositoryId > 0 )

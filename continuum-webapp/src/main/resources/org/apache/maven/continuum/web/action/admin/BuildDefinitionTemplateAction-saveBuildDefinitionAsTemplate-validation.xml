@@ -35,10 +35,6 @@
     <field-validator type="requiredstring">
       <message key="buildDefinition.description.required"/>
     </field-validator>
-    <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
-      <message key="buildDefinition.description.invalid"/>
-    </field-validator>
   </field>
   <field name="buildDefinition.goals">
     <field-validator type="regex">

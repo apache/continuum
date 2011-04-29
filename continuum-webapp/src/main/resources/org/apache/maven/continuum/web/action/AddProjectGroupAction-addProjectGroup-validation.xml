@@ -24,11 +24,20 @@
 <validators>
   <field name="name">
     <field-validator type="requiredstring">
-      <message key="projectGroup.name.required"/>
+      <message key="addProjectGroup.name.required"/>
     </field-validator>
     <field-validator type="regex">
       <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
-      <message key="projectGroup.name.invalid"/>
+      <message key="addProjectGroup.name.invalid"/>
+    </field-validator>
+  </field>
+  <field name="groupId">
+    <field-validator type="requiredstring">
+      <message key="addProjectGroup.groupId.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[a-zA-Z0-9.\\s]*]]></param>
+      <message key="addProjectGroup.groupId.invalid"/>
     </field-validator>
   </field>
 </validators>

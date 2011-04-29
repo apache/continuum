@@ -165,6 +165,9 @@ public class BuildAgentAction
 
         ConfigurationService configuration = getContinuum().getConfiguration();
 
+        // escape xml to prevent xss attacks
+        buildAgent.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( buildAgent.getDescription() ) ) );
+
         if ( configuration.getBuildAgents() != null )
         {
             for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )

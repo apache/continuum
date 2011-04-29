@@ -34,12 +34,7 @@
   </field>
   <field name="description">
     <field-validator type="requiredstring">
-      <message key="schedule.version.required"/>
-    </field-validator>
-    <field-validator type="regex">
-      <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.\s-]*]]></param>
-      <message key="schedule.version.invalid"/>
+      <message key="schedule.description.required"/>
     </field-validator>
   </field>
   <field name="maxJobExecutionTime">

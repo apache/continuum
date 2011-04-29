@@ -46,11 +46,4 @@
       <message key="buildDefinition.arguments.invalid"/>
     </field-validator>
   </field>
-  <field name="description">
-    <field-validator type="regex">
-      <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.\s-]*]]></param>
-      <message key="buildDefinition.description.invalid"/>
-    </field-validator>
-  </field>
 </validators>

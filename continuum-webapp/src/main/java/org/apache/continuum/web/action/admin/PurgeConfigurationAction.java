@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -35,12 +36,10 @@ import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
-import org.apache.maven.continuum.web.action.ScheduleAction;
 import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
@@ -547,7 +546,8 @@ public class PurgeConfigurationAction
         repoPurge.setRetentionCount( this.retentionCount );
         repoPurge.setEnabled( this.enabled );
         repoPurge.setDefaultPurge( this.defaultPurgeConfiguration );
-        repoPurge.setDescription( this.description );
+        // escape xml to prevent xss attacks
+        repoPurge.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( this.description ) ) );
         repoPurge.setDefaultPurge( this.defaultPurgeConfiguration );
 
         if ( repositoryId != 0 )
@@ -573,7 +573,8 @@ public class PurgeConfigurationAction
         dirPurge.setEnabled( this.enabled );
         dirPurge.setDaysOlder( this.daysOlder );
         dirPurge.setRetentionCount( this.retentionCount );
-        dirPurge.setDescription( this.description );
+        // escape xml to prevent xss attacks
+        dirPurge.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( this.description ) ) );
         dirPurge.setDirectoryType( this.directoryType );
         dirPurge.setDefaultPurge( this.defaultPurgeConfiguration );
 

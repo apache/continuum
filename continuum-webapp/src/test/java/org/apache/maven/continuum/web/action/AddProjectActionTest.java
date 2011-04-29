@@ -44,24 +44,14 @@ public class AddProjectActionTest
 
     private static final String VALID_NAME_CHARACTER = "abcABC123whitespaces_.:-";
     
-    private static final String INVALID_NAME_CHARACTER = "!@#$<>?etc";
-    
     private static final String VALID_VERSION_CHARACTER = "abcABC123.-";
-    
-    private static final String INVALID_VERSION_CHARACTER = "<>whitespaces!#etc";
-    
+
     private static final String VALID_SCM_URL_CHARACTER = "abcABC123_.:-#~=@\\/|[]";
     
-    private static final String INVALID_SCM_URL_CHARACTER = "!<>*%etc";
-    
     private static final String VALID_SCM_TAG_CHARACTER = "abcABC123_.:-#~=@\\/|[]";
-    
-    private static final String INVALID_SCM_TAG_CHARACTER = "!<>*%etc";
 
     private static final String VALID_DESCRIPTION_CHARACTER = "abcABC123whitespaces_.-";
-    
-    private static final String INVALID_DESCRIPTION_CHARACTER = "![]<>'^&etc";
-    
+
     protected void setUp()
         throws Exception
     {
@@ -144,25 +134,6 @@ public class AddProjectActionTest
         continuumMock.verify();
     }
 
-    public void testAddAntProjectWithInvalidValues()
-    {
-        action.setProjectName( INVALID_NAME_CHARACTER );
-        action.setProjectDescription( INVALID_DESCRIPTION_CHARACTER );
-        action.setProjectVersion( INVALID_VERSION_CHARACTER );
-        action.setProjectScmUrl( INVALID_SCM_URL_CHARACTER );
-        action.setProjectScmTag( INVALID_SCM_TAG_CHARACTER );
-        action.setProjectType( "ant" );
-        action.setSelectedProjectGroup( 1 );
-        action.setBuildDefintionTemplateId( 1 );
-
-        // validate
-        action.validate();
-
-        // verify
-        assertTrue( action.hasActionErrors() );
-        assertEquals( 5, action.getActionErrors().size() );
-    }
-
     /**
      * Test add of Shell project
      *
@@ -216,25 +187,6 @@ public class AddProjectActionTest
         action.add();
 
         continuumMock.verify();
-    }
-
-    public void testAddShellProjectWithInvalidValues()
-    {
-        action.setProjectName( INVALID_NAME_CHARACTER );
-        action.setProjectDescription( INVALID_DESCRIPTION_CHARACTER );
-        action.setProjectVersion( INVALID_VERSION_CHARACTER );
-        action.setProjectScmUrl( INVALID_SCM_URL_CHARACTER );
-        action.setProjectScmTag( INVALID_SCM_TAG_CHARACTER );
-        action.setProjectType( "shell" );
-        action.setSelectedProjectGroup( 1 );
-        action.setBuildDefintionTemplateId( 1 );
-
-        // validate
-        action.validate();
-
-        // verify
-        assertTrue( action.hasActionErrors() );
-        assertEquals( 5, action.getActionErrors().size() );
     }
 
     private List<Project> createProjectList()

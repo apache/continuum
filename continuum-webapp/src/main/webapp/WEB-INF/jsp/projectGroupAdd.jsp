@@ -30,8 +30,7 @@
         <h3><s:text name="projectGroup.add.section.title"/></h3>
 
         <div class="axial">
-          <s:url id="actionUrl" action="addProjectGroup" includeContext="false" />
-          <s:form action="%{actionUrl}" method="post" >
+          <s:form action="addProjectGroup" method="post" validate="true">
             <c:if test="${!empty actionErrors}">
               <div class="errormessage">
                 <s:iterator value="actionErrors">
