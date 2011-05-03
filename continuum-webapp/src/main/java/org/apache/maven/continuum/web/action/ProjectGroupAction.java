@@ -19,7 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,12 +26,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildmanager.BuildManagerException;
@@ -50,7 +46,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.bean.ProjectGroupUserBean;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.struts2.interceptor.TokenInterceptor;
 import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
 import org.codehaus.plexus.redback.rbac.RbacObjectNotFoundException;
@@ -110,8 +105,6 @@ public class ProjectGroupAction
 
     private Map<Integer, String> projectGroups = new HashMap<Integer, String>();
 
-    private boolean confirmed;
-
     private boolean projectInCOQueue = false;
 
     private Collection<Project> projectList;
@@ -148,21 +141,6 @@ public class ProjectGroupAction
     private boolean disabledRepositories = true;
 
     private List<ProjectScmRoot> projectScmRoots;
-
-    private Random randomizer;
-
-    private String encodedRandomVal;
-
-    private static List<String> encodedRandomValCache =  new LinkedList();
-
-    private boolean explicitCSRFCheck = false;
-
-    private static final int CACHE_MAX_SIZE = 30;
-
-    public ProjectGroupAction()
-    {
-        randomizer = new SecureRandom();
-    }
 
     public String summary()
         throws ContinuumException
@@ -264,19 +242,6 @@ public class ProjectGroupAction
             projectScmRoots = getContinuum().getProjectScmRootByProjectGroup( projectGroup.getId() );
         }
 
-        // explicit csrf check for CONTINUUM-2622
-        encodedRandomVal = generateEncodedRandomVal();
-
-        synchronized( encodedRandomValCache )
-        {
-            // check size of cache first before adding anything in the cache
-            if( encodedRandomValCache.size() == CACHE_MAX_SIZE )
-            {
-                ( ( LinkedList ) encodedRandomValCache ).removeFirst();
-            }
-            encodedRandomValCache.add( decodeRandomVal( encodedRandomVal ) );
-        }
-
         return SUCCESS;
     }
 
@@ -333,41 +298,15 @@ public class ProjectGroupAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if ( confirmed )
+        try
         {
-            try
-            {
-                getContinuum().removeProjectGroup( projectGroupId );
-            }
-            catch ( ContinuumException e )
-            {
-                logger.error( "Error while removing project group with id " + projectGroupId, e );
-                addActionError( getText( "projectGroup.delete.error", "Unable to remove project group",
-                                         Integer.toString( projectGroupId ) ) );
-            }
+            getContinuum().removeProjectGroup( projectGroupId );
         }
-        else
+        catch ( ContinuumException e )
         {
-            // explicit CSRF check for CONTINUUM-2622 - need to explicitly implement for remove project group because <s:token/> doesn't work
-            //   in project group summary as there is a <s:action> whose result is being executed in the page causing a double submission
-            if( explicitCSRFCheck  )
-            {
-                if( StringUtils.isEmpty( encodedRandomVal ) || !encodedRandomValCache.contains( decodeRandomVal( encodedRandomVal ) ) )
-                {
-                    logger.error( "Token not found in cache!" );
-                    addActionError( getText( "projectGroup.remove.invalid.token", "Action not allowed to continue - invalid token found!" ) );
-                    return TokenInterceptor.INVALID_TOKEN_CODE;
-                }
-                else
-                {
-                    logger.info( "Token found in cache.." );
-                    // remove it from the cache if found and let the action continue
-                    encodedRandomValCache.remove( decodeRandomVal( encodedRandomVal ) );  
-                }
-            }
-
-            name = getProjectGroupName();
-            return CONFIRM;
+            logger.error( "Error while removing project group with id " + projectGroupId, e );
+            addActionError( getText( "projectGroup.delete.error", "Unable to remove project group",
+                                     Integer.toString( projectGroupId ) ) );
         }
 
         AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.REMOVE_PROJECT_GROUP );
@@ -376,6 +315,23 @@ public class ProjectGroupAction
         event.log();
 
         return SUCCESS;
+    }
+
+    public String confirmRemove()
+        throws ContinuumException
+    {
+        try
+        {
+            checkRemoveProjectGroupAuthorization( getProjectGroupName() );
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+
+        name = getProjectGroupName();
+        return CONFIRM;
     }
 
     private void initialize()
@@ -885,42 +841,6 @@ public class ProjectGroupAction
         } );
     }
 
-    protected String generateEncodedRandomVal()
-    {
-        String encodedRandomVale;
-
-        byte[] random =  new byte[16];
-        randomizer.nextBytes( random );
-        byte[] all = new byte[17];
-
-        for( int i = 0; i < random.length; i++ )
-        {
-            all[i] = random[i];
-        }
-
-        // include time to ensure uniqueness
-        byte time = ( byte ) System.currentTimeMillis();
-        all[16] = time;
-
-        // encode as string
-        encodedRandomVale = Base64.encodeBase64String( all );
-
-        return encodedRandomVale;
-    }
-
-    protected String decodeRandomVal( String encodedRandomVal )
-    {
-        byte[] randomValInBytes = Base64.decodeBase64( encodedRandomVal );
-
-        String decodedRandomVal = "";
-        if( randomValInBytes != null )
-        {
-            decodedRandomVal = new String( randomValInBytes );
-        }
-
-        return decodedRandomVal;
-    }
-
     public int getProjectGroupId()
     {
         return projectGroupId;
@@ -939,16 +859,6 @@ public class ProjectGroupAction
     public void setProjectGroup( ProjectGroup projectGroup )
     {
         this.projectGroup = projectGroup;
-    }
-
-    public boolean isConfirmed()
-    {
-        return confirmed;
-    }
-
-    public void setConfirmed( boolean confirmed )
-    {
-        this.confirmed = confirmed;
     }
 
     public String getDescription()
@@ -1187,25 +1097,5 @@ public class ProjectGroupAction
     public void setSorterProperty( String sorterProperty )
     {
         this.sorterProperty = sorterProperty;
-    }
-
-    public String getEncodedRandomVal()
-    {
-        return encodedRandomVal;
-    }
-
-    public void setEncodedRandomVal( String encodedRandomVal )
-    {
-        this.encodedRandomVal = encodedRandomVal;
-    }
-
-    public boolean isExplicitCSRFCheck()
-    {
-        return explicitCSRFCheck;
-    }
-
-    public void setExplicitCSRFCheck( boolean explicitCSRFCheck )
-    {
-        this.explicitCSRFCheck = explicitCSRFCheck;
     }
 }

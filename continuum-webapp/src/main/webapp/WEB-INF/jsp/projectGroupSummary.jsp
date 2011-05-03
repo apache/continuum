@@ -170,10 +170,7 @@
             </td>
             <td>
               <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
-                <form action="removeProjectGroup.action" method="post">
-                  <s:token/>
-                  <input type="hidden" name="encodedRandomVal" value="<s:property value="encodedRandomVal"/>"/>
-                  <input type="hidden" name="explicitCSRFCheck" value="true"/>
+                <form action="confirmRemoveProjectGroup.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                   <input type="submit" name="remove" value="<s:text name="projectGroup.deleteGroup"/>"/>
                 </form>

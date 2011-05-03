@@ -31,7 +31,6 @@
 
     <interceptors>
       <interceptor name="continuumConfigurationCheck" class="forceContinuumConfigurationInterceptor"/>
-      <interceptor name="continuumTokenSessionCheck" class="continuumTokenSessionInterceptor"/>
       <interceptor name="redbackForceAdminUser" class="redbackForceAdminUserInterceptor"/>
       <interceptor name="redbackSecureActions" class="redbackSecureActionInterceptor"/>
       <interceptor name="redbackAutoLogin" class="redbackAutoLoginInterceptor"/>
@@ -48,7 +47,7 @@
         </interceptor-ref>
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="continuumConfigurationCheck"/>
-        <interceptor-ref name="continuumTokenSessionCheck">
+        <interceptor-ref name="tokenSession">
           <param name="excludeMethods">*</param>
         </interceptor-ref>
         <interceptor-ref name="validation">
@@ -67,9 +66,6 @@
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="redbackSecureActions">
           <param name="enableReferrerCheck">false</param>
-        </interceptor-ref>
-        <interceptor-ref name="continuumTokenSessionCheck">
-          <param name="excludeMethods">*</param>
         </interceptor-ref>
         <interceptor-ref name="validation">
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
@@ -369,11 +365,15 @@
       <result name="to_summary_page" type="chain">groupSummary</result>
     </action>
 
+    <action name="confirmRemoveProjectGroup" class="projectGroup" method="confirmRemove">
+      <interceptor-ref name="storeStack"/>
+      <result name="confirm">/WEB-INF/jsp/confirmGroupRemoval.jsp</result>
+    </action>
+
     <action name="removeProjectGroup" class="projectGroup" method="remove">
       <interceptor-ref name="storeStack">
-        <param name="continuumTokenSessionCheck.includeMethods">remove</param>
+        <param name="tokenSession.includeMethods">remove</param>
       </interceptor-ref>
-      <result name="confirm">/WEB-INF/jsp/confirmGroupRemoval.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">groupSummary</param>
       </result>
@@ -499,7 +499,7 @@
       <result name="success" type="chain">schedules</result>
       <result name="error" type="chain">schedule</result>
       <interceptor-ref name="configuredContinuumStack">
-        <param name="continuumTokenSessionCheck.includeMethods">remove</param>
+        <param name="tokenSession.includeMethods">remove</param>
       </interceptor-ref>
     </action>
 
@@ -983,7 +983,7 @@
     
     <action name="removeRepository" class="localRepository" method="remove">
       <interceptor-ref name="storeStack">
-        <param name="continuumTokenSessionCheck.includeMethods">remove</param>
+        <param name="tokenSession.includeMethods">remove</param>
       </interceptor-ref>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteLocalRepository.jsp</result>
       <result name="success" type="redirect-action">
@@ -1028,7 +1028,7 @@
         <param name="actionName">purgeConfigList</param>
       </result>
       <interceptor-ref name="configuredContinuumStack">
-        <param name="continuumTokenSessionCheck.includeMethods">remove</param>
+        <param name="tokenSession.includeMethods">remove</param>
       </interceptor-ref>
     </action>
     
