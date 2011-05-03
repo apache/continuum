@@ -365,7 +365,7 @@ public class ContinuumXmlRpcClient
     public ProjectScmRoot getProjectScmRootByProject( int projectId )
         throws Exception
     {
-        return getProjectScmRootByProject( projectId );
+        return continuum.getProjectScmRootByProject( projectId );
     }
 
     // ----------------------------------------------------------------------
