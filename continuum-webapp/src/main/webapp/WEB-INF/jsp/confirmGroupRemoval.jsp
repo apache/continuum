@@ -30,8 +30,6 @@
         <div class="axial">
         <s:form action="removeProjectGroup" method="post">
           <s:hidden name="projectGroupId"/>
-          <s:hidden name="confirmed" value="true"/>
-          <s:hidden name="explicitCSRFCheck" value="false"/>
           <s:token/>
           <s:actionerror/>
 
