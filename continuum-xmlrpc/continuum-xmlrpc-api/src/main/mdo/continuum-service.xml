@@ -1531,15 +1531,7 @@
           <version>1.4.1+</version>
           <type>String</type>
         </field>
-        <field>
-          <name>projectGroup</name>
-          <version>1.4.1+</version>
-          <association xml.reference="true" stash.part="true" jpox.dependent="false">
-            <type>ProjectGroup</type>
-          </association>
-          <required>true</required>
-        </field>
       </fields>
-    </class>    
+    </class>
   </classes>
 </model>

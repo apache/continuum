@@ -235,7 +235,7 @@ public class ContinuumServiceImplTest
     public void testGetProjectScmRootByProject()
         throws Exception
     {
-        final ProjectGroup projectGroup = new ProjectGroup();
+        final ProjectGroup projectGroup = new ProjectGroupStub();
         projectGroup.setName( "test-group" );
         projectGroup.setId( 1 );
 
@@ -261,8 +261,6 @@ public class ContinuumServiceImplTest
         assertEquals( 1, projectScmRoot.getState() );
         assertEquals( 3, projectScmRoot.getOldState() );
         assertEquals( "address1", projectScmRoot.getScmRootAddress() );
-        assertEquals( projectGroup.getName(), projectScmRoot.getProjectGroup().getName() );
-        assertEquals( projectGroup.getId(), projectScmRoot.getProjectGroup().getId() );
     }
 
     private BuildDefinition createBuildDefinition()
@@ -287,5 +285,17 @@ public class ContinuumServiceImplTest
         map.put( "release-phases", Arrays.asList( "incomplete-phase" ) );
         map.put( "completed-release-phases", Arrays.asList( "completed-phase" ) );
         return map;
+    }
+
+    public class ProjectGroupStub
+        extends ProjectGroup
+    {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public List<Project> getProjects()
+        {
+            throw new RuntimeException( "Can't call getProjects as it will throw JDODetachedFieldAccessException" );
+        }
     }
 }
