@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
@@ -85,7 +87,6 @@ import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
-import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,6 +101,48 @@ import net.sf.dozer.util.mapping.MapperIF;
 public class ContinuumServiceImpl
     extends AbstractContinuumSecureService
 {
+    private static final String NAME_VALID_EXPRESSION = "[a-zA-Z0-9_.\\s\\-]*";
+
+    private static final String DIRECTORY_VALID_EXPRESSION = "[A-Za-z0-9_/\\s:.\\\\-]*";
+
+    private static final String URL_VALID_EXPRESSION = "[A-Za-z0-9_.@:/-]*";
+
+    private static final String PROJECT_VERSION_VALID_EXPRESSION = "[a-zA-Z0-9.-]*";
+
+    private static final String PROJECT_SCM_URL_VALID_EXPRESSION = "[a-zA-Z0-9_.:${}#~=@\\/|\\[\\]-]*";
+
+    private static final String PROJECT_SCM_TAG_VALID_EXPRESSION = "[a-zA-Z0-9_.:@\\/|#~=\\[\\]-]*";
+
+    private static final String PROJECT_GROUP_ID_VALID_EXPRESSION = "[A-Za-z0-9.]*";
+
+    private static final String PROJECT_ARTIFACT_ID_VALID_EXPRESSION = "[A-Za-z0-9\\-]*";
+
+    private static final String PROJECT_EXECUTOR_OR_BUILDDEF_TYPE_VALID_EXPRESSION = "maven2|maven-1|ant|shell";    
+
+    private static final String SCHEDULE_CRON_VALID_EXPRESSION = "[A-Z0-9\\s*/,-?#]*";
+
+    private static final String PROJECTGROUP_ID_VALID_EXPRESSION = "[a-zA-Z0-9.\\s]*";
+
+    private static final String REPOSITORY_LAYOUT_VALID_EXPRESSION = "default|legacy";
+
+    private static final String BUILD_DEFINITION_ARGUMENTS_VALID_EXPRESSION = "[A-Za-z0-9_./=,\":\\s\\\\-]*";
+
+    private static final String BUILD_DEFINITION_GOALS_VALID_EXPRESSION = "[A-Za-z0-9_:\\s\\-]*";
+
+    private static final String BUILD_DEFINITION_BUILD_FILE_VALID_EXPRESSION = "[A-Za-z0-9_.\\-]*";
+
+    private static final String INSTALLATION_VARNAME_VALID_EXPRESSION = "[A-Za-z][A-Za-z0-9_]*";
+
+    private static final String INSTALLATION_VARVALUE_VALID_EXPRESSION = "[A-Za-z0-9_.:=${}/\\s\\\\-]*";
+
+    private static final String INSTALLATION_TYPE_VALID_EXPRESSION = "jdk|maven2|maven1|ant|envvar";
+
+    private static final String DIRECTORY_TYPE_VALID_EXPRESSION = "releases|buildOutput";
+
+    private static final String NOTIFIER_TYPE_VALID_EXPRESSION = "irc|jabber|msn|mail|wagon";
+
+    private static final String USERNAME_VALID_EXPRESSION = "[a-zA-Z_0-9\\-.@]*";
+
     private static final MapperIF mapper = DozerBeanMapperSingletonWrapper.getInstance();
 
     private final Logger logger = LoggerFactory.getLogger( ContinuumServiceImpl.class );
@@ -194,6 +237,31 @@ public class ContinuumServiceImpl
     public ProjectSummary updateProject( ProjectSummary project )
         throws ContinuumException
     {
+        if ( StringUtils.isNotBlank( project.getName() ) && 
+                        !project.getName().matches( NAME_VALID_EXPRESSION ) )
+                        //!GenericValidator.matchRegexp( project.getName(), NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Name contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( project.getScmTag() ) && 
+                        !project.getScmTag().matches( PROJECT_SCM_TAG_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Scm Tag contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( project.getScmUrl() ) &&
+                        !project.getScmUrl().matches( PROJECT_SCM_URL_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Scm Url contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( project.getVersion() ) &&
+                        !project.getVersion().matches( PROJECT_VERSION_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Version contains invalid characters" );
+        }
+
         ProjectSummary ps = getProjectSummary( project.getId() );
 
         checkRemoveProjectFromGroupAuthorization( ps.getProjectGroup().getName() );
@@ -350,6 +418,11 @@ public class ContinuumServiceImpl
             throw new ContinuumException( "project group name can't be spaces" );
         }
 
+        if ( !projectGroup.getName().matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "ProjectGroup Name contains invalid characters" );
+        }
+
         org.apache.maven.continuum.model.project.ProjectGroup pg =
             continuum.getProjectGroupWithProjects( projectGroup.getId() );
 
@@ -371,7 +444,7 @@ public class ContinuumServiceImpl
             }
         }
 
-        pg.setDescription( projectGroup.getDescription() );
+        pg.setDescription( StringEscapeUtils.escapeXml( projectGroup.getDescription() ) );
 
         org.apache.continuum.model.repository.LocalRepository repo =
             new org.apache.continuum.model.repository.LocalRepository();
@@ -384,11 +457,23 @@ public class ContinuumServiceImpl
     public ProjectGroupSummary addProjectGroup( String groupName, String groupId, String description )
         throws Exception
     {
+        if ( StringUtils.isNotBlank( groupId ) &&
+                        !groupId.matches( PROJECTGROUP_ID_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "ProjectGroup Id contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( groupName ) &&
+                        !groupName.matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "ProjectGroup Name contains invalid characters" );
+        }
+
         org.apache.maven.continuum.model.project.ProjectGroup pg =
             new org.apache.maven.continuum.model.project.ProjectGroup();
         pg.setName( groupName );
         pg.setGroupId( groupId );
-        pg.setDescription( description );
+        pg.setDescription( StringEscapeUtils.escapeXml( description ) );
         continuum.addProjectGroup( pg );
         return populateProjectGroupSummary( continuum.getProjectGroupByGroupId( groupId ) );
     }
@@ -402,6 +487,11 @@ public class ContinuumServiceImpl
     public ProjectNotifier updateNotifier( int projectid, ProjectNotifier newNotifier )
         throws ContinuumException
     {
+        if ( StringUtils.isNotBlank( newNotifier.getType() ) &&
+             !newNotifier.getType().matches( NOTIFIER_TYPE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Notifier Type can only be 'irc, jabber, msn, mail or wagon" );
+        }
 
         org.apache.maven.continuum.model.project.ProjectNotifier notifier =
             continuum.getNotifier( projectid, newNotifier.getId() );
@@ -420,6 +510,11 @@ public class ContinuumServiceImpl
     public ProjectNotifier addNotifier( int projectid, ProjectNotifier newNotifier )
         throws ContinuumException
     {
+        if ( StringUtils.isNotBlank( newNotifier.getType() ) &&
+                        !newNotifier.getType().matches( NOTIFIER_TYPE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Notifier Type can only be 'irc, jabber, msn, mail or wagon'" );
+        }
 
         org.apache.maven.continuum.model.project.ProjectNotifier notifier =
             new org.apache.maven.continuum.model.project.ProjectNotifier();
@@ -451,6 +546,11 @@ public class ContinuumServiceImpl
     public ProjectNotifier updateGroupNotifier( int projectgroupid, ProjectNotifier newNotifier )
         throws ContinuumException
     {
+        if ( StringUtils.isNotBlank( newNotifier.getType() ) &&
+             !newNotifier.getType().matches( NOTIFIER_TYPE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Notifier Type can only be 'irc, jabber, msn, mail, or wagon" );
+        }
 
         org.apache.maven.continuum.model.project.ProjectNotifier notifier =
             continuum.getGroupNotifier( projectgroupid, newNotifier.getId() );
@@ -471,6 +571,13 @@ public class ContinuumServiceImpl
     {
         org.apache.maven.continuum.model.project.ProjectNotifier notifier =
             new org.apache.maven.continuum.model.project.ProjectNotifier();
+
+        if ( StringUtils.isNotBlank( newNotifier.getType() ) &&
+                        !newNotifier.getType().matches( NOTIFIER_TYPE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Notifier Type can only be 'irc, jabber, msn, mail or wagon" );
+        }
+
         notifier.setConfiguration( newNotifier.getConfiguration() );
         notifier.setFrom( newNotifier.getFrom() );
         notifier.setRecipientType( newNotifier.getRecipientType() );
@@ -1003,7 +1110,7 @@ public class ContinuumServiceImpl
         org.apache.maven.continuum.model.project.Schedule storedSchedule = continuum.getSchedule( schedule.getId() );
         storedSchedule.setActive( newSchedule.isActive() );
         storedSchedule.setName( newSchedule.getName() );
-        storedSchedule.setDescription( newSchedule.getDescription() );
+        storedSchedule.setDescription( StringEscapeUtils.escapeXml( newSchedule.getDescription() ) );
         storedSchedule.setDelay( newSchedule.getDelay() );
         storedSchedule.setCronExpression( newSchedule.getCronExpression() );
         storedSchedule.setMaxJobExecutionTime( newSchedule.getMaxJobExecutionTime() );
@@ -1844,7 +1951,7 @@ public class ContinuumServiceImpl
             configurationService.store();
             return populateBuildAgent( configurationService.getBuildAgent( buildAgentConfiguration.getUrl() ) );
         }
-        catch ( ConfigurationException e )
+        catch ( ContinuumException e )
         {
             throw new ConfigurationException( "Error in adding buildAgent", e );
         }
@@ -1862,22 +1969,29 @@ public class ContinuumServiceImpl
     public BuildAgentConfiguration updateBuildAgent( BuildAgentConfiguration buildAgentConfiguration )
         throws ConfigurationStoringException, ContinuumConfigurationException
     {
-        ConfigurationService configurationService = continuum.getConfiguration();
-        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
-            configurationService.getBuildAgent( buildAgentConfiguration.getUrl() );
-        BuildAgentConfiguration buildAgentConfigurationToUpdate = buildAgent != null ? populateBuildAgent( buildAgent ) : null;
-
-        if ( buildAgentConfigurationToUpdate != null )
+        try
         {
-            buildAgentConfigurationToUpdate.setDescription( buildAgentConfiguration.getDescription() );
-            buildAgentConfigurationToUpdate.setEnabled( buildAgentConfiguration.isEnabled() );
-            configurationService.updateBuildAgent( populateBuildAgent( buildAgentConfigurationToUpdate ) );
-            configurationService.store();
-            return populateBuildAgent( configurationService.getBuildAgent( buildAgentConfiguration.getUrl() ) );
+            ConfigurationService configurationService = continuum.getConfiguration();
+            org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
+                configurationService.getBuildAgent( buildAgentConfiguration.getUrl() );
+            BuildAgentConfiguration buildAgentConfigurationToUpdate = buildAgent != null ? populateBuildAgent( buildAgent ) : null;
+    
+            if ( buildAgentConfigurationToUpdate != null )
+            {
+                buildAgentConfigurationToUpdate.setDescription( StringEscapeUtils.escapeXml( buildAgentConfiguration.getDescription() ) );
+                buildAgentConfigurationToUpdate.setEnabled( buildAgentConfiguration.isEnabled() );
+                configurationService.updateBuildAgent( populateBuildAgent( buildAgentConfigurationToUpdate ) );
+                configurationService.store();
+                return populateBuildAgent( configurationService.getBuildAgent( buildAgentConfiguration.getUrl() ) );
+            }
+            else
+            {
+                return null;
+            }
         }
-        else
+        catch ( ContinuumException e )
         {
-            return null;
+            throw new ContinuumConfigurationException( "Error in adding buildAgent", e );
         }
     }
 
@@ -1988,9 +2102,65 @@ public class ContinuumServiceImpl
         {
             return null;
         }
+
+        // validate
+        if ( StringUtils.isNotBlank( projectSummary.getArtifactId() ) &&
+                        !projectSummary.getArtifactId().matches( PROJECT_ARTIFACT_ID_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Artifact Id contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getExecutorId() ) &&
+                        !projectSummary.getExecutorId().matches( PROJECT_EXECUTOR_OR_BUILDDEF_TYPE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Executor Id can only be 'maven2, maven-1, ant or shell'" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getGroupId() ) &&
+                        !projectSummary.getGroupId().matches( PROJECT_GROUP_ID_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Group Id contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getName() ) && 
+                        !projectSummary.getName().matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Name contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getScmTag() ) && 
+                        !projectSummary.getScmTag().matches( PROJECT_SCM_TAG_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Scm Tag contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getScmUrl() ) &&
+                        !projectSummary.getScmUrl().matches( PROJECT_SCM_URL_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Scm Url contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getUrl() ) && 
+                        !projectSummary.getUrl().matches( URL_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Url contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getVersion() ) &&
+                        !projectSummary.getVersion().matches( PROJECT_VERSION_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Version contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( projectSummary.getWorkingDirectory() ) &&
+                        !projectSummary.getWorkingDirectory().matches( DIRECTORY_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Project Working Directory contains invalid characters" );
+        }
+
         project.setArtifactId( projectSummary.getArtifactId() );
         project.setBuildNumber( projectSummary.getBuildNumber() );
-        project.setDescription( projectSummary.getDescription() );
+        project.setDescription( StringEscapeUtils.escapeXml( projectSummary.getDescription() ) );
         project.setExecutorId( projectSummary.getExecutorId() );
         project.setGroupId( projectSummary.getGroupId() );
         project.setId( projectSummary.getId() );
@@ -2029,13 +2199,26 @@ public class ContinuumServiceImpl
 
     private org.apache.maven.continuum.model.project.ProjectGroup populateProjectGroupSummary( ProjectGroupSummary group,
                                                                                                org.apache.maven.continuum.model.project.ProjectGroup g )
+        throws ContinuumException
     {
         if ( group == null )
         {
             return null;
         }
 
-        g.setDescription( group.getDescription() );
+        if ( StringUtils.isNotBlank( g.getGroupId() ) &&
+                        !g.getGroupId().matches( PROJECTGROUP_ID_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "ProjectGroup Id contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( g.getName() ) &&
+                        !g.getName().matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "ProjectGroup Name contains invalid characters" );
+        }
+
+        g.setDescription( StringEscapeUtils.escapeXml( group.getDescription() ) );
         g.setGroupId( group.getGroupId() );
         g.setId( group.getId() );
         g.setName( group.getName() );
@@ -2110,6 +2293,30 @@ public class ContinuumServiceImpl
             return null;
         }
 
+        if ( StringUtils.isNotBlank( buildDef.getArguments() ) &&
+                        !buildDef.getArguments().matches( BUILD_DEFINITION_ARGUMENTS_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Build Definition Arguments contain invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( buildDef.getBuildFile() ) &&
+                        !buildDef.getBuildFile().matches( BUILD_DEFINITION_BUILD_FILE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Build Definition Build File contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( buildDef.getGoals() ) &&
+                        !buildDef.getGoals().matches( BUILD_DEFINITION_GOALS_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Build Definition Goals contain invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( buildDef.getType() ) && 
+                        !buildDef.getType().matches( PROJECT_EXECUTOR_OR_BUILDDEF_TYPE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Build Definition Type can only be 'maven2, maven-1, ant, or shell'" );
+        }
+
         bd.setArguments( buildDef.getArguments() );
         bd.setBuildFile( buildDef.getBuildFile() );
         bd.setType( buildDef.getType() );
@@ -2139,7 +2346,7 @@ public class ContinuumServiceImpl
 
         if ( StringUtils.isNotEmpty( buildDef.getDescription() ) )
         {
-            bd.setDescription( buildDef.getDescription() );
+            bd.setDescription( StringEscapeUtils.escapeXml( buildDef.getDescription() ) );
         }
 
         return bd;
@@ -2158,16 +2365,29 @@ public class ContinuumServiceImpl
 
     private org.apache.maven.continuum.model.project.Schedule populateSchedule( Schedule schedule,
                                                                                 org.apache.maven.continuum.model.project.Schedule s )
+        throws ContinuumException
     {
         if ( schedule == null )
         {
             return null;
         }
 
+        if ( StringUtils.isNotBlank( schedule.getCronExpression() ) && 
+                        !schedule.getCronExpression().matches( SCHEDULE_CRON_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Schedule Cron Expression contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( schedule.getName() ) &&
+                        !schedule.getName().matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Schedule Name contains invalid characters" );
+        }
+
         s.setActive( schedule.isActive() );
         s.setCronExpression( schedule.getCronExpression() );
         s.setDelay( schedule.getDelay() );
-        s.setDescription( schedule.getDescription() );
+        s.setDescription( StringEscapeUtils.escapeXml( schedule.getDescription() ) );
         s.setId( schedule.getId() );
         s.setMaxJobExecutionTime( schedule.getMaxJobExecutionTime() );
         s.setName( schedule.getName() );
@@ -2188,11 +2408,17 @@ public class ContinuumServiceImpl
             return null;
         }
 
+        if ( StringUtils.isNotBlank( profile.getName() ) 
+                        && !profile.getName().matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Build Environment Name contains invalid characters" );
+        }
+
         try
         {
             newProfile.setActive( profile.isActive() );
             newProfile.setBuildWithoutChanges( profile.isBuildWithoutChanges() );
-            newProfile.setDescription( profile.getDescription() );
+            newProfile.setDescription( StringEscapeUtils.escapeXml( profile.getDescription() ) );
             newProfile.setName( profile.getName() );
             newProfile.setScmMode( profile.getScmMode() );
             if ( profile.getBuilder() != null )
@@ -2245,10 +2471,35 @@ public class ContinuumServiceImpl
 
     private org.apache.maven.continuum.model.system.Installation populateInstallation( Installation install,
                                                                                        org.apache.maven.continuum.model.system.Installation inst )
+        throws ContinuumException
     {
         if ( install == null )
         {
             return null;
+        }
+
+        if ( StringUtils.isNotBlank( install.getName() ) &&
+                        !install.getName().matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Installation Name contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( install.getType() ) &&
+                        !install.getType().matches( INSTALLATION_TYPE_VALID_EXPRESSION ))
+        {
+            throw new ContinuumException( "Installation Type contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( install.getVarName() ) &&
+                        !install.getVarName().matches( INSTALLATION_VARNAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Installation VarName contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( install.getVarValue() ) &&
+                        !install.getVarValue().matches( INSTALLATION_VARVALUE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Installation VarValue contains invalid characters" );
         }
 
         inst.setName( install.getName() );
@@ -2291,7 +2542,7 @@ public class ContinuumServiceImpl
         repoPurge.setDefaultPurge( repoPurgeConfig.isDefaultPurge() );
         repoPurge.setDeleteAll( repoPurgeConfig.isDeleteAll() );
         repoPurge.setDeleteReleasedSnapshots( repoPurgeConfig.isDeleteReleasedSnapshots() );
-        repoPurge.setDescription( repoPurgeConfig.getDescription() );
+        repoPurge.setDescription( StringEscapeUtils.escapeXml( repoPurgeConfig.getDescription() ) );
         repoPurge.setEnabled( repoPurgeConfig.isEnabled() );
         repoPurge.setRetentionCount( repoPurgeConfig.getRetentionCount() );
         if ( repoPurgeConfig.getRepository() != null )
@@ -2330,10 +2581,22 @@ public class ContinuumServiceImpl
             return null;
         }
 
+        if ( StringUtils.isNotBlank( dirPurgeConfig.getDirectoryType() ) &&
+                        !dirPurgeConfig.getDirectoryType().matches( DIRECTORY_TYPE_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Directory Purge Configuration Type can only be 'releases or buildOutput'" );
+        }
+
+        if ( StringUtils.isNotBlank( dirPurgeConfig.getLocation() ) &&
+                        !dirPurgeConfig.getLocation().matches( DIRECTORY_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Directory Purge Configuration Location contains invalid characters" );
+        }
+
         dirPurge.setDaysOlder( dirPurgeConfig.getDaysOlder() );
         dirPurge.setDefaultPurge( dirPurgeConfig.isDefaultPurge() );
         dirPurge.setDeleteAll( dirPurgeConfig.isDeleteAll() );
-        dirPurge.setDescription( dirPurgeConfig.getDescription() );
+        dirPurge.setDescription( StringEscapeUtils.escapeXml( dirPurgeConfig.getDescription() ) );
         dirPurge.setDirectoryType( dirPurgeConfig.getDirectoryType() );
         dirPurge.setEnabled( dirPurgeConfig.isEnabled() );
 
@@ -2370,10 +2633,29 @@ public class ContinuumServiceImpl
 
     private org.apache.continuum.model.repository.LocalRepository populateLocalRepository( LocalRepository repository,
                                                                                            org.apache.continuum.model.repository.LocalRepository repo )
+        throws ContinuumException
     {
         if ( repository == null )
         {
             return null;
+        }
+
+        if ( StringUtils.isNotBlank( repository.getLayout() ) &&
+                        !repository.getLayout().matches( REPOSITORY_LAYOUT_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Repository Layout can only be 'default or legacy'" );
+        }
+
+        if ( StringUtils.isNotBlank( repository.getLocation() ) &&
+                        !repository.getLocation().matches( DIRECTORY_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Repository Location contains invalid characters" );
+        }
+
+        if ( StringUtils.isNotBlank( repository.getName() ) &&
+                        !repository.getName().matches( NAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Repository Name contains invalid characters" );
         }
 
         repo.setLayout( repository.getLayout() );
@@ -2383,10 +2665,17 @@ public class ContinuumServiceImpl
     }
 
     private org.apache.continuum.utils.build.BuildTrigger populateBuildTrigger( BuildTrigger buildTrigger )
+        throws ContinuumException
     {
         if ( buildTrigger == null )
         {
             return null;
+        }
+
+        if ( StringUtils.isNotBlank( buildTrigger.getTriggeredBy() ) &&
+                        !buildTrigger.getTriggeredBy().matches( USERNAME_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "BuildTrigger Triggered By contains invalid characters" );
         }
 
         return new org.apache.continuum.utils.build.BuildTrigger( buildTrigger.getTrigger(),
@@ -2394,15 +2683,23 @@ public class ContinuumServiceImpl
     }
 
     private org.apache.continuum.configuration.BuildAgentConfiguration populateBuildAgent( BuildAgentConfiguration buildAgent )
+        throws ContinuumException
     {
         if ( buildAgent == null )
         {
             return null;
         }
+
+        if ( StringUtils.isNotBlank( buildAgent.getUrl() ) &&
+                        !buildAgent.getUrl().matches( URL_VALID_EXPRESSION ) )
+        {
+            throw new ContinuumException( "Build Agent URL contains invalid characters" );
+        }
+
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgentConfiguration =
             new org.apache.continuum.configuration.BuildAgentConfiguration();
         buildAgentConfiguration.setUrl( buildAgent.getUrl() );
-        buildAgentConfiguration.setDescription( buildAgent.getDescription() );
+        buildAgentConfiguration.setDescription( StringEscapeUtils.escapeXml( buildAgent.getDescription() ) );
         buildAgentConfiguration.setEnabled( buildAgent.isEnabled() );
         return buildAgentConfiguration;
     }

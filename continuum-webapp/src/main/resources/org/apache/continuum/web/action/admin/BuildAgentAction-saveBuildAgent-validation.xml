@@ -31,10 +31,4 @@
       <message key="buildAgent.url.invalid"/>
     </field-validator>
   </field>
-  <field name="buildAgent.description">
-    <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
-      <message key="buildAgent.description.invalid"/>
-    </field-validator>
-  </field>
 </validators>
