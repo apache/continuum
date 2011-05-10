@@ -2206,14 +2206,14 @@ public class ContinuumServiceImpl
             return null;
         }
 
-        if ( StringUtils.isNotBlank( g.getGroupId() ) &&
-                        !g.getGroupId().matches( PROJECTGROUP_ID_VALID_EXPRESSION ) )
+        if ( StringUtils.isNotBlank( group.getGroupId() ) &&
+                        !group.getGroupId().matches( PROJECTGROUP_ID_VALID_EXPRESSION ) )
         {
             throw new ContinuumException( "ProjectGroup Id contains invalid characters" );
         }
 
-        if ( StringUtils.isNotBlank( g.getName() ) &&
-                        !g.getName().matches( NAME_VALID_EXPRESSION ) )
+        if ( StringUtils.isNotBlank( group.getName() ) &&
+                        !group.getName().matches( NAME_VALID_EXPRESSION ) )
         {
             throw new ContinuumException( "ProjectGroup Name contains invalid characters" );
         }

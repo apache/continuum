@@ -22,6 +22,7 @@ package org.apache.maven.continuum.xmlrpc.client;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
 import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
@@ -29,8 +30,10 @@ import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
+import org.apache.maven.continuum.xmlrpc.system.Installation;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -48,7 +51,7 @@ public class SampleClient
         throws Exception
     {
         client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
-
+/*
         System.out.println( "Adding project..." );
         AddingResult result = client.addMavenTwoProject( "http://svn.apache.org/repos/asf/continuum/sandbox/simple-example/pom.xml" );
         if ( result.hasErrors() )
@@ -90,10 +93,21 @@ public class SampleClient
             Thread.sleep( 1000 );
         }
 
-        System.out.println();
+        System.out.println();*/
 
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setArguments( "A-Za-z0-9_./=,\": \\-" );
+        buildDef.setSchedule( client.getSchedule( 1 ) );
+        client.addBuildDefinitionToProjectGroup( 1, buildDef );
+        
+        /*
+        ProjectSummary ps = client.getProjectSummary( 1 );
         System.out.println( "Add the project to the build queue." );
-        client.buildProject( ps.getId() );
+        BuildTrigger trigger = new BuildTrigger();
+        trigger.setTrigger( 1 );
+        trigger.setTriggeredBy( "<script>alert('hahaha' )</script>" );
+        client.buildProject( ps.getId(), trigger );
         while ( !"Building".equals( client.getProjectStatusAsString( ps.getState() ) ) )
         {
             ps = client.refreshProjectSummary( ps );
@@ -137,7 +151,7 @@ public class SampleClient
         }
         System.out.println( "Done.");
 
-        System.out.println();
+        System.out.println();/*
 
         System.out.println( "Projects list." );
         System.out.println( "=====================" );
@@ -217,7 +231,7 @@ public class SampleClient
         System.out.println( "Removing Local Repository '" + repository.getName() + "' (" + 
                             repository.getId() + ")..." );
         client.removeLocalRepository( repository.getId() );
-        System.out.println( "Done." );
+        System.out.println( "Done." );*/
     }
 
     public static void printProjectGroupSummary( ProjectGroupSummary pg )
