@@ -39,12 +39,12 @@
       <ec:column property="scheduleName" title="projectView.buildDefinition.schedule">
         <redback:ifAuthorized permission="continuum-manage-schedules">
           <s:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
-            <s:param name="id">${pageScope.buildDefinitionSummary.scheduleId}</s:param>
+            <s:param name="id"><c:out value="${pageScope.buildDefinitionSummary.scheduleId}"/></s:param>
           </s:url>
-          <s:a href="%{scheduleUrl}">${pageScope.buildDefinitionSummary.scheduleName}</s:a>
+          <s:a href="%{scheduleUrl}"><c:out value="${pageScope.buildDefinitionSummary.scheduleName}"/></s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          ${pageScope.buildDefinitionSummary.scheduleName}
+          <c:out value="${pageScope.buildDefinitionSummary.scheduleName}"/>
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile"/>
@@ -56,8 +56,8 @@
       <ec:column property="buildAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <s:url id="buildProjectUrl" action="buildProject" namespace="/">
-            <s:param name="projectId">${projectId}</s:param>
-            <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+            <s:param name="projectId"><c:out value="${projectId}"/></s:param>
+            <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             <s:param name="fromProjectPage" value="true"/>
           </s:url>
           <s:a href="%{buildProjectUrl}"><img src="<s:url value='/images/buildnow.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0"></s:a>
@@ -72,8 +72,8 @@
           <c:when test="${pageScope.buildDefinitionSummary.from=='PROJECT'}">
             <redback:ifAuthorized permission="continuum-modify-project-build-definition" resource="${projectGroupName}">
               <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
-                <s:param name="projectId">${projectId}</s:param>
-                <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+                <s:param name="projectId"><c:out value="${projectId}"/></s:param>
+                <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
               </s:url>
               <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
             </redback:ifAuthorized>
@@ -84,8 +84,8 @@
           <c:otherwise>
             <redback:ifAuthorized permission="continuum-modify-group-build-definition" resource="${projectGroupName}">
               <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
-                <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
-                <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+                <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
+                <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                 <s:param name="groupBuildDefinition">true</s:param>
               </s:url>
               <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
@@ -103,8 +103,8 @@
             <redback:ifAuthorized permission="continuum-remove-project-build-definition" resource="${projectGroupName}">
               <s:token/>
               <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
-                <s:param name="projectId">${projectId}</s:param>
-                <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+                <s:param name="projectId"><c:out value="${projectId}"/></s:param>
+                <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                 <s:param name="confirmed" value="false"/>
                 <s:param name="struts.token.name">struts.token</s:param>
                 <s:param name="struts.token"><s:property value="struts.token"/></s:param>
@@ -124,8 +124,8 @@
                 <c:otherwise>
                   <s:token/>
                   <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
-                    <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
-                    <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+                    <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
+                    <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                     <s:param name="groupBuildDefinition">true</s:param>
                     <s:param name="confirmed" value="false"/>
                     <s:param name="struts.token.name">struts.token</s:param>

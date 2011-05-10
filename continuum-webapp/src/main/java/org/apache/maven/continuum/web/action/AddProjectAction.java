@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
@@ -89,44 +90,8 @@ public class AddProjectAction
 
     private boolean emptyProjectGroups;
 
-    public void validate()
-    {
-        clearErrorsAndMessages();
-        try
-        {
-            if ( ( projectName != null ) && !( projectName.trim().length() > 0 ) )
-            {
-                addActionError( getText( "addProject.name.required" ) );
-            }
-            if ( ( projectVersion != null ) && !( projectVersion.trim().length() > 0 ) )
-            {
-                addActionError( getText( "addProject.version.required" ) );
-            }
-            if ( ( projectScmUrl != null ) && !( projectScmUrl.trim().length() > 0 ) )
-            {
-                addActionError( getText( "addProject.scmUrl.required" ) );
-            }
-            if ( isEmptyProjectGroups() )
-            {
-                addActionError( getText( "addProject.projectGroup.required" ) );
-            }
-            if ( hasActionErrors() )
-            {
-                input();
-            }
-        }
-        catch ( ContinuumException e )
-        {
-            logger.error( e.getMessage(), e );
-        }
-        catch ( BuildDefinitionServiceException e )
-        {
-            logger.error( e.getMessage(), e );
-        }
-    }
-
     public String add()
-        throws ContinuumException
+        throws ContinuumException, ProfileException, BuildDefinitionServiceException
     {
         initializeProjectGroupName();
 
@@ -147,6 +112,11 @@ public class AddProjectAction
             return REQUIRES_AUTHORIZATION;
         }
 
+        if ( isEmptyProjectGroups() )
+        {
+            addActionError( getText( "addProject.projectGroup.required" ) );
+        }
+
         String projectNameTrim = projectName.trim();
         String versionTrim = projectVersion.trim();
         String scmTrim = projectScmUrl.trim();
@@ -159,8 +129,13 @@ public class AddProjectAction
                 StringUtils.equalsIgnoreCase( project.getScmUrl(), scmTrim ) )
             {
                 addActionError( getText( "projectName.already.exist.error" ) );
-                return INPUT;
+                break;
             }
+        }
+
+        if ( hasActionErrors() )
+        {
+            return INPUT;
         }
 
         Project project = new Project();
@@ -169,7 +144,7 @@ public class AddProjectAction
 
         if ( projectDescription != null )
         {
-            project.setDescription( projectDescription.trim() );
+            project.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( projectDescription.trim() ) ) );
         }
 
         project.setVersion( versionTrim );

@@ -26,5 +26,9 @@
     <field-validator type="requiredstring">
       <message key="buildAgent.url.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.@:/-]*]]></param>
+      <message key="buildAgent.url.invalid"/>
+    </field-validator>
   </field>
 </validators>

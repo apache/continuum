@@ -26,10 +26,18 @@
     <field-validator type="requiredstring">
       <message key="repository.name.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
+      <message key="repository.name.invalid"/>
+    </field-validator>
   </field>
   <field name="repository.location">
     <field-validator type="requiredstring">
       <message key="repository.location.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
+      <message key="repository.location.invalid"/>
     </field-validator>
   </field>
 </validators>

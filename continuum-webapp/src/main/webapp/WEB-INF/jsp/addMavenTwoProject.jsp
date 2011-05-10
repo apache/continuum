@@ -37,7 +37,7 @@
                               <p><s:property/></p>
                             </s:iterator>
                             <c:forEach items="${errorMessages}" var="errorMessage">
-                              <p>${errorMessage}</p>
+                              <p><c:out value="${errorMessage}"/></p>
                             </c:forEach>
                           </div>
                         </c:if>

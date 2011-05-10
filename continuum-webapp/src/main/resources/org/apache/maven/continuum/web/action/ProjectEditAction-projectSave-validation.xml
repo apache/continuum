@@ -26,15 +26,37 @@
     <field-validator type="requiredstring">
       <message key="projectEdit.name.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="trim">true</param>
+      <param name="expression"><![CDATA[[a-zA-Z0-9_.\s:-]*]]></param>
+      <message key="projectEdit.name.invalid"/>
+    </field-validator>
   </field>
   <field name="version">
     <field-validator type="requiredstring">
       <message key="projectEdit.version.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="trim">true</param>
+      <param name="expression"><![CDATA[[a-zA-Z0-9.-]*]]></param>
+      <message key="projectEdit.version.invalid"/>
+    </field-validator>
   </field>
   <field name="scmUrl">
     <field-validator type="requiredstring">
       <message key="projectEdit.scmUrl.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="trim">true</param>
+      <param name="expression"><![CDATA[[a-zA-Z0-9_.:@\\/|#~=\[\]-]*]]></param>
+      <message key="projectEdit.scmUrl.invalid"/>
+    </field-validator>
+  </field>
+  <field name="scmTag">
+    <field-validator type="regex">
+      <param name="trim">true</param>
+      <param name="expression"><![CDATA[[a-zA-Z0-9_.:@\\/|#~=\[\]-]*]]></param>
+      <message key="projectEdit.scmTag.invalid"/>
     </field-validator>
   </field>
 </validators>

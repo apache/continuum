@@ -24,12 +24,28 @@
 <validators>
   <field name="buildDefinition.buildFile">
     <field-validator type="requiredstring">
-      <message key="buildDefintion.buildFile.required"/>
+      <message key="buildDefinition.buildFile.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\-]*]]></param>
+      <message key="buildDefinition.buildFile.invalid"/>
     </field-validator>
   </field>
   <field name="buildDefinition.description">
     <field-validator type="requiredstring">
-      <message key="buildDefintion.description.required"/>
+      <message key="buildDefinition.description.required"/>
     </field-validator>
-  </field>  
+  </field>
+  <field name="buildDefinition.goals">
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_:\s\-]*]]></param>
+      <message key="buildDefinition.goals.invalid"/>
+    </field-validator>
+  </field>
+  <field name="buildDefinition.arguments">
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\\/=,":\s\-]*]]></param>
+      <message key="buildDefinition.arguments.invalid"/>
+    </field-validator>
+  </field>
 </validators>

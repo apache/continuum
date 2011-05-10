@@ -33,7 +33,7 @@
   <div id="h3">
 
     <s:if test="infoMessage != null">
-       <p>${infoMessage}</p>
+       <p><c:out value="${infoMessage}"/></p>
     </s:if>
     <s:else>
        <h3><s:text name="groups.page.section.title"/></h3>
@@ -63,13 +63,18 @@
               filterable="false">
       <ec:row highlightRow="true">
         <ec:column property="name" title="groups.table.name" width="40%" style="white-space: nowrap">
-          <a href="<s:url  action="projectGroupSummary" namespace="/"><s:param name="projectGroupId">${group.id}</s:param></s:url>">${group.name}</a>
+          <s:url id="projectGroupSummaryUrl" action="projectGroupSummary" namespace="/">
+            <s:param name="projectGroupId">
+              <c:out value="${group.id}" />
+            </s:param>
+          </s:url>
+          <a href="${projectGroupSummaryUrl}"><c:out value="${group.name}"/></a>
         </ec:column>
         <ec:column property="groupId" title="groups.table.groupId" width="40%"/>
         <ec:column property="buildGroupNowAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="buildProjectGroupUrl" action="buildProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId">${group.id}</s:param>
+              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
               <s:param name="buildDefinitionId" value="-1"/>
               <s:param name="fromSummaryPage" value="true"/>
             </s:url>
@@ -84,7 +89,7 @@
         <ec:column property="releaseProjectGroupAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="releaseProjectGroupUrl" action="releaseProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId">${group.id}</s:param>
+              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
             </s:url>
             <s:a href="%{releaseProjectGroupUrl}">
               <img src="<s:url value='/images/releaseproject.gif'/>" alt="<s:text name="projectGroup.releaseNow"/>" title="<s:text name="projectGroup.releaseNow"/>" border="0">
@@ -98,7 +103,7 @@
           <redback:ifAuthorized permission="continuum-remove-group" resource="${group.name}">
             <s:token/>
             <s:url id="removeProjectGroupUrl" action="confirmRemoveProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId">${group.id}</s:param>
+              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
             </s:url>
             <s:a href="%{removeProjectGroupUrl}">
               <img src="<s:url value='/images/delete.gif'/>" alt="<s:text name="projectGroup.deleteGroup"/>" title="<s:text name="projectGroup.deleteGroup"/>" border="0">

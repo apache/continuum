@@ -44,6 +44,13 @@ public class BuildEnvironmentTest
         assertTextPresent( "You must define a name" );
     }
 
+    public void testAddBuildEnvironmentWithXSS()
+    {
+        goToAddBuildEnvironment();
+        addBuildEnvironment( "<script>alert('gotcha')</script>", new String[] {}, false );
+        assertTextPresent( "Build environment name contains invalid characters." );
+    }
+
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditInvalidBuildEnvironment()
     {

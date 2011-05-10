@@ -239,8 +239,7 @@ public abstract class AbstractNotifierTest
         clickButtonWithValue( "Save" );
         if ( !isValid )
         {
-            assertTextPresent( "Host is required" );
-            assertTextPresent( "Channel is required" );
+            return;
         }
         else if ( projectName != null )
         {
@@ -301,10 +300,7 @@ public abstract class AbstractNotifierTest
 
         if ( !isValid )
         {
-            assertTextPresent( "Host is required" );
-            assertTextPresent( "Login is required" );
-            assertTextPresent( "Password is required" );
-            assertTextPresent( "Address is required" );
+            return;
         }
         else if ( projectName != null )
         {
@@ -370,9 +366,7 @@ public abstract class AbstractNotifierTest
 
         if ( !isValid )
         {
-            assertTextPresent( "Login is required" );
-            assertTextPresent( "Password is required" );
-            assertTextPresent( "Address is required" );
+            return;
         }
         else if ( projectName != null )
         {
@@ -433,8 +427,7 @@ public abstract class AbstractNotifierTest
 
         if ( !isValid )
         {
-            assertTextPresent( "Destination URL is required" );
-            assertTextPresent( "Server Id is required" );
+            return;
         }
         else if ( projectName != null )
         {

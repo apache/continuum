@@ -24,7 +24,7 @@
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <s:i18n name="localization.Continuum">
 
-  <h3><s:text name="projectGroupNotifierSummaryComponent.groupNotifiers"><s:param>${projectGroup.name}</s:param></s:text></h3>
+  <h3><s:text name="projectGroupNotifierSummaryComponent.groupNotifiers"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
   <c:if test="${not empty projectGroupNotifierSummaries}">
   <ec:table items="projectGroupNotifierSummaries"
             var="projectGroupNotifierSummary"
@@ -42,9 +42,9 @@
       <ec:column property="editActions" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
           <s:url id="editUrl" action="editProjectGroupNotifier" namespace="/">
-            <s:param name="projectGroupId">${pageScope.projectGroupNotifierSummary.projectGroupId}</s:param>
-            <s:param name="notifierId">${pageScope.projectGroupNotifierSummary.id}</s:param>
-            <s:param name="notifierType">${pageScope.projectGroupNotifierSummary.type}</s:param>
+            <s:param name="projectGroupId"><c:out value="${pageScope.projectGroupNotifierSummary.projectGroupId}"/></s:param>
+            <s:param name="notifierId"><c:out value="${pageScope.projectGroupNotifierSummary.id}"/></s:param>
+            <s:param name="notifierType"><c:out value="${pageScope.projectGroupNotifierSummary.type}"/></s:param>
           </s:url>
           <s:a href="%{editUrl}">
             <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
@@ -57,9 +57,9 @@
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
           <s:url id="removeUrl" action="deleteProjectGroupNotifier!default.action" namespace="/">
-            <s:param name="projectGroupId">${pageScope.projectGroupNotifierSummary.projectGroupId}</s:param>
-            <s:param name="notifierId">${pageScope.projectGroupNotifierSummary.id}</s:param>
-            <s:param name="notifierType">${pageScope.projectGroupNotifierSummary.type}</s:param>
+            <s:param name="projectGroupId"><c:out value="${pageScope.projectGroupNotifierSummary.projectGroupId}"/></s:param>
+            <s:param name="notifierId"><c:out value="${pageScope.projectGroupNotifierSummary.id}"/></s:param>
+            <s:param name="notifierType"><c:out value="${pageScope.projectGroupNotifierSummary.type}"/></s:param>
           </s:url>
         <s:a href="%{removeUrl}">
           <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
@@ -96,9 +96,9 @@
       <ec:row>
         <ec:column property="projectName" title="projectView.project.name">
           <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-            <s:param name="projectId">${pageScope.projectNotifierSummary.projectId}</s:param>
+            <s:param name="projectId"><c:out value="${pageScope.projectNotifierSummary.projectId}"/></s:param>
           </s:url>
-        <s:a href="%{projectUrl}">${pageScope.projectNotifierSummary.projectName}</s:a>
+        <s:a href="%{projectUrl}"><c:out value="${pageScope.projectNotifierSummary.projectName}"/></s:a>
         </ec:column>
         <ec:column property="type" title="projectView.notifier.type"/>
         <ec:column property="recipient" title="projectView.notifier.recipient"/>
@@ -109,10 +109,10 @@
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
                 <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
-                  <s:param name="projectGroupId">${pageScope.projectNotifierSummary.projectGroupId}</s:param>
-                  <s:param name="projectId">${pageScope.projectNotifierSummary.projectId}</s:param>
-                  <s:param name="notifierId">${pageScope.projectNotifierSummary.id}</s:param>
-                  <s:param name="notifierType">${pageScope.projectNotifierSummary.type}</s:param>
+                  <s:param name="projectGroupId"><c:out value="${pageScope.projectNotifierSummary.projectGroupId}"/></s:param>
+                  <s:param name="projectId"><c:out value="${pageScope.projectNotifierSummary.projectId}"/></s:param>
+                  <s:param name="notifierId"><c:out value="${pageScope.projectNotifierSummary.id}"/></s:param>
+                  <s:param name="notifierType"><c:out value="${pageScope.projectNotifierSummary.type}"/></s:param>
                   <s:param name="fromGroupPage" value="true"/>
                 </s:url>
                 <s:a href="%{editUrl}">
@@ -133,9 +133,9 @@
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
                 <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
-                  <s:param name="projectGroupId">${pageScope.projectNotifierSummary.projectGroupId}</s:param>
-                  <s:param name="projectId">${pageScope.projectNotifierSummary.projectId}</s:param>
-                  <s:param name="notifierId">${pageScope.projectNotifierSummary.id}</s:param>
+                  <s:param name="projectGroupId"><c:out value="${pageScope.projectNotifierSummary.projectGroupId}"/></s:param>
+                  <s:param name="projectId"><c:out value="${pageScope.projectNotifierSummary.projectId}"/></s:param>
+                  <s:param name="notifierId"><c:out value="${pageScope.projectNotifierSummary.id}"/></s:param>
                   <s:param name="fromGroupPage" value="true"/>
                 </s:url>
                 <s:a href="%{removeUrl}">

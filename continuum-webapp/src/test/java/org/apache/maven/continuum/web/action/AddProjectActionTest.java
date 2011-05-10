@@ -42,6 +42,16 @@ public class AddProjectActionTest
 
     private final Mock continuumMock;
 
+    private static final String VALID_NAME_CHARACTER = "abcABC123whitespaces_.:-";
+
+    private static final String VALID_VERSION_CHARACTER = "abcABC123.-";
+
+    private static final String VALID_SCM_URL_CHARACTER = "abcABC123_.:-#~=@\\/|[]";
+
+    private static final String VALID_SCM_TAG_CHARACTER = "abcABC123_.:-#~=@\\/|[]";
+
+    private static final String VALID_DESCRIPTION_CHARACTER = "abcABC123whitespaces_.-";
+
     public AddProjectActionTest()
     {
         action = new AddProjectActionStub();
@@ -90,6 +100,35 @@ public class AddProjectActionTest
         action.add();
         continuumMock.verify();
     }
+    
+    public void testAddAntProjectWithValidValues()
+        throws Exception
+    {
+        List<Project> projects = createProjectList();
+        continuumMock.expects( once() ).method( "getProjects" ).will( returnValue( projects ) );
+        continuumMock.expects( once() ).method( "addProject" ).will( returnValue( 3 ) );
+        
+        action.setProjectName( VALID_NAME_CHARACTER );
+        action.setProjectDescription( VALID_DESCRIPTION_CHARACTER );
+        action.setProjectVersion( VALID_VERSION_CHARACTER );
+        action.setProjectScmUrl( VALID_SCM_URL_CHARACTER );
+        action.setProjectScmTag( VALID_SCM_TAG_CHARACTER );
+        action.setProjectType( "ant" );
+        action.setSelectedProjectGroup( 1 );
+        action.setBuildDefintionTemplateId( 1 );
+        
+        // validate
+        action.validate();
+
+        // verify
+        assertFalse( action.hasActionErrors() );
+        assertEquals( 0, action.getActionErrors().size() );
+
+        // add
+        action.add();
+        
+        continuumMock.verify();
+    }
 
     /**
      * Test add of Shell project
@@ -116,7 +155,36 @@ public class AddProjectActionTest
         action.add();
         continuumMock.verify();
     }
-    
+
+    public void testAddShellProjectWithValidValues()
+        throws Exception
+    {
+        List<Project> projects = createProjectList();
+        continuumMock.expects( once() ).method( "getProjects" ).will( returnValue( projects ) );
+        continuumMock.expects( once() ).method( "addProject" ).will( returnValue( 3 ) );
+
+        action.setProjectName( VALID_NAME_CHARACTER );
+        action.setProjectDescription( VALID_DESCRIPTION_CHARACTER );
+        action.setProjectVersion( VALID_VERSION_CHARACTER );
+        action.setProjectScmUrl( VALID_SCM_URL_CHARACTER );
+        action.setProjectScmTag( VALID_SCM_TAG_CHARACTER );
+        action.setProjectType( "shell" );
+        action.setSelectedProjectGroup( 1 );
+        action.setBuildDefintionTemplateId( 1 );
+
+        // validate
+        action.validate();
+
+        // verify
+        assertFalse( action.hasActionErrors() );
+        assertEquals( 0, action.getActionErrors().size() );
+
+        // add
+        action.add();
+
+        continuumMock.verify();
+    }
+
     private List<Project> createProjectList()
     {
         List<Project> projects = new ArrayList<Project>();

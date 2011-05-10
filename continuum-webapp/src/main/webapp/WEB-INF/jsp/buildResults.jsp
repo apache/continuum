@@ -21,6 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
+
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -77,10 +78,10 @@
               <ec:column property="duration" title="&nbsp;">
                 <c:choose>
                   <c:when test="${buildResult.endTime gt 0}">
-                    <s:text name="buildResults.duration"/> : ${buildResult.durationTime}
+                    <s:text name="buildResults.duration"/> : <c:out value="${buildResult.durationTime}"/>
                   </c:when>
                   <c:otherwise>
-                    <s:text name="buildResults.startedSince"/> : ${buildResult.elapsedTime}
+                    <s:text name="buildResults.startedSince"/> : <c:out value="${buildResult.elapsedTime}"/>
                   </c:otherwise>
                 </c:choose>
               </ec:column>
@@ -88,10 +89,10 @@
               <ec:column property="buildDefinition.description" title="buildResults.buildDefinition.description" />
               <ec:column property="actions" title="&nbsp;">
                 <s:url id="buildResultUrl" action="buildResult">
-                  <s:param name="projectId">${projectId}</s:param>
-                  <s:param name="projectName">${projectName}</s:param>
-                  <s:param name="buildId">${buildResult.id}</s:param>
-                  <s:param name="projectGroupId">${projectGroupId}</s:param>
+                  <s:param name="projectId"><c:out value="${projectId}"/></s:param>
+                  <s:param name="projectName"><c:out value="${projectName}"/></s:param>
+                  <s:param name="buildId"><c:out value="${buildResult.id}"/></s:param>
+                  <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
                 </s:url>
                 <s:a href="%{buildResultUrl}"><s:text name="buildResults.result"/></s:a>
               </ec:column>

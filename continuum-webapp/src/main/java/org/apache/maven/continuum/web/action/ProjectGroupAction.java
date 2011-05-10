@@ -28,8 +28,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections.ComparatorUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
@@ -142,6 +144,14 @@ public class ProjectGroupAction
 
     private List<ProjectScmRoot> projectScmRoots;
 
+    public void prepare()
+        throws Exception
+    {
+        super.prepare();
+    
+        repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
+    }
+    
     public String summary()
         throws ContinuumException
     {
@@ -186,7 +196,7 @@ public class ProjectGroupAction
         }
 
         if ( projectGroup != null )
-        {
+        {   
             if ( projectGroup.getProjects() != null && projectGroup.getProjects().size() > 0 )
             {
                 int nbMaven2Projects = 0;
@@ -436,32 +446,18 @@ public class ProjectGroupAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if ( name != null )
+        for ( ProjectGroup projectGroup : getContinuum().getAllProjectGroups() )
         {
-            if ( name.equals( "" ) )
+            if ( name.equals( projectGroup.getName() ) && projectGroup.getId() != projectGroupId )
             {
-                addActionError( getText( "projectGroup.error.name.required" ) );
+                addActionError( getText( "projectGroup.error.name.already.exists" ) );
             }
-            else if ( name.trim().equals( "" ) )
-            {
-                addActionError( getText( "projectGroup.error.name.cannot.be.spaces" ) );
-            }
-            else
-            {
-                name = name.trim();
-                for ( ProjectGroup projectGroup : getContinuum().getAllProjectGroups() )
-                {
-                    if ( name.equals( projectGroup.getName() ) && projectGroup.getId() != projectGroupId )
-                    {
-                        addActionError( getText( "projectGroup.error.name.already.exists" ) );
-                    }
-                }
-            }
-            if ( hasActionErrors() )
-            {
-                initialize();
-                return INPUT;
-            }
+        }
+
+        if ( hasActionErrors() )
+        {
+            initialize();
+            return INPUT;
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
@@ -487,7 +483,7 @@ public class ProjectGroupAction
 
         }
 
-        projectGroup.setDescription( description );
+        projectGroup.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( description ) ) );
 
         // [CONTINUUM-2228]. In select field can't select empty values.
         if ( repositoryId > 0 )

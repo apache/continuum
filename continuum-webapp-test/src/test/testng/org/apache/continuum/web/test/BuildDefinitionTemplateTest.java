@@ -47,6 +47,14 @@ public class BuildDefinitionTemplateTest
         assertTextPresent( "Name is required" );
     }
 
+    public void testAddTemplateWithXSS()
+        throws Exception
+    {
+        goToAddTemplate();
+        addEditTemplate( "Name <script>alert('gotcha')</script>", new String[] {}, new String[] {}, false );
+        assertTextPresent( "Name contains invalid characters" );
+    }
+
     @Test( dependsOnMethods = { "testAddTemplate" } )
     public void testEditTemplate()
         throws Exception
@@ -89,6 +97,18 @@ public class BuildDefinitionTemplateTest
         addEditBuildDefinitionTemplate( "", "", "", "", true, true, true, false );
         assertTextPresent( "BuildFile is required" );
         assertTextPresent( "Description is required" );
+    }
+
+    public void testAddBuildDefinitionTemplateWithXSS()
+        throws Exception
+    {
+        String invalidString = "<script>alert('gotcha')</script>";
+        goToAddBuildDefinitionTemplate();
+        addEditBuildDefinitionTemplate( invalidString, invalidString, invalidString, invalidString, true, true, true, false );
+        assertTextPresent( "BuildFile contains invalid characters" );
+        assertTextPresent( "Description contains invalid characters" );
+        assertTextPresent( "Goals contain invalid characters" );
+        assertTextPresent( "Arguments contain invalid characters" );
     }
 
     @Test( dependsOnMethods = { "testAddBuildDefinitionTemplate" } )

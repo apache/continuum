@@ -22,6 +22,7 @@ package org.apache.continuum.web.test;
 //import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
 import org.testng.annotations.Test;
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
+import org.testng.Assert;
 
 
 @Test( groups = { "agent" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )//dependsOnMethods = { "testDeleteBuildDefinitionTemplate" } )
@@ -48,7 +49,39 @@ public class BuildAgentsTest
         disableDistributedBuilds();
 	}
 
-	@Test( dependsOnMethods = { "testEditBuildAgent" } )
+    public void testAddBuildAgentWithXSS()
+    {
+        try
+        {
+            String invalidUrl = "http://sampleagent/<script>alert('gotcha')</script>";
+            String invalidDescription = "blah blah <script>alert('gotcha')</script> blah blah";
+            enableDistributedBuilds();
+            goToAddBuildAgent();
+            addBuildAgent( invalidUrl, invalidDescription, false, true, false );
+
+            assertTextPresent( "Build agent url is invalid." );
+            assertTextPresent( "Build agent description contains invalid characters." );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    public void testViewBuildAgentInstallationXSS()
+    {
+        getSelenium().open( baseUrl + "/security/viewBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        Assert.assertFalse( getSelenium().isAlertPresent() );
+        assertTextPresent( "<script>alert('xss')</script>" );
+    }       
+
+    public void testEditBuildAgentXSS()
+    {
+        getSelenium().open( baseUrl + "/security/editBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        Assert.assertFalse( getSelenium().isAlertPresent() );
+    }
+
+    @Test( dependsOnMethods = { "testEditBuildAgent" } )
     public void testAddAnExistingBuildAgent()
     {
 		String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
@@ -79,7 +112,7 @@ public class BuildAgentsTest
 
 	@Test( dependsOnMethods = { "testAddAnExistingBuildAgent" } )
     public void testDeleteBuildAgent()
-
+        throws Exception
     {
 	    enableDistributedBuilds();
         goToBuildAgentPage();
@@ -102,6 +135,29 @@ public class BuildAgentsTest
     }
 
 //TESTS FOR BUILD AGENT GROUPS
+
+    @Test( dependsOnMethods = { "testAddBuildAgent" } )
+    public void testAddBuildAgentGroupXSS()
+        throws Exception
+    {
+        try
+        {   
+            enableDistributedBuilds();
+            goToAddBuildAgentGroup();  
+            addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[] {}, false );
+            assertTextPresent( "Build agent group name contains invalid characters" );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
+    }
+
+    public void testEditBuildAgentGroupXSS()
+    {
+        getSelenium().open( baseUrl + "/security/editBuildAgentGroup.action?buildAgentGroup.name=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        Assert.assertFalse( getSelenium().isAlertPresent() );
+    }
 
     @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testAddBuildAgentGroup()
@@ -158,7 +214,7 @@ public class BuildAgentsTest
         enableDistributedBuilds();
     	goToAddBuildAgentGroup();
     	addEditBuildAgentGroup( "", new String[] {}, new String[] {}, false );
-		assertTextPresent( "Build agent group name required." );
+		assertTextPresent( "Build agent group name is required." );
 		disableDistributedBuilds();
     }
 

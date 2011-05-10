@@ -51,6 +51,30 @@ public class AntProjectTest
                     false, TEST_PROJ_GRP_NAME, null, true, "ant" );
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
     }
+    
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
+    public void testAddAntProjectWithInvalidValues()
+        throws Exception
+    {
+        String ANT_NAME = "!@#$<>?etc";
+        String ANT_DESCRIPTION = "![]<>'^&etc";
+        String ANT_VERSION = "<>whitespaces!#etc";
+        String ANT_TAG = "!<>*%etc";
+        String ANT_SCM_URL = "!<>*%etc";
+        String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
+        String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
+        String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
+        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
+        goToAddAntProjectPage();
+        addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME,
+                    ANT_SCM_PASSWORD, ANT_TAG, false, DEFAULT_PROJ_GRP_NAME, null, false, "ant" );
+        assertTextPresent( "Name contains invalid characters." );
+        assertTextPresent( "Description contains invalid characters." );
+        assertTextPresent( "Version contains invalid characters." );
+        assertTextPresent( "SCM Url contains invalid characters." );
+        assertTextPresent( "SCM Tag contains invalid characters." );
+    }
 
     public void testSubmitEmptyForm()
     {

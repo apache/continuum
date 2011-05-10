@@ -17,6 +17,30 @@
   ~ under the License.
   -->
 
+<!DOCTYPE validators PUBLIC
+    "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+    "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+  <field name="name">
+    <field-validator type="requiredstring">
+      <message key="addProjectGroup.name.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
+      <message key="addProjectGroup.name.invalid"/>
+    </field-validator>
+  </field>
+  <field name="groupId">
+    <field-validator type="requiredstring">
+      <message key="addProjectGroup.groupId.required"/>
+    </field-validator>
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[[a-zA-Z0-9.\\s]*]]></param>
+      <message key="addProjectGroup.groupId.invalid"/>
+    </field-validator>
+  </field>
+</validators>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -41,22 +65,22 @@
     "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
 
 <validators>
-  <field name="companyPom.groupId">
+  <field name="name">
     <field-validator type="requiredstring">
-      <message key="appearance.groupId.required"/>
+      <message key="addProjectGroup.name.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9.]*]]></param>
-      <message key="appearance.groupId.invalid"/>
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
+      <message key="addProjectGroup.name.invalid"/>
     </field-validator>
   </field>
-  <field name="companyPom.artifactId">
+  <field name="groupId">
     <field-validator type="requiredstring">
-      <message key="appearance.artifactId.required"/>
+      <message key="addProjectGroup.groupId.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9\-]*]]></param>
-      <message key="appearance.artifactId.invalid"/>
+      <param name="expression"><![CDATA[[a-zA-Z0-9.\\s]*]]></param>
+      <message key="addProjectGroup.groupId.invalid"/>
     </field-validator>
   </field>
 </validators>

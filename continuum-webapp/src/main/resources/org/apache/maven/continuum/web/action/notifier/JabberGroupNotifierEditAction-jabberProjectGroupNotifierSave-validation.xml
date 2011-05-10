@@ -26,6 +26,11 @@
     <field-validator type="requiredstring">
       <message key="jabberNotifier.host.required"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="trim">true</param>
+      <param name="expression"><![CDATA[[a-zA-Z0-9_.:\\/-]*]]></param>
+      <message key="jabberNotifier.host.invalid"/>
+    </field-validator>
   </field>
   <field name="port">
     <field-validator type="int">
@@ -43,6 +48,13 @@
     <field-validator type="requiredstring">
       <message key="jabberNotifier.password.required"/>
     </field-validator>
+  </field>
+  <field name="domainName">
+	<field-validator type="regex">
+	  <param name="trim">true</param>
+	  <param name="expression"><![CDATA[[a-zA-Z0-9_.:\\/-]*]]></param>
+	  <message key="jabberNotifier.domain.invalid" />
+	</field-validator>
   </field>
   <field name="address">
     <field-validator type="requiredstring">

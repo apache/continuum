@@ -41,7 +41,7 @@
       -->
     </div>
 
-    <h3><s:text name="projectGroup.members.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
+    <h3><s:text name="projectGroup.members.section.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
 
     <ec:table items="groupProjects"
               var="project"
@@ -54,9 +54,9 @@
       <ec:row highlightRow="true">
         <ec:column property="name" title="summary.projectTable.name" width="48%">
           <s:url id="projectViewUrl" action="projectView">
-            <s:param name="projectId">${pageScope.project.id}</s:param>
+            <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
           </s:url>
-          <s:a href="%{projectViewUrl}">${pageScope.project.name}</s:a>
+          <s:a href="%{projectViewUrl}"><c:out value="${pageScope.project.name}"/></s:a>
         </ec:column>
         <ec:column property="editAction" title="&nbsp;" width="1%" sortable="false">
           <center>
@@ -65,8 +65,8 @@
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                 <s:url id="editProjectUrl" action="projectEdit">
-                  <s:param name="projectId">${pageScope.project.id}</s:param>
-                  <s:param name="projectName">${project.name}</s:param>
+                  <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
+                  <s:param name="projectName"><c:out value="${project.name}"/></s:param>
                 </s:url>
                 <s:a href="%{editProjectUrl}">
                   <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
@@ -90,8 +90,8 @@
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                 <s:token/>  
                 <s:url id="removeProjectUrl" action="deleteProject!default.action">
-                  <s:param name="projectId">${pageScope.project.id}</s:param>
-                  <s:param name="projectName">${pageScope.project.name}</s:param>
+                  <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
+                  <s:param name="projectName"><c:out value="${pageScope.project.name}"/></s:param>
                   <s:param name="struts.token.name">struts.token</s:param>
                   <s:param name="struts.token"><s:property value="struts.token"/></s:param>
                 </s:url>

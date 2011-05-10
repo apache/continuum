@@ -82,7 +82,7 @@
       <s:param name="tabName" value="'Summary'"/>
     </s:action>
 
-    <h3><s:text name="projectGroup.information.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
+    <h3><s:text name="projectGroup.information.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <c1:data label="%{getText('projectGroup.name.label')}" name="projectGroup.name"/>
@@ -190,8 +190,8 @@
     </redback:ifAnyAuthorized>
 
     <s:action name="projectSummary" executeResult="true" namespace="component">
-      <s:param name="projectGroupId">${projectGroupId}</s:param>
-      <s:param name="projectGroupName">${projectGroup.name}</s:param>
+      <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
+      <s:param name="projectGroupName"><c:out value="${projectGroup.name}"/></s:param>
     </s:action>
 
   </div>

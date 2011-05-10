@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
@@ -283,7 +284,7 @@ public class ScheduleAction
         schedule.setActive( active );
         schedule.setCronExpression( getCronExpression() );
         schedule.setDelay( delay );
-        schedule.setDescription( description );
+        schedule.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( description ) ) );
         schedule.setName( name );
         schedule.setMaxJobExecutionTime(maxJobExecutionTime);
         if (!getContinuum().getConfiguration().isDistributedBuildEnabled()) {

@@ -46,15 +46,15 @@
             <ec:column property="active" title="schedules.table.active"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editScheduleUrl" action="schedule">
-                  <s:param name="id">${pageScope.schedule.id}</s:param>
+                  <s:param name="id"><c:out value="${pageScope.schedule.id}"/></s:param>
                 </s:url>
                 <s:a href="%{editScheduleUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:token/>
                 <s:url id="removeScheduleUrl" action="removeSchedule">
-                  <s:param name="id">${pageScope.schedule.id}</s:param>
-                  <s:param name="name">${pageScope.schedule.name}</s:param>
+                  <s:param name="id"><c:out value="${pageScope.schedule.id}"/></s:param>
+                  <s:param name="name"><c:out value="${pageScope.schedule.name}"/></s:param>
                   <s:param name="struts.token.name">struts.token</s:param>
                   <s:param name="struts.token"><s:property value="struts.token"/></s:param>
                 </s:url>

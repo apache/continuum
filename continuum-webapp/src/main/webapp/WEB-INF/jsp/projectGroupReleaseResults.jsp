@@ -37,7 +37,7 @@
         <s:param name="tabName" value="'ReleaseResults'"/>
       </s:action>
     
-      <h3><s:text name="projectGroup.releaseResults.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
+      <h3><s:text name="projectGroup.releaseResults.section.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
       
       <form id="releaseResultsForm" action="removeReleaseResults.action" method="post">
         <s:token/>
@@ -72,8 +72,8 @@
             </ec:column>
             <ec:column property="actions" title="&nbsp;">
                <s:url id="viewReleaseResultUrl" action="viewReleaseResult">
-                 <s:param name="releaseResultId">${pageScope.result.id}</s:param>
-                 <s:param name="projectGroupId">${projectGroupId}</s:param>
+                 <s:param name="releaseResultId"><c:out value="${pageScope.result.id}"/></s:param>
+                 <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
                </s:url>
                <s:a href="%{viewReleaseResultUrl}"><s:text name="releaseResults.viewResult"/></s:a>
              </ec:column>

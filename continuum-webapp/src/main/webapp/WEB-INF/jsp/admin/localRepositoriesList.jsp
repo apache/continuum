@@ -50,7 +50,7 @@
             <ec:column property="layout" title="repositories.table.layout"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editRepositoryUrl" action="editRepository">
-                  <s:param name="repository.id">${pageScope.repository.id}</s:param>
+                  <s:param name="repository.id"><c:out value="${pageScope.repository.id}"/></s:param>
                 </s:url>
                 <c:choose>
                   <c:when test="${repository.name == 'DEFAULT'}">
@@ -66,7 +66,7 @@
               <c:choose>
                 <c:when test="${defaultPurgeMap[repositoryName]}">
                   <s:url id="purgeRepositoryUrl" action="purgeRepository">
-                    <s:param name="repository.id">${pageScope.repository.id}</s:param>
+                    <s:param name="repository.id"><c:out value="${pageScope.repository.id}"/></s:param>
                   </s:url>
                   <s:a href="%{purgeRepositoryUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
                 </c:when>
@@ -78,7 +78,7 @@
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
                 <s:token/>
                 <s:url id="removeRepositoryUrl" action="removeRepository">
-                  <s:param name="repository.id">${pageScope.repository.id}</s:param>
+                  <s:param name="repository.id"><c:out value="${pageScope.repository.id}"/></s:param>
                   <s:param name="struts.token.name">struts.token</s:param>
                   <s:param name="struts.token"><s:property value="struts.token"/></s:param>
                 </s:url>

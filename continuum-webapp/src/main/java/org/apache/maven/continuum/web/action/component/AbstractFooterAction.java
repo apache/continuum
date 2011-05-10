@@ -18,6 +18,7 @@
  */
 package org.apache.maven.continuum.web.action.component;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
 
@@ -51,6 +52,4 @@ public abstract class AbstractFooterAction
     {
         this.footer = footer;
     }
-
-    
 }

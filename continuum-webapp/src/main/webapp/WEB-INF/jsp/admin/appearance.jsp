@@ -71,24 +71,29 @@
       <table>
         <tr>
           <th><s:text name="appearance.companyPom.organizationName.label"/></th>
-          <td>${companyModel.organization.name}</td>
+          <td><c:out value="${companyModel.organization.name}"/></td>
         </tr>
         <tr>
           <th><s:text name="appearance.companyPom.organizationUrl.label"/></th>
-          <td><a href="${companyModel.organization.url}" target="_blank">
-            <code>${companyModel.organization.url}</code>
+          <c:set var="companyOrgUrl"><c:out value="${companyModel.organization.url}"/></c:set>
+          <td><a href="${companyOrgUrl}" target="_blank">
+            <code><c:out value="${companyModel.organization.url}"/></code>
           </a></td>
         </tr>
         <tr>
           <th><s:text name="appearance.companyPom.organizationLogoUrl.label"/></th>
           <td>
-            <code>${companyModel.properties['organization.logo']}</code>
+            <code><c:out value="${companyModel.properties['organization.logo']}"/></code>
           </td>
         </tr>
       </table>
     </c:when>
     <c:otherwise>
-      <s:text name="appearance.companyPomDoesNotExist"><s:param>${companyPom.groupId}:${companyPom.artifactId}</s:param></s:text>
+      <s:text name="appearance.companyPomDoesNotExist">
+        <s:param>
+          <c:out value="${companyPom.groupId}"/>:<c:out value="${companyPom.artifactId}"/>
+        </s:param>
+      </s:text>
       <a href="<s:url action='editCompanyPom' />"><s:text name="appearance.createCompanyPom"/></a>
     </c:otherwise>
   </c:choose>

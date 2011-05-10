@@ -90,4 +90,17 @@ public abstract class AbstractConfigurationTest
             assertEditConfigurationPage();
         }
     }
+
+    protected void goToAppearancePage()
+    {
+        clickLinkWithText( "Appearance" );
+        assertAppearancePage();
+    }
+
+    protected void assertAppearancePage()
+    {
+        assertPage( "Configure Appearance" );
+        assertTextPresent( "Company Details" );
+        assertTextPresent( "Footer Content" );
+    }
 }

@@ -37,6 +37,7 @@ import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.codehaus.plexus.util.StringUtils;
@@ -490,7 +491,7 @@ public class BuildDefinitionAction
                 buildDefinition.setProfile( profile );
             }
         }
-        buildDefinition.setDescription( description );
+        buildDefinition.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( description ) ) );
         buildDefinition.setType( buildDefinitionType );
         buildDefinition.setAlwaysBuild( alwaysBuild );
         return buildDefinition;
