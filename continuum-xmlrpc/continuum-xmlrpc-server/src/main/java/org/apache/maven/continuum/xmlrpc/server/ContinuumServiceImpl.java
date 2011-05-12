@@ -125,7 +125,7 @@ public class ContinuumServiceImpl
 
     private static final String REPOSITORY_LAYOUT_VALID_EXPRESSION = "default|legacy";
 
-    private static final String BUILD_DEFINITION_ARGUMENTS_VALID_EXPRESSION = "[A-Za-z0-9_./=,\":\\s\\\\-]*";
+    private static final String BUILD_DEFINITION_ARGUMENTS_VALID_EXPRESSION = "[A-Za-z0-9_./=,${}\":\\s\\\\-]*";
 
     private static final String BUILD_DEFINITION_GOALS_VALID_EXPRESSION = "[A-Za-z0-9_:\\s\\-]*";
 
