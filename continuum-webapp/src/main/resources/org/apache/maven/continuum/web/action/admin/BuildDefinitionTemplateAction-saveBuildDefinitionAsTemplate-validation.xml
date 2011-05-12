@@ -44,7 +44,7 @@
   </field>
   <field name="buildDefinition.arguments">
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.\\/=,":\s\-]*]]></param>
+      <param name="expression"><![CDATA[[A-Za-z0-9_${}.\\/=,":\s\-]*]]></param>
       <message key="buildDefinition.arguments.invalid"/>
     </field-validator>
   </field>
