@@ -32,22 +32,28 @@ import java.net.UnknownHostException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -119,11 +125,31 @@ public abstract class AbstractContinuumProjectBuilder
                                                                                                      password ) );
             }
 
+            // basic auth
             HttpResponse httpResponse = httpClient.execute( httpGet );
 
-            // basic auth 
+            // CONTINUUM-2627
+            if( httpResponse.getStatusLine().getStatusCode() != 200 )
+            {
+                log.debug( "Initial attempt did not return a 200 status code. Trying pre-emptive authentication.." );
+
+                HttpHost targetHost = new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() );
+
+                // Create AuthCache instance
+                AuthCache authCache = new BasicAuthCache();
+                // Generate BASIC scheme object and add it to the local auth cache
+                BasicScheme basicAuth = new BasicScheme();
+                authCache.put(targetHost, basicAuth);
+
+                // Add AuthCache to the execution context
+                BasicHttpContext localcontext = new BasicHttpContext();
+                localcontext.setAttribute( ClientContext.AUTH_CACHE, authCache);
+
+                httpResponse = httpClient.execute( targetHost, httpGet, localcontext );
+            }
 
             int res = httpResponse.getStatusLine().getStatusCode();
+
             switch ( res )
             {
                 case 200:

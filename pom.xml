@@ -977,12 +977,12 @@ under the License.
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpcore</artifactId>
-        <version>4.0-beta3</version>
+        <version>4.1.1</version>
       </dependency>    
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.0-beta2</version>
+        <version>4.1.1</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
