@@ -10,7 +10,7 @@ import org.apache.maven.scm.provider.git.repository.GitScmProviderRepository;
  */
 public class ContinuumScmUtils
 {
-    private static final String GIT_SCM_PROVIDERTYPE = "git";
+    public static final String GIT_SCM_PROVIDERTYPE = "git";
 
     // CONTINUUM-2628
     public static ContinuumScmConfiguration setSCMCredentialsforSSH( ContinuumScmConfiguration config,

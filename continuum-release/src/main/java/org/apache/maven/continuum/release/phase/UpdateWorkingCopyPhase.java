@@ -22,6 +22,8 @@ package org.apache.maven.continuum.release.phase;
 import java.io.File;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.scm.ContinuumScmUtils;
 import org.apache.maven.scm.ScmBranch;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.ScmFileSet;
@@ -32,6 +34,7 @@ import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.manager.plexus.PlexusLogger;
 import org.apache.maven.scm.provider.ScmProvider;
 import org.apache.maven.scm.provider.ScmProviderRepository;
+import org.apache.maven.scm.provider.ScmUrlUtils;
 import org.apache.maven.scm.provider.git.gitexe.command.branch.GitBranchCommand;
 import org.apache.maven.scm.provider.git.repository.GitScmProviderRepository;
 import org.apache.maven.scm.repository.ScmRepository;
@@ -72,6 +75,53 @@ public class UpdateWorkingCopyPhase
 
         ScmRepository repository;
         ScmProvider provider;
+
+        // CONTINUUM-2628
+        // if git ssh, use credentials specified in scm url if present. otherwise, use the scm credentials of project
+        String providerType = ScmUrlUtils.getProvider( releaseDescriptor.getScmSourceUrl() );
+        String scmSpecificUrl = releaseDescriptor.getScmSourceUrl().substring( providerType.length() + 5 );
+
+        if( providerType.contains( ContinuumScmUtils.GIT_SCM_PROVIDERTYPE ) && scmSpecificUrl.startsWith( GitScmProviderRepository.PROTOCOL_SSH ) )
+        {
+            scmSpecificUrl = scmSpecificUrl.substring( GitScmProviderRepository.PROTOCOL_SSH.length() + 3 );
+
+            // extract user information
+            int indexAt = scmSpecificUrl.indexOf( "@" );
+            String sshScmUsername = "";
+            String sshScmPassword = "";
+
+            if ( indexAt >= 0 )
+            {
+                String userInfo = scmSpecificUrl.substring( 0, indexAt );
+                sshScmUsername = userInfo;
+
+                int indexPwdSep = userInfo.indexOf( ":" );
+                // password is specified in the url
+                if ( indexPwdSep < 0 )
+                {
+                    sshScmUsername = userInfo.substring( indexPwdSep + 1);
+                }
+                else
+                {
+                    sshScmUsername = userInfo.substring( 0, indexPwdSep );
+                    sshScmPassword = userInfo.substring( indexPwdSep + 1 );
+                }
+            }
+
+            if( !StringUtils.isBlank( sshScmUsername ) )
+            {
+                releaseDescriptor.setScmUsername( sshScmUsername );
+                if( !StringUtils.isBlank( sshScmPassword ) )
+                {
+                    releaseDescriptor.setScmPassword( sshScmPassword );
+                }
+                else
+                {
+                    releaseDescriptor.setScmPassword( null );
+                }
+            }
+        }
+
         try
         {
             repository = scmRepositoryConfigurator.getConfiguredRepository( releaseDescriptor, settings );
