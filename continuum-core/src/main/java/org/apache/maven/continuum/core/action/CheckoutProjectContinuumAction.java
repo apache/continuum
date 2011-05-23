@@ -28,6 +28,7 @@ import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
+import org.apache.continuum.scm.ContinuumScmUtils;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -244,8 +245,10 @@ public class CheckoutProjectContinuumAction
         {
             config.setUrl( project.getScmUrl() );
         }
-        config.setUsername( scmUserName );
-        config.setPassword( scmPassword );
+
+        // CONTINUUM-2628
+        config = ContinuumScmUtils.setSCMCredentialsforSSH( config, config.getUrl(), scmUserName, scmPassword );
+
         config.setUseCredentialsCache( project.isScmUseCache() );
         config.setWorkingDirectory( workingDirectory );
         config.setTag( project.getScmTag() );

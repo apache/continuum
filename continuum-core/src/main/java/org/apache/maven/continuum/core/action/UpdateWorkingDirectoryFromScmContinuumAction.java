@@ -29,6 +29,7 @@ import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
+import org.apache.continuum.scm.ContinuumScmUtils;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -216,9 +217,10 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             config.setUrl( project.getScmUrl() );
         }
-        
-        config.setUsername( project.getScmUsername() );
-        config.setPassword( project.getScmPassword() );
+
+        // CONTINUUM-2628
+        config = ContinuumScmUtils.setSCMCredentialsforSSH( config, config.getUrl(), project.getScmUsername(), project.getScmPassword() );
+
         config.setUseCredentialsCache( project.isScmUseCache() );
         config.setWorkingDirectory( workingDirectory );
         config.setTag( project.getScmTag() );

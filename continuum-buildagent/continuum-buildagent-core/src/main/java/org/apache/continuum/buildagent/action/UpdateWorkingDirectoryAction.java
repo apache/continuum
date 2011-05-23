@@ -29,6 +29,7 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationServ
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
+import org.apache.continuum.scm.ContinuumScmUtils;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
@@ -140,8 +141,10 @@ public class UpdateWorkingDirectoryAction
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
         config.setUrl( project.getScmUrl() );
-        config.setUsername( project.getScmUsername() );
-        config.setPassword( project.getScmPassword() );
+
+        // CONTINUUM-2628
+        config = ContinuumScmUtils.setSCMCredentialsforSSH( config, project.getScmUrl(), project.getScmUsername(), project.getScmPassword() );
+        
         config.setUseCredentialsCache( project.isScmUseCache() );
         config.setWorkingDirectory( workingDirectory );
         config.setTag( project.getScmTag() );
