@@ -75,7 +75,9 @@ public abstract class AbstractContinuumProjectBuilder
 
     protected final Logger log = LoggerFactory.getLogger( getClass() );
 
-    private DefaultHttpClient httpClient;
+    private HttpParams params;
+    
+    private ClientConnectionManager cm;
 
     public void initialize()
         throws InitializationException
@@ -86,21 +88,21 @@ public abstract class AbstractContinuumProjectBuilder
         // https scheme
         schemeRegistry.register( new Scheme( "https", new EasySSLSocketFactory(), 443 ) );
 
-        HttpParams params = new BasicHttpParams();
+        params = new BasicHttpParams();
         // TODO put this values to a configuration way ???
         params.setParameter( ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 30 );
         params.setParameter( ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean( 30 ) );
         HttpProtocolParams.setVersion( params, HttpVersion.HTTP_1_1 );
 
-        ClientConnectionManager cm = new ThreadSafeClientConnManager( params, schemeRegistry );
-
-        httpClient = new DefaultHttpClient( cm, params );
+        cm = new ThreadSafeClientConnManager( params, schemeRegistry );
     }
 
     protected File createMetadataFile( URL metadata, String username, String password,
                                        ContinuumProjectBuildingResult result )
         throws IOException, URISyntaxException, HttpException
     {
+        DefaultHttpClient httpClient = new DefaultHttpClient( cm, params );
+
         String url = metadata.toExternalForm();
         if ( metadata.getProtocol().startsWith( "http" ) )
         {
