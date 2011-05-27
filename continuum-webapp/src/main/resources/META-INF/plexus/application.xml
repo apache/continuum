@@ -205,6 +205,11 @@
             <name>org.jpox.rdbms.dateTimezone</name>
             <value>JDK_DEFAULT_TIMEZONE</value>
           </property>
+          <!-- this is required for some MySQL versions and configurations, see CONTINUUM-1113 -->
+          <property>
+            <name>org.jpox.rdbms.stringDefaultLength</name>
+            <value>255</value>
+          </property>
 <!--
           <property>
             <name>org.jpox.identifier.case</name>
