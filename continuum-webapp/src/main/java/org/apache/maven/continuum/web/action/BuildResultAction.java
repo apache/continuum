@@ -222,7 +222,7 @@ public class BuildResultAction
 
         if ( buildOutputFile.exists() )
         {
-            return StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
+            return FileUtils.fileRead( buildOutputFile );
         }
         return null;
     }
