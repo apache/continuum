@@ -67,6 +67,8 @@ public class ConfigurationAction
 
     private boolean distributedBuildEnabled;
 
+    private String sharedSecretPassword;
+
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -116,6 +118,8 @@ public class ConfigurationAction
         setRequireReleaseOutput( Boolean.valueOf( requireRelease ) );
 
         distributedBuildEnabled = configuration.isDistributedBuildEnabled();
+
+        sharedSecretPassword = configuration.getSharedSecretPassword();
     }
 
     public String input()
@@ -178,6 +182,8 @@ public class ConfigurationAction
         }
 
         configuration.setDistributedBuildEnabled( distributedBuildEnabled );
+
+        configuration.setSharedSecretPassword( sharedSecretPassword );
 
         configuration.store();
 
@@ -272,5 +278,15 @@ public class ConfigurationAction
     public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
     {
         this.distributedBuildEnabled = distributedBuildEnabled;
+    }
+
+    public void setSharedSecretPassword( String sharedSecretPassword )
+    {
+        this.sharedSecretPassword = sharedSecretPassword;
+    }
+
+    public String getSharedSecretPassword()
+    {
+        return sharedSecretPassword;
     }
 }

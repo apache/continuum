@@ -51,6 +51,8 @@ public class GeneralConfiguration
     
     private boolean distributedBuildEnabled;
 
+    private String sharedSecretPassword;
+
     public GeneralConfiguration()
     {
         // nothing here
@@ -160,5 +162,15 @@ public class GeneralConfiguration
     public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
     {
         this.distributedBuildEnabled = distributedBuildEnabled;
+    }
+
+    public void setSharedSecretPassword( String sharedSecretPassword )
+    {
+        this.sharedSecretPassword = sharedSecretPassword;
+    }
+
+    public String getSharedSecretPassword()
+    {
+        return sharedSecretPassword;
     }
 }

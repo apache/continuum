@@ -134,6 +134,10 @@ public interface ConfigurationService
 
     boolean containsBuildAgentUrl(String buildAgentUrl,  BuildAgentGroupConfiguration buildAgentGroup );
 
+    void setSharedSecretPassword( String sharedSecretPassword );
+
+    String getSharedSecretPassword();
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

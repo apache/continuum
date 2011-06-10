@@ -48,4 +48,6 @@ public interface BuildAgentConfigurationService
     List<Installation> getAvailableInstallations();
     
     List<LocalRepository> getLocalRepositories();
+
+    String getSharedSecretPassword();
 }

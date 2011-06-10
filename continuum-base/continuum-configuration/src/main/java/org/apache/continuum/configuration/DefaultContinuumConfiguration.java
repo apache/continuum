@@ -126,6 +126,7 @@ public class DefaultContinuumConfiguration
 
             this.generalConfiguration.setNumberOfBuildsInParallel( configuration.getNumberOfBuildsInParallel() );
             this.generalConfiguration.setBaseUrl( configuration.getBaseUrl() );
+            this.generalConfiguration.setSharedSecretPassword( configuration.getSharedSecretPassword() );
             
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
             {
@@ -232,6 +233,7 @@ public class DefaultContinuumConfiguration
             ContinuumConfigurationModel configurationModel = new ContinuumConfigurationModel();
             configurationModel.setBaseUrl( this.generalConfiguration.getBaseUrl() );
             configurationModel.setNumberOfBuildsInParallel( this.generalConfiguration.getNumberOfBuildsInParallel() );
+            configurationModel.setSharedSecretPassword( this.generalConfiguration.getSharedSecretPassword() );
 
             // normally not null but NPE free is better !
             if ( this.generalConfiguration.getBuildOutputDirectory() != null )

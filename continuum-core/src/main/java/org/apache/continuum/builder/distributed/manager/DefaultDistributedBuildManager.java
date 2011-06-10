@@ -1534,7 +1534,7 @@ public class DefaultDistributedBuildManager
     public SlaveBuildAgentTransportService createSlaveBuildAgentTransportClientConnection( String buildAgentUrl ) 
         throws MalformedURLException, Exception
     {
-        return new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+        return new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ), "", configurationService.getSharedSecretPassword() );
     }
 
     // for unit testing

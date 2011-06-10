@@ -37,6 +37,8 @@ public class GeneralBuildAgentConfiguration
     
     private List<LocalRepository> localRepositories;
 
+    private String sharedSecretPassword;
+
     public File getWorkingDirectory()
     {
         return workingDirectory;
@@ -85,5 +87,15 @@ public class GeneralBuildAgentConfiguration
     public void setLocalRepositories( List<LocalRepository> localRepositories )
     {
         this.localRepositories = localRepositories;
+    }
+
+    public void setSharedSecretPassword( String sharedSecretPassword )
+    {
+        this.sharedSecretPassword = sharedSecretPassword;
+    }
+
+    public String getSharedSecretPassword()
+    {
+        return sharedSecretPassword;
     }
 }

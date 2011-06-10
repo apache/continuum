@@ -106,6 +106,7 @@ public class DefaultBuildAgentConfiguration
             this.generalBuildAgentConfiguration.setContinuumServerUrl( configuration.getContinuumServerUrl() );
             this.generalBuildAgentConfiguration.setInstallations( configuration.getInstallations() );
             this.generalBuildAgentConfiguration.setLocalRepositories( configuration.getLocalRepositories() );
+            this.generalBuildAgentConfiguration.setSharedSecretPassword( configuration.getSharedSecretPassword() );
         }
         catch ( IOException e )
         {
@@ -155,6 +156,7 @@ public class DefaultBuildAgentConfiguration
             configurationModel.setContinuumServerUrl( this.generalBuildAgentConfiguration.getContinuumServerUrl() );
             configurationModel.setInstallations( this.generalBuildAgentConfiguration.getInstallations() );
             configurationModel.setLocalRepositories( this.generalBuildAgentConfiguration.getLocalRepositories() );
+            configurationModel.setSharedSecretPassword( this.generalBuildAgentConfiguration.getSharedSecretPassword() );
 
             ContinuumBuildAgentConfigurationModelXpp3Writer writer =
                 new ContinuumBuildAgentConfigurationModelXpp3Writer();

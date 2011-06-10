@@ -39,6 +39,7 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.redback.policy.PasswordEncoder;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -73,6 +74,9 @@ public class DefaultConfigurationService
     private ContinuumConfiguration configuration;
 
     private GeneralConfiguration generalConfiguration;
+
+    @Resource( name="passwordEncoder#sha256" )
+    private PasswordEncoder encoder;
 
     // ----------------------------------------------------------------------
     //
@@ -649,6 +653,29 @@ public class DefaultConfigurationService
     public void setNumberOfBuildsInParallel( int num )
     {
         generalConfiguration.setNumberOfBuildsInParallel( num );
+    }
+
+    public String getSharedSecretPassword()
+    {
+        return generalConfiguration.getSharedSecretPassword();
+    }
+
+    public void setSharedSecretPassword( String sharedSecretPassword )
+    {
+        String encryptedPassword = encoder.encodePassword( sharedSecretPassword );
+
+        if ( StringUtils.isNotBlank( generalConfiguration.getSharedSecretPassword() ) )
+        {
+            String previousEncodedPassword = generalConfiguration.getSharedSecretPassword();
+            // check if nothing changed
+            if ( previousEncodedPassword.equals( sharedSecretPassword ) || 
+                            previousEncodedPassword.equals( encryptedPassword ) )
+            {
+                return;
+            }
+        }
+
+        generalConfiguration.setSharedSecretPassword( encryptedPassword );
     }
 
     // ----------------------------------------------------------------------

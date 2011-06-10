@@ -149,7 +149,12 @@ public class DefaultBuildAgentConfigurationService
     {
         return generalBuildAgentConfiguration.getLocalRepositories();
     }
-    
+
+    public String getSharedSecretPassword()
+    {
+        return generalBuildAgentConfiguration.getSharedSecretPassword();
+    }
+
     private void loadData()
         throws BuildAgentConfigurationException
     {

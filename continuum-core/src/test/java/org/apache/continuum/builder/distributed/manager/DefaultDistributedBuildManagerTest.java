@@ -328,6 +328,9 @@ public class DefaultDistributedBuildManagerTest
                 exactly( 2 ).of( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
 
+                one( configurationService ).getSharedSecretPassword();
+                will( returnValue( null ) );
+
                 one( configurationService ).updateBuildAgent( buildAgent1 );
                 one( configurationService ).store();
 
@@ -397,6 +400,9 @@ public class DefaultDistributedBuildManagerTest
                 one( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
 
+                one( configurationService ).getSharedSecretPassword();
+                will( returnValue( null ) );
+
                 one( configurationService ).updateBuildAgent( buildAgent1 );
                 one( configurationService ).store();
             }
@@ -412,6 +418,9 @@ public class DefaultDistributedBuildManagerTest
                 exactly( 5 ).of( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
 
+                one( configurationService ).getSharedSecretPassword();
+                will( returnValue( null ) );
+                
                 one( configurationService ).updateBuildAgent( buildAgent1 );
                 one( configurationService ).store();
 
@@ -442,6 +451,9 @@ public class DefaultDistributedBuildManagerTest
             {
                 exactly( 6 ).of( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
+
+                exactly( 2 ).of( configurationService ).getSharedSecretPassword();
+                will( returnValue( null ) );
 
                 one( configurationService ).updateBuildAgent( buildAgent1 );
                 one( configurationService ).updateBuildAgent( buildAgent2 );

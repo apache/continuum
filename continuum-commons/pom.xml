@@ -54,7 +54,7 @@ under the License.
     <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>jsr250-api</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -112,7 +112,11 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-policy</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
       <artifactId>plexus-spring</artifactId>

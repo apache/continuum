@@ -77,6 +77,11 @@
           <type>boolean</type>
         </field>
         <field>
+          <name>sharedSecretPassword</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
+        <field>
           <name>buildAgents</name>
           <version>1.1.0+</version>
           <association>

@@ -40,6 +40,7 @@ import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -85,6 +86,11 @@ public class DistributedBuildProjectTaskExecutor
      */
     private BuildResultDao buildResultDao;
 
+    /**
+     * @plexus.requirement
+     */
+    private ConfigurationService configurationService;
+
     public void setBuildAgentUrl( String buildAgentUrl )
     {
         this.buildAgentUrl = buildAgentUrl;
@@ -102,7 +108,8 @@ public class DistributedBuildProjectTaskExecutor
 
         try
         {
-            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ), "", 
+                                                                                        configurationService.getSharedSecretPassword() );
 
             log.info( "initializing buildContext for projectGroupId=" + prepareBuildTask.getProjectGroupId() );
             List<Map<String, Object>> buildContext =

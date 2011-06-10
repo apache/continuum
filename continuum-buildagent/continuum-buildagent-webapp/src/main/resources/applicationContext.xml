@@ -4,16 +4,19 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
   
-  <bean id="slaveBuildAgentTransportServer" class="org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportServer">
+  <bean id="slaveBuildAgentTransportServer" lazy-init="true" scope="singleton" class="org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportServer">
     <constructor-arg ref="continuumBuildAgentService"/>
   </bean>
 
-  <bean name="xmlrpcServicesList" class="java.util.ArrayList">
+  <bean name="xmlrpcServicesList" lazy-init="true" scope="singleton" class="java.util.ArrayList">
     <constructor-arg>
       <list>
         <ref bean="slaveBuildAgentTransportServer"/>
       </list>
     </constructor-arg>
   </bean>
-  
+
+  <bean name="xmlRpcAuthenticator" class="org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportAuthenticator">
+    <constructor-arg ref="buildAgentConfigurationService"/>
+  </bean>
 </beans>

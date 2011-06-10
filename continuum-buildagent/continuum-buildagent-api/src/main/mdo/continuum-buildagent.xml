@@ -63,6 +63,11 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
+        <field>
+          <name>sharedSecretPassword</name>
+          <version>1.4.1+</version>
+          <type>String</type>
+        </field>
       </fields>
     </class>
     <class xml.tagName="buildagent-installation">

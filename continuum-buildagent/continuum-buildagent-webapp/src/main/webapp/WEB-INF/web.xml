@@ -58,6 +58,10 @@
       <param-value>xmlrpcServicesList</param-value>
     </init-param>
     <init-param>
+      <param-name>authHandlerBeanName</param-name>
+      <param-value>xmlRpcAuthenticator</param-value>
+    </init-param>
+    <init-param>
       <param-name>enabledForExtensions</param-name>
       <param-value>true</param-value>
     </init-param>

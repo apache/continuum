@@ -26,6 +26,21 @@
     <title>
       <s:text name="configuration.page.title"/>
     </title>
+    <script language="javascript">
+      function setSecretPassword()
+      {
+        var form = document.forms[ "editConfiguration" ];
+
+        if ( form.distributedBuildEnabled.checked == true )
+        {
+          form.sharedSecretPassword.disabled = false;
+        }
+        else
+        {
+          form.sharedSecretPassword.disabled = true;
+        }
+      }
+    </script>
   </head>
 
   <body>
@@ -34,7 +49,7 @@
       <s:text name="configuration.section.title"/>
     </h3>
 
-    <s:form action="configuration!save" method="post">
+    <s:form name="editConfiguration" action="configuration!save" method="post">
 
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">
@@ -93,7 +108,15 @@
             <s:checkbox label="%{getText('configuration.disable.parallel.builds')}" name="requireParallelBuilds" required="true"/>
             --%>
 
-            <s:checkbox label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled"/>
+            <s:checkbox label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled" onclick="setSecretPassword();"/>
+
+            <s:password label="%{getText('configuration.sharedSecretPassword.label')}" name="sharedSecretPassword" disabled="%{!distributedBuildEnabled}" showPassword="true">
+              <s:param name="desc">
+                <p>
+                  <s:text name="configuration.sharedSecretPassword.message"/>
+                </p>
+              </s:param>
+            </s:password>
 
             <s:hidden name="requireReleaseOutput"/>
           </tbody>

@@ -39,6 +39,7 @@ import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
+import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.model.PreparedRelease;
@@ -53,7 +54,6 @@ import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +103,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 return client.getReleasePluginParameters( projectId, pomFilename );
             }
 
@@ -140,7 +140,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 return client.processProject( projectId, pomFilename, autoVersionSubmodules );
             }
 
@@ -176,7 +176,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
     
                 String releaseId =
                     client.releasePrepare( createProjectMap( project ), releaseProperties,
@@ -220,7 +220,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 Map<String, Object> result = client.getReleaseResult( releaseId );
     
                 ReleaseResult releaseResult = new ReleaseResult();
@@ -264,7 +264,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 return client.getListener( releaseId );
             }
 
@@ -300,7 +300,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 client.removeListener( releaseId );
             }
 
@@ -337,7 +337,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 return client.getPreparedReleaseName( releaseId );
             }
 
@@ -404,7 +404,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 client.releasePerform( releaseId, goals, arguments, useReleaseProfile, map, username );
     
                 addReleaseInProgress( releaseId, "perform", projectId, username );
@@ -464,7 +464,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 String releaseId =
                     client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername,
                                                   scmPassword, scmTag, scmTagBase, environments, username );
@@ -506,7 +506,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 client.releaseRollback( releaseId, projectId );
             }
 
@@ -542,7 +542,7 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 String result = client.releaseCleanup( releaseId );
     
                 removeFromReleaseInProgress( releaseId );
@@ -592,8 +592,7 @@ public class DefaultDistributedReleaseManager
                     {
                         if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
                         {
-                            SlaveBuildAgentTransportClient client =
-                                new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                            SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                             Map map = client.getListener( releaseId );
     
                             if ( map != null && !map.isEmpty() )
@@ -659,6 +658,12 @@ public class DefaultDistributedReleaseManager
         }
 
         return null;
+    }
+
+    public SlaveBuildAgentTransportService createSlaveBuildAgentTransportClientConnection( String buildAgentUrl ) 
+        throws MalformedURLException, Exception
+    {
+        return new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ), "", configurationService.getSharedSecretPassword() );
     }
 
     private Map createProjectMap( Project project )

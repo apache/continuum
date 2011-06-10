@@ -155,5 +155,12 @@ public class ConfigurationServiceTest
         assertEquals( "check # build agent groups", 1, service.getBuildAgentGroups().size() );
         assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
         assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription() );
+        assertNull( service.getSharedSecretPassword() );
+
+        service.setSharedSecretPassword( "password" );
+        service.store();
+        service.reload();
+
+        assertNotNull( service.getSharedSecretPassword() );
     }
 }

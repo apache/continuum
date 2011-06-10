@@ -178,6 +178,15 @@ public class ConfigurationServiceMock
         return null;
     }
 
+    public String getSharedSecretPassword()
+    {
+        return null;
+    }
+
+    public void setSharedSecretPassword( String sharedSecretPassword )
+    {        
+    }
+
     public boolean isLoaded()
     {
         return false;
