@@ -27,6 +27,8 @@ Managing General Configuration
 *---------------------------------+------------------------------------------------------+
 | Enable Distributed Builds       | When checked, this Continuum instance will delegate all builds to configured agents. |
 *---------------------------------+------------------------------------------------------+
+| Shared Secret Password          | The pre-shared key (PSK) between the master and all configured agents. The PSK will need to be copied to all configured agents. |
+*---------------------------------+------------------------------------------------------+
 
     You can modify values or keep defaults then save. 
 

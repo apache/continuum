@@ -161,6 +161,6 @@ public class ConfigurationServiceTest
         service.store();
         service.reload();
 
-        assertNotNull( service.getSharedSecretPassword() );
+        assertEquals( "password", service.getSharedSecretPassword() );
     }
 }

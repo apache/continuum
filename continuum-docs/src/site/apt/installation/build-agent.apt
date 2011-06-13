@@ -49,6 +49,7 @@ Installing and Configuring a Build Agent
       <layout>default</layout>
     </localRepository>
   </localRepositories>
+  <sharedSecretPassword>PSK</sharedSecretPassword>
 </continuum-buildagent-configuration>
 +----------------+
 
@@ -65,7 +66,10 @@ Installing and Configuring a Build Agent
     * <<<localRepositories>>> - a list of the local repositories that will be used by the build agent when building and releasing projects. 
     The local repository <<<name>>> must match that of the local repository configured in the Continuum Master. This configuration is 
     only available in Continuum 1.4.0+ to fix {{{http://jira.codehaus.org/browse/CONTINUUM-2391}CONTINUUM-2391}}.
-    
+
+    * <<<sharedSecretPassword>>> - the pre-shared key (PSK) between master and agent. Copy the PSK configured in the Continuum Master
+    configuration file <<<continuum.xml>>>.
+
   Note that all of your agents need not be identical, as there is a way to control which agent Continuum chooses by using a
   {{{../administrator_guides/build-agent-groups.html}Build Agent Group}}. In addition, you need to {{{../administrator_guides/buildEnvironment.html} configure}}
   the Build Environment from the Master in order to specify which installation to use for the build.
@@ -83,8 +87,9 @@ continuum-buildagent start
 continuum-buildagent.bat console
 +---+
 
-  Next, enable the <<Distributed Builds>> option in the {{{../administrator_guides/configuration.html}General Configuration}},
-  and {{{../administrator_guides/build-agents.html}add the agent}} to the Continuum Master server.
+  Next, {{{../administrator_guides/build-agents.html}add the agent}} to the Continuum Master server. 
+
+  Note that agent will be automatically disabled if the PSK is not configured properly or if the agent is unreachable by the Continuum Master.  
 
 ~~ TODO:  Does the Jetty bundle still want CONTINUUM_BUILDAGENT_HOME set?
 

@@ -115,10 +115,6 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-policy</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.redback</groupId>
       <artifactId>plexus-spring</artifactId>
       <scope>test</scope>
     </dependency>    

@@ -52,6 +52,9 @@
         <requirement>
           <role>org.apache.continuum.dao.BuildDefinitionDao</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
       </requirements>
     </component>
 

@@ -82,9 +82,9 @@ Understanding Distributed Builds
 
 * Setup
 
-    * {{{../installation/build-agent.html}Install and Configure}} one or more Build Agents.
+    * {{{./configuration.html}Enable}} the Distributed Builds option and set the Shared Secret Password in the General Configuration.
 
-    * {{{./configuration.html}Enable}} the Distributed Builds option in the General Configuration.
+    * {{{../installation/build-agent.html}Install and Configure}} one or more Build Agents.
 
     * {{{./build-agents.html}Add}} your Build Agents to the Continuum Master.
 
