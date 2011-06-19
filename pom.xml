@@ -1721,6 +1721,6 @@ under the License.
     <archiva.version>1.2.1</archiva.version>
     <slf4jVersion>1.5.8</slf4jVersion>
     <xmlrpc.version>3.1</xmlrpc.version>
-    <atlassian.xmlrpc.binder.version>0.9</atlassian.xmlrpc.binder.version>
+    <atlassian.xmlrpc.binder.version>0.8.2</atlassian.xmlrpc.binder.version>
   </properties>
 </project>
