@@ -186,6 +186,14 @@ public class ParallelBuildsManager
         if ( firstProjectId != 0 )
         {
             BuildDefinition buildDef = projectsBuildDefinitionsMap.get( firstProjectId );
+            
+            if ( buildDef.getArguments() == null || buildDef.getBuildFile() == null || buildDef.getGoals() == null || buildDef.getSchedule() == null )
+            {
+                log.error( "Null values set on build definition (id=" + buildDef.getId() + ")" );
+                throw new BuildManagerException( "Unable to build project due to null values set on " +
+                                                 "( GOALS , ARGUMENTS , BUILD_FILE, SCHEDULE_ID_OID ) of BUILDDEFINITION ID : " 
+                                                 + buildDef.getId() + " Please notify your system adminitrator");
+            }
             OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectsInGroupAreQueued( projectGroupId );
 
             if ( overallBuildQueue == null )
