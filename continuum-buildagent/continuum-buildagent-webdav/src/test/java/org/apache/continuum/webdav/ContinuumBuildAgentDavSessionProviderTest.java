@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -33,11 +34,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.jackrabbit.webdav.DavSessionProvider;
 import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.apache.jackrabbit.webdav.WebdavRequestImpl;
 
 import junit.framework.TestCase;
+import org.codehaus.plexus.util.Base64;
+import org.easymock.MockControl;
 
 public class ContinuumBuildAgentDavSessionProviderTest
     extends TestCase
@@ -46,20 +51,40 @@ public class ContinuumBuildAgentDavSessionProviderTest
 
     private WebdavRequest request;
 
+    private MockControl buildAgentConfigurationServiceControl;
+
+    private BuildAgentConfigurationService buildAgentConfigurationService;
+
     @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        sessionProvider = new ContinuumBuildAgentDavSessionProvider();
+
+        buildAgentConfigurationServiceControl = MockControl.
+            createControl( BuildAgentConfigurationService.class );
+        buildAgentConfigurationService =
+            (BuildAgentConfigurationService) buildAgentConfigurationServiceControl.getMock();
+
+        sessionProvider = new ContinuumBuildAgentDavSessionProvider( buildAgentConfigurationService );
         request = new WebdavRequestImpl( new HttpServletRequestMock(), null );
+
+        buildAgentConfigurationServiceControl.expectAndReturn(
+            buildAgentConfigurationService.getSharedSecretPassword(), "secret", 2 );
+
+        buildAgentConfigurationServiceControl.replay();
+
     }
 
     public void testAttachSession()
         throws Exception
     {
         assertNull( request.getDavSession() );
+
         sessionProvider.attachSession( request );
+        
+        buildAgentConfigurationServiceControl.verify();
+
         assertNotNull( request.getDavSession() );
     }
 
@@ -67,13 +92,17 @@ public class ContinuumBuildAgentDavSessionProviderTest
         throws Exception
     {
         assertNull( request.getDavSession() );
+
         sessionProvider.attachSession( request );
+
+        buildAgentConfigurationServiceControl.verify();
+
         assertNotNull( request.getDavSession() );
         
         sessionProvider.releaseSession( request );
         assertNull( request.getDavSession() );
     }
-
+    
     @SuppressWarnings("unchecked")
     private class HttpServletRequestMock implements HttpServletRequest
     {
@@ -236,7 +265,13 @@ public class ContinuumBuildAgentDavSessionProviderTest
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public String getHeader(String arg0) {
+        public String getHeader(String arg0)
+        {
+            if( arg0 != null && arg0.equalsIgnoreCase( "authorization" ) )
+            {
+                return getAuthorizationHeader();
+            }
+
             return "";
         }
 
@@ -247,7 +282,10 @@ public class ContinuumBuildAgentDavSessionProviderTest
 
         public Enumeration getHeaders(String arg0) 
         {
-            throw new UnsupportedOperationException("Not supported yet.");
+            Hashtable<String, String> hashTable = new Hashtable<String,String>();
+            hashTable.put( "Authorization", getAuthorizationHeader() );
+
+            return hashTable.elements();
         }
 
         public int getIntHeader(String arg0) 
@@ -338,6 +376,19 @@ public class ContinuumBuildAgentDavSessionProviderTest
         public boolean isUserInRole(String arg0) 
         {
             throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        private String getAuthorizationHeader()
+        {
+            try
+            {
+                String encodedPassword = IOUtils.toString( Base64.encodeBase64( ":secret".getBytes() ) ) ;
+                return "Basic " + encodedPassword;
+            }
+            catch( IOException e )
+            {
+                return "";
+            }
         }
     }
 }

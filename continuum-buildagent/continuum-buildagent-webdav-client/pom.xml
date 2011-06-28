@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.continuum</groupId>
+    <artifactId>continuum-buildagent</artifactId>
+    <version>1.4.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>continuum-buildagent-webdav-client</artifactId>
+  <version>1.4.1-SNAPSHOT</version>
+  <name>Continuum :: Distributed Build :: Build Agent :: Webdav Client</name>
+  <dependencies>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>4.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <!--
+    To execute the sample working copy webdav client, just execute "mvn exec:java".
+
+    By default, the sample webdav client gets the POM file of the Continuum project with id "1"
+    from the working copy directory. Change the values of the continuumProjectId and pomFile
+    properties depending on the contents of the continuum-buildagent's working directory you
+    are running this against.
+    -->
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+          <executable>java</executable>
+          <mainClass>org.apache.continuum.buildagent.webdav.client.WorkingCopyWebdavClient</mainClass>
+          <arguments>
+            <argument>${url}/workingcopy/${continuumProjectId}/${pomFile}</argument>
+            <argument>${sharedSecretPassword}</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <bannedDependencies>
+                  <includes>
+                    <!--
+                     Needed during runtime by httpclient. This module isn't included in webapp so it
+                     should be alright to include commons-logging
+                     -->
+                    <include>commons-logging:commons-logging:1.1.1:jar:runtime</include>
+                  </includes>
+                </bannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <url>http://localhost:${port}/continuum-buildagent</url>
+    <port>8181</port>
+    <sharedSecretPassword>secret</sharedSecretPassword>
+    <continuumProjectId>1</continuumProjectId>
+    <pomFile>pom.xml</pomFile>
+  </properties>
+</project>

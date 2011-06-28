@@ -20,12 +20,13 @@ package org.apache.continuum.webdav;
  */
 
 import java.io.File;
-
+import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.ehcache.CacheManager;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 import com.meterware.httpunit.GetMethodWebRequest;
@@ -35,6 +36,7 @@ import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
+import org.codehaus.plexus.util.Base64;
 
 public class WorkingCopyServletTest
     extends PlexusInSpringTestCase
@@ -67,7 +69,7 @@ public class WorkingCopyServletTest
         HttpUnitOptions.setExceptionsThrownOnErrorStatus( false );
 
         sr = new ServletRunner( getTestFile( "src/test/resources/WEB-INF/web.xml" ) );
-        sr.registerServlet( "/workingcopy/*", WorkingCopyServlet.class.getName() );
+        sr.registerServlet( "/workingcopy/*", MockWorkingCopyServlet.class.getName() );
         sc = sr.newClient();
 
         new File( workingDirectory, "1/src/main/java/org/apache/continuum" ).mkdirs();
@@ -103,7 +105,7 @@ public class WorkingCopyServletTest
     public void testGetWorkingCopy()
         throws Exception
     {
-        WorkingCopyServlet servlet = (WorkingCopyServlet) sc.newInvocation( REQUEST_PATH ).getServlet();
+        MockWorkingCopyServlet servlet = (MockWorkingCopyServlet) sc.newInvocation( REQUEST_PATH ).getServlet();
         assertNotNull( servlet );
     }
 
@@ -111,6 +113,8 @@ public class WorkingCopyServletTest
         throws Exception
     {
         request = new GetMethodWebRequest( REQUEST_PATH );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
+
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
@@ -122,6 +126,8 @@ public class WorkingCopyServletTest
         throws Exception
     {
         request = new GetMethodWebRequest( REQUEST_PATH + "src/" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
+
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
@@ -134,34 +140,42 @@ public class WorkingCopyServletTest
     {
         request = new GetMethodWebRequest( REQUEST_PATH + 
                                            "src/main/java/org/apache/continuum" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
         request = new GetMethodWebRequest( REQUEST_PATH + "src/main/java/org/apache/continuum/" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
         request = new GetMethodWebRequest( REQUEST_PATH + "src/main/java/org/apache/continuum/App.java" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
         request = new GetMethodWebRequest( REQUEST_PATH + "src/main/java/org/apache/continuum/App.java/" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_NOT_FOUND, response.getResponseCode() );
 
         request = new GetMethodWebRequest( REQUEST_PATH + "pom.xml" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
         request = new GetMethodWebRequest( REQUEST_PATH + "pom.xml/" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_NOT_FOUND, response.getResponseCode() );
 
         request = new GetMethodWebRequest( REQUEST_PATH + "target/continuum-artifact-1.0.jar" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
         request = new GetMethodWebRequest( REQUEST_PATH + "target/continuum-artifact-1.0.jar/" );
+        request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_NOT_FOUND, response.getResponseCode() );
     }
@@ -172,6 +186,19 @@ public class WorkingCopyServletTest
         for ( int i = 0; i < actualLinks.length; i++ )
         {
             assertEquals( "Link[" + i + "]", expectedLinks[i], actualLinks[i].getURLString() );
+        }
+    }
+
+    private String getAuthorizationHeader()
+    {
+        try
+        {
+            String encodedPassword = IOUtils.toString( Base64.encodeBase64( ":secret".getBytes() ) ) ;
+            return "Basic " + encodedPassword;
+        }
+        catch( IOException e )
+        {
+            return "";
         }
     }
 }
