@@ -3860,6 +3860,12 @@ public class ContinuumServiceImpl
         return (ReleaseListenerSummary) mapper.map( listener, ReleaseListenerSummary.class );
     }
 
+    public boolean pingBuildAgent( String buildAgentUrl )
+        throws Exception
+    {
+        return distributedBuildManager.pingBuildAgent( buildAgentUrl );
+    }
+
     private List getList( Object obj )
     {
         List<Object> list = new ArrayList<Object>();

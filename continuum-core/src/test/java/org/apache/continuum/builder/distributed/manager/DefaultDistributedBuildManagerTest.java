@@ -354,7 +354,22 @@ public class DefaultDistributedBuildManagerTest
         assertEquals( distributedBuildManager.getBuildAgentPlatform( TEST_BUILD_AGENT1 ), "" );
         context.assertIsSatisfied();
     }
-    
+
+    public void testBuildAgentIsAvailable()
+        throws Exception
+    {
+        assertTrue( distributedBuildManagerStub.isAgentAvailable( TEST_BUILD_AGENT1 ) );
+        context.checking( new Expectations()
+        {
+            {
+                never( configurationService ).getBuildAgents();
+                never( configurationService ).updateBuildAgent( buildAgent1 );
+                never( configurationService ).store();
+            }
+        } );
+        context.assertIsSatisfied();
+    }
+
     private Map<String, OverallDistributedBuildQueue> getMockOverallDistributedBuildQueues( int size )
     {
         Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =

@@ -1339,4 +1339,10 @@ public class ContinuumXmlRpcClient
     {
         return continuum.getProjectReleaseAndDevelopmentVersions( projectId, pomFilename, autoVersionSubmodules );
     }
+
+    public boolean pingBuildAgent( String buildAgentUrl )
+        throws Exception
+    {
+        return continuum.pingBuildAgent( buildAgentUrl );
+    }
 }

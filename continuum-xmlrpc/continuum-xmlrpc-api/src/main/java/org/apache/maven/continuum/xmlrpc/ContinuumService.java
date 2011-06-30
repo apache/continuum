@@ -1752,4 +1752,6 @@ public interface ContinuumService
      */
     List<Object> getAllBuildAgentsRPC();
 
+    boolean pingBuildAgent( String buildAgentUrl )
+        throws Exception;
 }

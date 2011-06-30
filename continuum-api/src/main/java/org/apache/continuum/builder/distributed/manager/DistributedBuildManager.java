@@ -92,6 +92,9 @@ public interface DistributedBuildManager
     boolean isAgentAvailable( String buildAgentUrl )
         throws ContinuumException;
 
+    boolean pingBuildAgent( String buildAgentUrl )
+        throws ContinuumException;
+
     boolean isProjectInAnyPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws ContinuumException;
 

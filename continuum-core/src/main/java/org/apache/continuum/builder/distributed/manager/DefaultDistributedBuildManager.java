@@ -1470,21 +1470,39 @@ public class DefaultDistributedBuildManager
     {
         try
         {
+            if ( pingBuildAgent( buildAgentUrl ) )
+            {
+                return true;
+            }
+        }
+        catch ( Exception e )
+        {
+            log.warn( "Disable build agent: {}; Unable to ping due to {}", buildAgentUrl,  e );
+        }
+
+        // disable it
+        disableBuildAgent( buildAgentUrl );
+
+        return false;
+    }
+
+    public boolean pingBuildAgent( String buildAgentUrl )
+        throws ContinuumException
+    {
+        try
+        {
             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
 
             return client.ping();
         }
         catch ( MalformedURLException e )
         {
-            log.warn( "Invalid build agent url" + buildAgentUrl );
+            log.warn( "Invalid build agent url {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.warn( "Unable to ping build agent: " + buildAgentUrl + "; disabling it..." );
+            throw new ContinuumException( "Unable to ping build agent " + buildAgentUrl + " : " + e.getMessage() );
         }
-
-        // disable it
-        disableBuildAgent( buildAgentUrl );
 
         return false;
     }
