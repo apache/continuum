@@ -114,5 +114,10 @@
         <ref bean="redbackUserService"/>
       </list>
     </constructor-arg>
-  </bean>    
+  </bean>
+
+  <bean name="redbackXmlRpcAuthenticator" class="org.codehaus.redback.xmlrpc.security.XmlRpcAuthenticator">
+    <constructor-arg ref="securitySystem"/>
+  </bean>
+  
 </beans>

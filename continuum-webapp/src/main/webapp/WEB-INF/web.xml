@@ -138,6 +138,10 @@
       <param-value>redbackXmlrpcServicesList</param-value>
     </init-param>
     <init-param>
+      <param-name>authHandlerBeanName</param-name>
+      <param-value>redbackXmlRpcAuthenticator</param-value>
+    </init-param>
+    <init-param>
       <param-name>enabledForExtensions</param-name>
       <param-value>true</param-value>
     </init-param>
