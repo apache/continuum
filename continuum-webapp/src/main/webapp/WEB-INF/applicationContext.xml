@@ -76,5 +76,43 @@
       </list>
     </constructor-arg>
   </bean>
-    
+
+  <!-- Redback Web Services -->
+  <bean name="redbackRoleService" lazy-init="true" scope="singleton"
+        class="org.codehaus.redback.xmlrpc.service.RoleServiceImpl">
+    <constructor-arg ref="rBACManager#cached"/>
+    <constructor-arg ref="roleManager"/>
+  </bean>
+
+  <bean name="redbackOperationService" lazy-init="true" scope="singleton"
+        class="org.codehaus.redback.xmlrpc.service.OperationServiceImpl">
+    <constructor-arg ref="rBACManager#cached"/>
+  </bean>
+
+  <bean name="redbackPermissionService" lazy-init="true" scope="singleton"
+        class="org.codehaus.redback.xmlrpc.service.PermissionServiceImpl">
+    <constructor-arg ref="rBACManager#cached"/>
+  </bean>
+
+  <bean name="redbackResourceService" lazy-init="true" scope="singleton"
+        class="org.codehaus.redback.xmlrpc.service.ResourceServiceImpl">
+    <constructor-arg ref="rBACManager#cached"/>
+  </bean>
+      
+  <bean name="redbackUserService" lazy-init="true" scope="singleton"
+        class="org.codehaus.redback.xmlrpc.service.UserServiceImpl">
+    <constructor-arg ref="userManager#cached"/>
+  </bean>
+
+  <bean name="redbackXmlrpcServicesList" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <ref bean="redbackOperationService"/>
+        <ref bean="redbackPermissionService"/>
+        <ref bean="redbackResourceService"/>
+        <ref bean="redbackRoleService"/>
+        <ref bean="redbackUserService"/>
+      </list>
+    </constructor-arg>
+  </bean>    
 </beans>

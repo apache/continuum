@@ -1296,6 +1296,11 @@ under the License.
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>org.codehaus.redback</groupId>
+        <artifactId>redback-xmlrpc-services</artifactId>
+        <version>${redback.version}</version>
+      </dependency>
       
       <!-- due to http://jira.codehaus.org/browse/MECLIPSE-472 -->
       <dependency>

@@ -127,7 +127,23 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
+
+  <servlet>
+    <servlet-name>RedbackXmlRpcServlet</servlet-name>
+    <servlet-class>
+      com.atlassian.xmlrpc.spring.BinderSpringXmlRpcServlet
+    </servlet-class>
+    <init-param>
+      <param-name>serviceListBeanName</param-name>
+      <param-value>redbackXmlrpcServicesList</param-value>
+    </init-param>
+    <init-param>
+      <param-name>enabledForExtensions</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+ 
   <servlet-mapping>
     <servlet-name>XmlRpcServlet</servlet-name>
     <url-pattern>/xmlrpc</url-pattern>
@@ -137,7 +153,12 @@
     <servlet-name>MasterXmlRpcServlet</servlet-name>
     <url-pattern>/master-xmlrpc</url-pattern>
   </servlet-mapping>
-  
+
+  <servlet-mapping>
+    <servlet-name>RedbackXmlRpcServlet</servlet-name>
+    <url-pattern>/redback-xmlrpc</url-pattern>
+  </servlet-mapping>
+
   <error-page>
     <error-code>403</error-code>
     <location>/httpError.jsp?errorCode=403</location>
