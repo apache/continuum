@@ -393,6 +393,7 @@ public abstract class AbstractBuildExecutor
 
         try
         {
+            log.debug( "Update project {}" + project.getId() );
             buildAgentManager.updateProject( projectMap );
         }
         catch ( Exception e )

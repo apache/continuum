@@ -99,7 +99,7 @@ public class DefaultBuildAgentReleaseManager
         }
         catch ( ContinuumReleaseException e )
         {
-            log.error( "Error while preparing release" );
+            log.error( "Error while preparing release", e );
             throw e;
         }
     }

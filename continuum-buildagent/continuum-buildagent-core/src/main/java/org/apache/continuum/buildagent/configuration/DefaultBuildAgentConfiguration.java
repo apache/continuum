@@ -103,6 +103,7 @@ public class DefaultBuildAgentConfiguration
                 this.generalBuildAgentConfiguration.setWorkingDirectory(
                     new File( configuration.getWorkingDirectory() ) );
             }
+
             this.generalBuildAgentConfiguration.setContinuumServerUrl( configuration.getContinuumServerUrl() );
             this.generalBuildAgentConfiguration.setInstallations( configuration.getInstallations() );
             this.generalBuildAgentConfiguration.setLocalRepositories( configuration.getLocalRepositories() );

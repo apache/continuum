@@ -137,19 +137,19 @@ public class DefaultDistributedBuildManager
 
                             if ( client.ping() )
                             {
-                                log.info(
-                                    "agent is enabled, create distributed build queue for build agent '" + agent.getUrl() + "'" );
+                                log.debug(
+                                    "agent is enabled, create distributed build queue for build agent '{}'", agent.getUrl() );
                                 createDistributedBuildQueueForAgent( agent.getUrl() );
                             }
                             else
                             {
-                                log.info( "unable to ping build agent '" + agent.getUrl() + "'" );
+                                log.debug( "unable to ping build agent '{}'", agent.getUrl() );
                             }
                         }
                         catch ( MalformedURLException e )
                         {
                             // do not throw exception, just log it
-                            log.info( "Invalid build agent URL " + agent.getUrl() + ", not creating distributed build queue" );
+                            log.error( "Invalid build agent URL {}, not creating distributed build queue", agent.getUrl() );
                         }
                         catch ( ContinuumException e )
                         {
@@ -159,9 +159,13 @@ public class DefaultDistributedBuildManager
                         catch ( Exception e )
                         {
                             agent.setEnabled( false );
-                            log.info( "unable to ping build agent '" + agent.getUrl() + "': " +
+                            log.debug( "unable to ping build agent '{}' : {}", agent.getUrl(),
                                 ContinuumUtils.throwableToString( e ) );
                         }
+                    }
+                    else
+                    {
+                        log.debug( "agent {} is disabled, not creating distributed build queue", agent.getUrl() );
                     }
                 }
             }
@@ -190,35 +194,36 @@ public class DefaultDistributedBuildManager
     
                         if ( client.ping() )
                         {
-                            log.info( "agent is enabled, create distributed build queue for build agent '" + agent.getUrl() + "'" );
+                            log.debug( "agent is enabled, create distributed build queue for build agent '{}'", agent.getUrl() );
                             createDistributedBuildQueueForAgent( agent.getUrl() );
                         }
                         else
                         {
-                            log.info( "unable to ping build agent '" + agent.getUrl() + "'" );
+                            log.debug( "unable to ping build agent '{}'", agent.getUrl() );
                         }
                     }
                     catch ( MalformedURLException e )
                     {
                         // do not throw exception, just log it
-                        log.info( "Invalid build agent URL " + agent.getUrl() + ", not creating distributed build queue" );
+                        log.error( "Invalid build agent URL {}, not creating distributed build queue", agent.getUrl() );
                     }
                     catch ( Exception e )
                     {
                         agent.setEnabled( false );
-                        log.info( "unable to ping build agent '" + agent.getUrl() + "': " +
+                        log.debug( "unable to ping build agent '{}': {}", agent.getUrl(),
                             ContinuumUtils.throwableToString( e ) );
                     }
                 }
                 else if ( !agent.isEnabled() && overallDistributedBuildQueues.containsKey( agent.getUrl() ) )
                 {
-                    log.info( "agent is disabled, remove distributed build queue for build agent '" + agent.getUrl() + "'" );
+                    log.debug( "agent is disabled, remove distributed build queue for build agent '{}'", agent.getUrl() );
                     removeDistributedBuildQueueOfAgent( agent.getUrl() );
                 }
             }
         }
     }
 
+    @SuppressWarnings( "unused" )
     public void prepareBuildProjects( Map<Integer, Integer>projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId, 
                                       String projectGroupName, String scmRootAddress, int scmRootId, List<ProjectScmRoot> scmRoots )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
@@ -227,12 +232,18 @@ public class DefaultDistributedBuildManager
                                                                       projectGroupId, projectGroupName, 
                                                                       scmRootAddress, scmRootId );
 
-        OverallDistributedBuildQueue overallDistributedBuildQueue = getOverallDistributedBuildQueueByGroup( projectGroupId, scmRoots, scmRootId );
+    	log.debug( "Determining which build agent should build the project..." );
+
+    	OverallDistributedBuildQueue overallDistributedBuildQueue = getOverallDistributedBuildQueueByGroup( projectGroupId, scmRoots, scmRootId );
 
         if ( overallDistributedBuildQueue == null )
         {
+            log.debug( "No projects with the same continuum group is currently building, checking if build definition has an attached build agent group" );
+
             if ( hasBuildagentGroup( projectsBuildDefinitionsMap ) )
             {
+                log.debug( "Build definition used has an attached build agent group, checking if there are configured build agents in the group" );
+
                 if ( !hasBuildagentInGroup( projectsBuildDefinitionsMap ) )
                 {
                     log.warn( "No build agent configured in build agent group. Not building projects." );
@@ -242,15 +253,18 @@ public class DefaultDistributedBuildManager
                 else
                 {
                     // get overall distributed build queue from build agent group
-                    log.info( "getting the least busy build agent from the build agent group" );
+                    log.info( "Getting the least busy build agent from the build agent group" );
                     overallDistributedBuildQueue = getOverallDistributedBuildQueueByAgentGroup( projectsBuildDefinitionsMap );
+                    log.debug( "Building project in the least busy agent {} within the build agent group", 
+                               overallDistributedBuildQueue.getBuildAgentUrl() );
                 }
             }
             else
             {
                 // project does not have build agent group
-                log.info( "project does not have a build agent group, getting the least busy build agent" );
+                log.info( "Project does not have a build agent group, getting the least busy build agent" );
                 overallDistributedBuildQueue = getOverallDistributedBuildQueue();
+                log.debug( "Building project in the least busy agent {}", overallDistributedBuildQueue.getBuildAgentUrl() );
             }
         }
 
@@ -268,7 +282,7 @@ public class DefaultDistributedBuildManager
         }
         else
         {
-            log.warn( "No build agent configured. Not building projects." );
+            log.warn( "Unable to determine which build agent should build the project. No build agent configured. Not building projects." );
 
             throw new NoBuildAgentException( "No build agent configured" );
         }
@@ -306,21 +320,21 @@ public class DefaultDistributedBuildManager
 
                     overallDistributedBuildQueues.remove( buildAgentUrl );
 
-                    log.info( "remove distributed build queue for build agent '" + buildAgentUrl + "'" );
+                    log.debug( "remove distributed build queue for build agent '{}'", buildAgentUrl );
                 }
                 catch ( TaskQueueException e )
                 {
-                    log.error( "Error occurred while removing build agent " + buildAgentUrl, e );
+                    log.error( "Error occurred while removing build agent {}", buildAgentUrl, e );
                     throw new ContinuumException( "Error occurred while removing build agent " + buildAgentUrl, e );
                 }
                 catch ( ComponentLifecycleException e )
                 {
-                    log.error( "Error occurred while removing build agent " + buildAgentUrl, e );
+                    log.error( "Error occurred while removing build agent {}", buildAgentUrl, e );
                     throw new ContinuumException( "Error occurred while removing build agent " + buildAgentUrl, e );
                 }
                 catch ( StoppingException e )
                 {
-                    log.error( "Error occurred while removing build agent " + buildAgentUrl, e );
+                    log.error( "Error occurred while removing build agent {}", buildAgentUrl, e );
                     throw new ContinuumException( "Error occurred while removing build agent " + buildAgentUrl, e );
                 }
             }
@@ -342,6 +356,8 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Getting projects in prepare build queue of build agent{}", buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
 
                         List<Map<String, Object>> projects = client.getProjectsInPrepareBuildQueue();
@@ -352,6 +368,10 @@ public class DefaultDistributedBuildManager
                         }
     
                         map.put( buildAgentUrl, tasks );
+                    }
+                    else
+                    {
+                        log.debug( "Unable to get projects in prepare build queue. Build agent {} not available", buildAgentUrl );
                     }
                 }
                 catch ( MalformedURLException e )
@@ -384,6 +404,8 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Getting project currently preparing build in build agent {}", buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                         Map<String, Object> project = client.getProjectCurrentlyPreparingBuild();
     
@@ -391,6 +413,10 @@ public class DefaultDistributedBuildManager
                         {
                             map.put( buildAgentUrl, getPrepareBuildProjectsTask( project ) );
                         }
+                    }
+                    else
+                    {
+                        log.debug( "Unable to get projects currently preparing build. Build agent {} is not available", buildAgentUrl );
                     }
                 }
                 catch ( MalformedURLException e )
@@ -423,6 +449,8 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Getting projects currently building in build agent {}", buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                         Map<String, Object> project = client.getProjectCurrentlyBuilding();
     
@@ -430,6 +458,10 @@ public class DefaultDistributedBuildManager
                         {
                             map.put( buildAgentUrl, getBuildProjectTask( project ) );
                         }
+                    }
+                    else
+                    {
+                        log.debug( "Unable to get projects currently building. Build agent {} is not available", buildAgentUrl );
                     }
                 }
                 catch ( MalformedURLException e )
@@ -464,6 +496,8 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Getting projects in build queue in build agent {}", buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                         List<Map<String, Object>> projects = client.getProjectsInBuildQueue();
     
@@ -473,6 +507,10 @@ public class DefaultDistributedBuildManager
                         }
     
                         map.put( buildAgentUrl, tasks );
+                    }
+                    else
+                    {
+                        log.debug( "Unable to get projects in build queue. Build agent {} is not available", buildAgentUrl );
                     }
                 }
                 catch ( MalformedURLException e )
@@ -501,11 +539,11 @@ public class DefaultDistributedBuildManager
             if ( overallDistributedBuildQueue != null && 
                  overallDistributedBuildQueue.getDistributedBuildTaskQueueExecutor().getCurrentTask() != null )
             {
-                log.info( "build agent '" + buildAgentUrl + "' is busy" );
+                log.debug( "build agent '" + buildAgentUrl + "' is busy" );
                 return true;
             }
 
-            log.info( "build agent '" + buildAgentUrl + "' is not busy" );
+            log.debug( "build agent '" + buildAgentUrl + "' is not busy" );
             return false;
         }
     }
@@ -517,9 +555,15 @@ public class DefaultDistributedBuildManager
         {
             if ( isAgentAvailable( buildAgentUrl ) )
             {
+                log.debug( "Cancelling build in build agent {}", buildAgentUrl );
+
                 SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
     
                 client.cancelBuild();
+            }
+            else
+            {
+                log.debug( "Unable to cancel build, build agent {} is not available", buildAgentUrl );
             }
 
             // call reload in case we disable the build agent
@@ -546,6 +590,7 @@ public class DefaultDistributedBuildManager
 
         if ( buildAgentUrl == null )
         {
+            log.debug( "Unable to determine the build agent where project is building" );
             return null;
         }
 
@@ -553,6 +598,7 @@ public class DefaultDistributedBuildManager
         {
             if ( isAgentAvailable( buildAgentUrl ) )
             {
+                log.debug( "Getting build result of project in build agent {}", buildAgentUrl );
                 SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
 
                 Map<String, Object> result = client.getBuildResult( projectId );
@@ -578,6 +624,14 @@ public class DefaultDistributedBuildManager
                     map.put( ContinuumBuildConstant.KEY_BUILD_RESULT, buildResult );
                     map.put( ContinuumBuildConstant.KEY_BUILD_OUTPUT, buildOutput );
                 }
+                else
+                {
+                    log.debug( "No build result returned by build agent {}", buildAgentUrl );
+                }
+            }
+            else
+            {
+                log.debug( "Unable to get build result of project. Build agent {} is not available", buildAgentUrl );
             }
         }
         catch ( MalformedURLException e )
@@ -603,8 +657,14 @@ public class DefaultDistributedBuildManager
             String platform = "";
             if ( isAgentAvailable( buildAgentUrl ) )
             {
+                log.debug( "Getting build agent {} platform", buildAgentUrl );
+
                 SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 platform = client.getBuildAgentPlatform();
+            }
+            else
+            {
+                log.debug( "Unable to get build agent platform. Build agent {} is not available", buildAgentUrl );
             }
             // call reload in case we disable the build agent
             reload();
@@ -626,6 +686,8 @@ public class DefaultDistributedBuildManager
         {
             if ( isAgentAvailable( buildAgentUrl ) )
             {
+                log.debug( "Getting available installations in build agent {}", buildAgentUrl );
+
                 SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
 
                 List<Map<String, String>> installationsList = client.getAvailableInstallations();
@@ -639,6 +701,10 @@ public class DefaultDistributedBuildManager
                     installation.setVarValue( ContinuumBuildConstant.getInstallationVarValue( context ) );
                     installations.add( installation );
                 }
+            }
+            else
+            {
+                log.debug( "Unable to get available installations. Build agent {} is not available", buildAgentUrl );
             }
 
             // call reload in case we disable the build agent
@@ -663,6 +729,8 @@ public class DefaultDistributedBuildManager
 
             if ( buildAgentUrl == null )
             {
+                log.debug( "Unable to determine the build agent where project last built" );
+
                 return "";
             }
 
@@ -675,8 +743,14 @@ public class DefaultDistributedBuildManager
 
                 if ( isAgentAvailable( buildAgentUrl ) )
                 {
+                    log.debug( "Generating working copy content of project in build agent {}", buildAgentUrl );
+
                     SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                     return client.generateWorkingCopyContent( projectId, directory, baseUrl, imageBaseUrl );
+                }
+                else
+                {
+                    log.debug( "Unable to generate working copy content of project. Build agent {} is not available", buildAgentUrl );
                 }
             }
             catch ( MalformedURLException e )
@@ -687,6 +761,10 @@ public class DefaultDistributedBuildManager
             {
                 log.error( "Error while generating working copy content from build agent " + buildAgentUrl, e );
             }
+        }
+        else
+        {
+            log.debug( "Unable to generate working copy content. Project hasn't been built yet." );
         }
 
         // call reload in case we disable the build agent
@@ -706,6 +784,7 @@ public class DefaultDistributedBuildManager
 
             if ( buildAgentUrl == null )
             {
+                log.debug( "Unable to determine build agent where project last built" );
                 return "";
             }
 
@@ -726,6 +805,10 @@ public class DefaultDistributedBuildManager
                 log.error( "Error while retrieving content of " + filename, e );
             }
         }
+        else
+        {
+            log.debug( "Unable to get file content because project hasn't been built yet" );
+        }
 
         // call reload in case we disable the build agent
         reload();
@@ -740,8 +823,15 @@ public class DefaultDistributedBuildManager
         {
             if ( isAgentAvailable( buildAgentUrl ) )
             {
+                log.debug( "Removing projectGroupId {} from prepare build queue of build agent {}", projectGroupId, buildAgentUrl );
+
                 SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 client.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
+            }
+            else
+            {
+                log.debug( "Unable to remove projectGroupId {} from prepare build queue. Build agent {} is not available", 
+                           projectGroupId, buildAgentUrl );
             }
         }
         catch ( MalformedURLException e )
@@ -770,8 +860,13 @@ public class DefaultDistributedBuildManager
         {
             if ( isAgentAvailable( buildAgentUrl ) )
             {
+                log.debug( "Removing projectId {} from build queue of build agent {}", projectId, buildAgentUrl );
                 SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 client.removeFromBuildQueue( projectId, buildDefinitionId );
+            }
+            else
+            {
+                log.debug( "Unable to remove projectId {} from build queue. Build agent {} is not available", projectId, buildAgentUrl );
             }
         }
         catch ( MalformedURLException e )
@@ -804,8 +899,14 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Removing project groups from prepare build queue of build agent {}", buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                         client.removeFromPrepareBuildQueue( hashCodes );
+                    }
+                    else
+                    {
+                        log.debug( "Unable to remove project groups from prepare build queue. Build agent {} is not available", buildAgentUrl );
                     }
                 }
                 catch ( MalformedURLException e )
@@ -834,8 +935,14 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Removing projects from build queue of build agent {}", buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                         client.removeFromBuildQueue( hashCodes );
+                    }
+                    else
+                    {
+                        log.debug( "Unable to remove projects from build queue. Build agent {} is not available", buildAgentUrl );
                     }
                 }
                 catch ( MalformedURLException e )
@@ -866,6 +973,8 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Checking if project {} is in prepare build queue of build agent {}", projectId, buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
 
                         List<Map<String, Object>> projects = client.getProjectsAndBuildDefinitionsInPrepareBuildQueue();
@@ -882,6 +991,11 @@ public class DefaultDistributedBuildManager
                             }
 
                         }
+                    }
+                    else
+                    {
+                        log.debug( "Unable to check if project {} is in prepare build queue. Build agent {} is not available",
+                                   projectId, buildAgentUrl );
                     }
 
                     if ( found )
@@ -946,6 +1060,8 @@ public class DefaultDistributedBuildManager
                 {
                     if ( isAgentAvailable( buildAgentUrl ) )
                     {
+                        log.debug( "Checking if project {} is currently preparing build in build agent {}", projectId, buildAgentUrl );
+
                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                         List<Map<String, Object>> projects = client.getProjectsAndBuildDefinitionsCurrentlyPreparingBuild();
     
@@ -960,6 +1076,11 @@ public class DefaultDistributedBuildManager
                                 break;
                             }
                         }
+                    }
+                    else
+                    {
+                        log.debug( "Unable to check if project {} is currently preparing build. Build agent {} is not available",
+                                   projectId, buildAgentUrl );
                     }
 
                     if ( found )
@@ -1036,14 +1157,20 @@ public class DefaultDistributedBuildManager
                                 break;
                             }
                         }
+                        else
+                        {
+                            log.debug( "Unable to check if project {} is currently building. Build agent {} is not available",
+                                       projectId, buildAgentUrl );
+                        }
                     }
                     catch ( MalformedURLException e )
                     {
-                        log.warn( "Unable to check if project " + projectId + " is currently building in agent: Invalid build agent url" + buildAgentUrl );
+                        log.warn( "Unable to check if project {} is currently building in agent: Invalid build agent url {}",
+                                  projectId, buildAgentUrl );
                     }
                     catch ( Exception e )
                     {
-                        log.warn( "Unable to check if project " + projectId + " is currently building in agent", e );
+                        log.warn( "Unable to check if project {} is currently building in agent", projectId, e );
                     }
                 }
             }
@@ -1073,6 +1200,8 @@ public class DefaultDistributedBuildManager
                     {
                         if ( isAgentAvailable( buildAgentUrl ) )
                         {
+                            log.debug( "Checking if project {} is currently queued or processed in agent {}", projectId, buildAgentUrl );
+
                             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                             
                             if ( client.isProjectGroupCurrentlyPreparingBuild( projectId ) ||
@@ -1084,14 +1213,20 @@ public class DefaultDistributedBuildManager
                                 break;
                             }
                         }
+                        else
+                        {
+                            log.debug( "Unable to check if project {} is currently queued or processed in agent. Build agent {} is not available", 
+                                       projectId, buildAgentUrl );
+                        }
                     }
                     catch ( MalformedURLException e )
                     {
-                        log.warn( "Unable to check if project " + projectId + " is currently queued or processed in agent: Invalid build agent url" + buildAgentUrl );
+                        log.warn( "Unable to check if project {} is currently queued or processed in agent: Invalid build agent url {}",
+                                  projectId, buildAgentUrl );
                     }
                     catch ( Exception e )
                     {
-                        log.warn( "Unable to check if project " + projectId + " is currently queued or processed in agent", e );
+                        log.warn( "Unable to check if project {} is currently queued or processed in agent", projectId, e );
                     }
                 }
             }
@@ -1117,36 +1252,6 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    private OverallDistributedBuildQueue getOverallDistributedBuildQueueByGroupAndScmRoot( int projectGroupId, int scmRootId )
-        throws ContinuumException
-    {
-        synchronized( overallDistributedBuildQueues )
-        {
-            for ( String buildAgentUrl : overallDistributedBuildQueues.keySet() )
-            {
-                OverallDistributedBuildQueue distributedBuildQueue = overallDistributedBuildQueues.get( buildAgentUrl );
-
-                try
-                {
-                    for ( PrepareBuildProjectsTask task : distributedBuildQueue.getProjectsInQueue() )
-                    {
-                        if ( task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
-                        {
-                            return distributedBuildQueue;
-                        }
-                    }
-                }
-                catch ( TaskQueueException e )
-                {
-                    log.error( "Error occurred while retrieving distributed build queue of projectGroupId=" + projectGroupId + " scmRootId=" + scmRootId, e );
-                    throw new ContinuumException( "Error occurred while retrieving distributed build queue of group", e );
-                }
-            }
-        }
-
-        return null;
-    }
-
     private OverallDistributedBuildQueue getOverallDistributedBuildQueueByScmRoot( ProjectScmRoot scmRoot, int projectGroupId )
         throws ContinuumException
     {
@@ -1164,6 +1269,7 @@ public class DefaultDistributedBuildManager
                     {
                         if ( task.getProjectScmRootId() == scmRootId )
                         {
+                            log.debug( "Projects in the same continuum group are building in build agent: {}. Also building project in the same agent.", buildAgentUrl );
                             return distributedBuildQueue;
                         }
                     }
@@ -1171,6 +1277,7 @@ public class DefaultDistributedBuildManager
                     Task task = distributedBuildQueue.getDistributedBuildTaskQueueExecutor().getCurrentTask();
                     if ( task != null && ( (PrepareBuildProjectsTask) task ).getProjectScmRootId() == scmRootId )
                     {
+                        log.debug( "Projects in the same continuum group are building in build agent: {}. Also building project in the same agent.", buildAgentUrl );
                         return distributedBuildQueue;
                     }
 
@@ -1191,6 +1298,7 @@ public class DefaultDistributedBuildManager
 
                         if ( client.isProjectScmRootInQueue( scmRootId, pIds ) )
                         {
+                            log.debug( "Projects in the same continuum group are building in build agent: {}. Also building project in the same agent.", buildAgentUrl );
                             return distributedBuildQueue;
                         }
                     }
@@ -1223,6 +1331,8 @@ public class DefaultDistributedBuildManager
     {
         if ( scmRoots != null )
         {
+            log.debug( "Checking if the project group is already building in one of the build agents" );
+
             for ( ProjectScmRoot scmRoot : scmRoots )
             {
                 if ( scmRoot.getId() == scmRootId )
@@ -1235,37 +1345,6 @@ public class DefaultDistributedBuildManager
                 }
             }
         }
-        return null;
-    }
-
-    // need to change this
-    private OverallDistributedBuildQueue getOverallDistributedBuildQueueByHashCode( int hashCode )
-        throws ContinuumException
-    {
-        synchronized( overallDistributedBuildQueues )
-        {
-            for ( String buildAgentUrl : overallDistributedBuildQueues.keySet() )
-            {
-                OverallDistributedBuildQueue distributedBuildQueue = overallDistributedBuildQueues.get( buildAgentUrl );
-
-                try
-                {
-                    for ( PrepareBuildProjectsTask task : distributedBuildQueue.getProjectsInQueue() )
-                    {
-                        if ( task.getHashCode() == hashCode )
-                        {
-                            return distributedBuildQueue;
-                        }
-                    }
-                }
-                catch ( TaskQueueException e )
-                {
-                    log.error( "Error occurred while retrieving distributed build queue", e );
-                    throw new ContinuumException( "Error occurred while retrieving distributed build queue", e );
-                }
-            }
-        }
-
         return null;
     }
 
@@ -1306,9 +1385,12 @@ public class DefaultDistributedBuildManager
                                 {
                                     if ( isAgentAvailable( buildAgentUrl ) )
                                     {
+                                        log.debug( "Build agent {} is available", buildAgentUrl );
+
                                         SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                                         int agentBuildSize = client.getBuildSizeOfAgent();
     
+                                        log.debug( "Number of projects currently building in agent: {}", agentBuildSize );
                                         if ( idx == 0 )
                                         {
                                             whereToBeQueued = distributedBuildQueue;
@@ -1367,9 +1449,12 @@ public class DefaultDistributedBuildManager
                     {
                         if ( isAgentAvailable( buildAgentUrl ) )
                         {
+                            log.debug( "Build agent is available: {}", buildAgentUrl );
+
                             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                             int agentBuildSize = client.getBuildSizeOfAgent();
-    
+
+                            log.debug( "Number of projects currently building in agent: {}", agentBuildSize );
                             if ( idx == 0 )
                             {
                                 whereToBeQueued = distributedBuildQueue;
@@ -1522,6 +1607,8 @@ public class DefaultDistributedBuildManager
                 try
                 {
                     configurationService.store();
+
+                    log.debug( "Disabled build agent {}", buildAgentUrl );
                 }
                 catch ( Exception e )
                 {

@@ -49,6 +49,8 @@ public class CleanWorkingDirectoryAction
     
         if ( workingDirectory.exists() )
         {
+            getLogger().debug( "Cleaning working directory " + workingDirectory.getAbsolutePath() );
+
             FileSetManager fileSetManager = new FileSetManager();
             FileSet fileSet = new FileSet();
             fileSet.setDirectory( workingDirectory.getPath() );

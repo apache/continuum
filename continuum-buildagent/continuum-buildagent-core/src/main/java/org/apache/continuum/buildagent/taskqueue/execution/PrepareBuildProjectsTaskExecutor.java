@@ -87,13 +87,13 @@ public class PrepareBuildProjectsTaskExecutor
                     {
                         BuildDefinition buildDef = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
     
-                        log.info( "Check scm root state" );
+                        log.debug( "Check scm root state of project group '{}'",  buildContext.getProjectGroupName() );
                         if ( !checkProjectScmRoot( context ) )
                         {
                             break;
                         }
     
-                        log.info( "Starting prepare build" );
+                        log.info( "Starting prepare build of project group '{}'", buildContext.getProjectGroupName() );
                         startPrepareBuild( buildContext );
     
                         log.info( "Initializing prepare build" );
@@ -103,17 +103,17 @@ public class PrepareBuildProjectsTaskExecutor
                         {
                             if ( buildDef.isBuildFresh() )
                             {
-                                log.info( "Clean up working directory" );
+                                log.info( "Clean up working directory of project '{}'", buildContext.getProjectName() );
                                 cleanWorkingDirectory( buildContext );
                             }
     
-                            log.info( "Updating working directory" );
+                            log.info( "Updating working directory of project '{}'", buildContext.getProjectName() );
                             updateWorkingDirectory( buildContext );
     
-                            log.info( "Merging SCM results" );
                             //CONTINUUM-1393
                             if ( !buildDef.isBuildFresh() )
                             {
+                                log.info( "Merging SCM results of project '{}'", buildContext.getProjectName() );
                                 mergeScmResults( buildContext );
                             }
                         }
@@ -131,6 +131,7 @@ public class PrepareBuildProjectsTaskExecutor
     
                 if ( checkProjectScmRoot( context ) )
                 {
+                    log.debug( "Successful prepare build. Creating build task" );
                     buildProjects( buildContexts );
                 }
             }
@@ -253,6 +254,8 @@ public class PrepareBuildProjectsTaskExecutor
 
         ScmResult scmResult = ContinuumBuildAgentUtil.getScmResult( context, null );
 
+        log.debug( "End prepare build of project '{}'", buildContext.getProjectName() );
+
         if ( scmResult == null || !scmResult.isSuccess() )
         {
             context.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, ContinuumProjectState.ERROR );
@@ -296,6 +299,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             try
             {
+                log.debug( "End prepare build of project group '{}'", ContinuumBuildAgentUtil.getProjectGroupName( context ) );
                 buildAgentManager.endPrepareBuild( result );
             }
             catch ( ContinuumException e )

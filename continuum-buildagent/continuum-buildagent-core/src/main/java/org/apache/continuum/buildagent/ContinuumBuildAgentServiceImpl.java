@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -52,17 +51,10 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.shared.release.ReleaseResult;
-import org.apache.maven.shared.release.versions.DefaultVersionInfo;
-import org.apache.maven.shared.release.versions.VersionInfo;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,6 +105,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
+            log.debug( "Adding project group {} to prepare build queue", task.getProjectGroupId() );
             buildAgentTaskQueueManager.getPrepareBuildQueue().put( task );
         }
         catch ( TaskQueueException e )
@@ -178,12 +171,15 @@ public class ContinuumBuildAgentServiceImpl
     public Map<String, Object> getBuildResult( int projectId )
         throws ContinuumBuildAgentException
     {
+        log.debug( "Get build result of project {}", projectId );
+
         Map<String, Object> result = new HashMap<String, Object>();
 
         int currentBuildId = 0;
 
         try
         {
+            log.debug( "Get current build project" );
             currentBuildId = buildAgentTaskQueueManager.getIdOfProjectCurrentlyBuilding();
         }
         catch ( TaskQueueManagerException e )
@@ -191,6 +187,7 @@ public class ContinuumBuildAgentServiceImpl
             throw new ContinuumBuildAgentException( e.getMessage(), e );
         }
 
+        log.debug( "Check if project {} is the one currently building in the agent", projectId );
         if ( projectId == currentBuildId )
         {
             BuildContext buildContext = buildContextManager.getBuildContext( projectId );
@@ -249,6 +246,10 @@ public class ContinuumBuildAgentServiceImpl
             result.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT,
                         ContinuumBuildAgentUtil.createScmResult( buildContext ) );
         }
+        else
+        {
+            log.debug( "Unable to get build result because project {} is not currently building in the agent", projectId );
+        }
         return result;
     }
 
@@ -257,6 +258,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Cancelling current build" );
             buildAgentTaskQueueManager.cancelBuild();
         }
         catch ( TaskQueueManagerException e )
@@ -318,6 +320,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
+            log.debug( "Getting release plugin parameters of project {}", projectId );
             return ReleaseUtil.getReleasePluginParameters( workingDirectory, pomFilename );
         }
         catch ( Exception e )
@@ -351,6 +354,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Preparing release" );
             return buildAgentReleaseManager.releasePrepare( project, properties, releaseVersion, developmentVersion,
                                                             environments, username );
         }
@@ -363,6 +367,7 @@ public class ContinuumBuildAgentServiceImpl
     public Map<String, Object> getReleaseResult( String releaseId )
         throws ContinuumBuildAgentException
     {
+        log.debug( "Getting release result of release {}", releaseId );
         ReleaseResult result = buildAgentReleaseManager.getReleaseResult( releaseId );
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -396,6 +401,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Performing release" );
             buildAgentReleaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
         }
         catch ( ContinuumReleaseException e )
@@ -411,6 +417,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Performing release from scm" );
             return buildAgentReleaseManager.releasePerformFromScm( goals, arguments, useReleaseProfile, repository,
                                                                    scmUrl, scmUsername, scmPassword, scmTag, scmTagBase,
                                                                    environments, username );
@@ -424,6 +431,7 @@ public class ContinuumBuildAgentServiceImpl
     public String releaseCleanup( String releaseId )
         throws ContinuumBuildAgentException
     {
+        log.debug( "Cleanup release {}", releaseId );
         return buildAgentReleaseManager.releaseCleanup( releaseId );
     }
 
@@ -432,6 +440,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Release rollback release {} with project {}", releaseId, projectId );
             buildAgentReleaseManager.releaseRollback( releaseId, projectId );
         }
         catch ( ContinuumReleaseException e )
@@ -446,6 +455,8 @@ public class ContinuumBuildAgentServiceImpl
         
         try
         {
+            log.debug( "Getting number of projects in any queue" );
+
             if ( buildAgentTaskQueueManager.getCurrentProjectInBuilding() != null )
             {
                 size++;
@@ -473,6 +484,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Getting projects in prepare build queue" );
             List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
 
             for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
@@ -501,6 +513,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Getting projects in prepare build queue" );
             List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
 
             for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
@@ -530,6 +543,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Getting projects in build queue" );
             List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
 
             for ( BuildProjectTask task : buildAgentTaskQueueManager.getProjectsInBuildQueue() )
@@ -559,6 +573,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Get project currently preparing build" );
             Map<String, Object> project = new HashMap<String, Object>();
 
             PrepareBuildProjectsTask task = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
@@ -586,6 +601,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Getting projects currently preparing build" );
             List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
 
             PrepareBuildProjectsTask task = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
@@ -616,6 +632,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Getting currently building project" );
             Map<String, Object> project = new HashMap<String, Object>();
 
             BuildProjectTask task = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
@@ -643,6 +660,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Checking if project group is in any queue", projectGroupId );
             for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
             {
                 if ( task.getProjectGroupId() == projectGroupId )
@@ -689,6 +707,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Checking if projects {} is in any queue", projectIds );
             PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
 
             if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getScmRootId() == projectScmRootId )
@@ -744,6 +763,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Checking if project group {} is in prepare build queue", projectGroupId );
             for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
             {
                 if ( task.getProjectGroupId() == projectGroupId )
@@ -764,6 +784,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Checking if project group {} currently preparing build", projectGroupId );
             PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
 
             if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
@@ -783,6 +804,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Checking if project {} is currently building", projectId );
             BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
 
             if ( currentBuildTask != null && currentBuildTask.getProjectId() == projectId )
@@ -802,6 +824,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Checking if project {} is in build queue", projectId );
             List<BuildProjectTask> buildTasks = buildAgentTaskQueueManager.getProjectsInBuildQueue();
 
             if ( buildTasks != null )
@@ -828,6 +851,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Removing project group {} from prepare build queue", projectGroupId );
             return buildAgentTaskQueueManager.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
         }
         catch ( TaskQueueManagerException e )
@@ -842,6 +866,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Removing project groups {} from prepare build queue", hashCodes );
             buildAgentTaskQueueManager.removeFromPrepareBuildQueue( listToIntArray( hashCodes ) );
         }
         catch ( TaskQueueManagerException e )
@@ -856,6 +881,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Removing project {} with buildDefinition {} from build queue", projectId, buildDefinitionId );
             return buildAgentTaskQueueManager.removeFromBuildQueue( projectId, buildDefinitionId );
         }
         catch ( TaskQueueManagerException e )
@@ -870,6 +896,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Removing projects {} from build queue", hashCodes );
             buildAgentTaskQueueManager.removeFromBuildQueue( listToIntArray( hashCodes ) );
         }
         catch ( TaskQueueManagerException e )
@@ -881,7 +908,7 @@ public class ContinuumBuildAgentServiceImpl
 
     public boolean ping()
     {
-        log.info( "Ping Ok" );
+        log.debug( "Ping Ok" );
 
         return Boolean.TRUE;
     }
@@ -891,6 +918,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
+            log.debug( "Getting build agent platform" );
             return System.getProperty( "os.name" );
         }
         catch ( Exception e )

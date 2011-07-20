@@ -107,7 +107,7 @@ public class BuildProjectTaskExecutor
 
         try
         {
-            log.info( "Initializing build (projectId=" + projectId + ")" );
+            log.info( "Initializing build (projectId={})", projectId );
             BuildContext context = buildContextManager.getBuildContext( projectId );
             initializeBuildContext( context );
     
@@ -116,13 +116,13 @@ public class BuildProjectTaskExecutor
                 return;
             }
     
-            log.info( "Checking if project '" + context.getProjectName() + "' should build" );
+            log.info( "Checking if project '{}' should build", context.getProjectName() );
             if ( !shouldBuild( context ) )
             {
                 return;
             }
     
-            log.info( "Starting build of " + context.getProjectName() );
+            log.info( "Starting build of {}", context.getProjectName() );
             startBuild( context );
     
             try
@@ -141,10 +141,12 @@ public class BuildProjectTaskExecutor
     
                 performAction( "execute-agent-builder", context );
     
+                log.info( "Updating build result of project '{}'", context.getProjectName() );
                 updateBuildResult( context, null );
             }
             finally
             {
+                log.info( "End build of project '{}'", context.getProjectName() );
                 endBuild( context );
             }
         }

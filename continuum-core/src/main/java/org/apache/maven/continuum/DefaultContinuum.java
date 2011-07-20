@@ -3658,7 +3658,7 @@ public class DefaultContinuum
             // check if project already in queue
             if ( !isProjectOkToBuild( projectId, buildDefinitionId ) )
             {
-                log.info( "not building" );
+                log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefinitionId );
                 continue;
             }
 

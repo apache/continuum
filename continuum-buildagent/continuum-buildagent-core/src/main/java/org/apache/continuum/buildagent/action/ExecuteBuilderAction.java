@@ -96,6 +96,7 @@ public class ExecuteBuilderAction
         {
             File buildOutputFile = buildAgentConfigurationService.getBuildOutputFile( project.getId() );
 
+            getLogger().debug( "Start building of project " + project.getId() );
             ContinuumAgentBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile,
                                                                              environments, localRepository );
 

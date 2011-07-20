@@ -78,11 +78,11 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.returnBuildResult( buildResult );
-            log.info( "Returning the build result for project " + projectInfo + "." );
+            log.debug( "Returning the build result for project {}", projectInfo );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return the build result for project " + projectInfo + ".", e );
+            log.error( "Failed to return the build result for project {}", projectInfo, e );
             throw new Exception( "Failed to return the build result for project " + projectInfo + ".", e );
         }
 
@@ -97,11 +97,11 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.ping();
-            log.info( "Ping " + ( result ? "ok" : "failed" ) );
+            log.debug( "Ping " + ( result ? "ok" : "failed" ) );
         }
         catch ( Exception e )
         {
-            log.info( "Ping error" );
+            log.error( "Ping error" );
             throw new Exception( "Ping error", e );
         }
 
@@ -117,11 +117,11 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.prepareBuildFinished( prepareBuildResult );
-            log.info( "Prepare build finished for project " + projectInfo + "." );
+            log.debug( "Prepare build finished for project '{}'", projectInfo );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to finish prepare build for project " + projectInfo + "." );
+            log.error( "Failed to finish prepare build for project {}", projectInfo );
             throw new Exception( "Failed to finish prepare build for project " + projectInfo + ".", e );
         }
 
@@ -136,11 +136,11 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.startProjectBuild( projectId );
-            log.info( "Return project currently building, projectId=" + projectId );
+            log.debug( "Return project currently building, projectId={}", projectId );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return project currently building, projectId=" + projectId, e );
+            log.error( "Failed to return project currently building, projectId={}", projectId, e );
             throw new Exception( "Failed to return project currently building, projectId=" + projectId, e );
         }
 
@@ -156,11 +156,11 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.startPrepareBuild( prepareBuildResult );
-            log.info( "Start prepare build for project " + projectInfo );
+            log.debug( "Start prepare build for project {}", projectInfo );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to start prepare build for project " + projectInfo, e );
+            log.error( "Failed to start prepare build for project {}", projectInfo, e );
             throw new Exception( "Failed to start prepare build for project " + projectInfo, e );
         }
 
@@ -174,7 +174,7 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.getEnvironments( buildDefinitionId, installationType );
-            log.info( "Retrieved environments. buildDefinitionId=" + buildDefinitionId + ", installationType=" + installationType );
+            log.debug( "Retrieved environments. buildDefinitionId={}, installationType={}", buildDefinitionId, installationType );
         }
         catch ( Exception e )
         {
@@ -196,11 +196,11 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.updateProject( project );
-            log.info( "Updating project " + projectInfo );
+            log.debug( "Updating project {}", projectInfo );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to update project " + projectInfo, e );
+            log.error( "Failed to update project {}", projectInfo, e );
             throw new Exception( "Failed to update project " + projectInfo, e );
         }
 
@@ -216,11 +216,11 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.shouldBuild( context );
-            log.info( "Checking if project " + projectInfo + " should build" );
+            log.debug( "Checking if project {} should build", projectInfo );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to determine if project " + projectInfo + " should build", e );
+            log.error( "Failed to determine if project {} should build", projectInfo, e );
             throw new Exception( "Failed to determine if project " + projectInfo + " should build", e );
         }
 
