@@ -104,6 +104,8 @@ public class BuildAgentAction
         else
         {
             type = "new";
+            buildAgent = new BuildAgentConfiguration();
+            buildAgent.setEnabled( true );
         }
 
         return INPUT;

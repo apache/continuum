@@ -29,10 +29,10 @@ public abstract class AbstractBuildAgentsTest
         goToBuildAgentPage();
         assertBuildAgentPage();
         clickAndWait("editBuildAgent_0"); //add button
-        assertAddEditBuildAgentPage();
+        assertAddEditBuildAgentPage( true );
     }
 
-    public void assertAddEditBuildAgentPage()
+    public void assertAddEditBuildAgentPage( boolean isChecked )
     {
         assertPage( "Continuum - Add/Edit Build Agent" );
         assertTextPresent( "Add/Edit Build Agent" );
@@ -41,6 +41,12 @@ public abstract class AbstractBuildAgentsTest
         assertTextPresent( "Enabled" );
         assertElementPresent( "saveBuildAgent_buildAgent_url" );
         assertElementPresent( "saveBuildAgent_buildAgent_description");
+
+        if ( isChecked )
+        {
+            assertIsChecked( "saveBuildAgent_buildAgent_enabled" );
+        }
+
         assertButtonWithValuePresent( "Save" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -87,7 +93,7 @@ public abstract class AbstractBuildAgentsTest
         }
         else
         {
-            assertAddEditBuildAgentPage();
+            assertAddEditBuildAgentPage( true );
         }
     }
 
@@ -95,7 +101,7 @@ public abstract class AbstractBuildAgentsTest
     {
         goToBuildAgentPage();
         clickImgWithAlt( "Edit" );
-        assertAddEditBuildAgentPage();
+        assertAddEditBuildAgentPage( false );
         assertFieldValue( name, "saveBuildAgent_buildAgent_url" );
         assertFieldValue( description, "saveBuildAgent_buildAgent_description" );
 	}
