@@ -235,7 +235,7 @@ public class DefaultBuildAgentManager
         catch ( Exception e )
         {
             log.error( "Unable to ping master " + continuumServerUrl, e );
-            throw new ContinuumException( "Unable to ping master " + continuumServerUrl, e );
+            throw new ContinuumException( "Unable to ping master " + continuumServerUrl + " from build agent", e );
         }
     }
 }

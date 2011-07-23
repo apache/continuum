@@ -205,7 +205,15 @@ public class BuildAgentAction
             }
         }
 
-        getContinuum().getDistributedBuildManager().reload();
+        try
+        {
+            getContinuum().getDistributedBuildManager().reload();
+        }
+        catch( ContinuumException e )
+        {
+            addActionError( e.getMessage() );
+            return INPUT;
+        }
         event.log();
 
         return SUCCESS;

@@ -210,8 +210,9 @@ public class DefaultDistributedBuildManager
                     catch ( Exception e )
                     {
                         agent.setEnabled( false );
-                        log.debug( "unable to ping build agent '{}': {}", agent.getUrl(),
+                        log.error( "unable to ping build agent '{}': {}", agent.getUrl(),
                             ContinuumUtils.throwableToString( e ) );
+                        throw new ContinuumException( e.getMessage() );
                     }
                 }
                 else if ( !agent.isEnabled() && overallDistributedBuildQueues.containsKey( agent.getUrl() ) )
