@@ -42,6 +42,8 @@ public class SlaveBuildAgentTransportClient
 
     private SlaveBuildAgentTransportService slave;
 
+    private String buildAgentUrl;
+
     public SlaveBuildAgentTransportClient( URL serviceUrl )
         throws Exception
     {
@@ -53,6 +55,8 @@ public class SlaveBuildAgentTransportClient
     {
         Binder binder = new DefaultBinder();
         AuthenticationInfo authnInfo = new AuthenticationInfo( login, password );
+
+        buildAgentUrl = serviceUrl.toString();
 
         try
         {
@@ -77,12 +81,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.buildProjects( projectsBuildContext );
-            log.info( "Building projects." );
+            log.debug( "Building projects in build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to build projects.", e );
-            throw new Exception( "Failed to build projects.", e );
+            log.error( "Failed to build projects in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to build projects in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -96,12 +100,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             installations = slave.getAvailableInstallations();
-            log.info( "Available installations: " + installations.size() );
+            log.debug( "Available installations in build agent {} : {}", buildAgentUrl, installations.size() );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to get available installations.", e );
-            throw new Exception( "Failed to get available installations.", e );
+            log.error( "Failed to get available installations in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to get available installations in build agent " + buildAgentUrl, e );
         }
 
         return installations;
@@ -115,12 +119,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             buildResult = slave.getBuildResult( projectId );
-            log.info( "Build result for project '" + projectId + "' acquired." );
+            log.debug( "Build result for project '{}' acquired from build agent {}", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to get build result for project '" + projectId + "'", e );
-            throw new Exception( "Failed to get build result for project '" + projectId + "'", e );
+            log.error( "Failed to get build result for project '" + projectId + "' in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to get build result for project '" + projectId + "' in build agent " + buildAgentUrl, e );
         }
 
         return buildResult;
@@ -134,12 +138,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             map = slave.getProjectCurrentlyBuilding();
-            log.info( "Retrieving currently building project" );
+            log.debug( "Retrieving currently building project in build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to get the currently building project", e );
-            throw new Exception( "Failed to get the currently building project", e );
+            log.error( "Failed to get the currently building project in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to get the currently building project in build agent " + buildAgentUrl, e );
         }
 
         return map;
@@ -153,12 +157,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.ping();
-            log.info( "Ping " + ( result ? "ok" : "failed" ) );
+            log.debug( "Ping build agent {} : {}", buildAgentUrl, ( result ? "ok" : "failed" ) );
         }
         catch ( Exception e )
         {
-            log.info( "Ping error" );
-            throw new Exception( "Ping error", e );
+            log.error( "Ping build agent " + buildAgentUrl + " error", e );
+            throw new Exception( "Ping build agent " + buildAgentUrl + " error", e );
         }
 
         return result;
@@ -172,12 +176,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.cancelBuild();
-            log.info( "Cancelled build" );
+            log.debug( "Cancelled current build in build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error cancelling build" );
-            throw new Exception( "Error cancelling build", e );
+            log.error( "Error cancelling current build in build agent " + buildAgentUrl, e  );
+            throw new Exception( "Error cancelling current build in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -191,12 +195,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.generateWorkingCopyContent( projectId, directory, baseUrl, imagesBaseUrl );
-            log.info( "Generated working copy content for project '" + projectId + "'" );
+            log.debug( "Generated working copy content for project '{}' in build agent ", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error generating working copy content for project '" + projectId + "'", e );
-            throw new Exception( "Error generating working copy content for project '" + projectId + "'", e );
+            log.error( "Error generating working copy content for project '" + projectId + "' in build agent " + buildAgentUrl, e );
+            throw new Exception( "Error generating working copy content for project '" + projectId + "' in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -210,12 +214,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.getProjectFileContent( projectId, directory, filename );
-            log.info( "Retrieved project '" + projectId + "' file content" );
+            log.debug( "Retrieved project '{}' file content from build agent {}", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error retrieving project '" + projectId + "' file content", e );
-            throw new Exception( "Error retrieving project '" + projectId + "' file content", e );
+            log.error( "Error retrieving project '" + projectId + "' file content from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error retrieving project '" + projectId + "' file content from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -229,12 +233,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.getReleasePluginParameters( projectId, pomFilename );
-            log.info( "Retrieving release plugin parameters for project '" + projectId + "'" );
+            log.debug( "Retrieving release plugin parameters for project '{}' from build agent {}", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error retrieving release plugin parameters for project '" + projectId + "'", e );
-            throw new Exception( "Error retrieving release plugin parameters for project '" + projectId + "'", e );
+            log.error( "Error retrieving release plugin parameters for project '" + projectId + "' from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error retrieving release plugin parameters for project '" + projectId + "' from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -248,12 +252,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.processProject( projectId, pomFilename, autoVersionSubmodules );
-            log.info( "Processing project '" + projectId + "'" );
+            log.debug( "Processing project '{}' in build agent ", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error processing project '" + projectId + "'", e );
-            throw new Exception( "Error processing project '" + projectId + "'", e );
+            log.error( "Error processing project '" + projectId + "' in build agent " + buildAgentUrl, e );
+            throw new Exception( "Error processing project '" + projectId + "' in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -268,12 +272,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             releaseId = slave.releasePrepare( project, properties, releaseVersion, developmentVersion, environments, username );
-            log.info( "Preparing release '" + releaseId + "'" );
+            log.debug( "Preparing release '{}' in build agent {}", releaseId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error while preparing release", e );
-            throw new Exception( "Error while preparing release", e );
+            log.error( "Error while preparing release in build agent " + buildAgentUrl, e );
+            throw new Exception( "Error while preparing release in build agent " + buildAgentUrl, e );
         }
 
         return releaseId;
@@ -287,12 +291,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.getReleaseResult( releaseId );
-            log.info( "Retrieving release result, releaseId=" + releaseId );
+            log.debug( "Retrieving release result, releaseId={} from build agent {}", releaseId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error retrieving release result, releaseId=" + releaseId, e );
-            throw new Exception( "Error retrieving release result, releaseId=" + releaseId, e );
+            log.error( "Error retrieving release result, releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error retrieving release result, releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -306,12 +310,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.getListener( releaseId );
-            log.info( "Retrieving listener for releaseId=" + releaseId );
+            log.debug( "Retrieving listener for releaseId={} from build agent {}", releaseId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error retrieving listener for releaseId=" + releaseId, e );
-            throw new Exception( "Error retrieving listener for releaseId=" + releaseId, e );
+            log.error( "Error retrieving listener for releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error retrieving listener for releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -326,12 +330,12 @@ public class SlaveBuildAgentTransportClient
         {
             slave.removeListener( releaseId );
             result = Boolean.FALSE;
-            log.info( "Removing listener for releaseId=" + releaseId );
+            log.debug( "Removing listener for releaseId={} from build agent {}", releaseId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error removing listener for releaseId=" + releaseId, e );
-            throw new Exception( "Error removing listener for releaseId=" + releaseId, e );
+            log.error( "Error removing listener for releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error removing listener for releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -345,12 +349,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.getPreparedReleaseName( releaseId );
-            log.info( "Retrieving prepared release name, releaseId=" + releaseId );
+            log.debug( "Retrieving prepared release name, releaseId={} from build agent {}", releaseId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error while retrieving prepared release name, releaseId=" + releaseId );
-            throw new Exception( "Error while retrieving prepared release name, releaseId=" + releaseId );
+            log.error( "Error while retrieving prepared release name, releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error while retrieving prepared release name, releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -366,12 +370,12 @@ public class SlaveBuildAgentTransportClient
         {
             slave.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
             result = Boolean.FALSE;
-            log.info( "Performing release of releaseId=" + releaseId );
+            log.debug( "Performing release of releaseId={} from build agent {}", releaseId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error performing release of releaseId=" + releaseId, e );
-            throw new Exception( "Error performing release of releaseId=" + releaseId, e );
+            log.error( "Error performing release of releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error performing release of releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -388,12 +392,12 @@ public class SlaveBuildAgentTransportClient
         {
             result = slave.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername,
                                                   scmPassword, scmTag, scmTagBase, environments, username );
-            log.info( "Performing release of scmUrl=" + scmUrl );
+            log.debug( "Performing release of scmUrl={} from build agent {}", scmUrl, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error performing release from scm '" + scmUrl + "'", e );
-            throw new Exception( "Error performing release from scm '" + scmUrl + "'", e );
+            log.error( "Error performing release from scm '" + scmUrl + "' from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error performing release from scm '" + scmUrl + "' from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -407,12 +411,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.releaseCleanup( releaseId );
-            log.info( "Cleanup release, releaseId=" + releaseId );
+            log.debug( "Cleanup release, releaseId={} from build agent {}", releaseId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Error cleaning up release, releaseId=" + releaseId, e );
-            throw new Exception( "Error cleaning up release, releaseId=" + releaseId, e );
+            log.error( "Error cleaning up release, releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
+            throw new Exception( "Error cleaning up release, releaseId=" + releaseId + " from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -427,12 +431,12 @@ public class SlaveBuildAgentTransportClient
         {
             slave.releaseRollback( releaseId, projectId );
             result = Boolean.TRUE;
-            log.info( "Rollback release. releaseId=" + releaseId + ", projectId=" + projectId );
+            log.debug( "Rollback release. releaseId={}, projectId={} from build agent {}", new Object[] { releaseId, projectId, buildAgentUrl } );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to rollback release. releaseId=" + releaseId + ", projectId=" + projectId );
-            throw new Exception( "Failed to rollback release. releaseId=" + releaseId + ", projectId=" + projectId );
+            log.error( "Failed to rollback release. releaseId=" + releaseId + ", projectId=" + projectId + " from build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to rollback release. releaseId=" + releaseId + ", projectId=" + projectId + " from build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -446,12 +450,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             size = slave.getBuildSizeOfAgent();
-            log.info( "Retrieving build size of agent" );
+            log.debug( "Retrieving build size of build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to retrieve build size of agent", e );
-            throw new Exception( "Failed to retrieve build size of agent", e );
+            log.error( "Failed to retrieve build size of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to retrieve build size of build agent " + buildAgentUrl, e );
         }
 
         return size;
@@ -465,12 +469,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             projects = slave.getProjectCurrentlyPreparingBuild();
-            log.info( "Retrieving projects currently preparing build" );
+            log.debug( "Retrieving projects currently preparing build in build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to retrieve projects currently preparing build", e );
-            throw new Exception( "Failed to retrieve projects currently preparing build", e );
+            log.error( "Failed to retrieve projects currently preparing build in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to retrieve projects currently preparing build in build agent " + buildAgentUrl, e );
         }
 
         return projects;
@@ -484,12 +488,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             projects = slave.getProjectsAndBuildDefinitionsCurrentlyPreparingBuild();
-            log.info( "Retrieving projects currently preparing build" );
+            log.debug( "Retrieving projects currently preparing build in build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to retrieve projects currently preparing build", e );
-            throw new Exception( "Failed to retrieve projects currently preparing build", e );
+            log.error( "Failed to retrieve projects currently preparing build in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to retrieve projects currently preparing build in build agent " + buildAgentUrl, e );
         }
 
         return projects;
@@ -503,12 +507,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             projects = slave.getProjectsInBuildQueue();
-            log.info( "Retrieving projects in build queue" );
+            log.debug( "Retrieving projects in build queue of build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to retrieve projects in build queue", e );
-            throw new Exception( "Failed to retrieve projects in build queue", e );
+            log.error( "Failed to retrieve projects in build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to retrieve projects in build queue of build agent " + buildAgentUrl, e );
         }
 
         return projects;
@@ -522,12 +526,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             projects = slave.getProjectsInPrepareBuildQueue();
-            log.info( "Retrieving projects in prepare build queue" );
+            log.debug( "Retrieving projects in prepare build queue of build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to retrieve projects in prepare build queue", e );
-            throw new Exception( "Failed to retrieve projects in prepare build queue", e );
+            log.error( "Failed to retrieve projects in prepare build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to retrieve projects in prepare build queue of build agent " + buildAgentUrl, e );
         }
 
         return projects;
@@ -541,12 +545,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             projects = slave.getProjectsAndBuildDefinitionsInPrepareBuildQueue();
-            log.info( "Retrieving projects in prepare build queue" );
+            log.debug( "Retrieving projects in prepare build queue of build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to retrieve projects in prepare build queue", e );
-            throw new Exception( "Failed to retrieve projects in prepare build queue", e );
+            log.error( "Failed to retrieve projects in prepare build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to retrieve projects in prepare build queue of build agent " + buildAgentUrl, e );
         }
 
         return projects;
@@ -560,12 +564,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.isProjectGroupInQueue( projectGroupId );
-            log.info( "Checking if project group '" + projectGroupId + "' is in queue" );
+            log.debug( "Checking if project group '{}' is in queue in build agent {}", projectGroupId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project group '" + projectGroupId + "' is in queue", e );
-            throw new Exception( "Failed to check if project group '" + projectGroupId + "' is in queue", e );
+            log.error( "Failed to check if project group '" + projectGroupId + "' is in queue in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if project group '" + projectGroupId + "' is in queue in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -579,12 +583,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.isProjectScmRootInQueue( projectScmRootId, projectIds );
-            log.info( "Checking if project scm root '" + projectScmRootId + "' is in queue" );
+            log.debug( "Checking if project scm root '{}' is in queue in build agent {}", projectScmRootId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project scm root '" + projectScmRootId + "' is in queue", e );
-            throw new Exception( "Failed to check if project scm root '" + projectScmRootId + "' is in queue", e );
+            log.error( "Failed to check if project scm root '" + projectScmRootId + "' is in queue in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if project scm root '" + projectScmRootId + "' is in queue in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -598,12 +602,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.isProjectCurrentlyBuilding( projectId );
-            log.info( "Checking if project " + projectId + " is currently building in agent" );
+            log.debug( "Checking if project {} is currently building in build agent {}", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project " + projectId + " is currently building in agent", e );
-            throw new Exception( "Failed to check if project " + projectId + " is currently building in agent", e );
+            log.error( "Failed to check if project " + projectId + " is currently building in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if project " + projectId + " is currently building in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -617,12 +621,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.isProjectInBuildQueue( projectId );
-            log.info( "Checking if project " + projectId + "is in build queue of agent" );
+            log.debug( "Checking if project {} is in build queue of build agent {}", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project " + projectId + " is in build queue of agent", e );
-            throw new Exception( "Failed to check if project " + projectId + " is in build queue of agent", e );
+            log.error( "Failed to check if project " + projectId + " is in build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if project " + projectId + " is in build queue of build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -636,12 +640,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.isProjectGroupInPrepareBuildQueue( projectGroupId );
-            log.info( "Checking if projectGroup " + projectGroupId + "is in prepare build queue of agent" );
+            log.debug( "Checking if projectGroup {} is in prepare build queue of build agent {}", projectGroupId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if projectGroup " + projectGroupId + " is in prepare build queue of agent", e );
-            throw new Exception( "Failed to check if projectGroup " + projectGroupId + " is in prepare build queue of agent", e );
+            log.error( "Failed to check if projectGroup " + projectGroupId + " is in prepare build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if projectGroup " + projectGroupId + " is in prepare build queue of build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -655,12 +659,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.isProjectGroupCurrentlyPreparingBuild( projectGroupId );
-            log.info( "Checking if projectGroup " + projectGroupId + "is currently preparing build" );
+            log.debug( "Checking if projectGroup {} is currently preparing build in build agent {}", projectGroupId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if projectGroup " + projectGroupId + " is currently preparing build", e );
-            throw new Exception( "Failed to check if projectGroup " + projectGroupId + " is currently preparing build", e );
+            log.error( "Failed to check if projectGroup " + projectGroupId + " is currently preparing build in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if projectGroup " + projectGroupId + " is currently preparing build in build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -674,14 +678,14 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
-            log.debug( "Remove projects from prepare build queue. projectGroupId=" + projectGroupId +
-            		   ", scmRootId=" + scmRootId );
+            log.debug( "Remove projects from prepare build queue of build agent {}. projectGroupId={}, scmRootId={}", 
+                       new Object[] { buildAgentUrl, projectGroupId, scmRootId } );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to remove projects from prepare build queue. projectGroupId=" + projectGroupId +
-                       ", scmRootId=" + scmRootId );
-            throw new Exception( "Failed to remove from prepare build queue. projectGroupId=" + projectGroupId +
+            log.error( "Failed to remove projects from prepare build queue of build agent " + buildAgentUrl + ". projectGroupId=" + projectGroupId + 
+                       ", scmRootId=" + scmRootId, e );
+            throw new Exception( "Failed to remove from prepare build queue of build agent " + buildAgentUrl + ". projectGroupId=" + projectGroupId +
                                  " scmRootId=" + scmRootId, e );
         }
 
@@ -696,12 +700,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.removeFromPrepareBuildQueue( hashCodes );
-            log.info( "Removing projects from prepare build queue of agent" );
+            log.debug( "Removing projects from prepare build queue of build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to remove projects from prepare build queue of agent", e );
-            throw new Exception( "Failed to remove projects from prepare build queue of agent", e );
+            log.error( "Failed to remove projects from prepare build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to remove projects from prepare build queue of build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -715,12 +719,12 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.removeFromBuildQueue( projectId, buildDefinitionId );
-            log.info( "Removing project '" + projectId + "' from build queue of agent" );
+            log.debug( "Removing project '{}' from build queue of build agent {}", projectId, buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to remove project '" + projectId + "' from build queue of agent", e );
-            throw new Exception( "Failed to remove project '" + projectId + "' from build queue of agent", e );
+            log.error( "Failed to remove project '" + projectId + "' from build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to remove project '" + projectId + "' from build queue of build agent " + buildAgentUrl, e );
         }
 
         return result;
@@ -734,29 +738,33 @@ public class SlaveBuildAgentTransportClient
         try
         {
             result = slave.removeFromBuildQueue( hashCodes );
-            log.info( "Removing projects from build queue of agent" );
+            log.debug( "Removing projects from build queue of build agent {}", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to remove projects from build queue of agent", e );
-            throw new Exception( "Failed to remove projects from build queue of agent", e );
+            log.error( "Failed to remove projects from build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to remove projects from build queue of build agent " + buildAgentUrl, e );
         }
 
         return result;
     }
 
     public String getBuildAgentPlatform()
-    throws Exception
+        throws Exception
     {
-    
+        String result;
+
         try
         {
-            return slave.getBuildAgentPlatform();
+            result = slave.getBuildAgentPlatform();
+            log.debug( "Retrieved build agent {} platform", buildAgentUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return build agent platform", e );
-            throw new Exception( "Failed to return build agent platform", e );
+            log.error( "Failed to return build agent " + buildAgentUrl + " platform", e );
+            throw new Exception( "Failed to return build agent " + buildAgentUrl + " platform", e );
         }
+
+        return result;
     }
 }

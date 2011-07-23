@@ -42,6 +42,8 @@ public class MasterBuildAgentTransportClient
 
     MasterBuildAgentTransportService master;
 
+    private String masterServerUrl;
+
     public MasterBuildAgentTransportClient( URL serviceUrl )
         throws Exception
     {
@@ -53,6 +55,8 @@ public class MasterBuildAgentTransportClient
     {
         Binder binder = new DefaultBinder();
         AuthenticationInfo authnInfo = new AuthenticationInfo( login, password );
+
+        this.masterServerUrl = serviceUrl.toString();
 
         try
         {
@@ -78,12 +82,12 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.returnBuildResult( buildResult );
-            log.debug( "Returning the build result for project {}", projectInfo );
+            log.debug( "Returning the build result for project {} to master {}", projectInfo, masterServerUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return the build result for project {}", projectInfo, e );
-            throw new Exception( "Failed to return the build result for project " + projectInfo + ".", e );
+            log.error( "Failed to return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
+            throw new Exception( "Failed to return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
         }
 
         return result;
@@ -97,12 +101,12 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.ping();
-            log.debug( "Ping " + ( result ? "ok" : "failed" ) );
+            log.debug( "Ping Master {} : {}", masterServerUrl, ( result ? "ok" : "failed" ) );
         }
         catch ( Exception e )
         {
-            log.error( "Ping error" );
-            throw new Exception( "Ping error", e );
+            log.error( "Ping Master " + masterServerUrl + " error", e );
+            throw new Exception( "Ping Master " + masterServerUrl + " error", e );
         }
 
         return result;
@@ -136,12 +140,12 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.startProjectBuild( projectId );
-            log.debug( "Return project currently building, projectId={}", projectId );
+            log.debug( "Return project currently building, projectId={} to master {}", projectId, masterServerUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return project currently building, projectId={}", projectId, e );
-            throw new Exception( "Failed to return project currently building, projectId=" + projectId, e );
+            log.error( "Failed to return project currently building, projectId=" + projectId + " to master " + masterServerUrl, e );
+            throw new Exception( "Failed to return project currently building, projectId=" + projectId + " to master " + masterServerUrl, e );
         }
 
         return result;
@@ -174,14 +178,15 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.getEnvironments( buildDefinitionId, installationType );
-            log.debug( "Retrieved environments. buildDefinitionId={}, installationType={}", buildDefinitionId, installationType );
+            log.debug( "Retrieved environments. buildDefinitionId={}, installationType={} from master {}",
+                       new Object[] { buildDefinitionId, installationType, masterServerUrl } );
         }
         catch ( Exception e )
         {
             log.error( "Failed to retrieve environments. buildDefinitionId=" + buildDefinitionId +
-                       ", installationType=" + installationType, e );
+                       ", installationType=" + installationType + " from master " + masterServerUrl, e );
             throw new Exception( "Failed to retrieve environments. buildDefinitionId=" +
-                                  buildDefinitionId + ", installationType=" + installationType, e );
+                                  buildDefinitionId + ", installationType=" + installationType + " from master " + masterServerUrl, e );
         }
 
         return result;
@@ -196,12 +201,12 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.updateProject( project );
-            log.debug( "Updating project {}", projectInfo );
+            log.debug( "Updating project {} in master {}", projectInfo, masterServerUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to update project {}", projectInfo, e );
-            throw new Exception( "Failed to update project " + projectInfo, e );
+            log.error( "Failed to update project " + projectInfo + " in master " + masterServerUrl, e );
+            throw new Exception( "Failed to update project " + projectInfo + " in master " + masterServerUrl, e );
         }
 
         return result;
@@ -216,12 +221,12 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.shouldBuild( context );
-            log.debug( "Checking if project {} should build", projectInfo );
+            log.debug( "Checking if project {} should build from master {}", projectInfo, masterServerUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to determine if project {} should build", projectInfo, e );
-            throw new Exception( "Failed to determine if project " + projectInfo + " should build", e );
+            log.error( "Failed to determine if project " + projectInfo + " should build from master " + masterServerUrl, e );
+            throw new Exception( "Failed to determine if project " + projectInfo + " should build from master " + masterServerUrl, e );
         }
 
         return result;
