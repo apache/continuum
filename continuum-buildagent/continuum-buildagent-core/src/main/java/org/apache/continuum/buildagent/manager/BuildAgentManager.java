@@ -47,4 +47,7 @@ public interface BuildAgentManager
 
     void endPrepareBuild( Map<String, Object> context )
         throws ContinuumException;
+
+    boolean pingMaster()
+        throws ContinuumException;
 }

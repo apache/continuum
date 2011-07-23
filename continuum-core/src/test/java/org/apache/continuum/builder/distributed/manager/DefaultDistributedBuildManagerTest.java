@@ -523,6 +523,8 @@ public class DefaultDistributedBuildManagerTest
                 one( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
 
+                one( overallDistributedBuildQueue1 ).getBuildAgentUrl();
+
                 one( overallDistributedBuildQueue1 ).addToDistributedBuildQueue( with( any( Task.class ) ) );
             }
         } );
@@ -570,6 +572,8 @@ public class DefaultDistributedBuildManagerTest
 
                 one( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
+
+                one( overallDistributedBuildQueue2 ).getBuildAgentUrl();
 
                 one( overallDistributedBuildQueue2 ).addToDistributedBuildQueue( with( any( Task.class ) ) );
             }

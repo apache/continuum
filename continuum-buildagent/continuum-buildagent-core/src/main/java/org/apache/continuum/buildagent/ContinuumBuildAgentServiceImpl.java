@@ -34,6 +34,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.manager.BuildAgentReleaseManager;
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
@@ -90,6 +91,11 @@ public class ContinuumBuildAgentServiceImpl
      * @plexus.requirement
      */
     private BuildAgentReleaseManager buildAgentReleaseManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentManager buildAgentManager;
 
     public void buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws ContinuumBuildAgentException
@@ -907,10 +913,17 @@ public class ContinuumBuildAgentServiceImpl
     }
 
     public boolean ping()
+        throws ContinuumBuildAgentException
     {
-        log.debug( "Ping Ok" );
-
-        return Boolean.TRUE;
+        try
+        {
+            // check first if it can ping the master
+            return buildAgentManager.pingMaster();
+        }
+        catch ( ContinuumException e )
+        {
+            throw new ContinuumBuildAgentException( e.getMessage() );
+        }
     }
 
     public String getBuildAgentPlatform() 

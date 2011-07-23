@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportClient;
 import org.apache.maven.continuum.ContinuumException;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,6 +205,37 @@ public class DefaultBuildAgentManager
         catch ( Exception e )
         {
             throw new ContinuumException( "Error while finishing prepare build", e );
+        }
+    }
+
+    public boolean pingMaster()
+        throws ContinuumException
+    {
+        String continuumServerUrl = buildAgentConfigurationService.getContinuumServerUrl();
+
+        try
+        {
+            if ( StringUtils.isBlank( continuumServerUrl ) )
+            {
+                throw new ContinuumException( "Build agent is not configured properly. Missing continuumServerUrl in the configuration file" );
+            }
+
+            MasterBuildAgentTransportClient client = 
+                new MasterBuildAgentTransportClient( new URL( continuumServerUrl ) )
+            ;
+            return client.ping();
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error(
+                "Invalid continuum server URL '" + continuumServerUrl + "'", e );
+            throw new ContinuumException(
+                "Invalid continuum server URL '" + continuumServerUrl + "'", e );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Unable to ping master " + continuumServerUrl, e );
+            throw new ContinuumException( "Unable to ping master " + continuumServerUrl, e );
         }
     }
 }

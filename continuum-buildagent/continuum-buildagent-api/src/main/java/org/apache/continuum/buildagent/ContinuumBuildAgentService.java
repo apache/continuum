@@ -124,7 +124,8 @@ public interface ContinuumBuildAgentService
     void removeFromBuildQueue( List<String> hashCodes )
         throws ContinuumBuildAgentException;
 
-    boolean ping();
+    boolean ping()
+        throws ContinuumBuildAgentException;
     
     /**
      * Get build agent's platform.
