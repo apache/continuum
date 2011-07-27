@@ -22,4 +22,5 @@ under the License.
   <continuumServerUrl>http://localhost:8080/continuum/master-xmlrpc</continuumServerUrl>
   <buildOutputDirectory>data/build-output-directory</buildOutputDirectory>
   <workingDirectory>data/working-directory</workingDirectory>
+  <sharedSecretPassword></sharedSecretPassword>
 </continuum-buildagent-configuration>
