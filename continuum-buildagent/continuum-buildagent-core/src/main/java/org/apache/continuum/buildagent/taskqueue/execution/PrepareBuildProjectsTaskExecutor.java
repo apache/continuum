@@ -299,7 +299,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             try
             {
-                log.debug( "End prepare build of project group '{}'", ContinuumBuildAgentUtil.getProjectGroupName( context ) );
+                log.debug( "End prepare build of project group '{}'", ContinuumBuildAgentUtil.getProjectGroupId( context ) );
                 buildAgentManager.endPrepareBuild( result );
             }
             catch ( ContinuumException e )
