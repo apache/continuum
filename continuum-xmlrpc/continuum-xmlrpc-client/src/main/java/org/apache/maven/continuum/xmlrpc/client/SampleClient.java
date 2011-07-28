@@ -27,6 +27,7 @@ import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
+import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
@@ -36,6 +37,7 @@ import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,7 +53,46 @@ public class SampleClient
         throws Exception
     {
         client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
-/*
+
+        /*
+        // Test for [CONTINUUM-2641]:
+        // make sure to set the projectIds to the actual projectIds of your projects added in Continuum
+        int projectIds[] = new int[] { 2, 3, 4, 5, 6 };
+
+        List<Thread> threads = new ArrayList<Thread>();
+
+        for ( int i = 0; i < projectIds.length; i++ )
+        {
+            final int order = i;
+            final int projectId = projectIds[i];
+            Runnable task = new Runnable (){
+                public void run()
+                {
+                    BuildTrigger buildTrigger = new BuildTrigger();
+                    buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
+                    buildTrigger.setTriggeredBy( "admin" );
+                    System.out.println( "Building project #" + order + " '" + projectId + "'.." );
+                    try
+                    {
+                        client.buildProject( projectId, buildTrigger );
+                    }
+                    catch ( Exception e )
+                    {
+                        throw new RuntimeException( e );
+                    }
+                }
+            };
+            threads.add(new Thread(task));
+        }
+        
+        for ( Thread thread : threads )
+        {
+            thread.start();
+        }
+        */
+
+
+      /*
         System.out.println( "Adding project..." );
         AddingResult result = client.addMavenTwoProject( "http://svn.apache.org/repos/asf/continuum/sandbox/simple-example/pom.xml" );
         if ( result.hasErrors() )
@@ -93,9 +134,8 @@ public class SampleClient
             Thread.sleep( 1000 );
         }
 
-        System.out.println();*/
+        System.out.println();    */
 
-        
         BuildDefinition buildDef = new BuildDefinition();
         buildDef.setArguments( "A-Za-z0-9_./=,\": \\-" );
         buildDef.setSchedule( client.getSchedule( 1 ) );

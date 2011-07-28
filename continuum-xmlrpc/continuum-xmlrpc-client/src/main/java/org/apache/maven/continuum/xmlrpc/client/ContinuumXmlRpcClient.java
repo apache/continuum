@@ -52,6 +52,7 @@ import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
 import org.apache.xmlrpc.client.util.ClientFactory;
 
 /**
@@ -102,6 +103,7 @@ public class ContinuumXmlRpcClient
         config.setServerURL( serviceUrl );
 
         XmlRpcClient client = new XmlRpcClient();
+        client.setTransportFactory( new XmlRpcCommonsTransportFactory( client ) );
         client.setConfig( config );
         ClientFactory factory = new ClientFactory( client );
         continuum = (ContinuumService) factory.newInstance( ContinuumService.class );
