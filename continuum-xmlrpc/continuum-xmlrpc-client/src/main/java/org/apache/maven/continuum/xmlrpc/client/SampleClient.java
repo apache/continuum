@@ -55,7 +55,7 @@ public class SampleClient
         client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
 
         /*
-        // Test for [CONTINUUM-2641]:
+        // Test for [CONTINUUM-2641]: (test with distributed builds with multiple build agents or parallel builds with > 1 build queue)
         // make sure to set the projectIds to the actual projectIds of your projects added in Continuum
         int projectIds[] = new int[] { 2, 3, 4, 5, 6 };
 

@@ -19,14 +19,14 @@ package org.apache.continuum.distributed.transport.master;
  * under the License.
  */
 
-import com.atlassian.xmlrpc.AuthenticationInfo;
+import com.atlassian.xmlrpc.ApacheBinder;
 import com.atlassian.xmlrpc.Binder;
 import com.atlassian.xmlrpc.BindingException;
-import com.atlassian.xmlrpc.DefaultBinder;
 
 import java.net.URL;
 import java.util.Map;
 
+import com.atlassian.xmlrpc.ConnectionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,22 +53,25 @@ public class MasterBuildAgentTransportClient
     public MasterBuildAgentTransportClient( URL serviceUrl, String login, String password )
         throws Exception
     {
-        Binder binder = new DefaultBinder();
-        AuthenticationInfo authnInfo = new AuthenticationInfo( login, password );
+        Binder binder = new ApacheBinder();
+        
+        ConnectionInfo connectionInfo = new ConnectionInfo();
+        connectionInfo.setUsername( login );
+        connectionInfo.setPassword( password );
 
         this.masterServerUrl = serviceUrl.toString();
 
         try
         {
-            master = binder.bind( MasterBuildAgentTransportService.class, serviceUrl, authnInfo );
+            master = binder.bind( MasterBuildAgentTransportService.class, serviceUrl, connectionInfo );
         }
         catch ( BindingException e )
         {
             log.error( "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " +
-                serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e );
+                serviceUrl.toExternalForm() + " using " + connectionInfo.getUsername() + ", " + connectionInfo.getPassword(), e );
             throw new Exception(
                 "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " +
-                    serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(),
+                    serviceUrl.toExternalForm() + " using " + connectionInfo.getUsername() + ", " + connectionInfo.getPassword(),
                 e );
         }
     }

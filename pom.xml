@@ -717,6 +717,17 @@ under the License.
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>com.atlassian.xmlrpc</groupId>
+        <artifactId>atlassian-xmlrpc-binder-client-apache</artifactId>
+        <version>${atlassian.xmlrpc.binder.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-plexus-application</artifactId>
         <version>${project.version}</version>
@@ -1730,7 +1741,7 @@ under the License.
     <redback.version>1.3-M2-SNAPSHOT</redback.version>
     <archiva.version>1.2.1</archiva.version>
     <slf4jVersion>1.5.8</slf4jVersion>
-    <xmlrpc.version>3.1</xmlrpc.version>
-    <atlassian.xmlrpc.binder.version>0.8.2</atlassian.xmlrpc.binder.version>
+    <xmlrpc.version>3.1.2</xmlrpc.version>
+    <atlassian.xmlrpc.binder.version>0.11</atlassian.xmlrpc.binder.version>
   </properties>
 </project>
