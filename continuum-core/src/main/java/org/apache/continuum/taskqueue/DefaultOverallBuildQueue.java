@@ -21,6 +21,8 @@ package org.apache.continuum.taskqueue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -55,6 +57,8 @@ public class DefaultOverallBuildQueue
     private TaskQueueExecutor buildTaskQueueExecutor;
 
     private TaskQueueExecutor checkoutTaskQueueExecutor;
+
+    private TaskQueueExecutor prepareBuildTaskQueueExecutor;
 
     private int id;
 
@@ -426,6 +430,221 @@ public class DefaultOverallBuildQueue
         }
     }
 
+    /* Prepare Build */
+
+    /**
+     * @see OverallBuildQueue#addToPrepareBuildQueue(PrepareBuildProjectsTask)
+     */
+    public void addToPrepareBuildQueue( PrepareBuildProjectsTask prepareBuildTask )
+        throws TaskQueueException
+    {
+        getPrepareBuildQueue().put( prepareBuildTask );
+    }
+
+    /**
+     * @see OverallBuildQueue#addToPrepareBuildQueue(List)
+     */
+    public void addToPrepareBuildQueue( List<PrepareBuildProjectsTask> prepareBuildTasks )
+        throws TaskQueueException
+    {
+        for ( PrepareBuildProjectsTask prepareBuildTask : prepareBuildTasks )
+        {
+            getPrepareBuildQueue().put( prepareBuildTask );
+        }
+    }
+
+    /**
+     * @see OverallBuildQueue#getProjectsInPrepareBuildQueue()
+     */
+    public List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+        throws TaskQueueException
+    {
+        return getPrepareBuildQueue().getQueueSnapshot();
+    }
+
+    /**
+     * @see OverallBuildQueue#isInPrepareBuildQueue(int)
+     */
+    public boolean isInPrepareBuildQueue( int projectId )
+        throws TaskQueueException
+    {
+        List<PrepareBuildProjectsTask> queue = getProjectsInPrepareBuildQueue();
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( task != null )
+            {
+                Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+
+                if ( map.size() > 0 )
+                {
+                    Set<Integer> projectIds = map.keySet();
+
+                    if ( projectIds.contains( new Integer( projectId ) ) )
+                    {
+                        log.info( "Project {} is already in prepare build queue", projectId );
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @see OverallBuildQueue#isInPrepareBuildQueue(int, int)
+     */
+    public boolean isInPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws TaskQueueException
+    {
+        List<PrepareBuildProjectsTask> queue = getProjectsInPrepareBuildQueue();
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( task != null && task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
+            {
+                log.info( "Project group {} with scm root {} is in prepare build queue {}", new Object[] { projectGroupId, scmRootId, task } );
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @see OverallBuildQueue#isInPrepareBuildQueue(int, String)
+     */
+    public boolean isInPrepareBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueException
+    {
+        List<PrepareBuildProjectsTask> queue = getProjectsInPrepareBuildQueue();
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+            {
+                log.info( "Project group {} with scm root {} is in prepare build queue {}", new Object[] { projectGroupId, scmRootAddress, task } );
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @see OverallBuildQueue#cancelPrepareBuildTask(int, int)
+     */
+    public void cancelPrepareBuildTask( int projectGroupId, int scmRootId )
+    {
+        PrepareBuildProjectsTask task = (PrepareBuildProjectsTask) prepareBuildTaskQueueExecutor.getCurrentTask();
+        if ( task != null && task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
+        {
+            log.info(
+                "Cancelling prepare build task for project group '{}' with scmRootId '{}' in task executor '{}'", 
+                new Object[] { projectGroupId, scmRootId, prepareBuildTaskQueueExecutor } );
+            prepareBuildTaskQueueExecutor.cancelTask( task );
+        }
+    }
+
+    /**
+     * @see OverallBuildQueue#cancelPrepareBuildTask(int)
+     */
+    public void cancelPrepareBuildTask( int projectId )
+    {
+        PrepareBuildProjectsTask task = (PrepareBuildProjectsTask) prepareBuildTaskQueueExecutor.getCurrentTask();
+        if ( task != null )
+        {
+            Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+
+            if ( map.size() > 0 )
+            {
+                Set<Integer> projectIds = map.keySet();
+
+                if ( projectIds.contains( new Integer( projectId ) ) )
+                {
+                    log.info(
+                             "Cancelling prepare build task for project '{}' in task executor '{}'", projectId, prepareBuildTaskQueueExecutor );
+                    prepareBuildTaskQueueExecutor.cancelTask( task );
+                }
+            }
+        }
+    }
+
+    /**
+     * @see OverallBuildQueue#cancelCurrentPrepareBuild()
+     */
+    public boolean cancelCurrentPrepareBuild()
+    {
+        Task task = prepareBuildTaskQueueExecutor.getCurrentTask();
+        if ( task != null )
+        {
+            return prepareBuildTaskQueueExecutor.cancelTask( task );
+        }
+
+        log.info( "No prepare build task currently executing on build executor: {}", buildTaskQueueExecutor );
+        return false;
+    }
+
+    /**
+     * @see OverallBuildQueue#removeProjectFromPrepareBuildQueue(int, int)
+     */
+    public boolean removeProjectFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws TaskQueueException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
+                {
+                    return getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @see OverallBuildQueue#removeProjectFromPrepareBuildQueue(int, String)
+     */
+    public boolean removeProjectFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueException
+    {
+        List<PrepareBuildProjectsTask> queue = getProjectsInPrepareBuildQueue();
+
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( task != null && task.getProjectGroupId() == projectGroupId &&
+                task.getScmRootAddress().equals( scmRootAddress ) )
+            {
+                return getPrepareBuildQueue().remove( task );
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @see OverallBuildQueue#removeProjectsFromPrepareBuildQueueWithHashCodes(int[])
+     */
+    public void removeProjectsFromPrepareBuildQueueWithHashCodes( int[] hashCodes )
+        throws TaskQueueException
+    {
+        List<PrepareBuildProjectsTask> tasks = getProjectsInPrepareBuildQueue();
+
+        if ( tasks != null )
+        {
+            for ( PrepareBuildProjectsTask task : tasks )
+            {
+                if ( ArrayUtils.contains( hashCodes, task.getHashCode() ) )
+                {
+                    getPrepareBuildQueue().remove( task );
+                }
+            }
+        }
+    }
+
     /**
      * @see OverallBuildQueue#getCheckoutQueue()
      */
@@ -440,6 +659,14 @@ public class DefaultOverallBuildQueue
     public TaskQueue getBuildQueue()
     {
         return ( (ParallelBuildsThreadedTaskQueueExecutor) buildTaskQueueExecutor ).getQueue();
+    }
+
+    /**
+     * @see OverallBuildQueue#getPrepareBuildQueue()
+     */
+    public TaskQueue getPrepareBuildQueue()
+    {
+        return ( (ParallelBuildsThreadedTaskQueueExecutor) prepareBuildTaskQueueExecutor ).getQueue();
     }
 
     /**
@@ -458,6 +685,14 @@ public class DefaultOverallBuildQueue
         return checkoutTaskQueueExecutor;
     }
 
+    /**
+     * @see OverallBuildQueue#getPrepareBuildTaskQueueExecutor()
+     */
+    public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
+    {
+        return prepareBuildTaskQueueExecutor;
+    }
+
     public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
     {
         this.buildDefinitionDao = buildDefinitionDao;
@@ -471,5 +706,10 @@ public class DefaultOverallBuildQueue
     public void setCheckoutTaskQueueExecutor( TaskQueueExecutor checkoutTaskQueueExecutor )
     {
         this.checkoutTaskQueueExecutor = checkoutTaskQueueExecutor;
+    }
+
+    public void setPrepareBuildTaskQueueExecutor( TaskQueueExecutor prepareBuildTaskQueueExecutor )
+    {
+        this.prepareBuildTaskQueueExecutor = prepareBuildTaskQueueExecutor;
     }
 }

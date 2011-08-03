@@ -29,9 +29,7 @@ import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.buildmanager.ParallelBuildsManager;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
-import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
-import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
@@ -44,18 +42,12 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderExcepti
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
 import org.codehaus.plexus.action.ActionManager;
-import org.codehaus.plexus.taskqueue.TaskQueue;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 
 public class PrepareBuildProjectsTaskExecutorTest
     extends AbstractContinuumTest
 {
     private ContinuumProjectBuilder projectBuilder;
-
-    private TaskQueue prepareBuildQueue;
-
-    private TaskQueueExecutor prepareBuildTaskQueueExecutor;
 
     private ActionManager actionManager;
 
@@ -74,10 +66,6 @@ public class PrepareBuildProjectsTaskExecutorTest
         projectBuilder =
             (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
-        prepareBuildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "prepare-build-project" );
-
-        prepareBuildTaskQueueExecutor = (TaskQueueExecutor) lookup( TaskQueueExecutor.ROLE, "prepare-build-project" );
-
         projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
 
         actionManager = (ActionManager) lookup( ActionManager.ROLE );
@@ -92,8 +80,6 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/multi-module/pom.xml", false, false );
 
-        this.prepareBuildQueue.put( task );
-
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
         assertEquals( "failed to add all projects", 4, projects.size() );
@@ -103,9 +89,12 @@ public class PrepareBuildProjectsTaskExecutorTest
         Project moduleB = getProjectDao().getProjectByName( "module-B" );
         Project moduleD = getProjectDao().getProjectByName( "module-D" );
 
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
+                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
         // wait while task finishes prepare build
-        while( !prepareBuildQueue.getQueueSnapshot().isEmpty() || 
-                        prepareBuildTaskQueueExecutor.getCurrentTask() != null )
+        while( buildsManager.isInPrepareBuildQueue( task.getProjectGroupId(), task.getProjectScmRootId() ) || 
+               buildsManager.isProjectGroupCurrentlyPreparingBuild( task.getProjectGroupId(), task.getProjectScmRootId() ) )
         {
             Thread.sleep( 10 );
         }
@@ -131,11 +120,7 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         assertTrue( "failed to checkout project 'module-D'", new File( workingDir, Integer.toString( moduleD.getId() ) ).list().length > 0 );
 
-        while( !buildsManager.getCurrentBuilds().isEmpty() ||
-                        isAnyProjectInBuildQueue() )
-        {
-            Thread.sleep( 10 );
-        }
+        buildsManager.cancelAllBuilds();
     }
 
     public void testCheckoutPrepareBuildMultiModuleProjectFreshBuild()
@@ -143,7 +128,6 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/multi-module/pom.xml", false, true );
 
-        this.prepareBuildQueue.put( task );
 
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
@@ -154,9 +138,12 @@ public class PrepareBuildProjectsTaskExecutorTest
         Project moduleB = getProjectDao().getProjectByName( "module-B" );
         Project moduleD = getProjectDao().getProjectByName( "module-D" );
 
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
+                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
         // wait while task finishes prepare build
-        while( !prepareBuildQueue.getQueueSnapshot().isEmpty() || 
-                        prepareBuildTaskQueueExecutor.getCurrentTask() != null )
+        while( buildsManager.isInPrepareBuildQueue( task.getProjectGroupId(), task.getProjectScmRootId() ) || 
+               buildsManager.isProjectGroupCurrentlyPreparingBuild( task.getProjectGroupId(), task.getProjectScmRootId() ) )
         {
             Thread.sleep( 10 );
         }
@@ -182,11 +169,7 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         assertTrue( "failed to checkout project 'module-D'", new File( workingDir, Integer.toString( moduleD.getId() ) ).list().length > 0 );
  
-        while( !buildsManager.getCurrentBuilds().isEmpty() ||
-                        isAnyProjectInBuildQueue() )
-        {
-            Thread.sleep( 10 );
-        }
+        buildsManager.cancelAllBuilds();
     }
 
     public void testCheckoutPrepareBuildSingleCheckedoutMultiModuleProject()
@@ -194,17 +177,18 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/multi-module/pom.xml", true, false );
 
-        this.prepareBuildQueue.put( task );
-
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
         assertEquals( "failed to add all projects", 4, projects.size() );
 
         Project rootProject = getProjectDao().getProjectByName( "multi-module-parent" );
 
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
+                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
         // wait while task finishes prepare build
-        while( !prepareBuildQueue.getQueueSnapshot().isEmpty() || 
-                        prepareBuildTaskQueueExecutor.getCurrentTask() != null )
+        while( buildsManager.isInPrepareBuildQueue( task.getProjectGroupId(), task.getProjectScmRootId() ) || 
+               buildsManager.isProjectGroupCurrentlyPreparingBuild( task.getProjectGroupId(), task.getProjectScmRootId() ) )
         {
             Thread.sleep( 10 );
         }
@@ -230,11 +214,7 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         assertTrue( "failed to checkout project 'module-D'", new File( checkedOutDir, "module-C/module-D" ).list().length > 0 );
 
-        while( !buildsManager.getCurrentBuilds().isEmpty() ||
-                        isAnyProjectInBuildQueue() )
-        {
-            Thread.sleep( 10 );
-        }
+        buildsManager.cancelAllBuilds();
     }
 
     public void testCheckoutPrepareBuildSingleCheckedoutMultiModuleProjectFreshBuild()
@@ -242,17 +222,18 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/multi-module/pom.xml", true, true );
 
-        this.prepareBuildQueue.put( task );
-
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
         assertEquals( "failed to add all projects", 4, projects.size() );
 
         Project rootProject = getProjectDao().getProjectByName( "multi-module-parent" );
 
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
+                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
         // wait while task finishes prepare build
-        while( !prepareBuildQueue.getQueueSnapshot().isEmpty() || 
-                        prepareBuildTaskQueueExecutor.getCurrentTask() != null )
+        while( buildsManager.isInPrepareBuildQueue( task.getProjectGroupId(), task.getProjectScmRootId() ) || 
+               buildsManager.isProjectGroupCurrentlyPreparingBuild( task.getProjectGroupId(), task.getProjectScmRootId() ) )
         {
             Thread.sleep( 10 );
         }
@@ -278,11 +259,7 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         assertTrue( "failed to checkout project 'module-D'", new File( checkedOutDir, "module-C/module-D" ).list().length > 0 );
 
-        while( !buildsManager.getCurrentBuilds().isEmpty() ||
-                        isAnyProjectInBuildQueue() )
-        {
-            Thread.sleep( 10 );
-        }
+        buildsManager.cancelAllBuilds();
     }
 
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProject()
@@ -290,17 +267,18 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true, false );
 
-        this.prepareBuildQueue.put( task );
-
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
         assertEquals( "failed to add all projects", 4, projects.size() );
         
         Project rootProject = getProjectDao().getProjectByName( "parent-project" );
 
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
+                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
         // wait while task finishes prepare build
-        while( !prepareBuildQueue.getQueueSnapshot().isEmpty() || 
-                        prepareBuildTaskQueueExecutor.getCurrentTask() != null )
+        while( buildsManager.isInPrepareBuildQueue( task.getProjectGroupId(), task.getProjectScmRootId() ) || 
+               buildsManager.isProjectGroupCurrentlyPreparingBuild( task.getProjectGroupId(), task.getProjectScmRootId() ) )
         {
             Thread.sleep( 10 );
         }
@@ -326,11 +304,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         
         assertTrue( "failed to checkout module-d", new File( checkedOutDir, "module-c/module-d" ).list().length > 0 );
 
-        while( !buildsManager.getCurrentBuilds().isEmpty() ||
-                        isAnyProjectInBuildQueue() )
-        {
-            Thread.sleep( 10 );
-        }
+        buildsManager.cancelAllBuilds();
     }
 
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProjectBuildFresh()
@@ -338,25 +312,23 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true, true );
 
-        this.prepareBuildQueue.put( task );
-
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
         assertEquals( "failed to add all projects", 4, projects.size() );
 
         Project rootProject = getProjectDao().getProjectByName( "parent-project" );
 
-        ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
+                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
         // wait while task finishes prepare build
-        while( !prepareBuildQueue.getQueueSnapshot().isEmpty() || 
-                        prepareBuildTaskQueueExecutor.getCurrentTask() != null || scmRoot.getState() == ContinuumProjectState.UPDATING )
+        while( buildsManager.isInPrepareBuildQueue( task.getProjectGroupId(), task.getProjectScmRootId() ) || 
+               buildsManager.isProjectGroupCurrentlyPreparingBuild( task.getProjectGroupId(), task.getProjectScmRootId() ) )
         {
             Thread.sleep( 10 );
-
-            scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         }
 
-        scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
+        ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         assertEquals( "Failed to update multi-module project", ContinuumProjectState.UPDATED, scmRoot.getState() );
 
         File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
@@ -377,18 +349,14 @@ public class PrepareBuildProjectsTaskExecutorTest
        
         assertTrue( "failed to checkout module-d", new File( checkedOutDir, "module-c/module-d" ).list().length > 0 );
 
-        while( !buildsManager.getCurrentBuilds().isEmpty() ||
-                        isAnyProjectInBuildQueue() )
-        {
-            Thread.sleep( 10 );
-        }
+        buildsManager.cancelAllBuilds();
     }
-    
+
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProjectBuildFreshAfterRemovingWorkingCopy()
         throws Exception
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true, true );
-     
+
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
      
         assertEquals( "failed to add all projects", 4, projects.size() );
@@ -398,23 +366,21 @@ public class PrepareBuildProjectsTaskExecutorTest
         File rootProjectDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
         rootProjectDir = new File( rootProjectDir, "parent-project" );
     
-       rootProject.setWorkingDirectory( rootProjectDir.getAbsolutePath() );
+        rootProject.setWorkingDirectory( rootProjectDir.getAbsolutePath() );
     
         getProjectDao().updateProject( rootProject );
    
-        this.prepareBuildQueue.put( task );
-    
-        ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
+                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
         // wait while task finishes prepare build
-        while( !prepareBuildQueue.getQueueSnapshot().isEmpty() || 
-                        prepareBuildTaskQueueExecutor.getCurrentTask() != null || scmRoot.getState() == ContinuumProjectState.UPDATING )
+        while( buildsManager.isInPrepareBuildQueue( task.getProjectGroupId(), task.getProjectScmRootId() ) || 
+               buildsManager.isProjectGroupCurrentlyPreparingBuild( task.getProjectGroupId(), task.getProjectScmRootId() ) )
         {
             Thread.sleep( 10 );
-
-            scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         }
-    
-        scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
+
+        ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         assertEquals( "Failed to update multi-module project", ContinuumProjectState.UPDATED, scmRoot.getState() );
     
         File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
@@ -435,11 +401,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         
         assertTrue( "failed to checkout module-d", new File( checkedOutDir, "module-c/module-d" ).list().length > 0 );
 
-        while( !buildsManager.getCurrentBuilds().isEmpty() ||
-                        isAnyProjectInBuildQueue() )
-        {
-            Thread.sleep( 10 );
-        }
+        buildsManager.cancelAllBuilds();
     }
 
     private PrepareBuildProjectsTask createTask( String pomResource, boolean singleCheckout, boolean buildFresh )
@@ -586,21 +548,5 @@ public class PrepareBuildProjectsTaskExecutorTest
             int indexDiff = StringUtils.differenceAt( path1, path2 );
             return path1.substring( 0, indexDiff );
         }
-    }
-
-    private boolean isAnyProjectInBuildQueue()
-        throws Exception
-    {
-        Map<String, List<BuildProjectTask>> buildTasks = buildsManager.getProjectsInBuildQueues();
-
-        for ( String queue : buildTasks.keySet() )
-        {
-            if ( !buildTasks.get( queue ).isEmpty() )
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

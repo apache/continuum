@@ -261,6 +261,7 @@
                       sortable="false"
                       filterable="false">
               <ec:row>
+                <ec:column property="queueName" title="prepareBuildQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
                     <s:param name="projectGroupId"><c:out value="${pageScope.currentPrepareBuild.projectGroupId}"/></s:param>
@@ -298,6 +299,7 @@
                     <input type="checkbox" name="selectedPrepareBuildTaskHashCodes" value="${pageScope.prepareBuildQueue.hashCode}" />
                   </ec:column>             
                 </redback:ifAuthorized>
+                <ec:column property="queueName" title="prepareBuildQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
                     <s:param name="projectGroupId"><c:out value="${pageScope.prepareBuildQueue.projectGroupId}"/></s:param>

@@ -163,9 +163,6 @@ public interface Continuum
     void buildProjects( BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    void buildProjects( BuildTrigger buildTrigger, int buildDefinitionId )
-        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
-
     void buildProjects( Schedule schedule )
         throws ContinuumException;
 

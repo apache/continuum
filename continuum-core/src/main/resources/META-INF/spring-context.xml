@@ -34,13 +34,12 @@
   </bean>
   
   <bean name="buildsManager#parallel" 
-  		class="org.apache.continuum.buildmanager.ParallelBuildsManager" autowire="byName">
-     <property name="prepareBuildQueue" ref="taskQueue#prepare-build-project"/>
-  </bean>
+  		class="org.apache.continuum.buildmanager.ParallelBuildsManager" autowire="byName"/>
     
   <bean name="overallBuildQueue" 
   		class="org.apache.continuum.taskqueue.DefaultOverallBuildQueue" scope="prototype" autowire="byName">
      <property name="buildTaskQueueExecutor" ref="taskQueueExecutor#build-project"/>
      <property name="checkoutTaskQueueExecutor" ref="taskQueueExecutor#check-out-project"/>
+     <property name="prepareBuildTaskQueueExecutor" ref="taskQueueExecutor#prepare-build-project"/>
   </bean>
 </beans>

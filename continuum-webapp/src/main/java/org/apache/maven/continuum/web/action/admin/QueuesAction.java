@@ -297,16 +297,19 @@ public class QueuesAction
             try
             {
                 // current prepare builds
-                PrepareBuildProjectsTask currentPrepareBuildTask = getContinuum().getBuildsManager().getCurrentProjectInPrepareBuild();
+                Map<String, PrepareBuildProjectsTask> currentPrepareBuildTasks = getContinuum().getBuildsManager().getCurrentProjectInPrepareBuild();
 
-                if ( currentPrepareBuildTask != null )
+                Set<String> keySet = currentPrepareBuildTasks.keySet();
+                for ( String key : keySet )
                 {
+                    PrepareBuildProjectsTask prepareBuildTask = currentPrepareBuildTasks.get( key );
+
                     PrepareBuildSummary s = new PrepareBuildSummary();
-                    
-                    s.setProjectGroupId( currentPrepareBuildTask.getProjectGroupId() );
-                    s.setProjectGroupName( currentPrepareBuildTask.getProjectGroupName() );
-                    s.setScmRootId( currentPrepareBuildTask.getProjectScmRootId() );
-                    s.setScmRootAddress( currentPrepareBuildTask.getScmRootAddress() );
+                    s.setProjectGroupId( prepareBuildTask.getProjectGroupId() );
+                    s.setProjectGroupName( prepareBuildTask.getProjectGroupName() );
+                    s.setScmRootId( prepareBuildTask.getProjectScmRootId() );
+                    s.setScmRootAddress( prepareBuildTask.getScmRootAddress() );
+                    s.setQueueName( key );
                     currentPrepareBuilds.add( s );
                 }
             }
@@ -339,18 +342,24 @@ public class QueuesAction
             try
             {
                 // queued prepare builds
-                List<PrepareBuildProjectsTask> prepareBuilds = 
+                Map<String, List<PrepareBuildProjectsTask>> prepareBuilds = 
                     getContinuum().getBuildsManager().getProjectsInPrepareBuildQueue();
-                for ( PrepareBuildProjectsTask task : prepareBuilds )
-                {
-                    PrepareBuildSummary summary = new PrepareBuildSummary();
-                    summary.setProjectGroupId( task.getProjectGroupId() );
-                    summary.setProjectGroupName( task.getProjectGroupName() );
-                    summary.setScmRootId( task.getProjectScmRootId() );
-                    summary.setScmRootAddress( task.getScmRootAddress() );
-                    summary.setHashCode( task.getHashCode() );
 
-                    prepareBuildQueues.add( summary );
+                Set<String> keySet = prepareBuilds.keySet();
+                for ( String key : keySet )
+                {
+                    for ( PrepareBuildProjectsTask task : prepareBuilds.get( key ) )
+                    {
+                        PrepareBuildSummary summary = new PrepareBuildSummary();
+                        summary.setProjectGroupId( task.getProjectGroupId() );
+                        summary.setProjectGroupName( task.getProjectGroupName() );
+                        summary.setScmRootId( task.getProjectScmRootId() );
+                        summary.setScmRootAddress( task.getScmRootAddress() );
+                        summary.setHashCode( task.getHashCode() );
+                        summary.setQueueName( key );
+
+                        prepareBuildQueues.add( summary );
+                    }
                 }
             }
             catch ( BuildManagerException e )

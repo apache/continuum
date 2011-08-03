@@ -398,6 +398,12 @@ public class DefaultContinuum
                         "Unable to delete group. At least one project in group is still being checked out." );
                 }
 
+                if ( parallelBuildsManager.isAnyProjectCurrentlyPreparingBuild( projectIds ) )
+                {
+                    throw new ContinuumException(
+                        "Unable to delete group. The project group is still preparing build." );
+                }
+
                 if ( parallelBuildsManager.isAnyProjectCurrentlyBuilding( projectIds ) )
                 {
                     throw new ContinuumException(
@@ -780,12 +786,6 @@ public class DefaultContinuum
     	buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
     }
 
-    public void buildProjectsWithBuildDefinition( int buildDefinitionId )
-        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
-    {
-    	buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, "" ), buildDefinitionId );
-    }
-
     public void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
@@ -817,23 +817,6 @@ public class DefaultContinuum
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );
 
         prepareBuildProjects( filteredProjectsList, null, true, buildTrigger );
-    }
-
-    /**
-     * fire of the builds of all projects across all project groups using the group build definition
-     *
-     * @param buildTrigger
-     * @param buildDefinitionId
-     * @throws ContinuumException
-     */
-    public void buildProjects( BuildTrigger buildTrigger, int buildDefinitionId )
-        throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
-    {
-        Collection<Project> projectsList = getProjectsInBuildOrder();
-
-        Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );
-
-        prepareBuildProjects( filteredProjectsList, buildDefinitionId, buildTrigger );
     }
 
     /**

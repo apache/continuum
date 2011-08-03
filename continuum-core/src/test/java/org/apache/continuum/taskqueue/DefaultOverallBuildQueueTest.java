@@ -21,7 +21,9 @@ package org.apache.continuum.taskqueue;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
@@ -53,6 +55,8 @@ public class DefaultOverallBuildQueueTest
 
     private ParallelBuildsThreadedTaskQueueExecutor checkoutTaskQueueExecutor;
 
+    private ParallelBuildsThreadedTaskQueueExecutor prepareBuildTaskQueueExecutor;
+
     @Override
     protected void setUp()
         throws Exception
@@ -71,11 +75,16 @@ public class DefaultOverallBuildQueueTest
         checkoutTaskQueueExecutor =
             context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "checkout-queue-executor" );
 
+        prepareBuildTaskQueueExecutor = 
+            context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "prepare-build-queue-executor" );
+
         overallQueue.setBuildDefinitionDao( buildDefinitionDao );
 
         overallQueue.setBuildTaskQueueExecutor( buildTaskQueueExecutor );
 
         overallQueue.setCheckoutTaskQueueExecutor( checkoutTaskQueueExecutor );
+
+        overallQueue.setPrepareBuildTaskQueueExecutor( prepareBuildTaskQueueExecutor );
     }
 
     // checkout queue
@@ -332,6 +341,256 @@ public class DefaultOverallBuildQueueTest
             }} );
 
         overallQueue.removeProjectFromBuildQueue( 1 );
+        context.assertIsSatisfied();
+    }
+
+    // prepare build queue
+
+    public void testAddToPrepareBuildQueue()
+        throws Exception
+    {
+        final PrepareBuildProjectsTask prepareBuildTask =
+            new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 1, 
+                                          "Project Group A", "http://scmRootAddress", 1 );
+        final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).put( prepareBuildTask );
+            }} );
+
+        overallQueue.addToPrepareBuildQueue( prepareBuildTask );
+        context.assertIsSatisfied();
+    }
+
+    public void testCancelCurrentPrepareBuild()
+        throws Exception
+    {
+        final Task prepareBuildTask = 
+            new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 1, 
+                                          "Project Group A", "http://scm.root.address", 1 );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( prepareBuildTask ) );
+
+                one( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
+            }} );
+
+        overallQueue.cancelCurrentPrepareBuild();
+        context.assertIsSatisfied();
+    }
+
+    public void testCancelPrepareBuildTaskByProject()
+        throws Exception
+    {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put( 1, 1 );
+
+        final Task prepareBuildTask = 
+            new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, 
+                                          "Project Group A", "http://scm.root.address", 1 );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( prepareBuildTask ) );
+
+                one( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
+            }} );
+
+        overallQueue.cancelPrepareBuildTask( 1 );
+        context.assertIsSatisfied();
+    }
+
+    public void testCancelPrepareBuildTaskByProjectGroup()
+        throws Exception
+    {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put( 1, 1 );
+
+        final Task prepareBuildTask = 
+            new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, 
+                                          "Project Group A", "http://scm.root.address", 2 );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( prepareBuildTask ) );
+
+                one( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
+            }} );
+
+        overallQueue.cancelPrepareBuildTask( 1, 2 );
+        context.assertIsSatisfied();
+    }
+
+    public void testGetProjectsFromPrepareBuildQueue()
+        throws Exception
+    {
+        final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 2, 
+                                                 "Project Group A", "http://scm.root.address", 2 ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }} );
+
+        List<PrepareBuildProjectsTask> returnedTasks = overallQueue.getProjectsInPrepareBuildQueue();
+        context.assertIsSatisfied();
+
+        assertNotNull( returnedTasks );
+        assertEquals( 1, returnedTasks.size() );
+    }
+
+    public void testIsInPrepareBuildQueueByProject()
+        throws Exception
+    {
+        final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+
+        final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put( 2, 1 );
+
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A", 
+                                                 "http://scm.root.address", 2 ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }} );
+
+        assertTrue( overallQueue.isInPrepareBuildQueue( 2 ) );
+        context.assertIsSatisfied();
+    }
+
+    public void testIsInPrepareBuildQueueByProjectGroupAndScmRootId()
+        throws Exception
+    {
+        final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+
+        final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put( 2, 1 );
+
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A", 
+                                                 "http://scm.root.address", 2 ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }} );
+
+        assertTrue( overallQueue.isInPrepareBuildQueue( 1, 2 ) );
+        context.assertIsSatisfied();
+    }
+
+    public void testIsInPrepareBuildQueueByProjectGroupAndScmRootAddress()
+        throws Exception
+    {
+        final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+
+        final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put( 2, 1 );
+
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A", 
+                                                 "http://scm.root.address", 2 ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }} );
+
+        assertTrue( overallQueue.isInPrepareBuildQueue( 1, "http://scm.root.address" ) );
+        context.assertIsSatisfied();
+    }
+
+    public void testRemoveProjectsFromPrepareBuildQueueByProjectGroupAndScmRootId()
+        throws Exception
+    {
+        final Task prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 
+                                                                    1, "Project Group A", "http://scm.root.address", 1 );
+
+        final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( prepareBuildTask );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).remove( prepareBuildTask );
+            }} );
+
+        overallQueue.removeProjectFromPrepareBuildQueue( 1, 1 );
+        context.assertIsSatisfied();
+    }
+
+    public void testRemoveProjectsFromPrepareBuildQueueByProjectGroupAndScmRootAddress()
+        throws Exception
+    {
+        final Task prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 
+                                                                    1, "Project Group A", "http://scm.root.address", 1 );
+
+        final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( prepareBuildTask );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+
+                one( prepareBuildTaskQueueExecutor ).getQueue();
+                will( returnValue( prepareBuildQueue ) );
+
+                one( prepareBuildQueue ).remove( prepareBuildTask );
+            }} );
+
+        overallQueue.removeProjectFromPrepareBuildQueue( 1, "http://scm.root.address" );
         context.assertIsSatisfied();
     }
 }

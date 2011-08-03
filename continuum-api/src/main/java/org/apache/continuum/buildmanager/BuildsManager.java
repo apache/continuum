@@ -149,7 +149,31 @@ public interface BuildsManager
 
     // public boolean cancelPrepareBuild(int projectId) throws BuildManagerException;
 
+    /**
+     * Cancels all the prepare builds in all overall queues
+     */
     boolean cancelAllPrepareBuilds()
+        throws BuildManagerException;
+
+    /**
+     * Cancels the specified project group prepare build
+     * 
+     * @param projectGroupId
+     * @param scmRootId
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean cancelPrepareBuild( int projectGroupId, int scmRootId )
+        throws BuildManagerException;
+
+    /**
+     * Cancels the specified project prepare build
+     * 
+     * @param projectId
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean cancelPrepareBuild( int projectId )
         throws BuildManagerException;
 
     /**
@@ -294,6 +318,17 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
         throws BuildManagerException;
 
     /**
+     * Checks where the project group is already in the prepare-build queue
+     * 
+     * @param projectGroupId
+     * @param scmRootId
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean isInPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws BuildManagerException;
+
+    /**
      * Checks whether the project is currently being built.
      *
      * @param projectId
@@ -301,6 +336,15 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
      * @throws BuildManagerException
      */
     boolean isProjectInAnyCurrentBuild( int projectId )
+        throws BuildManagerException;
+
+    /**
+     * Checks if at least one of the projects is currently preparing build
+     * @param projectIds
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean isAnyProjectCurrentlyPreparingBuild( int[] projectIds )
         throws BuildManagerException;
 
     // needed in QueuesAction
@@ -378,11 +422,21 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
         throws BuildManagerException;
 
     /**
+     * Checks whether project group is currently preparing build
+     * @param projectGroupId
+     * @param scmRootId
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId, int scmRootId )
+        throws BuildManagerException;
+
+    /**
      * Return currently preparing build project.
      * @return
      * @throws BuildManagerException
      */
-    PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
+    Map<String, PrepareBuildProjectsTask> getCurrentProjectInPrepareBuild()
         throws BuildManagerException;
 
     /**
@@ -390,7 +444,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
      * @return
      * @throws BuildManagerException
      */
-    List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+    Map<String, List<PrepareBuildProjectsTask>> getProjectsInPrepareBuildQueue()
         throws BuildManagerException;
 
     /**

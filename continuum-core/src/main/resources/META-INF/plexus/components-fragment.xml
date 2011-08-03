@@ -138,14 +138,14 @@
       <role-hint>prepare-build-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
       <lifecycle-handler>plexus-configurable</lifecycle-handler>
-      <instantiation-strategy>singleton</instantiation-strategy>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
     </component>
     
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>prepare-build-project</role-hint>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
-      <instantiation-strategy>singleton</instantiation-strategy>
+      <implementation>org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>

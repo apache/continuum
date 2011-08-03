@@ -138,6 +138,125 @@ public interface OverallBuildQueue
     void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException;
 
+    /* Prepare Build Queue */
+
+    /**
+     * Returns the prepare build queue.
+     *
+     * @return
+     */
+    TaskQueue getPrepareBuildQueue();
+
+    /**
+     * Add the prepare build task to the prepare build queue.
+     *
+     * @param prepareBuildTask
+     * @throws Exception
+     */
+    void addToPrepareBuildQueue( PrepareBuildProjectsTask prepareBuildTask )
+        throws TaskQueueException;
+
+    /**
+     * Add the prepare build tasks to the prepare build queue.
+     *
+     * @param prepareBuildTasks
+     * @throws TaskQueueException TODO
+     */
+    void addToPrepareBuildQueue( List<PrepareBuildProjectsTask> prepareBuildTasks )
+        throws TaskQueueException;
+
+    /**
+     * Returns the prepare build tasks in the prepare build queue.
+     *
+     * @return
+     * @throws TaskQueueException TODO
+     */
+    List<PrepareBuildProjectsTask> getProjectsInPrepareBuildQueue()
+        throws TaskQueueException;
+
+    /**
+     * Checks if the specified project is in the prepare build queue.
+     *
+     * @param projectId
+     * @return
+     * @throws TaskQueueException TODO
+     */
+    boolean isInPrepareBuildQueue( int projectId )
+        throws TaskQueueException;
+
+    /**
+     * Checks if the specified project group and scm root is in the prepare build queue.
+     * @param projectGroupId
+     * @param scmRootId
+     * @return
+     * @throws TaskQueueException
+     */
+    boolean isInPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws TaskQueueException;
+
+    /**
+     * Checks if the specified project group and scm root is in the prepare build queue.
+     * @param projectGroupId
+     * @param scmRootAddress
+     * @return
+     * @throws TaskQueueException
+     */
+    boolean isInPrepareBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueException;
+
+    /**
+     * Cancel the prepare build task of the corresponding project group and scm root.
+     *
+     * @param projectId
+     * @param scmRootId
+     */
+    void cancelPrepareBuildTask( int projectGroupId, int scmRootId );
+
+    /**
+     * Cancel the prepare build task of the corresponding project
+     * 
+     * @param projectId
+     */
+    void cancelPrepareBuildTask( int projectId );
+
+    /**
+     * Cancel the current prepare build.
+     *
+     * @return
+     */
+    boolean cancelCurrentPrepareBuild();
+
+    /**
+     * Remove the project group matching the specified id, and scm root id from the prepare build queue.
+     *
+     * @param projectGroupId
+     * @param scmRootId
+     * @return
+     * @throws TaskQueueException TODO
+     */
+    boolean removeProjectFromPrepareBuildQueue( int projectGroupId, int scmRootId )
+        throws TaskQueueException;
+
+    /**
+     * Remove the project group matching the specified id and scm root address from the prepare build queue.
+     *
+     * @param projectId
+     * @param scmRootAddress
+     * @return
+     * @throws TaskQueueException TODO
+     */
+    boolean removeProjectFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueException;
+
+    /**
+     * Remove the projects matching the specified hashcodes from the prepare build queue.
+     *
+     * @param hashCodes
+     * @throws TaskQueueException TODO
+     */
+    void removeProjectsFromPrepareBuildQueueWithHashCodes( int[] hashCodes )
+        throws TaskQueueException;
+
     /* Build Queue */
 
     /**
@@ -221,7 +340,7 @@ public interface OverallBuildQueue
      * @throws TaskQueueException TODO
      */
     boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
-    		                             String projectName, int projectGroupId )
+                                         String projectName, int projectGroupId )
         throws TaskQueueException;
 
     /**
@@ -266,4 +385,11 @@ public interface OverallBuildQueue
      * @return
      */
     TaskQueueExecutor getCheckoutTaskQueueExecutor();
+
+    /**
+     * Returns the prepare build task queue executor used.
+     * 
+     * @return
+     */
+    TaskQueueExecutor getPrepareBuildTaskQueueExecutor();
 }

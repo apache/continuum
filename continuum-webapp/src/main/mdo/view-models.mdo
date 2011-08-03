@@ -539,6 +539,13 @@
           <required>false</required>
           <type>int</type>
         </field>
+        <field>
+          <name>queueName</name>
+          <version>1.4.1+</version>
+          <required>true</required>
+          <description>Name where the prepare build is queued</description>
+          <type>String</type>
+        </field>
       </fields>
     </class>
     <class>
