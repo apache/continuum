@@ -256,8 +256,6 @@ public class DefaultDistributedBuildManager
                     // get overall distributed build queue from build agent group
                     log.info( "Getting the least busy build agent from the build agent group" );
                     overallDistributedBuildQueue = getOverallDistributedBuildQueueByAgentGroup( projectsBuildDefinitionsMap );
-                    log.debug( "Building project in the least busy agent {} within the build agent group", 
-                               overallDistributedBuildQueue.getBuildAgentUrl() );
                 }
             }
             else
@@ -265,7 +263,6 @@ public class DefaultDistributedBuildManager
                 // project does not have build agent group
                 log.info( "Project does not have a build agent group, getting the least busy build agent" );
                 overallDistributedBuildQueue = getOverallDistributedBuildQueue();
-                log.debug( "Building project in the least busy agent {}", overallDistributedBuildQueue.getBuildAgentUrl() );
             }
         }
 
