@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import com.atlassian.xmlrpc.ConnectionInfo;
 import org.slf4j.Logger;
@@ -58,6 +59,7 @@ public class SlaveBuildAgentTransportClient
         ConnectionInfo connectionInfo = new ConnectionInfo();
         connectionInfo.setUsername( login );
         connectionInfo.setPassword( password );
+        connectionInfo.setTimeZone( TimeZone.getDefault() );
 
         buildAgentUrl = serviceUrl.toString();
 

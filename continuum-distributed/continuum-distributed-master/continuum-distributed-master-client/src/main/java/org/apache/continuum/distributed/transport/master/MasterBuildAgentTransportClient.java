@@ -25,6 +25,7 @@ import com.atlassian.xmlrpc.BindingException;
 
 import java.net.URL;
 import java.util.Map;
+import java.util.TimeZone;
 
 import com.atlassian.xmlrpc.ConnectionInfo;
 import org.slf4j.Logger;
@@ -58,6 +59,7 @@ public class MasterBuildAgentTransportClient
         ConnectionInfo connectionInfo = new ConnectionInfo();
         connectionInfo.setUsername( login );
         connectionInfo.setPassword( password );
+        connectionInfo.setTimeZone( TimeZone.getDefault() );
 
         this.masterServerUrl = serviceUrl.toString();
 
