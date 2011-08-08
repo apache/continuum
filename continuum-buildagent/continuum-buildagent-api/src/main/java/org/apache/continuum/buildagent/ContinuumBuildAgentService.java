@@ -135,4 +135,7 @@ public interface ContinuumBuildAgentService
      */
     String getBuildAgentPlatform()
         throws ContinuumBuildAgentException;
+
+    void setBuildAgentUrl( String url )
+        throws ContinuumBuildAgentException;
 }

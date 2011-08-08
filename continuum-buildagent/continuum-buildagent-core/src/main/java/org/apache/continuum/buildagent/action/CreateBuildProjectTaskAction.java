@@ -66,6 +66,7 @@ public class CreateBuildProjectTaskAction
             {
                 if ( !buildAgentTaskQueueManager.isProjectInBuildQueue( buildProjectTask.getProjectId() ) )
                 {
+                    log.info( "Adding project {} to build queue", buildProjectTask.getProjectId() );
                     buildAgentTaskQueueManager.getBuildQueue().put( buildProjectTask );
                 }
             }

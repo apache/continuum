@@ -967,7 +967,7 @@ public class DefaultContinuum
             }
         }
 
-        BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, "" );
+        BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_SCHEDULED, schedule.getName() );
 
         for ( ProjectScmRoot scmRoot : sortedScmRoot )
         {

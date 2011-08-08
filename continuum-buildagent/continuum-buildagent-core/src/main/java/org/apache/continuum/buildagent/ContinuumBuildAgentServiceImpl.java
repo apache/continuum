@@ -33,6 +33,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.manager.BuildAgentReleaseManager;
@@ -111,7 +112,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            log.debug( "Adding project group {} to prepare build queue", task.getProjectGroupId() );
+            log.info( "Adding project group {} to prepare build queue", task.getProjectGroupId() );
             buildAgentTaskQueueManager.getPrepareBuildQueue().put( task );
         }
         catch ( TaskQueueException e )
@@ -857,7 +858,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Removing project group {} from prepare build queue", projectGroupId );
+            log.info( "Removing project group {} from prepare build queue", projectGroupId );
             return buildAgentTaskQueueManager.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
         }
         catch ( TaskQueueManagerException e )
@@ -872,7 +873,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Removing project groups {} from prepare build queue", hashCodes );
+            log.info( "Removing project groups {} from prepare build queue", hashCodes );
             buildAgentTaskQueueManager.removeFromPrepareBuildQueue( listToIntArray( hashCodes ) );
         }
         catch ( TaskQueueManagerException e )
@@ -887,7 +888,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Removing project {} with buildDefinition {} from build queue", projectId, buildDefinitionId );
+            log.info( "Removing project {} with buildDefinition {} from build queue", projectId, buildDefinitionId );
             return buildAgentTaskQueueManager.removeFromBuildQueue( projectId, buildDefinitionId );
         }
         catch ( TaskQueueManagerException e )
@@ -902,7 +903,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Removing projects {} from build queue", hashCodes );
+            log.info( "Removing projects {} from build queue", hashCodes );
             buildAgentTaskQueueManager.removeFromBuildQueue( listToIntArray( hashCodes ) );
         }
         catch ( TaskQueueManagerException e )
@@ -938,6 +939,21 @@ public class ContinuumBuildAgentServiceImpl
         {
             log.error( "Error in when trying to get build agent's platform", e );
             throw new ContinuumBuildAgentException( "Error in when trying to get build agent's platform", e );
+        }
+    }
+
+    public void setBuildAgentUrl( String url )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            buildAgentConfigurationService.setBuildAgentUrl( url );
+            buildAgentConfigurationService.store();
+        }
+        catch( BuildAgentConfigurationException e )
+        {
+            log.error( "Error occurred while setting build agent url " + url, e );
+            throw new ContinuumBuildAgentException( "Error occurred while setting build agent url " + url, e );
         }
     }
 

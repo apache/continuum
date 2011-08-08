@@ -28,8 +28,7 @@ public interface BuildAgentConfiguration
     GeneralBuildAgentConfiguration getContinuumBuildAgentConfiguration()
         throws BuildAgentConfigurationException;
 
-    void setContinuumBuildAgentConfiguration( GeneralBuildAgentConfiguration configuration )
-        throws BuildAgentConfigurationException;
+    void setContinuumBuildAgentConfiguration( GeneralBuildAgentConfiguration configuration );
 
     void save()
         throws BuildAgentConfigurationException;

@@ -30,7 +30,7 @@
       <meta http-equiv="refresh" content="60"/>
     </head>
     <body>
-      <s:form id="buildQueueForm" action="none" method="post">
+      
         <div id="h3">
           <h3>
             <s:text name="buildQueue.currentTask.section.title"/>
@@ -72,7 +72,7 @@
             <s:text name="buildQueue.no.currentTaks" />
           </c:if>
         </div>
-      </s:form>
+      
       
       <s:form id="removeBuildForm" action="removeBuildQueueEntries!removeBuildEntries.action" method="post">
         <div id="h3">
@@ -140,7 +140,7 @@
         </c:if>
       </s:form>
 
-      <s:form id="checkoutForm" action="none" method="post">
+      
         <%-- checkout queue --%>
         <div id="h3">
           <h3>
@@ -182,7 +182,7 @@
             <s:text name="checkoutQueue.no.currentTaks" />
           </c:if>
         </div>
-      </s:form>
+      
         
       <s:form id="removeCheckoutForm" action="removeCheckoutQueueEntries!removeCheckoutEntries.action" method="post">
         <div id="h3">
@@ -247,7 +247,7 @@
         </c:if>          
       </s:form>
 
-      <s:form id="prepareBuildForm" action="none" method="post">
+      
       	<div id="h3">
           <h3><s:text name="prepareBuildQueue.currentTask.section.title"/></h3>
           <c:if test="${not empty currentPrepareBuilds}">
@@ -276,7 +276,7 @@
             <s:text name="prepareBuildQueue.no.currentTasks"/>
           </c:if>
         </div>
-      </s:form>
+      
        
       <s:form id="removePrepareBuildForm" action="removePrepareBuildEntries.action" method="post">
         <div id="h3">

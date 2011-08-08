@@ -37,7 +37,7 @@
         </div>
       </c:if>
       
-      <s:form id="buildForm" action="none" method="post">
+      
         <div id="h3">
           <h3><s:text name="distributedBuilds.currentBuild.section.title"/></h3>
           <c:if test="${not empty currentDistributedBuilds}">
@@ -78,8 +78,8 @@
             <s:text name="distributedBuilds.no.currentTasks"/>
           </c:if>
         </div>
-      </s:form>
-      <s:form id="removeBuildForm" action="removeDistributedBuildEntries.action" method="post">
+      
+      <s:form id="removeBuildForm" action="removeDistributedBuildEntries!removeDistributedBuildEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.buildQueue.section.title"/>
@@ -143,7 +143,7 @@
           <s:text name="distributedBuilds.empty"/>
         </c:if>
       </s:form>
-      <s:form id="prepareForm" action="none" method="post">
+      
         <div id="h3">
           <h3><s:text name="distributedBuilds.currentPrepareBuild.section.title"/></h3>
           <c:if test="${not empty currentDistributedPrepareBuilds}">
@@ -172,9 +172,9 @@
             <s:text name="distributedPrepareBuilds.no.currentTasks"/>
           </c:if>
         </div>
-      </s:form>
       
-      <s:form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries.action" method="post">
+      
+      <s:form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries!removeDistributedPrepareBuildEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.prepareBuildQueue.section.title"/>

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
+import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
@@ -39,6 +40,9 @@ public interface DistributedBuildManager
         throws ContinuumException;
 
     void reload()
+        throws ContinuumException;
+
+    void update( BuildAgentConfiguration buildAgent )
         throws ContinuumException;
 
     void removeDistributedBuildQueueOfAgent( String buildAgentUrl )

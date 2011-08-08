@@ -81,8 +81,8 @@ public class DaoUtilsImpl
 
     public void eraseDatabase()
     {
-        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinitionTemplate.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), BuildResult.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinitionTemplate.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ContinuumReleaseResult.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectScmRoot.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectGroup.class );

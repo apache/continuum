@@ -207,7 +207,7 @@ public class BuildAgentAction
 
         try
         {
-            getContinuum().getDistributedBuildManager().reload();
+            getContinuum().getDistributedBuildManager().update( buildAgent );
         }
         catch( ContinuumException e )
         {

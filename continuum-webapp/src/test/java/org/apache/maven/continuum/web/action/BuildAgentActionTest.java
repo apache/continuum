@@ -67,7 +67,7 @@ public class BuildAgentActionTest
         configurationServiceMock.expects( once() ).method( "addBuildAgent" ).isVoid();
         configurationServiceMock.expects( once() ).method( "store" ).isVoid();
         continuumMock.expects( once() ).method( "getDistributedBuildManager" ).will( returnValue( distributedBuildManagerMock.proxy() ) );
-        distributedBuildManagerMock.expects( once() ).method( "reload" ).isVoid();
+        distributedBuildManagerMock.expects( once() ).method( "update" ).isVoid();
         
         BuildAgentConfiguration buildAgent = new BuildAgentConfiguration();
         buildAgent.setUrl( "http://sample/agent" );

@@ -78,7 +78,7 @@ public class MasterBuildAgentTransportClient
         }
     }
 
-    public Boolean returnBuildResult( Map<String, Object> buildResult )
+    public Boolean returnBuildResult( Map<String, Object> buildResult, String buildAgentUrl )
         throws Exception
     {
         Boolean result;
@@ -86,13 +86,13 @@ public class MasterBuildAgentTransportClient
 
         try
         {
-            result = master.returnBuildResult( buildResult );
-            log.debug( "Returning the build result for project {} to master {}", projectInfo, masterServerUrl );
+            result = master.returnBuildResult( buildResult, buildAgentUrl );
+            log.info( "Build finished. Returning the build result for project {} to master {}", projectInfo, masterServerUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
-            throw new Exception( "Failed to return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
+            log.error( "Failed to finish the build and return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
+            throw new Exception( "Failed to finish the build and return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
         }
 
         return result;
@@ -117,7 +117,7 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult )
+    public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult, String buildAgentUrl )
         throws Exception
     {
         Boolean result;
@@ -125,8 +125,8 @@ public class MasterBuildAgentTransportClient
 
         try
         {
-            result = master.prepareBuildFinished( prepareBuildResult );
-            log.debug( "Prepare build finished for project '{}'", projectInfo );
+            result = master.prepareBuildFinished( prepareBuildResult, buildAgentUrl );
+            log.info( "Prepare build finished for project '{}'", projectInfo );
         }
         catch ( Exception e )
         {
@@ -137,26 +137,26 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Boolean startProjectBuild( Integer projectId )
+    public Boolean startProjectBuild( Integer projectId, String buildAgentUrl )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            result = master.startProjectBuild( projectId );
-            log.debug( "Return project currently building, projectId={} to master {}", projectId, masterServerUrl );
+            result = master.startProjectBuild( projectId, buildAgentUrl );
+            log.info( "Start project {} build", projectId );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to return project currently building, projectId=" + projectId + " to master " + masterServerUrl, e );
-            throw new Exception( "Failed to return project currently building, projectId=" + projectId + " to master " + masterServerUrl, e );
+            log.error( "Failed to start build of projectId=" + projectId + " to master " + masterServerUrl, e );
+            throw new Exception( "Failed to start build of projectId=" + projectId + " to master " + masterServerUrl, e );
         }
 
         return result;
     }
 
-    public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult )
+    public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult, String buildAgentUrl )
         throws Exception
     {
         Boolean result;
@@ -164,8 +164,8 @@ public class MasterBuildAgentTransportClient
 
         try
         {
-            result = master.startPrepareBuild( prepareBuildResult );
-            log.debug( "Start prepare build for project {}", projectInfo );
+            result = master.startPrepareBuild( prepareBuildResult, buildAgentUrl );
+            log.info( "Start prepare build for project {}", projectInfo );
         }
         catch ( Exception e )
         {
@@ -176,13 +176,13 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType, String buildAgentUrl )
         throws Exception
     {
         Map<String, String> result;
         try
         {
-            result = master.getEnvironments( buildDefinitionId, installationType );
+            result = master.getEnvironments( buildDefinitionId, installationType, buildAgentUrl );
             log.debug( "Retrieved environments. buildDefinitionId={}, installationType={} from master {}",
                        new Object[] { buildDefinitionId, installationType, masterServerUrl } );
         }
@@ -217,7 +217,7 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Boolean shouldBuild( Map<String, Object> context )
+    public Boolean shouldBuild( Map<String, Object> context, String buildAgentUrl )
         throws Exception
     {
         Boolean result;
@@ -225,7 +225,7 @@ public class MasterBuildAgentTransportClient
 
         try
         {
-            result = master.shouldBuild( context );
+            result = master.shouldBuild( context, buildAgentUrl );
             log.debug( "Checking if project {} should build from master {}", projectInfo, masterServerUrl );
         }
         catch ( Exception e )

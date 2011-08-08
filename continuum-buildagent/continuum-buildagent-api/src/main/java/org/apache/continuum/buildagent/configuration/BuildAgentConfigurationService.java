@@ -50,4 +50,11 @@ public interface BuildAgentConfigurationService
     List<LocalRepository> getLocalRepositories();
 
     String getSharedSecretPassword();
+
+    String getBuildAgentUrl();
+
+    void setBuildAgentUrl( String buildAgentUrl );
+
+    void store()
+        throws BuildAgentConfigurationException;
 }

@@ -41,65 +41,71 @@ public class MasterBuildAgentTransportServer
         this.distributedBuildService = distributedBuildService;
     }
 
-    public Boolean returnBuildResult( Map<String, Object> buildResult )
+    public Boolean returnBuildResult( Map<String, Object> buildResult, String buildAgentUrl )
         throws Exception
     {
-        log.info( "Build result returned for project " + ContinuumDistributedUtil.getProjectNameAndId( buildResult ) + "." );
         distributedBuildService.updateBuildResult( buildResult );
+        log.info( "Project build finished in build agent {}. Returned build result for project {}", 
+                  buildAgentUrl, ContinuumDistributedUtil.getProjectNameAndId( buildResult ) );
         return Boolean.TRUE;
     }
 
     public Boolean ping()
         throws Exception
     {
-        log.info( "Ping ok" );
+        log.debug( "Ping master ok" );
 
         return Boolean.TRUE;
     }
 
-    public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult )
+    public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult, String buildAgentUrl )
         throws Exception
     {
-        log.info( "Prepare build finished for project " + ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ) + "." );
         distributedBuildService.prepareBuildFinished( prepareBuildResult );
+        log.info( "Prepare build finished for project {} in build agent {}", 
+                   ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ), buildAgentUrl );
         return Boolean.TRUE;
     }
 
-    public Boolean startProjectBuild( Integer projectId )
+    public Boolean startProjectBuild( Integer projectId, String buildAgentUrl )
         throws Exception
     {
-        log.info( "Start project '" + projectId + "' build." );
         distributedBuildService.startProjectBuild( projectId );
+        log.info( "Start building project '{}' in build agent {}.", projectId, buildAgentUrl );
         return Boolean.TRUE;
     }
 
-    public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult )
+    public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult, String buildAgentUrl )
         throws Exception
     {
-        log.info( "Start prepare build of project " + ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ) + "." );
         distributedBuildService.startPrepareBuild( prepareBuildResult );
+        log.info( "Start preparing build of project {} in build agent {}",
+                   ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ), buildAgentUrl );
         return Boolean.TRUE;
     }
 
-    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType, String buildAgentUrl )
         throws Exception
     {
-        log.info( "Retrieving environments. buildDefinitionId=" + buildDefinitionId + ", installationType=" + installationType );
-        return distributedBuildService.getEnvironments( buildDefinitionId, installationType );
+        Map<String, String> envs = distributedBuildService.getEnvironments( buildDefinitionId, installationType );
+        log.debug( "Retrieving environments by build agent {}. buildDefinitionId={}, installationType={}", 
+                   new Object[] { buildAgentUrl, buildDefinitionId, installationType } );
+        return envs;
     }
 
     public Boolean updateProject( Map<String, Object> project )
         throws Exception
     {
-        log.info( "Start updating project " + ContinuumDistributedUtil.getProjectNameAndId( project ) );
         distributedBuildService.updateProject( project );
+        log.debug( "Start updating project {}", ContinuumDistributedUtil.getProjectNameAndId( project ) );
         return Boolean.TRUE;
     }
 
-    public Boolean shouldBuild( Map<String, Object> context )
+    public Boolean shouldBuild( Map<String, Object> context, String buildAgentUrl )
         throws Exception
     {
-        log.info( "Checking if project " + ContinuumDistributedUtil.getProjectNameAndId( context ) + " should build" );
+        log.debug( "Checking if project {} should build in build agent {}",
+                   ContinuumDistributedUtil.getProjectNameAndId( context ), buildAgentUrl );
         return distributedBuildService.shouldBuild( context );
     }
 }

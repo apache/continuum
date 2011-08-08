@@ -550,6 +550,8 @@ public class DefaultDistributedBuildManagerTest
                 one( configurationService ).getBuildAgents();
                 will( returnValue( buildAgents ) );
 
+                one( overallDistributedBuildQueue1 ).getBuildAgentUrl();
+
                 one( overallDistributedBuildQueue1 ).addToDistributedBuildQueue( with( any( Task.class ) ) );
             }
         } );

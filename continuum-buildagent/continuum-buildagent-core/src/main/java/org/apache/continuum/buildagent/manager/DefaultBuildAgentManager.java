@@ -51,7 +51,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.startProjectBuild( projectId );
+            client.startProjectBuild( projectId, getBuildAgentUrl() );
         }
         catch ( MalformedURLException e )
         {
@@ -75,7 +75,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.returnBuildResult( buildResult );
+            client.returnBuildResult( buildResult, getBuildAgentUrl() );
         }
         catch ( MalformedURLException e )
         {
@@ -99,7 +99,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            return client.getEnvironments( buildDefinitionId, installationType );
+            return client.getEnvironments( buildDefinitionId, installationType, getBuildAgentUrl() );
         }
         catch ( MalformedURLException e )
         {
@@ -147,7 +147,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            return client.shouldBuild( context );
+            return client.shouldBuild( context, getBuildAgentUrl() );
         }
         catch ( MalformedURLException e )
         {
@@ -171,7 +171,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.startPrepareBuild( context );
+            client.startPrepareBuild( context, getBuildAgentUrl() );
         }
         catch ( MalformedURLException e )
         {
@@ -195,7 +195,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.prepareBuildFinished( context );
+            client.prepareBuildFinished( context, getBuildAgentUrl() );
         }
         catch ( MalformedURLException e )
         {
@@ -237,5 +237,10 @@ public class DefaultBuildAgentManager
             log.error( "Unable to ping master " + continuumServerUrl, e );
             throw new ContinuumException( "Unable to ping master " + continuumServerUrl + " from build agent", e );
         }
+    }
+
+    private String getBuildAgentUrl()
+    {
+        return buildAgentConfigurationService.getBuildAgentUrl();
     }
 }

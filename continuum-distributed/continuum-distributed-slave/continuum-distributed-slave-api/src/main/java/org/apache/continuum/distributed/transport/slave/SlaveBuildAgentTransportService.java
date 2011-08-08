@@ -148,4 +148,7 @@ public interface SlaveBuildAgentTransportService
      */
     public String getBuildAgentPlatform()
         throws Exception;
+
+    public void setBuildAgentUrl( String buildAgentUrl )
+        throws Exception;
 }
