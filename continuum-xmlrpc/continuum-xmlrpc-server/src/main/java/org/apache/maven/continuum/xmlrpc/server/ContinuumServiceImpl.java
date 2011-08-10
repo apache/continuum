@@ -1479,8 +1479,18 @@ public class ContinuumServiceImpl
 
                 String buildAgentUrl = dbm.getBuildAgentUrl( projectId );
 
+                if ( dbm.isProjectInAnyPrepareBuildQueue( projectId, -1 ) )
+                {
+                    if ( buildAgentUrl != null )
+                    {
+                        org.apache.continuum.model.project.ProjectScmRoot scmRoot =
+                            continuum.getProjectScmRootByProject( projectId );
+                        dbm.removeFromPrepareBuildQueue( buildAgentUrl, scmRoot.getProjectGroup().getId(),
+                                                         scmRoot.getId() );
+                    }
+                }
                 // wait if already preparing
-                if ( dbm.isProjectCurrentlyPreparingBuild( projectId, -1 ) )
+                else if ( dbm.isProjectCurrentlyPreparingBuild( projectId, -1 ) )
                 {
                     while ( dbm.isProjectCurrentlyPreparingBuild( projectId, -1 ) )
                     {
@@ -1495,17 +1505,8 @@ public class ContinuumServiceImpl
                     }
                 }
 
-                if ( dbm.isProjectInAnyPrepareBuildQueue( projectId, -1 ) )
-                {
-                    if ( buildAgentUrl != null )
-                    {
-                        org.apache.continuum.model.project.ProjectScmRoot scmRoot =
-                            continuum.getProjectScmRootByProject( projectId );
-                        dbm.removeFromPrepareBuildQueue( buildAgentUrl, scmRoot.getProjectGroup().getId(),
-                                                         scmRoot.getId() );
-                    }
-                }
-                else if ( dbm.isProjectInAnyBuildQueue( projectId, -1 ) )
+                
+                if ( dbm.isProjectInAnyBuildQueue( projectId, -1 ) )
                 {
                     dbm.removeFromBuildQueue( buildAgentUrl, projectId, -1 );
                 }

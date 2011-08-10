@@ -642,6 +642,44 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
+    public Boolean isProjectCurrentlyPreparingBuild( int projectId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectCurrentlyPreparingBuild( projectId );
+            log.debug( "Checking if project {} is currently preparing build in build agent {}", projectId, buildAgentUrl );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if project " + projectId + " is currently preparing build in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if project " + projectId + " is currently preparing build in build agent " + buildAgentUrl, e );
+        }
+
+        return result;
+    }
+
+    public Boolean isProjectInPrepareBuildQueue( int projectId )
+        throws Exception
+    {
+        Boolean result;
+
+        try
+        {
+            result = slave.isProjectInPrepareBuildQueue( projectId );
+            log.debug( "Checking if project {} is in prepare build queue of build agent {}", projectId, buildAgentUrl );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to check if project " + projectId + " is in prepare build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if project " + projectId + " is in prepare build queue of build agent " + buildAgentUrl, e );
+        }
+
+        return result;
+    }
+
     public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )
         throws Exception
     {

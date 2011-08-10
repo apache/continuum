@@ -112,6 +112,10 @@ public interface ContinuumBuildAgentService
 
     boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId );
 
+    boolean isProjectInPrepareBuildQueue( int projectId );
+
+    boolean isProjectCurrentlyPreparingBuild( int projectId );
+
     boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
         throws ContinuumBuildAgentException;
 

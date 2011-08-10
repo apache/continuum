@@ -1356,9 +1356,9 @@ public class DefaultDistributedBuildManager
 
                             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                             
-                            if ( client.isProjectGroupCurrentlyPreparingBuild( projectId ) ||
+                            if ( client.isProjectCurrentlyPreparingBuild( projectId ) ||
                                 client.isProjectCurrentlyBuilding( projectId ) ||
-                                client.isProjectGroupInPrepareBuildQueue( projectId ) ||
+                                client.isProjectInPrepareBuildQueue( projectId ) ||
                                 client.isProjectInBuildQueue( projectId ) )
                             {
                                 agentUrl = buildAgentUrl;

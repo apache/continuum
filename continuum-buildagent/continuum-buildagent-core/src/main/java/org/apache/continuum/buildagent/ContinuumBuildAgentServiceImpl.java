@@ -787,6 +787,33 @@ public class ContinuumBuildAgentServiceImpl
         return false;
     }
 
+    public boolean isProjectInPrepareBuildQueue( int projectId )
+    {
+        try
+        {
+            log.debug( "Checking if project {} is in prepare build queue", projectId );
+            for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
+            {
+                if ( task != null )
+                {
+                    for ( BuildContext context : task.getBuildContexts() )
+                    {
+                        if ( context.getProjectId() == projectId )
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error while checking if project " + projectId + " is in prepare build queue in agent", e);
+        }
+
+        return false;
+    }
+
     public boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId )
     {
         try
@@ -802,6 +829,32 @@ public class ContinuumBuildAgentServiceImpl
         catch ( TaskQueueManagerException e )
         {
             log.error( "Error while checking if project group " + projectGroupId + " is currently preparing build in agent", e);
+        }
+
+        return false;
+    }
+
+    public boolean isProjectCurrentlyPreparingBuild( int projectId )
+    {
+        try
+        {
+            log.debug( "Checking if project {} currently preparing build", projectId );
+            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+
+            if ( currentPrepareBuildTask != null )
+            {
+                for ( BuildContext context : currentPrepareBuildTask.getBuildContexts() )
+                {
+                    if ( context.getProjectId() == projectId )
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            log.error( "Error while checking if project " + projectId + " is currently preparing build in agent", e);
         }
 
         return false;
