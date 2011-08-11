@@ -45,8 +45,8 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         distributedBuildService.updateBuildResult( buildResult );
-        log.info( "Project build finished in build agent {}. Returned build result for project {}", 
-                  buildAgentUrl, ContinuumDistributedUtil.getProjectNameAndId( buildResult ) );
+        log.info( "Project {} build finished in build agent {}. Returned build result.", 
+                  ContinuumDistributedUtil.getProjectNameAndId( buildResult ), buildAgentUrl );
         return Boolean.TRUE;
     }
 
@@ -71,7 +71,7 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         distributedBuildService.startProjectBuild( projectId );
-        log.info( "Start building project '{}' in build agent {}.", projectId, buildAgentUrl );
+        log.info( "Start building project (projectId={}) in build agent {}.", projectId, buildAgentUrl );
         return Boolean.TRUE;
     }
 

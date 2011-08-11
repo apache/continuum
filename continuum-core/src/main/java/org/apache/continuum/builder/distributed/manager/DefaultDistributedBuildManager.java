@@ -331,25 +331,21 @@ public class DefaultDistributedBuildManager
 
     	if ( buildTrigger.getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
     	{
-    	    log.debug( "Build project triggered manually by {}", buildTrigger.getTriggeredBy() );
+    	    log.debug( "Build project (projectGroupId={}) triggered manually by {}", projectGroupId, buildTrigger.getTriggeredBy() );
     	}
     	else
     	{
-    	    log.debug( "Build project triggered by schedule {}", buildTrigger.getTriggeredBy() );
+    	    log.debug( "Build project (projectGroupId={}) triggered by schedule {}", projectGroupId, buildTrigger.getTriggeredBy() );
     	}
 
     	if ( log.isDebugEnabled() )
     	{
-    	    log.debug( "Projects currently building:" );
-
     	    Map<String, BuildProjectTask> buildTasks = getProjectsCurrentlyBuilding();
 
     	    for ( String key : buildTasks.keySet() )
     	    {
-    	        log.debug( "Build agent {} : Project {}", key, buildTasks.get( key ).getProjectName() );
+    	        log.debug( "Current build of agent {} :: Project {}", key, buildTasks.get( key ).getProjectName() );
     	    }
-
-    	    log.debug( "Projects in build queue:" );
 
     	    Map<String, List<BuildProjectTask>> buildQueues = getProjectsInBuildQueue();
 
@@ -357,22 +353,18 @@ public class DefaultDistributedBuildManager
     	    {
     	        for ( BuildProjectTask buildTask : buildQueues.get( key ) )
     	        {
-    	            log.debug( "Build agent {} : Project {}", key, buildTask.getProjectName() );
+    	            log.debug( "Build Queue of agent {} :: Project {}", key, buildTask.getProjectName() );
     	        }
     	    }
-
-    	    log.debug( "Projects currently preparing build:" );
 
     	    Map<String, PrepareBuildProjectsTask> prepareBuildTasks = getProjectsCurrentlyPreparingBuild();
 
     	    for( String key : prepareBuildTasks.keySet() )
     	    {
     	        PrepareBuildProjectsTask prepareBuildTask = prepareBuildTasks.get( key );
-    	        log.debug( "Build agent {} : Project Group {} - Scm Root {}", 
+    	        log.debug( "Current prepare build of agent {} :: Project Group {} - Scm Root {}", 
     	                   new Object[] { key, prepareBuildTask.getProjectGroupName(), prepareBuildTask.getProjectScmRootId() } );
     	    }
-
-    	    log.debug( "Projects in prepare build queue:" );
 
     	    Map<String, List<PrepareBuildProjectsTask>> prepareBuildQueues = getProjectsInPrepareBuildQueue();
 
@@ -380,7 +372,7 @@ public class DefaultDistributedBuildManager
     	    {
     	        for ( PrepareBuildProjectsTask prepareBuildTask : prepareBuildQueues.get( key ) )
     	        {
-    	            log.debug( "Build agent {} : Project Group {} - Scm Root {}", 
+    	            log.debug( "Prepare Build Queue of agent {} : Project Group {} - Scm Root {}", 
     	                       new Object[] { key, prepareBuildTask.getProjectGroupName(), prepareBuildTask.getProjectScmRootId() } );
     	        }
     	    }
@@ -1611,7 +1603,7 @@ public class DefaultDistributedBuildManager
                     {
                         if ( isAgentAvailable( buildAgentUrl ) )
                         {
-                            log.debug( "Build agent is available: {}", buildAgentUrl );
+                            log.debug( "Build agent {} is available", buildAgentUrl );
 
                             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                             int agentBuildSize = client.getBuildSizeOfAgent();
