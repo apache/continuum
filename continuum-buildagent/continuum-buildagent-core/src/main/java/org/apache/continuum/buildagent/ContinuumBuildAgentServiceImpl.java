@@ -469,14 +469,23 @@ public class ContinuumBuildAgentServiceImpl
                 size++;
             }
 
-            if ( buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild() != null )
+            PrepareBuildProjectsTask currentPrepareBuild = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+
+            if ( currentPrepareBuild != null )
             {
-                size++;
+                // need to get actual number of projects.
+                size = size + currentPrepareBuild.getBuildContexts().size();
             }
 
             size = size + buildAgentTaskQueueManager.getProjectsInBuildQueue().size();
 
-            size = size + buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue().size();
+            for ( PrepareBuildProjectsTask prepareBuildTask : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
+            {
+                if ( prepareBuildTask != null )
+                {
+                    size = size + prepareBuildTask.getBuildContexts().size();
+                }
+            }
         }
         catch ( TaskQueueManagerException e )
         {
