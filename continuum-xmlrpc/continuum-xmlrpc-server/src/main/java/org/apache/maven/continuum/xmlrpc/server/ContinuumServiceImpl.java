@@ -1966,6 +1966,23 @@ public class ContinuumServiceImpl
         BuildAgentConfiguration buildAgentConfiguration = buildAgent != null ? populateBuildAgent( buildAgent ) : null;
         return buildAgentConfiguration;
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @throws ContinuumException distributed build is not enabled or error during retrieval of build agent url
+     * 
+     *  @see DistributedBuildManager#getBuildAgentUrl(int)
+     */
+    public String getBuildAgentUrl( int projectId ) throws ContinuumException
+    {
+        if ( !continuum.getConfiguration().isDistributedBuildEnabled() )
+        {
+            throw new ContinuumException( "Method available only in distributed build mode." );
+        }
+        
+        return distributedBuildManager.getBuildAgentUrl( projectId );
+    }
 
     public BuildAgentConfiguration updateBuildAgent( BuildAgentConfiguration buildAgentConfiguration )
         throws ConfigurationStoringException, ContinuumConfigurationException
@@ -3889,5 +3906,10 @@ public class ContinuumServiceImpl
     public void setContinuum( Continuum continuum )
     {
         this.continuum = continuum;
+    }
+    
+    public void setDistributedBuildManager( DistributedBuildManager distributedBuildManager )
+    {
+        this.distributedBuildManager = distributedBuildManager;
     }
 }

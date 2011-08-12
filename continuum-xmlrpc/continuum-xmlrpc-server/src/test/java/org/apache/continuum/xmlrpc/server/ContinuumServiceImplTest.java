@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -36,6 +38,8 @@ public class ContinuumServiceImplTest
     private DistributedReleaseManager distributedReleaseManager;
 
     private ContinuumReleaseManager releaseManager;
+    
+    private DistributedBuildManager distributedBuildManager;
 
     private ConfigurationService configurationService;
 
@@ -52,13 +56,15 @@ public class ContinuumServiceImplTest
         context = new JUnit3Mockery();
         context.setImposteriser( ClassImposteriser.INSTANCE );
 
-        continuumService = new ContinuumServiceImplStub();
-        continuum = context.mock( Continuum.class );
-        continuumService.setContinuum( continuum );
-
         distributedReleaseManager = context.mock( DistributedReleaseManager.class );
         releaseManager = context.mock( ContinuumReleaseManager.class );
         configurationService = context.mock( ConfigurationService.class );
+        distributedBuildManager = context.mock( DistributedBuildManager.class );
+
+        continuumService = new ContinuumServiceImplStub();
+        continuum = context.mock( Continuum.class );
+        continuumService.setContinuum( continuum );
+        continuumService.setDistributedBuildManager( distributedBuildManager );
 
         ProjectGroup projectGroup = new ProjectGroup();
         projectGroup.setName( "test-group" );
@@ -261,6 +267,52 @@ public class ContinuumServiceImplTest
         assertEquals( 1, projectScmRoot.getState() );
         assertEquals( 3, projectScmRoot.getOldState() );
         assertEquals( "address1", projectScmRoot.getScmRootAddress() );
+    }
+    
+    public void testGetBuildAgentUrl() throws Exception
+    {
+        context.checking( new Expectations() 
+        {
+            {
+                one( continuum ).getConfiguration();
+                will( returnValue( configurationService ) );
+                
+                one( configurationService ).isDistributedBuildEnabled();
+                will( returnValue ( true ) );
+                
+                one( distributedBuildManager ).getBuildAgentUrl( 1 );
+                will( returnValue( "http://localhost:8181/continuum-buildagent/xmlrpc" ) );
+            }
+        });
+        String buildAgentUrl = continuumService.getBuildAgentUrl( 1 );
+        assertEquals( "http://localhost:8181/continuum-buildagent/xmlrpc", buildAgentUrl );
+
+        context.assertIsSatisfied();
+    }
+    
+    public void testGetBuildAgentUrlNotSupported() throws Exception
+    {
+        context.checking( new Expectations()
+        {
+            {
+                one( continuum ).getConfiguration();
+                will( returnValue( configurationService ) );
+
+                one( configurationService ).isDistributedBuildEnabled();
+                will( returnValue( false ) );
+            }
+        } );
+
+        try 
+        {
+            String buildAgentUrl = continuumService.getBuildAgentUrl( 1 );
+            fail ( "ContinuumException is expected to occur here." ); 
+        } 
+        catch ( ContinuumException e )
+        {
+            ; //pass
+        }
+        context.assertIsSatisfied();
     }
 
     private BuildDefinition createBuildDefinition()

@@ -1347,4 +1347,10 @@ public class ContinuumXmlRpcClient
     {
         return continuum.pingBuildAgent( buildAgentUrl );
     }
+    
+    public String getBuildAgentUrl( int projectId )
+        throws Exception
+    {
+        return continuum.getBuildAgentUrl( projectId );
+    }
 }

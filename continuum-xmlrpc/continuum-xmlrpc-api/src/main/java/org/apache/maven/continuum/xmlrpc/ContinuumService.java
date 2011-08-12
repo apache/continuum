@@ -1702,6 +1702,15 @@ public interface ContinuumService
      * @return
      */
     BuildAgentConfiguration getBuildAgent( String url );
+    
+    /**
+     * Get the url of the build agent that is processing the project
+     * 
+     * @param projectId project Id
+     * 
+     * @return build agent url
+     */
+    String getBuildAgentUrl( int projectId ) throws Exception;
 
     /**
      * Same method but compatible with standard XMLRPC
