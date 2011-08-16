@@ -155,16 +155,6 @@ public class DefaultBuildAgentConfigurationService
         return generalBuildAgentConfiguration.getSharedSecretPassword();
     }
 
-    public void setBuildAgentUrl( String buildAgentUrl )
-    {
-        generalBuildAgentConfiguration.setBuildAgentUrl( buildAgentUrl );
-    }
-
-    public String getBuildAgentUrl()
-    {
-        return generalBuildAgentConfiguration.getBuildAgentUrl();
-    }
-
     public void store()
         throws BuildAgentConfigurationException
     {

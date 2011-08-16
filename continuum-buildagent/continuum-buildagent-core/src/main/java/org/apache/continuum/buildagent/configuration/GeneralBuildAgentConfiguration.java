@@ -39,8 +39,6 @@ public class GeneralBuildAgentConfiguration
 
     private String sharedSecretPassword;
 
-    private String buildAgentUrl;
-
     public File getWorkingDirectory()
     {
         return workingDirectory;
@@ -99,15 +97,5 @@ public class GeneralBuildAgentConfiguration
     public String getSharedSecretPassword()
     {
         return sharedSecretPassword;
-    }
-
-    public void setBuildAgentUrl( String buildAgentUrl )
-    {
-        this.buildAgentUrl = buildAgentUrl;
-    }
-
-    public String getBuildAgentUrl()
-    {
-        return buildAgentUrl;
     }
 }

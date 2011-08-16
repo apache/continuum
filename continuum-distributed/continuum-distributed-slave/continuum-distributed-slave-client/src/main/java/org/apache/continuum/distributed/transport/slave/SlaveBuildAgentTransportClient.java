@@ -163,11 +163,6 @@ public class SlaveBuildAgentTransportClient
         {
             result = slave.ping();
             log.debug( "Ping build agent {} : {}", buildAgentUrl, ( result ? "ok" : "failed" ) );
-
-            if ( result )
-            {
-                slave.setBuildAgentUrl( buildAgentUrl );
-            }
         }
         catch ( Exception e )
         {
@@ -814,11 +809,5 @@ public class SlaveBuildAgentTransportClient
         }
 
         return result;
-    }
-
-    public void setBuildAgentUrl( String buildAgentUrl )
-        throws Exception
-    {
-        slave.setBuildAgentUrl( buildAgentUrl );
     }
 }

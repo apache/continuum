@@ -575,10 +575,4 @@ public class SlaveBuildAgentTransportServer
     {
         return continuumBuildAgentService.getBuildAgentPlatform();
     }
-
-    public void setBuildAgentUrl( String buildAgentUrl )
-        throws Exception
-    {
-        continuumBuildAgentService.setBuildAgentUrl( buildAgentUrl );
-    }
 }

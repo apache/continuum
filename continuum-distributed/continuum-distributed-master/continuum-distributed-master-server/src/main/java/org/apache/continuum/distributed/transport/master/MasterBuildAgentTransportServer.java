@@ -84,12 +84,12 @@ public class MasterBuildAgentTransportServer
         return Boolean.TRUE;
     }
 
-    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType, String buildAgentUrl )
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
         throws Exception
     {
         Map<String, String> envs = distributedBuildService.getEnvironments( buildDefinitionId, installationType );
-        log.debug( "Retrieving environments by build agent {}. buildDefinitionId={}, installationType={}", 
-                   new Object[] { buildAgentUrl, buildDefinitionId, installationType } );
+        log.debug( "Retrieving environments buildDefinitionId={}, installationType={}", 
+                   new Object[] { buildDefinitionId, installationType } );
         return envs;
     }
 

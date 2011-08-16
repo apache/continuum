@@ -1004,21 +1004,6 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
-    public void setBuildAgentUrl( String url )
-        throws ContinuumBuildAgentException
-    {
-        try
-        {
-            buildAgentConfigurationService.setBuildAgentUrl( url );
-            buildAgentConfigurationService.store();
-        }
-        catch( BuildAgentConfigurationException e )
-        {
-            log.error( "Error occurred while setting build agent url " + url, e );
-            throw new ContinuumBuildAgentException( "Error occurred while setting build agent url " + url, e );
-        }
-    }
-
     private List<BuildContext> initializeBuildContext( List<Map<String, Object>> projectsBuildContext )
     {
         List<BuildContext> buildContext = new ArrayList<BuildContext>();

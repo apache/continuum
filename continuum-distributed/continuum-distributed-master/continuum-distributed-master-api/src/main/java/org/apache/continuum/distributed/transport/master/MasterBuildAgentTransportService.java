@@ -41,7 +41,7 @@ public interface MasterBuildAgentTransportService
     public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult, String buildAgentUrl )
         throws Exception;
 
-    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType, String buildAgentUrl )
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
         throws Exception;
 
     public Boolean updateProject( Map<String, Object> project )

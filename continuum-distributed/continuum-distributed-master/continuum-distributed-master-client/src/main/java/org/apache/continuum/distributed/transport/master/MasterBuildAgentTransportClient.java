@@ -176,13 +176,13 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType, String buildAgentUrl )
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
         throws Exception
     {
         Map<String, String> result;
         try
         {
-            result = master.getEnvironments( buildDefinitionId, installationType, buildAgentUrl );
+            result = master.getEnvironments( buildDefinitionId, installationType );
             log.debug( "Retrieved environments. buildDefinitionId={}, installationType={} from master {}",
                        new Object[] { buildDefinitionId, installationType, masterServerUrl } );
         }

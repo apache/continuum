@@ -450,6 +450,7 @@ public class BuildProjectTaskExecutor
         map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, context.getTrigger() );
         map.put( ContinuumBuildAgentUtil.KEY_USERNAME, context.getUsername() );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
+        map.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL, context.getBuildAgentUrl() );
         
         if( context.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) )
         {

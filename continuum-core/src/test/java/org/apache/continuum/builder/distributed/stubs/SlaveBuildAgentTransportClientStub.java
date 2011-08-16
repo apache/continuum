@@ -280,13 +280,6 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
-    public void setBuildAgentUrl( String buildAgentUrl )
-        throws Exception
-    {
-        // TODO Auto-generated method stub
-        
-    }
-
     public Boolean isProjectCurrentlyPreparingBuild( int projectId )
         throws Exception
     {

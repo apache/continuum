@@ -157,6 +157,7 @@ public class PrepareBuildProjectsTaskExecutor
             Map<String, Object> map = new HashMap<String, Object>();
             map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, buildContext.getProjectGroupId() );
             map.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, buildContext.getScmRootAddress() );
+            map.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL, buildContext.getBuildAgentUrl() );
 
             try
             {
@@ -186,6 +187,7 @@ public class PrepareBuildProjectsTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_USERNAME, buildContext.getScmUsername() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, buildContext.getScmPassword() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL, buildContext.getBuildAgentUrl() );
 
         buildContext.setActionContext( actionContext );
     }
@@ -278,6 +280,8 @@ public class PrepareBuildProjectsTaskExecutor
                         ContinuumBuildAgentUtil.getScmRootAddress( context ) );
             result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE,
                         ContinuumBuildAgentUtil.getScmRootState( context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL,
+                        ContinuumBuildAgentUtil.getBuildAgentUrl( context ) );
 
             if ( ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR )
             {

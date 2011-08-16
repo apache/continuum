@@ -23,7 +23,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.continuum.buildagent.buildcontext.BuildContext;
+import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportClient;
 import org.apache.maven.continuum.ContinuumException;
 import org.codehaus.plexus.util.StringUtils;
@@ -43,6 +46,11 @@ public class DefaultBuildAgentManager
      */
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildContextManager buildContextManager;
+
     public void startProjectBuild( int projectId )
         throws ContinuumException
     {
@@ -51,7 +59,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.startProjectBuild( projectId, getBuildAgentUrl() );
+            client.startProjectBuild( projectId, getBuildAgentUrl( projectId ) );
         }
         catch ( MalformedURLException e )
         {
@@ -75,7 +83,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.returnBuildResult( buildResult, getBuildAgentUrl() );
+            client.returnBuildResult( buildResult, ContinuumBuildAgentUtil.getBuildAgentUrl( buildResult ) );
         }
         catch ( MalformedURLException e )
         {
@@ -99,7 +107,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            return client.getEnvironments( buildDefinitionId, installationType, getBuildAgentUrl() );
+            return client.getEnvironments( buildDefinitionId, installationType );
         }
         catch ( MalformedURLException e )
         {
@@ -147,7 +155,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            return client.shouldBuild( context, getBuildAgentUrl() );
+            return client.shouldBuild( context, ContinuumBuildAgentUtil.getBuildAgentUrl( context ) );
         }
         catch ( MalformedURLException e )
         {
@@ -171,7 +179,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.startPrepareBuild( context, getBuildAgentUrl() );
+            client.startPrepareBuild( context, ContinuumBuildAgentUtil.getBuildAgentUrl( context ) );
         }
         catch ( MalformedURLException e )
         {
@@ -195,7 +203,7 @@ public class DefaultBuildAgentManager
             MasterBuildAgentTransportClient client =
                 new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
                 ;
-            client.prepareBuildFinished( context, getBuildAgentUrl() );
+            client.prepareBuildFinished( context, ContinuumBuildAgentUtil.getBuildAgentUrl( context ) );
         }
         catch ( MalformedURLException e )
         {
@@ -239,8 +247,15 @@ public class DefaultBuildAgentManager
         }
     }
 
-    private String getBuildAgentUrl()
+    private String getBuildAgentUrl( int projectId )
     {
-        return buildAgentConfigurationService.getBuildAgentUrl();
+        BuildContext context = buildContextManager.getBuildContext( projectId );
+
+        if ( context != null )
+        {
+            return context.getBuildAgentUrl();
+        }
+
+        return "";
     }
 }
