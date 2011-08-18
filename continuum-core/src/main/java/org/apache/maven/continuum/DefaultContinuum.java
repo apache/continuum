@@ -943,7 +943,7 @@ public class DefaultContinuum
             {
                 for ( Integer buildDefId : buildDefIds )
                 {
-                    if ( buildDefId != null && isProjectOkToBuild( project.getId(), buildDefId ) )
+                    if ( isProjectOkToBuild( project.getId(), buildDefId ) )
                     {
                         ProjectScmRoot scmRoot = getProjectScmRootByProject( project.getId() );
 
@@ -962,6 +962,10 @@ public class DefaultContinuum
                         {
                             sortedScmRoot.add( scmRoot );
                         }
+                    }
+                    else
+                    {
+                        log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefId );
                     }
                 }
             }
@@ -1020,6 +1024,7 @@ public class DefaultContinuum
 
         if ( !isProjectOkToBuild( projectId, buildDef.getId() ) )
         {
+            log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDef.getId() );
             return;
         }
 
@@ -1045,6 +1050,7 @@ public class DefaultContinuum
 
         if ( !isProjectOkToBuild( projectId, buildDefinitionId ) )
         {
+            log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefinitionId );
             return;
         }
 
@@ -3603,6 +3609,7 @@ public class DefaultContinuum
             // check if project already in queue
             if ( !isProjectOkToBuild( projectId, buildDefId ) )
             {
+                log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefId );
                 continue;
             }
 

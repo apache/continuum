@@ -599,77 +599,89 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public Boolean isProjectCurrentlyBuilding( int projectId )
+    public Boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            result = slave.isProjectCurrentlyBuilding( projectId );
-            log.debug( "Checking if project {} is currently building in build agent {}", projectId, buildAgentUrl );
+            result = slave.isProjectCurrentlyBuilding( projectId, buildDefinitionId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is currently building in build agent {}", 
+                       new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project " + projectId + " is currently building in build agent " + buildAgentUrl, e );
-            throw new Exception( "Failed to check if project " + projectId + " is currently building in build agent " + buildAgentUrl, e );
+            log.error( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is currently building in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                                 " is currently building in build agent " + buildAgentUrl, e );
         }
 
         return result;
     }
 
-    public Boolean isProjectInBuildQueue( int projectId )
+    public Boolean isProjectInBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            result = slave.isProjectInBuildQueue( projectId );
-            log.debug( "Checking if project {} is in build queue of build agent {}", projectId, buildAgentUrl );
+            result = slave.isProjectInBuildQueue( projectId, buildDefinitionId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is in build queue of build agent {}",
+                       new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project " + projectId + " is in build queue of build agent " + buildAgentUrl, e );
-            throw new Exception( "Failed to check if project " + projectId + " is in build queue of build agent " + buildAgentUrl, e );
+            log.error( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is in build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                                 " is in build queue of build agent " + buildAgentUrl, e );
         }
 
         return result;
     }
 
-    public Boolean isProjectCurrentlyPreparingBuild( int projectId )
+    public Boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            result = slave.isProjectCurrentlyPreparingBuild( projectId );
-            log.debug( "Checking if project {} is currently preparing build in build agent {}", projectId, buildAgentUrl );
+            result = slave.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is currently preparing build in build agent {}",
+                       new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project " + projectId + " is currently preparing build in build agent " + buildAgentUrl, e );
-            throw new Exception( "Failed to check if project " + projectId + " is currently preparing build in build agent " + buildAgentUrl, e );
+            log.error( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is currently preparing build in build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                                 " is currently preparing build in build agent " + buildAgentUrl, e );
         }
 
         return result;
     }
 
-    public Boolean isProjectInPrepareBuildQueue( int projectId )
+    public Boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            result = slave.isProjectInPrepareBuildQueue( projectId );
-            log.debug( "Checking if project {} is in prepare build queue of build agent {}", projectId, buildAgentUrl );
+            result = slave.isProjectInPrepareBuildQueue( projectId, buildDefinitionId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue of build agent {}",
+                       new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to check if project " + projectId + " is in prepare build queue of build agent " + buildAgentUrl, e );
-            throw new Exception( "Failed to check if project " + projectId + " is in prepare build queue of build agent " + buildAgentUrl, e );
+            log.error( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is in prepare build queue of build agent " + buildAgentUrl, e );
+            throw new Exception( "Failed to check if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                                 " is in prepare build queue of build agent " + buildAgentUrl, e );
         }
 
         return result;

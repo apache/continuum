@@ -1294,8 +1294,11 @@ public class DefaultDistributedBuildManager
                         if ( isAgentAvailable( buildAgentUrl ) )
                         {
                             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
-                            
-                            if ( client.isProjectCurrentlyBuilding( projectId ) )
+
+                            // TODO: should check for specific build definition and handle that in UI;
+                            // project with different build definitions can build at the same time in different agents and
+                            // currently, we can't handle that in the ui.
+                            if ( client.isProjectCurrentlyBuilding( projectId, -1 ) )
                             {
                                 agentUrl = buildAgentUrl;
                                 break;
@@ -1326,7 +1329,7 @@ public class DefaultDistributedBuildManager
         return agentUrl;
     }
 
-    public String getBuildAgentUrl( int projectId )
+    public String getBuildAgentUrl( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
         String agentUrl = null;
@@ -1344,15 +1347,18 @@ public class DefaultDistributedBuildManager
                     {
                         if ( isAgentAvailable( buildAgentUrl ) )
                         {
-                            log.debug( "Checking if project {} is currently queued or processed in agent {}", projectId, buildAgentUrl );
+                            log.debug( "Checking if project {} with build definition {} is currently queued or processed in agent {}", 
+                                       new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
 
                             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                             
-                            if ( client.isProjectCurrentlyPreparingBuild( projectId ) ||
-                                client.isProjectCurrentlyBuilding( projectId ) ||
-                                client.isProjectInPrepareBuildQueue( projectId ) ||
-                                client.isProjectInBuildQueue( projectId ) )
+                            if ( client.isProjectInPrepareBuildQueue( projectId, buildDefinitionId ) ||
+                                 client.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId ) ||
+                                 client.isProjectInBuildQueue( projectId, buildDefinitionId ) ||
+                                 client.isProjectCurrentlyBuilding( projectId, buildDefinitionId ) )
                             {
+                                log.debug( "Project {} with build definition {} is currently queued or processed in agent {}", 
+                                           new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
                                 agentUrl = buildAgentUrl;
                                 break;
                             }

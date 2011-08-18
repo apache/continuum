@@ -111,6 +111,6 @@ public interface DistributedBuildManager
     boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws ContinuumException;
         
-    String getBuildAgentUrl( int projectId )
+    String getBuildAgentUrl( int projectId, int buildDefinitionId )
         throws ContinuumException;
 }

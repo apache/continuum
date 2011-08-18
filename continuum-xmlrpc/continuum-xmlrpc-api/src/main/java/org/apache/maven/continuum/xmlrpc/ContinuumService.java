@@ -1159,6 +1159,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Return true if the project is in prepare build queue
+     * 
+     * @param projectId The project id
+     * @param buildDefinitionId The build definition id
+     * @throws ContinuumException
+     */
+    boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
+        throws Exception;
+
+    /**
      * Return true if the project is in building queue.
      * 
      * @param projectId The project id
@@ -1168,9 +1178,19 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Return true if the project is in building queue.
+     * 
+     * @param projectId The project id
+     * @param buildDefinitionId The build definition id
+     * @throws ContinuumException
+     */
+    boolean isProjectInBuildingQueue( int projectId, int buildDefinitionId )
+        throws Exception;
+
+    /**
      * Return true if the project is currently preparing build
      * 
-     * @param projectId
+     * @param projectId The project id
      * @return
      * @throws Exception
      */
@@ -1178,13 +1198,35 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Return true if the project is currently preparing build
+     * 
+     * @param projectId The project id
+     * @param buildDefinitionId The build definition id
+     * @return
+     * @throws Exception
+     */
+    boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
+        throws Exception;
+
+    /**
      * Return true if the project is currently building
      * 
-     * @param projectId
+     * @param projectId The project id
      * @return
      * @throws Exception
      */
     boolean isProjectCurrentlyBuilding( int projectId )
+        throws Exception;
+
+    /**
+     * Return true if the project is currently building
+     * 
+     * @param projectId The project id 
+     * @param buildDefinitionId The build definition id
+     * @return
+     * @throws Exception
+     */
+    boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws Exception;
 
     /**
@@ -1218,10 +1260,11 @@ public interface ContinuumService
      * Cancel a project build
      * 
      * @param projectId the project id
+     * @param buildDefinitionId the build definition id
      * @return
      * @throws Exception
      */
-    boolean cancelBuild( int projectId )
+    boolean cancelBuild( int projectId, int buildDefinitionId )
         throws Exception;
 
     // ----------------------------------------------------------------------
@@ -1707,10 +1750,11 @@ public interface ContinuumService
      * Get the url of the build agent that is processing the project
      * 
      * @param projectId project Id
+     * @param buildDefinitionId build definition Id
      * 
      * @return build agent url
      */
-    String getBuildAgentUrl( int projectId ) throws Exception;
+    String getBuildAgentUrl( int projectId, int buildDefinition ) throws Exception;
 
     /**
      * Same method but compatible with standard XMLRPC

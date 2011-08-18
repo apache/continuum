@@ -280,11 +280,11 @@ public class ContinuumServiceImplTest
                 one( configurationService ).isDistributedBuildEnabled();
                 will( returnValue ( true ) );
                 
-                one( distributedBuildManager ).getBuildAgentUrl( 1 );
+                one( distributedBuildManager ).getBuildAgentUrl( 1, 1 );
                 will( returnValue( "http://localhost:8181/continuum-buildagent/xmlrpc" ) );
             }
         });
-        String buildAgentUrl = continuumService.getBuildAgentUrl( 1 );
+        String buildAgentUrl = continuumService.getBuildAgentUrl( 1, 1 );
         assertEquals( "http://localhost:8181/continuum-buildagent/xmlrpc", buildAgentUrl );
 
         context.assertIsSatisfied();
@@ -305,7 +305,7 @@ public class ContinuumServiceImplTest
 
         try 
         {
-            String buildAgentUrl = continuumService.getBuildAgentUrl( 1 );
+            String buildAgentUrl = continuumService.getBuildAgentUrl( 1, 1 );
             fail ( "ContinuumException is expected to occur here." ); 
         } 
         catch ( ContinuumException e )

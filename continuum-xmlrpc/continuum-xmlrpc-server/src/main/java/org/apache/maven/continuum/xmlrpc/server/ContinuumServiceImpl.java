@@ -1325,15 +1325,20 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
     // Queue
     // ----------------------------------------------------------------------
-
     public boolean isProjectInPrepareBuildQueue( int projectId )
+        throws ContinuumException
+    {
+        return isProjectInPrepareBuildQueue( projectId, -1 );
+    }
+    
+    public boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
         try
         {
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                return distributedBuildManager.isProjectInAnyPrepareBuildQueue( projectId, -1 );
+                return distributedBuildManager.isProjectInAnyPrepareBuildQueue( projectId, buildDefinitionId );
             }
             else
             {
@@ -1349,11 +1354,17 @@ public class ContinuumServiceImpl
     public boolean isProjectInBuildingQueue( int projectId )
         throws ContinuumException
     {
+        return isProjectInBuildingQueue( projectId, -1 );
+    }
+
+    public boolean isProjectInBuildingQueue( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
         try
         {
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                return distributedBuildManager.isProjectInAnyBuildQueue( projectId, -1 );
+                return distributedBuildManager.isProjectInAnyBuildQueue( projectId, buildDefinitionId );
             }
             else
             {
@@ -1369,11 +1380,17 @@ public class ContinuumServiceImpl
     public boolean isProjectCurrentlyPreparingBuild( int projectId )
         throws ContinuumException
     {
+        return isProjectCurrentlyPreparingBuild( projectId, -1 );
+    }
+
+    public boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
         try
         {
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                return distributedBuildManager.isProjectCurrentlyPreparingBuild( projectId, -1 );
+                return distributedBuildManager.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId );
             }
             else
             {
@@ -1389,11 +1406,17 @@ public class ContinuumServiceImpl
     public boolean isProjectCurrentlyBuilding( int projectId )
         throws ContinuumException
     {
+        return isProjectCurrentlyBuilding( projectId, -1 );
+    }
+
+    public boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
         try
         {
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                return distributedBuildManager.isProjectCurrentlyBuilding( projectId, -1 );
+                return distributedBuildManager.isProjectCurrentlyBuilding( projectId, buildDefinitionId );
             }
             else
             {
@@ -1467,7 +1490,7 @@ public class ContinuumServiceImpl
         }
     }
 
-    public boolean cancelBuild( int projectId )
+    public boolean cancelBuild( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
         checkManageQueuesAuthorization();
@@ -1477,9 +1500,9 @@ public class ContinuumServiceImpl
             {
                 DistributedBuildManager dbm = continuum.getDistributedBuildManager();
 
-                String buildAgentUrl = dbm.getBuildAgentUrl( projectId );
+                String buildAgentUrl = dbm.getBuildAgentUrl( projectId, buildDefinitionId );
 
-                if ( dbm.isProjectInAnyPrepareBuildQueue( projectId, -1 ) )
+                if ( dbm.isProjectInAnyPrepareBuildQueue( projectId, buildDefinitionId ) )
                 {
                     if ( buildAgentUrl != null )
                     {
@@ -1490,9 +1513,9 @@ public class ContinuumServiceImpl
                     }
                 }
                 // wait if already preparing
-                else if ( dbm.isProjectCurrentlyPreparingBuild( projectId, -1 ) )
+                else if ( dbm.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId ) )
                 {
-                    while ( dbm.isProjectCurrentlyPreparingBuild( projectId, -1 ) )
+                    while ( dbm.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId ) )
                     {
                         try
                         {
@@ -1506,11 +1529,11 @@ public class ContinuumServiceImpl
                 }
 
                 
-                if ( dbm.isProjectInAnyBuildQueue( projectId, -1 ) )
+                if ( dbm.isProjectInAnyBuildQueue( projectId, buildDefinitionId ) )
                 {
-                    dbm.removeFromBuildQueue( buildAgentUrl, projectId, -1 );
+                    dbm.removeFromBuildQueue( buildAgentUrl, projectId, buildDefinitionId );
                 }
-                else if ( dbm.isProjectCurrentlyBuilding( projectId, -1 ) )
+                else if ( dbm.isProjectCurrentlyBuilding( projectId, buildDefinitionId ) )
                 {
                     if ( buildAgentUrl != null )
                     {
@@ -1972,16 +1995,16 @@ public class ContinuumServiceImpl
      * 
      * @throws ContinuumException distributed build is not enabled or error during retrieval of build agent url
      * 
-     *  @see DistributedBuildManager#getBuildAgentUrl(int)
+     *  @see DistributedBuildManager#getBuildAgentUrl(int, int)
      */
-    public String getBuildAgentUrl( int projectId ) throws ContinuumException
+    public String getBuildAgentUrl( int projectId, int buildDefinitionId ) throws ContinuumException
     {
         if ( !continuum.getConfiguration().isDistributedBuildEnabled() )
         {
             throw new ContinuumException( "Method available only in distributed build mode." );
         }
         
-        return distributedBuildManager.getBuildAgentUrl( projectId );
+        return distributedBuildManager.getBuildAgentUrl( projectId, buildDefinitionId );
     }
 
     public BuildAgentConfiguration updateBuildAgent( BuildAgentConfiguration buildAgentConfiguration )

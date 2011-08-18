@@ -456,32 +456,32 @@ public class SlaveBuildAgentTransportServer
         return continuumBuildAgentService.isProjectScmRootInQueue( projectScmRootId, projectIds );
     }
 
-    public Boolean isProjectCurrentlyBuilding( int projectId )
+    public Boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if project {} is currently building in agent", projectId );
-        return continuumBuildAgentService.isProjectCurrentlyBuilding( projectId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is currently building in agent", projectId, buildDefinitionId );
+        return continuumBuildAgentService.isProjectCurrentlyBuilding( projectId, buildDefinitionId );
     }
 
-    public Boolean isProjectInBuildQueue( int projectId )
+    public Boolean isProjectInBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if project {} is in build queue of agent", projectId );
-        return continuumBuildAgentService.isProjectInBuildQueue( projectId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is in build queue of agent", projectId, buildDefinitionId );
+        return continuumBuildAgentService.isProjectInBuildQueue( projectId, buildDefinitionId );
     }
 
-    public Boolean isProjectCurrentlyPreparingBuild( int projectId )
+    public Boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if project '{}' is currently preparing build", projectId );
-        return continuumBuildAgentService.isProjectCurrentlyPreparingBuild( projectId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is currently preparing build", projectId, buildDefinitionId );
+        return continuumBuildAgentService.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId );
     }
 
-    public Boolean isProjectInPrepareBuildQueue( int projectId )
+    public Boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if project '{}' is in prepare build queue", projectId );
-        return continuumBuildAgentService.isProjectInPrepareBuildQueue( projectId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId, buildDefinitionId );
+        return continuumBuildAgentService.isProjectInPrepareBuildQueue( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )

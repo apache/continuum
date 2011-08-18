@@ -116,16 +116,16 @@ public interface SlaveBuildAgentTransportService
     public Boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds )
         throws Exception;
 
-    public Boolean isProjectCurrentlyBuilding( int projectId )
+    public Boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws Exception;
 
-    public Boolean isProjectInBuildQueue( int projectId )
+    public Boolean isProjectInBuildQueue( int projectId, int buildDefinitionId )
         throws Exception;
 
-    public Boolean isProjectCurrentlyPreparingBuild( int projectId )
+    public Boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
         throws Exception;
 
-    public Boolean isProjectInPrepareBuildQueue( int projectId )
+    public Boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws Exception;
 
     public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )

@@ -566,6 +566,12 @@ public class ContinuumXmlRpcClient
         return continuum.isProjectInPrepareBuildQueue( projectId );
     }
 
+    public boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
+        throws Exception
+    {
+        return continuum.isProjectInPrepareBuildQueue( projectId, buildDefinitionId );
+    }
+
     public List<BuildProjectTask> getProjectsInBuildQueue()
         throws Exception
     {
@@ -578,16 +584,34 @@ public class ContinuumXmlRpcClient
         return continuum.isProjectInBuildingQueue( projectId );
     }
 
+    public boolean isProjectInBuildingQueue( int projectId, int buildDefinitionId )
+        throws Exception
+    {
+        return continuum.isProjectInBuildingQueue( projectId, buildDefinitionId );
+    }
+
     public boolean isProjectCurrentlyPreparingBuild( int projectId )
         throws Exception
     {
         return continuum.isProjectCurrentlyPreparingBuild( projectId );
     }
 
+    public boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
+        throws Exception
+    {
+        return continuum.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId );
+    }
+
     public boolean isProjectCurrentlyBuilding( int projectId )
         throws Exception
     {
         return continuum.isProjectCurrentlyBuilding( projectId );
+    }
+
+    public boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
+        throws Exception
+    {
+        return continuum.isProjectCurrentlyBuilding( projectId, buildDefinitionId );
     }
 
     public int removeProjectsFromBuildingQueue( int[] projectsId )
@@ -602,10 +626,10 @@ public class ContinuumXmlRpcClient
         return continuum.cancelCurrentBuild();
     }
 
-    public boolean cancelBuild( int projectId )
+    public boolean cancelBuild( int projectId, int buildDefinitionId )
         throws Exception
     {
-        return continuum.cancelBuild( projectId );
+        return continuum.cancelBuild( projectId, buildDefinitionId );
     }
 
     // ----------------------------------------------------------------------
@@ -1348,9 +1372,9 @@ public class ContinuumXmlRpcClient
         return continuum.pingBuildAgent( buildAgentUrl );
     }
     
-    public String getBuildAgentUrl( int projectId )
+    public String getBuildAgentUrl( int projectId, int buildDefinitionId )
         throws Exception
     {
-        return continuum.getBuildAgentUrl( projectId );
+        return continuum.getBuildAgentUrl( projectId, buildDefinitionId );
     }
 }

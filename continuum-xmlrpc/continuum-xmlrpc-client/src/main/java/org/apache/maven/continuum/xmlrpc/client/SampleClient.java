@@ -54,7 +54,7 @@ public class SampleClient
     {
         client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
 
-        /*
+
         // Test for [CONTINUUM-2641]: (test with distributed builds with multiple build agents or parallel builds with > 1 build queue)
         // make sure to set the projectIds to the actual projectIds of your projects added in Continuum
         int projectIds[] = new int[] { 2, 3, 4, 5, 6 };
@@ -89,10 +89,7 @@ public class SampleClient
         {
             thread.start();
         }
-        */
 
-
-      /*
         System.out.println( "Adding project..." );
         AddingResult result = client.addMavenTwoProject( "http://svn.apache.org/repos/asf/continuum/sandbox/simple-example/pom.xml" );
         if ( result.hasErrors() )
@@ -134,15 +131,14 @@ public class SampleClient
             Thread.sleep( 1000 );
         }
 
-        System.out.println();    */
+        System.out.println();
 
         BuildDefinition buildDef = new BuildDefinition();
         buildDef.setArguments( "A-Za-z0-9_./=,\": \\-" );
         buildDef.setSchedule( client.getSchedule( 1 ) );
         client.addBuildDefinitionToProjectGroup( 1, buildDef );
-        
-        /*
-        ProjectSummary ps = client.getProjectSummary( 1 );
+
+        ps = client.getProjectSummary( 1 );
         System.out.println( "Add the project to the build queue." );
         BuildTrigger trigger = new BuildTrigger();
         trigger.setTrigger( 1 );
@@ -191,7 +187,7 @@ public class SampleClient
         }
         System.out.println( "Done.");
 
-        System.out.println();/*
+        System.out.println();
 
         System.out.println( "Projects list." );
         System.out.println( "=====================" );
@@ -271,7 +267,7 @@ public class SampleClient
         System.out.println( "Removing Local Repository '" + repository.getName() + "' (" + 
                             repository.getId() + ")..." );
         client.removeLocalRepository( repository.getId() );
-        System.out.println( "Done." );*/
+        System.out.println( "Done." );
     }
 
     public static void printProjectGroupSummary( ProjectGroupSummary pg )

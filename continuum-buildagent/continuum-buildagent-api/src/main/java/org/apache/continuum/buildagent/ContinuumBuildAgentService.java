@@ -104,17 +104,17 @@ public interface ContinuumBuildAgentService
 
     boolean isProjectScmRootInQueue( int projectScmRootId, List<Integer> projectIds );
 
-    boolean isProjectCurrentlyBuilding( int projectId );
+    boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId );
 
-    boolean isProjectInBuildQueue( int projectId );
+    boolean isProjectInBuildQueue( int projectId, int buildDefinitionId );
 
     boolean isProjectGroupInPrepareBuildQueue( int projectGroupId );
 
     boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId );
 
-    boolean isProjectInPrepareBuildQueue( int projectId );
+    boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId );
 
-    boolean isProjectCurrentlyPreparingBuild( int projectId );
+    boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId );
 
     boolean removeFromPrepareBuildQueue( int projectGroupId, int scmRootId )
         throws ContinuumBuildAgentException;

@@ -133,7 +133,7 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
-    public Boolean isProjectCurrentlyBuilding( int projectId )
+    public Boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws Exception
     {
         // TODO Auto-generated method stub
@@ -152,7 +152,7 @@ public class SlaveBuildAgentTransportClientStub
         return true;
     }
 
-    public Boolean isProjectInBuildQueue( int projectId )
+    public Boolean isProjectInBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
         // TODO Auto-generated method stub
@@ -280,14 +280,14 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
-    public Boolean isProjectCurrentlyPreparingBuild( int projectId )
+    public Boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
         throws Exception
     {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public Boolean isProjectInPrepareBuildQueue( int projectId )
+    public Boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
         // TODO Auto-generated method stub

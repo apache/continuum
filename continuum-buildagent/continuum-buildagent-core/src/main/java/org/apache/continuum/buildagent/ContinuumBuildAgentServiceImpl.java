@@ -796,19 +796,21 @@ public class ContinuumBuildAgentServiceImpl
         return false;
     }
 
-    public boolean isProjectInPrepareBuildQueue( int projectId )
+    public boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
     {
         try
         {
-            log.debug( "Checking if project {} is in prepare build queue", projectId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId, buildDefinitionId );
             for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
             {
                 if ( task != null )
                 {
                     for ( BuildContext context : task.getBuildContexts() )
                     {
-                        if ( context.getProjectId() == projectId )
+                        if ( context.getProjectId() == projectId && 
+                             ( buildDefinitionId == -1 || context.getBuildDefinitionId() == buildDefinitionId ) )
                         {
+                            log.debug( "projectId={}, buildDefinitionId={} is in prepare build queue" );
                             return true;
                         }
                     }
@@ -817,7 +819,8 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if project " + projectId + " is in prepare build queue in agent", e);
+            log.error( "Error while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is in prepare build queue in agent", e);
         }
 
         return false;
@@ -843,19 +846,21 @@ public class ContinuumBuildAgentServiceImpl
         return false;
     }
 
-    public boolean isProjectCurrentlyPreparingBuild( int projectId )
+    public boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
     {
         try
         {
-            log.debug( "Checking if project {} currently preparing build", projectId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} currently preparing build", projectId, buildDefinitionId );
             PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
 
             if ( currentPrepareBuildTask != null )
             {
                 for ( BuildContext context : currentPrepareBuildTask.getBuildContexts() )
                 {
-                    if ( context.getProjectId() == projectId )
+                    if ( context.getProjectId() == projectId && 
+                         ( buildDefinitionId == -1 || context.getBuildDefinitionId() == buildDefinitionId ) )
                     {
+                        log.debug( "projectId={}, buildDefinitionId={} is currently preparing build" );
                         return true;
                     }
                 }
@@ -863,45 +868,51 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if project " + projectId + " is currently preparing build in agent", e);
+            log.error( "Error while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is currently preparing build in agent", e);
         }
 
         return false;
     }
 
-    public boolean isProjectCurrentlyBuilding( int projectId )
+    public boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
     {
         try
         {
-            log.debug( "Checking if project {} is currently building", projectId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is currently building", projectId, buildDefinitionId );
             BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
 
-            if ( currentBuildTask != null && currentBuildTask.getProjectId() == projectId )
+            if ( currentBuildTask != null && currentBuildTask.getProjectId() == projectId && 
+                 ( buildDefinitionId == -1 || currentBuildTask.getBuildDefinitionId() == buildDefinitionId ) )
             {
+                log.debug( "projectId={}, buildDefinitionId={} is currently building" );
                 return true;
             }
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error occurred while checking if project " + projectId + " is currently building in agent", e );
+            log.error( "Error occurred while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is currently building in agent", e );
         }
 
         return false;
     }
 
-    public boolean isProjectInBuildQueue( int projectId )
+    public boolean isProjectInBuildQueue( int projectId, int buildDefinitionId )
     {
         try
         {
-            log.debug( "Checking if project {} is in build queue", projectId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is in build queue", projectId, buildDefinitionId );
             List<BuildProjectTask> buildTasks = buildAgentTaskQueueManager.getProjectsInBuildQueue();
 
             if ( buildTasks != null )
             {
                 for ( BuildProjectTask task : buildTasks )
                 {
-                    if ( task.getProjectId() == projectId )
+                    if ( task.getProjectId() == projectId && 
+                         ( buildDefinitionId == -1 || task.getBuildDefinitionId() == buildDefinitionId ) )
                     {
+                        log.debug( "projectId={}, buildDefinitionId={} is in build queue" );
                         return true;
                     }
                 }
@@ -909,7 +920,8 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error occurred while checking if project " + projectId + " is in build queue of agent", e );
+            log.error( "Error occurred while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
+                       " is in build queue of agent", e );
         }
 
         return false;
