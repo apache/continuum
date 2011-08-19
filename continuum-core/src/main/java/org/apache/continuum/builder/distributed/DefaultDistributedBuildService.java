@@ -293,7 +293,7 @@ public class DefaultDistributedBuildService
     {
         try
         {
-            Project project = projectDao.getProject( ContinuumBuildConstant.getProjectId( context ) );
+            Project project = projectDao.getProjectWithAllDetails( ContinuumBuildConstant.getProjectId( context ) );
     
             if ( StringUtils.isNotBlank( ContinuumBuildConstant.getGroupId( context ) ) )
             {
@@ -330,7 +330,48 @@ public class DefaultDistributedBuildService
             project.setParent( getProjectParent( context ) );
             project.setDependencies( getProjectDependencies( context ) );
             project.setDevelopers( getProjectDevelopers( context ) );
+
+            List<ProjectNotifier> userNotifiers = new ArrayList<ProjectNotifier>();
+
+            if ( project.getNotifiers() != null )
+            {
+                for ( ProjectNotifier notifier : project.getNotifiers() )
+                {
+                    if ( notifier.isFromUser() )
+                    {
+                        ProjectNotifier userNotifier = new ProjectNotifier();
+
+                        userNotifier.setType( notifier.getType() );
+
+                        userNotifier.setEnabled( notifier.isEnabled() );
+
+                        userNotifier.setConfiguration( notifier.getConfiguration() );
+
+                        userNotifier.setFrom( notifier.getFrom() );
+
+                        userNotifier.setRecipientType( notifier.getRecipientType() );
+
+                        userNotifier.setSendOnError( notifier.isSendOnError() );
+
+                        userNotifier.setSendOnFailure( notifier.isSendOnFailure() );
+
+                        userNotifier.setSendOnSuccess( notifier.isSendOnSuccess() );
+
+                        userNotifier.setSendOnWarning( notifier.isSendOnWarning() );
+
+                        userNotifier.setSendOnScmFailure( notifier.isSendOnScmFailure() );
+
+                        userNotifiers.add( userNotifier );
+                    }
+                }
+            }
+
             project.setNotifiers( getProjectNotifiers( context ) );
+
+            for ( ProjectNotifier userNotifier : userNotifiers )
+            {
+                project.addNotifier( userNotifier );
+            }
     
             projectDao.updateProject( project );
         }
