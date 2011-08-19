@@ -494,7 +494,6 @@ public abstract class AbstractBuildExecutor
         return pDependencies;
     }
 
-    //TODO: Check the content of this method, it always return an empty list
     protected List<Map<String, Object>> getProjectNotifiers( List<ProjectNotifier> notifiers )
     {
         List<Map<String, Object>> pNotifiers = new ArrayList<Map<String, Object>>();
@@ -529,6 +528,7 @@ public abstract class AbstractBuildExecutor
                 map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_FAILURE, notifier.isSendOnFailure() );
                 map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SCMFAILURE, notifier.isSendOnScmFailure() );
                 map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_WARNING, notifier.isSendOnWarning() );
+                pNotifiers.add(map);
             }
         }
         return pNotifiers;
