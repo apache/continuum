@@ -60,6 +60,9 @@ public interface InstallationService
     public Installation getInstallation( int installationId )
         throws InstallationException;
 
+    public Installation getInstallation( String installationName )
+        throws InstallationException;
+
     public List<Installation> getAllInstallations()
         throws InstallationException;
 

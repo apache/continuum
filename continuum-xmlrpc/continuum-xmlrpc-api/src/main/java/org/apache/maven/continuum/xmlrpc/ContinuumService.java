@@ -30,6 +30,7 @@ import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration;
+import org.apache.maven.continuum.xmlrpc.project.BuildAgentGroupConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildProjectTask;
@@ -394,6 +395,24 @@ public interface ContinuumService
      * @throws Exception
      */
     List<Object> getBuildDefinitionsForProjectGroupRPC( int projectGroupId )
+        throws Exception;
+
+    /**
+     * Get the build definition
+     * @param buildDefinitionId The build definition id
+     * @return The build definition
+     * @throws Exception
+     */
+    BuildDefinition getBuildDefinition( int buildDefinitionId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * @param buildDefinitionId The build definition id
+     * @return The build definition as RPC value
+     * @throws Exception
+     */
+    Map<String, Object> getBuildDefinitionRPC( int buildDefinitionId )
         throws Exception;
 
     /**
@@ -1043,6 +1062,12 @@ public interface ContinuumService
     Map<String, Object> getProfileRPC( int profileId )
         throws Exception;
 
+    Profile getProfileWithName( String profileName )
+        throws Exception;
+
+    Map<String, Object> getProfileWithNameRPC( String profileName )
+        throws Exception;
+
     Profile addProfile( Profile profile )
         throws Exception;
 
@@ -1098,6 +1123,26 @@ public interface ContinuumService
      * @throws Exception
      */
     Map<String, Object> getInstallationRPC( int installationId )
+        throws Exception;
+
+    /**
+     * Return the installation defined by this name
+     * 
+     * @param installationName The installation name
+     * @return The installation
+     * @throws Exception
+     */
+    Installation getInstallation( String installationName )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param installationName The installation name
+     * @return The installation
+     * @throws Exception
+     */
+    Map<String, Object> getInstallationRPC( String installationName )
         throws Exception;
 
     /**
@@ -1806,5 +1851,24 @@ public interface ContinuumService
     List<Object> getAllBuildAgentsRPC();
 
     boolean pingBuildAgent( String buildAgentUrl )
+        throws Exception;
+
+    BuildAgentGroupConfiguration addBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws Exception;
+
+    Map<String, Object> addBuildAgentGroupRPC( Map<String, Object> buildAgentGroup )
+        throws Exception;
+
+    BuildAgentGroupConfiguration getBuildAgentGroup( String name );
+
+    Map<String, Object> getBuildAgentGroupRPC( String name );
+
+    BuildAgentGroupConfiguration updateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws Exception;
+
+    Map<String, Object> updateBuildAgentGroupRPC( Map<String, Object> buildAgentGroup )
+        throws Exception;
+
+    void removeBuildAgentGroup( String name )
         throws Exception;
 }

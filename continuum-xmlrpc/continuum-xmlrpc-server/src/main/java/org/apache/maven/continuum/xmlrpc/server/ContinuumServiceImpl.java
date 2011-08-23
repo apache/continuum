@@ -39,7 +39,6 @@ import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
-import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
@@ -67,6 +66,7 @@ import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration;
+import org.apache.maven.continuum.xmlrpc.project.BuildAgentGroupConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildProjectTask;
@@ -635,6 +635,14 @@ public class ContinuumServiceImpl
         return result;
     }
 
+    public BuildDefinition getBuildDefinition( int buildDefinitionId )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.BuildDefinition bd = continuum.getBuildDefinition( buildDefinitionId );
+
+        return populateBuildDefinition( bd );
+    }
+
     public int removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
         throws ContinuumException
     {
@@ -1165,6 +1173,15 @@ public class ContinuumServiceImpl
         return populateProfile( continuum.getProfileService().getProfile( profileId ) );
     }
 
+    public Profile getProfileWithName( String profileName )
+        throws ContinuumException
+    {
+        checkManageProfilesAuthorization();
+        org.apache.maven.continuum.model.system.Profile profile = 
+                        continuum.getProfileService().getProfileWithName( profileName );
+        return profile != null ? populateProfile( profile ) : null;
+    }
+
     public Profile addProfile( Profile profile )
         throws ContinuumException
     {
@@ -1247,6 +1264,22 @@ public class ContinuumServiceImpl
             org.apache.maven.continuum.model.system.Installation install =
                 continuum.getInstallationService().getInstallation( installationId );
             return populateInstallation( install );
+        }
+        catch ( InstallationException e )
+        {
+            throw new ContinuumException( "Can't load installations", e );
+        }
+    }
+
+    public Installation getInstallation( String installationName )
+        throws ContinuumException
+    {
+        checkManageInstallationsAuthorization();
+        try
+        {
+            org.apache.maven.continuum.model.system.Installation install =
+                continuum.getInstallationService().getInstallation( installationName );
+            return install != null ? populateInstallation( install ) : null;
         }
         catch ( InstallationException e )
         {
@@ -1957,7 +1990,7 @@ public class ContinuumServiceImpl
     }
 
     // ----------------------------------------------------------------------
-    // ConfigurationService
+    // Build agent
     // ----------------------------------------------------------------------
 
     public BuildAgentConfiguration addBuildAgent( BuildAgentConfiguration buildAgentConfiguration )
@@ -2056,7 +2089,7 @@ public class ContinuumServiceImpl
 
             if ( configurationService.getBuildAgentGroups() != null )
             {
-                for ( BuildAgentGroupConfiguration buildAgentGroup : configurationService.getBuildAgentGroups() )
+                for ( org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroup : configurationService.getBuildAgentGroups() )
                 {
                     if ( configurationService.containsBuildAgentUrl( buildAgentConfiguration.getUrl(), buildAgentGroup ) )
                     {
@@ -2105,6 +2138,87 @@ public class ContinuumServiceImpl
         return buildAgentConfigurations;
     }
 
+    // ----------------------------------------------------------------------
+    // Build agent group
+    // ----------------------------------------------------------------------
+
+    public BuildAgentGroupConfiguration addBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException, ConfigurationStoringException, ContinuumConfigurationException
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+
+        if ( buildAgentGroup == null )
+        {
+            return null;
+        }
+        try
+        {
+            configurationService.addBuildAgentGroup( populateBuildAgentGroup( buildAgentGroup ) );
+            configurationService.store();
+            return populateBuildAgentGroup( configurationService.getBuildAgentGroup( buildAgentGroup.getName() ) );
+        }
+        catch ( ContinuumException e )
+        {
+            throw new ConfigurationException( "Error in adding buildAgentGroup", e );
+        }
+    }
+
+    public BuildAgentGroupConfiguration getBuildAgentGroup( String name )
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+        org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroup =
+            configurationService.getBuildAgentGroup( name );
+        BuildAgentGroupConfiguration buildAgentGroupConfiguration = buildAgentGroup != null ? populateBuildAgentGroup( buildAgentGroup ) : null;
+        return buildAgentGroupConfiguration;
+    }
+
+    public BuildAgentGroupConfiguration updateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup ) 
+        throws ConfigurationException, ConfigurationStoringException, ContinuumConfigurationException
+    {
+        try
+        {
+            ConfigurationService configurationService = continuum.getConfiguration();
+            org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroupConfiguration =
+                configurationService.getBuildAgentGroup( buildAgentGroup.getName() );
+    
+            if ( buildAgentGroupConfiguration != null )
+            {
+                buildAgentGroupConfiguration.setName( StringEscapeUtils.escapeXml( buildAgentGroup.getName() ) );
+                if ( buildAgentGroup.getBuildAgents() != null )
+                {
+                    buildAgentGroupConfiguration.getBuildAgents().clear();
+                    for ( BuildAgentConfiguration buildAgent : buildAgentGroup.getBuildAgents() )
+                    {
+                        buildAgentGroupConfiguration.getBuildAgents().add( populateBuildAgent( buildAgent ) );
+                    }
+                }
+                else
+                {
+                    buildAgentGroupConfiguration.setBuildAgents( null );
+                }
+                configurationService.updateBuildAgentGroup( buildAgentGroupConfiguration );
+                configurationService.store();
+                return populateBuildAgentGroup( configurationService.getBuildAgentGroup( buildAgentGroup.getName() ) );
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch ( ContinuumException e )
+        {
+            throw new ContinuumConfigurationException( "Error in updating build agent group " + buildAgentGroup.getName(), e );
+        }
+    }
+
+    public void removeBuildAgentGroup( String name ) 
+        throws ConfigurationException
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+        org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroupConfiguration =
+            configurationService.getBuildAgentGroup( name );
+        configurationService.removeBuildAgentGroup( buildAgentGroupConfiguration );
+    }
     // ----------------------------------------------------------------------
     // Converters
     // ----------------------------------------------------------------------
@@ -2462,6 +2576,7 @@ public class ContinuumServiceImpl
             newProfile.setDescription( StringEscapeUtils.escapeXml( profile.getDescription() ) );
             newProfile.setName( profile.getName() );
             newProfile.setScmMode( profile.getScmMode() );
+            newProfile.setBuildAgentGroup( profile.getBuildAgentGroup() );
             if ( profile.getBuilder() != null )
             {
                 final org.apache.maven.continuum.model.system.Installation newBuilder =
@@ -2760,6 +2875,40 @@ public class ContinuumServiceImpl
             buildAgentConfiguration.setPlatform( "" );
             return buildAgentConfiguration;
         }
+    }
+
+    private org.apache.continuum.configuration.BuildAgentGroupConfiguration populateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ContinuumException
+    {
+        if ( buildAgentGroup == null )
+        {
+            return null;
+        }
+
+        org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroupConfiguration =
+            new org.apache.continuum.configuration.BuildAgentGroupConfiguration();
+
+        if ( StringUtils.isBlank( buildAgentGroup.getName() ) )
+        {
+            throw new ContinuumException( "Build agent group name is required" );
+        }
+
+        buildAgentGroupConfiguration.setName( StringEscapeUtils.escapeXml( buildAgentGroup.getName() ) );
+
+        buildAgentGroupConfiguration.getBuildAgents().clear();
+        if ( buildAgentGroup.getBuildAgents() != null )
+        {
+            for( BuildAgentConfiguration buildAgent : buildAgentGroup.getBuildAgents() )
+            {
+                buildAgentGroupConfiguration.getBuildAgents().add( populateBuildAgent( buildAgent ) );
+            }
+        }
+        return buildAgentGroupConfiguration;
+    }
+    
+    private BuildAgentGroupConfiguration populateBuildAgentGroup( org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroup )
+    {
+        return (BuildAgentGroupConfiguration) mapper.map( buildAgentGroup, BuildAgentGroupConfiguration.class );
     }
 
     private Map<String, Object> serializeObject( Object o, final String... ignore )
@@ -3268,6 +3417,12 @@ public class ContinuumServiceImpl
         return serializeObject( this.getBuildDefinitionsForProject( projectId ) );
     }
 
+    public Map<String, Object> getBuildDefinitionRPC( int buildDefinitionId )
+        throws Exception
+    {
+        return serializeObject( this.getBuildDefinition( buildDefinitionId ) );
+    }
+
     public Map<String, Object> getBuildResultRPC( int projectId, int buildId )
         throws Exception
     {
@@ -3284,6 +3439,12 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.getInstallation( installationId ) );
+    }
+
+    public Map<String, Object> getInstallationRPC( String installationName )
+        throws Exception
+    {
+        return serializeObject( this.getInstallation( installationName ) );
     }
 
     public List<Object> getInstallationsRPC()
@@ -3308,6 +3469,12 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.getProfile( profileId ) );
+    }
+
+    public Map<String, Object> getProfileWithNameRPC( String profileName )
+        throws Exception
+    {
+        return serializeObject( this.getProfileWithName( profileName ) );
     }
 
     public List<Object> getProfilesRPC()
@@ -3580,6 +3747,23 @@ public class ContinuumServiceImpl
     public List<Object> getAllBuildAgentsRPC()
     {
         return serializeObject( this.getAllBuildAgents() );
+    }
+
+    public Map<String, Object> addBuildAgentGroupRPC( Map<String, Object> buildAgentGroup ) 
+        throws ConfigurationException, ConfigurationStoringException, ContinuumConfigurationException
+    {
+        return serializeObject( this.addBuildAgentGroup( (BuildAgentGroupConfiguration) unserializeObject( buildAgentGroup ) ) );
+    }
+
+    public Map<String, Object> getBuildAgentGroupRPC( String name )
+    {
+        return serializeObject( this.getBuildAgentGroup( name ) );
+    }
+
+    public Map<String, Object> updateBuildAgentGroupRPC( Map<String, Object> buildAgentGroup )
+        throws ConfigurationException, ConfigurationStoringException, ContinuumConfigurationException
+    {
+        return serializeObject( this.updateBuildAgentGroup( (BuildAgentGroupConfiguration) unserializeObject( buildAgentGroup ) ) );
     }
 
     public String releasePrepare( int projectId, Properties releaseProperties, Map<String, String> releaseVersions,

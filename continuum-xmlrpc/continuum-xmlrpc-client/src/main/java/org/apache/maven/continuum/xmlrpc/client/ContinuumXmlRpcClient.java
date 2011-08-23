@@ -33,6 +33,7 @@ import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration;
+import org.apache.maven.continuum.xmlrpc.project.BuildAgentGroupConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildProjectTask;
@@ -516,6 +517,12 @@ public class ContinuumXmlRpcClient
         return continuum.getProfile( profileId );
     }
 
+    public Profile getProfileWithName( String profileName )
+        throws Exception
+    {
+        return continuum.getProfileWithName( profileName );
+    }
+
     // ----------------------------------------------------------------------
     // Installations
     // ----------------------------------------------------------------------
@@ -530,6 +537,12 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.getInstallation( installationId );
+    }
+
+    public Installation getInstallation( String installationName )
+        throws Exception
+    {
+        return continuum.getInstallation( installationName );
     }
 
     public List<Installation> getBuildAgentInstallations( String url )
@@ -928,6 +941,12 @@ public class ContinuumXmlRpcClient
         return continuum.getInstallationRPC( installationId );
     }
 
+    public Map<String, Object> getInstallationRPC( String installationName )
+        throws Exception
+    {
+        return continuum.getInstallationRPC( installationName );
+    }
+
     public List<Object> getInstallationsRPC()
         throws Exception
     {
@@ -950,6 +969,12 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.getProfileRPC( profileId );
+    }
+
+    public Map<String, Object> getProfileWithNameRPC( String profileName )
+        throws Exception
+    {
+        return continuum.getProfileWithNameRPC( profileName );
     }
 
     public List<Object> getProfilesRPC()
@@ -1376,5 +1401,57 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.getBuildAgentUrl( projectId, buildDefinitionId );
+    }
+
+    public BuildDefinition getBuildDefinition( int buildDefinitionId )
+        throws Exception
+    {
+        return continuum.getBuildDefinition( buildDefinitionId );
+    }
+
+    public Map<String, Object> getBuildDefinitionRPC( int buildDefinitionId )
+        throws Exception
+    {
+        return continuum.getBuildDefinitionRPC( buildDefinitionId );
+    }
+
+    public BuildAgentGroupConfiguration addBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws Exception
+    {
+        return continuum.addBuildAgentGroup( buildAgentGroup );
+    }
+
+    public Map<String, Object> addBuildAgentGroupRPC( Map<String, Object> buildAgentGroup )
+        throws Exception
+    {
+        return continuum.addBuildAgentGroupRPC( buildAgentGroup );
+    }
+
+    public BuildAgentGroupConfiguration getBuildAgentGroup( String name )
+    {
+        return continuum.getBuildAgentGroup( name );
+    }
+
+    public Map<String, Object> getBuildAgentGroupRPC( String name )
+    {
+        return continuum.getBuildAgentGroupRPC( name );
+    }
+
+    public BuildAgentGroupConfiguration updateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws Exception
+    {
+        return continuum.updateBuildAgentGroup( buildAgentGroup );
+    }
+
+    public Map<String, Object> updateBuildAgentGroupRPC( Map<String, Object> buildAgentGroup )
+        throws Exception
+    {
+        return continuum.updateBuildAgentGroupRPC( buildAgentGroup );
+    }
+
+    public void removeBuildAgentGroup( String name )
+        throws Exception
+    {
+        continuum.removeBuildAgentGroup( name );
     }
 }

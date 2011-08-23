@@ -78,6 +78,7 @@ public class DefaultInstallationServiceTest
         assertEquals( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), getted.getVarName() );
         assertEquals( "bar", getted.getVarValue() );
         assertEquals( 1, getInstallationService().getAllInstallations().size() );
+        assertNotNull( getInstallationService().getInstallation( NEW_INSTALLATION_NAME ) );
     }
 
     public void testAddDuplicateInstallation()

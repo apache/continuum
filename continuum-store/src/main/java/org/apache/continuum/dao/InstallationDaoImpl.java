@@ -176,13 +176,53 @@ public class InstallationDaoImpl
 
             Query query = pm.newQuery( extent );
 
-            query.declareImports( "import java.lang.String" );
-
             query.declareParameters( "int installationId" );
 
             query.setFilter( "this.installationId == installationId" );
 
             Collection result = (Collection) query.execute( installationId );
+
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+
+                return null;
+            }
+
+            Object object = pm.detachCopy( result.iterator().next() );
+
+            tx.commit();
+
+            return (Installation) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public Installation getInstallation( String installationName )
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( Installation.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String name" );
+
+            query.setFilter( "this.name == name" );
+
+            Collection result = (Collection) query.execute( installationName );
 
             if ( result.size() == 0 )
             {

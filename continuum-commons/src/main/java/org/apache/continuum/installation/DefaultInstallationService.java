@@ -202,6 +202,22 @@ public class DefaultInstallationService
     }
 
     /**
+     * @see org.apache.maven.continuum.installation.InstallationService#getInstallation(String)
+     */
+    public Installation getInstallation( String installationName )
+        throws InstallationException
+    {
+        try
+        {
+            return installationDao.getInstallation( installationName );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new InstallationException( e.getMessage(), e );
+        }
+    }
+
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#update(org.apache.maven.continuum.model.system.Installation)
      */
     public void update( Installation installation )

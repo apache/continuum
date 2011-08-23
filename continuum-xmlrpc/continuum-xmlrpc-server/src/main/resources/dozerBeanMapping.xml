@@ -271,4 +271,15 @@
     <class-a>org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration</class-a>
     <class-b>org.apache.continuum.configuration.BuildAgentConfiguration</class-b>
   </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.BuildAgentGroupConfiguration</class-a>
+    <class-b>org.apache.continuum.configuration.BuildAgentGroupConfiguration</class-b>
+    <field>
+      <a>buildAgents</a>
+      <b>buildAgents</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration</a-hint>
+      <b-hint>org.apache.continuum.configuration.BuildAgentConfiguration</b-hint>
+    </field>
+  </mapping>
 </mappings>

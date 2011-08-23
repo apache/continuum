@@ -46,7 +46,7 @@ public interface BuildAgentConfigurationService
         throws BuildAgentConfigurationException;
 
     List<Installation> getAvailableInstallations();
-    
+
     List<LocalRepository> getLocalRepositories();
 
     String getSharedSecretPassword();

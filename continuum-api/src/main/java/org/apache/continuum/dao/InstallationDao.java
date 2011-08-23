@@ -45,4 +45,6 @@ public interface InstallationDao
     Installation getInstallation( int installationId )
         throws ContinuumStoreException;
 
+    Installation getInstallation( String installationName )
+                    throws ContinuumStoreException;
 }
