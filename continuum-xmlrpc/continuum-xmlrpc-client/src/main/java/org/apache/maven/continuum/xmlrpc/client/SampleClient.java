@@ -53,7 +53,8 @@ public class SampleClient
         throws Exception
     {
         client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
-
+        client.removeBuildAgentGroup( "group" );
+/*
 
         // Test for [CONTINUUM-2641]: (test with distributed builds with multiple build agents or parallel builds with > 1 build queue)
         // make sure to set the projectIds to the actual projectIds of your projects added in Continuum
@@ -267,7 +268,7 @@ public class SampleClient
         System.out.println( "Removing Local Repository '" + repository.getName() + "' (" + 
                             repository.getId() + ")..." );
         client.removeLocalRepository( repository.getId() );
-        System.out.println( "Done." );
+        System.out.println( "Done." );*/
     }
 
     public static void printProjectGroupSummary( ProjectGroupSummary pg )

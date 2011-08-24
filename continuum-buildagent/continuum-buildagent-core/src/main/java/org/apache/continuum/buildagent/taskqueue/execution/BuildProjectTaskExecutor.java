@@ -404,11 +404,16 @@ public class BuildProjectTaskExecutor
             // get environments from Master (Continuum)
             Map<String, String> environments = buildAgentManager.getEnvironments( buildDefinitionId, installationType );
 
-            // get environments from Slave (Build Agent)
-            for ( Installation installation : buildAgentConfigurationService.getAvailableInstallations() )
+            List<Installation> installations = buildAgentConfigurationService.getAvailableInstallations();
+
+            if ( installations != null )
             {
-                // combine environments (Master and Slave); Slave's environments overwrite Master's environments
-                environments.put( installation.getVarName(), installation.getVarValue() );
+                // get environments from Slave (Build Agent)
+                for ( Installation installation : installations )
+                {
+                    // combine environments (Master and Slave); Slave's environments overwrite Master's environments
+                    environments.put( installation.getVarName(), installation.getVarValue() );
+                }
             }
 
             return environments;

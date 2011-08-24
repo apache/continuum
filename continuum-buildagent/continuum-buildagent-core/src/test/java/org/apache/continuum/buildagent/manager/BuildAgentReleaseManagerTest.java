@@ -87,6 +87,9 @@ public class BuildAgentReleaseManagerTest
 
                 one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
                 will( returnValue( workingDir ) );
+
+                one( buildAgentConfigurationService ).getAvailableInstallations();
+                will( returnValue( null ) );
             }
         } );
 
@@ -116,6 +119,9 @@ public class BuildAgentReleaseManagerTest
 
                 one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
                 will( returnValue( workingDir ) );
+
+                one( buildAgentConfigurationService ).getAvailableInstallations();
+                will( returnValue( null ) );
             }
         } );
 

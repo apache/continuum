@@ -27,6 +27,7 @@ import java.util.Properties;
 
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
+import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
@@ -80,6 +81,23 @@ public class DefaultBuildAgentReleaseManager
 
         String executable = buildAgentInstallationService.getExecutorConfigurator(
             BuildAgentInstallationService.MAVEN2_TYPE ).getExecutable();
+
+        if ( environments == null )
+        {
+            environments = new HashMap<String, String>();
+        }
+
+        // get environments from Slave (Build Agent)
+        List<Installation> installations = buildAgentConfigurationService.getAvailableInstallations();
+
+        if ( installations != null )
+        {
+            for ( Installation installation : installations )
+            {
+                // combine environments (Master and Slave); Slave's environments overwrite Master's environments
+                environments.put( installation.getVarName(), installation.getVarValue() );
+            }
+        }
 
         if ( environments != null )
         {
