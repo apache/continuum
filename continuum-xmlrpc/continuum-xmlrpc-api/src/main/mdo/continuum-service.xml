@@ -474,7 +474,7 @@
         </field>
         <field jpox.null-value="default">
           <name>buildUrl</name>
-          <version>1.1.0+</version>
+          <version>1.4.1+</version>
           <type>String</type>
           <defaultValue></defaultValue>
         </field>
