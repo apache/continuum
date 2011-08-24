@@ -1595,10 +1595,10 @@ public interface ContinuumService
     List<Object> getAllDirectoryPurgeConfigurationsRPC()
         throws Exception;
 
-    void purgeLocalRepository( int repoPurgeId )
+    int purgeLocalRepository( int repoPurgeId )
         throws Exception;
 
-    void purgeDirectory( int dirPurgeId )
+    int purgeDirectory( int dirPurgeId )
         throws Exception;
 
     // ----------------------------------------------------------------------
@@ -1869,6 +1869,6 @@ public interface ContinuumService
     Map<String, Object> updateBuildAgentGroupRPC( Map<String, Object> buildAgentGroup )
         throws Exception;
 
-    void removeBuildAgentGroup( String name )
+    int removeBuildAgentGroup( String name )
         throws Exception;
 }

@@ -737,16 +737,16 @@ public class ContinuumXmlRpcClient
         return continuum.getAllDirectoryPurgeConfigurations();
     }
 
-    public void purgeLocalRepository( int repoPurgeId )
+    public int purgeLocalRepository( int repoPurgeId )
         throws Exception
     {
-        continuum.purgeLocalRepository( repoPurgeId );
+        return continuum.purgeLocalRepository( repoPurgeId );
     }
 
-    public void purgeDirectory( int dirPurgeId )
+    public int purgeDirectory( int dirPurgeId )
         throws Exception
     {
-        continuum.purgeDirectory( dirPurgeId );
+        return continuum.purgeDirectory( dirPurgeId );
     }
 
     // ----------------------------------------------------------------------
@@ -1449,9 +1449,9 @@ public class ContinuumXmlRpcClient
         return continuum.updateBuildAgentGroupRPC( buildAgentGroup );
     }
 
-    public void removeBuildAgentGroup( String name )
+    public int removeBuildAgentGroup( String name )
         throws Exception
     {
-        continuum.removeBuildAgentGroup( name );
+        return continuum.removeBuildAgentGroup( name );
     }
 }

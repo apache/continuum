@@ -1862,7 +1862,7 @@ public class ContinuumServiceImpl
         return d;
     }
 
-    public void purgeLocalRepository( int repoPurgeId )
+    public int purgeLocalRepository( int repoPurgeId )
         throws ContinuumException
     {
         checkManagePurgingAuthorization();
@@ -1872,6 +1872,8 @@ public class ContinuumServiceImpl
             org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurgeConfig =
                 continuum.getPurgeConfigurationService().getRepositoryPurgeConfiguration( repoPurgeId );
             continuum.getPurgeManager().purgeRepository( repoPurgeConfig );
+
+            return 0;
         }
         catch ( PurgeConfigurationServiceException e )
         {
@@ -1883,7 +1885,7 @@ public class ContinuumServiceImpl
         }
     }
 
-    public void purgeDirectory( int dirPurgeId )
+    public int purgeDirectory( int dirPurgeId )
         throws ContinuumException
     {
         checkManagePurgingAuthorization();
@@ -1893,6 +1895,8 @@ public class ContinuumServiceImpl
             org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurgeConfig =
                 continuum.getPurgeConfigurationService().getDirectoryPurgeConfiguration( dirPurgeId );
             continuum.getPurgeManager().purgeDirectory( dirPurgeConfig );
+
+            return 0;
         }
         catch ( PurgeConfigurationServiceException e )
         {
@@ -2211,14 +2215,17 @@ public class ContinuumServiceImpl
         }
     }
 
-    public void removeBuildAgentGroup( String name ) 
+    public int removeBuildAgentGroup( String name ) 
         throws ConfigurationException
     {
         ConfigurationService configurationService = continuum.getConfiguration();
         org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroupConfiguration =
             configurationService.getBuildAgentGroup( name );
         configurationService.removeBuildAgentGroup( buildAgentGroupConfiguration );
+
+        return 0;
     }
+
     // ----------------------------------------------------------------------
     // Converters
     // ----------------------------------------------------------------------
