@@ -2416,9 +2416,16 @@ public class ContinuumServiceImpl
 
         if ( result.hasErrors() )
         {
-            for ( String error : result.getErrors() )
+            if ( StringUtils.isNotBlank( result.getErrorsAsString() ) )
             {
-                res.addError( error );
+                res.addError( result.getErrorsAsString() );
+            }
+            else
+            {
+                for ( String error : result.getErrors() )
+                {
+                    res.addError( AddingResultUtil.getErrorMessage( error ) );
+                }
             }
         }
 
