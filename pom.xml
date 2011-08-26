@@ -1386,6 +1386,17 @@ under the License.
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>javax.annotation</groupId>
         <artifactId>jsr250-api</artifactId>
         <version>1.0</version>

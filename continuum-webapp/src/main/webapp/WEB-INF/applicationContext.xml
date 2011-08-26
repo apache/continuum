@@ -120,4 +120,29 @@
     <constructor-arg ref="securitySystem"/>
   </bean>
   
+  <!-- triggers -->
+  <bean id="continuumBuildTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="continuumBuildJob" />
+    <property name="cronExpression" value="0 * * * * ?" />
+  </bean>
+  
+   <!-- scheduler -->
+  <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+      <list>
+        <ref bean="continuumBuildTrigger" />
+      </list>
+    </property>
+    <property name="schedulerName" value="Continuum Scheduler" />
+    <property name="waitForJobsToCompleteOnShutdown" value="true" />
+    <property name="quartzProperties">
+      <props>
+        <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+        <prop key="org.quartz.plugin.shutdownhook.class">org.quartz.plugins.management.ShutdownHookPlugin
+        </prop>
+        <prop key="org.quartz.plugin.shutdownhook.cleanShutdown">true</prop>
+      </props>
+    </property>
+  </bean>
+
 </beans>

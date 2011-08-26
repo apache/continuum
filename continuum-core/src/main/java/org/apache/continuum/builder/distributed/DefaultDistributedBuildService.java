@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.distributed.util.DistributedBuildUtil;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -87,6 +88,11 @@ public class DefaultDistributedBuildService
      * @plexus.requirement
      */
     private DistributedBuildUtil distributedBuildUtil;
+
+    /**
+     * @plexus.requirement
+     */
+    private DistributedBuildManager distributedBuildManager;
 
     public void updateBuildResult( Map<String, Object> context )
         throws ContinuumException
@@ -167,6 +173,8 @@ public class DefaultDistributedBuildService
             {
                 notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
             }
+
+            distributedBuildManager.removeCurrentRun( projectId, buildDefinitionId );
         }
         catch ( ContinuumStoreException e )
         {

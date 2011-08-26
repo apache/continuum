@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.model.project.ProjectRunSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
@@ -113,4 +114,8 @@ public interface DistributedBuildManager
         
     String getBuildAgentUrl( int projectId, int buildDefinitionId )
         throws ContinuumException;
+
+    List<ProjectRunSummary> getCurrentRuns();
+
+    void removeCurrentRun( int projectId, int buildDefinitionId );
 }

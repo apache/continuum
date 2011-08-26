@@ -42,4 +42,11 @@
      <property name="checkoutTaskQueueExecutor" ref="taskQueueExecutor#check-out-project"/>
      <property name="prepareBuildTaskQueueExecutor" ref="taskQueueExecutor#prepare-build-project"/>
   </bean>
+  
+  <!-- jobs -->
+  <bean name="continuumBuildJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="targetObject" ref="continuumWorker" />
+    <property name="targetMethod" value="work" />
+    <property name="concurrent" value="false" />
+  </bean>
 </beans>

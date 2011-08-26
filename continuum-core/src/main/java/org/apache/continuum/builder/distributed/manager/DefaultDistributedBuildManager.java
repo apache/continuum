@@ -39,6 +39,7 @@ import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
+import org.apache.continuum.model.project.ProjectRunSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.OverallDistributedBuildQueue;
@@ -82,6 +83,8 @@ public class DefaultDistributedBuildManager
 
     private Map<String, OverallDistributedBuildQueue> overallDistributedBuildQueues =
         Collections.synchronizedMap( new HashMap<String, OverallDistributedBuildQueue>() );
+
+    private List<ProjectRunSummary> currentRuns = Collections.synchronizedList( new ArrayList<ProjectRunSummary>() );
 
     /**
      * @plexus.requirement
@@ -415,8 +418,10 @@ public class DefaultDistributedBuildManager
         {
             try
             {
-                log.info( "Building project in the least busy agent {}", overallDistributedBuildQueue.getBuildAgentUrl() );
+                String agentUrl = overallDistributedBuildQueue.getBuildAgentUrl();
+                log.info( "Building project in the least busy agent {}", agentUrl );
                 overallDistributedBuildQueue.addToDistributedBuildQueue( task );
+                createProjectRunSummaries( task, agentUrl );
             }
             catch ( TaskQueueException e )
             {
@@ -1756,6 +1761,79 @@ public class DefaultDistributedBuildManager
         }
 
         return false;
+    }
+
+    public List<ProjectRunSummary> getCurrentRuns()
+    {
+        return currentRuns;
+    }
+
+    public void removeCurrentRun( int projectId, int buildDefinitionId )
+    {
+        synchronized( currentRuns )
+        {
+            boolean found = false;
+            ProjectRunSummary runToDelete = null;
+
+            for ( ProjectRunSummary currentRun : currentRuns )
+            {
+                if ( currentRun.getProjectId() == projectId && currentRun.getBuildDefinitionId() == buildDefinitionId )
+                {
+                    found = true;
+                    runToDelete = currentRun;
+                    break;
+                }
+            }
+
+            if ( found )
+            {
+                currentRuns.remove( runToDelete );
+            }
+        }
+    }
+
+    private void createProjectRunSummaries( PrepareBuildProjectsTask task, String buildAgentUrl )
+    {
+        synchronized( currentRuns )
+        {
+            int projectGroupId = task.getProjectGroupId();
+            int projectScmRootId = task.getProjectScmRootId();
+            Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+    
+            for ( int projectId : map.keySet() )
+            {
+                int buildDefinitionId = map.get( projectId );
+
+                ProjectRunSummary runToDelete = null;
+
+                // check if there is an existing current run with that project id and build definition id
+                for ( ProjectRunSummary currentRun : currentRuns )
+                {
+                    if ( currentRun.getProjectId() == projectId && currentRun.getBuildDefinitionId() == buildDefinitionId )
+                    {
+                        runToDelete = currentRun;
+                        break;
+                    }
+                }
+
+                if ( runToDelete != null )
+                {
+                    // previous run already finished, but was not removed from the list
+                    // removed it
+                    currentRuns.remove( runToDelete );
+                }
+
+                ProjectRunSummary run = new ProjectRunSummary();
+                run.setProjectGroupId( projectGroupId );
+                run.setProjectScmRootId( projectScmRootId );
+                run.setProjectId( projectId );
+                run.setBuildDefinitionId( buildDefinitionId );
+                run.setTriggeredBy( task.getBuildTrigger().getTriggeredBy() );
+                run.setTrigger( task.getBuildTrigger().getTrigger() );
+                run.setBuildAgentUrl( buildAgentUrl );
+                currentRuns.add( run );
+            }
+        }
     }
 
     private void disableBuildAgent( String buildAgentUrl )

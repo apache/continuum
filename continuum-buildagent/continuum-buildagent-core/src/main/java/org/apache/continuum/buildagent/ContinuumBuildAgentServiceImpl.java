@@ -33,7 +33,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
-import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.manager.BuildAgentReleaseManager;
