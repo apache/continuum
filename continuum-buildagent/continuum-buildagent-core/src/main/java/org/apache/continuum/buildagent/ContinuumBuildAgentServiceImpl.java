@@ -1067,7 +1067,7 @@ public class ContinuumBuildAgentServiceImpl
                  return;
             }
         }
-        
+
         try
         {
             purgeManager.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );

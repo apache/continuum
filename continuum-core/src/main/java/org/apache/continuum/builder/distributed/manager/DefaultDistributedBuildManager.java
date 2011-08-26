@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.apache.continuum.model.project.ProjectRunSummary;
@@ -105,6 +107,11 @@ public class DefaultDistributedBuildManager
      * @plexus.requirement
      */
     private BuildResultDao buildResultDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectScmRootDao projectScmRootDao;
 
     /**
      * @plexus.requirement
@@ -727,6 +734,140 @@ public class DefaultDistributedBuildManager
         {
             log.error( "Error occurred while cancelling build in build agent " + buildAgentUrl, e );
             throw new ContinuumException( "Error occurred while cancelling build in build agent " + buildAgentUrl, e );
+        }
+    }
+
+    public void cancelGroupBuild( int projectGroupId )
+        throws ContinuumException
+    {
+        log.debug( "Cancelling all builds of project group {}", projectGroupId );
+
+        List<ProjectRunSummary> runsToDelete = new ArrayList<ProjectRunSummary>();
+
+        synchronized( currentRuns )
+        {
+            for ( ProjectRunSummary run : currentRuns )
+            {
+                if ( run.getProjectGroupId() == projectGroupId )
+                {
+                    cancelCurrentRun( run, runsToDelete );
+                }
+            }
+
+            if ( runsToDelete.size() > 0 )
+            {
+                currentRuns.removeAll( runsToDelete );
+            }
+        }
+    }
+
+    public void cancelBuild( int projectId )
+        throws ContinuumException
+    {
+        log.debug( "Cancelling all builds of project {}", projectId );
+
+        List<ProjectRunSummary> runsToDelete = new ArrayList<ProjectRunSummary>();
+
+        synchronized( currentRuns )
+        {
+            for ( ProjectRunSummary run : currentRuns )
+            {
+                if ( run.getProjectId() == projectId )
+                {
+                    cancelCurrentRun( run, runsToDelete );
+                }
+            }
+
+            if ( runsToDelete.size() > 0 )
+            {
+                currentRuns.removeAll( runsToDelete );
+            }
+        }
+    }
+
+    private void cancelCurrentRun( ProjectRunSummary run, List<ProjectRunSummary> runsToDelete )
+        throws ContinuumException
+    {
+        int projectId = run.getProjectId();
+        int buildDefinitionId = run.getBuildDefinitionId();
+        String buildAgentUrl = run.getBuildAgentUrl();
+
+        // try to remove from any queue first
+        removeFromPrepareBuildQueue( buildAgentUrl, run.getProjectGroupId(), run.getProjectScmRootId() );
+        removeFromBuildQueue( buildAgentUrl, projectId, buildDefinitionId );
+
+        if ( isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId ) )
+        {
+            log.debug( "Unable to cancel build of projectId={}, buildDefinitionId={} in build agent{}. Project is currently doing scm update." );
+            return;
+        }
+        else if ( isProjectCurrentlyBuilding( projectId, buildDefinitionId ) )
+        {
+            log.debug( "Cancel build of projectId={}, buildDefinitionId={} in build agent {}", 
+                       new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
+            cancelDistributedBuild( buildAgentUrl );
+            runsToDelete.add( run );
+        }
+        else
+        {
+            try
+            {
+                ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( run.getProjectScmRootId() );
+
+                if ( scmRoot != null && scmRoot.getState() == ContinuumProjectState.UPDATING )
+                {
+                    // no longer updating, but state was not updated.
+                    scmRoot.setState( ContinuumProjectState.ERROR );
+                    scmRoot.setError( "Problem encountered while returning scm update result to master by build agent '" + buildAgentUrl + "'. \n" +
+                                      "Make sure build agent is configured properly. Check the logs for more information." );
+                    projectScmRootDao.updateProjectScmRoot( scmRoot );
+
+                    log.debug( "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
+                               new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
+                    runsToDelete.add( run );
+                }
+                else if ( scmRoot != null && scmRoot.getState() == ContinuumProjectState.ERROR )
+                {
+                    log.debug( "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
+                               new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
+                    runsToDelete.add( run );
+                }
+                else
+                {
+                    Project project = projectDao.getProject( projectId );
+                    BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+    
+                    // no longer building, but state was not updated
+                    BuildResult buildResult = new BuildResult();
+                    buildResult.setBuildDefinition( buildDefinition );
+                    buildResult.setBuildUrl( run.getBuildAgentUrl() );
+                    buildResult.setTrigger( run.getTrigger() );
+                    buildResult.setUsername( run.getTriggeredBy() );
+                    buildResult.setState( ContinuumProjectState.ERROR );
+                    buildResult.setSuccess( false );
+                    buildResult.setStartTime( new Date().getTime() );
+                    buildResult.setEndTime( new Date().getTime() );
+                    buildResult.setExitCode( 1 );
+                    buildResult.setError( "Problem encountered while returning build result to master by build agent '" + buildAgentUrl + "'. \n" +
+                                          "Make sure build agent is configured properly. Check the logs for more information." );
+                    buildResultDao.addBuildResult( project, buildResult );
+    
+                    project.setState( ContinuumProjectState.ERROR );
+                    project.setLatestBuildId( buildResult.getId() );
+                    projectDao.updateProject( project );
+    
+                    log.debug( "projectId={}, buildDefinitionId={} is not building anymore. Problem encountered while return build result by build agent {}. Stopping the build.",
+                               new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
+    
+                    // create a build result
+                    runsToDelete.add( run );
+                }
+            }
+            catch ( Exception e )
+            {
+                log.error( "Unable to end build for projectId={}, buildDefinitionId={} : {}",
+                           new Object[] { projectId, buildDefinitionId, e.getMessage() } );
+            }
         }
     }
 
@@ -1918,4 +2059,13 @@ public class DefaultDistributedBuildManager
         this.container = container;
     }
 
+    public void setCurrentRuns( List<ProjectRunSummary> currentRuns )
+    {
+        this.currentRuns = currentRuns;
+    }
+
+    public void setProjectScmRootDao( ProjectScmRootDao projectScmRootDao )
+    {
+        this.projectScmRootDao = projectScmRootDao;
+    }
 }

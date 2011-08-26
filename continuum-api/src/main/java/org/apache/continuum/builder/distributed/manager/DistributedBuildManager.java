@@ -118,4 +118,10 @@ public interface DistributedBuildManager
     List<ProjectRunSummary> getCurrentRuns();
 
     void removeCurrentRun( int projectId, int buildDefinitionId );
+
+    void cancelBuild( int projectId )
+        throws ContinuumException;
+
+    void cancelGroupBuild( int projectGroupId )
+        throws ContinuumException;
 }

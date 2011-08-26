@@ -64,9 +64,16 @@ public class CancelBuildAction
         {
             checkBuildProjectInGroupAuthorization( getProjectGroupName() );
 
-            BuildsManager buildsManager = getContinuum().getBuildsManager();
+            if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+            {
+                getContinuum().getDistributedBuildManager().cancelBuild( projectId );
+            }
+            else
+            {
+                BuildsManager buildsManager = getContinuum().getBuildsManager();
 
-            buildsManager.cancelBuild( projectId );
+                buildsManager.cancelBuild( projectId );
+            }
 
             AuditLog event = new AuditLog( "Project id=" + projectId, AuditLogConstants.CANCEL_BUILD );
             event.setCategory( AuditLogConstants.PROJECT );
@@ -99,29 +106,44 @@ public class CancelBuildAction
             projectsId = ArrayUtils.add( projectsId, projectId );
         }
 
-        BuildsManager parallelBuildsManager = getContinuum().getBuildsManager();
-        parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );
-
-        try
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            // now we must check if the current build is one of this
-            int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
-            if ( index > 0 )
+            for ( int i = 0; i < projectsId.length; i++ )
             {
-                int projId = projectsId[index];
-                getContinuum().getBuildsManager().cancelBuild( projId );
-                
-                AuditLog event = new AuditLog( "Project id=" + projId, AuditLogConstants.CANCEL_BUILD );
+                getContinuum().getDistributedBuildManager().cancelBuild( projectsId[i] );
+
+                AuditLog event = new AuditLog( "Project id=" + projectsId[i], AuditLogConstants.CANCEL_BUILD );
                 event.setCategory( AuditLogConstants.PROJECT );
                 event.setCurrentUser( getPrincipal() );
                 event.log();
             }
-
         }
-        catch ( BuildManagerException e )
+        else
         {
-            logger.error( e.getMessage() );
-            throw new ContinuumException( e.getMessage(), e );
+            BuildsManager parallelBuildsManager = getContinuum().getBuildsManager();
+            parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );
+    
+            try
+            {
+                // now we must check if the current build is one of this
+                int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
+                if ( index > 0 )
+                {
+                    int projId = projectsId[index];
+                    getContinuum().getBuildsManager().cancelBuild( projId );
+                    
+                    AuditLog event = new AuditLog( "Project id=" + projId, AuditLogConstants.CANCEL_BUILD );
+                    event.setCategory( AuditLogConstants.PROJECT );
+                    event.setCurrentUser( getPrincipal() );
+                    event.log();
+                }
+    
+            }
+            catch ( BuildManagerException e )
+            {
+                logger.error( e.getMessage() );
+                throw new ContinuumException( e.getMessage(), e );
+            }
         }
 
         return SUCCESS;
@@ -139,38 +161,52 @@ public class CancelBuildAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        BuildsManager buildsManager = getContinuum().getBuildsManager();
-
-        List<ProjectScmRoot> scmRoots = getContinuum().getProjectScmRootByProjectGroup( projectGroupId );
-
-        if ( scmRoots != null )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            for ( ProjectScmRoot scmRoot : scmRoots )
+            getContinuum().getDistributedBuildManager().cancelGroupBuild( projectGroupId );
+
+            AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.CANCEL_BUILD );
+            event.setCategory( AuditLogConstants.PROJECT_GROUP );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
+
+            return SUCCESS;
+        }
+        else
+        {
+            BuildsManager buildsManager = getContinuum().getBuildsManager();
+
+            List<ProjectScmRoot> scmRoots = getContinuum().getProjectScmRootByProjectGroup( projectGroupId );
+
+            if ( scmRoots != null )
             {
-                try
+                for ( ProjectScmRoot scmRoot : scmRoots )
                 {
-                    buildsManager.removeProjectGroupFromPrepareBuildQueue( projectGroupId,
-                                                                           scmRoot.getScmRootAddress() );
-                    //taskQueueManager.removeFromPrepareBuildQueue( projectGroupId, scmRoot.getScmRootAddress() );
-                }
-                catch ( BuildManagerException e )
-                {
-                    throw new ContinuumException( "Unable to cancel group build", e );
+                    try
+                    {
+                        buildsManager.removeProjectGroupFromPrepareBuildQueue( projectGroupId,
+                                                                               scmRoot.getScmRootAddress() );
+                        //taskQueueManager.removeFromPrepareBuildQueue( projectGroupId, scmRoot.getScmRootAddress() );
+                    }
+                    catch ( BuildManagerException e )
+                    {
+                        throw new ContinuumException( "Unable to cancel group build", e );
+                    }
                 }
             }
+            Collection<Project> projects = getContinuum().getProjectsInGroup( projectGroupId );
+    
+            List<String> projectIds = new ArrayList<String>();
+    
+            for ( Project project : projects )
+            {
+                projectIds.add( Integer.toString( project.getId() ) );
+            }
+    
+            setSelectedProjects( projectIds );
+    
+            return cancelBuilds();
         }
-        Collection<Project> projects = getContinuum().getProjectsInGroup( projectGroupId );
-
-        List<String> projectIds = new ArrayList<String>();
-
-        for ( Project project : projects )
-        {
-            projectIds.add( Integer.toString( project.getId() ) );
-        }
-
-        setSelectedProjects( projectIds );
-
-        return cancelBuilds();
     }
 
     public void setProjectId( int projectId )
