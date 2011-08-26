@@ -305,6 +305,9 @@ public class BuildDefinitionAction
         throws ContinuumException, ProfileException
     {
 
+        AuditLog event = null;
+        String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
+
         try
         {
             if ( buildDefinitionId == 0 )
@@ -312,12 +315,16 @@ public class BuildDefinitionAction
                 checkAddProjectBuildDefinitionAuthorization( getProjectGroupName() );
 
                 getContinuum().addBuildDefinitionToProject( projectId, getBuildDefinitionFromInput() );
+
+                event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
             }
             else
             {
                 checkModifyProjectBuildDefinitionAuthorization( getProjectGroupName() );
 
                 getContinuum().updateBuildDefinitionForProject( projectId, getBuildDefinitionFromInput() );
+
+                event = new AuditLog( resource, AuditLogConstants.MODIFY_GOAL );
             }
         }
         catch ( ContinuumActionException cae )
@@ -330,9 +337,7 @@ public class BuildDefinitionAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        
-        String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
-        AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+
         event.setCategory( AuditLogConstants.BUILD_DEFINITION );
         event.setCurrentUser( getPrincipal() );
         event.log();
@@ -384,7 +389,15 @@ public class BuildDefinitionAction
         if ( projectId != 0 )
         {
             String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
-            AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+            AuditLog event = null;
+            if ( buildDefinitionId == 0 )
+            {
+                event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+            }
+            else
+            {
+                event = new AuditLog( resource, AuditLogConstants.MODIFY_GOAL );
+            }
             event.setCategory( AuditLogConstants.BUILD_DEFINITION );
             event.setCurrentUser( getPrincipal() );
             event.log();
@@ -393,7 +406,15 @@ public class BuildDefinitionAction
         else
         {
             String resource = "Project Group id=" + projectGroupId + ":" + goals + " " + arguments;
-            AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+            AuditLog event = null;
+            if ( buildDefinitionId == 0 )
+            {
+                event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+            }
+            else
+            {
+                event = new AuditLog( resource, AuditLogConstants.MODIFY_GOAL );
+            }
             event.setCategory( AuditLogConstants.BUILD_DEFINITION );
             event.setCurrentUser( getPrincipal() );
             event.log();
