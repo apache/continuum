@@ -81,7 +81,7 @@ public class RetentionCountDirectoryPurgeExecutor
 
         for ( File file : files )
         {
-            if ( countToPurge-- <= 0 )
+            if ( countToPurge <= 0 )
             {
                 break;
             }

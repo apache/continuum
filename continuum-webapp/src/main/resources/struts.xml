@@ -912,7 +912,7 @@
     </action>    
 
     <action name="removePrepareBuildEntry" class="queues" method="removePrepareBuildEntry">
-	  <result name="success" type="redirectAction">
+      <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
       </result>
     </action>
@@ -936,9 +936,9 @@
     </action>
 
     <action name="removeDistributedPrepareBuildEntries" class="queues" method="removeDistributedPrepareBuildEntries">
-	  <result name="success" type="redirectAction">
-	    <param name="actionName">displayQueues</param>
-	  </result>
+      <result name="success" type="redirectAction">
+        <param name="actionName">displayQueues</param>
+      </result>
     </action>
 
     <action name="removeDistributedBuildEntries" class="queues" method="removeDistributedBuildEntries">
@@ -1023,7 +1023,14 @@
     <!--
     * Purge actions
     -->
+    <action name="displayPurge" class="purge" method="display">
+        <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
+        <result name="distributed-build-success">/WEB-INF/jsp/admin/distributedPurgeConfigurationsList.jsp</result>
+    </action>
     
+    <!--
+    * Parallel Purge Actions
+    -->
     <action name="purgeConfigList" class="purgeConfiguration" method="list">
       <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
     </action>
@@ -1036,7 +1043,7 @@
     <action name="savePurgeConfig" class="purgeConfiguration" method="save">
       <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
       <result name="success" type="redirectAction">
-        <param name="actionName">purgeConfigList</param>
+        <param name="actionName">displayPurge</param>
       </result>
     </action>
     
@@ -1047,7 +1054,7 @@
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeletePurgeConfiguration.jsp</result>
       <result name="success" type="redirectAction">
-        <param name="actionName">purgeConfigList</param>
+        <param name="actionName">displayPurge</param>
       </result>
       <interceptor-ref name="configuredContinuumStack">
         <param name="tokenSession.includeMethods">remove</param>
@@ -1056,13 +1063,56 @@
     
     <action name="doPurge" class="purgeConfiguration" method="purge">
       <result name="success" type="redirectAction">
-        <param name="actionName">purgeConfigList</param>
+        <param name="actionName">displayPurge</param>
       </result>
+      <result name="error" type="redirectAction">
+        <param name="actionName">displayPurge</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+    </action>
+
+    <!--
+    * Distributed Purge actions
+    -->
+    <action name="editDistributedPurgeConfig" class="distributedPurgeConfiguration" method="input">
+      <result name="error">/WEB-INF/jsp/admin/editDistributedPurgeConfiguration.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editDistributedPurgeConfiguration.jsp</result>
+    </action>
+    
+    <action name="saveDistributedPurgeConfig" class="distributedPurgeConfiguration" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editDistributedPurgeConfiguration.jsp</result>
+      <result name="success" type="redirectAction">
+        <param name="actionName">displayPurge</param>
+      </result>
+    </action>
+    
+    <action name="removeDistributedPurgeConfig" class="distributedPurgeConfiguration" method="remove">
       <result name="error" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
         <param name="errorMessage">${message}</param>
       </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteDistributedPurgeConfiguration.jsp</result>
+      <result name="success" type="redirectAction">
+        <param name="actionName">displayPurge</param>
+      </result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">remove</param>
+      </interceptor-ref>
     </action>
+    
+    <action name="doDistributedPurge" class="distributedPurgeConfiguration" method="purge">
+      <result name="success" type="redirectAction">
+        <param name="actionName">displayPurge</param>
+      </result>
+      <result name="error" type="redirectAction">
+        <param name="actionName">displayPurge</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+    </action>
+
+    <!--
+    * Build Agent actions
+    -->
     
     <action name="buildAgentList" class="buildAgent" method="list">
       <result name="success">/WEB-INF/jsp/admin/buildAgentsList.jsp</result>

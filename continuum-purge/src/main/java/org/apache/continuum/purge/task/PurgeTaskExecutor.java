@@ -21,6 +21,7 @@ package org.apache.continuum.purge.task;
 
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.PurgeConfigurationService;
@@ -101,6 +102,17 @@ public class PurgeTaskExecutor
                 purgeController.initializeExecutors( dirPurge );
 
                 purgeController.doPurge( dirPurge.getLocation() );
+            }
+            else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
+            {
+                DistributedDirectoryPurgeConfiguration dirPurge = ( DistributedDirectoryPurgeConfiguration ) purgeConfig;
+                
+                PurgeController purgeController = 
+                    ( PurgeController ) container.lookup( PurgeController.ROLE, "purge-distributed-directory" );
+                
+                purgeController.initializeExecutors( dirPurge );
+                
+                purgeController.doPurge( dirPurge );
             }
 
         }

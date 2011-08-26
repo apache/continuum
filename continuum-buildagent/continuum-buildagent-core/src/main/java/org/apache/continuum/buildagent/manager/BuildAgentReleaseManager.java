@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.continuum.release.ContinuumReleaseException;
+import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.shared.release.ReleaseResult;
 
 public interface BuildAgentReleaseManager
@@ -54,4 +55,6 @@ public interface BuildAgentReleaseManager
 
     void releaseRollback( String releaseId, int projectId )
         throws ContinuumReleaseException;
+    
+    ContinuumReleaseManager getReleaseManager();
 }

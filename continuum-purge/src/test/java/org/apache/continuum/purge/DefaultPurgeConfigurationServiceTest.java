@@ -19,12 +19,13 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.ManagedDefaultRepositoryContent;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
-
-import java.util.List;
 
 /**
  * @author Maria Catherine Tan
@@ -95,6 +96,35 @@ public class DefaultPurgeConfigurationServiceTest
         purgeConfigurationService.removeDirectoryPurgeConfiguration( dirConfig );
 
         List<DirectoryPurgeConfiguration> dirConfigs = purgeConfigurationService.getAllDirectoryPurgeConfigurations();
+        assertFalse( "check if dir purge configuration was removed", dirConfigs.contains( dirConfig ) );
+    }
+
+    public void testDistributedDirectoryPurgeConfiguration()
+        throws Exception
+    {
+        DistributedDirectoryPurgeConfiguration dirConfig = new DistributedDirectoryPurgeConfiguration();
+
+        dirConfig.setBuildAgentUrl( TEST_BUILD_AGENT_URL );
+        dirConfig.setDirectoryType( TEST_RELEASES_DIRECTORY_TYPE );
+        dirConfig.setDaysOlder( TEST_DAYS_OLDER );
+        dirConfig.setRetentionCount( TEST_RETENTION_COUNT );
+
+        dirConfig = purgeConfigurationService.addDistributedDirectoryPurgeConfiguration( dirConfig );
+
+        assertNotNull( dirConfig );
+
+        DistributedDirectoryPurgeConfiguration retrieved =
+            distributedDirectoryPurgeConfigurationDao.getDistributedDirectoryPurgeConfiguration( dirConfig.getId() );
+        assertEquals( dirConfig, retrieved );
+
+        dirConfig.setDirectoryType( TEST_WORKING_DIRECTORY_TYPE );
+        purgeConfigurationService.updateDistributedDirectoryPurgeConfiguration( dirConfig );
+        retrieved = distributedDirectoryPurgeConfigurationDao.getDistributedDirectoryPurgeConfiguration( dirConfig.getId() );
+        assertEquals( dirConfig, retrieved );
+
+        purgeConfigurationService.removeDistributedDirectoryPurgeConfiguration( dirConfig );
+
+        List<DistributedDirectoryPurgeConfiguration> dirConfigs = purgeConfigurationService.getAllDistributedDirectoryPurgeConfigurations();
         assertFalse( "check if dir purge configuration was removed", dirConfigs.contains( dirConfig ) );
     }
 

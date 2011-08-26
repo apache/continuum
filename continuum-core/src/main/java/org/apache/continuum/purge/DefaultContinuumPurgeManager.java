@@ -19,23 +19,22 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.continuum.buildmanager.BuildsManager;
-import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.task.PurgeTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
-import org.apache.maven.continuum.build.settings.DefaultSchedulesActivator;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * DefaultContinuumPurgeManager
@@ -75,11 +74,17 @@ public class DefaultContinuumPurgeManager
     {
         List<RepositoryPurgeConfiguration> repoPurgeList = null;
         List<DirectoryPurgeConfiguration> dirPurgeList = null;
+        List<DistributedDirectoryPurgeConfiguration> distributedDirPurgeList = null;
 
         repoPurgeList = purgeConfigurationService.getEnableRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
         dirPurgeList = purgeConfigurationService.getEnableDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+        distributedDirPurgeList = purgeConfigurationService.getEnableDistributedDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
 
-        if ( repoPurgeList != null && repoPurgeList.size() > 0 )
+        boolean hasRepoPurge = repoPurgeList != null && repoPurgeList.size() > 0;
+        boolean hasDirPurge = dirPurgeList != null && dirPurgeList.size() > 0;
+        boolean hasDitributedDirPurge = distributedDirPurgeList != null && distributedDirPurgeList.size() > 0;
+        
+        if ( hasRepoPurge )
         {
             for ( RepositoryPurgeConfiguration repoPurge : repoPurgeList )
             {
@@ -87,7 +92,7 @@ public class DefaultContinuumPurgeManager
             }
         }
 
-        if ( dirPurgeList != null && dirPurgeList.size() > 0 )
+        if ( hasDirPurge )
         {
             for ( DirectoryPurgeConfiguration dirPurge : dirPurgeList )
             {
@@ -95,7 +100,15 @@ public class DefaultContinuumPurgeManager
             }
         }
         
-        if ( ( repoPurgeList == null || repoPurgeList.isEmpty() ) && ( dirPurgeList == null || dirPurgeList.isEmpty() ) )
+        if ( hasDitributedDirPurge )
+        {
+            for ( DistributedDirectoryPurgeConfiguration dirPurge : distributedDirPurgeList )
+            {
+                purgeDistributedDirectory( dirPurge );
+            }
+        }
+        
+        if ( !hasRepoPurge && !hasDirPurge && !hasDitributedDirPurge )
         {
             // This purge is not enable for a purge process.
             try
@@ -161,11 +174,24 @@ public class DefaultContinuumPurgeManager
         }
         catch ( TaskQueueException e )
         {
-            throw new ContinuumPurgeManagerException( "Error while enqueuing repository", e );
+            throw new ContinuumPurgeManagerException( "Error while enqueuing directory", e );
         }
         catch ( TaskQueueManagerException e )
         {
             throw new ContinuumPurgeManagerException( e.getMessage(), e );
+        }
+    }
+
+    public void purgeDistributedDirectory( DistributedDirectoryPurgeConfiguration dirPurge )
+        throws ContinuumPurgeManagerException
+    {
+        try
+        {
+            taskQueueManager.getPurgeQueue().put( new PurgeTask( dirPurge.getId() ) );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumPurgeManagerException( "Error while enqueuing distributed directory", e );
         }
     }
 

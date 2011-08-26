@@ -107,4 +107,16 @@ public class SlaveBuildAgentTransportServiceTest
             fail( e.getMessage() );
         }
     }
+    
+    public void testExecuteDirectoryPurge()
+    {
+        try
+        {
+            slaveProxy.executeDirectoryPurge( "releases", 1, 2, false );
+        }
+        catch ( Exception e )
+        {
+            fail( e.getMessage() );
+        }
+    }
 }

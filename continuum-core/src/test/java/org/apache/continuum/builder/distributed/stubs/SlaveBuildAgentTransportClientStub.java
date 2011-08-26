@@ -294,4 +294,12 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
+    @Override
+    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
+        throws Exception
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

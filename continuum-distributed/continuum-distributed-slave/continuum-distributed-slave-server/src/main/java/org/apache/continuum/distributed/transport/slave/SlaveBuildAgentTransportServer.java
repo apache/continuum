@@ -575,4 +575,10 @@ public class SlaveBuildAgentTransportServer
     {
         return continuumBuildAgentService.getBuildAgentPlatform();
     }
+    
+    @Override
+    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll ) throws Exception
+    {
+        continuumBuildAgentService.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
+    }
 }

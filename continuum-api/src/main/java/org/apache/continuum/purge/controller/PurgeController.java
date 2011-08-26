@@ -34,5 +34,7 @@ public interface PurgeController
     void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException;
     
+    void doPurge( AbstractPurgeConfiguration purgeConfig );
+    
     void doPurge( String path );
 }

@@ -32,6 +32,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -48,9 +49,16 @@ import org.apache.maven.shared.release.config.ReleaseDescriptorStore;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
 import org.apache.maven.shared.release.versions.DefaultVersionInfo;
 import org.apache.maven.shared.release.versions.VersionInfo;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -62,8 +70,13 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * @version $Id$
  */
 public class DefaultContinuumReleaseManager
-    implements ContinuumReleaseManager
+    implements ContinuumReleaseManager, Contextualizable
 {
+    
+    private static final String PLEXUS_KEY_PERFORM_RELEASE_TASKQUEUE_EXECUTOR = "perform-release";
+    private static final String PLEXUS_KEY_PREPARE_RELEASE_TASKQUEUE_EXECUTOR = "prepare-release";
+    private static final String PLEXUS_KEY_ROLLBACK_RELEASE_TASKQUEUE_EXECUTOR = "rollback-release";
+    
     /**
      * @plexus.requirement
      */
@@ -88,6 +101,8 @@ public class DefaultContinuumReleaseManager
      * @plexus.requirement
      */
     private ScmManager scmManager;
+
+    private PlexusContainer container;
 
     private Map<String, ContinuumReleaseManagerListener> listeners;
 
@@ -388,5 +403,58 @@ public class DefaultContinuumReleaseManager
         }
 
         return null;
+    }
+    
+    public boolean isExecutingRelease() throws Exception
+    {
+        return prepareReleaseQueue.getQueueSnapshot().size() > 0 || 
+            performReleaseQueue.getQueueSnapshot().size() > 0 || 
+            rollbackReleaseQueue.getQueueSnapshot().size() > 0 ||
+            getPerformReleaseTaskQueueExecutor().getCurrentTask() != null || 
+            getPrepareReleaseTaskQueueExecutor().getCurrentTask() != null ||
+            getRollbackReleaseTaskQueueExecutor().getCurrentTask() != null;
+    }
+    
+
+    public TaskQueueExecutor getPerformReleaseTaskQueueExecutor() throws TaskQueueManagerException
+    {
+        try
+        {
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, PLEXUS_KEY_PERFORM_RELEASE_TASKQUEUE_EXECUTOR );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+    }
+    
+    public TaskQueueExecutor getPrepareReleaseTaskQueueExecutor() throws TaskQueueManagerException
+    {
+        try
+        {
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, PLEXUS_KEY_PREPARE_RELEASE_TASKQUEUE_EXECUTOR );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+    }
+    
+    public TaskQueueExecutor getRollbackReleaseTaskQueueExecutor() throws TaskQueueManagerException
+    {
+        try
+        {
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, PLEXUS_KEY_ROLLBACK_RELEASE_TASKQUEUE_EXECUTOR );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+    }
+
+    public void contextualize( Context context )
+        throws ContextException
+    {
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
 }

@@ -1,0 +1,85 @@
+<%--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  --%>
+
+<%@ taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
+<%@ taglib uri="continuum" prefix="c1" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
+
+<html>
+  <s:i18n name="localization.Continuum">
+    <head>
+      <title><s:text name="purgeConfigs.page.title"/></title>
+    </head>
+    <body>
+      <div id="h3">
+        <h3><s:text name="purgeConfigs.dir.section.title"/></h3>
+        <s:set name="distributedDirPurgeConfigs" value="distributedDirPurgeConfigs" scope="request"/>
+        <ec:table items="distributedDirPurgeConfigs"
+                  var="dirPurge"
+                  autoIncludeParameters="false"
+                  showExports="false"
+                  showPagination="false"
+                  showStatusBar="false"
+                  sortable="false"
+                  filterable="false">
+         <ec:row>
+            <ec:column property="directoryType" title="purgeConfigs.table.directoryType"/>
+            <ec:column property="daysOlder" title="purgeConfigs.table.daysOlder"/>
+            <ec:column property="retentionCount" title="purgeConfigs.table.retentionCount"/>
+            <ec:column property="deleteAll" title="purgeConfigs.table.deleteAll"/>
+            <ec:column property="schedule.name" title="purgeConfigs.table.schedule"/>
+            <ec:column property="enabled" title="purgeConfigs.table.enabled"/>
+            <ec:column property="description" title="purgeConfigs.table.description"/>
+            <ec:column property="buildAgentUrl" title="purgeConfigs.table.buildAgent"/>
+            <ec:column property="editActions" title="&nbsp;" width="1%">
+                <s:url id="editPurgeConfigUrl" action="editDistributedPurgeConfig">
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
+                </s:url>
+                <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
+            </ec:column>
+            <ec:column property="purgeActions" title="&nbsp;" width="1%">
+                <s:url id="purgeUrl" action="doDistributedPurge">
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
+                </s:url>
+                <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
+            </ec:column>
+            <ec:column property="deleteActions" title="&nbsp;" width="1%">
+                <s:token/>
+                <s:url id="removePurgeConfigUrl" action="removeDistributedPurgeConfig">
+                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
+                  <s:param name="description"><c:out value="${pageScope.dirPurge.description}"/></s:param>
+                  <s:param name="struts.token.name">struts.token</s:param>
+                  <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+                </s:url>
+                <s:a href="%{removePurgeConfigUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
+            </ec:column>
+          </ec:row>
+        </ec:table>
+      </div>
+      <div class="functnbar3">
+        <s:form name="addDirPurgeConfig" action="editDistributedPurgeConfig" method="post">
+          <s:hidden name="purgeType" value="directory"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
+        </s:form>
+      </div>
+    </body>
+  </s:i18n>
+</html>

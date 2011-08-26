@@ -21,6 +21,7 @@ package org.apache.continuum.buildagent;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
+import org.apache.continuum.buildagent.manager.BuildAgentPurgeManager;
 import org.apache.continuum.buildagent.manager.BuildAgentReleaseManager;
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
@@ -96,6 +98,11 @@ public class ContinuumBuildAgentServiceImpl
      * @plexus.requirement
      */
     private BuildAgentManager buildAgentManager;
+    
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentPurgeManager purgeManager;
 
     public void buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws ContinuumBuildAgentException
@@ -1012,6 +1019,62 @@ public class ContinuumBuildAgentServiceImpl
         {
             log.error( "Error in when trying to get build agent's platform", e );
             throw new ContinuumBuildAgentException( "Error in when trying to get build agent's platform", e );
+        }
+    }
+    
+    public boolean isExecutingBuild()
+    {
+        return getBuildSizeOfAgent() > 0;
+    }
+    
+    public boolean isExecutingRelease() throws ContinuumBuildAgentException
+    {
+        try
+        {
+            return buildAgentReleaseManager.getReleaseManager().isExecutingRelease();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumBuildAgentException( e.getMessage(), e );
+        }
+    }
+    
+    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
+        throws ContinuumBuildAgentException
+    {
+        String logMsgFormat = "Directory purge [directoryType={0}, daysOlder={1}, retentionCount={2}, deleteAll={3}] not possible; {4}";
+        if ( isExecutingBuild() )
+        {
+            log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll, "Build Agent busy" ) );
+            return;
+        } 
+       
+        try
+        {
+            if ( isExecutingRelease() )
+            {
+                log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll, 
+                                                    "Build Agent is executing a release." ) );
+                return;
+            }
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            if ( isExecutingRelease() )
+            {
+                 log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll, 
+                                                 "Unable to determine if Build Agent is executing a release." ) );
+                 return;
+            }
+        }
+        
+        try
+        {
+            purgeManager.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumBuildAgentException( e.getMessage(), e );
         }
     }
 

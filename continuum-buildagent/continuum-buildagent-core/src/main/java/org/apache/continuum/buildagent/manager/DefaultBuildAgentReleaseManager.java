@@ -324,4 +324,9 @@ public class DefaultBuildAgentReleaseManager
     {
         this.buildAgentConfigurationService = buildAgentConfigurationService;
     }    
+    
+    public ContinuumReleaseManager getReleaseManager()
+    {
+        return releaseManager;
+    }
 }

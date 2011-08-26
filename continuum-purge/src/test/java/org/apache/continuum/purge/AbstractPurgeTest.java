@@ -28,6 +28,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
@@ -51,6 +52,8 @@ public abstract class AbstractPurgeTest
     private static final String TEST_DEFAULT_RELEASES_DIR = "target/working-directory";
 
     private static final String TEST_DEFAULT_BUILDOUTPUT_DIR = "target/build-output-directory";
+    
+    protected static final String TEST_BUILD_AGENT_URL = "http://localhost:8181/continuum-buildagent/xmlrpc";
 
     protected static final int TEST_DAYS_OLDER = 30;
 
@@ -59,12 +62,16 @@ public abstract class AbstractPurgeTest
     protected static final String TEST_RELEASES_DIRECTORY_TYPE = "releases";
 
     protected static final String TEST_BUILDOUTPUT_DIRECTORY_TYPE = "buildOutput";
+    
+    protected static final String TEST_WORKING_DIRECTORY_TYPE = "working";
 
     protected LocalRepositoryDao localRepositoryDao;
 
     protected DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
 
     protected RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    protected DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
 
     protected RepositoryPurgeConfiguration defaultRepoPurge;
 
@@ -89,6 +96,9 @@ public abstract class AbstractPurgeTest
 
         directoryPurgeConfigurationDao =
             (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class );
+        
+        distributedDirectoryPurgeConfigurationDao =
+            (DistributedDirectoryPurgeConfigurationDao) lookup( DistributedDirectoryPurgeConfigurationDao.class );
 
         if ( localRepositoryDao.getAllLocalRepositories().size() == 0 )
         {

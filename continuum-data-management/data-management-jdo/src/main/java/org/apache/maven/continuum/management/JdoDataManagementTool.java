@@ -46,6 +46,7 @@ import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ProfileDao;
@@ -107,6 +108,11 @@ public class JdoDataManagementTool
      * @plexus.requirement
      */
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+    
+    /**
+     * @plexus.requirement
+     */
+    private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
 
     /**
      * @plexus.requirement
@@ -201,6 +207,7 @@ public class JdoDataManagementTool
         database.setRepositoryPurgeConfigurations(
             repositoryPurgeConfigurationDao.getAllRepositoryPurgeConfigurations() );
         database.setDirectoryPurgeConfigurations( directoryPurgeConfigurationDao.getAllDirectoryPurgeConfigurations() );
+        database.setDistributedDirectoryPurgeConfigurations( distributedDirectoryPurgeConfigurationDao.getAllDistributedDirectoryPurgeConfigurations() );
         database.setProjectScmRoots( projectScmRootDao.getAllProjectScmRoots() );
         database.setContinuumReleaseResults( releaseResultDao.getAllContinuumReleaseResults() );
 

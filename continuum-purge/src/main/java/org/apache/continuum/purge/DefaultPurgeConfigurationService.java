@@ -20,10 +20,12 @@ package org.apache.continuum.purge;
  */
 
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
@@ -64,6 +66,11 @@ public class DefaultPurgeConfigurationService
      * @plexus.requirement
      */
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+    
+    /**
+     * @plexus.requirement
+     */
+    private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
 
     private PlexusContainer container;
 
@@ -80,6 +87,10 @@ public class DefaultPurgeConfigurationService
         {
             purgeConfiguration = addDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) purgeConfig );
         }
+        else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
+        {
+            purgeConfiguration = addDistributedDirectoryPurgeConfiguration( ( DistributedDirectoryPurgeConfiguration ) purgeConfig );
+        }
 
         return purgeConfiguration;
     }
@@ -95,6 +106,10 @@ public class DefaultPurgeConfigurationService
         {
             updateDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) purgeConfig );
         }
+        else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
+        {
+            updateDistributedDirectoryPurgeConfiguration( ( DistributedDirectoryPurgeConfiguration ) purgeConfig );
+        }
     }
 
     public void removePurgeConfiguration( int purgeConfigId )
@@ -109,6 +124,10 @@ public class DefaultPurgeConfigurationService
         else if ( purgeConfig instanceof DirectoryPurgeConfiguration )
         {
             removeDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) purgeConfig );
+        }
+        else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
+        {
+            removeDistributedDirectoryPurgeConfiguration( ( DistributedDirectoryPurgeConfiguration ) purgeConfig );
         }
     }
 
@@ -340,6 +359,18 @@ public class DefaultPurgeConfigurationService
                 // purgeConfigId is not of type directory purge configuration
             }
         }
+        
+        if ( purgeConfig == null )
+        {
+            try
+            {
+                purgeConfig = getDistributedDirectoryPurgeConfiguration( purgeConfigId );
+            }
+            catch ( PurgeConfigurationServiceException e )
+            {
+                // purgeConfigId is not of type directory purge configuration
+            }
+        }
 
         return purgeConfig;
     }
@@ -374,6 +405,77 @@ public class DefaultPurgeConfigurationService
             throw new PurgeConfigurationServiceException(
                 "Error retrieving managed repository content for: " + repositoryId, e );
         }
+    }
+
+    public List<DistributedDirectoryPurgeConfiguration> getAllDistributedDirectoryPurgeConfigurations()
+    {
+        return distributedDirectoryPurgeConfigurationDao.getAllDistributedDirectoryPurgeConfigurations();
+    }
+
+    public DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
+        throws PurgeConfigurationServiceException
+    {
+        DistributedDirectoryPurgeConfiguration dirPurgeConfig;
+        
+        try
+        {
+            dirPurgeConfig = distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration( dirPurge );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+
+        return dirPurgeConfig;
+        
+    }
+
+    public DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int dirPurgeId )
+        throws PurgeConfigurationServiceException
+    {
+        try
+        {
+            return distributedDirectoryPurgeConfigurationDao.getDistributedDirectoryPurgeConfiguration( dirPurgeId );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+    }
+    
+    public void updateDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
+        throws PurgeConfigurationServiceException
+    {
+        try
+        {
+            distributedDirectoryPurgeConfigurationDao.updateDistributedDirectoryPurgeConfiguration( dirPurge );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+    }
+
+    public void removeDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration purgeConfig )
+        throws PurgeConfigurationServiceException
+    {
+        try
+        {
+            distributedDirectoryPurgeConfigurationDao.removeDistributedDirectoryPurgeConfiguration( purgeConfig );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+    }
+    
+    public List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule( int scheduleId )
+    {
+            return distributedDirectoryPurgeConfigurationDao.getEnableDistributedDirectoryPurgeConfigurationsBySchedule( scheduleId );
     }
 
     public void contextualize( Context context )

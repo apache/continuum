@@ -21,7 +21,9 @@ package org.apache.maven.continuum.release;
 
 import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.Project;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
 import java.io.File;
 import java.util.Map;
@@ -152,5 +154,41 @@ public interface ContinuumReleaseManager
      * @return
      */
     ReleaseListenerSummary getListener( String releaseId );
+    
+    /**
+     * Determines if there is an ongoing release
+     * 
+     * @return true if there is an ongoing release; false otherwise
+     * 
+     * @throws Exception if unable to determine if release is ongoing
+     */
+    boolean isExecutingRelease() throws Exception;
+    
+    /**
+     * Retrieve the Release TaskQueueExecutor instance
+     * 
+     * @return Release TaskQueueExecutor instance
+     * 
+     * @throws TaskQueueManagerException if unable to retrieve the Release TaskQueueExecutor instance
+     */
+    TaskQueueExecutor getPerformReleaseTaskQueueExecutor() throws TaskQueueManagerException;
+    
+    /**
+     * Retrieve the PrepareRelease TaskQueueExecutor instance
+     * 
+     * @return PrepareRelease TaskQueueExecutor instance
+     * 
+     * @throws TaskQueueManagerException if unable to retrieve the PrepareRelease TaskQueueExecutor instance
+     */
+    TaskQueueExecutor getPrepareReleaseTaskQueueExecutor() throws TaskQueueManagerException;
+    
+    /**
+     * Retrieve the RollbackRelease TaskQueueExecutor instance
+     * 
+     * @return RollbackRelease TaskQueueExecutor instance
+     * 
+     * @throws TaskQueueManagerException if unable to retrieve the RollbackRelease TaskQueueExecutor instance
+     */
+    TaskQueueExecutor getRollbackReleaseTaskQueueExecutor() throws TaskQueueManagerException;
 
 }

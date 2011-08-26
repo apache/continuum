@@ -20,9 +20,11 @@ package org.apache.continuum.purge;
  */
 
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.task.PurgeTask;
@@ -43,6 +45,8 @@ public class DefaultContinuumPurgeManagerTest
 
     private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
 
+    private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
+
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
 
     private ContinuumPurgeManager purgeManager;
@@ -52,6 +56,8 @@ public class DefaultContinuumPurgeManagerTest
     private RepositoryPurgeConfiguration repoPurge;
 
     private DirectoryPurgeConfiguration dirPurge;
+
+    private DistributedDirectoryPurgeConfiguration distDirPurge;
 
     private TaskQueueManager taskQueueManager;
 
@@ -68,6 +74,9 @@ public class DefaultContinuumPurgeManagerTest
 
         repositoryPurgeConfigurationDao =
             (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class.getName() );
+        
+        distributedDirectoryPurgeConfigurationDao =
+            (DistributedDirectoryPurgeConfigurationDao) lookup( DistributedDirectoryPurgeConfigurationDao.class.getName() );
 
         purgeManager = (ContinuumPurgeManager) lookup( ContinuumPurgeManager.ROLE );
 
@@ -122,9 +131,11 @@ public class DefaultContinuumPurgeManagerTest
     {
         purgeManager.purgeRepository( repoPurge );
         purgeManager.purgeDirectory( dirPurge );
+        purgeManager.purgeDistributedDirectory( distDirPurge );
 
         assertNextBuildIs( repoPurge.getId() );
         assertNextBuildIs( dirPurge.getId() );
+        assertNextBuildIs( distDirPurge.getId() );
         assertNextBuildIsNull();
 
         purgeManager.purgeRepository( repoPurge );
@@ -158,6 +169,11 @@ public class DefaultContinuumPurgeManagerTest
         dirPurge.setDirectoryType( "releases" );
         dirPurge.setLocation( getTestFile( "target/working-directory" ).getAbsolutePath() );
         dirPurge = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( dirPurge );
+        
+        distDirPurge = new DistributedDirectoryPurgeConfiguration();
+        distDirPurge.setDirectoryType( "releases" );
+        distDirPurge.setBuildAgentUrl( "http://localhost:8186/continuum-buildagent/xmlrpc" );
+        distDirPurge = distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration( distDirPurge );
     }
 
     private void assertNextBuildIs( int expectedPurgeConfigId )

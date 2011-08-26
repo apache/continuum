@@ -139,4 +139,36 @@ public interface ContinuumBuildAgentService
      */
     String getBuildAgentPlatform()
         throws ContinuumBuildAgentException;
+    
+    /**
+     * Determines if build agent is currently executing a build
+     * 
+     * @return true if executing build; false otherwise
+     */
+    boolean isExecutingBuild();
+    
+    /**
+     * Determines if build agent is currently executing a release
+     * 
+     * @return true if executing release; false otherwise
+     * 
+     * @throws ContinuumBuildAgentException if unable to determine if buildagent is executing a release
+     */
+    boolean isExecutingRelease() throws ContinuumBuildAgentException;
+    
+    /**
+     * Execute a directory purge on the build agent
+     * 
+     * @param directoryType valid types are <i>working</i> and <i>releases</i>
+     * @param daysOlder days older
+     * @param retentionCount retention count
+     * @param deleteAll delete all flag
+     * 
+     * @return true if purge is successful; false otherwise
+     * 
+     * @throws ContinuumBuildAgentException error that will occur during the purge
+     */
+    void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
+        throws ContinuumBuildAgentException;
+    
 }

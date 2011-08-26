@@ -363,6 +363,11 @@
       </field>
       <field name="directoryType"/>
     </class>
+    <class name="DistributedDirectoryPurgeConfiguration" persistence-capable-superclass="org.apache.continuum.model.repository.AbstractPurgeConfiguration" detachable="true" table="DistributedDirectoryPurgeConfiguration">
+      <inheritance strategy="new-table"/>
+      <field name="buildAgentUrl" null-value="exception"/>
+      <field name="directoryType"/>
+    </class>
   </package>
   <package name="org.apache.maven.continuum.model.scm">
     <class name="ScmResult" detachable="true" table="ScmResult">

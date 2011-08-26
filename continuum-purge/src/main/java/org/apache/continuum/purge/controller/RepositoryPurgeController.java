@@ -95,6 +95,12 @@ public class RepositoryPurgeController
         }
     }
 
+    public void doPurge( AbstractPurgeConfiguration purgeConfig )
+    {
+        RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
+        doPurge( repoPurge.getRepository().getLocation() );
+    }
+    
     public void doPurge( String path )
     {
         try

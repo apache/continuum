@@ -58,6 +58,14 @@ under the License.
       <artifactId>continuum-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-distributed-slave-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-distributed-slave-client</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>

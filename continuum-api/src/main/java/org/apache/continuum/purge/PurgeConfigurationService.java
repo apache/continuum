@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 
@@ -90,7 +91,23 @@ public interface PurgeConfigurationService
     
     List<AbstractPurgeConfiguration> getAllPurgeConfigurations();
     
+    List<DistributedDirectoryPurgeConfiguration> getAllDistributedDirectoryPurgeConfigurations();
+    
+    DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int dirPurgeId )
+        throws PurgeConfigurationServiceException;
+    
+    DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
+        throws PurgeConfigurationServiceException;
+    
+    void updateDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
+        throws PurgeConfigurationServiceException;
+    
+    void removeDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
+        throws PurgeConfigurationServiceException;
+    
     AbstractPurgeConfiguration getPurgeConfiguration( int purgeConfigId );
+    
+    List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule( int scheduleId );
     
     /**
      * @param repositoryId

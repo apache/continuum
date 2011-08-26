@@ -42,6 +42,12 @@ public class DirectoryPurgeController
 
     private ContinuumPurgeExecutor purgeExecutor;
 
+    public void doPurge( AbstractPurgeConfiguration purgeConfig )
+    {
+        DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
+        doPurge( dirPurge.getLocation() );
+    }
+    
     public void doPurge( String path )
     {
         try

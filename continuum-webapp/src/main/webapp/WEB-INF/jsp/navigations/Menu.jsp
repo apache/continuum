@@ -98,7 +98,7 @@
           </div>
         </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-purging">
-          <s:url id="purgeConfigListUrl" action="purgeConfigList" namespace="/admin" includeParams="none"/>
+          <s:url id="purgeConfigListUrl" action="displayPurge" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{purgeConfigListUrl}">
               <s:text name="menu.administration.purge"/>

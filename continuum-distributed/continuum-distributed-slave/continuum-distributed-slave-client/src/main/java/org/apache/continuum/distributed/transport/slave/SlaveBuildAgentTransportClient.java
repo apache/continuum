@@ -19,19 +19,19 @@ package org.apache.continuum.distributed.transport.slave;
  * under the License.
  */
 
-import com.atlassian.xmlrpc.ApacheBinder;
-import com.atlassian.xmlrpc.Binder;
-import com.atlassian.xmlrpc.BindingException;
-
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import com.atlassian.xmlrpc.ConnectionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.atlassian.xmlrpc.ApacheBinder;
+import com.atlassian.xmlrpc.Binder;
+import com.atlassian.xmlrpc.BindingException;
+import com.atlassian.xmlrpc.ConnectionInfo;
 
 /**
  * SlaveBuildAgentTransportClient
@@ -821,5 +821,11 @@ public class SlaveBuildAgentTransportClient
         }
 
         return result;
+    }
+
+    @Override
+    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll ) throws Exception
+    {
+        slave.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
     }
 }

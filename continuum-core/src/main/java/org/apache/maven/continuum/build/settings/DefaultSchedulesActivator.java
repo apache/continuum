@@ -26,9 +26,11 @@ import java.util.List;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -66,6 +68,12 @@ public class DefaultSchedulesActivator
      * @plexus.requirement
      */
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
+
 
     /**
      * @plexus.requirement
@@ -288,8 +296,10 @@ public class DefaultSchedulesActivator
             repositoryPurgeConfigurationDao.getEnableRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
         List<DirectoryPurgeConfiguration> dirPurgeConfigs =
             directoryPurgeConfigurationDao.getEnableDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+        List<DistributedDirectoryPurgeConfiguration> distriDirPurgeConfigs = 
+            distributedDirectoryPurgeConfigurationDao.getEnableDistributedDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
 
-        return repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0;
+        return repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0 || distriDirPurgeConfigs.size() > 0;
 
     }
 }
