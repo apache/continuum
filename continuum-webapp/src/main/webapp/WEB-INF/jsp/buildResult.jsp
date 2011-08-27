@@ -70,6 +70,11 @@
             <c1:data label="%{getText('buildResult.username')}">
                 <s:param name="after"><s:property value="buildResult.username"/></s:param>
             </c1:data>
+            <c:if test="${!empty buildResult.buildUrl}">
+              <c1:data label="%{getText('buildResult.buildUrl')}">
+                <s:param name="after"><s:property value="buildResult.buildUrl"/></s:param>
+              </c1:data>
+            </c:if>
           </table>
         </div>
         <div class="functnbar3">
