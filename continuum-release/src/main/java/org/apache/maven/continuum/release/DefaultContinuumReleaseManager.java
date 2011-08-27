@@ -134,6 +134,7 @@ public class DefaultContinuumReleaseManager
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
+        String id = releaseId;
 
         ReleaseDescriptor descriptor =
             getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, environments, workingDirectory,
@@ -143,6 +144,12 @@ public class DefaultContinuumReleaseManager
         {
             listener = new DefaultReleaseManagerListener();
             listener.setUsername( releaseProperties.getProperty( "release-by" ) );
+        }
+
+        // check if releaseId exists
+        while ( getListeners().get( releaseId ) != null )
+        {
+            releaseId = id + ":" + String.valueOf( System.currentTimeMillis() );
         }
 
         getListeners().put( releaseId, listener );

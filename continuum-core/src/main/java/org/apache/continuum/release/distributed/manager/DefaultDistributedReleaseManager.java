@@ -542,11 +542,11 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
-                String result = client.releaseCleanup( releaseId );
-    
                 removeFromReleaseInProgress( releaseId );
                 removeFromPreparedReleases( releaseId );
+
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                String result = client.releaseCleanup( releaseId );
     
                 return result;
             }
@@ -740,22 +740,16 @@ public class DefaultDistributedReleaseManager
             preparedReleases = new ArrayList<PreparedRelease>();
         }
 
-        boolean found = false;
-
         for ( PreparedRelease preparedRelease : preparedReleases )
         {
-            if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) &&
-                 preparedRelease.getReleaseName().equals( release.getReleaseName() ) )
+            if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) )
             {
-                preparedRelease.setBuildAgentUrl( release.getBuildAgentUrl() );
-                found = true;
+                preparedReleases.remove( preparedRelease );
+                break;
             }
         }
 
-        if ( !found )
-        {
-            preparedReleases.add( release );
-        }
+        preparedReleases.add( release );
 
         savePreparedReleases( preparedReleases );
     }
