@@ -4,32 +4,36 @@
   </properties>  
 <body>
 
-  <h2>Apache Continuum 1.3.7 Release Notes</h2>
+  <h2>Apache Continuum 1.3.8 Release Notes</h2>
   
-  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.7.</p>
+  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.8.</p>
 
   <p>To learn more about how the Continuum dev team versions releases, see our
       <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.</p>  
 
   
-  <h2>Release Notes - Continuum - Version 1.3.7</h2>
+  <h2>Release Notes - Continuum - Version 1.3.8</h2>
         
 <h2>        Bug
 </h2>
 <ul>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2003'>CONTINUUM-2003</a>] -         Edit roles deletes all existing roles when sharing a user database
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2603'>CONTINUUM-2603</a>] -         CSRF vulnerability - Continuum doesn&#39;t check which form sends credentials
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2604'>CONTINUUM-2604</a>] -         extremecomponents table should use autoIncludeParameters=&quot;false&quot;
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2626'>CONTINUUM-2626</a>] -         Email notification not sent when Distributed Build enabled
 </li>
 </ul>
             
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2622'>CONTINUUM-2622</a>] -         Add CSRF prevention checks for sensitive actions
+</li>
+</ul>
+
 <h2>        Task
 </h2>
 <ul>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2605'>CONTINUUM-2605</a>] -         upgrade to Redback 1.2.6
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2620'>CONTINUUM-2620</a>] -         Fix XSS vulnerability in Continuum
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2621'>CONTINUUM-2621</a>] -         Upgrade Continuum to Redback 1.2.8 to get CSRF fixes for user management
 </ul>
 
 Have Fun !
