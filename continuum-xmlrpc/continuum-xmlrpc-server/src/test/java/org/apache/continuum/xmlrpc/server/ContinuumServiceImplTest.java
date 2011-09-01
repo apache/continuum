@@ -315,6 +315,24 @@ public class ContinuumServiceImplTest
         context.assertIsSatisfied();
     }
 
+    public void testGetNonExistingBuildAgentGroup() throws Exception
+    {
+        context.checking( new Expectations() 
+        {
+            {
+                one( continuum ).getConfiguration();
+                will( returnValue( configurationService ) );
+                
+                one( configurationService ).getBuildAgentGroup( "Agent Group Name" );
+                will( returnValue ( null ) );
+            }
+        });
+        int result = continuumService.removeBuildAgentGroup( "Agent Group Name" );
+        assertEquals( 0, result );
+
+        context.assertIsSatisfied();
+    }
+
     private BuildDefinition createBuildDefinition()
     {
         BuildDefinition buildDef = new BuildDefinition();
