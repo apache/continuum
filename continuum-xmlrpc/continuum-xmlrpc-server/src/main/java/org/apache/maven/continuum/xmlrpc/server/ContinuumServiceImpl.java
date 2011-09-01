@@ -2221,7 +2221,10 @@ public class ContinuumServiceImpl
         ConfigurationService configurationService = continuum.getConfiguration();
         org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroupConfiguration =
             configurationService.getBuildAgentGroup( name );
-        configurationService.removeBuildAgentGroup( buildAgentGroupConfiguration );
+        if ( buildAgentGroupConfiguration != null )
+        {
+            configurationService.removeBuildAgentGroup( buildAgentGroupConfiguration );
+        }
 
         return 0;
     }
