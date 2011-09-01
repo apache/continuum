@@ -21,7 +21,7 @@ under the License.
   <parent>
     <groupId>org.apache.continuum</groupId>
     <artifactId>continuum-distributed-slave</artifactId>
-    <version>1.3.8-SNAPSHOT</version>
+    <version>1.3.8</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-distributed-slave-server</artifactId>
