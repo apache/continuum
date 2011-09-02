@@ -121,7 +121,7 @@ public class ContinuumServiceImpl
 
     private static final String SCHEDULE_CRON_VALID_EXPRESSION = "[A-Z0-9\\s*/,-?#]*";
 
-    private static final String PROJECTGROUP_ID_VALID_EXPRESSION = "[a-zA-Z0-9.\\s]*";
+    private static final String PROJECTGROUP_ID_VALID_EXPRESSION = "[a-zA-Z0-9_.\\s]*";
 
     private static final String REPOSITORY_LAYOUT_VALID_EXPRESSION = "default|legacy";
 
