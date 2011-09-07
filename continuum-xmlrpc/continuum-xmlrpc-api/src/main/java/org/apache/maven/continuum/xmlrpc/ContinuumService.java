@@ -1850,6 +1850,23 @@ public interface ContinuumService
      */
     List<Object> getAllBuildAgentsRPC();
 
+    /**
+     * Retrieve all enabled build agents with their available installations
+     * @return
+     * @throws Exception
+     */
+    List<BuildAgentConfiguration> getBuildAgentsWithInstallations()
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @return
+     * @throws Exception
+     */
+    List<Object> getBuildAgentsWithInstallationsRPC()
+        throws Exception;
+    
     boolean pingBuildAgent( String buildAgentUrl )
         throws Exception;
 

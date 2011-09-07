@@ -1507,6 +1507,14 @@
           <version>1.4.1+</version>
           <type>String</type>
         </field>
+        <field>
+          <name>installations</name>
+          <version>1.4.1+</version>
+          <association>
+            <type>Installation</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
       </fields>
     </class>
     <class>

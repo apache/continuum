@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.xmlrpc.utils.BuildTrigger;
@@ -16,6 +17,7 @@ import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
+import org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
@@ -329,6 +331,82 @@ public class ContinuumServiceImplTest
         });
         int result = continuumService.removeBuildAgentGroup( "Agent Group Name" );
         assertEquals( 0, result );
+
+        context.assertIsSatisfied();
+    }
+
+    public void testRemoveNonExistingBuildAgentGroup()
+        throws Exception
+    {
+        context.checking( new Expectations() 
+        {
+            {
+                one( continuum ).getConfiguration();
+                will( returnValue( configurationService ) );
+                
+                one( configurationService ).getBuildAgentGroup( "Agent Group Name" );
+                will( returnValue ( null ) );
+                
+                never( configurationService ).removeBuildAgentGroup( with( any( BuildAgentGroupConfiguration.class ) ) );
+            }
+        });
+
+        continuumService.removeBuildAgentGroup( "Agent Group Name" );
+        context.assertIsSatisfied();
+    }
+
+    public void testGetBuildAgentsWithInstallations()
+        throws Exception
+    {
+        final List<org.apache.continuum.configuration.BuildAgentConfiguration> buildAgents = 
+            new ArrayList<org.apache.continuum.configuration.BuildAgentConfiguration>();
+
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent = 
+            new org.apache.continuum.configuration.BuildAgentConfiguration();
+        buildAgent.setUrl( "http://localhost:8080/xmlrpc" );
+        buildAgent.setEnabled( true );
+        buildAgents.add( buildAgent );
+
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent2 = 
+            new org.apache.continuum.configuration.BuildAgentConfiguration();
+        buildAgent2.setUrl( "http://localhost:8181/xmlrpc" );
+        buildAgent2.setEnabled( false );
+        buildAgents.add( buildAgent2 );
+
+        final List<org.apache.maven.continuum.model.system.Installation> buildAgentInstallations = 
+            new ArrayList<org.apache.maven.continuum.model.system.Installation>();
+
+        org.apache.maven.continuum.model.system.Installation buildAgentInstallation = 
+            new org.apache.maven.continuum.model.system.Installation();
+        buildAgentInstallation.setInstallationId( 1 );
+        buildAgentInstallation.setName( "JDK 6" );
+        buildAgentInstallation.setType( "jdk" );
+        buildAgentInstallation.setVarName( "JAVA_HOME" );
+        buildAgentInstallation.setVarValue( "/opt/java" );
+        buildAgentInstallations.add( buildAgentInstallation );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( continuum ).getConfiguration();
+                will( returnValue( configurationService ) );
+
+                one( configurationService ).getBuildAgents();
+                will( returnValue( buildAgents ) );
+
+                one( distributedBuildManager ).getBuildAgentPlatform( "http://localhost:8080/xmlrpc" );
+                will( returnValue( "Linux" ) );
+
+                one( distributedBuildManager ).getAvailableInstallations( "http://localhost:8080/xmlrpc" );
+                will( returnValue( buildAgentInstallations ) );
+            }
+        });
+        List<BuildAgentConfiguration> agents = continuumService.getBuildAgentsWithInstallations();
+        assertEquals( 1, agents.size() );
+        BuildAgentConfiguration agent = agents.get( 0 );
+        assertEquals( "http://localhost:8080/xmlrpc", agent.getUrl() );
+        assertEquals( "Linux", agent.getPlatform() );
+        assertEquals( 1, agent.getInstallations().size() );
 
         context.assertIsSatisfied();
     }

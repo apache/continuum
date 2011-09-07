@@ -1454,4 +1454,16 @@ public class ContinuumXmlRpcClient
     {
         return continuum.removeBuildAgentGroup( name );
     }
+
+    public List<BuildAgentConfiguration> getBuildAgentsWithInstallations()
+        throws Exception
+    {
+        return continuum.getBuildAgentsWithInstallations();
+    }
+
+    public List<Object> getBuildAgentsWithInstallationsRPC()
+        throws Exception
+    {
+        return continuum.getBuildAgentsWithInstallationsRPC();
+    }
 }

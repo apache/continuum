@@ -2142,6 +2142,30 @@ public class ContinuumServiceImpl
         return buildAgentConfigurations;
     }
 
+    public List<BuildAgentConfiguration> getBuildAgentsWithInstallations()
+        throws Exception
+    {
+        ConfigurationService configurationService = continuum.getConfiguration();
+
+        List<org.apache.continuum.configuration.BuildAgentConfiguration> buildAgents =
+            configurationService.getBuildAgents();
+        List<BuildAgentConfiguration> buildAgentConfigurations = new ArrayList<BuildAgentConfiguration>();
+
+        if ( buildAgents != null )
+        {
+            for ( org.apache.continuum.configuration.BuildAgentConfiguration buildAgent : buildAgents )
+            {
+                if ( buildAgent.isEnabled() )
+                {
+                    BuildAgentConfiguration agent = populateBuildAgent( buildAgent );
+                    agent.setInstallations( getBuildAgentInstallations( buildAgent.getUrl() ) );
+                    buildAgentConfigurations.add( agent );
+                }
+            }
+        }
+        return buildAgentConfigurations;
+    }
+
     // ----------------------------------------------------------------------
     // Build agent group
     // ----------------------------------------------------------------------
@@ -3764,6 +3788,12 @@ public class ContinuumServiceImpl
     public List<Object> getAllBuildAgentsRPC()
     {
         return serializeObject( this.getAllBuildAgents() );
+    }
+
+    public List<Object> getBuildAgentsWithInstallationsRPC()
+        throws Exception
+    {
+        return serializeObject( this.getBuildAgentsWithInstallations() );
     }
 
     public Map<String, Object> addBuildAgentGroupRPC( Map<String, Object> buildAgentGroup ) 
