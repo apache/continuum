@@ -124,8 +124,6 @@
             <configuration>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>app</shadedClassifierName>
-              <shadedArtifactAttached>true</shadedArtifactAttached>
-              <shadedClassifierName>app</shadedClassifierName> 
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
