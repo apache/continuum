@@ -23,8 +23,8 @@
 
 <s:set name="companyLogo" value="companyLogo"/>
 <c:if test="${!empty (companyLogo)}">
-  <s:set name="companyName" value="companyName"/>"/>
-  <s:set name="companyUrl" value="companyUrl"/>"/>
+  <s:set name="companyName" value="companyName"/>
+  <s:set name="companyUrl" value="companyUrl"/>
   <c:choose>
     <c:when test="${!empty (companyUrl)}">
       <a href="${fn:escapeXml(companyUrl)}">
