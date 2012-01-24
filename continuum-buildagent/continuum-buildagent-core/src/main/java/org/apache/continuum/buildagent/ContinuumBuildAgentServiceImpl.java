@@ -458,7 +458,7 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( ContinuumReleaseException e )
         {
-            throw new ContinuumBuildAgentException( "Unable to rollback release " + releaseId, e );
+            throw new ContinuumBuildAgentException( e );
         }
     }
 

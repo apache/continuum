@@ -281,6 +281,11 @@ public class DefaultBuildAgentReleaseManager
         }
 
         releaseManager.getPreparedReleases().remove( releaseId );
+
+        if ( StringUtils.isNotBlank( listener.getError() ) )
+        {
+            throw new ContinuumReleaseException( "Failed to rollback release: " + listener.getError() );
+        }
     }
 
     private Project getProject( Map<String, Object> context )

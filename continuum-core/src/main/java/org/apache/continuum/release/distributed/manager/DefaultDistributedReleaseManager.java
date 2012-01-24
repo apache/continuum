@@ -508,8 +508,9 @@ public class DefaultDistributedReleaseManager
             {
                 SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
                 client.releaseRollback( releaseId, projectId );
+                return;
             }
-
+            
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
@@ -524,7 +525,7 @@ public class DefaultDistributedReleaseManager
         catch ( Exception e )
         {
             log.error( "Unable to rollback release " + releaseId, e );
-            throw new ContinuumReleaseException( "Unable to rollback release " + releaseId, e );
+            throw new ContinuumReleaseException( e );
         }
     }
 

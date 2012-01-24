@@ -441,7 +441,7 @@ public class SlaveBuildAgentTransportClient
         catch ( Exception e )
         {
             log.error( "Failed to rollback release. releaseId=" + releaseId + ", projectId=" + projectId + " from build agent " + buildAgentUrl, e );
-            throw new Exception( "Failed to rollback release. releaseId=" + releaseId + ", projectId=" + projectId + " from build agent " + buildAgentUrl, e );
+            throw (Exception) e.getCause().getCause().getCause().getCause();
         }
 
         return result;

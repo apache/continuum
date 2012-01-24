@@ -76,12 +76,9 @@ public class ReleaseRollbackAction
             {
                 releaseManager.releaseRollback( releaseId, projectId );
             }
-            catch ( BuildAgentConfigurationException e )
+            catch ( Exception e )
             {
-                List<Object> args = new ArrayList<Object>();
-                args.add( e.getMessage() );
-
-                addActionError( getText( "releaseRollback.error", args ) );
+                addActionError( e.getMessage() );
                 return ERROR;
             }
         }
