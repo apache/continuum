@@ -1063,7 +1063,7 @@ public class DefaultDistributedBuildManager
         return "";
     }
     
-    public String getFileContent( int projectId, String directory, String filename )
+    public Map<String, Object> getFileContent( int projectId, String directory, String filename )
         throws ContinuumException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
@@ -1075,7 +1075,7 @@ public class DefaultDistributedBuildManager
             if ( buildAgentUrl == null )
             {
                 log.debug( "Unable to determine build agent where project last built" );
-                return "";
+                return null;
             }
 
             try
@@ -1083,7 +1083,7 @@ public class DefaultDistributedBuildManager
                 if ( isAgentAvailable( buildAgentUrl ) )
                 {
                     SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
-                    return client.getProjectFileContent( projectId, directory, filename );
+                    return client.getProjectFile( projectId, directory, filename );
                 }
             }
             catch ( MalformedURLException e )
@@ -1103,7 +1103,7 @@ public class DefaultDistributedBuildManager
         // call reload in case we disable the build agent
         reload();
 
-        return "";
+        return null;
     }
 
     public void removeFromPrepareBuildQueue( String buildAgentUrl, int projectGroupId, int scmRootId )

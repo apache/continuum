@@ -153,13 +153,13 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
-    public String getProjectFileContent( int projectId, String directory, String filename )
+    public Map<String, Object> getProjectFile( int projectId, String directory, String filename )
         throws Exception
     {
         try
         {
             log.debug( "Retrieve project '{}' file content", projectId );
-            return continuumBuildAgentService.getProjectFileContent( projectId, directory, filename );
+            return continuumBuildAgentService.getProjectFile( projectId, directory, filename );
         }
         catch ( ContinuumBuildAgentException e )
         {
@@ -576,8 +576,8 @@ public class SlaveBuildAgentTransportServer
         return continuumBuildAgentService.getBuildAgentPlatform();
     }
     
-    @Override
-    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll ) throws Exception
+    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
+        throws Exception
     {
         continuumBuildAgentService.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
     }

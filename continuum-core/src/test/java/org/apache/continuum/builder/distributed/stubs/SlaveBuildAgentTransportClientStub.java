@@ -98,7 +98,7 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
-    public String getProjectFileContent( int projectId, String directory, String filename )
+    public Map<String, Object> getProjectFile( int projectId, String directory, String filename )
         throws Exception
     {
         // TODO Auto-generated method stub
@@ -294,7 +294,6 @@ public class SlaveBuildAgentTransportClientStub
         return null;
     }
 
-    @Override
     public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws Exception
     {

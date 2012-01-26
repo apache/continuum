@@ -19,12 +19,14 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -77,6 +79,12 @@ public class WorkingCopyAction
 
     private String projectGroupName = "";
 
+    private String downloadFileName = "";
+
+    private String downloadFileLength = "";
+
+    private InputStream downloadFileInputStream;
+
     public String execute()
         throws ContinuumException
     {
@@ -120,7 +128,25 @@ public class WorkingCopyAction
 
             if ( currentFile != null && !currentFile.equals( "" ) )
             {
-                currentFileContent = distributedBuildManager.getFileContent( projectId, userDirectory, currentFile );
+                Map<String, Object> projectFile = distributedBuildManager.getFileContent( projectId, userDirectory, currentFile );
+
+                if ( projectFile == null )
+                {
+                    currentFileContent = "";
+                }
+                else
+                {
+                    downloadFileInputStream =  new ByteArrayInputStream( (byte[]) projectFile.get( "downloadFile" ) );
+                    downloadFileLength = (String) projectFile.get( "downloadFileLength" );
+                    downloadFileName = (String) projectFile.get( "downloadFileName" );
+                    currentFileContent = (String) projectFile.get( "fileContent" );
+                    mimeType = (String) projectFile.get( "mimeType" );
+
+                    if ( (Boolean) projectFile.get( "isStream" ) ) 
+                    {
+                        return "stream";
+                    }
+                }
             }
             else
             {
@@ -155,6 +181,8 @@ public class WorkingCopyAction
 
                 downloadFile = new File( getContinuum().getWorkingDirectory( projectId ) + dir + currentFile );
                 mimeType = mimeTypesMap.getContentType( downloadFile );
+                downloadFileLength = Long.toString( downloadFile.length() );
+                downloadFileName = downloadFile.getName();
 
                 if ( ( mimeType.indexOf( "image" ) >= 0 ) || ( mimeType.indexOf( "java-archive" ) >= 0 ) ||
                     ( mimeType.indexOf( "java-class" ) >= 0 ) || ( downloadFile.length() > 100000 ) )
@@ -222,27 +250,34 @@ public class WorkingCopyAction
     public InputStream getInputStream()
         throws ContinuumException
     {
-        FileInputStream fis;
-        try
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            fis = new FileInputStream( downloadFile );
+            return downloadFileInputStream;
         }
-        catch ( FileNotFoundException fne )
+        else
         {
-            throw new ContinuumException( "Error accessing file.", fne );
+            FileInputStream fis;
+            try
+            {
+                fis = new FileInputStream( downloadFile );
+            }
+            catch ( FileNotFoundException fne )
+            {
+                throw new ContinuumException( "Error accessing file.", fne );
+            }
+    
+            return fis;
         }
-
-        return fis;
     }
 
     public String getFileLength()
     {
-        return Long.toString( downloadFile.length() );
+        return downloadFileLength;
     }
 
     public String getDownloadFilename()
     {
-        return downloadFile.getName();
+        return downloadFileName;
     }
 
     public String getMimeType()

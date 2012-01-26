@@ -211,14 +211,14 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public String getProjectFileContent( int projectId, String directory, String filename )
+    public Map<String, Object> getProjectFile( int projectId, String directory, String filename )
         throws Exception
     {
-        String result;
+        Map result;
 
         try
         {
-            result = slave.getProjectFileContent( projectId, directory, filename );
+            result = slave.getProjectFile( projectId, directory, filename );
             log.debug( "Retrieved project '{}' file content from build agent {}", projectId, buildAgentUrl );
         }
         catch ( Exception e )
@@ -823,8 +823,8 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    @Override
-    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll ) throws Exception
+    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
+        throws Exception
     {
         slave.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
     }

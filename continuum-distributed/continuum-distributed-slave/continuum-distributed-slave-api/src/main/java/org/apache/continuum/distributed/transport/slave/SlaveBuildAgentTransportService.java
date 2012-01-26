@@ -51,7 +51,7 @@ public interface SlaveBuildAgentTransportService
     public String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
         throws Exception;
 
-    public String getProjectFileContent( int projectId, String directory, String filename )
+    public Map<String, Object> getProjectFile( int projectId, String directory, String filename )
         throws Exception;
 
     public Map getReleasePluginParameters( int projectId, String pomFilename )

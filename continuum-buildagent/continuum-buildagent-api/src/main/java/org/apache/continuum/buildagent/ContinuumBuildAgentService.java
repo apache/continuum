@@ -43,7 +43,7 @@ public interface ContinuumBuildAgentService
     String generateWorkingCopyContent( int projectId, String userDirectory, String baseUrl, String imagesBaseUrl )
         throws ContinuumBuildAgentException;
 
-    String getProjectFileContent( int projectId, String directory, String filename )
+    Map<String, Object> getProjectFile( int projectId, String directory, String filename )
         throws ContinuumBuildAgentException;
 
     Map<String, Object> getReleasePluginParameters( int projectId, String pomFilename )

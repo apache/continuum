@@ -20,7 +20,10 @@ package org.apache.continuum.buildagent;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +33,9 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.MimetypesFileTypeMap;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
@@ -56,7 +62,6 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +73,8 @@ public class ContinuumBuildAgentServiceImpl
     implements ContinuumBuildAgentService
 {
     private static final Logger log = LoggerFactory.getLogger( ContinuumBuildAgentServiceImpl.class );
+
+    private static final String FILE_SEPARATOR = System.getProperty( "file.separator" );
 
     /**
      * @plexus.requirement
@@ -299,9 +306,11 @@ public class ContinuumBuildAgentServiceImpl
         return "";
     }
 
-    public String getProjectFileContent( int projectId, String directory, String filename )
+    public Map<String, Object> getProjectFile( int projectId, String directory, String filename )
         throws ContinuumBuildAgentException
     {
+        Map<String, Object> projectFile = new HashMap<String, Object>();
+
         String relativePath = "\\.\\./"; // prevent users from using relative paths.
         Pattern pattern = Pattern.compile( relativePath );
         Matcher matcher = pattern.matcher( directory );
@@ -315,15 +324,52 @@ public class ContinuumBuildAgentServiceImpl
         File fileDirectory = new File( workingDirectory, filteredDirectory );
 
         File userFile = new File( fileDirectory, filteredFilename );
+        byte[] downloadFile;
 
         try
         {
-            return FileUtils.fileRead( userFile );
+            downloadFile = FileUtils.readFileToByteArray( userFile );
         }
         catch ( IOException e )
         {
-            throw new ContinuumBuildAgentException( "Can't read file " + filename, e );
+            throw new ContinuumBuildAgentException( "Can't read file: " + filename );
         }
+
+        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+        mimeTypesMap.addMimeTypes( "application/java-archive jar war ear" );
+        mimeTypesMap.addMimeTypes( "application/java-class class" );
+        mimeTypesMap.addMimeTypes( "image/png png" );
+
+        String mimeType = mimeTypesMap.getContentType( userFile );
+        String fileContent;
+        boolean isStream = false;
+
+        if ( ( mimeType.indexOf( "image" ) >= 0 ) || ( mimeType.indexOf( "java-archive" ) >= 0 ) ||
+             ( mimeType.indexOf( "java-class" ) >= 0 ) || ( userFile.length() > 100000 ) )
+        {
+            fileContent = "";
+            isStream = true;
+        }
+        else
+        {
+            try
+            {
+                fileContent = FileUtils.readFileToString( userFile );
+            }
+            catch ( IOException e )
+            {
+                throw new ContinuumBuildAgentException( "Can't read file " + filename, e );
+            }
+        }
+
+        projectFile.put( "downloadFileName", userFile.getName() );
+        projectFile.put( "downloadFileLength", Long.toString( userFile.length() ) );
+        projectFile.put( "downloadFile", downloadFile );
+        projectFile.put( "mimeType", mimeType );
+        projectFile.put( "fileContent", fileContent );
+        projectFile.put( "isStream", isStream );
+
+        return projectFile;
     }
 
     public Map<String, Object> getReleasePluginParameters( int projectId, String pomFilename )
@@ -1129,7 +1175,7 @@ public class ContinuumBuildAgentServiceImpl
 
             if ( buildOutputFile.exists() )
             {
-                return StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
+                return StringEscapeUtils.escapeHtml( FileUtils.readFileToString( buildOutputFile ) );
             }
         }
         catch ( Exception e )

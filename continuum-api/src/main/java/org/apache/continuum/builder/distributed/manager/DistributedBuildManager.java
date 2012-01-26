@@ -69,7 +69,7 @@ public interface DistributedBuildManager
     String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
         throws ContinuumException;
 
-    String getFileContent( int projectId, String directory, String filename )
+    Map<String, Object> getFileContent( int projectId, String directory, String filename )
         throws ContinuumException;
 
     void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId,  
