@@ -74,7 +74,7 @@ public class BuildDefinitionSummaryAction
             checkViewProjectGroupAuthorization( projectGroupName );
 
             groupBuildDefinitionSummaries = gatherGroupBuildDefinitionSummaries( projectGroupId );
-            projectBuildDefinitionSummaries = gatherProjectBuildDefinitionSummaries( projectId );
+            projectBuildDefinitionSummaries = gatherProjectBuildDefinitionSummaries( projectId, projectGroupId );
 
             fixDefaultBuildDefinitions();
 
@@ -107,7 +107,7 @@ public class BuildDefinitionSummaryAction
 
             for ( Project project : (List<Project>) projectGroup.getProjects() )
             {
-                projectBuildDefinitionSummaries.addAll( gatherProjectBuildDefinitionSummaries( project.getId() ) );
+                projectBuildDefinitionSummaries.addAll( gatherProjectBuildDefinitionSummaries( project.getId(), projectGroupId ) );
 
             }
 
@@ -154,7 +154,7 @@ public class BuildDefinitionSummaryAction
         }
     }
 
-    private List<BuildDefinitionSummary> gatherProjectBuildDefinitionSummaries( int projectId )
+    private List<BuildDefinitionSummary> gatherProjectBuildDefinitionSummaries( int projectId, int projectGroupId )
         throws ContinuumException
     {
         List<BuildDefinitionSummary> summaryList = new ArrayList<BuildDefinitionSummary>();
@@ -166,6 +166,7 @@ public class BuildDefinitionSummaryAction
             bds.setFrom( "PROJECT" );
             bds.setProjectId( project.getId() );
             bds.setProjectName( project.getName() );
+            bds.setProjectGroupId( projectGroupId );
 
             summaryList.add( bds );
         }
