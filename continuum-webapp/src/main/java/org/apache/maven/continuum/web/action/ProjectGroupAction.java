@@ -770,7 +770,9 @@ public class ProjectGroupAction
 
                 for ( Role role : effectiveRoles )
                 {
-                    if ( role.getName().indexOf( projectGroup.getName() ) > 0 )
+                    String projectGroupName = StringUtils.substringAfter( role.getName(), "-" ).trim();
+
+                    if ( projectGroupName.equals( projectGroup.getName() ) )
                     {
                         pgUser.addRole( role );
                         isGroupUser = true;

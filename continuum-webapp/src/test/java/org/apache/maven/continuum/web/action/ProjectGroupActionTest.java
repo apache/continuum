@@ -41,11 +41,11 @@ public class ProjectGroupActionTest
         throws Exception
     {
         ProjectGroup group = new ProjectGroup();
-        group.setName( "test-group" );
+        group.setName( "Project A" );
 
         List<Role> roles = new ArrayList<Role>();
         Role role1 = new JdoRole();
-        role1.setName( "Project User - test-group" );
+        role1.setName( "Project User - Project A" );
         roles.add( role1 );
 
         Role role2 = new JdoRole();
@@ -53,11 +53,11 @@ public class ProjectGroupActionTest
         roles.add( role2 );
         
         Role role3 = new JdoRole();
-        role3.setName( "Project Developer - test-group" );
+        role3.setName( "Project Developer - Project A" );
         roles.add( role3 );
 
         Role role4 = new JdoRole();
-        role4.setName( "Project Administrator - test-group" );
+        role4.setName( "Project Administrator - Project A" );
         roles.add( role4 );
 
         List<UserAssignment> userAssignments = new ArrayList<UserAssignment>();
