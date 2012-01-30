@@ -88,11 +88,11 @@ public class ProjectGroupActionTest
         throws Exception
     {
         ProjectGroup group = new ProjectGroup();
-        group.setName( "test-group" );
+        group.setName( "Project A" );
 
         List<Role> roles = new ArrayList<Role>();
         Role role1 = new JdoRole();
-        role1.setName( "Project User - test-group" );
+        role1.setName( "Project User - Project A" );
         roles.add( role1 );
 
         Role role2 = new JdoRole();
@@ -107,6 +107,10 @@ public class ProjectGroupActionTest
         role4.setName( "Project Administrator - test-group" );
         roles.add( role4 );
 
+        Role role5 = new JdoRole();
+        role5.setName( "Project Administrator - Project C" );
+        roles.add( role5 );
+
         List<UserAssignment> userAssignments = new ArrayList<UserAssignment>();
         UserAssignment ua1 = new JdoUserAssignment();
         ua1.setPrincipal( "user1" );
@@ -115,6 +119,7 @@ public class ProjectGroupActionTest
         List<Role> eRoles = new ArrayList<Role>();
         eRoles.add( role1 );
         eRoles.add( role2 );
+        eRoles.add( role5 );
 
         continuum.expects( once() ).method( "getProjectGroupWithProjects" ).will( returnValue( group ) );
         rbac.expects( once() ).method( "getAllRoles" ).will( returnValue( roles ) );
