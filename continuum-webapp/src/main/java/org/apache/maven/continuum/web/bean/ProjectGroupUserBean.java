@@ -23,6 +23,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.codehaus.plexus.redback.rbac.Role;
 import org.codehaus.plexus.redback.users.User;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -73,21 +74,26 @@ public class ProjectGroupUserBean
         this.projectGroup = projectGroup;
     }
 
-    public void addRole( String role )
+    public void addRole( Role role )
     {
+        if ( roles == null )
+        {
+            roles = new ArrayList();
+        }
+
         roles.add( role );
 
-        if ( role.indexOf( ROLE_ADMINISTRATOR ) != -1 )
+        if ( role.getName().indexOf( ROLE_ADMINISTRATOR ) != -1 )
         {
             isAdministrator = true;
         }
 
-        if ( role.indexOf( ROLE_DEVELOPER ) != -1 )
+        if ( role.getName().indexOf( ROLE_DEVELOPER ) != -1 )
         {
             isDeveloper = true;
         }
 
-        if ( role.indexOf( ROLE_USER ) != -1 )
+        if ( role.getName().indexOf( ROLE_USER ) != -1 )
         {
             isUser = true;
         }

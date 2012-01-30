@@ -727,7 +727,7 @@ public class ProjectGroupAction
             List<UserAssignment> userAssignments = rbac.getUserAssignmentsForRoles( roleNames );
             for ( UserAssignment ua : userAssignments )
             {
-                User u = getSecuritySystem().getUserManager().findUser( ua.getPrincipal() );
+                User u = getUser( ua.getPrincipal() );
                 if ( u != null )
                 {
                     users.add( u );
@@ -766,15 +766,20 @@ public class ProjectGroupAction
             try
             {
                 Collection<Role> effectiveRoles = rbac.getEffectivelyAssignedRoles( user.getUsername() );
+                boolean isGroupUser = false;
 
                 for ( Role role : effectiveRoles )
                 {
                     if ( role.getName().indexOf( projectGroup.getName() ) > -1 )
                     {
-                        pgUser.setRoles( effectiveRoles );
-                        projectGroupUsers.add( pgUser );
-                        break;
+                        pgUser.addRole( role );
+                        isGroupUser = true;
                     }
+                }
+
+                if ( isGroupUser )
+                {
+                    projectGroupUsers.add( pgUser );
                 }
             }
             catch ( RbacObjectNotFoundException e )
@@ -1117,5 +1122,11 @@ public class ProjectGroupAction
     public void setSorterProperty( String sorterProperty )
     {
         this.sorterProperty = sorterProperty;
+    }
+
+    // for testing
+    public void setRbacManager( RBACManager rbac )
+    {
+        this.rbac = rbac;
     }
 }

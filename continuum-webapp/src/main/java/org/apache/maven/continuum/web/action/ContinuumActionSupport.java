@@ -33,6 +33,8 @@ import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.system.SecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.system.SecuritySystemConstants;
+import org.codehaus.plexus.redback.users.User;
+import org.codehaus.plexus.redback.users.UserNotFoundException;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -567,5 +569,11 @@ public class ContinuumActionSupport
             principal = "unknown-user";
         }
         return principal;
+    }
+
+    protected User getUser( String principal )
+        throws UserNotFoundException
+    {
+        return getSecuritySystem().getUserManager().findUser( principal );
     }
 }
