@@ -444,6 +444,21 @@
             </permission>
           </permissions>
         </role>
+        <role>
+          <id>continuum-manage-distributed-builds</id>
+          <name>Continuum Manage Distributed Builds</name>
+          <assignable>true</assignable>
+          <permanent>true</permanent>
+          <permissions>
+            <permission>
+              <id>continuum-manage-distributed-builds</id>
+              <name>Manage Continuum Distributed Builds</name>
+              <permanent>true</permanent>
+              <operation>continuum-manage-distributed-builds</operation>
+              <resource>global</resource>
+            </permission>
+          </permissions>
+        </role>
       </roles>
       <templates>
         <template>
