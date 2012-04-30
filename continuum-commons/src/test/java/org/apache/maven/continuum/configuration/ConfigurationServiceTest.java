@@ -163,4 +163,35 @@ public class ConfigurationServiceTest
 
         assertEquals( "password", service.getSharedSecretPassword() );
     }
+
+    public void testAddDuplicateBuildAgentUrl()
+        throws Exception
+    {
+        ConfigurationService service = (ConfigurationService) lookup( "configurationService" );
+
+        assertNotNull( service );
+
+        BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( "http://agent1/xmlrpc ", "windows", false );
+        service.addBuildAgent( buildAgent );
+        service.store();
+        service.reload();
+
+        assertEquals( "check # build agents", 2, service.getBuildAgents().size() );
+        assertNotNull( service.getBuildAgent( "http://agent1/xmlrpc" ) );
+
+        BuildAgentConfiguration buildAgent2 = new BuildAgentConfiguration( "http://agent1/xmlrpc", "windows", false );
+
+        try
+        {
+            service.addBuildAgent( buildAgent2 );
+            fail( "Should have thrown an exception because of duplicate agent url" );
+        }
+        catch ( ConfigurationException e )
+        {
+            assertEquals( "Unable to add build agent: build agent already exist", e.getMessage() );
+        }
+
+        service.removeBuildAgent( buildAgent );
+        service.store();
+    }
 }

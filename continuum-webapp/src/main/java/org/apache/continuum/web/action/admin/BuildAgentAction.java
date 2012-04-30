@@ -176,11 +176,18 @@ public class BuildAgentAction
             {
                 if ( agent.getUrl().equals( buildAgent.getUrl() ) )
                 {
-                    agent.setDescription( buildAgent.getDescription() );
-                    agent.setEnabled( buildAgent.isEnabled() );
-
-                    configuration.updateBuildAgent( agent );
-                    configuration.store();
+                    if ( type.equals( "new" ) )
+                    {
+                        addActionError( getResourceBundle().getString( "buildAgent.error.duplicate" ) );
+                        return INPUT;
+                    }
+                    else
+                    {
+                        agent.setDescription( buildAgent.getDescription() );
+                        agent.setEnabled( buildAgent.isEnabled() );
+                        configuration.updateBuildAgent( agent );
+                        configuration.store();
+                    }
                     found = true;
                 }
             }
@@ -195,14 +202,6 @@ public class BuildAgentAction
             configuration.addBuildAgent( buildAgent );
             configuration.store();
             event.setAction( AuditLogConstants.ADD_BUILD_AGENT );
-        }
-        else
-        {
-            if ( type.equals( "new" ) )
-            {
-                addActionError( getResourceBundle().getString( "buildAgent.error.duplicate" ) );
-                return INPUT;
-            }
         }
 
         try

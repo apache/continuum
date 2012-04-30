@@ -299,6 +299,9 @@ public class DefaultConfigurationService
     public void addBuildAgent( BuildAgentConfiguration buildAgent )
         throws ConfigurationException
     {
+        // trim trailing space
+        buildAgent.setUrl( buildAgent.getUrl().trim() );
+        
         List<BuildAgentConfiguration> buildAgents = generalConfiguration.getBuildAgents();
         if ( buildAgents == null )
         {
@@ -307,7 +310,7 @@ public class DefaultConfigurationService
 
         for ( BuildAgentConfiguration agent : buildAgents )
         {
-            if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+            if ( agent.getUrl().trim().equals( buildAgent.getUrl() ) )
             {
                 throw new ConfigurationException( "Unable to add build agent: build agent already exist" );
             }
@@ -336,15 +339,19 @@ public class DefaultConfigurationService
 
     public void updateBuildAgent( BuildAgentConfiguration buildAgent )
     {
+        // trim trailing space
+        buildAgent.setUrl( buildAgent.getUrl().trim() );
+
         List<BuildAgentConfiguration> buildAgents = getBuildAgents();
         if ( buildAgents != null )
         {
             for ( BuildAgentConfiguration agent : buildAgents )
             {
-                if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+                if ( agent.getUrl().trim().equals( buildAgent.getUrl() ) )
                 {
                     agent.setDescription( buildAgent.getDescription() );
                     agent.setEnabled( buildAgent.isEnabled() );
+                    agent.setUrl( buildAgent.getUrl() );
 
                     return;
                 }
