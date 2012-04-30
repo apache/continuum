@@ -38,6 +38,8 @@ import org.apache.maven.archiva.model.ArtifactReference;
 import org.apache.maven.archiva.model.VersionedReference;
 import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Codes were taken from  Archiva's DaysOldRepositoryPurge and made some few changes.
@@ -48,6 +50,8 @@ public class DaysOldRepositoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
+    private Logger log = LoggerFactory.getLogger( DaysOldRepositoryPurgeExecutor.class );
+
     private final int daysOlder;
 
     private final int retentionCount;
@@ -68,6 +72,8 @@ public class DaysOldRepositoryPurgeExecutor
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
+        log.info( "--- Start: Repository Purge ---" );
+
         try
         {
             File artifactFile = new File( repository.getRepoRoot(), path );
@@ -148,6 +154,8 @@ public class DaysOldRepositoryPurgeExecutor
         {
             throw new ContinuumPurgeExecutorException( e.getMessage(), e );
         }
+
+        log.info( "--- End: Repository Purge ---" );
     }
 
     private Calendar uniqueSnapshotToCalendar( String version )

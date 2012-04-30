@@ -25,10 +25,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.continuum.purge.ContinuumPurgeConstants;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.common.utils.VersionComparator;
@@ -62,6 +58,8 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
+        log.info( "--- Start: Repository Purge ---" );
+                                                     
         try
         {
             File artifactFile = new File( repository.getRepoRoot(), path );
@@ -132,6 +130,8 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
         {
             throw new ContinuumPurgeExecutorException( e.getMessage(), e );
         }
+
+        log.info( "--- End: Repository Purge ---" );
     }
 
     private void removeMetadata( VersionedReference versionRef )

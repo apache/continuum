@@ -52,15 +52,25 @@ public class CleanAllPurgeExecutor
     {
         if ( purgeType.equals( ContinuumPurgeConstants.PURGE_REPOSITORY ) )
         {
+            log.info( "--- Start: Repository Purge ---" );
             purgeRepository( path );
+            log.info( "--- End: Repository Purge ---" );
         }
         else if ( purgeType.equals( ContinuumPurgeConstants.PURGE_DIRECTORY_RELEASES ) )
         {
+            log.info( "--- Start: Releases Directory Purge ---" );
             purgeReleases( path );
+            log.info( "--- End: Releases Directory Purge ---" );
         }
         else if ( purgeType.equals( ContinuumPurgeConstants.PURGE_DIRECTORY_BUILDOUTPUT ) )
         {
+            log.info( "--- Start: Build Output Directory Purge ---" );
             purgeBuildOutput( path );
+            log.info( "--- End: Build Output Directory Purge ---" );
+        }
+        else 
+        {
+            log.warn( "Not purging: Unknown purge type '{}'", purgeType );
         }
     }
 

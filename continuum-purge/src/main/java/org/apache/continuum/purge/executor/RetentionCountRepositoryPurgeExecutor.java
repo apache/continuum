@@ -32,6 +32,8 @@ import org.apache.maven.archiva.model.ArtifactReference;
 import org.apache.maven.archiva.model.VersionedReference;
 import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Codes were taken from Archiva's RetentionCountRepository Purge and made some few changes.
@@ -42,6 +44,8 @@ public class RetentionCountRepositoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
+    private Logger log = LoggerFactory.getLogger( RetentionCountRepositoryPurgeExecutor.class );
+
     private final int retentionCount;
 
     private final RepositoryManagedContent repository;
@@ -55,6 +59,8 @@ public class RetentionCountRepositoryPurgeExecutor
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
+        log.info( "--- Start: Repository Purge ---" );
+
         try
         {
             File artifactFile = new File( repository.getRepoRoot(), path );
@@ -105,6 +111,8 @@ public class RetentionCountRepositoryPurgeExecutor
             // Nothing to do here.
             // TODO: Log this condition?
         }
+
+        log.info( "--- End: Repository Purge ---" );
     }
 
     private void doPurgeAllRelated( ArtifactReference reference, String version )

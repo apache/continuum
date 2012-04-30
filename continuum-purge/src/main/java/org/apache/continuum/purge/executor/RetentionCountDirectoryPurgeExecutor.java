@@ -30,6 +30,8 @@ import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Maria Catherine Tan
@@ -38,6 +40,8 @@ public class RetentionCountDirectoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
+    private Logger log = LoggerFactory.getLogger( RetentionCountDirectoryPurgeExecutor.class );
+
     private final int retentionCount;
 
     private final String directoryType;
@@ -54,11 +58,19 @@ public class RetentionCountDirectoryPurgeExecutor
     {
         if ( directoryType.equals( ContinuumPurgeConstants.PURGE_DIRECTORY_RELEASES ) )
         {
+            log.info( "--- Start: Releases Directory Purge ---" );
             purgeReleaseDirectory( path );
+            log.info( "--- End: Releases Directory Purge ---" );
         }
         else if ( directoryType.equals( ContinuumPurgeConstants.PURGE_DIRECTORY_BUILDOUTPUT ) )
         {
+            log.info( "--- Start: Build Output Directory Purge ---" );
             purgeBuildOutputDirectory( path );
+            log.info( "--- End: Build Output Directory Purge ---" );
+        }
+        else
+        {
+            log.warn( "Not purging: Unknown directory type '{}'", directoryType );
         }
     }
 
