@@ -519,7 +519,8 @@ public class ReleasePrepareAction
 
         if ( StringUtils.isNotEmpty( scmCommentPrefix ) )
         {
-            p.setProperty( "scm-comment-prefix", scmCommentPrefix );
+            // CONTINUUM-2619
+            p.setProperty( "scm-comment-prefix", scmCommentPrefix.trim() + " " );
         }
 
         p.setProperty( "scm-tag", scmTag );
