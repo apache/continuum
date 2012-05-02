@@ -65,19 +65,11 @@ public class DaysOldDirectoryPurgeExecutor
     {
         if ( directoryType.equals( ContinuumPurgeConstants.PURGE_DIRECTORY_RELEASES ) )
         {
-            log.info( "--- Start: Releases Directory Purge ---" );
             purgeReleaseDirectory( path );
-            log.info( "--- End: Releases Directory Purge ---" );
         }
         else if ( directoryType.equals( ContinuumPurgeConstants.PURGE_DIRECTORY_BUILDOUTPUT ) )
         {
-            log.info( "--- Start: Build Output Directory Purge ---" );
             purgeBuildOutputDirectory( path );
-            log.info( "--- End: Build Output Directory Purge ---" );
-        }
-        else
-        {
-            log.warn( "Not purging: Unknown directory type '{}'", directoryType );
         }
     }
 

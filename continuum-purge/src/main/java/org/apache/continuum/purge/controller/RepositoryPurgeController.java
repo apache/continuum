@@ -103,6 +103,7 @@ public class RepositoryPurgeController
     
     public void doPurge( String path )
     {
+        log.info( "--- Start: Purging repository path '{}'---", path );
         try
         {
             if ( deleteReleasedSnapshots )
@@ -116,5 +117,6 @@ public class RepositoryPurgeController
         {
             log.error( e.getMessage(), e );
         }
+        log.info( "--- End: Purging repository path '{}'---", path );
     }
 }

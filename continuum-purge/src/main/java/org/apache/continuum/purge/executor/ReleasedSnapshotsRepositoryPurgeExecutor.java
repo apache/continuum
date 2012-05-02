@@ -47,7 +47,7 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
 {
     private Logger log = LoggerFactory.getLogger( ReleasedSnapshotsRepositoryPurgeExecutor.class );
-    
+
     private final RepositoryManagedContent repository;
 
     public ReleasedSnapshotsRepositoryPurgeExecutor( RepositoryManagedContent repository )
@@ -57,9 +57,7 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
 
     public void purge( String path )
         throws ContinuumPurgeExecutorException
-    {
-        log.info( "--- Start: Repository Purge ---" );
-                                                     
+    {                         
         try
         {
             File artifactFile = new File( repository.getRepoRoot(), path );
@@ -130,8 +128,6 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
         {
             throw new ContinuumPurgeExecutorException( e.getMessage(), e );
         }
-
-        log.info( "--- End: Repository Purge ---" );
     }
 
     private void removeMetadata( VersionedReference versionRef )
