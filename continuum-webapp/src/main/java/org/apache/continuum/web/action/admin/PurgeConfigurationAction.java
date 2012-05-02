@@ -36,6 +36,8 @@ import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -298,6 +300,8 @@ public class PurgeConfigurationAction
         {
             purgeConfig = purgeConfigService.getPurgeConfiguration( purgeConfigId );
 
+            AuditLog event;
+            
             if ( purgeConfig instanceof RepositoryPurgeConfiguration )
             {
                 RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
@@ -310,12 +314,29 @@ public class PurgeConfigurationAction
                 }
 
                 purgeManager.purgeRepository( repoPurge );
+
+                event = new AuditLog( repoPurge.getRepository().getName(), AuditLogConstants.PURGE_LOCAL_REPOSITORY );
+                event.setCategory( AuditLogConstants.LOCAL_REPOSITORY );
             }
             else
             {
                 DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
                 purgeManager.purgeDirectory( dirPurge );
+
+                if ( dirPurge.getDirectoryType().equals( PURGE_DIRECTORY_RELEASES ) )
+                {
+                    event = new AuditLog( dirPurge.getLocation(), AuditLogConstants.PURGE_DIRECTORY_RELEASES );
+                }
+                else
+                {
+                    event = new AuditLog( dirPurge.getLocation(), AuditLogConstants.PURGE_DIRECTORY_BUILDOUTPUT );
+                }
+
+                event.setCategory( AuditLogConstants.DIRECTORY );
             }
+
+            event.setCurrentUser( getPrincipal() );
+            event.log();
         }
 
         return SUCCESS;
