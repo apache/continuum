@@ -50,7 +50,7 @@ public class DirectoryPurgeController
     
     public void doPurge( String path )
     {
-        log.info( "--- Start: Purging directory path '{}'", path );
+        log.info( "--- Start: Purging directory path '{}'---", path );
         try
         {
             purgeExecutor.purge( path );
@@ -59,7 +59,7 @@ public class DirectoryPurgeController
         {
             log.error( e.getMessage(), e );
         }
-        log.info( "--- End: Purging directory path '{}'", path );
+        log.info( "--- End: Purging directory path '{}'---", path );
     }
 
     public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
