@@ -98,12 +98,15 @@ public class RepositoryPurgeController
     public void doPurge( AbstractPurgeConfiguration purgeConfig )
     {
         RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
+        log.info( "--- Start: Purging repository [{}] {} ---", repoPurge.getRepository().getId(), 
+                  repoPurge.getRepository().getLocation() );
         doPurge( repoPurge.getRepository().getLocation() );
+        log.info( "--- End: Purging repository [{}] {} ---", repoPurge.getRepository().getId(),
+                  repoPurge.getRepository().getLocation() );
     }
     
     public void doPurge( String path )
     {
-        log.info( "--- Start: Purging repository path '{}'---", path );
         try
         {
             if ( deleteReleasedSnapshots )
@@ -117,6 +120,5 @@ public class RepositoryPurgeController
         {
             log.error( e.getMessage(), e );
         }
-        log.info( "--- End: Purging repository path '{}'---", path );
     }
 }

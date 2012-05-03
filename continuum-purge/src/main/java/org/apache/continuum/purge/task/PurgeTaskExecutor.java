@@ -43,7 +43,7 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
  */
 public class PurgeTaskExecutor
     implements TaskExecutor, Contextualizable
-{
+{                             
     /**
      * @plexus.requirement
      */
@@ -85,7 +85,7 @@ public class PurgeTaskExecutor
 
                 if ( repoPurge.isDeleteAll() )
                 {
-                    purgeController.doPurge( repository.getLocation() );
+                    purgeController.doPurge( repoPurge );
                 }
                 else
                 {
