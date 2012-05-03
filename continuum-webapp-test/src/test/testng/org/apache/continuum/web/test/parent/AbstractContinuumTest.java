@@ -488,16 +488,7 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "buildDefinitionType" );
         assertTextPresent( "Build Environment" );
         assertElementPresent( "profileId" );
-
-        if ( isChecked( "buildFresh" ) )
-        {
-            assertDisabled( "alwaysBuild" );
-            assertIsChecked( "alwaysBuild" );
-        }
-        else
-        {
-            assertEnabled( "alwaysBuild" );
-        }
+        assertEnabled( "alwaysBuild" );
     }
 
     public void addEditGroupBuildDefinition(String groupName,String buildFile,String goals,String arguments,
@@ -520,8 +511,6 @@ public abstract class AbstractContinuumTest
 
             // need to do this for the onclick event
             click( "buildFresh" );
-            assertDisabled( "alwaysBuild" );
-            assertIsChecked( "alwaysBuild" );
         }
         else
         {
@@ -532,10 +521,9 @@ public abstract class AbstractContinuumTest
 
             // need to do this for the onclick event
             click( "buildFresh" );
-            assertEnabled( "alwaysBuild" );
-            assertIsNotChecked( "alwaysBuild" );
         }
 
+        assertEnabled( "alwaysBuild" );
         if ( isElementPresent( "defaultBuildDefinition" ) )
         {
             if ( isDefault )

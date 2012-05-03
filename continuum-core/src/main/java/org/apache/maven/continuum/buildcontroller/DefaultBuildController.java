@@ -490,11 +490,6 @@ public class DefaultBuildController
         throws TaskExecutionException
     {
         BuildDefinition buildDefinition = context.getBuildDefinition();
-        if ( buildDefinition.isBuildFresh() )
-        {
-            log.info( "FreshBuild configured, building" );
-            return true;
-        }
         if ( buildDefinition.isAlwaysBuild() )
         {
             log.info( "AlwaysBuild configured, building" );

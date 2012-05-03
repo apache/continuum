@@ -53,7 +53,7 @@ public abstract class AbstractBuildDefinitionAction
         }
         bds.setDescription( buildDefinition.getDescription() );
         bds.setType( buildDefinition.getType() );
-        bds.setAlwaysBuild( buildDefinition.isBuildFresh() || buildDefinition.isAlwaysBuild() );
+        bds.setAlwaysBuild( buildDefinition.isAlwaysBuild() );
         return bds;
     }
 

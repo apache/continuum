@@ -25,7 +25,7 @@ Project Group Build Definition
     * You may have arguments for Maven, such as <<<--batch-mode --non-recursive>>>.
     Add your arguments in the <<Arguments>> text box or leave it empty.
 
-    * Check <<Build Fresh>> to do a fresh checkout from SCM before the build process. <<Build Fresh>> will always build the project.
+    * Check <<Build Fresh>> to do a fresh checkout from SCM before the build process.
     Check <<Always Build>> if you want to execute the goal every time you build the project.
     If you want this build definition to be your default for building your project,
     check the <<Is it default?>> check box.

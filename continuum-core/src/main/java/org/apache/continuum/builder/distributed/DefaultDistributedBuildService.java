@@ -411,11 +411,6 @@ public class DefaultDistributedBuildService
     
             List<ChangeSet> changes = distributedBuildUtil.getScmChanges( context );
     
-            if ( buildDefinition.isBuildFresh() )
-            {
-                log.info( "FreshBuild configured, building (projectId=" + projectId + ")" );
-                return true;
-            }
             if ( buildDefinition.isAlwaysBuild() )
             {
                 log.info( "AlwaysBuild configured, building (projectId=" + projectId + ")" );
