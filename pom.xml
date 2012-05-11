@@ -312,6 +312,17 @@ under the License.
       </snapshots>      
     </repository>
     -->
+    <!-- atlassian xmlrpc 0.11 -->
+    <repository>
+      <id>atlassian.releases</id>
+      <url>https://maven.atlassian.com/content/groups/public</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
     <!-- remove when parent is released -->
     <repository>
       <id>vmbuild.snapshots</id>
