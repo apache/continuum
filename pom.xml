@@ -149,18 +149,8 @@ under the License.
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>2.1.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>2.0.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>2.0-beta-7</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -175,7 +165,7 @@ under the License.
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jpox-maven-plugin</artifactId>
-          <version>1.1.6</version>
+          <version>1.1.7</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -248,7 +238,6 @@ under the License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.4.3</version>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <argLine>-Xmx512m</argLine>
@@ -278,7 +267,7 @@ under the License.
             <property>
               <!-- java.io.tmpdir is a shared directory on solaris and cause permission issues -->
               <name>java.io.tmpdir</name>
-              <value>./target</value>
+              <value>${project.build.directory}</value>
             </property>
           </systemProperties>
         </configuration>
@@ -325,9 +314,9 @@ under the License.
     -->
     <!-- remove when parent is released -->
     <repository>
-      <id>apache.snapshots</id>
+      <id>vmbuild.snapshots</id>
       <name>Apache Snapshot Repository</name>
-      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+      <url>http://vmbuild.apache.org/archiva/repository/snapshots</url>
       <releases>
         <enabled>false</enabled>
       </releases>
