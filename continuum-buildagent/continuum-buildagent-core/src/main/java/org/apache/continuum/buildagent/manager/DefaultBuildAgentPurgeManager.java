@@ -30,7 +30,6 @@ public class DefaultBuildAgentPurgeManager
      */
     private BuildAgentConfigurationService buildAgentConfigurationService;
     
-    @Override
     public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws Exception
     {
