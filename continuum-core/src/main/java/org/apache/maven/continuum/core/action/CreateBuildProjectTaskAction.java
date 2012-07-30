@@ -75,7 +75,8 @@ public class CreateBuildProjectTaskAction
 
             if ( parallelBuildsManager.isInAnyBuildQueue( project.getId(), buildDefinition.getId() ) )
             {
-                return;
+                getLogger().info( "Project '" + project.getName() + "' is already in build queue." );
+                continue;
             }
 
             if ( parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) )
@@ -116,7 +117,6 @@ public class CreateBuildProjectTaskAction
             catch ( ContinuumStoreException e )
             {
                 getLogger().error( "Error while creating build object", e );
-                //throw new ContinuumException( "Error while creating build object.", e );
             }
         }
 
