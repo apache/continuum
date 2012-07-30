@@ -131,11 +131,18 @@ public class ShellProjectTest
         
         editBuildDefinitionShellType( "build.sh", "", "description", "shell", true );
 
-        enableDistributedBuilds();
+        try
+        {
+            enableDistributedBuilds();
 
-        goToProjectGroupsSummaryPage();
+            goToProjectGroupsSummaryPage();
 
-        buildProjectGroup( SHELL_GROUP_NAME ,SHELL_GROUP_ID , SHELL_GROUP_DESC ,SHELL_NAME, true );
+            buildProjectGroup( SHELL_GROUP_NAME ,SHELL_GROUP_ID , SHELL_GROUP_DESC ,SHELL_NAME, true );
+        }
+        finally
+        {
+            disableDistributedBuilds();
+        }
 
     }
     
