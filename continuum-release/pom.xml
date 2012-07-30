@@ -120,6 +120,12 @@ under the License.
       <artifactId>maven-scm-manager-plexus</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-security</artifactId>
+      <!-- TODO: change this to jetty.version when using Jetty 7 throughout -->
+      <version>8.1.5.v20120716</version>
+    </dependency>  
     <!-- === Testing Dependencies === -->
     <dependency>
       <groupId>hsqldb</groupId>

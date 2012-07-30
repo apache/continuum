@@ -39,6 +39,7 @@ import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
 import org.apache.maven.shared.release.config.ReleaseUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.eclipse.jetty.util.security.Password;
 
 public class ContinuumPropertiesReleaseDescriptorStore
     extends PropertiesReleaseDescriptorStore
@@ -73,7 +74,16 @@ public class ContinuumPropertiesReleaseDescriptorStore
         releaseDescriptor.setCompletedPhase( properties.getProperty( "completedPhase" ) );
         releaseDescriptor.setScmSourceUrl( properties.getProperty( "scm.url" ) );
         releaseDescriptor.setScmUsername( properties.getProperty( "scm.username" ) );
-        releaseDescriptor.setScmPassword( properties.getProperty( "scm.password" ) );
+        
+        String password = properties.getProperty( "scm.password" );
+        if ( password != null && password.startsWith( "OBF:" ) )
+        {
+            releaseDescriptor.setScmPassword( Password.deobfuscate( password ) );
+        }
+        else
+        {
+            releaseDescriptor.setScmPassword( password );
+        }
         releaseDescriptor.setScmPrivateKey( properties.getProperty( "scm.privateKey" ) );
         releaseDescriptor.setScmPrivateKeyPassPhrase( properties.getProperty( "scm.passphrase" ) );
         releaseDescriptor.setScmTagBase( properties.getProperty( "scm.tagBase" ) );
@@ -158,7 +168,8 @@ public class ContinuumPropertiesReleaseDescriptorStore
         }
         if ( config.getScmPassword() != null )
         {
-            properties.setProperty( "scm.password", config.getScmPassword() );
+            // obfuscate password
+            properties.setProperty( "scm.password", Password.obfuscate( config.getScmPassword() ) );
         }
         if ( config.getScmPrivateKey() != null )
         {
