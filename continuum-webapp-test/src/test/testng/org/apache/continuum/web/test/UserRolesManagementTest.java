@@ -15,7 +15,6 @@ public class UserRolesManagementTest
         createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
         deleteUser( username, fullname, getUserEmail() );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
     
     /*
@@ -47,13 +46,12 @@ public class UserRolesManagementTest
     {
         username = getProperty( "GUEST_USERNAME" );
         fullname = getProperty( "GUEST_FULLNAME" );
-        login( username, getUserRoleNewPassword() );
+        loginAs( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         goToAboutPage();
         clickLinkWithText( "Show Project Groups" );
         assertTextPresent( "Project Groups list is empty" );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
 
@@ -93,7 +91,6 @@ public class UserRolesManagementTest
         clickLinkWithText( "Show Project Groups" );
         assertTextPresent( "Project Groups list is empty." );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     /*
@@ -136,7 +133,6 @@ public class UserRolesManagementTest
         assertLinkPresent( "Default Project Group" );
 	
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     /* 
@@ -193,7 +189,6 @@ public class UserRolesManagementTest
         // TODO edit user
 
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     /*
@@ -229,7 +224,7 @@ public class UserRolesManagementTest
 
         clickLinkWithText( "Logout" );
 
-        login( getAdminUsername(), getAdminPassword() );
+        loginAsAdmin();
         // disable distributed build
         clickLinkWithText( "Configuration" );
         clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
@@ -289,7 +284,6 @@ public class UserRolesManagementTest
         checkResourceRoleWithValue( "Project Developer - Test Group" );
         submit();
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     /*
@@ -359,7 +353,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumGroupProjectDeveloperRole" } )
@@ -382,7 +375,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumGroupProjectUserRole" } )
@@ -405,7 +397,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumManageBuildEnvironmentRole" } )
@@ -428,7 +419,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumManageBuildTemplatesRole" } )
@@ -451,7 +441,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumManageInstallationsRole" } )
@@ -474,7 +463,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumManageLocalRepoRole" } )
@@ -497,7 +485,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumManagePurgingRole" } )
@@ -520,7 +507,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumManageQueuesRole" } )
@@ -543,7 +529,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithContinuumManageSchedulingRole" } )
@@ -566,7 +551,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithProjectAdminDefaultProjectGroup" } )
@@ -589,7 +573,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
     @Test( dependsOnMethods = { "testUserWithProjectDevDefaultProjectGroup" } )
@@ -612,7 +595,6 @@ public class UserRolesManagementTest
         login( username, getUserRoleNewPassword() );
         assertLeftNavMenuWithRole( fullname );
         clickLinkWithText( "Logout" );
-        login( getAdminUsername(), getAdminPassword() );
     }
 
 }

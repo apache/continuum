@@ -38,18 +38,6 @@ public abstract class AbstractUserRolesManagementTest
         return basedir;
     }
 
-	public String getAdminUsername()
-	{
-		String adminUsername = getProperty( "ADMIN_USERNAME" );
-		return adminUsername;
-	}
-
-	public String getAdminPassword()
-	{
-		String adminPassword = getProperty( "ADMIN_PASSWORD" );
-		return adminPassword;
-	}
-
 	////////////////////////////
 	// Assertions
 	////////////////////////////
@@ -274,7 +262,7 @@ public abstract class AbstractUserRolesManagementTest
 	private void createUser( String userName, String fullName, String emailAd, String password, String confirmPassword,
                              boolean valid )
 	{
-		login( getAdminUsername() , getAdminPassword() );
+		loginAsAdmin();
 		clickLinkWithText( "Users" );
 		clickButtonWithValue( "Create New User" );
 		assertCreateUserPage();
@@ -299,11 +287,6 @@ public abstract class AbstractUserRolesManagementTest
         }*/
 	}
 
-
-	public void login( String username, String password )
-	{
-	    login( username, password, true, "Login Page" );
-	}
 
     public void login( String username, String password, boolean valid, String assertReturnPage )
 	{

@@ -27,10 +27,14 @@ public abstract class AbstractAdminTest
     @BeforeMethod( alwaysRun = true )
     public void loginAsAdmin()
     {
-        String username = getProperty( "ADMIN_USERNAME" );
+        loginAs( getProperty( "ADMIN_USERNAME" ), getProperty( "ADMIN_PASSWORD" ) );
+    }
+
+    protected void loginAs( String username, String password )
+    {
         if ( !getSelenium().isElementPresent( "//span[@class='username' and text()='" + username + "']" ) )
         {
-            login( username, getProperty( "ADMIN_PASSWORD" ) );
+            login( username, password );
         }
     }
 }
