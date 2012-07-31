@@ -124,6 +124,32 @@ public class MavenTwoProjectTest
         assertTextPresent( TEST_PROJ_GRP_SCM_ROOT_URL );
     }
 
+    @Test( dependsOnMethods = { "testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup" } )
+    public void testMoveProject()
+        throws Exception
+    {
+        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+
+        // TODO: need to wait for checkout to complete. Can we add a special IT type of project that doesn't require checkout?
+        //       currently we get away with it due to the usualy duration between the dependant test and this test
+        // move the project of the test project group to the default project group
+        moveProjectToProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME,
+                                   DEFAULT_PROJ_GRP_NAME );
+        showProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
+        assertTextPresent( "Member Projects" );
+        // Restore project to test project group
+        moveProjectToProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION,
+                                   M2_PROJ_GRP_NAME, TEST_PROJ_GRP_NAME );
+        showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
+        assertTextPresent( "Member Projects" );
+    }
+
     /**
      * Test invalid pom url
      */
@@ -415,6 +441,18 @@ public class MavenTwoProjectTest
         {
             disableDistributedBuilds();
         }
+    }
+
+    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
+    public void testProjectGroupAllBuildSuccess()
+        throws Exception
+    {
+        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
+        clickButtonWithValue( "Release" );
+        assertReleaseSuccess();
     }
 
     private void addMaven2Project( String groupName )
