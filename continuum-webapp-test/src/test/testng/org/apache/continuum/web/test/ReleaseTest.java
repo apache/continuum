@@ -298,7 +298,7 @@ public class ReleaseTest
         throws Exception
     {
         String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
-        String buildAgent = getProperty( "BUILD_AGENT_NAME2" );
+        String buildAgent = getBuildAgentUrl();
         
         clickLinkWithText( "Build Agents" );
         String xPath = "//preceding::td[text()='" + M2_PROJECT_AGENT_GROUP + "']//following::img[@alt='Edit']";
@@ -316,7 +316,7 @@ public class ReleaseTest
         throws Exception
     {
         String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
-        String buildAgent = getProperty( "BUILD_AGENT_NAME2" );
+        String buildAgent = getBuildAgentUrl();
         
         clickLinkWithText( "Build Agents" );
         String xPath = "//preceding::td[text()='" + M2_PROJECT_AGENT_GROUP + "']//following::img[@alt='Edit']";

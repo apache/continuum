@@ -80,17 +80,18 @@ public abstract class AbstractBuildAgentsTest
 
         if ( success )
         {
-            assertBuildAgentPage();
-            assertElementPresent( "link=" + agentURL );
-            clickLinkWithText( agentURL );
-
             if ( pingOk )
             {
+                assertBuildAgentPage();
+                assertElementPresent( "link=" + agentURL );
+                clickLinkWithText( agentURL );
+
                 assertTextPresent( "true" );
             }
             else
             {
-                assertTextPresent( "false" );
+                assertTextPresent( "Unable to ping" );
+                assertAddEditBuildAgentPage( true );
             }
         }
         else
@@ -136,13 +137,10 @@ public abstract class AbstractBuildAgentsTest
 
     public void goToAddBuildAgentGroup()
     {
-        String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
-        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
-
         goToBuildAgentPage();
         clickAndWait("editBuildAgentGroup_0"); //add button
         String[] options =
-            new String[] { "--- Available Build Agents ---", BUILD_AGENT_NAME2, BUILD_AGENT_NAME3 };
+            new String[] { "--- Available Build Agents ---" };
         assertAddEditBuildAgentGroupPage( options, null );
     }
 

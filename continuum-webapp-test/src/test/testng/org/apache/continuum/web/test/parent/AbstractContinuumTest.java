@@ -1051,6 +1051,7 @@ public abstract class AbstractContinuumTest
         {
             checkField( "configuration_distributedBuildEnabled" );
         }
+        setFieldValue( "configuration_sharedSecretPassword", "continuum1234" );
         clickAndWait( "configuration_" );
         assertTextPresent( "true" );
         assertTextPresent( "Distributed Builds" );

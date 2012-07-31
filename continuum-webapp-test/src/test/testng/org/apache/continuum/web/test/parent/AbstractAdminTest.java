@@ -37,4 +37,9 @@ public abstract class AbstractAdminTest
             login( username, password );
         }
     }
+
+    protected String getBuildAgentUrl()
+    {
+        return baseUrl.replace( "/continuum", "/continuum-buildagent/xmlrpc" );
+    }
 }

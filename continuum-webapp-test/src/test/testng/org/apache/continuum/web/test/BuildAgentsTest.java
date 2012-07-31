@@ -20,7 +20,9 @@ package org.apache.continuum.web.test;
  */
 
 //import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
 import org.testng.Assert;
@@ -29,48 +31,35 @@ import org.testng.Assert;
 public class BuildAgentsTest
     extends AbstractBuildAgentsTest
 {
+    @BeforeMethod
+    public void setUp()
+    {
+        enableDistributedBuilds();
+    }
+
+    @AfterMethod
+    public void tearDown()
+    {
+        disableDistributedBuilds();
+    }
+
     public void testAddBuildAgent()
     {
-        String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
-        String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
-        String BUILD_AGENT_DESCRIPTION2 = getProperty( "BUILD_AGENT_DESCRIPTION2" );
-        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
-        String BUILD_AGENT_DESCRIPTION3 = getProperty( "BUILD_AGENT_DESCRIPTION3" );
 
-        try
-        {
-            enableDistributedBuilds();
-            goToAddBuildAgent();
-            addBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION, true, true, false );
-            goToAddBuildAgent();
-            addBuildAgent( BUILD_AGENT_NAME2, BUILD_AGENT_DESCRIPTION2, true, true, true );
-            goToAddBuildAgent();
-            addBuildAgent( BUILD_AGENT_NAME3, BUILD_AGENT_DESCRIPTION3, true, false, false );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToAddBuildAgent();
+        addBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION, true, true, true );
     }
 
     public void testAddBuildAgentWithXSS()
     {
-        try
-        {
-            String invalidUrl = "http://sampleagent/<script>alert('gotcha')</script>";
-            String invalidDescription = "blah blah <script>alert('gotcha')</script> blah blah";
-            enableDistributedBuilds();
-            goToAddBuildAgent();
-            addBuildAgent( invalidUrl, invalidDescription, false, true, false );
+        String invalidUrl = "http://sampleagent/<script>alert('gotcha')</script>";
+        String invalidDescription = "blah blah <script>alert('gotcha')</script> blah blah";
+        goToAddBuildAgent();
+        addBuildAgent( invalidUrl, invalidDescription, false, true, false );
 
-            assertTextPresent( "Build agent url is invalid." );
-            assertTextPresent( "Build agent description contains invalid characters." );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        assertTextPresent( "Build agent url is invalid." );
     }
 
     public void testViewBuildAgentInstallationXSS()
@@ -89,59 +78,37 @@ public class BuildAgentsTest
     @Test( dependsOnMethods = { "testEditBuildAgent" } )
     public void testAddAnExistingBuildAgent()
     {
-        String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
 
-        try
-        {
-            enableDistributedBuilds();
-            goToAddBuildAgent();
-            addBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION, false, false, false ) ;
-            assertTextPresent( "Build agent already exists" );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToAddBuildAgent();
+        addBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION, false, false, true ) ;
+        assertTextPresent( "Build agent already exists" );
     }
 
     @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testEditBuildAgent()
     {
-        String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
         String new_agentDescription = "new_agentDescription";
 
-        try
-        {
-            enableDistributedBuilds();
-            goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
-            addEditBuildAgent( BUILD_AGENT_NAME, new_agentDescription );
-            goToEditBuildAgent( BUILD_AGENT_NAME, new_agentDescription);
-            addEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
+        addEditBuildAgent( BUILD_AGENT_NAME, new_agentDescription );
+        goToEditBuildAgent( BUILD_AGENT_NAME, new_agentDescription);
+        addEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
     }
 
     @Test( dependsOnMethods = { "testAddAnExistingBuildAgent" } )
     public void testDeleteBuildAgent()
         throws Exception
     {
-        try
-        {
-            enableDistributedBuilds();
-            goToBuildAgentPage();
-            String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME" );
-            removeBuildAgent( BUILD_AGENT_NAME );
-            assertTextNotPresent( BUILD_AGENT_NAME );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToBuildAgentPage();
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
+        removeBuildAgent( BUILD_AGENT_NAME );
+        assertTextNotPresent( BUILD_AGENT_NAME );
+
+        testAddBuildAgent();
     }
 
 	@Test( dependsOnMethods = { "testDeleteBuildAgent" } )
@@ -149,78 +116,52 @@ public class BuildAgentsTest
     {
     	String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
 
-    	try
-    	{
-    	    enableDistributedBuilds();
-    	    goToAddBuildAgent();
-    	    addBuildAgent( "", BUILD_AGENT_DESCRIPTION, false, false, false ) ;
-    	    assertTextPresent( "Build agent url is required." );
-    	}
-    	finally
-    	{
-    	    disableDistributedBuilds();
-    	}
+        goToAddBuildAgent();
+        addBuildAgent( "", BUILD_AGENT_DESCRIPTION, false, false, false ) ;
+        assertTextPresent( "Build agent url is required." );
     }
 
     @Test( dependsOnMethods = { "testDeleteBuildAgent" }, enabled=false )
     public void testBuildSuccessWithDistributedBuildsAfterDisableEnableOfBuildAgent()
         throws Exception
     {
-        String BUILD_AGENT_NAME = getProperty( "BUILD_AGENT_NAME2" );
-        String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION2" );
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
+        String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
         String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
         String M2_POM_URL = getProperty( "M2_DELETE_POM_URL" );
         String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
         String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
-        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_DELETE_PROJ_GRP_DESCRIPTION" );
 
-        try
-        {
-            enableDistributedBuilds();
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( M2_PROJ_GRP_NAME );
 
-            addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
-            goToProjectGroupsSummaryPage();
-            assertLinkPresent( M2_PROJ_GRP_NAME );
-            
-            clickLinkWithText( M2_PROJ_GRP_NAME );
+        clickLinkWithText( M2_PROJ_GRP_NAME );
 
-            assertPage( "Continuum - Project Group" );
+        assertPage( "Continuum - Project Group" );
 
-            // disable then enable build agent
-            goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
-            enableDisableBuildAgent( BUILD_AGENT_NAME, false );
-            goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
-            enableDisableBuildAgent( BUILD_AGENT_NAME, true );
+        // disable then enable build agent
+        goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
+        enableDisableBuildAgent( BUILD_AGENT_NAME, false );
+        goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
+        enableDisableBuildAgent( BUILD_AGENT_NAME, true );
 
-            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME, true );
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME, true );
 
-            removeProjectGroup( M2_PROJ_GRP_NAME );
-            assertLinkNotPresent( M2_PROJ_GRP_NAME );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        removeProjectGroup( M2_PROJ_GRP_NAME );
+        assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
 
-//TESTS FOR BUILD AGENT GROUPS
+    //TESTS FOR BUILD AGENT GROUPS
 
     @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testAddBuildAgentGroupXSS()
         throws Exception
     {
-        try
-        {
-            enableDistributedBuilds();
-            goToAddBuildAgentGroup();
-            addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[] {}, false );
-            assertTextPresent( "Build agent group name contains invalid characters" );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[] {}, false );
+        assertTextPresent( "Build agent group name contains invalid characters" );
     }
 
     public void testEditBuildAgentGroupXSS()
@@ -233,83 +174,48 @@ public class BuildAgentsTest
     public void testAddBuildAgentGroup()
         throws Exception
     {
-        String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
-        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
-        try
-        {
-            enableDistributedBuilds();
-            goToAddBuildAgentGroup();
-            addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME2, BUILD_AGENT_NAME3 }, new String[] {}, true );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME }, new String[] {}, true );
     }
 
     @Test( dependsOnMethods = { "testAddBuildAgentGroup" } )
     public void testEditBuildAgentGroup()
         throws Exception
     {
-        String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
-        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
         String newName = "new_agentgroupname";
-        try
-        {
-            enableDistributedBuilds();
-            goToEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME2, BUILD_AGENT_NAME3 } );
-            addEditBuildAgentGroup( newName, new String[] {},
-                             new String[] { BUILD_AGENT_NAME3 }, true );
-            goToEditBuildAgentGroup( newName, new String[] { BUILD_AGENT_NAME2 } );
-            addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME3 },
-                             new String[] {}, true );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME } );
+        addEditBuildAgentGroup( newName, new String[] {},
+                         new String[] { BUILD_AGENT_NAME }, true );
+        goToEditBuildAgentGroup( newName, new String[] {  } );
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME },
+                         new String[] {}, true );
     }
 
     @Test( dependsOnMethods = { "testEditBuildAgentGroup" } )
     public void testAddAnExistingBuildAgentGroup()
         throws Exception
     {
-        String BUILD_AGENT_NAME2 = getProperty( "BUILD_AGENT_NAME2" );
-        String BUILD_AGENT_NAME3 = getProperty( "BUILD_AGENT_NAME3" );
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
-        try
-        {
-            enableDistributedBuilds();
-            goToAddBuildAgentGroup();
-           	addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME2, BUILD_AGENT_NAME3 }, new String[] {}, false );
-           	assertTextPresent( "Build agent group already exists." );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME }, new String[] {}, false );
+        assertTextPresent( "Build agent group already exists." );
     }
 
     @Test( dependsOnMethods = { "testAddAnExistingBuildAgentGroup" } )
     public void testAddEmptyBuildAgentGroupName()
         throws Exception
     {
-        try
-        {
-            enableDistributedBuilds();
-            goToAddBuildAgentGroup();
-            addEditBuildAgentGroup( "", new String[] {}, new String[] {}, false );
-            assertTextPresent( "Build agent group name is required." );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( "", new String[] {}, new String[] {}, false );
+        assertTextPresent( "Build agent group name is required." );
     }
 
     @Test( dependsOnMethods = { "testAddEmptyBuildAgentGroupName" } )
@@ -317,15 +223,7 @@ public class BuildAgentsTest
     {
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
-        try
-        {
-            enableDistributedBuilds();
-            removeBuildAgentGroup( BUILD_AGENT_GROUPNAME );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        removeBuildAgentGroup( BUILD_AGENT_GROUPNAME );
     }
 
     @Test( dependsOnMethods = { "testDeleteBuildAgentGroup" } )
@@ -334,15 +232,7 @@ public class BuildAgentsTest
     {
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
-        try
-        {
-            enableDistributedBuilds();
-            goToAddBuildAgentGroup();
-            addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] {}, new String[] {}, true );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] {}, new String[] {}, true );
     }
 }

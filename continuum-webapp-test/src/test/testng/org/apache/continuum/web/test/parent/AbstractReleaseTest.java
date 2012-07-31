@@ -173,7 +173,7 @@ public abstract class AbstractReleaseTest
         FileInputStream fis = new FileInputStream( file );
         BufferedReader reader = new BufferedReader( new InputStreamReader( fis ) );
 
-        String BUILD_AGENT_URL = getProperty( "BUILD_AGENT_NAME2" );
+        String BUILD_AGENT_URL = getBuildAgentUrl();
         String strLine;
         StringBuffer str = new StringBuffer();
         while( ( strLine = reader.readLine() ) != null )
