@@ -106,7 +106,6 @@ public class BuildDefinitionTemplateTest
         goToAddBuildDefinitionTemplate();
         addEditBuildDefinitionTemplate( invalidString, invalidString, invalidString, invalidString, true, true, true, false );
         assertTextPresent( "BuildFile contains invalid characters" );
-        assertTextPresent( "Description contains invalid characters" );
         assertTextPresent( "Goals contain invalid characters" );
         assertTextPresent( "Arguments contain invalid characters" );
     }
