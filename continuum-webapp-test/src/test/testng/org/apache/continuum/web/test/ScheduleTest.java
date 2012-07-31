@@ -89,7 +89,6 @@ public class ScheduleTest
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true, false );
         assertTextPresent( "Name contains invalid characters." );
-        assertTextPresent( "Description contains invalid characters." );
     }
 
     public void testAddInvalidSchedule()
