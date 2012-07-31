@@ -36,7 +36,7 @@
       <message key="addProjectGroup.groupId.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.\\s]*]]></param>
+      <param name="expression"><![CDATA[[a-zA-Z0-9_.\s]*]]></param>
       <message key="addProjectGroup.groupId.invalid"/>
     </field-validator>
   </field>
