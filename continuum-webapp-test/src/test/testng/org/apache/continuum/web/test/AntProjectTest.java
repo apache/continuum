@@ -33,7 +33,6 @@ import org.testng.annotations.Test;
 public class AntProjectTest
     extends AbstractAdminTest
 {
-    @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testAddAntProject()
         throws Exception
     {
@@ -44,16 +43,15 @@ public class AntProjectTest
         String ANT_SCM_URL = getProperty( "ANT_SCM_URL" );
         String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
         String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+        String TEST_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String TEST_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
+        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
                     false, TEST_PROJ_GRP_NAME, null, true, "ant" );
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
     }
     
-    @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testAddAntProjectWithInvalidValues()
         throws Exception
     {
@@ -65,8 +63,6 @@ public class AntProjectTest
         String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
         String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
         String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
-        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME,
                     ANT_SCM_PASSWORD, ANT_TAG, false, DEFAULT_PROJ_GRP_NAME, null, false, "ant" );
