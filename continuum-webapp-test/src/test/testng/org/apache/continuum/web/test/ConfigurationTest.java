@@ -27,7 +27,7 @@ import org.testng.Assert;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "configuration" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "configuration" } )
 public class ConfigurationTest
     extends AbstractConfigurationTest
 {

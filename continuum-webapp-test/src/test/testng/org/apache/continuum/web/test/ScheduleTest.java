@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "schedule" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "schedule" } )
 public class ScheduleTest
     extends AbstractScheduleTest
 {

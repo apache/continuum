@@ -30,8 +30,6 @@ under the License.
      -->
     <groups>
       <run>
-        <include name="setup"/>
-        <!-- required to setup Selenium -->
         <include name="about"/>
       </run>
     </groups>
@@ -42,7 +40,6 @@ under the License.
   <test name="AdminTest" enabled="true">
     <groups>
       <run>
-        <include name="setup"/> <!-- required to setup Selenium -->        
         <include name="login"/>
         <include name="projectGroup"/>
         <include name="mavenTwoProject"/>

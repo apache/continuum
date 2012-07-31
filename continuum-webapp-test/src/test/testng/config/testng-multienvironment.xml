@@ -27,7 +27,6 @@ under the License.
         <parameter name="browser" value="Safari 4 on Windows"/>
         <groups>
             <run>
-                <include name="setup" /> <!-- required to setup Selenium -->
                 <include name="login" />
             </run>
         </groups>
@@ -39,7 +38,6 @@ under the License.
         <parameter name="browser" value="Firefox 3 on Linux"/>
         <groups>
             <run>
-                <include name="setup" /> <!-- required to setup Selenium -->
                 <include name="login" />
             </run>
         </groups>

@@ -26,7 +26,7 @@ import org.testng.Assert;
  * @version $Id$
  */
 public abstract class AbstractBuildQueueTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
     public void goToBuildQueuePage()
     {

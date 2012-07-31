@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "repository" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "repository" } )
 public class LocalRepositoriesTest
     extends AbstractLocalRepositoryTest
 {

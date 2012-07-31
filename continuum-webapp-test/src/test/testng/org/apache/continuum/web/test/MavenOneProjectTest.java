@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
@@ -28,9 +29,9 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "mavenOneProject" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "mavenOneProject" } )
 public class MavenOneProjectTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
     public void testAddMavenOneProjectWithNoDefaultBuildDefinitionFromTemplate()
         throws Exception

@@ -23,6 +23,7 @@ import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,9 +58,9 @@ public abstract class AbstractSeleniumTest
     private static String maxProjectWaitTimeInMs;
 
     /**
-     * Initialize properties.
+     * Initialize selenium
      */
-    public void open()
+    public void open( String baseUrl, String browser, String seleniumHost, int seleniumPort )
         throws Exception
     {
         InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
@@ -68,17 +69,10 @@ public abstract class AbstractSeleniumTest
 
         maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
         maxProjectWaitTimeInMs = getProperty( "MAX_PROJECT_WAIT_TIME_IN_MS" );
-    }
 
-    /**
-     * Initialize selenium
-     */
-    public void open( String baseUrl, String browser, String seleniumHost, int seleniumPort )
-        throws Exception
-    {
-        this.baseUrl = baseUrl;
+        AbstractSeleniumTest.baseUrl = baseUrl;
 
-        this.browser = browser;
+        AbstractSeleniumTest.browser = browser;
 
         if ( getSelenium() == null )
         {
@@ -128,6 +122,7 @@ public abstract class AbstractSeleniumTest
     /**
      * Close selenium session. Called from AfterSuite method of sub-class
      */
+    @AfterSuite(alwaysRun = true)
     public void close()
         throws Exception
     {

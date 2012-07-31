@@ -1,5 +1,7 @@
 package org.apache.continuum.web.test.parent;
 
+import org.testng.annotations.BeforeClass;
+
 import java.net.URLEncoder;
 
 /*
@@ -22,7 +24,7 @@ import java.net.URLEncoder;
  */
 
 public abstract class AbstractBuildAgentsTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
     public void goToAddBuildAgent()
     {

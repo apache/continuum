@@ -2,10 +2,8 @@ package org.apache.continuum.web.test.parent;
 
 import java.io.File;
 
-import org.apache.continuum.web.test.XPathExpressionUtil;
-
 public abstract class AbstractUserRolesManagementTest
-	extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
 	protected String username;
 	protected String fullname;

@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
 import org.testng.annotations.Test;
@@ -29,9 +30,9 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "projectGroup" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "projectGroup" } )
 public class ProjectGroupTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
 
     public void testAddProjectGroup()

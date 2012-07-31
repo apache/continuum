@@ -17,7 +17,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.continuum</groupId>
@@ -43,11 +44,6 @@ under the License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-          <verbose>true</verbose>
-        </configuration>
         <executions>
           <execution>
             <goals>
@@ -58,6 +54,7 @@ under the License.
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
         <executions>
           <execution>
             <goals>
@@ -67,8 +64,175 @@ under the License.
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.3</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <copy todir="${project.build.directory}">
+                  <fileset dir="src/appserver-base"/>
+                </copy>
+                <delete dir="${project.build.directory}/example-svn"/>
+                <copy todir="${project.build.directory}/example-svn">
+                  <fileset dir="src/test/example-svn"/>
+                </copy>
+                <!-- This doesn't work, SVN doesn't like the file:/ URL it gives
+                <makeurl file="${project.build.directory}/example-svn" property="svn.base.url"/>
+                -->
+                <path id="svn.repo.dir">
+                  <pathelement location="${project.build.directory}/example-svn"/>
+                </path>
+                <pathconvert refid="svn.repo.dir" targetos="unix" property="svn.base.url"/>
+                <echo file="${project.build.directory}/filter.properties">
+                  svn.base.url=file://localhost/${svn.base.url}
+                </echo>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${project.build.directory}/filter.properties</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>selenium-maven-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <id>start-selenium</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start-server</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop-selenium</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop-server</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>1.2.3</version>
+        <configuration>
+          <container>
+            <containerId>${container.name}</containerId>
+            <log>${project.build.directory}/logs/${container.name}.log</log>
+            <output>${project.build.directory}/logs/${container.name}.out</output>
+            <systemProperties>
+              <appserver.base>${project.build.directory}</appserver.base>
+              <derby.system.home>${project.build.directory}</derby.system.home>
+              <svn.base.url>${svn.base.url}</svn.base.url>
+            </systemProperties>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derby</artifactId>
+              </dependency>
+              <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+              </dependency>
+              <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+              </dependency>
+            </dependencies>
+          </container>
+          <configuration>
+            <properties>
+              <cargo.servlet.port>9595</cargo.servlet.port>
+              <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
+              <cargo.datasource.datasource.users>
+                cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
+                cargo.datasource.jndi=jdbc/users|
+                cargo.datasource.username=sa
+              </cargo.datasource.datasource.users>
+              <cargo.datasource.datasource.builds>
+                cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/builds;create=true|
+                cargo.datasource.jndi=jdbc/continuum|
+                cargo.datasource.username=sa
+              </cargo.datasource.datasource.builds>
+              <cargo.resource.resource.mail>
+                cargo.resource.name=mail/Session|
+                cargo.resource.type=javax.mail.Session|
+                cargo.resource.factory=org.apache.naming.factory.MailSessionFactory|
+                cargo.resource.parameters=mail.smtp.host=localhost
+              </cargo.resource.resource.mail>
+            </properties>
+          </configuration>
+          <deployables>
+            <deployable>
+              <artifactId>continuum-webapp</artifactId>
+              <type>war</type>
+              <properties>
+                <context>continuum</context>
+              </properties>
+            </deployable>
+            <deployable>
+              <artifactId>continuum-buildagent-webapp</artifactId>
+              <type>war</type>
+              <properties>
+                <context>continuum-buildagent</context>
+              </properties>
+            </deployable>
+            <!-- Test resources -->
+            <deployable>
+              <location>${basedir}/src/test/example-projects</location>
+              <type>war</type>
+              <properties>
+                <context>example-projects</context>
+              </properties>
+            </deployable>
+          </deployables>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-container</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop-container</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
+        <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <!-- Better to be able to see the results output from the listener as we go -->
           <redirectTestOutputToFile>false</redirectTestOutputToFile>
@@ -81,7 +245,7 @@ under the License.
             <id>integration-tests</id>
             <phase>integration-test</phase>
             <goals>
-              <goal>test</goal>
+              <goal>integration-test</goal>
             </goals>
             <configuration>
               <systemProperties>
@@ -104,37 +268,48 @@ under the License.
               </systemProperties>
             </configuration>
           </execution>
+          <execution>
+            <id>verify-integration-tests</id>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
         </executions>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>selenium-maven-plugin</artifactId>
+          <version>2.3</version>
+          <configuration>
+            <port>${seleniumPort}</port>
+            <background>true</background>
+            <logOutput>true</logOutput>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
-	
+
   <dependencies>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <version>5.8</version>
+      <version>6.2.1</version>
       <scope>test</scope>
-      <classifier>jdk15</classifier>
     </dependency>
 
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>1.4</version>
-    </dependency>  
-    
     <!-- deployables -->
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-webapp</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-buildagent-webapp</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
 
@@ -142,24 +317,24 @@ under the License.
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.1.3.1</version>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
-      <version>1.4</version>
     </dependency>
     <dependency>
       <groupId>javax.activation</groupId>
       <artifactId>activation</artifactId>
-      <version>1.1</version>
     </dependency>
 
     <!-- dependencies below are for code in src/test/it -->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium.server</groupId>
@@ -184,246 +359,53 @@ under the License.
         </exclusion>
       </exclusions>
     </dependency>
-
   </dependencies>
 
   <profiles>
     <profile>
-      <id>create-container</id>
+      <id>disable-cargo</id>
       <activation>
         <property>
-          <name>!container</name>
+          <name>baseUrl</name>
         </property>
       </activation>
       <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven2-plugin</artifactId>
-            <version>1.0</version>
-            <executions>
-              <execution>
-                <id>start-container</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-                <configuration>
-                  <wait>false</wait>
-                </configuration>
-              </execution>
-              <execution>
-                <id>stop-container</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <container>
-                <containerId>${container.name}</containerId>
-                <zipUrlInstaller>
-                  <url>${container.url}</url>
-                  <installDir>${cargo.installs.directory}/${container.name}</installDir>
-                </zipUrlInstaller>
-                <log>${project.build.directory}/logs/${container.name}.log</log>
-                <output>${project.build.directory}/logs/${container.name}.out</output>
-                <timeout>600000</timeout>
-                <systemProperties>
-                  <appserver.base>${project.build.directory}</appserver.base>
-                  <derby.system.home>${project.build.directory}</derby.system.home>
-                  <svn.base.url>${svn.base.url}</svn.base.url>
-                </systemProperties>
-                <dependencies>
-                  <dependency>
-                    <groupId>org.apache.derby</groupId>
-                    <artifactId>derby</artifactId>
-                  </dependency>
-                  <dependency>
-                    <groupId>javax.mail</groupId>
-                    <artifactId>mail</artifactId>
-                  </dependency>
-                  <dependency>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>activation</artifactId>
-                  </dependency>
-                </dependencies>
-              </container>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.cargo</groupId>
+              <artifactId>cargo-maven2-plugin</artifactId>
               <configuration>
-                <home>${project.build.directory}/${container.name}</home>
-                <type>standalone</type>
-                <properties>
-                  <cargo.servlet.port>9595</cargo.servlet.port>
-                  <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
-                  <cargo.datasource.datasource.users>
-                    cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
-                    cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
-                    cargo.datasource.jndi=jdbc/users|
-                    cargo.datasource.username=sa
-                  </cargo.datasource.datasource.users>
-                  <cargo.datasource.datasource.builds>
-                    cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
-                    cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/builds;create=true|
-                    cargo.datasource.jndi=jdbc/continuum|
-                    cargo.datasource.username=sa
-                  </cargo.datasource.datasource.builds>
-                  <cargo.resource.resource.mail>
-                    cargo.resource.name=mail/Session|
-                    cargo.resource.type=javax.mail.Session|
-                    cargo.resource.factory=org.apache.naming.factory.MailSessionFactory|
-                    cargo.resource.parameters=mail.smtp.host=localhost
-                  </cargo.resource.resource.mail>
-                </properties>
-                <deployables>
-                  <deployable>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>continuum-webapp</artifactId>
-                    <type>war</type>
-                    <properties>
-                      <context>continuum</context>
-                    </properties>
-                  </deployable>
-                  <deployable>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>continuum-buildagent-webapp</artifactId>
-                    <type>war</type>
-                    <properties>
-                      <context>continuum-buildagent</context>
-                    </properties>
-                  </deployable>
-                  <!-- Test resources -->
-                  <deployable>
-                    <location>${basedir}/src/test/example-projects</location>
-                    <type>war</type>
-                    <properties>
-                      <context>example-projects</context>
-                    </properties>
-                  </deployable>
-                </deployables>
+                <skip>true</skip>
               </configuration>
-            </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.3</version>
-            <executions>
-              <execution>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <copy todir="${project.build.directory}">
-                      <fileset dir="src/appserver-base" />
-                    </copy>
-                    <delete dir="${project.build.directory}/example-svn" />
-                    <copy todir="${project.build.directory}/example-svn">
-                      <fileset dir="src/test/example-svn" />
-                    </copy>
-                    <!-- This doesn't work, SVN doesn't like the file:/ URL it gives
-                    <makeurl file="${project.build.directory}/example-svn" property="svn.base.url"/>
-                    -->
-                    <path id="svn.repo.dir">
-                      <pathelement location="${project.build.directory}/example-svn" />
-                    </path>
-                    <pathconvert refid="svn.repo.dir" targetos="unix" property="svn.base.url"/>
-                    <echo file="${project.build.directory}/filter.properties">
-                      svn.base.url=file://localhost/${svn.base.url}
-                    </echo>
-                  </tasks>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>properties-maven-plugin</artifactId>
-            <version>1.0-alpha-2</version>
-            <executions>
-              <execution>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>read-project-properties</goal>
-                </goals>
-                <configuration>
-                  <files>
-                    <file>${project.build.directory}/filter.properties</file>
-                  </files>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
+            </plugin>
+          </plugins>
+        </pluginManagement>
       </build>
     </profile>
     <profile>
-      <id>start-selenium</id>
+      <id>disable-selenium-server</id>
       <activation>
         <property>
-          <name>!seleniumHost</name>
+          <name>seleniumHost</name>
         </property>
       </activation>
-      <properties>
-        <seleniumHost>localhost</seleniumHost>
-        <seleniumPort>4444</seleniumPort>
-      </properties>
       <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>selenium-maven-plugin</artifactId>
-            <version>2.3</version>
-            <executions>
-              <execution>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>start-server</goal>
-                </goals>
-                <configuration>
-                  <background>true</background>
-                  <port>${seleniumPort}</port>
-                  <logOutput>true</logOutput>      
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>selenium-maven-plugin</artifactId>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
       </build>
-    </profile>
-    <profile>
-      <id>tomcat5x</id>
-      <activation>
-        <property>
-          <name>!container</name>
-        </property>
-      </activation>
-      <properties>
-        <container.name>tomcat5x</container.name>
-        <container.url>
-          http://archive.apache.org/dist/tomcat/tomcat-5/v${tomcat5x.version}/bin/apache-tomcat-${tomcat5x.version}.zip
-        </container.url>
-      </properties>
-    </profile>
-    <profile>
-      <id>existing-container</id>
-      <activation>
-        <property>
-          <name>!baseUrl</name>
-        </property>
-      </activation>
-      <properties>
-        <baseUrl>http://localhost:9595/continuum/</baseUrl>
-      </properties>
     </profile>
     <profile>
       <id>firefox</id>
-      <activation>
-        <property>
-          <name>!browser</name>
-        </property>
-      </activation>
       <properties>
         <browser>*firefox</browser>
       </properties>
@@ -471,7 +453,6 @@ under the License.
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>selenium-maven-plugin</artifactId>
-            <version>2.3</version>
             <executions>
               <execution>
                 <id>xvfb</id>
@@ -485,35 +466,91 @@ under the License.
         </plugins>
       </build>
     </profile>
-  <profile>
-    <id>reporting</id>
+    <profile>
+      <id>reporting</id>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <testFailureIgnore>true</testFailureIgnore>
-            </configuration>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>report-only</id>
+                <phase>integration-test</phase>
+                <goals>
+                  <goal>report-only</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-report-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>report-only</id>
-              <goals>
-                <goal>report-only</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>tomcat7x</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <!-- -DseleniumHost profile cancels this, so we need to trigger on that as well -->
+        <property>
+          <name>seleniumHost</name>
+        </property>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.cargo</groupId>
+              <artifactId>cargo-maven2-plugin</artifactId>
+              <configuration>
+                <container>
+                  <zipUrlInstaller>
+                    <url>
+                      http://archive.apache.org/dist/tomcat/tomcat-7/v${tomcat7x.version}/bin/apache-tomcat-${tomcat7x.version}.zip
+                    </url>
+                    <downloadDir>${user.home}/.cargo</downloadDir>
+                  </zipUrlInstaller>
+                </container>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+      <properties>
+        <container.name>tomcat7x</container.name>
+        <tomcat7x.version>7.0.29</tomcat7x.version>
+      </properties>
+    </profile>
+    <profile>
+      <id>jetty7x</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.cargo</groupId>
+              <artifactId>cargo-maven2-plugin</artifactId>
+              <configuration>
+                <container>
+                  <artifactInstaller>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-distribution</artifactId>
+                    <version>${jetty7x.version}</version>
+                  </artifactInstaller>
+                </container>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+      <properties>
+        <container.name>jetty7x</container.name>
+        <jetty7x.version>7.6.5.v20120716</jetty7x.version>
+      </properties>
+    </profile>
   </profiles>
   <properties>
-    <cargo.installs.directory>${basedir}/cargo-installs</cargo.installs.directory>
-    <tomcat5x.version>5.5.27</tomcat5x.version>
+    <seleniumHost>localhost</seleniumHost>
+    <seleniumPort>4444</seleniumPort>
+    <baseUrl>http://localhost:9595/continuum/</baseUrl>
+    <browser>*firefox</browser>
   </properties>
 </project>

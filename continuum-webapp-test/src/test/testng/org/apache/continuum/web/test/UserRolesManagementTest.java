@@ -3,7 +3,7 @@ package org.apache.continuum.web.test;
 import org.apache.continuum.web.test.parent.AbstractUserRolesManagementTest;
 import org.testng.annotations.Test;
 
-@Test( groups = { "userroles" }, dependsOnMethods = { "testWithCorrectUsernamePassword" }, sequential = true )
+@Test( groups = { "userroles" }, sequential = true )
 public class UserRolesManagementTest
     extends AbstractUserRolesManagementTest
 {

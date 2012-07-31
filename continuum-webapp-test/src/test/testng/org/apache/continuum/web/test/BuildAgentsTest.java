@@ -20,11 +20,12 @@ package org.apache.continuum.web.test;
  */
 
 //import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
 import org.testng.Assert;
 
-@Test( groups = { "agent" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "agent" } )
 public class BuildAgentsTest
     extends AbstractBuildAgentsTest
 {

@@ -27,7 +27,7 @@ import org.testng.Assert;
  */
 
 public abstract class AbstractReleaseTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
     public void releasePrepareProject( String username, String password, String tagBase, String tag, String releaseVersion, String developmentVersion, String buildEnv, boolean success )
         throws Exception

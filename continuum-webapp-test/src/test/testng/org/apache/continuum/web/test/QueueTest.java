@@ -30,7 +30,7 @@ import org.apache.continuum.web.test.ScheduleTest;
  */
 
 
-@Test( groups = { "queue" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "queue" } )
 public class QueueTest
     extends AbstractBuildQueueTest
 {

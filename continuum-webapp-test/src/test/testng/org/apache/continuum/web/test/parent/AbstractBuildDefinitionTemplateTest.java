@@ -24,7 +24,7 @@ package org.apache.continuum.web.test.parent;
  * @version $Id$
  */
 public abstract class AbstractBuildDefinitionTemplateTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
     public void goToBuildDefinitionTemplatePage()
     {

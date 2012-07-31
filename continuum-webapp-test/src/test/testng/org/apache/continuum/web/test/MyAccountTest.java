@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,11 +30,10 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "myAccount" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "myAccount" } )
 public class MyAccountTest
-    extends AbstractSeleniumTest
+    extends AbstractAdminTest
 {
-
     public String newFullName = "Admin_FullName";
 
     public String newEmail = "new_admin@mail.com";

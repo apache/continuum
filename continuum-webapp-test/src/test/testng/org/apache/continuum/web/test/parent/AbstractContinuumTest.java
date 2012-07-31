@@ -20,10 +20,10 @@ package org.apache.continuum.web.test.parent;
  */
 
 import org.apache.continuum.web.test.ConfigurationTest;
-import org.apache.continuum.web.test.listener.CaptureScreenShotsListener;
 import org.testng.Assert;
-
-import java.io.File;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
 /**
  * Based on AbstractContinuumTestCase of Emmanuel Venisse test.
@@ -107,26 +107,6 @@ public abstract class AbstractContinuumTest
         assertButtonWithValuePresent( "Cancel" );
         assertTextPresent( "Need an Account? Register!" );
         assertTextPresent( "Forgot your Password? Request a password reset." );
-    }
-
-    public void submitUserData(String username,String password,boolean rememberme,boolean success )
-    {
-
-        setFieldValue( "username", username );
-        setFieldValue( "password", password );
-        if ( rememberme )
-        {
-            checkField( "rememberMe" );
-        }
-        submit();
-        if ( success )
-        {
-            assertAutenticatedPage( username );
-        }
-        else
-        {
-            assertLoginPage();
-        }
     }
 
     public void assertAutenticatedPage(String username )
@@ -1167,5 +1147,71 @@ public abstract class AbstractContinuumTest
         assertTextNotPresent( "Export to CSV" );
         assertTextNotPresent( "Results" );
         assertTextNotPresent( "No Results Found" );
+    }
+
+    @BeforeSuite( alwaysRun = true )
+    @Parameters( { "baseUrl", "browser", "seleniumHost", "seleniumPort" } )
+    public void initializeContinuum( @Optional( "http://localhost:9595/continuum" ) String baseUrl,
+                                     @Optional( "*firefox" ) String browser,
+                                     @Optional( "localhost" ) String seleniumHost,
+                                     @Optional( "4444" ) int seleniumPort )
+        throws Exception
+    {
+        super.open( baseUrl, browser, seleniumHost, seleniumPort );
+        Assert.assertNotNull( getSelenium(), "Selenium is not initialized" );
+        getSelenium().open( baseUrl );
+        String title = getSelenium().getTitle();
+        if ( title.equals( "Create Admin User" ) )
+        {
+            assertCreateAdmin();
+            String fullname = getProperty( "ADMIN_FULLNAME" );
+            String username = getProperty( "ADMIN_USERNAME" );
+            String mail = getProperty( "ADMIN_MAIL" );
+            String password = getProperty( "ADMIN_PASSWORD" );
+            submitAdminData( fullname, mail, password );
+            assertAutenticatedPage( username );
+            assertEditConfigurationPage();
+            postAdminUserCreation();
+            disableDefaultSchedule();
+            clickLinkWithText( "Logout" );
+        }
+    }
+
+    private void postAdminUserCreation()
+    {
+        if ( getTitle().endsWith( "Continuum - Configuration" ) )
+        {
+            String workingDir = getFieldValue( "configuration_workingDirectory" );
+            String buildOutputDir = getFieldValue( "configuration_buildOutputDirectory" );
+            String releaseOutputDir = getFieldValue( "configuration_releaseOutputDirectory" );
+            String locationDir = "target/data";
+            String data = "data";
+            setFieldValue( "workingDirectory", workingDir.replaceFirst( data, locationDir ) );
+            setFieldValue( "buildOutputDirectory", buildOutputDir.replaceFirst( data, locationDir ) );
+            setFieldValue( "releaseOutputDirectory", releaseOutputDir.replaceFirst( data, locationDir ) );
+            setFieldValue( "baseUrl", baseUrl );
+            submit();
+        }
+    }
+
+    private void disableDefaultSchedule()
+    {
+        clickLinkWithText( "Schedules" );
+        String xPath = "//preceding::td[text()='DEFAULT_SCHEDULE']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        if ( isChecked( "saveSchedule_active" ) )
+        {
+            uncheckField( "saveSchedule_active" );
+        }
+        clickButtonWithValue( "Save" );
+    }
+
+    protected void login( String username, String password )
+    {
+        goToLoginPage();
+        getSelenium().type( "loginForm_username", username );
+        getSelenium().type( "loginForm_password", password );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
     }
 }

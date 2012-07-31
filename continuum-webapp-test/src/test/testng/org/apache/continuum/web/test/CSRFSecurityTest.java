@@ -19,15 +19,16 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
  * Test actions that are vulnerable to CSRF.
  */
-@Test( groups = { "csrf" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "csrf" } )
 public class CSRFSecurityTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
     public void testCSRFDeleteProject()
     {

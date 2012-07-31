@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "installation" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "installation" } )
 public class InstallationTest
     extends AbstractInstallationTest
 {

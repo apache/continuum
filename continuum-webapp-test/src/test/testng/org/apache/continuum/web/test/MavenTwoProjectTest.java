@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractContinuumTest;
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.annotations.Test;
 
 /**
@@ -28,9 +28,9 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "mavenTwoProject" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "mavenTwoProject" } )
 public class MavenTwoProjectTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
 
     public void testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate()

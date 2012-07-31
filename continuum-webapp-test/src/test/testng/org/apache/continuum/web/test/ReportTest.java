@@ -19,12 +19,13 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
-@Test( groups = { "report" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "report" } )
 public class ReportTest
-    extends AbstractContinuumTest
+    extends AbstractAdminTest
 {
     @Test( dependsOnMethods = { "testProjectGroupAllBuildSuccess" } )
     public void testViewBuildsReportWithSuccessfulBuild()

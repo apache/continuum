@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "buildEnvironment" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "buildEnvironment" } )
 public class BuildEnvironmentTest
     extends AbstractBuildEnvironmentTest
 {

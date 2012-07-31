@@ -23,7 +23,7 @@ import java.io.File;
 import org.apache.continuum.web.test.parent.AbstractReleaseTest;
 import org.testng.annotations.Test;
 
-@Test( groups = { "release" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
+@Test( groups = { "release" } )
 public class ReleaseTest
     extends AbstractReleaseTest
 {

@@ -24,7 +24,7 @@ package org.apache.continuum.web.test.parent;
  * @version $Id$
  */
 public abstract class AbstractPurgeTest
-    extends AbstractSeleniumTest
+    extends AbstractAdminTest
 {
     public void goToGeneralPurgePage()
     {

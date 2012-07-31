@@ -47,18 +47,12 @@ public class LoginTest
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
 
-    @Test( dependsOnMethods = { "testWithBadUsername" }, alwaysRun = true )
     public void testWithBadPassword()
     {
-        goToLoginPage();
-        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
-        getSelenium().type( "loginForm_password", "badPassword" );
-        getSelenium().click( "loginForm__login" );
-        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        login( getProperty( "ADMIN_USERNAME" ), "badPassword" );
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
 
-    @Test( dependsOnMethods = { "testWithBadPassword" }, alwaysRun = true )
     public void testWithEmptyUsername()
     {
         goToLoginPage();
@@ -68,7 +62,6 @@ public class LoginTest
         assertTextPresent( "User Name is required" );
     }
 
-    @Test( dependsOnMethods = { "testWithEmptyUsername" }, alwaysRun = true )
     public void testWithEmptyPassword()
     {
         goToLoginPage();
@@ -78,16 +71,14 @@ public class LoginTest
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
 
-    @Test( groups = { "loginSuccess" }, dependsOnMethods = { "testWithEmptyPassword" }, alwaysRun = true )
     public void testWithCorrectUsernamePassword()
     {
-        goToLoginPage();
-        getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
-        getSelenium().type( "loginForm_password", getProperty( "ADMIN_PASSWORD" ) );
-        getSelenium().click( "loginForm__login" );
-        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        String username = getProperty( "ADMIN_USERNAME" );
+        String password = getProperty( "ADMIN_PASSWORD" );
+        login( username, password );
         assertTextPresent( "Edit Details" );
         assertTextPresent( "Logout" );
-        assertTextPresent( getProperty( "ADMIN_USERNAME" ) );
+        assertTextPresent( username );
     }
+
 }
