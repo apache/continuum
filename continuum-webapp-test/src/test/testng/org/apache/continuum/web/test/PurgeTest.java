@@ -47,14 +47,6 @@ public class PurgeTest
         assertTextPresent( "Retention Count must be greater than 0." );
     }
 
-    public void testAddRepositoryPurgeWithXSS()
-    {
-        String invalidDescription = "blah blah <script>alert('gotcha')</script>";
-        goToAddRepositoryPurge();
-        addEditRepositoryPurge( "1", "1", invalidDescription, false );
-        assertTextPresent( "Description contains invalid characters." );
-    }
-
     @Test( dependsOnMethods = { "testAddRepositoryPurge" } )
     public void testEditRepositoryPurge()
     {
@@ -92,14 +84,6 @@ public class PurgeTest
         goToAddDirectoryPurge();
         addEditDirectoryPurge( "", "", PURGE_DIRECTORY_DESCRIPTION, false );
         assertTextPresent( "Retention Count must be greater than 0." );
-    }
-
-    public void testAddDirectoryPurgeWithXSS()
-    {
-        String invalidDescription = "blah blah <script>alert('gotcha')</script>";
-        goToAddDirectoryPurge();
-        addEditDirectoryPurge( "1", "1", invalidDescription, false );
-        assertTextPresent( "Description contains invalid characters." );
     }
 
     @Test( dependsOnMethods = { "testAddDirectoryPurge" } )
