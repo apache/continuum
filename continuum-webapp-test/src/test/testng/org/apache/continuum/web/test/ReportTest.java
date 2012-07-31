@@ -80,7 +80,6 @@ public class ReportTest
         assertLinkPresent( "Next" );
     }*/
 
-    @Test
     public void testBuildsReportWithInvalidRowCount()
     {
         goToProjectBuildsReport();
@@ -91,7 +90,6 @@ public class ReportTest
         assertTextPresent( "Row count should be at least 10." );
     }
 
-    @Test
     public void testBuildsReportWithInvalidDates()
     {
         goToProjectBuildsReport();
@@ -103,7 +101,6 @@ public class ReportTest
         assertTextPresent( "Start Date must be earlier than the End Date" );
     }
 
-    @Test
     public void testViewBuildsReportWithFailedBuild()
         throws Exception
     {
@@ -130,7 +127,6 @@ public class ReportTest
         assertTextPresent( M2_PROJ_GRP_NAME );
     }
 
-    @Test
     public void testViewBuildsReportWithErrorBuild()
     {
         goToProjectBuildsReport();
