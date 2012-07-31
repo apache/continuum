@@ -42,4 +42,66 @@ public abstract class AbstractAdminTest
     {
         return baseUrl.replace( "/continuum", "/continuum-buildagent/xmlrpc" );
     }
+
+    protected void addBuildAgent( String buildAgentUrl )
+    {
+        goToBuildAgentPage();
+        assertBuildAgentPage();
+
+        if ( !isElementPresent( "link=" + buildAgentUrl ) )
+        {
+
+            clickAndWait( "editBuildAgent_0" ); //add button
+            assertAddEditBuildAgentPage( true );
+
+            setFieldValue( "saveBuildAgent_buildAgent_url", buildAgentUrl );
+            setFieldValue( "saveBuildAgent_buildAgent_description", "Default description" );
+            checkField( "saveBuildAgent_buildAgent_enabled" );
+
+            submit();
+
+            assertBuildAgentPage();
+            assertElementPresent( "link=" + buildAgentUrl );
+        }
+    }
+
+    public void goToAddBuildAgent()
+    {
+        goToBuildAgentPage();
+        assertBuildAgentPage();
+        clickAndWait("editBuildAgent_0"); //add button
+        assertAddEditBuildAgentPage( true );
+    }
+
+    public void assertAddEditBuildAgentPage( boolean isChecked )
+    {
+        assertPage( "Continuum - Add/Edit Build Agent" );
+        assertTextPresent( "Add/Edit Build Agent" );
+        assertTextPresent( "Build Agent URL*:" );
+        assertTextPresent( "Description:" );
+        assertTextPresent( "Enabled" );
+        assertElementPresent( "saveBuildAgent_buildAgent_url" );
+        assertElementPresent( "saveBuildAgent_buildAgent_description");
+
+        if ( isChecked )
+        {
+            assertIsChecked( "saveBuildAgent_buildAgent_enabled" );
+        }
+
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    protected void addMaven2Project( String groupName )
+        throws Exception
+    {
+        String M2_POM_URL = getProperty( "M2_DELETE_POM_URL" );
+        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
+        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_DELETE_PROJ_GRP_DESCRIPTION" );
+
+        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( groupName );
+    }
 }

@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -66,6 +67,12 @@ public abstract class AbstractSeleniumTest
         InputStream input = this.getClass().getClassLoader().getResourceAsStream( "testng.properties" );
         p = new Properties();
         p.load( input );
+
+        String svnBaseUrl = "file://localhost/" + new File( "target/example-svn" ).getAbsolutePath();
+        for ( String key : p.stringPropertyNames() ) {
+            String value = p.getProperty( key ).replace( "${svn.base.url}", svnBaseUrl );
+            p.setProperty( key, value );
+        }
 
         maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );
         maxProjectWaitTimeInMs = getProperty( "MAX_PROJECT_WAIT_TIME_IN_MS" );

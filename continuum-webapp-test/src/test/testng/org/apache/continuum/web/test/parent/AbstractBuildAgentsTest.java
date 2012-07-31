@@ -26,33 +26,6 @@ import java.net.URLEncoder;
 public abstract class AbstractBuildAgentsTest
     extends AbstractAdminTest
 {
-    public void goToAddBuildAgent()
-    {
-        goToBuildAgentPage();
-        assertBuildAgentPage();
-        clickAndWait("editBuildAgent_0"); //add button
-        assertAddEditBuildAgentPage( true );
-    }
-
-    public void assertAddEditBuildAgentPage( boolean isChecked )
-    {
-        assertPage( "Continuum - Add/Edit Build Agent" );
-        assertTextPresent( "Add/Edit Build Agent" );
-        assertTextPresent( "Build Agent URL*:" );
-        assertTextPresent( "Description:" );
-        assertTextPresent( "Enabled" );
-        assertElementPresent( "saveBuildAgent_buildAgent_url" );
-        assertElementPresent( "saveBuildAgent_buildAgent_description");
-
-        if ( isChecked )
-        {
-            assertIsChecked( "saveBuildAgent_buildAgent_enabled" );
-        }
-
-        assertButtonWithValuePresent( "Save" );
-        assertButtonWithValuePresent( "Cancel" );
-    }
-
     public void removeBuildAgent( String agentName )
         throws Exception
     {
