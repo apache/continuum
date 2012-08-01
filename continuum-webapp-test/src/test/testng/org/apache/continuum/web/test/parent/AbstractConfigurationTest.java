@@ -71,6 +71,7 @@ public abstract class AbstractConfigurationTest
         setFieldValue( "deploymentRepositoryDirectory", deploymentRepository );
         setFieldValue( "baseUrl", baseUrl );
         setFieldValue( "numberOfAllowedBuildsinParallel", numberBuildParallel );
+        setFieldValue( "sharedSecretPassword", SHARED_SECRET );
         if ( distributed )
         {
             checkField( "distributedBuildEnabled" );

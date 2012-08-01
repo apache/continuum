@@ -89,8 +89,11 @@ public class BuildAgentsTest
     @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testEditBuildAgent()
     {
-        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
+
+        addBuildAgent( getBuildAgentUrl(), BUILD_AGENT_DESCRIPTION );
+
+        String BUILD_AGENT_NAME = getBuildAgentUrl();
         String new_agentDescription = "new_agentDescription";
 
         goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
@@ -99,7 +102,7 @@ public class BuildAgentsTest
         addEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
     }
 
-    @Test( dependsOnMethods = { "testAddAnExistingBuildAgent" } )
+    @Test( dependsOnMethods = { "testAddAnExistingBuildAgent", "testDeleteBuildAgentGroup" } )
     public void testDeleteBuildAgent()
         throws Exception
     {
@@ -107,8 +110,6 @@ public class BuildAgentsTest
         String BUILD_AGENT_NAME = getBuildAgentUrl();
         removeBuildAgent( BUILD_AGENT_NAME );
         assertTextNotPresent( BUILD_AGENT_NAME );
-
-        testAddBuildAgent();
     }
 
 	@Test( dependsOnMethods = { "testDeleteBuildAgent" } )
@@ -125,6 +126,8 @@ public class BuildAgentsTest
     public void testBuildSuccessWithDistributedBuildsAfterDisableEnableOfBuildAgent()
         throws Exception
     {
+        addBuildAgent( getBuildAgentUrl() );
+
         String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
         String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
@@ -159,6 +162,8 @@ public class BuildAgentsTest
     public void testAddBuildAgentGroupXSS()
         throws Exception
     {
+        addBuildAgent( getBuildAgentUrl() );
+
         goToAddBuildAgentGroup();
         addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[] {}, false );
         assertTextPresent( "Build agent group name contains invalid characters" );
@@ -170,10 +175,11 @@ public class BuildAgentsTest
         Assert.assertFalse( getSelenium().isAlertPresent() );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgent", "testDeleteBuildAgent" } )
     public void testAddBuildAgentGroup()
         throws Exception
     {
+        addBuildAgent( getBuildAgentUrl() );
+
         String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 

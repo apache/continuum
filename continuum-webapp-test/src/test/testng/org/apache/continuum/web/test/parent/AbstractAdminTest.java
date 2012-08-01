@@ -45,6 +45,11 @@ public abstract class AbstractAdminTest
 
     protected void addBuildAgent( String buildAgentUrl )
     {
+        addBuildAgent( buildAgentUrl, "Default description" );
+    }
+
+    protected void addBuildAgent( String buildAgentUrl, String description )
+    {
         goToBuildAgentPage();
         assertBuildAgentPage();
 
@@ -55,7 +60,7 @@ public abstract class AbstractAdminTest
             assertAddEditBuildAgentPage( true );
 
             setFieldValue( "saveBuildAgent_buildAgent_url", buildAgentUrl );
-            setFieldValue( "saveBuildAgent_buildAgent_description", "Default description" );
+            setFieldValue( "saveBuildAgent_buildAgent_description", description );
             checkField( "saveBuildAgent_buildAgent_enabled" );
 
             submit();

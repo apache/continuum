@@ -25,6 +25,8 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
+import static org.testng.Assert.assertEquals;
+
 /**
  * Based on AbstractContinuumTestCase of Emmanuel Venisse test.
  *
@@ -34,6 +36,8 @@ import org.testng.annotations.Parameters;
 public abstract class AbstractContinuumTest
     extends AbstractSeleniumTest
 {
+
+    protected static final String SHARED_SECRET = "continuum1234";
 
     // ////////////////////////////////////
     // Create Admin User
@@ -312,16 +316,25 @@ public abstract class AbstractContinuumTest
         clickButtonWithValue( "Save" );
         assertProjectGroupsSummaryPage();
     }
-    
+
     public void removeProjectGroup( String groupName )
         throws Exception
     {
+        removeProjectGroup( groupName, true );
+    }
+
+    public void removeProjectGroup( String groupName, boolean failIfMissing )
+        throws Exception
+    {
         goToProjectGroupsSummaryPage();
-        clickLinkWithText( groupName );
-        clickButtonWithValue( "Delete Group" );
-        assertTextPresent( "Project Group Removal" );
-        clickButtonWithValue( "Delete" );
-        assertProjectGroupsSummaryPage();
+        if ( failIfMissing || isLinkPresent( groupName ) )
+        {
+            clickLinkWithText( groupName );
+            clickButtonWithValue( "Delete Group" );
+            assertTextPresent( "Project Group Removal" );
+            clickButtonWithValue( "Delete" );
+            assertProjectGroupsSummaryPage();
+        }
     }
 
     public void editProjectGroup(String name,String groupId,String description,String newName,String newDescription )
@@ -383,6 +396,7 @@ public abstract class AbstractContinuumTest
         }
 
         clickLinkWithText( projectName );
+        waitForElementPresent( "link=Builds" );
         clickLinkWithText( "Builds" );
         clickLinkWithText( "Result" );
 
@@ -853,7 +867,7 @@ public abstract class AbstractContinuumTest
             waitForCondition( condition );
         }
 
-        Assert.assertEquals( getTitle(), title );
+        assertEquals( getTitle(), title );
     }
 
     public void createAndAddUserAsDeveloperToGroup( String username, String name, String email, String password, String groupName )
@@ -1049,9 +1063,10 @@ public abstract class AbstractContinuumTest
         setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
         if ( !isChecked( "configuration_distributedBuildEnabled" ) )
         {
-            checkField( "configuration_distributedBuildEnabled" );
+            // must use click here so the JavaScript enabling the shared secret gets triggered
+            click( "configuration_distributedBuildEnabled" );
         }
-        setFieldValue( "configuration_sharedSecretPassword", "continuum1234" );
+        setFieldValue( "configuration_sharedSecretPassword", SHARED_SECRET );
         clickAndWait( "configuration_" );
         assertTextPresent( "true" );
         assertTextPresent( "Distributed Builds" );

@@ -1,7 +1,5 @@
 package org.apache.continuum.web.test.parent;
 
-import org.testng.annotations.BeforeClass;
-
 import java.net.URLEncoder;
 
 /*
@@ -29,14 +27,25 @@ public abstract class AbstractBuildAgentsTest
     public void removeBuildAgent( String agentName )
         throws Exception
     {
-        clickLinkWithXPath( "//a[contains(@href,'deleteBuildAgent.action') and contains(@href, '" + URLEncoder.encode( agentName, "UTF-8" ) + "')]/img" );
-        assertPage("Continuum - Delete Build Agent");
-        assertTextPresent( "Delete Build Agent" );
-        assertTextPresent( "Are you sure you want to delete build agent " + agentName + " ?" );
-        assertButtonWithValuePresent( "Delete" );
-        assertButtonWithValuePresent( "Cancel" );
-        clickButtonWithValue( "Delete" );
-        assertBuildAgentPage();
+        removeBuildAgent( agentName, true );
+    }
+
+    public void removeBuildAgent( String agentName, boolean failIfMissing )
+        throws Exception
+    {
+        String deleteButton = "//a[contains(@href,'deleteBuildAgent.action') and contains(@href, '" + URLEncoder.encode(
+            agentName, "UTF-8" ) + "')]/img";
+        if ( failIfMissing || isElementPresent( deleteButton ) )
+        {
+            clickLinkWithXPath( deleteButton );
+            assertPage("Continuum - Delete Build Agent");
+            assertTextPresent( "Delete Build Agent" );
+            assertTextPresent( "Are you sure you want to delete build agent " + agentName + " ?" );
+            assertButtonWithValuePresent( "Delete" );
+            assertButtonWithValuePresent( "Cancel" );
+            clickButtonWithValue( "Delete" );
+            assertBuildAgentPage();
+        }
     }
 
     public void addBuildAgent( String agentURL, String description, boolean success, boolean enabled, boolean pingOk )
