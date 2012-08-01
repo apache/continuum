@@ -67,7 +67,6 @@ public class AntProjectTest
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME,
                     ANT_SCM_PASSWORD, ANT_TAG, false, DEFAULT_PROJ_GRP_NAME, null, false, "ant" );
         assertTextPresent( "Name contains invalid characters." );
-        assertTextPresent( "Description contains invalid characters." );
         assertTextPresent( "Version contains invalid characters." );
         assertTextPresent( "SCM Url contains invalid characters." );
         assertTextPresent( "SCM Tag contains invalid characters." );

@@ -153,4 +153,56 @@ public class DistributedBuildTest
         buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
     }
 
+    public void testBuildShellProjectWithDistributedBuildsEnabled()
+        throws Exception
+    {
+        String SHELL_GROUP_NAME = getProperty( "SHELL_GROUP_NAME" );
+        String SHELL_GROUP_ID = getProperty( "SHELL_GROUP_ID" );
+        String SHELL_GROUP_DESC = getProperty( "SHELL_GROUP_DESC" );
+
+        String SHELL_NAME = getProperty( "SHELL_NAME_TWO" );
+        String SHELL_DESCRIPTION = getProperty( "SHELL_DESCRIPTION_TWO" );
+        String SHELL_VERSION = getProperty( "SHELL_VERSION_TWO" );
+        String SHELL_TAG = getProperty( "SHELL_TAG_TWO" );
+        String SHELL_SCM_URL = getProperty( "SHELL_SCM_URL_TWO" );
+        String SHELL_SCM_USERNAME = getProperty( "SHELL_SCM_USERNAME_TWO" );
+        String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD_TWO" );
+
+        addProjectGroup( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC, true );
+
+        projectGroupName = SHELL_GROUP_NAME;
+
+        addBuildAgent( getBuildAgentUrl() );
+
+        goToAddShellProjectPage();
+        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
+                    SHELL_SCM_PASSWORD, SHELL_TAG, false, SHELL_GROUP_NAME, null, true, "shell" );
+        assertProjectGroupSummaryPage( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC );
+
+        goToProjectGroupsSummaryPage();
+        clickLinkWithText( SHELL_GROUP_NAME );
+        clickLinkWithText( "Build Definitions" );
+        clickLinkWithXPath( "//table[@id='ec_table']/tbody/tr/td[14]/a/img" );
+
+        editBuildDefinitionShellType( "build.sh", "", "description", "shell", true );
+
+        goToProjectGroupsSummaryPage();
+
+        buildProjectGroup( SHELL_GROUP_NAME ,SHELL_GROUP_ID , SHELL_GROUP_DESC ,SHELL_NAME, true );
+
+    }
+
+    private void editBuildDefinitionShellType( String buildFile, String arguments, String description, String buildDefinitionType, boolean alwaysBuild )
+    {
+        setFieldValue( "buildFile", buildFile);
+        setFieldValue( "arguments", arguments );
+        setFieldValue( "description", description );
+        setFieldValue( "buildDefinitionType", buildDefinitionType );
+        if( alwaysBuild )
+        {
+            checkField( "alwaysBuild" );
+        }
+
+        submit();
+    }
 }

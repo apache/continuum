@@ -368,6 +368,7 @@ public abstract class AbstractContinuumTest
     {
         showProjectGroup( projectGroupName, groupId, description );
         waitForProjectUpdate();
+        waitForElementPresent( "//button[@value='Build all projects']" );
         clickButtonWithValue( "Build all projects" );
 
         // wait for project to finish building
