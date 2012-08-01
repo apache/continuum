@@ -167,7 +167,7 @@ under the License.
           <configuration>
             <properties>
               <cargo.servlet.port>9595</cargo.servlet.port>
-              <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
+              <cargo.jvmargs>${cargo.jvmargs}</cargo.jvmargs>
               <cargo.datasource.datasource.users>
                 cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
                 cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
@@ -546,11 +546,25 @@ under the License.
         <jetty7x.version>7.6.5.v20120716</jetty7x.version>
       </properties>
     </profile>
+    <profile>
+      <id>debug</id>
+      <properties>
+        <cargo.jvmargs>
+          -Xmx512m
+          -XX:MaxPermSize=128m
+          -Xdebug
+          -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+          -Xnoagent
+          -Djava.compiler=NONE
+        </cargo.jvmargs>
+      </properties>
+    </profile>
   </profiles>
   <properties>
     <seleniumHost>localhost</seleniumHost>
     <seleniumPort>4444</seleniumPort>
     <baseUrl>http://localhost:9595/continuum/</baseUrl>
     <browser>*firefox</browser>
+    <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
   </properties>
 </project>
