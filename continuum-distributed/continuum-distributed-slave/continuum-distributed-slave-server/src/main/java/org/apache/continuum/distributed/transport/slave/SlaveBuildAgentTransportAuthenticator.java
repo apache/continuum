@@ -43,10 +43,14 @@ public class SlaveBuildAgentTransportAuthenticator
         {
             XmlRpcHttpRequestConfigImpl config = (XmlRpcHttpRequestConfigImpl) pRequest.getConfig();
 
-            if ( StringUtils.isBlank( config.getBasicPassword() ) || 
-                            StringUtils.isBlank( buildAgentConfigurationService.getSharedSecretPassword() ) )
+            if ( config.getBasicPassword() == null || StringUtils.isBlank( config.getBasicPassword() ) )
             {
-                throw new XmlRpcException( "Shared Secret Password is not configured properly" );
+                throw new XmlRpcException( "Shared Secret Password is not present in the server request" );
+            }
+
+            if ( buildAgentConfigurationService.getSharedSecretPassword() == null || StringUtils.isBlank( buildAgentConfigurationService.getSharedSecretPassword() ) )
+            {
+                throw new XmlRpcException( "Shared Secret Password is not configured properly on the build agent" );
             }
 
             return buildAgentConfigurationService.getSharedSecretPassword().equals( config.getBasicPassword() );
