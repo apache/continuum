@@ -40,7 +40,7 @@ public abstract class AbstractAdminTest
 
     protected String getBuildAgentUrl()
     {
-        return baseUrl.replace( "/continuum", "/continuum-buildagent/xmlrpc" );
+        return baseUrl.substring( 0, baseUrl.indexOf( "/continuum" ) ) + "/continuum-buildagent/xmlrpc";
     }
 
     protected void addBuildAgent( String buildAgentUrl )
