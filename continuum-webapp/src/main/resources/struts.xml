@@ -242,8 +242,6 @@
 
     <action name="addProject" class="addProject" method="add">
       <interceptor-ref name="configuredContinuumStack"/>
-      <interceptor-ref name="execAndWait"/>
-      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
       <result name="input" type="chain">addProjectInput</result>
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirectAction">
