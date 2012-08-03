@@ -111,6 +111,8 @@ public class MavenTwoProjectTest
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
         String TEST_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
 
+        removeProjectGroup( TEST_PROJ_GRP_NAME, false );
+
         addProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, true );
 
         String M2_POM_URL = getProperty( "M2_POM_URL" );
