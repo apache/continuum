@@ -94,7 +94,6 @@ public class BuildDefinitionTest
         setFieldValue( "description", "<script>alert('xss')</script>" );
         clickButtonWithValue( "Save" );
         assertTextPresent( "Build file contains invalid characters." );
-        assertTextPresent( "Description contains invalid characters." );
     }
 
     @Test( dependsOnMethods = { "testAddProjectGroup2" } )
