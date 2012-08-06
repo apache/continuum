@@ -21,7 +21,6 @@ package org.apache.continuum.web.test;
 
 import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
 import org.testng.annotations.Test;
-import org.apache.continuum.web.test.ScheduleTest;
 
 
 /**
@@ -129,7 +128,7 @@ public class QueueTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
-        buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+        buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
         String location = getSelenium().getLocation();
 
         //check queue page while building
@@ -159,7 +158,7 @@ public class QueueTest
         try
         {
             enableDistributedBuilds();
-            buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
+            buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
 
             //check queue page while building
             getSelenium().open( "/continuum/admin/displayQueues!display.action" );

@@ -20,8 +20,6 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
-import org.apache.continuum.web.test.parent.AbstractContinuumTest;
-import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -179,10 +177,10 @@ public class ProjectGroupTest
         addProjectGroup( GRP_NAME_THREE, GRP_ID_THREE, GRP_DESCRIPTION_THREE, true );
         assertLinkPresent( GRP_NAME_THREE );
 
-        createAndAddUserAsDeveloperToGroup( "username1", "user1", "user1@something.com", "password123", GRP_NAME_ONE );
-        createAndAddUserAsDeveloperToGroup( "username2", "user2", "user2@something.com", "password123", GRP_NAME_ONE );
-        createAndAddUserAsDeveloperToGroup( "username3", "user3", "user3@something.com", "password123", GRP_NAME_TWO );
-        createAndAddUserAsDeveloperToGroup( "username4", "user4", "user4@something.com", "password123", GRP_NAME_THREE );
+        createAndAddUserAsDeveloperToGroup( "username1", "user1", "user1@something.com", GRP_NAME_ONE );
+        createAndAddUserAsDeveloperToGroup( "username2", "user2", "user2@something.com", GRP_NAME_ONE );
+        createAndAddUserAsDeveloperToGroup( "username3", "user3", "user3@something.com", GRP_NAME_TWO );
+        createAndAddUserAsDeveloperToGroup( "username4", "user4", "user4@something.com", GRP_NAME_THREE );
 
         showMembers( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE );
         assertUserPresent( "username1", "user1", "user1@something.com" );

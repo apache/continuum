@@ -32,8 +32,8 @@ public abstract class AbstractConfigurationTest
         assertEditConfigurationPage();
     }
 
-    public void assertEditedConfigurationPage( String working, String buildOutput, String releaseOutput,
-                                               String deploymentRepository, String baseUrl, String numberBuildParallel )
+    void assertEditedConfigurationPage( String working, String buildOutput, String releaseOutput,
+                                        String deploymentRepository, String baseUrl, String numberBuildParallel )
     {
         assertPage( "Continuum - Configuration" );
         assertTextPresent( "General Configuration " );
@@ -61,9 +61,9 @@ public abstract class AbstractConfigurationTest
 
     }
 
-    public void submitConfiguration( String working, String buildOutput, String releaseOutput,
-                                     String deploymentRepository, String baseUrl, String numberBuildParallel,
-                                     boolean distributed, boolean success )
+    protected void submitConfiguration( String working, String buildOutput, String releaseOutput,
+                                        String deploymentRepository, String baseUrl, String numberBuildParallel,
+                                        boolean distributed, boolean success )
     {
         setFieldValue( "workingDirectory", working );
         setFieldValue( "buildOutputDirectory", buildOutput );
@@ -98,7 +98,7 @@ public abstract class AbstractConfigurationTest
         assertAppearancePage();
     }
 
-    protected void assertAppearancePage()
+    void assertAppearancePage()
     {
         assertPage( "Configure Appearance" );
         assertTextPresent( "Company Details" );

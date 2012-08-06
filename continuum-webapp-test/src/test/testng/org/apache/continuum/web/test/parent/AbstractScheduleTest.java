@@ -26,21 +26,21 @@ package org.apache.continuum.web.test.parent;
 public abstract class AbstractScheduleTest
     extends AbstractAdminTest
 {
-    public void goToSchedulePage()
+    void goToSchedulePage()
     {
         clickLinkWithText( "Schedules" );
 
         assertSchedulePage();
     }
 
-    public void goToAddSchedule()
+    protected void goToAddSchedule()
     {
         goToSchedulePage();
         clickButtonWithValue( "Add" );
         assertAddSchedulePage();
     }
 
-    public void assertSchedulePage()
+    void assertSchedulePage()
     {
         assertPage( "Continuum - Schedules" );
         assertTextPresent( "Schedules" );
@@ -56,7 +56,7 @@ public abstract class AbstractScheduleTest
         assertButtonWithValuePresent( "Add" );
     }
 
-    public void assertAddSchedulePage()
+    void assertAddSchedulePage()
     {
         assertPage( "Continuum - Edit Schedule" );
         assertTextPresent( "Edit Schedule" );
@@ -92,9 +92,9 @@ public abstract class AbstractScheduleTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addEditSchedule( String name, String description, String second, String minute, String hour,
-                                 String dayMonth, String month, String dayWeek, String year, String maxTime,
-                                 String period, boolean buildQueue, boolean success )
+    protected void addEditSchedule( String name, String description, String second, String minute, String hour,
+                                    String dayMonth, String month, String dayWeek, String year, String maxTime,
+                                    String period, boolean buildQueue, boolean success )
     {
 	if ( buildQueue ) 
 	{
@@ -160,7 +160,7 @@ public abstract class AbstractScheduleTest
         assertFieldValue( period, "delay" );
     }
 
-    public void removeSchedule( String name )
+    protected void removeSchedule( String name )
     {
         goToSchedulePage();
         clickLinkWithXPath( "(//a[contains(@href,'removeSchedule.action') and contains(@href, '" + name + "')])//img" );

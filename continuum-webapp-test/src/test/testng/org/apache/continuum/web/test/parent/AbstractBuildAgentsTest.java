@@ -24,13 +24,13 @@ import java.net.URLEncoder;
 public abstract class AbstractBuildAgentsTest
     extends AbstractAdminTest
 {
-    public void removeBuildAgent( String agentName )
+    protected void removeBuildAgent( String agentName )
         throws Exception
     {
         removeBuildAgent( agentName, true );
     }
 
-    public void removeBuildAgent( String agentName, boolean failIfMissing )
+    protected void removeBuildAgent( String agentName, boolean failIfMissing )
         throws Exception
     {
         String deleteButton = "//a[contains(@href,'deleteBuildAgent.action') and contains(@href, '" + URLEncoder.encode(
@@ -48,7 +48,8 @@ public abstract class AbstractBuildAgentsTest
         }
     }
 
-    public void addBuildAgent( String agentURL, String description, boolean success, boolean enabled, boolean pingOk )
+    protected void addBuildAgent( String agentURL, String description, boolean success, boolean enabled,
+                                  boolean pingOk )
     {
         setFieldValue( "saveBuildAgent_buildAgent_url", agentURL );
         setFieldValue("saveBuildAgent_buildAgent_description", description );
@@ -82,7 +83,7 @@ public abstract class AbstractBuildAgentsTest
         }
     }
 
-    public void goToEditBuildAgent( String name, String description )
+    protected void goToEditBuildAgent( String name, String description )
     {
         goToBuildAgentPage();
         clickImgWithAlt( "Edit" );
@@ -91,7 +92,7 @@ public abstract class AbstractBuildAgentsTest
         assertFieldValue( description, "saveBuildAgent_buildAgent_description" );
 	}
 
-    public void addEditBuildAgent( String agentName, String newDesc )
+    protected void addEditBuildAgent( String agentName, String newDesc )
     {
         assertFieldValue( agentName, "saveBuildAgent_buildAgent_url" );
         setFieldValue( "saveBuildAgent_buildAgent_description", newDesc );
@@ -100,7 +101,7 @@ public abstract class AbstractBuildAgentsTest
         assertTextPresent( newDesc );
     }
 
-    public void enableDisableBuildAgent( String agentName, boolean enable )
+    protected void enableDisableBuildAgent( String agentName, boolean enable )
     {
         assertFieldValue( agentName, "saveBuildAgent_buildAgent_url" );
         
@@ -114,10 +115,10 @@ public abstract class AbstractBuildAgentsTest
         }
         submit();
         assertBuildAgentPage();
-        assertTextPresent( new Boolean( enable ).toString() );
+        assertTextPresent( Boolean.toString( enable ) );
     }
 
-    public void goToAddBuildAgentGroup()
+    protected void goToAddBuildAgentGroup()
     {
         goToBuildAgentPage();
         clickAndWait("editBuildAgentGroup_0"); //add button
@@ -126,8 +127,8 @@ public abstract class AbstractBuildAgentsTest
         assertAddEditBuildAgentGroupPage( options, null );
     }
 
-    public void addEditBuildAgentGroup( String name, String[] addBuildAgents, String[] removeBuildAgents,
-            boolean success ) throws Exception
+    protected void addEditBuildAgentGroup( String name, String[] addBuildAgents, String[] removeBuildAgents,
+                                           boolean success )
     {
         setFieldValue( "saveBuildAgentGroup_buildAgentGroup_name", name );
         if ( addBuildAgents != null && addBuildAgents.length > 0 )
@@ -157,7 +158,7 @@ public abstract class AbstractBuildAgentsTest
         }
     }
 
-    public void assertAddEditBuildAgentGroupPage( String[] availableBuildAgents, String[] usedBuildAgents )
+    void assertAddEditBuildAgentGroupPage( String[] availableBuildAgents, String[] usedBuildAgents )
     {
         assertPage( "Continuum - Add/Edit Build Agent Group" );
         assertTextPresent( "Add/Edit Build Agent Group" );
@@ -177,7 +178,7 @@ public abstract class AbstractBuildAgentsTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void goToEditBuildAgentGroup( String name, String[] buildAgents )
+    protected void goToEditBuildAgentGroup( String name, String[] buildAgents )
     {
         goToBuildAgentPage();
         String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
@@ -186,7 +187,7 @@ public abstract class AbstractBuildAgentsTest
         assertFieldValue( name, "buildAgentGroup.name" );
     }
 
-    public void removeBuildAgentGroup( String name )
+    protected void removeBuildAgentGroup( String name )
     {
         goToBuildAgentPage();
         clickLinkWithXPath( "(//a[contains(@href,'deleteBuildAgentGroup.action') and contains(@href, '" + name + "')])//img" );

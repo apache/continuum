@@ -37,12 +37,12 @@ public abstract class AbstractContinuumTest
     extends AbstractSeleniumTest
 {
 
-    protected static final String SHARED_SECRET = "continuum1234";
+    static final String SHARED_SECRET = "continuum1234";
 
     // ////////////////////////////////////
     // Create Admin User
     // ////////////////////////////////////
-    public void assertCreateAdmin()
+    void assertCreateAdmin()
     {
         assertPage( "Create Admin User" );
         assertTextPresent( "Username" );
@@ -58,7 +58,7 @@ public abstract class AbstractContinuumTest
         assertButtonWithValuePresent( "Create Admin" );
     }
 
-    public void submitAdminData(String fullname,String email,String password )
+    void submitAdminData( String fullname, String email, String password )
     {
         setFieldValue( "user.fullName", fullname );
         setFieldValue( "user.email", email );
@@ -70,14 +70,14 @@ public abstract class AbstractContinuumTest
     // ////////////////////////////////////
     // About
     // ////////////////////////////////////
-    public void goToAboutPage()
+    protected void goToAboutPage()
     {
         getSelenium().open( baseUrl );
         clickLinkWithText( "About" );
         assertAboutPage();
     }
 
-    public void assertAboutPage()
+    protected void assertAboutPage()
     {
         assertPage( "Continuum - About" );
         assertTextPresent( "About Continuum" );
@@ -88,7 +88,7 @@ public abstract class AbstractContinuumTest
     // Login
     // ////////////////////////////////////
 
-    public void goToLoginPage()
+    protected void goToLoginPage()
     {
         getSelenium().deleteAllVisibleCookies();
         getSelenium().open( baseUrl );
@@ -96,7 +96,7 @@ public abstract class AbstractContinuumTest
         assertLoginPage();
     }
 
-    public void assertLoginPage()
+    void assertLoginPage()
     {
         assertPage( "Login Page" );
         assertTextPresent( "Login" );
@@ -113,7 +113,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Forgot your Password? Request a password reset." );
     }
 
-    public void assertAutenticatedPage(String username )
+    void assertAutenticatedPage( String username )
     {
         assertTextPresent( "Current User" );
         assertTextPresent( "Edit Details" );
@@ -122,43 +122,11 @@ public abstract class AbstractContinuumTest
         assertTextPresent( username );
     }
 
-    public void assertChangePasswordPage()
-    {
-        assertPage( "Change Password" );
-        assertTextPresent( "Change Password" );
-        assertTextPresent( "Existing Password*:" );
-        assertElementPresent( "existingPassword" );
-        assertTextPresent( "New Password*:" );
-        assertElementPresent( "newPassword" );
-        assertTextPresent( "Confirm New Password*:" );
-        assertElementPresent( "newPasswordConfirm" );
-    }
-
-    public void assertUserEditPage( String username, String name, String email )
-    {
-        assertPage( "[Admin] User Edit" );
-        assertTextPresent( "[Admin] User Edit" );
-        assertTextPresent( "Username" );
-        assertTextPresent( username );
-        assertTextPresent( "Full Name*:" );
-        assertFieldValue( name, "userEditForm_user_fullName" );
-        assertTextPresent( "Email Address*:" );
-        assertFieldValue( email, "userEditForm_user_email" );
-        assertTextPresent( "Password*:" );
-        assertFieldValue( "", "userEditForm_user_password" );
-        assertTextPresent( "Confirm Password*:" );
-        assertElementPresent( "userEditForm_user_confirmPassword" );
-        assertTextPresent( "Account Creation:" );
-        assertTextPresent( "Last Password Change:" );
-        assertTextPresent( "Effective Roles" );
-        assertLinkPresent( "Edit Roles" );
-    }
-
     // ////////////////////////////////////
     // Configuration
     // ////////////////////////////////////
 
-    public void assertEditConfigurationPage()
+    void assertEditConfigurationPage()
     {
         assertPage( "Continuum - Configuration" );
         assertTextPresent( "General Configuration " );
@@ -184,7 +152,7 @@ public abstract class AbstractContinuumTest
     // Build Queue
     // ////////////////////////////////////
 
-    public void setMaxBuildQueue(int maxBuildQueue )
+    protected void setMaxBuildQueue( int maxBuildQueue )
     {
         clickLinkWithText( "Configuration" );
         setFieldValue( "numberOfAllowedBuildsinParallel", String.valueOf( maxBuildQueue ) );
@@ -194,8 +162,7 @@ public abstract class AbstractContinuumTest
     // ////////////////////////////////////
     // Project Groups
     // ////////////////////////////////////
-    public void goToProjectGroupsSummaryPage()
-        throws Exception
+    protected void goToProjectGroupsSummaryPage()
     {
         getSelenium().open( "/continuum/groupSummary.action" );
         waitPage();
@@ -203,7 +170,7 @@ public abstract class AbstractContinuumTest
         assertProjectGroupsSummaryPage();
     }
 
-    public void assertProjectGroupsSummaryPage()
+    protected void assertProjectGroupsSummaryPage()
     {
         assertPage( "Continuum - Group Summary" );
         assertTextPresent( "Project Groups" );
@@ -223,8 +190,7 @@ public abstract class AbstractContinuumTest
     // ////////////////////////////////////
     // Project Group
     // ////////////////////////////////////
-    public void showProjectGroup(String name,String groupId,String description )
-        throws Exception
+    protected void showProjectGroup( String name, String groupId, String description )
     {
         goToProjectGroupsSummaryPage();
 
@@ -235,7 +201,7 @@ public abstract class AbstractContinuumTest
         assertProjectGroupSummaryPage( name, groupId, description );
     }
 
-    public void assertProjectGroupSummaryPage(String name,String groupId,String description )
+    protected void assertProjectGroupSummaryPage( String name, String groupId, String description )
     {
         assertPage( "Continuum - Project Group" );
         assertTextPresent( "Project Group Name" );
@@ -266,8 +232,7 @@ public abstract class AbstractContinuumTest
         }
     }
 
-    public void addProjectGroup(String name,String groupId,String description,boolean success )
-        throws Exception
+    protected void addProjectGroup( String name, String groupId, String description, boolean success )
     {
         goToProjectGroupsSummaryPage();
 
@@ -291,7 +256,7 @@ public abstract class AbstractContinuumTest
         }
     }
 
-    public void assertAddProjectGroupPage()
+    void assertAddProjectGroupPage()
     {
         assertPage( "Continuum - Add Project Group" );
         assertTextPresent( "Add Project Group" );
@@ -303,28 +268,12 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "description" );
     }
 
-    public void removeProjectGroup(String name,String groupId,String description )
-        throws Exception
-    {
-        showProjectGroup( name, groupId, description );
-        // Remove
-        clickLinkWithLocator( "remove" );
-        // Assert Confirmation
-        assertElementPresent( "removeProjectGroup_" );
-        assertElementPresent( "Cancel" );
-        // Confirm Project Group deletion
-        clickButtonWithValue( "Save" );
-        assertProjectGroupsSummaryPage();
-    }
-
-    public void removeProjectGroup( String groupName )
-        throws Exception
+    protected void removeProjectGroup( String groupName )
     {
         removeProjectGroup( groupName, true );
     }
 
-    public void removeProjectGroup( String groupName, boolean failIfMissing )
-        throws Exception
+    protected void removeProjectGroup( String groupName, boolean failIfMissing )
     {
         goToProjectGroupsSummaryPage();
         if ( failIfMissing || isLinkPresent( groupName ) )
@@ -337,8 +286,8 @@ public abstract class AbstractContinuumTest
         }
     }
 
-    public void editProjectGroup(String name,String groupId,String description,String newName,String newDescription )
-        throws Exception
+    protected void editProjectGroup( String name, String groupId, String description, String newName,
+                                     String newDescription )
     {
         showProjectGroup( name, groupId, description );
         clickButtonWithValue( "Edit" );
@@ -348,8 +297,7 @@ public abstract class AbstractContinuumTest
         clickButtonWithValue( "Save" );
     }
 
-    public void assertEditGroupPage(String groupId )
-        throws Exception
+    void assertEditGroupPage( String groupId )
     {
         assertPage( "Continuum - Update Project Group" );
         assertTextPresent( "Update Project Group" );
@@ -363,8 +311,8 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "Cancel" );
     }
 
-    public void buildProjectGroup(String projectGroupName,String groupId,String description,String projectName, boolean success )
-        throws Exception
+    protected void buildProjectGroup( String projectGroupName, String groupId, String description, String projectName,
+                                      boolean success )
     {
         showProjectGroup( projectGroupName, groupId, description );
         waitForProjectUpdate();
@@ -415,7 +363,7 @@ public abstract class AbstractContinuumTest
         clickLinkWithText( "Project Group Summary" );
     }
 
-    public void assertReleaseSuccess()
+    protected void assertReleaseSuccess()
     {
         assertTextPresent( "Choose Release Goal for " );
         assertTextPresent( "Prepare project for release " );
@@ -425,34 +373,19 @@ public abstract class AbstractContinuumTest
         assertButtonWithValuePresent( "Submit" );
     }
 
-    public void addValidM2ProjectFromProjectGroup(String projectGroupName,String groupId,String description,
-                                                  String m2PomUrl )
-        throws Exception
-    {
-        showProjectGroup( projectGroupName, groupId, description );
-        selectValue( "projectTypes", "Add M2 Project" );
-        clickButtonWithValue( "Add" );
-        assertAddMavenTwoProjectPage();
-        setFieldValue( "m2PomUrl", m2PomUrl );
-        clickButtonWithValue( "Add" );
-        // if success redirect to summary page
-        assertProjectGroupsSummaryPage();
-    }
-
-    public void goToGroupBuildDefinitionPage(String projectGroupName,String groupId,String description )
-        throws Exception
+    protected void goToGroupBuildDefinitionPage( String projectGroupName, String groupId, String description )
     {
         showProjectGroup( projectGroupName, groupId, description );
         clickLinkWithText( "Build Definitions" );
         assertGroupBuildDefinitionPage( projectGroupName );
     }
 
-    public void assertGroupBuildDefinitionPage(String projectGroupName )
+    protected void assertGroupBuildDefinitionPage( String projectGroupName )
     {
         assertTextPresent( "Project Group Build Definitions of " + projectGroupName + " group" );
     }
 
-    public void assertDeleteBuildDefinitionPage(String description,String goals )
+    protected void assertDeleteBuildDefinitionPage( String description, String goals )
     {
         assertTextPresent( "Are you sure you want to delete the build definition with description \"" + description
             + "\", goals \"" + goals + "\" and id" );
@@ -460,7 +393,7 @@ public abstract class AbstractContinuumTest
         isButtonWithValuePresent( "Delete" );
     }
 
-    public void assertAddEditBuildDefinitionPage()
+    protected void assertAddEditBuildDefinitionPage()
     {
         assertTextPresent( "Add/Edit Build Definition" );
         assertTextPresent( "POM filename*:" );
@@ -482,12 +415,12 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "buildDefinitionType" );
         assertTextPresent( "Build Environment" );
         assertElementPresent( "profileId" );
-        assertEnabled( "alwaysBuild" );
+        assertEnabled();
     }
 
-    public void addEditGroupBuildDefinition(String groupName,String buildFile,String goals,String arguments,
-                                            String description,boolean buildFresh,boolean alwaysBuild,
-                                            boolean isDefault )
+    protected void addEditGroupBuildDefinition( String groupName, String buildFile, String goals, String arguments,
+                                                String description, boolean buildFresh, boolean alwaysBuild,
+                                                boolean isDefault )
     {
         assertAddEditBuildDefinitionPage();
         // Enter values into Add Build Definition fields, and submit
@@ -517,7 +450,7 @@ public abstract class AbstractContinuumTest
             click( "buildFresh" );
         }
 
-        assertEnabled( "alwaysBuild" );
+        assertEnabled();
         if ( isElementPresent( "defaultBuildDefinition" ) )
         {
             if ( isDefault )
@@ -552,39 +485,7 @@ public abstract class AbstractContinuumTest
         }
     }
 
-    // ////////////////////////////////////
-    // General Project Pages
-    // ////////////////////////////////////
-    public void goToEditProjectPage(String projectGroupName,String projectName )
-    {
-        clickLinkWithText( "Show Project Groups" );
-        clickLinkWithText( projectGroupName );
-        clickLinkWithText( projectName );
-        clickButtonWithValue( "Edit" );
-
-        assertEditProjectPage();
-    }
-
-    public void assertEditProjectPage()
-    {
-        assertTextPresent( "Update Continuum Project" );
-        assertTextPresent( "Project Name*:" );
-        assertElementPresent( "name" );
-        assertTextPresent( "Version*:" );
-        assertElementPresent( "version" );
-        assertTextPresent( "SCM Url*:" );
-        assertElementPresent( "scmUrl" );
-        assertTextPresent( "Use SCM Credentials Cache, if available" );
-        assertElementPresent( "scmUseCache" );
-        assertTextPresent( "SCM Username:" );
-        assertElementPresent( "scmUsername" );
-        assertTextPresent( "SCM Password:" );
-        assertElementPresent( "scmPassword" );
-        assertTextPresent( "SCM Branch/Tag:" );
-        assertElementPresent( "scmTag" );
-    }
-
-    public void goToProjectInformationPage(String projectGroupName,String projectName )
+    protected void goToProjectInformationPage( String projectGroupName, String projectName )
     {
         clickLinkWithText( "Show Project Groups" );
         clickLinkWithText( projectGroupName );
@@ -593,7 +494,7 @@ public abstract class AbstractContinuumTest
         assertProjectInformationPage();
     }
 
-    public void assertProjectInformationPage()
+    protected void assertProjectInformationPage()
     {
         assertTextPresent( "Project Group Summary" );
         assertTextPresent( "Project Information" );
@@ -605,9 +506,8 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Developers" );
     }
 
-    public void moveProjectToProjectGroup(String groupName,String groupId,String groupDescription,
-                                          String projectName,String newProjectGroup )
-        throws Exception
+    protected void moveProjectToProjectGroup( String groupName, String groupId, String groupDescription,
+                                              String projectName, String newProjectGroup )
     {
         showProjectGroup( groupName, groupId, groupDescription );
         
@@ -629,14 +529,14 @@ public abstract class AbstractContinuumTest
     // ////////////////////////////////////
     // Maven 2.0+ Project
     // ////////////////////////////////////
-    public void goToAddMavenTwoProjectPage()
+    protected void goToAddMavenTwoProjectPage()
     {
         clickLinkWithText( "Maven Project" );
 
         assertAddMavenTwoProjectPage();
     }
 
-    public void assertAddMavenTwoProjectPage()
+    protected void assertAddMavenTwoProjectPage()
     {
         assertTextPresent( "POM Url" );
         assertElementPresent( "m2PomUrl" );
@@ -650,9 +550,8 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "selectedProjectGroup" );
     }
 
-    public void addMavenTwoProject(String pomUrl,String username,String password,String projectGroup,
-                                   boolean success )
-        throws Exception
+    protected void addMavenTwoProject( String pomUrl, String username, String password, String projectGroup,
+                                       boolean success )
     {
         goToAddMavenTwoProjectPage();
 
@@ -678,33 +577,21 @@ public abstract class AbstractContinuumTest
         waitAddProject( title );
     }
 
-    /**
-     * submit the page
-     *
-     * @param m2PomUrl
-     * @param validPom
-     */
-    public void submitAddMavenTwoProjectPage(String m2PomUrl,boolean validPom )
-        throws Exception
+    protected void submitAddMavenTwoProjectPage( String m2PomUrl )
     {
-        addMavenTwoProject( m2PomUrl, "", "", null, validPom );
-
-        if ( validPom )
-        {
-            assertTextPresent( "Default Project Group" );
-        }
+        addMavenTwoProject( m2PomUrl, "", "", null, false );
     }
 
     // ////////////////////////////////////
     // Maven 1.x Project
     // ////////////////////////////////////
-    public void goToAddMavenOneProjectPage()
+    protected void goToAddMavenOneProjectPage()
     {
         clickLinkWithText( "Maven 1.x Project" );
         assertAddMavenOneProjectPage();
     }
 
-    public void assertAddMavenOneProjectPage()
+    void assertAddMavenOneProjectPage()
     {
         assertPage( "Continuum - Add Maven 1 Project" );
         assertTextPresent( "Add Maven 1.x Project" );
@@ -728,18 +615,13 @@ public abstract class AbstractContinuumTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addMavenOneProject(String pomUrl,String username,String password,String projectGroup,
-                                   String buildTemplate,boolean success )
-        throws Exception
+    protected void addMavenOneProject( String pomUrl, String username, String password, String projectGroup,
+                                       boolean success )
     {
         setFieldValue( "m1PomUrl", pomUrl );
         setFieldValue( "scmUsername", username );
         setFieldValue( "scmPassword", password );
 
-        if ( buildTemplate != null )
-        {
-            selectValue( "buildDefinitionTemplateId", buildTemplate );
-        }
         if ( projectGroup != null )
         {
             selectValue( "selectedProjectGroup", projectGroup );
@@ -761,19 +643,19 @@ public abstract class AbstractContinuumTest
     // ANT/SHELL Projects
     // ////////////////////////////////////
 
-    public void goToAddAntProjectPage()
+    protected void goToAddAntProjectPage()
     {
         clickLinkWithText( "Ant Project" );
         assertAddProjectPage( "ant" );
     }
 
-    public void goToAddShellProjectPage()
+    protected void goToAddShellProjectPage()
     {
         clickLinkWithText( "Shell Project" );
         assertAddProjectPage( "shell" );
     }
 
-    public void assertAddProjectPage(String type )
+    protected void assertAddProjectPage( String type )
     {
         String title = type.substring( 0, 1 ).toUpperCase() + type.substring( 1 ).toLowerCase();
         assertPage( "Continuum - Add " + title + " Project" );
@@ -806,10 +688,8 @@ public abstract class AbstractContinuumTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addProject(String name,String description,String version,String scmUrl,String scmUser,
-                           String scmPassword,String scmTag,boolean useCache,String projectGroup,
-                           String buildTemplate,boolean success,String type )
-        throws Exception
+    protected void addProject( String name, String description, String version, String scmUrl, String scmUser,
+                               String scmPassword, String scmTag, String projectGroup, boolean success, String type )
     {
         setFieldValue( "projectName", name );
         setFieldValue( "projectDescription", description );
@@ -818,14 +698,6 @@ public abstract class AbstractContinuumTest
         setFieldValue( "projectScmUsername", scmUser );
         setFieldValue( "projectScmPassword", scmPassword );
         setFieldValue( "projectScmTag", scmTag );
-        if ( useCache )
-        {
-            checkField( "projectScmUseCache" );
-        }
-        if ( buildTemplate != null )
-        {
-            selectValue( "buildDefinitionTemplateId", buildTemplate );
-        }
         if ( projectGroup != null )
         {
             selectValue( "selectedProjectGroup", projectGroup );
@@ -844,8 +716,7 @@ public abstract class AbstractContinuumTest
         waitAddProject( title );
     }
 
-    public void waitAddProject( String title )
-        throws Exception
+    protected void waitAddProject( String title )
     {
         // the "adding project" interstitial page has an empty title, so we wait for a real title to appear
 
@@ -870,7 +741,7 @@ public abstract class AbstractContinuumTest
         assertEquals( getTitle(), title );
     }
 
-    public void createAndAddUserAsDeveloperToGroup( String username, String name, String email, String password, String groupName )
+    protected void createAndAddUserAsDeveloperToGroup( String username, String name, String email, String groupName )
     {
         clickLinkWithText( "Users" );
         assertPage( "[Admin] User List" );
@@ -880,11 +751,11 @@ public abstract class AbstractContinuumTest
         setFieldValue( "user.fullName", name );
         setFieldValue( "user.username", username );
         setFieldValue( "user.email", email );
-        setFieldValue( "user.password", password );
-        setFieldValue( "user.confirmPassword", password );
+        setFieldValue( "user.password", "password123" );
+        setFieldValue( "user.confirmPassword", "password123" );
         clickButtonWithValue( "Create User" );
         assertPage( "[Admin] User Edit" );
-        assignContinuumResourceRoleToUser( "Project Developer", groupName );
+        assignContinuumResourceRoleToUser( groupName );
         clickButtonWithValue( "Submit" );
         assertPage( "[Admin] User List" );
         assertTextPresent( username );
@@ -892,8 +763,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( email );
     }
 
-    public void showMembers( String name, String groupId, String description )
-        throws Exception
+    protected void showMembers( String name, String groupId, String description )
     {
         showProjectGroup( name, groupId, description );
         clickLinkWithText( "Members" );
@@ -901,29 +771,27 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Users" );
     }
 
-    public void assertUserPresent( String username, String name, String email )
+    protected void assertUserPresent( String username, String name, String email )
     {
         assertTextPresent( username );
         assertTextPresent( name );
         assertTextPresent( email );
     }
 
-    public void assertUserNotPresent( String username, String name, String email )
+    protected void assertUserNotPresent( String username, String name, String email )
     {
         assertTextNotPresent( username );
         assertTextNotPresent( name );
         assertTextNotPresent( email );
     }
 
-    public void waitForProjectCheckout()
-        throws Exception
+    protected void waitForProjectCheckout()
     {
         // wait for project to finish checking out
         waitForElementPresent( "//img[@alt='Checking Out']", false );
     }
     
-    public void waitForProjectUpdate()
-        throws Exception
+    void waitForProjectUpdate()
     {
         if ( isElementPresent( "//img[@alt='Checking Out']" ) )
         {
@@ -934,8 +802,7 @@ public abstract class AbstractContinuumTest
         waitForElementPresent( "//img[@alt='Updating']", false );
     }
     
-    public void waitForProjectBuild()
-        throws Exception
+    void waitForProjectBuild()
     {
         if ( isElementPresent( "//img[@alt='Checking Out']" ) || isElementPresent( "//img[@alt='Updating']" ) )
         {
@@ -946,73 +813,33 @@ public abstract class AbstractContinuumTest
         waitForElementPresent( "//img[@alt='Building']", false );
     }
 
-    public void createNewUser( String username, String name, String email, String password )
+    void assignContinuumResourceRoleToUser( String groupName )
     {
-        clickLinkWithText( "Users" );
-        assertPage( "[Admin] User List" );
-        assertTextNotPresent( username );
-        clickButtonWithValue( "Create New User" );
-        assertPage( "[Admin] User Create" );
-        setFieldValue( "user.fullName", name );
-        setFieldValue( "user.username", username );
-        setFieldValue( "user.email", email );
-        setFieldValue( "user.password", password );
-        setFieldValue( "user.confirmPassword", password );
-        clickButtonWithValue( "Create User" );
-        assertPage( "[Admin] User Edit" );
+        clickLinkWithXPath( "//input[@name='addDSelectedRoles' and @value='" + "Project Developer" + " - " + groupName + "']", false );
     }
 
-    public void assignContinuumRoleToUser( String role )
-    {
-        clickLinkWithXPath( "//input[@id='addRolesToUser_addNDSelectedRoles' and @name='addNDSelectedRoles' and @value='" + role + "']", false );
-    }
-
-    public void assignContinuumResourceRoleToUser( String resourceRole, String groupName )
-    {
-        clickLinkWithXPath( "//input[@name='addDSelectedRoles' and @value='" + resourceRole + " - " + groupName + "']", false );
-    }
-
-    public void assertUserCreatedPage()
-    {
-        assertPage( "[Admin] User List" );
-        assertTextPresent( "[Admin] List of Users in Role: Any" );
-        assertLinkPresent( "admin" );
-        assertLinkPresent( "guest" );
-    }
-
-    public void removeDefaultBuildDefinitionFromTemplate( String type )
+    protected void removeDefaultBuildDefinitionFromTemplate( String type )
     {
         goToEditBuildDefinitionTemplate( type );
         clickLinkWithXPath( "//input[@value='<-']", false );
         submit();
     }
 
-    public void addDefaultBuildDefinitionFromTemplate( String type )
+    protected void addDefaultBuildDefinitionFromTemplate( String type )
     {
         goToEditBuildDefinitionTemplate( type );
 
         if ( "maven2".equals( type ) )
         {
-            selectForOption( "saveBuildDefinitionTemplate_buildDefinitionIds", "Default Maven Build Definition" );
-        }
-        else if ( "maven1".equals( type ) )
-        {
-            
-        }
-        else if ( "ant".equals( type ) )
-        {
-            
-        }
-        else
-        {
-            
+            getSelenium().addSelection(
+                "saveBuildDefinitionTemplate_buildDefinitionIds", "label=" + "Default Maven Build Definition" );
         }
 
         clickLinkWithXPath( "//input[@value='->']", false );
         submit();
     }
 
-    public void goToEditBuildDefinitionTemplate( String type )
+    void goToEditBuildDefinitionTemplate( String type )
     {
         clickLinkWithText( "Build Definition Templates" );
 
@@ -1038,7 +865,7 @@ public abstract class AbstractContinuumTest
         assertPage( "Continuum - Build Definition Template" );
     }
 
-    public void assertBuildDefinitionTemplatesPage()
+    void assertBuildDefinitionTemplatesPage()
     {
         assertPage( "Continuum - Build Definition Templates" );
         assertTextPresent( "Default Ant Template" );
@@ -1056,7 +883,7 @@ public abstract class AbstractContinuumTest
     // Distributed Builds
     // ////////////////////////////////////
 
-    public void enableDistributedBuilds()
+    protected void enableDistributedBuilds()
     {
         ConfigurationTest config = new ConfigurationTest();
         config.goToConfigurationPage();
@@ -1073,7 +900,7 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "link=Build Agents" );
     }
 
-    public void disableDistributedBuilds()
+    protected void disableDistributedBuilds()
     {
         ConfigurationTest config = new ConfigurationTest();
         config.goToConfigurationPage();
@@ -1087,13 +914,13 @@ public abstract class AbstractContinuumTest
         assertElementNotPresent( "link=Build Agents" );
     }
 
-    public void goToBuildAgentPage()
+    protected void goToBuildAgentPage()
     {
         clickAndWait("link=Build Agents");
         assertPage("Continuum - Build Agents");
     }
 
-    public void assertBuildAgentPage()
+    void assertBuildAgentPage()
     {
         assertPage("Continuum - Build Agents");
         assertTextPresent("Build Agents");
@@ -1105,13 +932,13 @@ public abstract class AbstractContinuumTest
     // Reports
     // ////////////////////////////////////
 
-    public void goToProjectBuildsReport()
+    protected void goToProjectBuildsReport()
     {
         clickLinkWithText( "Project Builds" );
         assertViewBuildsReportPage();
     }
 
-    public void assertViewBuildsReportPage()
+    void assertViewBuildsReportPage()
     {
         assertPage( "Continuum - Project Builds Report" );
         assertTextPresent( "Project Group" );
@@ -1132,7 +959,7 @@ public abstract class AbstractContinuumTest
         assertTextNotPresent( "Export to CSV" );
     }
     
-    public void assertProjectBuildReportWithResult()
+    protected void assertProjectBuildReportWithResult()
     {
         assertTextPresent( "Results" );
         assertTextPresent( "Project Group" );
@@ -1145,7 +972,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Export to CSV" );
     }
 
-    public void assertProjectBuildReportWithNoResult()
+    protected void assertProjectBuildReportWithNoResult()
     {
         assertTextNotPresent( "Build Date" );
         assertTextNotPresent( "Prev" );
@@ -1155,7 +982,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "No Results Found" );
     }
 
-    public void assertProjectBuildReportWithFieldError()
+    protected void assertProjectBuildReportWithFieldError()
     {
         assertTextNotPresent( "Build Date" );
         assertTextNotPresent( "Prev" );

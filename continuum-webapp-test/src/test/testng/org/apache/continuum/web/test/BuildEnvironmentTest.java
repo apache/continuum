@@ -99,7 +99,7 @@ public class BuildEnvironmentTest
             String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
             String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
             goToAddBuildEnvironment();
-            addBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[] {}, BUILD_AGENT_GROUPNAME, true );
+            addBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[] {}, BUILD_AGENT_GROUPNAME );
         }
         finally
         {

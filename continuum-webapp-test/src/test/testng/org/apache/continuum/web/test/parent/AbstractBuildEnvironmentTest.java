@@ -26,27 +26,27 @@ package org.apache.continuum.web.test.parent;
 public abstract class AbstractBuildEnvironmentTest
     extends AbstractAdminTest
 {
-    public void goToBuildEnvironmentPage()
+    void goToBuildEnvironmentPage()
     {
         clickLinkWithText( "Build Environments" );
         assertBuildEnvironmentPage();
     }
 
-    public void assertBuildEnvironmentPage()
+    void assertBuildEnvironmentPage()
     {
         assertPage( "Continuum - Build Environments" );
         assertTextPresent( "Build Environments" );
         assertButtonWithValuePresent( "Add" );
     }
 
-    public void goToAddBuildEnvironment()
+    protected void goToAddBuildEnvironment()
     {
         goToBuildEnvironmentPage();
         clickButtonWithValue( "Add" );
         assertAddBuildEnvironmentPage();
     }
 
-    public void assertAddBuildEnvironmentPage()
+    void assertAddBuildEnvironmentPage()
     {
         assertPage( "Continuum - Build Environment" );
         assertTextPresent( "Build Environment" );
@@ -56,7 +56,7 @@ public abstract class AbstractBuildEnvironmentTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void assertEditBuildEnvironmentPage( String name )
+    void assertEditBuildEnvironmentPage( String name )
     {
         assertAddBuildEnvironmentPage();
         assertTextPresent( "Installation Name" );
@@ -64,21 +64,22 @@ public abstract class AbstractBuildEnvironmentTest
         assertFieldValue( name, "profile.name" );
     }
 
-    public void addBuildEnvironment( String name, String[] installations, boolean success )
+    protected void addBuildEnvironment( String name, String[] installations, boolean success )
     {
         setFieldValue( "profile.name", name );
         submit();
         editBuildEnvironment( name, installations, success );
     }
 
-    public void addBuildEnvironmentWithBuildAgentGroup( String name, String[] installations, String buildAgentGroupName, boolean success )
+    protected void addBuildEnvironmentWithBuildAgentGroup( String name, String[] installations,
+                                                           String buildAgentGroupName )
     {
         setFieldValue( "profile.name", name );
         submit();
-        editBuildEnvironmentWithBuildAgentGroup( name, installations, buildAgentGroupName, success );
+        editBuildEnvironmentWithBuildAgentGroup( name, installations, buildAgentGroupName, true );
     }
 
-    public void editBuildEnvironment( String name, String[] installations, boolean success )
+    protected void editBuildEnvironment( String name, String[] installations, boolean success )
     {
         setFieldValue( "profile.name", name );
         for ( String i : installations )
@@ -97,7 +98,8 @@ public abstract class AbstractBuildEnvironmentTest
         }
     }
 
-    public void editBuildEnvironmentWithBuildAgentGroup( String name, String[] installations, String buildAgentGroupName, boolean success )
+    protected void editBuildEnvironmentWithBuildAgentGroup( String name, String[] installations,
+                                                            String buildAgentGroupName, boolean success )
     {
         setFieldValue( "profile.name", name );
         selectValue( "profile.buildAgentGroup", buildAgentGroupName );
@@ -117,7 +119,7 @@ public abstract class AbstractBuildEnvironmentTest
         }
     }
 
-    public void goToEditBuildEnvironment( String name )
+    protected void goToEditBuildEnvironment( String name )
     {
         goToBuildEnvironmentPage();
         String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
@@ -125,7 +127,7 @@ public abstract class AbstractBuildEnvironmentTest
         assertEditBuildEnvironmentPage( name );
     }
 
-    public void removeBuildEnvironment( String name )
+    protected void removeBuildEnvironment( String name )
     {
         goToBuildEnvironmentPage();
         String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Delete']";

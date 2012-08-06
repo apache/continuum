@@ -1,11 +1,12 @@
 package org.apache.continuum.web.test.parent;
 
+import org.testng.Assert;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-
-import org.testng.Assert;
+import java.util.Arrays;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -29,8 +30,8 @@ import org.testng.Assert;
 public abstract class AbstractReleaseTest
     extends AbstractAdminTest
 {
-    public void releasePrepareProject( String username, String password, String tagBase, String tag, String releaseVersion, String developmentVersion, String buildEnv, boolean success )
-        throws Exception
+    protected void releasePrepareProject( String username, String password, String tagBase, String tag,
+                                          String releaseVersion, String developmentVersion, String buildEnv )
     {
         goToReleasePreparePage();
         setFieldValue( "scmUsername", username );
@@ -43,11 +44,11 @@ public abstract class AbstractReleaseTest
         setFieldValue( "devVersions", developmentVersion );
         submit();
 
-        assertRelease( success );
+        assertRelease();
     }
 
-    public void releasePerformProjectWithProvideParameters( String username, String password, String tagBase, String tag, String scmUrl, String buildEnv, boolean success )
-        throws Exception
+    protected void releasePerformProjectWithProvideParameters( String username, String password, String tagBase,
+                                                               String tag, String scmUrl, String buildEnv )
     {
         goToReleasePerformProvideParametersPage();
         setFieldValue( "scmUrl", scmUrl );
@@ -59,40 +60,24 @@ public abstract class AbstractReleaseTest
         selectValue( "profileId", buildEnv );
         submit();
 
-        assertRelease( success );
-    }
-    
-    public void releasePrepareProject( String username, String password, String tagBase, String tag,
-                                       String releaseVersion, String developmentVersion, String buildEnv )
-        throws Exception
-    {
-        goToReleasePreparePage();
-        setFieldValue( "scmUsername", username );
-        setFieldValue( "scmPassword", password );
-        setFieldValue( "scmTag", tag );
-        setFieldValue( "scmTagBase", tagBase );
-        setFieldValue( "prepareGoals", "clean" );
-        selectValue( "profileId", buildEnv );
-        setFieldValue( "relVersions", releaseVersion );
-        setFieldValue( "devVersions", developmentVersion );
-        submit();
+        assertRelease();
     }
 
-    public void goToReleasePreparePage()
+    void goToReleasePreparePage()
     {
         clickLinkWithLocator( "goal", false );
         submit();
         assertReleasePreparePage();
     }
 
-    public void goToReleasePerformProvideParametersPage()
+    void goToReleasePerformProvideParametersPage()
     {
         clickLinkWithLocator( "//input[@name='goal' and @value='perform']", false );
         submit();
         assertReleasePerformProvideParametersPage();
     }
 
-    public void assertReleasePreparePage()
+    void assertReleasePreparePage()
     {
         assertPage( "Continuum - Release Project" );
         assertTextPresent( "Prepare Project for Release" );
@@ -110,7 +95,7 @@ public abstract class AbstractReleaseTest
         assertButtonWithValuePresent( "Submit" );
     }
 
-    public void assertReleasePerformProvideParametersPage()
+    void assertReleasePerformProvideParametersPage()
     {
         assertPage( "Continuum - Perform Project Release" );
         assertTextPresent( "Perform Project Release" );
@@ -126,45 +111,20 @@ public abstract class AbstractReleaseTest
         assertButtonWithValuePresent( "Submit" );
     }
 
-    public void assertRelease( boolean success )
-        throws Exception
+    void assertRelease()
     {
         String doneButtonLocator = "//input[@id='releaseCleanup_0']";
         String errorTextLocator = "//h3[text()='Release Error']";
         
         // condition for release is complete; "Done" button or "Release Error" in page is present
-        if ( browser.equals( "*iexplore" ) )
-        {
-            int currentIt = 0;
-            int maxIt = Integer.valueOf( getProperty( "WAIT_TRIES" ) );
-            String pageLoadTimeInMs = getProperty( "PAGE_LOAD_TIME_IN_MS" );
-            
-            while ( ( isElementPresent( doneButtonLocator ) || isElementPresent( errorTextLocator ) ) && currentIt < maxIt )
-            {
-                getSelenium().waitForPageToLoad( pageLoadTimeInMs );
-                currentIt++;
-            }
-        }
-        else
-        {
-            String condition = "( selenium.isElementPresent(\"" + doneButtonLocator + "\") || " +
-                               "selenium.isElementPresent(\"" + errorTextLocator + "\") )";
-            waitForCondition( condition );
-        }
+        waitForOneOfElementsPresent( Arrays.asList( doneButtonLocator, errorTextLocator ), true );
 
         assertButtonWithValuePresent( "Rollback changes" );
-    
-        if ( success )
-        {
-            assertImgWithAltNotPresent( "Error" );
-        }
-        else
-        {
-            assertImgWithAlt( "Error" );
-        }
+
+        assertImgWithAlt( "Error" );
     }
 
-    public void assertPreparedReleasesFileCreated()
+    protected void assertPreparedReleasesFileCreated()
         throws Exception
     {
         File file = new File( "target/conf/prepared-releases.xml" );
@@ -175,7 +135,7 @@ public abstract class AbstractReleaseTest
 
         String BUILD_AGENT_URL = getBuildAgentUrl();
         String strLine;
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         while( ( strLine = reader.readLine() ) != null )
         {
             str.append( strLine );

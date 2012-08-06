@@ -1,7 +1,5 @@
 package org.apache.continuum.web.test.parent;
 
-import org.testng.Assert;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,14 +26,14 @@ import org.testng.Assert;
 public abstract class AbstractBuildQueueTest
     extends AbstractAdminTest
 {
-    public void goToBuildQueuePage()
+    protected void goToBuildQueuePage()
     {
         clickLinkWithText( "Build Queue" );
 
         assertBuildQueuePage();
     }
 
-    public void assertBuildQueuePage()
+    void assertBuildQueuePage()
     {
         assertPage( "Continumm - Parallel Build Queue" );
         assertTextPresent( "Continuum - Parallel Build Queue" );
@@ -44,7 +42,7 @@ public abstract class AbstractBuildQueueTest
         assertButtonWithValuePresent( "Add" );
     }
 
-    public void removeBuildQueue( String queueName )
+    protected void removeBuildQueue( String queueName )
     {
         clickLinkWithXPath( "(//a[contains(@href,'deleteBuildQueue.action') and contains(@href, '" + queueName
             + "')])//img" );
@@ -56,7 +54,7 @@ public abstract class AbstractBuildQueueTest
         assertBuildQueuePage();
     }
 
-    public void assertAddBuildQueuePage()
+    void assertAddBuildQueuePage()
     {
         assertPage( "Continuum - Add/Edit Parallel Build Queue" );
         assertTextPresent( "Continuum - Add/Edit Parallel Build Queue" );
@@ -66,7 +64,7 @@ public abstract class AbstractBuildQueueTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-	public void addBuildQueue( String name, boolean success )
+	protected void addBuildQueue( String name, boolean success )
 	{
 	    goToBuildQueuePage();
 	    assertBuildQueuePage();
@@ -85,9 +83,8 @@ public abstract class AbstractBuildQueueTest
 	    }
 	}
 	    
-	public void buildProjectForQueuePageTest( String projectGroupName, String groupId, String description, String projectName )
-    throws Exception
-    {       
+	protected void buildProjectForQueuePageTest( String projectGroupName, String groupId, String description )
+    {
         showProjectGroup( projectGroupName, groupId, description );
         clickButtonWithValue( "Build all projects" );
         waitForElementPresent( "//img[@alt='Building']" );

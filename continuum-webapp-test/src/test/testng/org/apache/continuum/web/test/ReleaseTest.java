@@ -19,9 +19,11 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import java.io.File;
 import org.apache.continuum.web.test.parent.AbstractReleaseTest;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 @Test( groups = { "release" } )
 public class ReleaseTest
@@ -54,7 +56,7 @@ public class ReleaseTest
             clickButtonWithValue( "Release" );
             assertReleaseSuccess();
             releasePrepareProject( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG,
-                                   M2_PROJ_RELEASE_VERSION, M2_PROJ_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV, false );
+                                   M2_PROJ_RELEASE_VERSION, M2_PROJ_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
             assertPreparedReleasesFileCreated();
         }
         finally
@@ -118,10 +120,8 @@ public class ReleaseTest
     public void testReleasePrepareProjectWithNoBuildagentGroupInBuildEnvironment()
         throws Exception
     {
-        String M2_PROJECT_NAME = getProperty( "M2_RELEASE_PROJECT_NAME" );
         String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
         String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
-        String M2_PROJECT_DESCRIPTION = getProperty( "M2_RELEASE_GRP_DESCRIPTION" );
         String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
         String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
         String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
@@ -162,10 +162,8 @@ public class ReleaseTest
     public void testReleasePrepareProjectWithNoBuildEnvironment()
         throws Exception
     {
-        String M2_PROJECT_NAME = getProperty( "M2_RELEASE_PROJECT_NAME" );
         String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
         String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
-        String M2_PROJECT_DESCRIPTION = getProperty( "M2_RELEASE_GRP_DESCRIPTION" );
         String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
         String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
         String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
@@ -220,7 +218,7 @@ public class ReleaseTest
             clickButtonWithValue( "Release" );
             assertReleaseSuccess();
             releasePerformProjectWithProvideParameters( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG, 
-                                                        M2_PROJ_SCM_URL, M2_PROJECT_BUILD_ENV, false );
+                                                        M2_PROJ_SCM_URL, M2_PROJECT_BUILD_ENV );
             assertPreparedReleasesFileCreated();
 
             removeProjectGroup( M2_PROJ_GRP_NAME );
@@ -233,17 +231,20 @@ public class ReleaseTest
     }
 
     private void init()
+        throws IOException
     {
         File file = new File( "target/conf/prepared-releases.xml" );
 
         if ( file.exists() )
         {
-            file.delete();
+            if ( !file.delete() )
+            {
+                throw new IOException( "Unable to delete existing prepared-releases.xml file" );
+            }
         }
     }
     
     private void createBuildEnvAndBuildagentGroup()
-        throws Exception
     {
         String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
         String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
@@ -295,7 +296,6 @@ public class ReleaseTest
     }
     
     private void attachBuildagentInGroup()
-        throws Exception
     {
         String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
         String buildAgent = getBuildAgentUrl();
@@ -313,7 +313,6 @@ public class ReleaseTest
     }
     
     private void detachBuildagentFromGroup()
-        throws Exception
     {
         String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
         String buildAgent = getBuildAgentUrl();

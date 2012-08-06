@@ -26,13 +26,13 @@ package org.apache.continuum.web.test.parent;
 public abstract class AbstractBuildDefinitionTemplateTest
     extends AbstractAdminTest
 {
-    public void goToBuildDefinitionTemplatePage()
+    void goToBuildDefinitionTemplatePage()
     {
         clickLinkWithText( "Build Definition Templates" );
         assertBuildDefinitionTemplatePage();
     }
 
-    public void assertBuildDefinitionTemplatePage()
+    void assertBuildDefinitionTemplatePage()
     {
         assertPage( "Continuum - Build Definition Templates" );
         assertTextPresent( "Available Templates" );
@@ -41,7 +41,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertButtonWithIdPresent( "buildDefinitionAsTemplate_0" );
     }
 
-    public void goToAddTemplate()
+    protected void goToAddTemplate()
     {
         goToBuildDefinitionTemplatePage();
         clickSubmitWithLocator( "buildDefinitionTemplate_0" );
@@ -52,7 +52,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertAddEditTemplatePage( options, null );
     }
 
-    public void assertAddEditTemplatePage( String[] pendingSelectBuild, String[] selectedBuild )
+    void assertAddEditTemplatePage( String[] pendingSelectBuild, String[] selectedBuild )
     {
         assertPage( "Continuum - Build Definition Template" );
         assertTextPresent( "Build Definition Template" );
@@ -71,9 +71,8 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addEditTemplate( String name, String[] addBuildDefinitions, String[] removeBuildDefinitions,
-                                 boolean success )
-        throws Exception
+    protected void addEditTemplate( String name, String[] addBuildDefinitions, String[] removeBuildDefinitions,
+                                    boolean success )
     {
         setFieldValue( "buildDefinitionTemplate.name", name );
         if ( addBuildDefinitions != null && addBuildDefinitions.length > 0 )
@@ -103,7 +102,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         }
     }
 
-    public void goToEditTemplate( String name, String[] buildDefinitions )
+    protected void goToEditTemplate( String name, String[] buildDefinitions )
     {
         goToBuildDefinitionTemplatePage();
         String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
@@ -112,7 +111,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertFieldValue( name, "buildDefinitionTemplate.name" );
     }
 
-    public void removeTemplate( String name )
+    protected void removeTemplate( String name )
     {
         goToBuildDefinitionTemplatePage();
         clickLinkWithXPath( "(//a[contains(@href,'deleteDefinitionTemplate') and contains(@href, '" + name
@@ -126,14 +125,14 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertBuildDefinitionTemplatePage();
     }
 
-    public void goToAddBuildDefinitionTemplate()
+    protected void goToAddBuildDefinitionTemplate()
     {
         goToBuildDefinitionTemplatePage();
         clickSubmitWithLocator( "buildDefinitionAsTemplate_0" );
         assertAddEditBuildDefinitionTemplatePage();
     }
 
-    public void goToEditBuildDefinitionTemplate( String description )
+    protected void goToEditBuildDefinitionTemplate( String description )
     {
         goToBuildDefinitionTemplatePage();
         String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
@@ -141,7 +140,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertAddEditBuildDefinitionTemplatePage();
     }
 
-    public void assertAddEditBuildDefinitionTemplatePage()
+    void assertAddEditBuildDefinitionTemplatePage()
     {
         assertPage( "Continuum - Build Definition Template" );
         assertTextPresent( "Build Definition Template" );
@@ -168,9 +167,9 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addEditBuildDefinitionTemplate( String buildFile, String goals, String arguments, String description,
-                                                boolean buildFresh, boolean alwaysBuild, boolean isDefault,
-                                                boolean success )
+    protected void addEditBuildDefinitionTemplate( String buildFile, String goals, String arguments, String description,
+                                                   boolean buildFresh, boolean alwaysBuild, boolean isDefault,
+                                                   boolean success )
     {
         // Enter values into Add Build Definition fields, and submit
         setFieldValue( "buildDefinition.buildFile", buildFile );
@@ -212,7 +211,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         }
     }
 
-    public void removeBuildDefinitionTemplate( String description )
+    protected void removeBuildDefinitionTemplate( String description )
     {
         goToBuildDefinitionTemplatePage();
         String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Delete']";

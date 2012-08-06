@@ -157,7 +157,7 @@ public class MavenTwoProjectTest
     public void testNoPomSpecified()
         throws Exception
     {
-        submitAddMavenTwoProjectPage( "", false );
+        submitAddMavenTwoProjectPage( "" );
         assertTextPresent( "Either POM URL or Upload POM is required." );
     }
 
@@ -168,7 +168,7 @@ public class MavenTwoProjectTest
         throws Exception
     {
         String pomUrl = getProperty( "NOT_SCM_POM_URL" );
-        submitAddMavenTwoProjectPage( pomUrl, false );
+        submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent( "Missing ''scm'' element in the POM, project Maven Two Project" );
     }
 
@@ -179,7 +179,7 @@ public class MavenTwoProjectTest
         throws Exception
     {
         String pomUrl = "aaa";
-        submitAddMavenTwoProjectPage( pomUrl, false );
+        submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent( "The specified resource cannot be accessed. Please try again later or contact your administrator." );
     }
 
@@ -190,7 +190,7 @@ public class MavenTwoProjectTest
         throws Exception
     {
         String pomUrl = getProperty( "MISS_CONECT_POM_URL" );
-        submitAddMavenTwoProjectPage( pomUrl, false );
+        submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent( "Missing 'connection' sub-element in the 'scm' element in the POM." );
     }
 
@@ -201,7 +201,7 @@ public class MavenTwoProjectTest
         throws Exception
     {
         String pomUrl = "file:///pom.xml";
-        submitAddMavenTwoProjectPage( pomUrl, false );
+        submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent( "The specified resource isn't a file or the protocol used isn't allowed." );
     }
 
@@ -212,7 +212,7 @@ public class MavenTwoProjectTest
         throws Exception
     {
         String pomUrl = getProperty( "MISS_PARENT_POM_URL" );
-        submitAddMavenTwoProjectPage( pomUrl, false );
+        submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent( "Missing artifact trying to build the POM. Check that its parent POM is available or add it first in Continuum." );
     }
 
@@ -223,7 +223,7 @@ public class MavenTwoProjectTest
         throws Exception
     {
         String pomUrl = getProperty( "MISS_SUBPRO_POM_URL" );
-        submitAddMavenTwoProjectPage( pomUrl, false );
+        submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent( "Unknown error trying to build POM." );
     }
 
@@ -234,7 +234,7 @@ public class MavenTwoProjectTest
         throws Exception
     {
         String pomUrl = "http://localhost:9595/";
-        submitAddMavenTwoProjectPage( pomUrl, false );
+        submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
 
@@ -258,7 +258,10 @@ public class MavenTwoProjectTest
         goToProjectGroupsSummaryPage();
         
         // delete project - delete icon
-        addMaven2Project( M2_PROJ_GRP_NAME );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
+                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
 
         assertPage( "Continuum - Project Group" );
@@ -281,7 +284,10 @@ public class MavenTwoProjectTest
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
 
         // delete project - "Delete Project(s)" button
-        addMaven2Project( M2_PROJ_GRP_NAME );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
+                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
 
         assertPage( "Continuum - Project Group" );

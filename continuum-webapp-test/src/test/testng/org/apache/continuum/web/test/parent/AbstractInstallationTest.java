@@ -26,20 +26,20 @@ package org.apache.continuum.web.test.parent;
 public abstract class AbstractInstallationTest
     extends AbstractAdminTest
 {
-    public void goToInstallationPage()
+    void goToInstallationPage()
     {
         clickLinkWithText( "Installations" );
         assertInstallationPage();
     }
 
-    public void assertInstallationPage()
+    void assertInstallationPage()
     {
         assertPage( "Continuum - Installations" );
         assertTextPresent( "Installations" );
         assertButtonWithValuePresent( "Add" );
     }
 
-    public void goToAddInstallationTool()
+    protected void goToAddInstallationTool()
     {
         goToInstallationPage();
         clickButtonWithValue( "Add" );
@@ -49,7 +49,7 @@ public abstract class AbstractInstallationTest
         assertAddInstallationToolPage();
     }
 
-    public void goToAddInstallationVariable()
+    protected void goToAddInstallationVariable()
     {
         goToInstallationPage();
         clickButtonWithValue( "Add" );
@@ -59,7 +59,7 @@ public abstract class AbstractInstallationTest
         assertAddInstallationVariablePage();
     }
 
-    public void assertAddChoiceTypeInstallation()
+    void assertAddChoiceTypeInstallation()
     {
         assertPage( "Continuum - Installation Type Choice" );
         assertTextPresent( "Installation Type Choice" );
@@ -69,14 +69,14 @@ public abstract class AbstractInstallationTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void assertAddInstallationToolPage()
+    void assertAddInstallationToolPage()
     {
         assertEditInstallationToolPage();
         assertElementPresent( "automaticProfile" );
         assertTextPresent( "Create a Build Environment with the Installation name" );
     }
 
-    public void assertEditInstallationToolPage()
+    void assertEditInstallationToolPage()
     {
         assertPage( "Continuum - Installation" );
         assertTextPresent( "Continuum - Installation" );
@@ -90,14 +90,14 @@ public abstract class AbstractInstallationTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void assertAddInstallationVariablePage()
+    void assertAddInstallationVariablePage()
     {
         assertEditInstallationVariablePage();
         assertElementPresent( "automaticProfile" );
         assertTextPresent( "Create a Build Environment with the Installation name" );
     }
 
-    public void assertEditInstallationVariablePage()
+    void assertEditInstallationVariablePage()
     {
         assertPage( "Continuum - Installation" );
         assertTextPresent( "Continuum - Installation" );
@@ -111,8 +111,8 @@ public abstract class AbstractInstallationTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void addInstallation( String name, String var, String path, boolean createBuildEnv, boolean tool,
-                                 boolean success )
+    protected void addInstallation( String name, String var, String path, boolean createBuildEnv, boolean tool,
+                                    boolean success )
     {
         if ( createBuildEnv )
         {
@@ -125,7 +125,7 @@ public abstract class AbstractInstallationTest
         editInstallation( name, var, path, tool, success );
     }
 
-    public void editInstallation( String name, String var, String path, boolean tool, boolean success )
+    protected void editInstallation( String name, String var, String path, boolean tool, boolean success )
     {
         setFieldValue( "installation.name", name );
         setFieldValue( "installation.varValue", path );
@@ -152,7 +152,7 @@ public abstract class AbstractInstallationTest
         }
     }
 
-    public void goToEditInstallation( String name, String var, String path, boolean tool )
+    protected void goToEditInstallation( String name, String var, String path, boolean tool )
     {
         goToInstallationPage();
         String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
@@ -170,7 +170,7 @@ public abstract class AbstractInstallationTest
         assertFieldValue( path, "installation.varValue" );
     }
 
-    public void removeInstallation( String name )
+    protected void removeInstallation( String name )
     {
         goToInstallationPage();
         clickLinkWithXPath( "(//a[contains(@href,'deleteInstallation') and contains(@href, '" + name + "')])//img" );

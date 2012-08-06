@@ -26,17 +26,12 @@ package org.apache.continuum.web.test.parent;
 public abstract class AbstractNotifierTest
     extends AbstractContinuumTest
 {
-    public void assertGroupNotifierPage( String projectGroupName )
+    protected void assertGroupNotifierPage( String projectGroupName )
     {
         assertTextPresent( "Project Group Notifiers of group " + projectGroupName );
     }
 
-    public void assertProjectNotifierPage()
-    {
-        assertTextPresent( "Add Notifier" );
-    }
-
-    public void assertAddNotifierPage()
+    void assertAddNotifierPage()
     {
         assertPage( "Continuum - Add Notifier" );
         assertTextPresent( "Add Notifier" );
@@ -45,7 +40,7 @@ public abstract class AbstractNotifierTest
         assertElementPresent( "Cancel" );
     }
 
-    public void assertAddEditMailNotifierPage()
+    void assertAddEditMailNotifierPage()
     {
         assertPage( "Continuum - Add/Edit Mail Notifier" );
         assertTextPresent( "Add/Edit Mail Notifier" );
@@ -60,7 +55,7 @@ public abstract class AbstractNotifierTest
         assertElementPresent( "Cancel" );
     }
 
-    public void assertAddEditIrcNotifierPage()
+    void assertAddEditIrcNotifierPage()
     {
         assertPage( "Continuum - Add/Edit IRC Notifier" );
 
@@ -96,7 +91,7 @@ public abstract class AbstractNotifierTest
         assertTextPresent( "Send on SCM Failure" );
     }
 
-    public void assertAddEditJabberPage()
+    void assertAddEditJabberPage()
     {
         assertPage( "Continuum - Add/Edit Jabber Notifier" );
 
@@ -122,7 +117,7 @@ public abstract class AbstractNotifierTest
         assertTextPresent( "Send on SCM Failure" );
     }
 
-    public void assertAddEditMsnPage()
+    void assertAddEditMsnPage()
     {
         assertPage( "Continuum - Add/Edit MSN Notifier" );
 
@@ -140,7 +135,7 @@ public abstract class AbstractNotifierTest
         assertTextPresent( "Send on SCM Failure" );
     }
 
-    public void assertAddEditWagonPage()
+    void assertAddEditWagonPage()
     {
         assertPage( "Continuum - Add/Edit Wagon Notifier" );
 
@@ -154,8 +149,7 @@ public abstract class AbstractNotifierTest
         assertTextPresent( "Send on Warning" );
     }
 
-    public void goToGroupNotifier( String projectGroupName, String projectGroupId, String projectGroupDescription )
-        throws Exception
+    protected void goToGroupNotifier( String projectGroupName, String projectGroupId, String projectGroupDescription )
     {
         showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
         clickLinkWithText( "Notifiers" );
@@ -164,16 +158,14 @@ public abstract class AbstractNotifierTest
         assertAddNotifierPage();
     }
 
-    public void goToProjectNotifier( String projectGroupName, String projectName )
-        throws Exception
+    protected void goToProjectNotifier( String projectGroupName, String projectName )
     {
         goToProjectInformationPage( projectGroupName, projectName );
         clickLinkWithXPath( "//input[contains(@id,'addProjectNotifier') and @type='submit']" );
         assertAddNotifierPage();
     }
 
-    public void addMailNotifier( String projectGroupName, String projectName, String email, boolean isValid )
-        throws Exception
+    protected void addMailNotifier( String projectGroupName, String projectName, String email, boolean isValid )
     {
         selectValue( "//select", "Mail" );
         clickButtonWithValue( "Submit" );
@@ -195,9 +187,8 @@ public abstract class AbstractNotifierTest
         }
     }
 
-    public void editMailNotifier( String projectGroupName, String projectName, String oldMail, String newMail,
-                                  boolean isValid )
-        throws Exception
+    protected void editMailNotifier( String projectGroupName, String projectName, String oldMail, String newMail,
+                                     boolean isValid )
     {
         if ( projectName == null )
         {
@@ -226,9 +217,8 @@ public abstract class AbstractNotifierTest
         }
     }
 
-    public void addIrcNotifier( String projectGroupName, String projectName, String host, String channel,
-                                boolean isValid )
-        throws Exception
+    protected void addIrcNotifier( String projectGroupName, String projectName, String host, String channel,
+                                   boolean isValid )
     {
         selectValue( "//select", "IRC" );
         clickButtonWithValue( "Submit" );
@@ -237,23 +227,21 @@ public abstract class AbstractNotifierTest
         setFieldValue( "channel", channel );
 
         clickButtonWithValue( "Save" );
-        if ( !isValid )
+        if ( isValid )
         {
-            return;
-        }
-        else if ( projectName != null )
-        {
-            assertProjectInformationPage();
-        }
-        else
-        {
-            assertGroupNotifierPage( projectGroupName );
+            if ( projectName != null )
+            {
+                assertProjectInformationPage();
+            }
+            else
+            {
+                assertGroupNotifierPage( projectGroupName );
+            }
         }
     }
 
-    public void editIrcNotifier( String projectGroupName, String projectName, String oldHost, String oldChannel,
-                                 String newHost, String newChannel, boolean isValid )
-        throws Exception
+    protected void editIrcNotifier( String projectGroupName, String projectName, String oldHost, String oldChannel,
+                                    String newHost, String newChannel, boolean isValid )
     {
         if ( projectName == null )
         {
@@ -285,9 +273,8 @@ public abstract class AbstractNotifierTest
         }
     }
 
-    public void addJabberNotifier( String projectGroupName, String projectName, String host, String login,
-                                   String password, String address, boolean isValid )
-        throws Exception
+    protected void addJabberNotifier( String projectGroupName, String projectName, String host, String login,
+                                      String password, String address, boolean isValid )
     {
         selectValue( "//select", "Jabber" );
         clickButtonWithValue( "Submit" );
@@ -298,24 +285,22 @@ public abstract class AbstractNotifierTest
         setFieldValue( "address", address );
         clickButtonWithValue( "Save" );
 
-        if ( !isValid )
+        if ( isValid )
         {
-            return;
-        }
-        else if ( projectName != null )
-        {
-            assertProjectInformationPage();
-        }
-        else
-        {
-            assertGroupNotifierPage( projectGroupName );
+            if ( projectName != null )
+            {
+                assertProjectInformationPage();
+            }
+            else
+            {
+                assertGroupNotifierPage( projectGroupName );
+            }
         }
     }
 
-    public void editJabberNotifier( String projectGroupName, String projectName, String oldHost, String oldLogin,
-                                    String oldAddress, String newHost, String newLogin, String newPassword,
-                                    String newAddress, boolean isValid )
-        throws Exception
+    protected void editJabberNotifier( String projectGroupName, String projectName, String oldHost, String oldLogin,
+                                       String oldAddress, String newHost, String newLogin, String newPassword,
+                                       String newAddress, boolean isValid )
     {
         if ( projectName == null )
         {
@@ -352,9 +337,8 @@ public abstract class AbstractNotifierTest
         }
     }
 
-    public void addMsnNotifier( String projectGroupName, String projectName, String login, String password,
-                                String recipientAddress, boolean isValid )
-        throws Exception
+    protected void addMsnNotifier( String projectGroupName, String projectName, String login, String password,
+                                   String recipientAddress, boolean isValid )
     {
         selectValue( "//select", "MSN" );
         clickButtonWithValue( "Submit" );
@@ -364,23 +348,21 @@ public abstract class AbstractNotifierTest
         setFieldValue( "address", recipientAddress );
         clickButtonWithValue( "Save" );
 
-        if ( !isValid )
+        if ( isValid )
         {
-            return;
-        }
-        else if ( projectName != null )
-        {
-            assertProjectInformationPage();
-        }
-        else
-        {
-            assertGroupNotifierPage( projectGroupName );
+            if ( projectName != null )
+            {
+                assertProjectInformationPage();
+            }
+            else
+            {
+                assertGroupNotifierPage( projectGroupName );
+            }
         }
     }
 
-    public void editMsnNotifier( String projectGroupName, String projectName, String oldLogin, String oldAddress,
-                                 String newLogin, String newPassword, String newAddress, boolean isValid )
-        throws Exception
+    protected void editMsnNotifier( String projectGroupName, String projectName, String oldLogin, String oldAddress,
+                                    String newLogin, String newPassword, String newAddress, boolean isValid )
     {
         if ( projectName == null )
         {
@@ -414,9 +396,8 @@ public abstract class AbstractNotifierTest
         }
     }
 
-    public void addWagonNotifierPage( String projectGroupName, String projectName, String siteUrl, String serverId,
-                                      boolean isValid )
-        throws Exception
+    protected void addWagonNotifierPage( String projectGroupName, String projectName, String siteUrl, String serverId,
+                                         boolean isValid )
     {
         selectValue( "//select", "Wagon" );
         clickButtonWithValue( "Submit" );
@@ -425,23 +406,21 @@ public abstract class AbstractNotifierTest
         setFieldValue( "id", serverId );
         clickButtonWithValue( "Save" );
 
-        if ( !isValid )
+        if ( isValid )
         {
-            return;
-        }
-        else if ( projectName != null )
-        {
-            assertProjectInformationPage();
-        }
-        else
-        {
-            assertGroupNotifierPage( projectGroupName );
+            if ( projectName != null )
+            {
+                assertProjectInformationPage();
+            }
+            else
+            {
+                assertGroupNotifierPage( projectGroupName );
+            }
         }
     }
 
-    public void editWagonNotifier( String projectGroupName, String projectName, String oldUrl, String oldId,
-                                   String newUrl, String newId, boolean isValid )
-        throws Exception
+    protected void editWagonNotifier( String projectGroupName, String projectName, String oldUrl, String oldId,
+                                      String newUrl, String newId, boolean isValid )
     {
         if ( projectName == null )
         {

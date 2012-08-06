@@ -20,7 +20,6 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
-import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -48,7 +47,7 @@ public class AntProjectTest
         String TEST_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    false, TEST_PROJ_GRP_NAME, null, true, "ant" );
+                    TEST_PROJ_GRP_NAME, true, "ant" );
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
     }
     
@@ -64,8 +63,8 @@ public class AntProjectTest
         String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
         String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
         goToAddAntProjectPage();
-        addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME,
-                    ANT_SCM_PASSWORD, ANT_TAG, false, DEFAULT_PROJ_GRP_NAME, null, false, "ant" );
+        addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
+                    DEFAULT_PROJ_GRP_NAME, false, "ant" );
         assertTextPresent( "Name contains invalid characters." );
         assertTextPresent( "Version contains invalid characters." );
         assertTextPresent( "SCM Url contains invalid characters." );
@@ -95,7 +94,7 @@ public class AntProjectTest
         String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
         goToAddAntProjectPage();
         addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    false, null, null, false, "ant" );
+                    null, false, "ant" );
         assertTextPresent( "Project name already exist" );
     }
 }

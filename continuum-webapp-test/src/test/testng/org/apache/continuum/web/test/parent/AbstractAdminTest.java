@@ -70,7 +70,7 @@ public abstract class AbstractAdminTest
         }
     }
 
-    public void goToAddBuildAgent()
+    protected void goToAddBuildAgent()
     {
         goToBuildAgentPage();
         assertBuildAgentPage();
@@ -78,7 +78,7 @@ public abstract class AbstractAdminTest
         assertAddEditBuildAgentPage( true );
     }
 
-    public void assertAddEditBuildAgentPage( boolean isChecked )
+    void assertAddEditBuildAgentPage( boolean isChecked )
     {
         assertPage( "Continuum - Add/Edit Build Agent" );
         assertTextPresent( "Add/Edit Build Agent" );
@@ -90,23 +90,10 @@ public abstract class AbstractAdminTest
 
         if ( isChecked )
         {
-            assertIsChecked( "saveBuildAgent_buildAgent_enabled" );
+            assertIsChecked();
         }
 
         assertButtonWithValuePresent( "Save" );
         assertButtonWithValuePresent( "Cancel" );
-    }
-
-    protected void addMaven2Project( String groupName )
-        throws Exception
-    {
-        String M2_POM_URL = getProperty( "M2_DELETE_POM_URL" );
-        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
-        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
-        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_DELETE_PROJ_GRP_DESCRIPTION" );
-
-        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
-        goToProjectGroupsSummaryPage();
-        assertLinkPresent( groupName );
     }
 }

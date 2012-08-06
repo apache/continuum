@@ -186,6 +186,6 @@ public class InstallationTest
 	{
 		String os = System.getProperty("os.name").toLowerCase();
 		//windows
-	    return (os.indexOf( "win" ) >= 0); 
+	    return os.contains( "win" );
 	}
 }

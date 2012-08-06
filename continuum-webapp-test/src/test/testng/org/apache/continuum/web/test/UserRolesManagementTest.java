@@ -12,8 +12,8 @@ public class UserRolesManagementTest
         username = getProperty( "GUEST_USERNAME" );
         fullname = getProperty( "GUEST_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
-        deleteUser( username, fullname, getUserEmail() );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
+        deleteUser( username );
         clickLinkWithText( "Logout" );
     }
     
@@ -28,7 +28,7 @@ public class UserRolesManagementTest
         username = getProperty( "GUEST_USERNAME" );
         fullname = getProperty( "GUEST_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         //checkUserRoleWithValue( fullname );
         clickLinkWithLocator( "addRolesToUser_addNDSelectedRoles", false );
@@ -66,7 +66,7 @@ public class UserRolesManagementTest
         username = getProperty( "REGISTERED_USERNAME" );
         fullname = getProperty( "REGISTERED_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -107,7 +107,7 @@ public class UserRolesManagementTest
         username = getProperty( "SYSAD_USERNAME" );
         fullname = getProperty( "SYSAD_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -147,7 +147,7 @@ public class UserRolesManagementTest
         username = getProperty( "USERADMIN_USERNAME" );
         fullname = getProperty( "USERADMIN_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
 		clickButtonWithValue( "Submit" );
@@ -185,7 +185,7 @@ public class UserRolesManagementTest
         selectValue( "name=ec_rd", "50" );
         waitPage();
         // delete user	
-        deleteUser( "guest0", "guest0", "guest0@guest0.com" );	
+        deleteUser( "guest0" );
         // TODO edit user
 
         clickLinkWithText( "Logout" );
@@ -204,7 +204,7 @@ public class UserRolesManagementTest
         username = getProperty( "GROUPPROJECTADMIN_USERNAME" );
         fullname = getProperty( "GROUPPROJECTADMIN_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -339,7 +339,7 @@ public class UserRolesManagementTest
         username = getProperty( "GROUPPROJECTDEVELOPER_USERNAME" );
         fullname = getProperty( "GROUPPROJECTDEVELOPER_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -361,7 +361,7 @@ public class UserRolesManagementTest
         username = getProperty( "GROUPPROJECTUSER_USERNAME" );
         fullname = getProperty( "GROUPPROJECTUSER_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -383,7 +383,7 @@ public class UserRolesManagementTest
         username = getProperty( "MANAGEBUILDENVIRONMENT_USERNAME" );
         fullname = getProperty( "MANAGEBUILDENVIRONMENT_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -405,7 +405,7 @@ public class UserRolesManagementTest
         username = getProperty( "MANAGEBUILDTEMPLATES_USERNAME" );
         fullname = getProperty( "MANAGEBUILDTEMPLATES_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -427,7 +427,7 @@ public class UserRolesManagementTest
         username = getProperty( "MANAGEINSTALLATIONS_USERNAME" );
         fullname = getProperty( "MANAGEINSTALLATIONS_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -449,7 +449,7 @@ public class UserRolesManagementTest
         username = getProperty( "MANAGELOCALREPOS_USERNAME" );
         fullname = getProperty( "MANAGELOCALREPOS_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -471,7 +471,7 @@ public class UserRolesManagementTest
         username = getProperty( "MANAGEPURGING_USERNAME" );
         fullname = getProperty( "MANAGEPURGING_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -493,7 +493,7 @@ public class UserRolesManagementTest
         username = getProperty( "MANAGEQUEUES_USERNAME" );
         fullname = getProperty( "MANAGEQUEUES_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
 	    clickButtonWithValue( "Submit" );
@@ -515,7 +515,7 @@ public class UserRolesManagementTest
         username = getProperty( "MANAGESCHEDULING_USERNAME" );
         fullname = getProperty( "MANAGESCHEDULING_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkUserRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -537,7 +537,7 @@ public class UserRolesManagementTest
         username = getProperty( "PROJECTADMINISTRATOR_DEFAULTPROJECTGROUP_USERNAME" );
         fullname = getProperty( "PROJECTADMINISTRATOR_DEFAULTPROJECTGROUP_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -559,7 +559,7 @@ public class UserRolesManagementTest
         username = getProperty( "PROJECTDEVELOPER_DEFAULTPROJECTGROUP_USERNAME" );
         fullname = getProperty( "PROJECTDEVELOPER_DEFAULTPROJECTGROUP_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );
@@ -581,7 +581,7 @@ public class UserRolesManagementTest
         username = getProperty( "PROJECTUSER_DEFAULTPROJECTGROUP_USERNAME" );
         fullname = getProperty( "PROJECTUSER_DEFAULTPROJECTGROUP_FULLNAME" );
 
-        createUser( username, fullname, getUserEmail(), getUserRolePassword(), true );
+        createUser( username, fullname, getUserEmail(), getUserRolePassword() );
         assertCreatedUserInfo( username );
         checkResourceRoleWithValue( fullname );
         clickButtonWithValue( "Submit" );

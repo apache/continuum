@@ -20,7 +20,6 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
-import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -48,7 +47,7 @@ public class ShellProjectTest
         String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddShellProjectPage();
         addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, true, "shell" );
+                    SHELL_SCM_PASSWORD, SHELL_TAG, DEFAULT_PROJ_GRP_NAME, true, "shell" );
         assertProjectGroupSummaryPage( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
     }
     
@@ -63,11 +62,9 @@ public class ShellProjectTest
         String SHELL_SCM_USERNAME = getProperty( "SHELL_SCM_USERNAME" );
         String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD" );
         String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
-        String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddShellProjectPage();
-        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, DEFAULT_PROJ_GRP_NAME, null, false, "shell" );
+        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME, SHELL_SCM_PASSWORD,
+                    SHELL_TAG, DEFAULT_PROJ_GRP_NAME, false, "shell" );
         assertTextPresent( "Name contains invalid characters." );
         assertTextPresent( "Version contains invalid characters." );
         assertTextPresent( "SCM Url contains invalid characters." );
@@ -97,7 +94,7 @@ public class ShellProjectTest
         String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD" );
         goToAddShellProjectPage();
         addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, null, null, false, "shell" );
+                    SHELL_SCM_PASSWORD, SHELL_TAG, null, false, "shell" );
         assertTextPresent( "Project name already exist" );
     }
 

@@ -570,11 +570,11 @@ public class NotifierTest
         String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
         String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         String newId = "newId";
-        String newUrl = WAGON_NOTIFIER_URL;
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
-        editWagonNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, newUrl, newId,
+        editWagonNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, WAGON_NOTIFIER_URL, WAGON_SERVER_ID,
+                           WAGON_NOTIFIER_URL, newId,
                            true );
-        editWagonNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, newUrl, newId, WAGON_NOTIFIER_URL, WAGON_SERVER_ID,
+        editWagonNotifier( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME, WAGON_NOTIFIER_URL, newId, WAGON_NOTIFIER_URL, WAGON_SERVER_ID,
                            true );
     }
 
@@ -623,12 +623,11 @@ public class NotifierTest
         String WAGON_NOTIFIER_URL = getProperty( "WAGON_NOTIFIER_URL" );
         String WAGON_SERVER_ID = getProperty( "WAGON_SERVER_ID" );
         String newId = "newId";
-        String newUrl = WAGON_NOTIFIER_URL;
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         clickLinkWithText( "Notifiers" );
         assertGroupNotifierPage( TEST_PROJ_GRP_NAME );
-        editWagonNotifier( TEST_PROJ_GRP_NAME, null, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, newUrl, newId, true );
-        editWagonNotifier( TEST_PROJ_GRP_NAME, null, newUrl, newId, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, true );
+        editWagonNotifier( TEST_PROJ_GRP_NAME, null, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, WAGON_NOTIFIER_URL, newId, true );
+        editWagonNotifier( TEST_PROJ_GRP_NAME, null, WAGON_NOTIFIER_URL, newId, WAGON_NOTIFIER_URL, WAGON_SERVER_ID, true );
     }
 
     @Test( dependsOnMethods = { "testAddValidWagonGroupNotifier" } )

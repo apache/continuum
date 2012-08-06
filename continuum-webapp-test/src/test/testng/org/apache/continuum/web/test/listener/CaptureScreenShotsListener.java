@@ -19,17 +19,17 @@ package org.apache.continuum.web.test.listener;
  * under the License.
  */
 
+import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.io.FileUtils;
+import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
+import org.testng.ITestResult;
+import org.testng.TestListenerAdapter;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
-
-import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
-import org.apache.commons.io.FileUtils;
-import org.testng.ITestResult;
-import org.testng.TestListenerAdapter;
-import com.thoughtworks.selenium.Selenium;
 
 public class CaptureScreenShotsListener
     extends TestListenerAdapter
@@ -85,7 +85,10 @@ public class CaptureScreenShotsListener
         int lNumber = stackTrace[index].getLineNumber();
         String lineNumber = Integer.toString( lNumber );
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
-        targetPath.mkdirs();
+        if ( !targetPath.mkdirs() )
+        {
+            System.out.println( "Unable to create screenshots directory" );
+        }
         String fileBaseName = methodName + "_" + className + ".java_" + lineNumber + "-" + time;
         try
         {
@@ -133,10 +136,5 @@ public class CaptureScreenShotsListener
         while ( !match );
         i--;
         return i;
-    }
-
-    public static void captureScreenshotAndSource( String name )
-    {
-        captureScreenshotAndSource( name, new Exception() );
     }
 }

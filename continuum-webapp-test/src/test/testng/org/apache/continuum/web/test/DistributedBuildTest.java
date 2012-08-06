@@ -68,7 +68,10 @@ public class DistributedBuildTest
         String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
         projectGroupName = M2_PROJ_GRP_NAME;
 
-        addMaven2Project( projectGroupName );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
+                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( projectGroupName );
         clickLinkWithText( projectGroupName );
 
         assertPage( "Continuum - Project Group" );
@@ -88,7 +91,10 @@ public class DistributedBuildTest
 
         addBuildAgent( getBuildAgentUrl() );
 
-        addMaven2Project( M2_PROJ_GRP_NAME );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
+                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
 
         assertPage( "Continuum - Project Group" );
@@ -111,7 +117,10 @@ public class DistributedBuildTest
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         projectGroupName = M2_PROJ_GRP_NAME;
 
-        addMaven2Project( M2_PROJ_GRP_NAME );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
+                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        goToProjectGroupsSummaryPage();
+        assertLinkPresent( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
 
         assertPage( "Continuum - Project Group" );
@@ -176,7 +185,7 @@ public class DistributedBuildTest
 
         goToAddShellProjectPage();
         addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, false, SHELL_GROUP_NAME, null, true, "shell" );
+                    SHELL_SCM_PASSWORD, SHELL_TAG, SHELL_GROUP_NAME, true, "shell" );
         assertProjectGroupSummaryPage( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC );
 
         goToProjectGroupsSummaryPage();
@@ -184,7 +193,7 @@ public class DistributedBuildTest
         clickLinkWithText( "Build Definitions" );
         clickLinkWithXPath( "//table[@id='ec_table']/tbody/tr/td[14]/a/img" );
 
-        editBuildDefinitionShellType( "build.sh", "", "description", "shell", true );
+        editBuildDefinitionShellType();
 
         goToProjectGroupsSummaryPage();
 
@@ -192,16 +201,13 @@ public class DistributedBuildTest
 
     }
 
-    private void editBuildDefinitionShellType( String buildFile, String arguments, String description, String buildDefinitionType, boolean alwaysBuild )
+    private void editBuildDefinitionShellType()
     {
-        setFieldValue( "buildFile", buildFile);
-        setFieldValue( "arguments", arguments );
-        setFieldValue( "description", description );
-        setFieldValue( "buildDefinitionType", buildDefinitionType );
-        if( alwaysBuild )
-        {
-            checkField( "alwaysBuild" );
-        }
+        setFieldValue( "buildFile", "build.sh" );
+        setFieldValue( "arguments", "" );
+        setFieldValue( "description", "description" );
+        setFieldValue( "buildDefinitionType", "shell" );
+        checkField( "alwaysBuild" );
 
         submit();
     }

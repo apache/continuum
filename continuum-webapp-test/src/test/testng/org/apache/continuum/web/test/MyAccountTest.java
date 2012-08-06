@@ -20,7 +20,6 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
-import org.apache.continuum.web.test.parent.AbstractSeleniumTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,28 +33,30 @@ import org.testng.annotations.Test;
 public class MyAccountTest
     extends AbstractAdminTest
 {
-    public String newFullName = "Admin_FullName";
 
-    public String newEmail = "new_admin@mail.com";
+    private static final String NEW_FULL_NAME = "Admin_FullName";
+
+    private static final String NEW_EMAIL = "new_admin@mail.com";
 
     public void testMyAccountEdit()
         throws Exception
     {
         clickLinkWithText( "Edit Details" );
         String email = getFieldValue( "user.email" );
-        setFieldValue( "user.fullName", newFullName );
-        setFieldValue( "user.email", newEmail );
+        String fullName = getFieldValue( "user.fullName" );
+        setFieldValue( "user.fullName", NEW_FULL_NAME );
+        setFieldValue( "user.email", NEW_EMAIL );
         submit();
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         Assert.assertEquals( "Continuum - Group Summary", getTitle() );
         clickLinkWithText( "Edit Details" );
-        assertFieldValue( newFullName, "user.fullName" );
-        assertFieldValue( newEmail, "user.email" );
-        setFieldValue( "user.fullName", getProperty( "ADMIN_USERNAME" ) );
+        assertFieldValue( NEW_FULL_NAME, "user.fullName" );
+        assertFieldValue( NEW_EMAIL, "user.email" );
+        setFieldValue( "user.fullName", fullName );
         setFieldValue( "user.email", email );
         submit();
         clickLinkWithText( "Edit Details" );
-        assertFieldValue( getProperty( "ADMIN_USERNAME" ), "user.fullName" );
+        assertFieldValue( fullName, "user.fullName" );
         assertFieldValue( email, "user.email" );
     }
 }

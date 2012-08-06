@@ -26,13 +26,13 @@ package org.apache.continuum.web.test.parent;
 public abstract class AbstractPurgeTest
     extends AbstractAdminTest
 {
-    public void goToGeneralPurgePage()
+    void goToGeneralPurgePage()
     {
         clickLinkWithText( "Purge Configurations" );
         assertGeneralPurgePage();
     }
 
-    public void assertGeneralPurgePage()
+    void assertGeneralPurgePage()
     {
         assertPage( "Continuum - Purge Configurations" );
         assertTextPresent( "Repository Purge Configurations" );
@@ -40,7 +40,7 @@ public abstract class AbstractPurgeTest
         assertButtonWithValuePresent( "Add" );
     }
 
-    public void removeRepositoryPurge( String purgeDescription )
+    protected void removeRepositoryPurge( String purgeDescription )
     {
         goToGeneralPurgePage();
         clickLinkWithXPath( "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription
@@ -53,7 +53,7 @@ public abstract class AbstractPurgeTest
         assertGeneralPurgePage();
     }
 
-    public void removeDirectoryPurge( String purgeDescription )
+    protected void removeDirectoryPurge( String purgeDescription )
     {
         goToGeneralPurgePage();
         clickLinkWithXPath( "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription
@@ -66,7 +66,7 @@ public abstract class AbstractPurgeTest
         assertGeneralPurgePage();
     }
 
-    public void assertAddRepositoryPurgePage()
+    void assertAddRepositoryPurgePage()
     {
         assertPage( "Continuum - Add/Edit Purge Configuration" );
         assertTextPresent( "Add/Edit Purge Configuration" );
@@ -87,7 +87,7 @@ public abstract class AbstractPurgeTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void assertAddEditDirectoryPurgePage()
+    void assertAddEditDirectoryPurgePage()
     {
         assertPage( "Continuum - Add/Edit Purge Configuration" );
         assertTextPresent( "Add/Edit Purge Configuration" );
@@ -107,7 +107,7 @@ public abstract class AbstractPurgeTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void goToAddRepositoryPurge()
+    protected void goToAddRepositoryPurge()
     {
         goToGeneralPurgePage();
         assertGeneralPurgePage();
@@ -115,7 +115,7 @@ public abstract class AbstractPurgeTest
         assertAddRepositoryPurgePage();
     }
 
-    public void goToEditRepositoryPurge( String daysOlder, String retentionCount, String description )
+    protected void goToEditRepositoryPurge( String daysOlder, String retentionCount, String description )
     {
         goToGeneralPurgePage();
         assertGeneralPurgePage();
@@ -127,7 +127,7 @@ public abstract class AbstractPurgeTest
         assertFieldValue( description, "description" );
     }
 
-    public void goToEditDirectoryPurge( String daysOlder, String retentionCount, String description )
+    protected void goToEditDirectoryPurge( String daysOlder, String retentionCount, String description )
     {
         goToGeneralPurgePage();
         assertGeneralPurgePage();
@@ -139,7 +139,8 @@ public abstract class AbstractPurgeTest
         assertFieldValue( description, "description" );
     }
 
-    public void addEditRepositoryPurge( String daysOlder, String retentionCount, String description, boolean success )
+    protected void addEditRepositoryPurge( String daysOlder, String retentionCount, String description,
+                                           boolean success )
     {
         setFieldValue( "daysOlder", daysOlder );
         setFieldValue( "retentionCount", retentionCount );
@@ -155,7 +156,7 @@ public abstract class AbstractPurgeTest
         }
     }
 
-    public void goToAddDirectoryPurge()
+    protected void goToAddDirectoryPurge()
     {
         goToGeneralPurgePage();
         assertGeneralPurgePage();
@@ -163,7 +164,7 @@ public abstract class AbstractPurgeTest
         assertAddEditDirectoryPurgePage();
     }
 
-    public void addEditDirectoryPurge( String daysOlder, String retentionCount, String description, boolean success )
+    protected void addEditDirectoryPurge( String daysOlder, String retentionCount, String description, boolean success )
     {
         setFieldValue( "daysOlder", daysOlder );
         setFieldValue( "retentionCount", retentionCount );

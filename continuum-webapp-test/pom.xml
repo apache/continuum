@@ -565,6 +565,7 @@ under the License.
     <seleniumPort>4444</seleniumPort>
     <baseUrl>http://localhost:9595/continuum/</baseUrl>
     <browser>*firefox</browser>
+    <browserPath/>
     <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
   </properties>
 </project>
