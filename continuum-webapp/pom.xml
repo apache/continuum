@@ -142,6 +142,7 @@ under the License.
           </execution>
         </executions>
         <configuration>
+          <source>1.5</source>
           <warSourceDirectory>${project.build.directory}/${project.build.finalName}/</warSourceDirectory>
           <injectString><![CDATA[<!-- [jspc-maven-plugin:post-compiled-jsps-as-servlets] -->]]></injectString>
           <!-- 
