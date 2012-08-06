@@ -85,9 +85,10 @@ public class CaptureScreenShotsListener
         int lNumber = stackTrace[index].getLineNumber();
         String lineNumber = Integer.toString( lNumber );
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
-        if ( !targetPath.mkdirs() )
+        if ( !targetPath.exists() && !targetPath.mkdirs() )
         {
             System.out.println( "Unable to create screenshots directory" );
+            return;
         }
         String fileBaseName = methodName + "_" + className + ".java_" + lineNumber + "-" + time;
         try
