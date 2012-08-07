@@ -18,27 +18,66 @@
   -->
 
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd"> 
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-  <constant name="struts.action.extension" value="action" />
+  <constant name="struts.action.extension" value="action"/>
 
   <include file="struts-default.xml"/>
 
   <!-- Include plexus-security xwork configurations. -->
   <include file="struts-security.xml"/>
 
-
   <package name="default" extends="struts-default">
 
     <interceptors>
+      <interceptor-stack name="defaultStack">
+        <interceptor-ref name="exception"/>
+        <interceptor-ref name="alias"/>
+        <interceptor-ref name="servletConfig"/>
+        <interceptor-ref name="i18n"/>
+        <interceptor-ref name="prepare"/>
+        <interceptor-ref name="chain"/>
+        <interceptor-ref name="debugging"/>
+        <interceptor-ref name="scopedModelDriven"/>
+        <interceptor-ref name="modelDriven"/>
+        <interceptor-ref name="fileUpload"/>
+        <interceptor-ref name="checkbox"/>
+        <interceptor-ref name="multiselect"/>
+        <interceptor-ref name="staticParams"/>
+        <interceptor-ref name="actionMappingParams"/>
+        <interceptor-ref name="params">
+          <param name="excludeParams">dojo\..*,^struts\..*,.*\\.*,.*\(.*,.*\).*,.*@.*</param>
+        </interceptor-ref>
+        <interceptor-ref name="conversionError"/>
+        <interceptor-ref name="validation">
+          <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
+        <interceptor-ref name="workflow">
+          <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
+      </interceptor-stack>
+
+      <interceptor-stack name="basicStack">
+        <interceptor-ref name="exception"/>
+        <interceptor-ref name="servletConfig"/>
+        <interceptor-ref name="prepare"/>
+        <interceptor-ref name="checkbox"/>
+        <interceptor-ref name="multiselect"/>
+        <interceptor-ref name="actionMappingParams"/>
+        <interceptor-ref name="params">
+          <param name="excludeParams">dojo\..*,^struts\..*,.*\\.*,.*\(.*,.*\).*,.*@.*</param>
+        </interceptor-ref>
+        <interceptor-ref name="conversionError"/>
+      </interceptor-stack>
+
       <interceptor name="continuumConfigurationCheck" class="forceContinuumConfigurationInterceptor"/>
       <interceptor name="redbackForceAdminUser" class="redbackForceAdminUserInterceptor"/>
       <interceptor name="redbackSecureActions" class="redbackSecureActionInterceptor"/>
       <interceptor name="redbackAutoLogin" class="redbackAutoLoginInterceptor"/>
       <interceptor name="redbackPolicyEnforcement" class="redbackPolicyEnforcementInterceptor"/>
       <interceptor name="redbackEnvironmentChecker" class="redbackEnvironmentCheckInterceptor"/>
-      
+
       <interceptor-stack name="configuredContinuumStack">
         <interceptor-ref name="redbackEnvironmentChecker"/>
         <interceptor-ref name="redbackForceAdminUser"/>
@@ -76,7 +115,7 @@
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
       </interceptor-stack>
-      
+
       <interceptor-stack name="storeStack">
         <interceptor-ref name="configuredContinuumStack"/>
         <interceptor-ref name="store">
@@ -89,7 +128,7 @@
         <interceptor-ref name="store">
           <param name="operationMode">RETRIEVE</param>
         </interceptor-ref>
-      </interceptor-stack> 
+      </interceptor-stack>
     </interceptors>
 
     <default-interceptor-ref name="configuredContinuumStack"/>
@@ -186,14 +225,14 @@
 
     <action name="companyInfo" class="companyInfo">
       <result name="success">/WEB-INF/jsp/components/companyLogo.jsp</result>
-      <interceptor-ref name="basicStack" />
+      <interceptor-ref name="basicStack"/>
     </action>
-    
+
     <action name="bottom" class="bottom">
       <result name="success">/WEB-INF/jsp/navigations/DefaultBottom.jsp</result>
-      <interceptor-ref name="basicStack" />
-    </action>    
-    
+      <interceptor-ref name="basicStack"/>
+    </action>
+
 
     <action name="groupSummary" class="groupSummary">
       <interceptor-ref name="retrieveStack"/>
@@ -202,16 +241,16 @@
 
     <action name="addMavenTwoProjectInput" class="addMavenTwoProject">
       <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
-    </action>        
-    
+    </action>
+
     <action name="addMavenTwoProject" class="addMavenTwoProject">
       <interceptor-ref name="configuredContinuumStack"/>
       <interceptor-ref name="fileUpload"/>
       <interceptor-ref name="execAndWait">
         <param name="delay">200</param>
         <param name="delaySleepInterval">50</param>
-      </interceptor-ref> 
-      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>     
+      </interceptor-ref>
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>
       <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirectAction">
@@ -222,12 +261,12 @@
 
     <action name="addMavenOneProjectInput" class="addMavenOneProject">
       <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
-    </action>    
-    
+    </action>
+
     <action name="addMavenOneProject" class="addMavenOneProject">
       <interceptor-ref name="configuredContinuumStack"/>
       <interceptor-ref name="execAndWait"/>
-      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>
       <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirectAction">
@@ -380,7 +419,7 @@
         <param name="actionName">groupSummary</param>
       </result>
     </action>
-    
+
     <action name="releaseProjectGroup" class="projectGroup" method="release">
       <interceptor-ref name="storeStack"/>
       <result name="input" type="redirectAction">
@@ -417,7 +456,7 @@
       <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/buildResults.jsp</result>
     </action>
-    
+
     <action name="removeBuildResults" class="buildResults" method="remove">
       <interceptor-ref name="storeStack"/>
       <result name="success" type="redirectAction">
@@ -435,14 +474,14 @@
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
     </action>
-    
+
     <action name="buildOutputText" class="buildResult">
       <result name="success" type="stream">
         <param name="inputName">buildOutputInputStream</param>
         <param name="contentDisposition">attachment; filename="build-output.txt"</param>
       </result>
-    </action>    
-    
+    </action>
+
     <action name="removeBuildResult" class="buildResult" method="remove">
       <interceptor-ref name="storeStack">
         <param name="tokenSession.includeMethods">remove</param>
@@ -466,7 +505,7 @@
         <param name="contentLength">${fileLength}</param>
       </result>
     </action>
-    
+
     <action name="workingCopyFileText" class="workingCopy">
       <result name="success" type="stream">
         <param name="contentType">application/octet-stream</param>
@@ -478,7 +517,7 @@
     <action name="scmResult" class="scmResult">
       <result name="success">/WEB-INF/jsp/scmResult.jsp</result>
     </action>
-    
+
     <!--
     * schedule actions
     -->
@@ -495,7 +534,7 @@
       <result name="success" type="chain">schedules</result>
       <result name="error" type="chain">schedule</result>
     </action>
-    
+
     <action name="removeSchedule" class="schedule" method="remove">
       <result name="confirm">/WEB-INF/jsp/confirmScheduleRemoval.jsp</result>
       <result name="success" type="chain">schedules</result>
@@ -508,13 +547,13 @@
     <action name="cancelBuild" class="cancelBuild">
       <result name="success" type="chain">buildResults</result>
     </action>
-    
+
     <action name="cancelBuilds" class="cancelBuild" method="cancelBuilds">
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
-    </action>    
+    </action>
 
     <action name="cancelGroupBuild" class="cancelBuild" method="cancelGroupBuild">
       <result name="success" type="redirectAction">
@@ -656,7 +695,7 @@
     <action name="viewReleases" class="distributedRelease" method="list">
       <result name="success">/WEB-INF/jsp/releases.jsp</result>
     </action>
-    
+
     <action name="viewProjectBuildsReport" class="projectBuildsReport" method="init">
       <result name="success">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
     </action>
@@ -665,7 +704,7 @@
       <result name="input">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
       <result name="success">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
     </action>
-    
+
     <action name="downloadProjectBuildsReport" class="projectBuildsReport" method="downloadBuildsReport">
       <result name="input">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
       <result name="success">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
@@ -696,15 +735,15 @@
     <action name="configureAppearance" class="configureAppearance" method="input">
       <result name="input">/WEB-INF/jsp/admin/appearance.jsp</result>
     </action>
-    
+
     <action name="saveFooter" class="configureFooter" method="saveFooter">
       <result name="input">/WEB-INF/jsp/admin/appearance.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/appearance.jsp</result>
       <interceptor-ref name="configuredContinuumStack">
         <param name="tokenSession.includeMethods">saveFooter</param>
       </interceptor-ref>
-    </action>    
-      
+    </action>
+
     <action name="editAppearance" class="configureAppearance" method="input">
       <result name="input">/WEB-INF/jsp/admin/editAppearance.jsp</result>
     </action>
@@ -731,25 +770,25 @@
         <param name="tokenSession.includeMethods">execute</param>
       </interceptor-ref>
     </action>
-      
+
     <!--
        Build Environment actions
-    -->      
-      
+    -->
+
     <action name="buildEnvList" class="profileAdministration" method="list">
       <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
-    </action>   
-      
-    <action name="addBuildEnv" class="profileAdministration">
-      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>   
     </action>
-        
+
+    <action name="addBuildEnv" class="profileAdministration">
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
+    </action>
+
     <action name="editBuildEnv" class="profileAdministration">
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
-      
+
     <action name="deleteBuildEnv" class="profileAdministration" method="delete">
       <interceptor-ref name="storeStack">
         <param name="tokenSession.includeMethods">delete</param>
@@ -759,67 +798,67 @@
         <param name="namespace">/admin</param>
         <param name="method">list</param>
       </result>
-    </action>      
-    
+    </action>
+
     <action name="confirmDeleteBuildEnv" class="profileAdministration" method="confirmDelete">
       <result name="success">/WEB-INF/jsp/admin/confirmDeleteBuildEnv.jsp</result>
-    </action>  
-      
+    </action>
+
     <action name="saveBuildEnv" class="profileAdministration" method="save">
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="editProfile">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
-      
+
     <action name="addInstallationBuildEnv" class="profileAdministration" method="addInstallation">
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
-      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
-    </action>  
-    
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
+    </action>
+
     <action name="removeBuildEnvInstallation" class="profileAdministration" method="removeInstallation">
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
-      
+
     <!--
        Installation actions 
-    -->  
+    -->
     <action name="installationsTypeChoice" class="installation" method="listTypes">
       <result name="success">/WEB-INF/jsp/admin/installationsTypeChoice.jsp</result>
     </action>
-    
+
     <action name="installationsList" class="installation" method="list">
       <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
-    </action>        
-      
+    </action>
+
     <action name="editInstallation" class="installation" method="edit">
       <result name="success">/WEB-INF/jsp/admin/editInstallation.jsp</result>
-      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>    
+      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
     </action>
-      
+
     <action name="saveInstallation" class="installation" method="save">
       <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
       <result name="success" type="redirectAction">installationsList</result>
-    </action> 
-    
+    </action>
+
     <action name="deleteInstallation" class="installation" method="delete">
       <result name="input">/WEB-INF/jsp/admin/installationsList.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteInstallation.jsp</result>
-    </action>  
-    
+    </action>
+
     <!--addBuildEnv
        Build Definitions Templates actions 
-    -->  
+    -->
     <action name="buildDefinitionTemplates" class="buildDefinitionTemplates" method="summary">
       <result name="success">/WEB-INF/jsp/admin/buildDefinitionTemplateSummary.jsp</result>
     </action>
-    
+
     <action name="buildDefinitionTemplate" class="buildDefinitionTemplates" method="input">
       <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
     </action>
-    
+
     <action name="editBuildDefinitionTemplate" class="buildDefinitionTemplates" method="edit">
       <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
@@ -827,26 +866,26 @@
 
     <action name="deleteDefinitionTemplate" class="buildDefinitionTemplates" method="delete">
       <result name="success" type="redirectAction">
-        <param name="actionName">buildDefinitionTemplates.action</param>        
+        <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionTemplate.jsp</result>
       <interceptor-ref name="configuredContinuumStack">
         <param name="tokenSession.includeMethods">delete</param>
       </interceptor-ref>
     </action>
-    
+
     <action name="saveBuildDefinitionTemplate" class="buildDefinitionTemplates" method="save">
       <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
     </action>
-    
+
     <action name="editBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="editBuildDefinition">
       <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
     </action>
-    
+
     <action name="saveBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
       <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
@@ -860,54 +899,54 @@
       </result>
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
     </action>
-              
+
     <action name="deleteBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="deleteBuildDefinition">
       <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionAsTemplate.jsp</result>
     </action>
-    
+
     <action name="displayQueues" class="queues" method="display">
       <result name="success">/WEB-INF/jsp/admin/buildQueueView.jsp</result>
       <result name="distributed-build-success">/WEB-INF/jsp/admin/viewDistributedBuilds.jsp</result>
     </action>
-    
+
     <action name="removeBuildQueueEntry" class="queues" method="remove">
       <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
-      </result>      
-    </action>   
-    
+      </result>
+    </action>
+
     <action name="removeBuildQueueEntries" class="queues" method="removeBuildEntries">
       <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
-      </result>      
-    </action>    
-    
+      </result>
+    </action>
+
     <action name="cancelCurrentBuildTask" class="queues" method="cancelCurrent">
       <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
-      </result>      
-    </action> 
-    
+      </result>
+    </action>
+
     <action name="removeCheckoutQueueEntry" class="queues" method="removeCheckout">
       <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
-      </result>      
+      </result>
     </action>
-    
+
     <action name="cancelCurrentQueueTask" class="queues" method="cancelCurrentCheckout">
       <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
-      </result>      
-    </action>    
-    
+      </result>
+    </action>
+
     <action name="removeCheckoutQueueEntries" class="queues" method="removeCheckoutEntries">
       <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
-      </result>      
-    </action>    
+      </result>
+    </action>
 
     <action name="removePrepareBuildEntry" class="queues" method="removePrepareBuildEntry">
       <result name="success" type="redirectAction">
@@ -920,7 +959,7 @@
         <param name="actionName">displayQueues</param>
       </result>
     </action>
-    
+
     <action name="cancelDistributedBuild" class="queues" method="cancelDistributedBuild">
       <result name="success" type="redirectAction">
         <param name="actionName">displayQueues</param>
@@ -950,26 +989,27 @@
         <param name="actionName">displayQueues</param>
       </result>
     </action>
-    
+
     <!--
     * Build Queue (Parallel Builds)
     -->
-    
+
     <action name="buildQueueList" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="list">
       <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
     </action>
-    
+
     <action name="addBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction">
-      <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result> 
+      <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
     </action>
-    
+
     <action name="saveBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="save">
       <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
       <result name="success" type="redirectAction">buildQueueList</result>
-    </action> 
-    
-    <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="delete">
+    </action>
+
+    <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction"
+            method="delete">
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildQueue.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">buildQueueList</param>
@@ -978,21 +1018,21 @@
         <param name="tokenSession.includeMethods">delete</param>
       </interceptor-ref>
     </action>
-            
+
     <!--
     * Local Repository actions
     -->
-    
+
     <action name="repositoryList" class="localRepository" method="list">
       <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/localRepositoriesList.jsp</result>
     </action>
-    
+
     <action name="editRepository" class="localRepository" method="input">
       <result name="error">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
     </action>
-    
+
     <action name="saveRepository" class="localRepository" method="save">
       <result name="error">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
@@ -1000,7 +1040,7 @@
         <param name="actionName">repositoryList</param>
       </result>
     </action>
-    
+
     <action name="removeRepository" class="localRepository" method="remove">
       <interceptor-ref name="storeStack">
         <param name="tokenSession.includeMethods">remove</param>
@@ -1010,41 +1050,41 @@
         <param name="actionName">repositoryList</param>
       </result>
     </action>
-    
+
     <action name="purgeRepository" class="localRepository" method="doPurge">
       <interceptor-ref name="storeStack"/>
       <result name="success" type="redirectAction">
         <param name="actionName">repositoryList</param>
       </result>
     </action>
-    
+
     <!--
     * Purge actions
     -->
     <action name="displayPurge" class="purge" method="display">
-        <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
-        <result name="distributed-build-success">/WEB-INF/jsp/admin/distributedPurgeConfigurationsList.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
+      <result name="distributed-build-success">/WEB-INF/jsp/admin/distributedPurgeConfigurationsList.jsp</result>
     </action>
-    
+
     <!--
     * Parallel Purge Actions
     -->
     <action name="purgeConfigList" class="purgeConfiguration" method="list">
       <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
     </action>
-    
+
     <action name="editPurgeConfig" class="purgeConfiguration" method="input">
       <result name="error">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
     </action>
-    
+
     <action name="savePurgeConfig" class="purgeConfiguration" method="save">
       <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">displayPurge</param>
       </result>
     </action>
-    
+
     <action name="removePurgeConfig" class="purgeConfiguration" method="remove">
       <result name="error" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
@@ -1058,7 +1098,7 @@
         <param name="tokenSession.includeMethods">remove</param>
       </interceptor-ref>
     </action>
-    
+
     <action name="doPurge" class="purgeConfiguration" method="purge">
       <result name="success" type="redirectAction">
         <param name="actionName">displayPurge</param>
@@ -1076,14 +1116,14 @@
       <result name="error">/WEB-INF/jsp/admin/editDistributedPurgeConfiguration.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editDistributedPurgeConfiguration.jsp</result>
     </action>
-    
+
     <action name="saveDistributedPurgeConfig" class="distributedPurgeConfiguration" method="save">
       <result name="input">/WEB-INF/jsp/admin/editDistributedPurgeConfiguration.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">displayPurge</param>
       </result>
     </action>
-    
+
     <action name="removeDistributedPurgeConfig" class="distributedPurgeConfiguration" method="remove">
       <result name="error" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
@@ -1097,7 +1137,7 @@
         <param name="tokenSession.includeMethods">remove</param>
       </interceptor-ref>
     </action>
-    
+
     <action name="doDistributedPurge" class="distributedPurgeConfiguration" method="purge">
       <result name="success" type="redirectAction">
         <param name="actionName">displayPurge</param>
@@ -1111,16 +1151,16 @@
     <!--
     * Build Agent actions
     -->
-    
+
     <action name="buildAgentList" class="buildAgent" method="list">
       <result name="success">/WEB-INF/jsp/admin/buildAgentsList.jsp</result>
     </action>
-    
+
     <action name="editBuildAgent" class="buildAgent" method="input">
       <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
     </action>
-    
+
     <action name="saveBuildAgent" class="buildAgent" method="save">
       <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
@@ -1128,7 +1168,7 @@
         <param name="actionName">buildAgentList</param>
       </result>
     </action>
-    
+
     <action name="deleteBuildAgent" class="buildAgent" method="delete">
       <result name="error" type="redirectAction">
         <param name="actionName">buildAgentList</param>
@@ -1142,7 +1182,7 @@
         <param name="tokenSession.includeMethods">delete</param>
       </interceptor-ref>
     </action>
-    
+
     <action name="viewBuildAgent" class="buildAgent" method="view">
       <result name="success">/WEB-INF/jsp/admin/viewBuildAgent.jsp</result>
     </action>
@@ -1367,6 +1407,6 @@
       <result name="input">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
       <result name="success" type="chain">projectGroupNotifier</result>
     </action>
-    
+
   </package>
 </struts>
