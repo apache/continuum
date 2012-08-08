@@ -18,11 +18,17 @@
  */
 package org.apache.maven.continuum;
 
+import org.apache.continuum.AbstractAddProjectTest;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
+import org.mortbay.jetty.Handler;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.DefaultHandler;
+import org.mortbay.jetty.handler.ResourceHandler;
+import org.mortbay.jetty.nio.SelectChannelConnector;
 
 import java.util.Collections;
 
@@ -32,21 +38,56 @@ import java.util.Collections;
  * @version $Id$
  */
 public class AddProjectTest
-    extends AbstractContinuumTest
-{
+        extends AbstractAddProjectTest {
     static final String SCM_USERNAME = "test";
     
     static final String SCM_PASSWORD = ";password";
-    
+
+    private Server server;
+
+    private String scmUrl;
+
+    @Override
+    protected void setUp()
+        throws Exception
+    {
+        super.setUp();
+
+        createLocalRepository();
+
+        server = startJettyServer();
+        int port = server.getConnectors()[0].getLocalPort();
+        scmUrl = "http://test:;password@localhost:" + port + "/projects/continuum/continuum-core/pom.xml";
+    }
+
+    @Override
+    protected void tearDown()
+        throws Exception
+    {
+        super.tearDown();
+        server.stop();
+    }
+
+    private Server startJettyServer()
+        throws Exception
+    {
+        Server server = new Server( 0 );
+        ResourceHandler handler = new ResourceHandler();
+        handler.setResourceBase( getTestFile( "src/test/resources" ).getAbsolutePath() );
+        server.setHandlers( new Handler[]{ handler, new DefaultHandler() } );
+        server.start();
+        return server;
+    }
+
     public void testScmUserNamePasswordNotStoring()
         throws Exception
     {
-        String metadataUrl = "http://test:;password@svn.apache.org/repos/asf/continuum/tags/continuum-1.1/continuum-api/pom.xml";
         DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
-        
+
         ContinuumProjectBuildingResult result = continuum
-            .executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
-            						getDefaultProjectGroup().getId(), false, true, false, -1, false, false );
+            .executeAddProjectsFromMetadataActivity( scmUrl, MavenTwoContinuumProjectBuilder.ID,
+                                                     getDefaultProjectGroup().getId(), false, true, false, -1, false,
+                                                     false );
         assertEquals( Collections.emptyList(), result.getErrors() );
 
         assertEquals( 1, result.getProjects().size() );
@@ -61,12 +102,12 @@ public class AddProjectTest
     public void testScmUserNamePasswordStoring()
         throws Exception
     {
-        String metadataUrl = "http://test:;password@svn.apache.org/repos/asf/continuum/tags/continuum-1.1/continuum-api/pom.xml";
         DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
 
         ContinuumProjectBuildingResult result = continuum
-            .executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
-            						getDefaultProjectGroup().getId(), false, false, false, -1, false, false );
+            .executeAddProjectsFromMetadataActivity( scmUrl, MavenTwoContinuumProjectBuilder.ID,
+                                                     getDefaultProjectGroup().getId(), false, false, false, -1, false,
+                                                     false );
         assertEquals( Collections.emptyList(), result.getErrors() );
 
         assertEquals( 1, result.getProjects().size() );
@@ -81,8 +122,6 @@ public class AddProjectTest
     public void testAntProjectScmUserNamePasswordNotStoring()
         throws Exception
     {
-        // use same url since we're just going to add the project, not build it
-        String scmUrl = "http://test:;password@svn.apache.org/repos/asf/continuum/tags/continuum-1.1/continuum-api/pom.xml";
         DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
         
         Project project = new Project();
@@ -90,7 +129,7 @@ public class AddProjectTest
         project.setVersion( "1.0" );
         project.setScmUsername( SCM_USERNAME );
         project.setScmPassword( SCM_PASSWORD );
-        project.setScmUrl( scmUrl );        
+        project.setScmUrl( this.scmUrl );
         project.setScmUseCache( true );
         
         BuildDefinitionService bdService = ( BuildDefinitionService )lookup( BuildDefinitionService.class.getName() );
@@ -110,8 +149,6 @@ public class AddProjectTest
     public void testAntProjectScmUserNamePasswordStoring()
         throws Exception
     {
-        // use same url since we're just going to add the project, not build it
-        String scmUrl = "http://test:;password@svn.apache.org/repos/asf/continuum/tags/continuum-1.1/continuum-api/pom.xml";
         DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
         
         Project project = new Project();

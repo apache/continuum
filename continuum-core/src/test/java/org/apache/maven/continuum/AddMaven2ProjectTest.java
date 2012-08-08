@@ -3,6 +3,7 @@ package org.apache.maven.continuum;
 import java.io.File;
 import java.util.Collections;
 
+import org.apache.continuum.AbstractAddProjectTest;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class AddMaven2ProjectTest
-    extends AbstractContinuumTest
+    extends AbstractAddProjectTest
 {
     protected final Logger log = LoggerFactory.getLogger( getClass() );
 
@@ -65,11 +66,11 @@ public class AddMaven2ProjectTest
         
         bdt = bds.addBuildDefinitionTemplate( bdt );
         
-        bdt = bds.addBuildDefinitionInTemplate( bdt, bd, false );        
-    }    
-    
-    
-    
+        bdt = bds.addBuildDefinitionInTemplate( bdt, bd, false );
+
+        createLocalRepository();
+    }
+
     public void testAddProjectToExistingGroupWithBuildDefTemplate()
         throws Exception
     {
@@ -226,7 +227,7 @@ public class AddMaven2ProjectTest
 
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
         
-        assertEquals( "clean install", ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
+        assertEquals( "clean install", pg.getBuildDefinitions().get( 0 ).getGoals() );
     }
     
     
