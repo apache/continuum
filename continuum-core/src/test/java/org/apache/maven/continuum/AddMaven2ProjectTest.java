@@ -1,6 +1,7 @@
 package org.apache.maven.continuum;
 
 import java.io.File;
+import java.util.Collections;
 
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -94,6 +95,8 @@ public class AddMaven2ProjectTest
                                                                                        true, false, false, bdt.getId(), false );
         assertNotNull( result );
 
+        assertEquals( Collections.emptyList(), result.getErrors() );
+
         assertEquals( 1, result.getProjects().size() );
 
         Project project = result.getProjects().get( 0 );
@@ -120,6 +123,8 @@ public class AddMaven2ProjectTest
                                                                                        .toExternalForm(), -1, true,
                                                                                        false, true, bdt.getId(), false );
         assertNotNull( result );
+
+        assertEquals( Collections.emptyList(), result.getErrors() );
 
         assertEquals( 1, result.getProjects().size() );
         Project project = result.getProjects().get( 0 );
@@ -156,6 +161,8 @@ public class AddMaven2ProjectTest
                                                                                        .toExternalForm(), -1, true,
                                                                                        false, true, -1, false );
         assertNotNull( result );
+
+        assertEquals( Collections.emptyList(), result.getErrors() );
 
         assertEquals( 1, result.getProjects().size() );
 
@@ -204,6 +211,8 @@ public class AddMaven2ProjectTest
                                                                                        .toExternalForm(), pg.getId(),
                                                                                        true, false, false, -1, false );
         assertNotNull( result );
+
+        assertEquals( Collections.emptyList(), result.getErrors() );
 
         assertEquals( 1, result.getProjects().size() );
 

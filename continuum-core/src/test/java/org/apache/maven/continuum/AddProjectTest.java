@@ -24,6 +24,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
 
+import java.util.Collections;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @since 12 juin 2008
@@ -45,6 +47,8 @@ public class AddProjectTest
         ContinuumProjectBuildingResult result = continuum
             .executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
             						getDefaultProjectGroup().getId(), false, true, false, -1, false, false );
+        assertEquals( Collections.emptyList(), result.getErrors() );
+
         assertEquals( 1, result.getProjects().size() );
         
         // read the project from store
@@ -63,6 +67,8 @@ public class AddProjectTest
         ContinuumProjectBuildingResult result = continuum
             .executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
             						getDefaultProjectGroup().getId(), false, false, false, -1, false, false );
+        assertEquals( Collections.emptyList(), result.getErrors() );
+
         assertEquals( 1, result.getProjects().size() );
 
         // read the project from store
