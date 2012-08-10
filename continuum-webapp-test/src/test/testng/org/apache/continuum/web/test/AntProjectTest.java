@@ -20,6 +20,8 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -32,39 +34,65 @@ import org.testng.annotations.Test;
 public class AntProjectTest
     extends AbstractAdminTest
 {
+    private String projectName;
+
+    private String projectDescription;
+
+    private String projectVersion;
+
+    private String projectTag;
+
+    private String scmUrl;
+
+    private String scmUsername;
+
+    private String scmPassword;
+
+    private String projectGroupName;
+
+    private String projectGroupId;
+
+    private String projectGroupDescription;
+
+    @BeforeMethod
+    protected void setUp()
+        throws Exception
+    {
+        projectName = getProperty( "ANT_NAME" );
+        projectDescription = getProperty( "ANT_DESCRIPTION" );
+        projectVersion = getProperty( "ANT_VERSION" );
+        projectTag = getProperty( "ANT_TAG" );
+        scmUrl = getProperty( "ANT_SCM_URL" );
+        scmUsername = getProperty( "ANT_SCM_USERNAME" );
+        scmPassword = getProperty( "ANT_SCM_PASSWORD" );
+
+        projectGroupName = getProperty( "ANT_PROJECT_GROUP_NAME" );
+        projectGroupId = getProperty( "ANT_PROJECT_GROUP_ID" );
+        projectGroupDescription = getProperty( "ANT_PROJECT_GROUP_DESCRIPTION" );
+
+        // create project group, if it doesn't exist
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
+    }
+
     public void testAddAntProject()
         throws Exception
     {
-        String ANT_NAME = getProperty( "ANT_NAME" );
-        String ANT_DESCRIPTION = getProperty( "ANT_DESCRIPTION" );
-        String ANT_VERSION = getProperty( "ANT_VERSION" );
-        String ANT_TAG = getProperty( "ANT_TAG" );
-        String ANT_SCM_URL = getProperty( "ANT_SCM_URL" );
-        String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
-        String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
-        String TEST_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddAntProjectPage();
-        addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    TEST_PROJ_GRP_NAME, true, "ant" );
-        assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
+        addProject( projectName, projectDescription, projectVersion, scmUrl, scmUsername, scmPassword, projectTag,
+                    projectGroupName, true, "ant" );
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
     }
-    
+
     public void testAddAntProjectWithInvalidValues()
         throws Exception
     {
-        String ANT_NAME = "!@#$<>?etc";
-        String ANT_DESCRIPTION = "![]<>'^&etc";
-        String ANT_VERSION = "<>whitespaces!#etc";
-        String ANT_TAG = "!<>*%etc";
-        String ANT_SCM_URL = "!<>*%etc";
-        String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
-        String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
-        String DEFAULT_PROJ_GRP_NAME = getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String name = "!@#$<>?etc";
+        String description = "![]<>'^&etc";
+        String version = "<>whitespaces!#etc";
+        String tag = "!<>*%etc";
+        String scmUrl = "!<>*%etc";
         goToAddAntProjectPage();
-        addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    DEFAULT_PROJ_GRP_NAME, false, "ant" );
+        addProject( name, description, version, scmUrl, scmUsername, scmPassword, tag, projectGroupName, false, "ant" );
         assertTextPresent( "Name contains invalid characters." );
         assertTextPresent( "Version contains invalid characters." );
         assertTextPresent( "SCM Url contains invalid characters." );
@@ -85,16 +113,9 @@ public class AntProjectTest
     public void testAddDuplicateAntProject()
         throws Exception
     {
-        String ANT_NAME = getProperty( "ANT_NAME" );
-        String ANT_DESCRIPTION = getProperty( "ANT_DESCRIPTION" );
-        String ANT_VERSION = getProperty( "ANT_VERSION" );
-        String ANT_TAG = getProperty( "ANT_TAG" );
-        String ANT_SCM_URL = getProperty( "ANT_SCM_URL" );
-        String ANT_SCM_USERNAME = getProperty( "ANT_SCM_USERNAME" );
-        String ANT_SCM_PASSWORD = getProperty( "ANT_SCM_PASSWORD" );
         goToAddAntProjectPage();
-        addProject( ANT_NAME, ANT_DESCRIPTION, ANT_VERSION, ANT_SCM_URL, ANT_SCM_USERNAME, ANT_SCM_PASSWORD, ANT_TAG,
-                    null, false, "ant" );
+        addProject( projectName, projectDescription, projectVersion, scmUrl, scmUsername, scmPassword, projectTag, null,
+                    false, "ant" );
         assertTextPresent( "Project name already exist" );
     }
 }

@@ -234,7 +234,24 @@ public abstract class AbstractContinuumTest
 
     protected void addProjectGroup( String name, String groupId, String description, boolean success )
     {
+        addProjectGroup( name, groupId, description, success, true );
+    }
+
+    protected void addProjectGroup( String name, String groupId, String description, boolean success,
+                                    boolean failIfExists )
+    {
         goToProjectGroupsSummaryPage();
+        if ( failIfExists )
+        {
+            assertLinkNotPresent( name );
+        }
+        else
+        {
+            if ( isLinkPresent( name ) )
+            {
+                return;
+            }
+        }
 
         // Go to Add Project Group Page
         clickButtonWithValue( "Add Project Group" );
