@@ -1795,7 +1795,7 @@ public class DefaultContinuum
         }
 
         AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
-        // add the relevent security administration roles for this project
+        // add the relevant security administration roles for this project
         if ( addAssignableRoles )
         {
             executeAction( "add-assignable-roles", context );
