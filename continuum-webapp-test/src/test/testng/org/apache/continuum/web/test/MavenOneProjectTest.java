@@ -20,6 +20,8 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -32,24 +34,61 @@ import org.testng.annotations.Test;
 public class MavenOneProjectTest
     extends AbstractAdminTest
 {
+    private String pomUrl;
+
+    private String pomUsername;
+
+    private String projectGroupId;
+
+    private String projectGroupDescription;
+
+    private String projectGroupName;
+
+    private String pomPassword;
+
+    private String pomUrlMissingElement;
+
+    private String pomUrlWithExtend;
+
+    private String pomUrlUnparseableContent;
+
+    private String malformedPomUrl;
+
+    private String inaccessiblePomUrl;
+
+    @BeforeMethod
+    protected void setUp()
+        throws Exception
+    {
+        pomUrl = getProperty( "M1_POM_URL" );
+        pomUsername = getProperty( "M1_POM_USERNAME" );
+        pomPassword = getProperty( "M1_POM_PASSWORD" );
+        projectGroupName = getProperty( "M1_PROJ_GRP_NAME" );
+        projectGroupId = getProperty( "M1_PROJ_GRP_ID" );
+        projectGroupDescription = getProperty( "M1_PROJ_GRP_DESCRIPTION" );
+
+        pomUrlMissingElement = getProperty( "M1_MISS_REPO_POM_URL" );
+        pomUrlWithExtend = getProperty( "M1_EXTENDED_POM_URL" );
+        pomUrlUnparseableContent = getProperty( "M1_UNPARSEABLE_POM_URL" );
+
+        malformedPomUrl = "aaa";
+        inaccessiblePomUrl = "http://localhost:9595/";
+    }
+
+    @AfterMethod
+    protected void tearDown()
+    {
+        removeProjectGroup( projectGroupName, false );
+    }
+
     public void testAddMavenOneProjectWithNoDefaultBuildDefinitionFromTemplate()
         throws Exception
     {
-        String M1_POM_URL = getProperty( "M1_POM_URL" );
-        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
-        String M1_PROJ_GRP_NAME = getProperty( "M1_PROJ_GRP_NAME" );
-        String M1_PROJ_GRP_ID = getProperty( "M1_PROJ_GRP_ID" );
-        String M1_PROJ_GRP_DESCRIPTION = getProperty( "M1_PROJ_GRP_DESCRIPTION" );
-
         removeDefaultBuildDefinitionFromTemplate( "maven1" );
-        
-        goToAddMavenOneProjectPage();
-        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, true );
-        assertProjectGroupSummaryPage( M1_PROJ_GRP_NAME, M1_PROJ_GRP_ID, M1_PROJ_GRP_DESCRIPTION );
 
-        // Delete project group
-        removeProjectGroup( M1_PROJ_GRP_NAME );
+        goToAddMavenOneProjectPage();
+        addMavenOneProject( pomUrl, pomUsername, pomPassword, null, true );
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
 
         // Re-add default build definition of template
         addDefaultBuildDefinitionFromTemplate( "maven1" );
@@ -62,31 +101,10 @@ public class MavenOneProjectTest
     public void testValidPomUrl()
         throws Exception
     {
-        String M1_POM_URL = getProperty( "M1_POM_URL" );
-        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
-        String M1_PROJ_GRP_NAME = getProperty( "M1_PROJ_GRP_NAME" );
-        String M1_PROJ_GRP_ID = getProperty( "M1_PROJ_GRP_ID" );
-        String M1_PROJ_GRP_DESCRIPTION = getProperty( "M1_PROJ_GRP_DESCRIPTION" );
         // Enter values into Add Maven Two Project fields, and submit
         goToAddMavenOneProjectPage();
-        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, true );
-        assertProjectGroupSummaryPage( M1_PROJ_GRP_NAME, M1_PROJ_GRP_ID, M1_PROJ_GRP_DESCRIPTION );
-    }
-
-    @Test( dependsOnMethods = { "testAddProjectGroup" } )
-    public void testAddMavenOneProjectFromRemoteSourceToNonDefaultProjectGroup()
-        throws Exception
-    {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-        String M1_POM_URL = getProperty( "M1_POM_URL" );
-        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
-        goToAddMavenOneProjectPage();
-        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, TEST_PROJ_GRP_NAME, true );
-        assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
+        addMavenOneProject( pomUrl, pomUsername, pomPassword, null, true );
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
     }
 
     /**
@@ -106,11 +124,8 @@ public class MavenOneProjectTest
     public void testMissingElementInPom()
         throws Exception
     {
-        String M1_MISS_REPO_POM_URL = getProperty( "M1_MISS_REPO_POM_URL" );
-        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         goToAddMavenOneProjectPage();
-        addMavenOneProject( M1_MISS_REPO_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, false );
+        addMavenOneProject( pomUrlMissingElement, pomUsername, pomPassword, null, false );
         assertTextPresent( "Missing 'repository' element in the POM." );
     }
 
@@ -120,11 +135,8 @@ public class MavenOneProjectTest
     public void testWithExtendElementPom()
         throws Exception
     {
-        String M1_EXTENDED_POM_URL = getProperty( "M1_EXTENDED_POM_URL" );
-        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         goToAddMavenOneProjectPage();
-        addMavenOneProject( M1_EXTENDED_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, false );
+        addMavenOneProject( pomUrlWithExtend, pomUsername, pomPassword, null, false );
         assertTextPresent( "Cannot use a POM with an 'extend' element" );
     }
 
@@ -134,11 +146,8 @@ public class MavenOneProjectTest
     public void testUnparseableXmlContent()
         throws Exception
     {
-        String M1_UNPARSEABLE_POM_URL = getProperty( "M1_UNPARSEABLE_POM_URL" );
-        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
         goToAddMavenOneProjectPage();
-        addMavenOneProject( M1_UNPARSEABLE_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, false );
+        addMavenOneProject( pomUrlUnparseableContent, pomUsername, pomPassword, null, false );
         assertTextPresent( "The XML content of the POM can not be parsed." );
     }
 
@@ -148,9 +157,8 @@ public class MavenOneProjectTest
     public void testMalformedPomUrl()
         throws Exception
     {
-        String pomUrl = "aaa";
         goToAddMavenOneProjectPage();
-        addMavenOneProject( pomUrl, "", "", null, false );
+        addMavenOneProject( malformedPomUrl, "", "", null, false );
         assertTextPresent( "The specified resource cannot be accessed. Please try again later or contact your administrator." );
     }
 
@@ -160,9 +168,8 @@ public class MavenOneProjectTest
     public void testInaccessiblePomUrl()
         throws Exception
     {
-        String pomUrl = "http://localhost:9595/";
         goToAddMavenOneProjectPage();
-        addMavenOneProject( pomUrl, "", "", null, false );
+        addMavenOneProject( inaccessiblePomUrl, "", "", null, false );
         assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
 
@@ -181,55 +188,41 @@ public class MavenOneProjectTest
     public void testDeleteMavenOneProject()
         throws Exception
     {
-        boolean isExisting = false;
-        String M1_PROJ_GRP_NAME = getProperty( "M1_DELETE_PROJ_GRP_NAME" );
+        // setup
         goToProjectGroupsSummaryPage();
-        
-        if ( isLinkPresent( M1_PROJ_GRP_NAME ) )
-        {
-            isExisting = true;
-        }
-        else
-        {
-            addMaven1Project( M1_PROJ_GRP_NAME );
-        }
-        
+        addMaven1Project( projectGroupName, pomUrl, pomUsername, pomPassword );
+
         // delete project - delete icon
-        clickLinkWithText( M1_PROJ_GRP_NAME );
+        clickLinkWithText( projectGroupName );
         clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
         assertTextPresent( "Delete Continuum Project" );
         clickButtonWithValue( "Delete" );
         assertPage( "Continuum - Project Group" );
-        assertLinkNotPresent( M1_PROJ_GRP_NAME );
-        
-        // remove group for next test
-        removeProjectGroup( M1_PROJ_GRP_NAME );
-        
+        assertLinkNotPresent( projectGroupName );
+    }
+
+    public void testDeleteMavenOneProjects()
+        throws Exception
+    {
+        // setup
+        goToProjectGroupsSummaryPage();
+        addMaven1Project( projectGroupName, pomUrl, pomUsername, pomPassword );
+
         // delete project - "Delete Project(s)" button
-        addMaven1Project( M1_PROJ_GRP_NAME );
-        clickLinkWithText( M1_PROJ_GRP_NAME );
+        clickLinkWithText( projectGroupName );
         checkField( "//tbody/tr['0']/td['0']/input[@name='selectedProjects']" );
         clickButtonWithValue( "Delete Project(s)" );
         assertTextPresent( "Delete Continuum Projects" );
         clickButtonWithValue( "Delete" );
         assertPage( "Continuum - Project Group" );
-        assertLinkNotPresent( M1_PROJ_GRP_NAME );
-        
-        if ( !isExisting )
-        {
-            removeProjectGroup( M1_PROJ_GRP_NAME );
-        }
+        assertLinkNotPresent( projectGroupName );
     }
     
-    private void addMaven1Project( String groupName )
+    private void addMaven1Project( String groupName, String pomUrl, String pomUsername, String pomPassword )
     {
-        String M1_POM_URL = getProperty( "M1_DELETE_POM_URL" );
-        String M1_POM_USERNAME = getProperty( "M1_POM_USERNAME" );
-        String M1_POM_PASSWORD = getProperty( "M1_POM_PASSWORD" );
-
         goToAddMavenOneProjectPage();
         assertLinkNotPresent( groupName );
-        addMavenOneProject( M1_POM_URL, M1_POM_USERNAME, M1_POM_PASSWORD, null, true );
+        addMavenOneProject( pomUrl, pomUsername, pomPassword, null, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( groupName );
     }
