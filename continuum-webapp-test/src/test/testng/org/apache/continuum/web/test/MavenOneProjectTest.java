@@ -97,7 +97,6 @@ public class MavenOneProjectTest
     /**
      * test with valid pom url
      */
-    @Test( dependsOnMethods = { "testAddMavenOneProjectWithNoDefaultBuildDefinitionFromTemplate" } )
     public void testValidPomUrl()
         throws Exception
     {
@@ -184,7 +183,6 @@ public class MavenOneProjectTest
         assertAboutPage();
     }
 
-    @Test( dependsOnMethods = { "testValidPomUrl" } )
     public void testDeleteMavenOneProject()
         throws Exception
     {
