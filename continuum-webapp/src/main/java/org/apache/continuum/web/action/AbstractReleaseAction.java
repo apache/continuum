@@ -40,7 +40,14 @@ public class AbstractReleaseAction
     {
         if ( profile == null )
         {
-            return Collections.EMPTY_MAP;
+            if ( defaultBuildagent != null )
+            {
+                return Collections.singletonMap( DistributedReleaseUtil.KEY_BUILD_AGENT_URL, defaultBuildagent );
+            }
+            else
+            {
+                return Collections.emptyMap();
+            }
         }
 
         Map<String, String> envVars = new HashMap<String, String>();
