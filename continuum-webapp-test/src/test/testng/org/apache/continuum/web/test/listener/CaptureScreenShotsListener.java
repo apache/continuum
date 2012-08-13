@@ -64,7 +64,8 @@ public class CaptureScreenShotsListener
     private static void captureScreenshotAndSource( String cName, Throwable throwable )
     {
         Selenium selenium = AbstractSeleniumTest.getSelenium();
-        if (selenium == null) {
+        if ( selenium == null )
+        {
             // avoid swallowing exception
             System.err.println( "Not capturing screenshot as Selenium is not initialised" );
             return;

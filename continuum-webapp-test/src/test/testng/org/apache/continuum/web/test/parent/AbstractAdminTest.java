@@ -74,7 +74,7 @@ public abstract class AbstractAdminTest
     {
         goToBuildAgentPage();
         assertBuildAgentPage();
-        clickAndWait("editBuildAgent_0"); //add button
+        clickAndWait( "editBuildAgent_0" ); //add button
         assertAddEditBuildAgentPage( true );
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractAdminTest
         assertTextPresent( "Description:" );
         assertTextPresent( "Enabled" );
         assertElementPresent( "saveBuildAgent_buildAgent_url" );
-        assertElementPresent( "saveBuildAgent_buildAgent_description");
+        assertElementPresent( "saveBuildAgent_buildAgent_description" );
 
         if ( isChecked )
         {

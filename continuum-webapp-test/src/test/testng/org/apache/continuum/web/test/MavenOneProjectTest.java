@@ -158,7 +158,8 @@ public class MavenOneProjectTest
     {
         goToAddMavenOneProjectPage();
         addMavenOneProject( malformedPomUrl, "", "", null, false );
-        assertTextPresent( "The specified resource cannot be accessed. Please try again later or contact your administrator." );
+        assertTextPresent(
+            "The specified resource cannot be accessed. Please try again later or contact your administrator." );
     }
 
     /**
@@ -169,7 +170,8 @@ public class MavenOneProjectTest
     {
         goToAddMavenOneProjectPage();
         addMavenOneProject( inaccessiblePomUrl, "", "", null, false );
-        assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
+        assertTextPresent(
+            "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
 
     /**
@@ -215,7 +217,7 @@ public class MavenOneProjectTest
         assertPage( "Continuum - Project Group" );
         assertLinkNotPresent( projectGroupName );
     }
-    
+
     private void addMaven1Project( String groupName, String pomUrl, String pomUsername, String pomPassword )
     {
         goToAddMavenOneProjectPage();
