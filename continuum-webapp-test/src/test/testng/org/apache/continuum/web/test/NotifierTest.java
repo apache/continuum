@@ -71,10 +71,10 @@ public class NotifierTest
         projectGroupId = getProperty( "NOTIFIER_PROJECT_GROUP_ID" );
         projectGroupDescription = getProperty( "NOTIFIER_PROJECT_GROUP_DESCRIPTION" );
 
-        projectName = getProperty( "M2_PROJECT_NAME" );
-        String projectPomUrl = getProperty( "M2_POM_URL" );
-        String pomUsername = getProperty( "M2_POM_USERNAME" );
-        String pomPassword = getProperty( "M2_POM_PASSWORD" );
+        projectName = getProperty( "MAVEN2_PROJECT_NAME" );
+        String projectPomUrl = getProperty( "MAVEN2_POM_URL" );
+        String pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
+        String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
 
         loginAsAdmin();
         addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );

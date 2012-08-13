@@ -60,16 +60,16 @@ public class MavenOneProjectTest
     protected void setUp()
         throws Exception
     {
-        pomUrl = getProperty( "M1_POM_URL" );
-        pomUsername = getProperty( "M1_POM_USERNAME" );
-        pomPassword = getProperty( "M1_POM_PASSWORD" );
-        projectGroupName = getProperty( "M1_PROJ_GRP_NAME" );
-        projectGroupId = getProperty( "M1_PROJ_GRP_ID" );
-        projectGroupDescription = getProperty( "M1_PROJ_GRP_DESCRIPTION" );
+        pomUrl = getProperty( "MAVEN1_POM_URL" );
+        pomUsername = getProperty( "MAVEN1_POM_USERNAME" );
+        pomPassword = getProperty( "MAVEN1_POM_PASSWORD" );
+        projectGroupName = getProperty( "MAVEN1_PROJECT_GROUP_NAME" );
+        projectGroupId = getProperty( "MAVEN1_PROJECT_GROUP_ID" );
+        projectGroupDescription = getProperty( "MAVEN1_PROJECT_GROUP_DESCRIPTION" );
 
-        pomUrlMissingElement = getProperty( "M1_MISS_REPO_POM_URL" );
-        pomUrlWithExtend = getProperty( "M1_EXTENDED_POM_URL" );
-        pomUrlUnparseableContent = getProperty( "M1_UNPARSEABLE_POM_URL" );
+        pomUrlMissingElement = getProperty( "MAVEN1_MISSING_REPO_POM_URL" );
+        pomUrlWithExtend = getProperty( "MAVEN1_EXTENDED_POM_URL" );
+        pomUrlUnparseableContent = getProperty( "MAVEN1_UNPARSEABLE_POM_URL" );
 
         malformedPomUrl = "aaa";
         inaccessiblePomUrl = "http://localhost:9595/";

@@ -67,7 +67,8 @@ public abstract class AbstractSeleniumTest
         p.load( input );
 
         String svnBaseUrl = "file://localhost/" + new File( "target/example-svn" ).getAbsolutePath();
-        for ( String key : p.stringPropertyNames() ) {
+        for ( String key : p.stringPropertyNames() )
+        {
             String value = p.getProperty( key ).replace( "${svn.base.url}", svnBaseUrl );
             p.setProperty( key, value );
         }
@@ -127,7 +128,7 @@ public abstract class AbstractSeleniumTest
     /**
      * Close selenium session. Called from AfterSuite method of sub-class
      */
-    @AfterSuite(alwaysRun = true)
+    @AfterSuite( alwaysRun = true )
     public void close()
         throws Exception
     {
@@ -185,7 +186,7 @@ public abstract class AbstractSeleniumTest
 
     protected void assertLinkNotPresent( String text )
     {
-            Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
+        Assert.assertFalse( isElementPresent( "link=" + text ), "The link '" + text + "' is present." );
     }
 
     protected void assertImgWithAlt( String alt )
@@ -260,8 +261,8 @@ public abstract class AbstractSeleniumTest
 
     boolean isButtonWithValuePresent( String text )
     {
-        return isElementPresent( "//button[@value='" + text + "']" )
-            || isElementPresent( "//input[@value='" + text + "']" );
+        return isElementPresent( "//button[@value='" + text + "']" ) || isElementPresent(
+            "//input[@value='" + text + "']" );
     }
 
     boolean isButtonWithIdPresent( String text )
@@ -377,7 +378,7 @@ public abstract class AbstractSeleniumTest
         waitForOneOfElementsPresent( Collections.singletonList( locator ), shouldBePresent );
     }
 
-    void waitForOneOfElementsPresent( List<String> locators, boolean shouldBePresent )
+    protected void waitForOneOfElementsPresent( List<String> locators, boolean shouldBePresent )
     {
         if ( browser.equals( "*iexplore" ) )
         {
@@ -403,7 +404,8 @@ public abstract class AbstractSeleniumTest
         {
             StringBuilder condition = new StringBuilder();
             String operator = "";
-            for ( String locator : locators ) {
+            for ( String locator : locators )
+            {
                 condition.append( operator );
                 condition.append( "(selenium.isElementPresent(\"" ).append( locator ).append( "\")" );
                 condition.append( " == " );

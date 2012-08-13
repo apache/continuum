@@ -80,10 +80,9 @@ public class CaptureScreenShotsListener
         SimpleDateFormat sdf = new SimpleDateFormat( "yyyy.MM.dd-HH_mm_ss" );
         String time = sdf.format( new Date() );
         File targetPath = new File( "target", "screenshots" );
-        StackTraceElement stackTrace[] = throwable.getStackTrace();
-        int index = getStackTraceIndexOfCallingClass( cName, stackTrace );
-        String methodName = stackTrace[index].getMethodName();
-        int lNumber = stackTrace[index].getLineNumber();
+        StackTraceElement trace = getStackTraceOfCallingClass( cName, throwable.getStackTrace() );
+        String methodName = trace.getMethodName();
+        int lNumber = trace.getLineNumber();
         String lineNumber = Integer.toString( lNumber );
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
         if ( !targetPath.exists() && !targetPath.mkdirs() )
@@ -125,18 +124,17 @@ public class CaptureScreenShotsListener
         return fileName;
     }
 
-    private static int getStackTraceIndexOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )
+    private static StackTraceElement getStackTraceOfCallingClass( String nameOfClass, StackTraceElement stackTrace[] )
     {
-        boolean match;
-        int i = 0;
-        do
+        StackTraceElement lastMatch = null;
+        for ( StackTraceElement el : stackTrace )
         {
-            String className = stackTrace[i].getClassName();
-            match = Pattern.matches( nameOfClass, className );
-            i++;
+            String className = el.getClassName();
+            if ( Pattern.matches( nameOfClass, className ) )
+            {
+                lastMatch = el;
+            }
         }
-        while ( !match );
-        i--;
-        return i;
+        return lastMatch;
     }
 }

@@ -19,313 +19,394 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractReleaseTest;
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
 @Test( groups = { "release" } )
 public class ReleaseTest
-    extends AbstractReleaseTest
+    extends AbstractAdminTest
 {
-    @Test( dependsOnMethods = { "testProjectGroupAllBuildSuccessWithDistributedBuilds" } )
+    private String projectGroupName;
+
+    private String projectGroupId;
+
+    private String releaseBuildEnvironment;
+
+    private String releaseBuildAgentGroup;
+
+    private String tagBase;
+
+    private String tag;
+
+    private String releaseVersion;
+
+    private String developmentVersion;
+
+    private String errorMessageNoAgent;
+
+    private String releaseProjectScmUrl;
+
+    @BeforeClass
+    public void createAndBuildProject()
+    {
+        projectGroupName = getProperty( "RELEASE_PROJECT_GROUP_NAME" );
+        projectGroupId = getProperty( "RELEASE_PROJECT_GROUP_ID" );
+        String description = "Distributed Release test projects";
+
+        loginAsAdmin();
+
+        enableDistributedBuilds();
+
+        addBuildAgent( getBuildAgentUrl() );
+
+        String pomUrl = getProperty( "MAVEN2_POM_URL" );
+        String pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
+        String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
+        String projectName = getProperty( "MAVEN2_PROJECT_NAME" );
+
+        addProjectGroup( projectGroupName, projectGroupId, description, true, false );
+        clickLinkWithText( projectGroupName );
+
+        if ( !isLinkPresent( projectName ) )
+        {
+            addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
+
+            buildProjectGroup( projectGroupName, projectGroupId, "", projectName, true );
+        }
+    }
+
+    @BeforeMethod
+    public void setUp()
+        throws IOException
+    {
+        releaseBuildEnvironment = getProperty( "M2_RELEASE_BUILD_ENV" );
+        releaseBuildAgentGroup = getProperty( "M2_RELEASE_AGENT_GROUP" );
+        tagBase = getProperty( "RELEASE_PROJECT_TAGBASE" );
+        tag = getProperty( "RELEASE_PROJECT_TAG" );
+        releaseVersion = getProperty( "RELEASE_PROJECT_VERSION" );
+        developmentVersion = getProperty( "RELEASE_PROJECT_DEVELOPMENT_VERSION" );
+        releaseProjectScmUrl = getProperty( "RELEASE_PROJECT_SCM_URL" );
+        errorMessageNoAgent = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
+
+        File file = new File( "target/conf/prepared-releases.xml" );
+
+        if ( file.exists() && !file.delete() )
+        {
+            throw new IOException( "Unable to delete existing prepared-releases.xml file" );
+        }
+
+        enableDistributedBuilds();
+
+        addBuildAgent( getBuildAgentUrl() );
+
+        createBuildEnvAndBuildagentGroup( releaseBuildEnvironment, releaseBuildAgentGroup );
+    }
+
+    @AfterMethod
+    public void tearDown()
+        throws Exception
+    {
+        removeBuildagentGroupFromBuildEnv( releaseBuildAgentGroup );
+
+        disableDistributedBuilds();
+    }
+
     public void testReleasePrepareProjectWithInvalidUsernamePasswordInDistributedBuilds()
         throws Exception
     {
-        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
+        String releaseUsername = "invalid";
+        String releasePassword = "invalid";
 
-        String M2_PROJ_USERNAME = "invalid";
-        String M2_PROJ_PASSWORD = "invalid";
-        String M2_PROJ_TAGBASE = getProperty( "M2_DELETE_PROJ_TAGBASE" );
-        String M2_PROJ_TAG = getProperty( "M2_DELETE_PROJ_TAG" );
-        String M2_PROJ_RELEASE_VERSION = getProperty( "M2_DELETE_PROJ_RELEASE_VERSION" );
-        String M2_PROJ_DEVELOPMENT_VERSION = getProperty( "M2_DELETE_PROJ_DEVELOPMENT_VERSION" );
-
-        init();
-
-        try
-        {
-            enableDistributedBuilds();
-        
-            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
-            createBuildEnvAndBuildagentGroup();
-            
-            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
-            clickButtonWithValue( "Release" );
-            assertReleaseSuccess();
-            releasePrepareProject( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG,
-                                   M2_PROJ_RELEASE_VERSION, M2_PROJ_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
-            assertPreparedReleasesFileCreated();
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        showProjectGroup( projectGroupName, projectGroupId, "" );
+        clickButtonWithValue( "Release" );
+        assertReleaseSuccess();
+        releasePrepareProject( releaseUsername, releasePassword, tagBase, tag, releaseVersion, developmentVersion,
+                               releaseBuildEnvironment, true );
+        assertPreparedReleasesFileCreated();
     }
-    
+
     /*
      * Test release prepare with no build agent configured in the selected build environment.
      */
-    @Test( dependsOnMethods = { "testReleasePrepareProjectWithInvalidUsernamePasswordInDistributedBuilds" } )
     public void testReleasePrepareProjectWithNoBuildagentInBuildEnvironment()
         throws Exception
     {
-        String M2_PROJECT_POM_URL = getProperty( "M2_RELEASE_POM_URL" );
-        String M2_PROJECT_NAME = getProperty( "M2_RELEASE_PROJECT_NAME" );
-        String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
-        String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
-        String M2_PROJECT_DESCRIPTION = getProperty( "M2_RELEASE_GRP_DESCRIPTION" );
-        String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
-        String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
-        String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
-        String M2_PROJECT_DEVELOPMENT_VERSION = getProperty( "M2_RELEASE_DEVELOPMENT_VERSION" );
-        String ERROR_TEXT = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
-        
-        addProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_DESCRIPTION, true );
-        addMavenTwoProject( M2_PROJECT_POM_URL, "", "", M2_PROJECT_GROUP_NAME, true );
+        detachBuildagentFromGroup( releaseBuildAgentGroup );
 
-        init();
+        showProjectGroup( projectGroupName, projectGroupId, projectGroupId );
 
-        try
-        {
-            enableDistributedBuilds();
-        
-            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
-            createBuildEnvAndBuildagentGroup();
-            detachBuildagentFromGroup();
-            
-            buildProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_DESCRIPTION, M2_PROJECT_NAME, true );
-            
-            clickButtonWithValue( "Release" );
-            assertReleaseSuccess();
-            releasePrepareProject( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
-                                   M2_PROJECT_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
-            
-            assertTextPresent( "Release Error" );
-            assertTextPresent( ERROR_TEXT );
-        }
-        finally
-        {
-            attachBuildagentInGroup();
-            disableDistributedBuilds();
-        }
+        clickButtonWithValue( "Release" );
+        assertReleaseSuccess();
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
+                               false );
+
+        assertTextPresent( errorMessageNoAgent );
     }
-    
+
     /*
-     * Test release prepare with no build agent group in the selected build environment.
-     */
-    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildagentInBuildEnvironment" } )
+    * Test release prepare with no build agent group in the selected build environment.
+    */
     public void testReleasePrepareProjectWithNoBuildagentGroupInBuildEnvironment()
         throws Exception
     {
-        String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
-        String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
-        String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
-        String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
-        String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
-        String M2_PROJECT_DEVELOPMENT_VERSION = getProperty( "M2_RELEASE_DEVELOPMENT_VERSION" );
-        String ERROR_TEXT = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
+        removeBuildagentGroupFromBuildEnv( releaseBuildEnvironment );
 
-        init();
+        showProjectGroup( projectGroupName, projectGroupId, projectGroupId );
 
-        try
-        {
-            enableDistributedBuilds();
-            
-            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
-            createBuildEnvAndBuildagentGroup();
-            removeBuildagentGroupFromBuildEnv();
-            
-            showProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_GROUP_ID );
-            
-            clickButtonWithValue( "Release" );
-            assertReleaseSuccess();
-            releasePrepareProject( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
-                                   M2_PROJECT_DEVELOPMENT_VERSION, M2_PROJECT_BUILD_ENV );
-            
-            assertTextPresent( "Release Error" );
-            assertTextPresent( ERROR_TEXT );
-        }
-        finally
-        {
-            attachBuildagentGroupToBuildEnv();
-            disableDistributedBuilds();
-        }
+        clickButtonWithValue( "Release" );
+        assertReleaseSuccess();
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
+                               false );
+
+        assertTextPresent( errorMessageNoAgent );
     }
-    
+
     /*
-     * Test release prepare with no build environment selected.
-     */
-    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildagentGroupInBuildEnvironment" } )
+    * Test release prepare with no build environment selected.
+    */
     public void testReleasePrepareProjectWithNoBuildEnvironment()
         throws Exception
     {
-        String M2_PROJECT_GROUP_NAME = getProperty( "M2_RELEASE_GRP_NAME" );
-        String M2_PROJECT_GROUP_ID = getProperty( "M2_RELEASE_GRP_ID" );
-        String M2_PROJECT_TAGBASE = getProperty( "M2_RELEASE_TAGBASE_URL" );
-        String M2_PROJECT_TAG = getProperty( "M2_RELEASE_TAG" );
-        String M2_PROJECT_RELEASE_VERSION = getProperty( "M2_RELEASE_RELEASE_VERSION" );
-        String M2_PROJECT_DEVELOPMENT_VERSION = getProperty( "M2_RELEASE_DEVELOPMENT_VERSION" );
-        String ERROR_TEXT = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
+        showProjectGroup( projectGroupName, projectGroupId, projectGroupId );
 
-        init();
+        clickButtonWithValue( "Release" );
+        assertReleaseSuccess();
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, "", true );
 
-        try
-        {
-            enableDistributedBuilds();
-            
-            showProjectGroup( M2_PROJECT_GROUP_NAME, M2_PROJECT_GROUP_ID, M2_PROJECT_GROUP_ID );
-            
-            clickButtonWithValue( "Release" );
-            assertReleaseSuccess();
-            releasePrepareProject( "", "", M2_PROJECT_TAGBASE, M2_PROJECT_TAG, M2_PROJECT_RELEASE_VERSION,
-                                   M2_PROJECT_DEVELOPMENT_VERSION, "" );
-            
-            assertTextPresent( "Release Error" );
-            assertTextPresent( ERROR_TEXT );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        assertPreparedReleasesFileCreated();
     }
 
     @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildEnvironment" } )
-    public void testReleasePerformUsingProvideParamtersWithDistributedBuilds()
+    public void testReleasePerformUsingProvidedParametersWithDistributedBuilds()
         throws Exception
     {
-        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
+        String releaseUsername = "invalid";
+        String releasePassword = "invalid";
 
-        String M2_PROJ_USERNAME = "invalid";
-        String M2_PROJ_PASSWORD = "invalid";
-        String M2_PROJ_TAGBASE = getProperty( "M2_DELETE_PROJ_TAGBASE_PERFORM" );
-        String M2_PROJ_TAG = getProperty( "M2_DELETE_PROJ_TAG" );
-        String M2_PROJ_SCM_URL = getProperty( "M2_DELETE_PROJ_GRP_SCM_ROOT_URL" );
-
-        init();
-        
-        try
-        {
-            enableDistributedBuilds();
-        
-            String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
-            createBuildEnvAndBuildagentGroup();
-            
-            showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
-            clickButtonWithValue( "Release" );
-            assertReleaseSuccess();
-            releasePerformProjectWithProvideParameters( M2_PROJ_USERNAME, M2_PROJ_PASSWORD, M2_PROJ_TAGBASE, M2_PROJ_TAG, 
-                                                        M2_PROJ_SCM_URL, M2_PROJECT_BUILD_ENV );
-            assertPreparedReleasesFileCreated();
-
-            removeProjectGroup( M2_PROJ_GRP_NAME );
-            assertLinkNotPresent( M2_PROJ_GRP_NAME );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
+        showProjectGroup( projectGroupName, projectGroupId, "" );
+        clickButtonWithValue( "Release" );
+        assertReleaseSuccess();
+        releasePerformProjectWithProvideParameters( releaseUsername, releasePassword, tagBase, tag,
+                                                    releaseProjectScmUrl, releaseBuildEnvironment );
+        assertPreparedReleasesFileCreated();
     }
 
-    private void init()
-        throws IOException
+    private void createBuildEnvAndBuildagentGroup( String projectBuildEnv, String projectAgentGroup )
     {
-        File file = new File( "target/conf/prepared-releases.xml" );
-
-        if ( file.exists() )
-        {
-            if ( !file.delete() )
-            {
-                throw new IOException( "Unable to delete existing prepared-releases.xml file" );
-            }
-        }
-    }
-    
-    private void createBuildEnvAndBuildagentGroup()
-    {
-        String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
-        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
-        
         // add build agent group no agents
         goToBuildAgentPage();
-        if ( !isTextPresent( M2_PROJECT_AGENT_GROUP ) )
+        if ( !isTextPresent( projectAgentGroup ) )
         {
             clickAndWait( "//input[@id='editBuildAgentGroup_0']" );
-            setFieldValue( "saveBuildAgentGroup_buildAgentGroup_name", M2_PROJECT_AGENT_GROUP );
+            setFieldValue( "saveBuildAgentGroup_buildAgentGroup_name", projectAgentGroup );
             clickButtonWithValue( "Save" );
         }
-            
+
         // add build environment with build agent group
         clickLinkWithText( "Build Environments" );
-        if ( !isTextPresent( M2_PROJECT_BUILD_ENV ) )
+        if ( !isTextPresent( projectBuildEnv ) )
         {
             clickAndWait( "//input[@id='addBuildEnv_0']" );
-            setFieldValue( "saveBuildEnv_profile_name", M2_PROJECT_BUILD_ENV );
+            setFieldValue( "saveBuildEnv_profile_name", projectBuildEnv );
             clickButtonWithValue( "Save" );
-            attachBuildagentGroupToBuildEnv();
         }
-        
+
+        attachBuildagentGroupToBuildEnv( releaseBuildEnvironment, releaseBuildAgentGroup );
+
         // attach build agent in build agent group created
-        attachBuildagentInGroup();
+        attachBuildagentInGroup( releaseBuildAgentGroup );
     }
-    
-    private void attachBuildagentGroupToBuildEnv()
+
+    private void attachBuildagentGroupToBuildEnv( String projectBuildEnv, String projectAgentGroup )
     {
-        String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
-        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
-        
         clickLinkWithText( "Build Environments" );
-        String xPath = "//preceding::td[text()='" + M2_PROJECT_BUILD_ENV + "']//following::img[@alt='Edit']";
+        String xPath = "//preceding::td[text()='" + projectBuildEnv + "']//following::img[@alt='Edit']";
         clickLinkWithXPath( xPath );
-        selectValue( "profile.buildAgentGroup", M2_PROJECT_AGENT_GROUP );
+        selectValue( "profile.buildAgentGroup", projectAgentGroup );
         clickButtonWithValue( "Save" );
     }
-    
-    private void removeBuildagentGroupFromBuildEnv()
+
+    private void removeBuildagentGroupFromBuildEnv( String projectBuildEnv )
     {
-        String M2_PROJECT_BUILD_ENV = getProperty( "M2_RELEASE_BUILD_ENV" );
-        
         clickLinkWithText( "Build Environments" );
-        String xPath = "//preceding::td[text()='" + M2_PROJECT_BUILD_ENV + "']//following::img[@alt='Edit']";
-        clickLinkWithXPath( xPath );
-        selectValue( "profile.buildAgentGroup", "" );
-        clickButtonWithValue( "Save" );
+        String xPath = "//preceding::td[text()='" + projectBuildEnv + "']//following::img[@alt='Edit']";
+        if ( isElementPresent( "xpath=" + xPath ) )
+        {
+            clickLinkWithXPath( xPath );
+            selectValue( "profile.buildAgentGroup", "" );
+            clickButtonWithValue( "Save" );
+        }
     }
-    
-    private void attachBuildagentInGroup()
+
+    private void attachBuildagentInGroup( String projectAgentGroup )
     {
-        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
         String buildAgent = getBuildAgentUrl();
-        
+
         clickLinkWithText( "Build Agents" );
-        String xPath = "//preceding::td[text()='" + M2_PROJECT_AGENT_GROUP + "']//following::img[@alt='Edit']";
+        String xPath = "//preceding::td[text()='" + projectAgentGroup + "']//following::img[@alt='Edit']";
         clickLinkWithXPath( xPath );
-        
-        if ( isElementPresent( "xpath=//select[@id='saveBuildAgentGroup_buildAgentIds']/option[@value='" + buildAgent + "']" ) )
+
+        if ( isElementPresent(
+            "xpath=//select[@id='saveBuildAgentGroup_buildAgentIds']/option[@value='" + buildAgent + "']" ) )
         {
             selectValue( "buildAgentIds", buildAgent );
             clickLinkWithXPath( "//input[@value='->']", false );
             submit();
         }
     }
-    
-    private void detachBuildagentFromGroup()
+
+    private void detachBuildagentFromGroup( String projectAgentGroup )
     {
-        String M2_PROJECT_AGENT_GROUP = getProperty( "M2_RELEASE_AGENT_GROUP" );
         String buildAgent = getBuildAgentUrl();
-        
+
         clickLinkWithText( "Build Agents" );
-        String xPath = "//preceding::td[text()='" + M2_PROJECT_AGENT_GROUP + "']//following::img[@alt='Edit']";
+        String xPath = "//preceding::td[text()='" + projectAgentGroup + "']//following::img[@alt='Edit']";
         clickLinkWithXPath( xPath );
-        
-        if ( isElementPresent( "xpath=//select[@id='saveBuildAgentGroup_selectedBuildAgentIds']/option[@value='" + buildAgent + "']" ) )
+
+        if ( isElementPresent(
+            "xpath=//select[@id='saveBuildAgentGroup_selectedBuildAgentIds']/option[@value='" + buildAgent + "']" ) )
         {
             selectValue( "selectedBuildAgentIds", buildAgent );
             clickLinkWithXPath( "//input[@value='<-']", false );
             submit();
         }
+    }
+
+    private void releasePrepareProject( String username, String password, String tagBase, String tag,
+                                        String releaseVersion, String developmentVersion, String buildEnv,
+                                        boolean success )
+    {
+        goToReleasePreparePage();
+        setFieldValue( "scmUsername", username );
+        setFieldValue( "scmPassword", password );
+        setFieldValue( "scmTag", tag );
+        setFieldValue( "scmTagBase", tagBase );
+        setFieldValue( "prepareGoals", "clean" );
+        selectValue( "profileId", buildEnv );
+        setFieldValue( "relVersions", releaseVersion );
+        setFieldValue( "devVersions", developmentVersion );
+        submit();
+
+        assertRelease( success );
+    }
+
+    private void releasePerformProjectWithProvideParameters( String username, String password, String tagBase,
+                                                             String tag, String scmUrl, String buildEnv )
+    {
+        goToReleasePerformProvideParametersPage();
+        setFieldValue( "scmUrl", scmUrl );
+        setFieldValue( "scmUsername", username );
+        setFieldValue( "scmPassword", password );
+        setFieldValue( "scmTag", tag );
+        setFieldValue( "scmTagBase", tagBase );
+        setFieldValue( "goals", "clean deploy" );
+        selectValue( "profileId", buildEnv );
+        submit();
+
+        assertRelease();
+    }
+
+    private void goToReleasePreparePage()
+    {
+        clickLinkWithLocator( "goal", false );
+        submit();
+        assertReleasePreparePage();
+    }
+
+    private void goToReleasePerformProvideParametersPage()
+    {
+        clickLinkWithLocator( "//input[@name='goal' and @value='perform']", false );
+        submit();
+        assertReleasePerformProvideParametersPage();
+    }
+
+    private void assertReleasePreparePage()
+    {
+        assertPage( "Continuum - Release Project" );
+        assertTextPresent( "Prepare Project for Release" );
+        assertTextPresent( "Release Prepare Parameters" );
+        assertTextPresent( "SCM Username" );
+        assertTextPresent( "SCM Password" );
+        assertTextPresent( "SCM Tag" );
+        assertTextPresent( "SCM Tag Base" );
+        assertTextPresent( "SCM Comment Prefix" );
+        assertTextPresent( "Preparation Goals" );
+        assertTextPresent( "Arguments" );
+        assertTextPresent( "Build Environment" );
+        assertTextPresent( "Release Version" );
+        assertTextPresent( "Next Development Version" );
+        assertButtonWithValuePresent( "Submit" );
+    }
+
+    private void assertReleasePerformProvideParametersPage()
+    {
+        assertPage( "Continuum - Perform Project Release" );
+        assertTextPresent( "Perform Project Release" );
+        assertTextPresent( "Release Perform Parameters" );
+        assertTextPresent( "SCM Connection URL" );
+        assertTextPresent( "SCM Username" );
+        assertTextPresent( "SCM Password" );
+        assertTextPresent( "SCM Tag" );
+        assertTextPresent( "SCM Tag Base" );
+        assertTextPresent( "Perform Goals" );
+        assertTextPresent( "Arguments" );
+        assertTextPresent( "Build Environment" );
+        assertButtonWithValuePresent( "Submit" );
+    }
+
+    private void assertRelease()
+    {
+        assertRelease( true );
+    }
+
+    private void assertRelease( boolean success )
+    {
+        String doneButtonLocator = "//input[@id='releaseCleanup_0']";
+        String errorTextLocator = "//h3[text()='Release Error']";
+
+        // condition for release is complete; "Done" button or "Release Error" in page is present
+        waitForOneOfElementsPresent( Arrays.asList( doneButtonLocator, errorTextLocator ), true );
+
+        if ( success )
+        {
+            assertButtonWithValuePresent( "Rollback changes" );
+            assertImgWithAlt( "Error" );
+        }
+        else
+        {
+            assertTextPresent( "Release Error" );
+        }
+    }
+
+    private void assertPreparedReleasesFileCreated()
+        throws Exception
+    {
+        File file = new File( "target/conf/prepared-releases.xml" );
+        Assert.assertTrue( file.exists(), "prepared-releases.xml was not created" );
+
+        FileInputStream fis = new FileInputStream( file );
+        BufferedReader reader = new BufferedReader( new InputStreamReader( fis ) );
+
+        String BUILD_AGENT_URL = getBuildAgentUrl();
+        String strLine;
+        StringBuilder str = new StringBuilder();
+        while ( ( strLine = reader.readLine() ) != null )
+        {
+            str.append( strLine );
+        }
+
+        Assert.assertTrue( str.toString().contains( "<buildAgentUrl>" + BUILD_AGENT_URL + "</buildAgentUrl>" ),
+                           "prepared-releases.xml was not populated" );
     }
 }

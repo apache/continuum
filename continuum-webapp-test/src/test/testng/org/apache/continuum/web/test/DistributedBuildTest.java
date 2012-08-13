@@ -34,7 +34,6 @@ import org.testng.annotations.Test;
 public class DistributedBuildTest
     extends AbstractBuildAgentsTest
 {
-
     private String projectGroupName;
 
     @BeforeMethod
@@ -93,22 +92,12 @@ public class DistributedBuildTest
 
         addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
                             getProperty( "M2_POM_PASSWORD" ), null, true );
-        goToProjectGroupsSummaryPage();
-        assertLinkPresent( M2_PROJ_GRP_NAME );
-        clickLinkWithText( M2_PROJ_GRP_NAME );
-
-        assertPage( "Continuum - Project Group" );
-
-        showProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
-        clickButtonWithValue( "Build all projects" );
 
         buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME, true );
-
-        removeProjectGroup( M2_PROJ_GRP_NAME );
-        assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgentGroupWithEmptyBuildAgent", "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    @Test( dependsOnMethods = { "testAddBuildAgentGroupWithEmptyBuildAgent",
+        "testAddBuildEnvironmentWithBuildAgentGroup" } )
     public void testProjectGroupNoBuildAgentConfiguredInBuildAgentGroup()
         throws Exception
     {
@@ -136,9 +125,6 @@ public class DistributedBuildTest
         clickButtonWithValue( "Build all projects" );
 
         assertTextPresent( "Unable to build projects because no build agent is configured in the build agent group" );
-
-        removeProjectGroup( M2_PROJ_GRP_NAME );
-        assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
 
     public void testBuildMaven2ProjectWithTagDistributedBuild()
@@ -147,7 +133,7 @@ public class DistributedBuildTest
         String M2_POM_URL = getProperty( "M2_PROJ_WITH_TAG_POM_URL" );
         String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
         String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
-    
+
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = "";
@@ -184,8 +170,8 @@ public class DistributedBuildTest
         addBuildAgent( getBuildAgentUrl() );
 
         goToAddShellProjectPage();
-        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, SHELL_GROUP_NAME, true, "shell" );
+        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME, SHELL_SCM_PASSWORD,
+                    SHELL_TAG, SHELL_GROUP_NAME, true, "shell" );
         assertProjectGroupSummaryPage( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC );
 
         goToProjectGroupsSummaryPage();
@@ -195,9 +181,7 @@ public class DistributedBuildTest
 
         editBuildDefinitionShellType();
 
-        goToProjectGroupsSummaryPage();
-
-        buildProjectGroup( SHELL_GROUP_NAME ,SHELL_GROUP_ID , SHELL_GROUP_DESC ,SHELL_NAME, true );
+        buildProjectGroup( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC, SHELL_NAME, true );
 
     }
 
