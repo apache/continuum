@@ -28,14 +28,14 @@ public interface DistributedBuildTaskQueueExecutor
 
     /**
      * Returns the build agent url of task queue executor
-     * 
+     *
      * @return the build agent url
      */
     String getBuildAgentUrl();
 
     /**
      * Sets the build agent url of this task queue executor
-     * 
+     *
      * @param buildAgentUrl
      */
     void setBuildAgentUrl( String buildAgentUrl );
@@ -58,9 +58,7 @@ public interface DistributedBuildTaskQueueExecutor
 
     /**
      * Returns the task queue
-     * 
      *
-     * 
      * @return the TaskQueue of the task queue executor
      */
     public TaskQueue getQueue();

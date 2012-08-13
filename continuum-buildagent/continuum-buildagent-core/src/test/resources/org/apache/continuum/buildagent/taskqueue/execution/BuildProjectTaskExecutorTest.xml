@@ -22,7 +22,7 @@
     <component>
       <role>org.codehaus.plexus.action.Action</role>
       <role-hint>update-project-from-agent-working-directory</role-hint>
-     <implementation>org.apache.continuum.buildagent.stubs.ContinuumActionStub</implementation>
+      <implementation>org.apache.continuum.buildagent.stubs.ContinuumActionStub</implementation>
     </component>
     <component>
       <role>org.codehaus.plexus.action.Action</role>

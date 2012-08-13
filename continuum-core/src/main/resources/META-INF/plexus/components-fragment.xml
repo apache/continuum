@@ -19,12 +19,12 @@
 
 <component-set>
   <components>
-    
+
     <!--
-     |
-     | Build Project Task Queue
-     |
-     |-->
+    |
+    | Build Project Task Queue
+    |
+    |-->
 
     <component>
       <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
@@ -48,7 +48,8 @@
       <role-hint>build-project</role-hint>
       <instantiation-strategy>per-lookup</instantiation-strategy>
       <implementation>
-        org.apache.maven.continuum.buildqueue.evaluator.BuildProjectTaskViabilityEvaluator</implementation>
+        org.apache.maven.continuum.buildqueue.evaluator.BuildProjectTaskViabilityEvaluator
+      </implementation>
       <configuration>
         <required-buildInterval>1000</required-buildInterval>
       </configuration>
@@ -75,7 +76,7 @@
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>build-project</role-hint>
       <instantiation-strategy>per-lookup</instantiation-strategy>
-      <implementation>org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor</implementation>      
+      <implementation>org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor</implementation>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
@@ -132,7 +133,7 @@
      | Prepare Build Project Task Queue
      |
      |-->
-     
+
     <component>
       <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
       <role-hint>prepare-build-project</role-hint>
@@ -140,7 +141,7 @@
       <lifecycle-handler>plexus-configurable</lifecycle-handler>
       <instantiation-strategy>per-lookup</instantiation-strategy>
     </component>
-    
+
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>prepare-build-project</role-hint>
@@ -160,7 +161,7 @@
         <name>prepare-build-project</name>
       </configuration>
     </component>
-    
-    
+
+
   </components>
 </component-set>

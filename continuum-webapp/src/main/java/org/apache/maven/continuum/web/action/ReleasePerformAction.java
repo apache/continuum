@@ -35,14 +35,9 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
-import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -100,9 +95,9 @@ public class ReleasePerformAction
         else
         {
             Project project = getContinuum().getProject( projectId );
-    
+
             String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
-    
+
             getReleasePluginParameters( workingDirectory, "pom.xml" );
         }
     }
@@ -128,7 +123,7 @@ public class ReleasePerformAction
             List<Object> args = new ArrayList<Object>();
             args.add( e.getMessage() );
 
-            addActionError( getText( "distributedBuild.releasePerform.input.error", args ) ) ;
+            addActionError( getText( "distributedBuild.releasePerform.input.error", args ) );
             return ERROR;
         }
 
@@ -162,17 +157,16 @@ public class ReleasePerformAction
             List<Object> args = new ArrayList<Object>();
             args.add( e.getMessage() );
 
-            addActionError( getText( "distributedBuild.releasePerform.input.error", args ) ) ;
+            addActionError( getText( "distributedBuild.releasePerform.input.error", args ) );
             return ERROR;
         }
-
 
         return SUCCESS;
     }
 
     /**
      * FIXME olamy is it really the good place to do that ? should be moved to continuum-release
-     * TODO handle remoteTagging  
+     * TODO handle remoteTagging
      */
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
@@ -210,7 +204,7 @@ public class ReleasePerformAction
         Project project = getContinuum().getProject( projectId );
 
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
-        
+
         String username = getPrincipal();
 
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
@@ -219,7 +213,8 @@ public class ReleasePerformAction
 
             try
             {
-                releaseManager.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository, username );
+                releaseManager.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository,
+                                               username );
             }
             catch ( BuildAgentConfigurationException e )
             {
@@ -233,9 +228,9 @@ public class ReleasePerformAction
         else
         {
             listener = new DefaultReleaseManagerListener();
-            
+
             listener.setUsername( username );
-    
+
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
             //todo should be configurable
@@ -266,7 +261,7 @@ public class ReleasePerformAction
 
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
             Map<String, String> environments = new HashMap<String, String>();
-            
+
             if ( profileId != -1 )
             {
                 Profile profile = getContinuum().getProfileService().getProfile( profileId );
@@ -275,8 +270,9 @@ public class ReleasePerformAction
 
             try
             {
-                releaseId = releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
-                                                                  scmUsername, scmPassword, scmTag, scmTagBase, environments, getPrincipal() );
+                releaseId = releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile,
+                                                                  repository, scmUrl, scmUsername, scmPassword, scmTag,
+                                                                  scmTagBase, environments, getPrincipal() );
             }
             catch ( BuildAgentConfigurationException e )
             {
@@ -292,28 +288,28 @@ public class ReleasePerformAction
         else
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-    
+
             ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
             descriptor.setScmSourceUrl( scmUrl );
             descriptor.setScmUsername( scmUsername );
             descriptor.setScmPassword( scmPassword );
             descriptor.setScmReleaseLabel( scmTag );
             descriptor.setScmTagBase( scmTagBase );
-    
+
             if ( profileId != -1 )
             {
                 Profile profile = getContinuum().getProfileService().getProfile( profileId );
                 descriptor.setEnvironments( getEnvironments( profile, null ) );
             }
-    
+
             do
             {
                 releaseId = String.valueOf( System.currentTimeMillis() );
             }
             while ( releaseManager.getPreparedReleases().containsKey( releaseId ) );
-    
+
             releaseManager.getPreparedReleases().put( releaseId, descriptor );
-    
+
             return execute();
         }
     }

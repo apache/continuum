@@ -19,13 +19,13 @@ package org.apache.continuum.buildagent.taskqueue.manager;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.taskqueue.TaskQueue;
+
+import java.util.List;
 
 public interface BuildAgentTaskQueueManager
 {
@@ -46,7 +46,7 @@ public interface BuildAgentTaskQueueManager
 
     PrepareBuildProjectsTask getCurrentProjectInPrepareBuild()
         throws TaskQueueManagerException;
-    
+
     boolean hasBuildTaskInQueue()
         throws TaskQueueManagerException;
 

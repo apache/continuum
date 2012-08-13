@@ -19,14 +19,14 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -52,7 +52,7 @@ public class AddProjectToCheckOutQueueAction
      */
     private BuildsManager parallelBuildsManager;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public void execute( Map context )
         throws Exception
     {
@@ -64,23 +64,23 @@ public class AddProjectToCheckOutQueueAction
 
         String scmUsername = project.getScmUsername();
         String scmPassword = project.getScmPassword();
-        
-        if( scmUsername == null || StringUtils.isEmpty( scmUsername ) )
+
+        if ( scmUsername == null || StringUtils.isEmpty( scmUsername ) )
         {
             scmUsername = CheckoutProjectContinuumAction.getScmUsername( context, null );
         }
-        
-        if( scmPassword == null || StringUtils.isEmpty( scmPassword ) )
+
+        if ( scmPassword == null || StringUtils.isEmpty( scmPassword ) )
         {
             scmPassword = CheckoutProjectContinuumAction.getScmPassword( context, null );
         }
-        
+
         String scmRootUrl = getProjectScmRootUrl( context, null );
-        
+
         BuildDefinition defaultBuildDefinition = getBuildDefinition( context );
         parallelBuildsManager.checkoutProject( project.getId(), project.getName(),
-                                               workingDirectoryService.getWorkingDirectory( project ),
-                                               scmRootUrl, scmUsername, scmPassword, defaultBuildDefinition,
+                                               workingDirectoryService.getWorkingDirectory( project ), scmRootUrl,
+                                               scmUsername, scmPassword, defaultBuildDefinition,
                                                getListOfProjectsInGroupWithCommonScmRoot( context ) );
     }
 }

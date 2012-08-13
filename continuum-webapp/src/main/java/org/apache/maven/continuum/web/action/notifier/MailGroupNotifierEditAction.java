@@ -19,13 +19,13 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'Mail' from the
@@ -57,9 +57,9 @@ public class MailGroupNotifierEditAction
             committers = Boolean.parseBoolean( configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) );
         }
 
-        if (StringUtils.isNotEmpty(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD)))
+        if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.DEVELOPER_FIELD ) ) )
         {
-            developers = Boolean.parseBoolean(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD));
+            developers = Boolean.parseBoolean( configuration.get( AbstractContinuumNotifier.DEVELOPER_FIELD ) );
         }
     }
 
@@ -74,7 +74,7 @@ public class MailGroupNotifierEditAction
 
         configuration.put( AbstractContinuumNotifier.COMMITTER_FIELD, String.valueOf( committers ) );
 
-        configuration.put(AbstractContinuumNotifier.DEVELOPER_FIELD, String.valueOf(developers));
+        configuration.put( AbstractContinuumNotifier.DEVELOPER_FIELD, String.valueOf( developers ) );
 
         notifier.setConfiguration( configuration );
     }
@@ -104,7 +104,7 @@ public class MailGroupNotifierEditAction
         return developers;
     }
 
-    public void setDevelopers(boolean developers)
+    public void setDevelopers( boolean developers )
     {
         this.developers = developers;
     }

@@ -19,11 +19,11 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -45,7 +45,7 @@ public interface ProjectScmRootDao
 
     ProjectScmRoot getProjectScmRoot( int projectScmRootId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
-    
+
     ProjectScmRoot getProjectScmRootByProjectGroupAndScmRootAddress( int projectGroupId, String scmRootAddress )
         throws ContinuumStoreException;
 }

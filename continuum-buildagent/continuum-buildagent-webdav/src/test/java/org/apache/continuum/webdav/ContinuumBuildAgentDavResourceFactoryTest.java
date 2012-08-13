@@ -19,8 +19,6 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.jackrabbit.webdav.DavException;
@@ -29,6 +27,8 @@ import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.easymock.MockControl;
+
+import java.io.File;
 
 public class ContinuumBuildAgentDavResourceFactoryTest
     extends PlexusInSpringTestCase
@@ -64,7 +64,7 @@ public class ContinuumBuildAgentDavResourceFactoryTest
 
         buildAgentConfigurationServiceControl = MockControl.
             createControl( BuildAgentConfigurationService.class );
-        buildAgentConfigurationService = 
+        buildAgentConfigurationService =
             (BuildAgentConfigurationService) buildAgentConfigurationServiceControl.getMock();
 
         resourceFactory = new ContinuumBuildAgentDavResourceFactory();
@@ -94,9 +94,10 @@ public class ContinuumBuildAgentDavResourceFactoryTest
     public void testRequestArtifact()
         throws Exception
     {
-        DavResourceLocator locator =
-            new ContinuumBuildAgentDavResourceLocator( "http://myhost/", "/workingcopy/1/target/continuum-artifact-1.0.jar", 
-                                                       new ContinuumBuildAgentDavLocatorFactory(), 1 );
+        DavResourceLocator locator = new ContinuumBuildAgentDavResourceLocator( "http://myhost/",
+                                                                                "/workingcopy/1/target/continuum-artifact-1.0.jar",
+                                                                                new ContinuumBuildAgentDavLocatorFactory(),
+                                                                                1 );
 
         try
         {
@@ -122,9 +123,10 @@ public class ContinuumBuildAgentDavResourceFactoryTest
     public void testRequestArtifactDoesNotExist()
         throws Exception
     {
-        DavResourceLocator locator =
-            new ContinuumBuildAgentDavResourceLocator( "http://myhost/", "/workingcopy/1/pom.xml", 
-                                                       new ContinuumBuildAgentDavLocatorFactory(), 1 );
+        DavResourceLocator locator = new ContinuumBuildAgentDavResourceLocator( "http://myhost/",
+                                                                                "/workingcopy/1/pom.xml",
+                                                                                new ContinuumBuildAgentDavLocatorFactory(),
+                                                                                1 );
 
         try
         {

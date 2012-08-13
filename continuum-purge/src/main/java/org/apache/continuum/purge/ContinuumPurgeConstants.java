@@ -31,16 +31,16 @@ public class ContinuumPurgeConstants
     public static final String PURGE_DIRECTORY_RELEASES = "releases";
 
     public static final String PURGE_DIRECTORY_BUILDOUTPUT = "buildOutput";
-    
+
     public static final String PURGE = "PURGE";
-    
+
     public static final String PURGE_REPO_CONTENTS = "Purge All Repository Contents";
-    
+
     public static final String PURGE_DIR_CONTENTS = "Purge All Directory Contents";
-   
+
     public static final String PURGE_ARTIFACT = "Purge Artifact File";
-    
+
     public static final String PURGE_FILE = "Purge Support File";
-    
+
     public static final String PURGE_PROJECT = "Purge Project";
 }

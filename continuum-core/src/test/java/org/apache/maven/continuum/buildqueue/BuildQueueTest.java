@@ -134,7 +134,8 @@ public class BuildQueueTest
         throws Exception
     {
         ProjectGroup group = getDefaultProjectGroup();
-        buildQueue.put( new BuildProjectTask( projectId, 0, new BuildTrigger( trigger, "" ), null, null, null, group.getId() ) );
+        buildQueue.put( new BuildProjectTask( projectId, 0, new BuildTrigger( trigger, "" ), null, null, null,
+                                              group.getId() ) );
     }
 
     private void assertNextBuildIs( int expectedProjectId )

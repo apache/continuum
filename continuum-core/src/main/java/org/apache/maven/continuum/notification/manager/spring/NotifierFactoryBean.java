@@ -19,9 +19,6 @@ package org.apache.maven.continuum.notification.manager.spring;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.maven.continuum.notification.Notifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +28,9 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -48,8 +48,8 @@ public class NotifierFactoryBean
     {
         Map<String, Notifier> notifiers = new HashMap<String, Notifier>();
 
-        Map<String, Notifier> beans =
-            BeanFactoryUtils.beansOfTypeIncludingAncestors( applicationContext, Notifier.class );
+        Map<String, Notifier> beans = BeanFactoryUtils.beansOfTypeIncludingAncestors( applicationContext,
+                                                                                      Notifier.class );
 
         for ( Notifier notifier : beans.values() )
         {

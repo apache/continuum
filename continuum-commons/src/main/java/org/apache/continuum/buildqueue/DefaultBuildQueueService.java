@@ -19,19 +19,18 @@ package org.apache.continuum.buildqueue;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
+import java.util.List;
 import javax.annotation.Resource;
 
 /**
  * DefaultBuildQueueService
- * 
+ *
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public class DefaultBuildQueueService
@@ -39,17 +38,17 @@ public class DefaultBuildQueueService
 {
     @Resource
     private BuildQueueDao buildQueueDao;
-    
+
     @Resource
     private ScheduleDao scheduleDao;
 
     public BuildQueue addBuildQueue( BuildQueue buildQueue )
         throws BuildQueueServiceException
-    {        
+    {
         try
         {
             return buildQueueDao.addBuildQueue( buildQueue );
-        } 
+        }
         catch ( ContinuumStoreException e )
         {
             throw new BuildQueueServiceException( e );
@@ -97,23 +96,23 @@ public class DefaultBuildQueueService
 
     public void removeBuildQueue( BuildQueue buildQueue )
         throws BuildQueueServiceException
-    {   
+    {
         try
         {
             // detach from schedule(s) first
             List<Schedule> schedules = scheduleDao.getAllSchedulesByName();
-            for( Schedule schedule : schedules )
+            for ( Schedule schedule : schedules )
             {
                 List<BuildQueue> buildQueues = schedule.getBuildQueues();
-                if( buildQueues.contains( buildQueue ) )
+                if ( buildQueues.contains( buildQueue ) )
                 {
                     buildQueues.remove( buildQueue );
                 }
                 schedule.setBuildQueues( buildQueues );
-                
+
                 scheduleDao.updateSchedule( schedule );
-            }        
-        
+            }
+
             buildQueueDao.removeBuildQueue( buildQueue );
         }
         catch ( ContinuumStoreException e )

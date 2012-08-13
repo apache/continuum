@@ -19,26 +19,26 @@ package org.apache.maven.continuum.utils;
  * under the License.
  */
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 27 mars 2008
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.utils.ContinuumUrlValidator"
- *   role-hint="continuumUrl"
+ * role-hint="continuumUrl"
+ * @since 27 mars 2008
  */
-@Service("continuumUrlValidator#continuumUrl")
+@Service( "continuumUrlValidator#continuumUrl" )
 public class ContinuumUrlValidator
     implements Configurable
 {
@@ -50,7 +50,7 @@ public class ContinuumUrlValidator
     /**
      * If no schemes are provided, default to this set.
      */
-    protected String[] defaultSchemes = { "http", "https", "ftp" };
+    protected String[] defaultSchemes = {"http", "https", "ftp"};
 
     /**
      * Create a UrlValidator with default properties.
@@ -62,10 +62,11 @@ public class ContinuumUrlValidator
 
     /**
      * Behavior of validation is modified by passing in several strings options:
+     *
      * @param schemes Pass in one or more url schemes to consider valid, passing in
-     *        a null will default to "http,https,ftp" being valid.
-     *        If a non-null schemes is specified then all valid schemes must
-     *        be specified.
+     *                a null will default to "http,https,ftp" being valid.
+     *                If a non-null schemes is specified then all valid schemes must
+     *                be specified.
      */
     public ContinuumUrlValidator( String[] schemes )
     {
@@ -81,7 +82,7 @@ public class ContinuumUrlValidator
      * <p>Checks if a field has a valid url address.</p>
      *
      * @param value The value validation is being performed on.  A <code>null</code>
-     * value is considered invalid.
+     *              value is considered invalid.
      * @return true if the url is valid.
      */
     public boolean validate( String value )
@@ -93,7 +94,7 @@ public class ContinuumUrlValidator
      * <p>Checks if a field has a valid url address.</p>
      *
      * @param value The value validation is being performed on.  A <code>null</code>
-     * value is considered valid.
+     *              value is considered valid.
      * @return true if the url is valid.
      */
     public boolean isValid( String value )

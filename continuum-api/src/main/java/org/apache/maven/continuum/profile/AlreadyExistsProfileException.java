@@ -22,16 +22,15 @@ import org.apache.maven.continuum.ContinuumException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 9 mai 2008
  * @version $Id$
  * @since 1.2
  */
 public class AlreadyExistsProfileException
     extends ContinuumException
 {
-	private static final long serialVersionUID = -3827218055154032672L;
+    private static final long serialVersionUID = -3827218055154032672L;
 
-	/**
+    /**
      * @param message
      */
     public AlreadyExistsProfileException( String message )

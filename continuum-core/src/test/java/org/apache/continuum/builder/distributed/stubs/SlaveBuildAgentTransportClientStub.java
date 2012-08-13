@@ -19,11 +19,11 @@ package org.apache.continuum.builder.distributed.stubs;
  * under the License.
  */
 
+import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 
 public class SlaveBuildAgentTransportClientStub
     implements SlaveBuildAgentTransportService
@@ -298,7 +298,7 @@ public class SlaveBuildAgentTransportClientStub
         throws Exception
     {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

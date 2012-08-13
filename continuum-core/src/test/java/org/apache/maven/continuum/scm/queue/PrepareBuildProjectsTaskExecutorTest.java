@@ -19,12 +19,6 @@ package org.apache.maven.continuum.scm.queue;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.buildmanager.ParallelBuildsManager;
 import org.apache.continuum.dao.ProjectScmRootDao;
@@ -45,6 +39,12 @@ import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProject
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class PrepareBuildProjectsTaskExecutorTest
     extends AbstractContinuumTest
 {
@@ -64,14 +64,14 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         super.setUp();
 
-        projectBuilder =
-            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
+        projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
+                                                           MavenTwoContinuumProjectBuilder.ID );
 
         projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
 
         actionManager = (ActionManager) lookup( ActionManager.ROLE );
 
-        configurationService =  (ConfigurationService ) lookup( "configurationService" );
+        configurationService = (ConfigurationService) lookup( "configurationService" );
 
         buildsManager = (ParallelBuildsManager) lookup( BuildsManager.class, "parallel" );
     }
@@ -90,8 +90,9 @@ public class PrepareBuildProjectsTaskExecutorTest
         Project moduleB = getProjectDao().getProjectByName( "module-B" );
         Project moduleD = getProjectDao().getProjectByName( "module-D" );
 
-        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
-                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(),
+                                            task.getProjectGroupId(), task.getProjectGroupName(),
+                                            task.getScmRootAddress(), task.getProjectScmRootId() );
 
         // wait while task finishes prepare build
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
@@ -101,21 +102,30 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         File workingDir = configurationService.getWorkingDirectory();
 
-        assertTrue( "checkout directory of project 'multi-module-parent' does not exist.", new File( workingDir, Integer.toString( rootProject.getId() ) ).exists() );
+        assertTrue( "checkout directory of project 'multi-module-parent' does not exist.", new File( workingDir,
+                                                                                                     Integer.toString(
+                                                                                                         rootProject.getId() ) ).exists() );
 
-        assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString( moduleA.getId() ) ).exists() );
+        assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString(
+            moduleA.getId() ) ).exists() );
 
-        assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString( moduleB.getId() ) ).exists() );
+        assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString(
+            moduleB.getId() ) ).exists() );
 
-        assertTrue( "checkout directory of project 'module-D' does not exist.", new File( workingDir, Integer.toString( moduleD.getId() ) ).exists() );
- 
-        assertTrue( "failed to checkout project 'multi-module-parent'", new File( workingDir, Integer.toString( rootProject.getId() ) ).list().length > 0 );
+        assertTrue( "checkout directory of project 'module-D' does not exist.", new File( workingDir, Integer.toString(
+            moduleD.getId() ) ).exists() );
 
-        assertTrue( "failed to checkout project 'module-A'", new File( workingDir, Integer.toString( moduleA.getId() ) ).list().length > 0 );
+        assertTrue( "failed to checkout project 'multi-module-parent'", new File( workingDir, Integer.toString(
+            rootProject.getId() ) ).list().length > 0 );
 
-        assertTrue( "failed to checkout project 'module-B'", new File( workingDir, Integer.toString( moduleB.getId() ) ).list().length > 0 );
+        assertTrue( "failed to checkout project 'module-A'", new File( workingDir, Integer.toString(
+            moduleA.getId() ) ).list().length > 0 );
 
-        assertTrue( "failed to checkout project 'module-D'", new File( workingDir, Integer.toString( moduleD.getId() ) ).list().length > 0 );
+        assertTrue( "failed to checkout project 'module-B'", new File( workingDir, Integer.toString(
+            moduleB.getId() ) ).list().length > 0 );
+
+        assertTrue( "failed to checkout project 'module-D'", new File( workingDir, Integer.toString(
+            moduleD.getId() ) ).list().length > 0 );
 
         // wait while task finished build
         waitForBuildToFinish();
@@ -126,7 +136,6 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         PrepareBuildProjectsTask task = createTask( "src/test-projects/multi-module/pom.xml", false, true );
 
-
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
         assertEquals( "failed to add all projects", 4, projects.size() );
@@ -136,8 +145,9 @@ public class PrepareBuildProjectsTaskExecutorTest
         Project moduleB = getProjectDao().getProjectByName( "module-B" );
         Project moduleD = getProjectDao().getProjectByName( "module-D" );
 
-        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
-                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(),
+                                            task.getProjectGroupId(), task.getProjectGroupName(),
+                                            task.getScmRootAddress(), task.getProjectScmRootId() );
 
         // wait while task finishes prepare build
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
@@ -147,22 +157,31 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         File workingDir = configurationService.getWorkingDirectory();
 
-        assertTrue( "checkout directory of project 'multi-module-parent' does not exist.", new File( workingDir, Integer.toString( rootProject.getId() ) ).exists() );
+        assertTrue( "checkout directory of project 'multi-module-parent' does not exist.", new File( workingDir,
+                                                                                                     Integer.toString(
+                                                                                                         rootProject.getId() ) ).exists() );
 
-        assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString( moduleA.getId() ) ).exists() );
+        assertTrue( "checkout directory of project 'module-A' does not exist.", new File( workingDir, Integer.toString(
+            moduleA.getId() ) ).exists() );
 
-        assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString( moduleB.getId() ) ).exists() );
-        
-        assertTrue( "checkout directory of project 'module-D' does not exist.", new File( workingDir, Integer.toString( moduleD.getId() ) ).exists() );
- 
-        assertTrue( "failed to checkout project 'multi-module-parent'", new File( workingDir, Integer.toString( rootProject.getId() ) ).list().length > 0 );
+        assertTrue( "checkout directory of project 'module-B' does not exist.", new File( workingDir, Integer.toString(
+            moduleB.getId() ) ).exists() );
 
-        assertTrue( "failed to checkout project 'module-A'", new File( workingDir, Integer.toString( moduleA.getId() ) ).list().length > 0 );
+        assertTrue( "checkout directory of project 'module-D' does not exist.", new File( workingDir, Integer.toString(
+            moduleD.getId() ) ).exists() );
 
-        assertTrue( "failed to checkout project 'module-B'", new File( workingDir, Integer.toString( moduleB.getId() ) ).list().length > 0 );
+        assertTrue( "failed to checkout project 'multi-module-parent'", new File( workingDir, Integer.toString(
+            rootProject.getId() ) ).list().length > 0 );
 
-        assertTrue( "failed to checkout project 'module-D'", new File( workingDir, Integer.toString( moduleD.getId() ) ).list().length > 0 );
- 
+        assertTrue( "failed to checkout project 'module-A'", new File( workingDir, Integer.toString(
+            moduleA.getId() ) ).list().length > 0 );
+
+        assertTrue( "failed to checkout project 'module-B'", new File( workingDir, Integer.toString(
+            moduleB.getId() ) ).list().length > 0 );
+
+        assertTrue( "failed to checkout project 'module-D'", new File( workingDir, Integer.toString(
+            moduleD.getId() ) ).list().length > 0 );
+
         // wait while task finished build
         waitForBuildToFinish();
     }
@@ -178,8 +197,9 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         Project rootProject = getProjectDao().getProjectByName( "multi-module-parent" );
 
-        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
-                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(),
+                                            task.getProjectGroupId(), task.getProjectGroupName(),
+                                            task.getScmRootAddress(), task.getProjectScmRootId() );
 
         // wait while task finishes prepare build
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
@@ -187,23 +207,28 @@ public class PrepareBuildProjectsTaskExecutorTest
         ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         assertEquals( "Failed to update multi-module project", ContinuumProjectState.UPDATED, scmRoot.getState() );
 
-        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
+        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString(
+            rootProject.getId() ) );
 
         assertTrue( "checkout directory of project 'multi-module-parent' does not exist.", checkedOutDir.exists() );
 
-        assertTrue( "module-A was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-A" ).exists() );
+        assertTrue( "module-A was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-A" ).exists() );
 
-        assertTrue( "module-B was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-B" ).exists() );
-       
-        assertTrue( "module-D was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-C/module-D" ).exists() );
+        assertTrue( "module-B was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-B" ).exists() );
+
+        assertTrue( "module-D was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-C/module-D" ).exists() );
 
         assertTrue( "failed to checkout project 'multi-module-parent'", checkedOutDir.list().length > 0 );
-   
-            assertTrue( "failed to checkout project 'module-A'", new File( checkedOutDir, "module-A" ).list().length > 0 );
+
+        assertTrue( "failed to checkout project 'module-A'", new File( checkedOutDir, "module-A" ).list().length > 0 );
 
         assertTrue( "failed to checkout project 'module-B'", new File( checkedOutDir, "module-B" ).list().length > 0 );
 
-        assertTrue( "failed to checkout project 'module-D'", new File( checkedOutDir, "module-C/module-D" ).list().length > 0 );
+        assertTrue( "failed to checkout project 'module-D'", new File( checkedOutDir,
+                                                                       "module-C/module-D" ).list().length > 0 );
 
         // wait while task finishes build
         waitForBuildToFinish();
@@ -220,8 +245,9 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         Project rootProject = getProjectDao().getProjectByName( "multi-module-parent" );
 
-        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
-                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(),
+                                            task.getProjectGroupId(), task.getProjectGroupName(),
+                                            task.getScmRootAddress(), task.getProjectScmRootId() );
 
         // wait while task finishes prepare build
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
@@ -229,15 +255,19 @@ public class PrepareBuildProjectsTaskExecutorTest
         ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         assertEquals( "Failed to update multi-module project", ContinuumProjectState.UPDATED, scmRoot.getState() );
 
-        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
+        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString(
+            rootProject.getId() ) );
 
         assertTrue( "checkout directory of project 'multi-module-parent' does not exist.", checkedOutDir.exists() );
 
-        assertTrue( "module-A was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-A" ).exists() );
+        assertTrue( "module-A was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-A" ).exists() );
 
-        assertTrue( "module-B was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-B" ).exists() );
-        
-        assertTrue( "module-D was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-C/module-D" ).exists() );
+        assertTrue( "module-B was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-B" ).exists() );
+
+        assertTrue( "module-D was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-C/module-D" ).exists() );
 
         assertTrue( "failed to checkout project 'multi-module-parent'", checkedOutDir.list().length > 0 );
 
@@ -245,7 +275,8 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         assertTrue( "failed to checkout project 'module-B'", new File( checkedOutDir, "module-B" ).list().length > 0 );
 
-        assertTrue( "failed to checkout project 'module-D'", new File( checkedOutDir, "module-C/module-D" ).list().length > 0 );
+        assertTrue( "failed to checkout project 'module-D'", new File( checkedOutDir,
+                                                                       "module-C/module-D" ).list().length > 0 );
 
         // wait while task finishes build
         waitForBuildToFinish();
@@ -254,16 +285,18 @@ public class PrepareBuildProjectsTaskExecutorTest
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProject()
         throws Exception
     {
-        PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true, false );
+        PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true,
+                                                    false );
 
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
         assertEquals( "failed to add all projects", 4, projects.size() );
-        
+
         Project rootProject = getProjectDao().getProjectByName( "parent-project" );
 
-        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
-                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(),
+                                            task.getProjectGroupId(), task.getProjectGroupName(),
+                                            task.getScmRootAddress(), task.getProjectScmRootId() );
 
         // wait while task finishes prepare build
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
@@ -271,22 +304,28 @@ public class PrepareBuildProjectsTaskExecutorTest
         ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         assertEquals( "Failed to update multi-module project", ContinuumProjectState.UPDATED, scmRoot.getState() );
 
-        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
+        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString(
+            rootProject.getId() ) );
 
-        assertTrue( "checkout directory of project 'parent-project' does not exist.", new File( checkedOutDir, "parent-project" ).exists() );
+        assertTrue( "checkout directory of project 'parent-project' does not exist.", new File( checkedOutDir,
+                                                                                                "parent-project" ).exists() );
 
-        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-a" ).exists() );
+        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-a" ).exists() );
 
-        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-b" ).exists() );
+        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-b" ).exists() );
 
-        assertTrue( "module-d was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-c/module-d" ).exists() );
+        assertTrue( "module-d was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-c/module-d" ).exists() );
 
-        assertTrue( "failed to checkout parent-project", new File( checkedOutDir, "parent-project" ).list().length > 0 );
+        assertTrue( "failed to checkout parent-project", new File( checkedOutDir, "parent-project" ).list().length >
+            0 );
 
         assertTrue( "failed to checkout module-a", new File( checkedOutDir, "module-a" ).list().length > 0 );
-        
+
         assertTrue( "failed to checkout module-b", new File( checkedOutDir, "module-b" ).list().length > 0 );
-        
+
         assertTrue( "failed to checkout module-d", new File( checkedOutDir, "module-c/module-d" ).list().length > 0 );
 
         // wait while task finishes build
@@ -296,7 +335,8 @@ public class PrepareBuildProjectsTaskExecutorTest
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProjectBuildFresh()
         throws Exception
     {
-        PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true, true );
+        PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true,
+                                                    true );
 
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
 
@@ -304,8 +344,9 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         Project rootProject = getProjectDao().getProjectByName( "parent-project" );
 
-        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
-                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(),
+                                            task.getProjectGroupId(), task.getProjectGroupName(),
+                                            task.getScmRootAddress(), task.getProjectScmRootId() );
 
         // wait while task finishes prepare build
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
@@ -313,22 +354,28 @@ public class PrepareBuildProjectsTaskExecutorTest
         ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         assertEquals( "Failed to update multi-module project", ContinuumProjectState.UPDATED, scmRoot.getState() );
 
-        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
+        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString(
+            rootProject.getId() ) );
 
-        assertTrue( "checkout directory of project 'parent-project' does not exist.", new File( checkedOutDir, "parent-project" ).exists() );
+        assertTrue( "checkout directory of project 'parent-project' does not exist.", new File( checkedOutDir,
+                                                                                                "parent-project" ).exists() );
 
-        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-a" ).exists() );
+        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-a" ).exists() );
 
-        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-b" ).exists() );
+        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-b" ).exists() );
 
-        assertTrue( "module-d was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-c/module-d" ).exists() );
+        assertTrue( "module-d was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-c/module-d" ).exists() );
 
-        assertTrue( "failed to checkout parent-project", new File( checkedOutDir, "parent-project" ).list().length > 0 );
+        assertTrue( "failed to checkout parent-project", new File( checkedOutDir, "parent-project" ).list().length >
+            0 );
 
         assertTrue( "failed to checkout module-a", new File( checkedOutDir, "module-a" ).list().length > 0 );
-        
+
         assertTrue( "failed to checkout module-b", new File( checkedOutDir, "module-b" ).list().length > 0 );
-       
+
         assertTrue( "failed to checkout module-d", new File( checkedOutDir, "module-c/module-d" ).list().length > 0 );
 
         // wait while task finishes build
@@ -338,46 +385,55 @@ public class PrepareBuildProjectsTaskExecutorTest
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProjectBuildFreshAfterRemovingWorkingCopy()
         throws Exception
     {
-        PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true, true );
+        PrepareBuildProjectsTask task = createTask( "src/test-projects/flat-multi-module/parent-project/pom.xml", true,
+                                                    true );
 
         List<Project> projects = getProjectDao().getProjectsInGroup( task.getProjectGroupId() );
-     
+
         assertEquals( "failed to add all projects", 4, projects.size() );
-    
+
         Project rootProject = getProjectDao().getProjectByName( "parent-project" );
-    
-        File rootProjectDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
+
+        File rootProjectDir = new File( configurationService.getWorkingDirectory(), Integer.toString(
+            rootProject.getId() ) );
         rootProjectDir = new File( rootProjectDir, "parent-project" );
-    
+
         rootProject.setWorkingDirectory( rootProjectDir.getAbsolutePath() );
-    
+
         getProjectDao().updateProject( rootProject );
-   
-        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(), task.getProjectGroupId(),
-                                            task.getProjectGroupName(), task.getScmRootAddress(), task.getProjectScmRootId() );
+
+        buildsManager.prepareBuildProjects( task.getProjectsBuildDefinitionsMap(), task.getBuildTrigger(),
+                                            task.getProjectGroupId(), task.getProjectGroupName(),
+                                            task.getScmRootAddress(), task.getProjectScmRootId() );
 
         // wait while task finishes prepare build
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
 
         ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( task.getProjectScmRootId() );
         assertEquals( "Failed to update multi-module project", ContinuumProjectState.UPDATED, scmRoot.getState() );
-    
-        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString( rootProject.getId() ) );
-    
-        assertTrue( "checkout directory of project 'parent-project' does not exist.", new File( checkedOutDir, "parent-project" ).exists() );
-    
-        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-a" ).exists() );
-    
-        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-b" ).exists() );
 
-        assertTrue( "module-d was not checked out in the same directory as it's parent.", new File( checkedOutDir, "module-c/module-d" ).exists() );
+        File checkedOutDir = new File( configurationService.getWorkingDirectory(), Integer.toString(
+            rootProject.getId() ) );
 
-        assertTrue( "failed to checkout parent-project", new File( checkedOutDir, "parent-project" ).list().length > 0 );
+        assertTrue( "checkout directory of project 'parent-project' does not exist.", new File( checkedOutDir,
+                                                                                                "parent-project" ).exists() );
+
+        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-a" ).exists() );
+
+        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-b" ).exists() );
+
+        assertTrue( "module-d was not checked out in the same directory as it's parent.", new File( checkedOutDir,
+                                                                                                    "module-c/module-d" ).exists() );
+
+        assertTrue( "failed to checkout parent-project", new File( checkedOutDir, "parent-project" ).list().length >
+            0 );
 
         assertTrue( "failed to checkout module-a", new File( checkedOutDir, "module-a" ).list().length > 0 );
-        
+
         assertTrue( "failed to checkout module-b", new File( checkedOutDir, "module-b" ).list().length > 0 );
-        
+
         assertTrue( "failed to checkout module-d", new File( checkedOutDir, "module-c/module-d" ).list().length > 0 );
 
         // wait while task finishes build
@@ -393,12 +449,13 @@ public class PrepareBuildProjectsTaskExecutorTest
         buildDefinition.setId( 0 );
         buildDefinition.setGoals( "clean" );
         buildDefinition.setBuildFresh( buildFresh );
-        
+
         projectGroup.addBuildDefinition( buildDefinition );
 
         Map<String, Object> pgContext = new HashMap<String, Object>();
 
-        AbstractContinuumAction.setWorkingDirectory( pgContext, configurationService.getWorkingDirectory().getAbsolutePath() );
+        AbstractContinuumAction.setWorkingDirectory( pgContext,
+                                                     configurationService.getWorkingDirectory().getAbsolutePath() );
 
         AbstractContinuumAction.setUnvalidatedProjectGroup( pgContext, projectGroup );
 
@@ -429,7 +486,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         for ( Project project : projects )
         {
             assertFalse( project.getId() == 0 );
-            
+
             map.put( project.getId(), buildDefinition.getId() );
 
             if ( rootProject == null || rootProject.getId() > project.getId() )
@@ -439,9 +496,11 @@ public class PrepareBuildProjectsTaskExecutorTest
         }
 
         assertEquals( 4, map.size() );
-        PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( map, new org.apache.continuum.utils.build.BuildTrigger( 1, "user" ),
-                                                                               projectGroupId, projectGroup.getName(), 
-                                                                               scmRoot.getScmRootAddress(), scmRoot.getId() );
+        PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( map,
+                                                                      new org.apache.continuum.utils.build.BuildTrigger(
+                                                                          1, "user" ), projectGroupId,
+                                                                      projectGroup.getName(),
+                                                                      scmRoot.getScmRootAddress(), scmRoot.getId() );
 
         return task;
     }
@@ -450,21 +509,22 @@ public class PrepareBuildProjectsTaskExecutorTest
         throws ContinuumProjectBuilderException, IOException
     {
         File pom = getTestFile( pomResource );
-    
+
         assertNotNull( "Can't find project " + pomResource, pom );
 
         //ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( pom.toURL(), null, null, true );
-        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( pom.toURL(), null, null, true, singleCheckout );
+        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( pom.toURL(), null, null, true,
+                                                                                          singleCheckout );
 
         // some assertions to make sure our expectations match. This is NOT
         // meant as a unit test for the projectbuilder!
-    
+
         assertNotNull( "Project list not null", result.getProjects() );
-    
+
         assertEquals( "#Projectgroups", 1, result.getProjectGroups().size() );
-    
+
         ProjectGroup pg = result.getProjectGroups().get( 0 );
-    
+
         if ( !result.getProjects().isEmpty() )
         {
             for ( Project p : result.getProjects() )
@@ -476,7 +536,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         return pg;
     }
 
-    private ProjectScmRoot getProjectScmRoot ( ProjectGroup pg, String url )
+    private ProjectScmRoot getProjectScmRoot( ProjectGroup pg, String url )
         throws Exception
     {
         if ( StringUtils.isEmpty( url ) )
@@ -484,8 +544,7 @@ public class PrepareBuildProjectsTaskExecutorTest
             return null;
         }
 
-        ProjectScmRoot scmRoot =
-            projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( pg.getId(), url );
+        ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( pg.getId(), url );
 
         if ( scmRoot != null )
         {
@@ -533,8 +592,8 @@ public class PrepareBuildProjectsTaskExecutorTest
     private void waitForPrepareBuildToFinish( int projectGroupId, int scmRootId )
         throws Exception
     {
-        while( buildsManager.isInPrepareBuildQueue( projectGroupId, scmRootId ) || 
-               buildsManager.isProjectGroupCurrentlyPreparingBuild( projectGroupId, scmRootId ) )
+        while ( buildsManager.isInPrepareBuildQueue( projectGroupId, scmRootId ) ||
+            buildsManager.isProjectGroupCurrentlyPreparingBuild( projectGroupId, scmRootId ) )
         {
             Thread.sleep( 10 );
         }
@@ -543,7 +602,7 @@ public class PrepareBuildProjectsTaskExecutorTest
     private void waitForBuildToFinish()
         throws Exception
     {
-        while( buildsManager.isBuildInProgress() || isAnyProjectInBuildQueue() )
+        while ( buildsManager.isBuildInProgress() || isAnyProjectInBuildQueue() )
         {
             Thread.sleep( 10 );
         }

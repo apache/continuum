@@ -78,7 +78,7 @@
       </fields>
     </class>
 
-    <class jpox.stashable="true" 
+    <class jpox.stashable="true"
            jpox.table="ROLES"
            jpox.not-persisted-fields="modelEncoding">
       <name>JdoRole</name>
@@ -115,16 +115,16 @@
             true if this object is permanent.
           </description>
         </field>
-        <field jpox.persistence-modifier="persistent" 
+        <field jpox.persistence-modifier="persistent"
                jpox.fetch-groups="role-child-detail"
                jpox.join-table="ROLE_CHILDROLE_MAP">
           <name>childRoleNames</name>
           <version>0.9.0</version>
-          <association stash.part="true" 
+          <association stash.part="true"
                        jpox.join="true"
-                       java.init="field" 
+                       java.init="field"
                        jpox.dependent="false"
-                       java.generate-break="false" 
+                       java.generate-break="false"
                        java.generate-create="false"
                        zjava.use-interface="org.codehaus.plexus.security.rbac.Role">
             <type>String</type>
@@ -153,7 +153,7 @@
       </fields>
     </class>
 
-    <class jpox.stashable="true" 
+    <class jpox.stashable="true"
            jpox.table="PERMISSIONS"
            jpox.not-persisted-fields="modelEncoding">
       <name>JdoPermission</name>
@@ -184,7 +184,7 @@
         <field jpox.indexed="true" jpox.column="RBAC_OPERATION">
           <name>operation</name>
           <version>0.9.0</version>
-          <association stash.part="true" 
+          <association stash.part="true"
                        xml.reference="true"
                        java.use-interface="org.codehaus.plexus.security.rbac.Operation"
                        jpox.dependent="false">
@@ -195,7 +195,7 @@
         <field jpox.indexed="true" jpox.column="RBAC_RESOURCE">
           <name>resource</name>
           <version>0.9.0</version>
-          <association stash.part="true" 
+          <association stash.part="true"
                        xml.reference="true"
                        java.use-interface="org.codehaus.plexus.security.rbac.Resource"
                        jpox.dependent="false">
@@ -206,7 +206,7 @@
       </fields>
     </class>
 
-    <class jpox.stashable="true" 
+    <class jpox.stashable="true"
            jpox.table="OPERATIONS"
            jpox.not-persisted-fields="modelEncoding">
       <name>JdoOperation</name>
@@ -245,7 +245,7 @@
       </fields>
     </class>
 
-    <class jpox.stashable="true" 
+    <class jpox.stashable="true"
            jpox.table="RESOURCES"
            jpox.not-persisted-fields="modelEncoding">
       <name>JdoResource</name>
@@ -286,7 +286,7 @@
       </fields>
     </class>
 
-    <class jpox.stashable="true" 
+    <class jpox.stashable="true"
            jpox.table="USER_ASSIGNMENTS"
            jpox.not-persisted-fields="modelEncoding">
       <name>JdoUserAssignment</name>
@@ -317,12 +317,12 @@
           </description>
         </field>
         <field java.adder="false"
-               jpox.persistence-modifier="persistent" 
+               jpox.persistence-modifier="persistent"
                jpox.indexed="false"
                jpox.join-table="USERASSIGNMENT_ROLENAMES">
           <name>roleNames</name>
           <version>0.9.0</version>
-          <association stash.part="true" 
+          <association stash.part="true"
                        jpox.join="true"
                        java.init="field"
                        java.generate-break="false"

@@ -23,19 +23,19 @@ import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
+import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.DirectoryPurgeConfigurationDao"
  */
-@Repository("directoryPurgeConfigurationDao")
+@Repository( "directoryPurgeConfigurationDao" )
 public class DirectoryPurgeConfigurationDaoImpl
     extends AbstractDao
     implements DirectoryPurgeConfigurationDao
@@ -74,7 +74,7 @@ public class DirectoryPurgeConfigurationDaoImpl
             rollback( tx );
         }
     }
-    
+
     public List<DirectoryPurgeConfiguration> getEnableDirectoryPurgeConfigurationsBySchedule( int scheduleId )
     {
         PersistenceManager pm = getPersistenceManager();

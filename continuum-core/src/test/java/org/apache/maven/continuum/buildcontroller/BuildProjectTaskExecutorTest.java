@@ -19,11 +19,6 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.AbstractContinuumTest;
@@ -40,6 +35,11 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:kenney@apache.org">Kenney Westerhof</a>
@@ -62,8 +62,8 @@ public class BuildProjectTaskExecutorTest
         {
             super.setUp();
 
-            projectBuilder =
-                (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
+            projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
+                                                               MavenTwoContinuumProjectBuilder.ID );
 
             buildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "build-project" );
 
@@ -246,8 +246,10 @@ public class BuildProjectTaskExecutorTest
 
         // projectGroup = continuumStore.addProjectGroup( projectGroup );
 
-        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), new BuildTrigger( 0, "" ),
-        		                                 project.getName(), buildDefinition.getDescription(), null, projectGroupId );
+        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), new BuildTrigger( 0,
+                                                                                                                  "" ),
+                                                      project.getName(), buildDefinition.getDescription(), null,
+                                                      projectGroupId );
 
         task.setMaxExecutionTime( maxRunTime );
 

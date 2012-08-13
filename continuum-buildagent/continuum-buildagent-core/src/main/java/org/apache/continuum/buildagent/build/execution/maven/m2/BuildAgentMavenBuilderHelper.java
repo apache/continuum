@@ -19,11 +19,11 @@ package org.apache.continuum.buildagent.build.execution.maven.m2;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
+
+import java.io.File;
 
 public interface BuildAgentMavenBuilderHelper
 {

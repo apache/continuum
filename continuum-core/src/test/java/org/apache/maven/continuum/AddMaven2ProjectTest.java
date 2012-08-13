@@ -1,8 +1,5 @@
 package org.apache.maven.continuum;
 
-import java.io.File;
-import java.util.Collections;
-
 import org.apache.continuum.AbstractAddProjectTest;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -12,6 +9,9 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /**
  * @author olamy
- * @since 
  * @version $Id$
  */
 public class AddMaven2ProjectTest
@@ -44,7 +44,7 @@ public class AddMaven2ProjectTest
     protected BuildDefinitionTemplate bdt;
 
     protected BuildDefinition bd;
-    
+
     @Override
     protected void setUp()
         throws Exception
@@ -55,17 +55,17 @@ public class AddMaven2ProjectTest
         bd.setBuildFile( "pom.xml" );
         bd.setDescription( "my foo" );
         bd.setTemplate( true );
-        BuildDefinitionService bds = (BuildDefinitionService) lookup( BuildDefinitionService.class.getName(), "default" );
+        BuildDefinitionService bds = (BuildDefinitionService) lookup( BuildDefinitionService.class.getName(),
+                                                                      "default" );
         bd = bds.addBuildDefinition( bd );
-        
-        
+
         assertEquals( 5, bds.getAllBuildDefinitions().size() );
 
         bdt = new BuildDefinitionTemplate();
         bdt.setName( "bdt foo" );
-        
+
         bdt = bds.addBuildDefinitionTemplate( bdt );
-        
+
         bdt = bds.addBuildDefinitionInTemplate( bdt, bd, false );
 
         createLocalRepository();
@@ -84,16 +84,13 @@ public class AddMaven2ProjectTest
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
         // group created with the m2 default build def 
         assertEquals( 1, pg.getBuildDefinitions().size() );
-        
 
         File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-core/pom.xml" );
 
         assertTrue( rootPom.exists() );
         //String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
-                                                                                   rootPom.toURI().toURL()
-                                                                                       .toExternalForm(), pg.getId(),
-                                                                                       true, false, false, bdt.getId(), false );
+            rootPom.toURI().toURL().toExternalForm(), pg.getId(), true, false, false, bdt.getId(), false );
         assertNotNull( result );
 
         assertEquals( Collections.emptyList(), result.getErrors() );
@@ -109,7 +106,7 @@ public class AddMaven2ProjectTest
         assertEquals( 1, project.getBuildDefinitions().size() );
         assertEquals( "clean deploy", ( (BuildDefinition) project.getBuildDefinitions().get( 0 ) ).getGoals() );
     }
-    
+
     public void testAddProjectWithGroupCreationWithBuildDefTemplate()
         throws Exception
     {
@@ -120,9 +117,7 @@ public class AddMaven2ProjectTest
         assertTrue( rootPom.exists() );
 
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
-                                                                                   rootPom.toURI().toURL()
-                                                                                       .toExternalForm(), -1, true,
-                                                                                       false, true, bdt.getId(), false );
+            rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, bdt.getId(), false );
         assertNotNull( result );
 
         assertEquals( Collections.emptyList(), result.getErrors() );
@@ -134,7 +129,7 @@ public class AddMaven2ProjectTest
         log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
         // build def only at the group level du to group creation 
         assertEquals( 0, project.getBuildDefinitions().size() );
-        
+
         log.info( "all pg size " + getContinuum().getAllProjectGroups().size() );
         ProjectGroup pg = result.getProjectGroups().get( 0 );
 
@@ -145,9 +140,9 @@ public class AddMaven2ProjectTest
         log.info( " pg builddefs size " + pg.getBuildDefinitions().size() );
         log.info( "pg bd goals " + ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
         assertEquals( "clean deploy", ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
-        
-    }    
-    
+
+    }
+
     public void testAddProjectWithGroupCreationDefaultBuildDef()
         throws Exception
     {
@@ -158,9 +153,7 @@ public class AddMaven2ProjectTest
         assertTrue( rootPom.exists() );
 
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
-                                                                                   rootPom.toURI().toURL()
-                                                                                       .toExternalForm(), -1, true,
-                                                                                       false, true, -1, false );
+            rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, -1, false );
         assertNotNull( result );
 
         assertEquals( Collections.emptyList(), result.getErrors() );
@@ -169,13 +162,13 @@ public class AddMaven2ProjectTest
 
         Project project = result.getProjects().get( 0 );
         assertNotNull( project );
-        
+
         assertNotNull( project );
         project = getContinuum().getProjectWithBuildDetails( project.getId() );
         log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
         // only build def at group level
         assertEquals( 0, project.getBuildDefinitions().size() );
-        
+
         log.info( "all pg size " + getContinuum().getAllProjectGroups().size() );
         ProjectGroup pg = result.getProjectGroups().get( 0 );
 
@@ -190,7 +183,7 @@ public class AddMaven2ProjectTest
         log.info( "pg bd goals " + ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
         assertEquals( "clean install", ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
 
-    }       
+    }
 
     public void testAddProjectToExistingGroupDefaultBuildDef()
         throws Exception
@@ -208,9 +201,7 @@ public class AddMaven2ProjectTest
         assertTrue( rootPom.exists() );
         //String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
-                                                                                   rootPom.toURI().toURL()
-                                                                                       .toExternalForm(), pg.getId(),
-                                                                                       true, false, false, -1, false );
+            rootPom.toURI().toURL().toExternalForm(), pg.getId(), true, false, false, -1, false );
         assertNotNull( result );
 
         assertEquals( Collections.emptyList(), result.getErrors() );
@@ -226,11 +217,11 @@ public class AddMaven2ProjectTest
         pg = result.getProjectGroups().get( 0 );
 
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
-        
+
         assertEquals( "clean install", pg.getBuildDefinitions().get( 0 ).getGoals() );
     }
-    
-    
+
+
     private Continuum getContinuum()
         throws Exception
     {
@@ -247,7 +238,7 @@ public class AddMaven2ProjectTest
     protected String getSpringConfigLocation()
     {
         return "applicationContextSlf4jPlexusLogger.xml";
-    }    
-    
-    
+    }
+
+
 }

@@ -19,13 +19,13 @@ package org.apache.continuum.buildagent.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.action.AbstractAction;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="check-agent-working-directory"

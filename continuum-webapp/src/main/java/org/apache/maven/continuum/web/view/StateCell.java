@@ -20,9 +20,6 @@ package org.apache.maven.continuum.web.view;
  */
 
 import com.opensymphony.xwork2.ActionContext;
-
-import java.util.HashMap;
-
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -40,6 +37,8 @@ import org.codehaus.plexus.redback.system.SecuritySystemConstants;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
+
+import java.util.HashMap;
 
 /**
  * Used in Summary view
@@ -68,8 +67,8 @@ public class StateCell
                 case ContinuumProjectState.UPDATING:
                 case ContinuumProjectState.CHECKING_OUT:
                 {
-                    String state =
-                        StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
+                    String state = StateGenerator.generate( project.getState(),
+                                                            tableModel.getContext().getContextPath() );
 
                     if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) &&
                         project.getState() != ContinuumProjectState.UPDATING )
@@ -105,8 +104,8 @@ public class StateCell
                 case ContinuumProjectState.UPDATED:
                 case ContinuumProjectState.ERROR:
                 {
-                    String state =
-                        StateGenerator.generate( projectScmRoot.getState(), tableModel.getContext().getContextPath() );
+                    String state = StateGenerator.generate( projectScmRoot.getState(),
+                                                            tableModel.getContext().getContextPath() );
 
                     if ( !StateGenerator.NEW.equals( state ) )
                     {
@@ -172,8 +171,8 @@ public class StateCell
         ActionContext context = ActionContext.getContext();
 
         PlexusContainer container = (PlexusContainer) context.getApplication().get( PlexusConstants.PLEXUS_KEY );
-        SecuritySession securitySession =
-            (SecuritySession) context.getSession().get( SecuritySystemConstants.SECURITY_SESSION_KEY );
+        SecuritySession securitySession = (SecuritySession) context.getSession().get(
+            SecuritySystemConstants.SECURITY_SESSION_KEY );
 
         try
         {

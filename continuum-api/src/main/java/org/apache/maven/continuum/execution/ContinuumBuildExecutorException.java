@@ -26,9 +26,9 @@ package org.apache.maven.continuum.execution;
 public class ContinuumBuildExecutorException
     extends Exception
 {
-	private static final long serialVersionUID = 8536807061085844707L;
+    private static final long serialVersionUID = 8536807061085844707L;
 
-	public ContinuumBuildExecutorException( String message )
+    public ContinuumBuildExecutorException( String message )
     {
         super( message );
     }

@@ -1,9 +1,5 @@
 package org.apache.continuum.builder.distributed.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -17,6 +13,10 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.apache.continuum.builder.distributed.util.DistributedBuildUtil"
@@ -83,8 +83,8 @@ public class DistributedBuildUtil
 
             for ( ProjectDependency dep : dependencies )
             {
-                Project dependencyProject =
-                    projectDao.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
+                Project dependencyProject = projectDao.getProject( dep.getGroupId(), dep.getArtifactId(),
+                                                                   dep.getVersion() );
 
                 if ( dependencyProject != null )
                 {
@@ -93,19 +93,19 @@ public class DistributedBuildUtil
                     if ( nbBuild > 0 )
                     {
                         log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
-                            dep.getVersion() );
+                                       dep.getVersion() );
                         modifiedDependencies.add( dep );
                     }
                     else
                     {
                         log.debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
-                            dep.getVersion() );
+                                       dep.getVersion() );
                     }
                 }
                 else
                 {
                     log.debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
-                        dep.getVersion() );
+                                   dep.getVersion() );
                 }
             }
 

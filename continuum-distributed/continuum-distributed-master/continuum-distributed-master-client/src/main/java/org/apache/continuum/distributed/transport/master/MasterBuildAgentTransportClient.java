@@ -22,16 +22,14 @@ package org.apache.continuum.distributed.transport.master;
 import com.atlassian.xmlrpc.ApacheBinder;
 import com.atlassian.xmlrpc.Binder;
 import com.atlassian.xmlrpc.BindingException;
+import com.atlassian.xmlrpc.ConnectionInfo;
+import org.apache.continuum.distributed.commons.utils.ContinuumDistributedUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Map;
 import java.util.TimeZone;
-
-import com.atlassian.xmlrpc.ConnectionInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.continuum.distributed.commons.utils.ContinuumDistributedUtil;
 
 /**
  * MasterBuildAgentTransportClient
@@ -55,7 +53,7 @@ public class MasterBuildAgentTransportClient
         throws Exception
     {
         Binder binder = new ApacheBinder();
-        
+
         ConnectionInfo connectionInfo = new ConnectionInfo();
         connectionInfo.setUsername( login );
         connectionInfo.setPassword( password );
@@ -70,11 +68,12 @@ public class MasterBuildAgentTransportClient
         catch ( BindingException e )
         {
             log.error( "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " +
-                serviceUrl.toExternalForm() + " using " + connectionInfo.getUsername() + ", " + connectionInfo.getPassword(), e );
+                           serviceUrl.toExternalForm() + " using " + connectionInfo.getUsername() + ", " +
+                           connectionInfo.getPassword(), e );
             throw new Exception(
                 "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " +
-                    serviceUrl.toExternalForm() + " using " + connectionInfo.getUsername() + ", " + connectionInfo.getPassword(),
-                e );
+                    serviceUrl.toExternalForm() + " using " + connectionInfo.getUsername() + ", " +
+                    connectionInfo.getPassword(), e );
         }
     }
 
@@ -87,12 +86,17 @@ public class MasterBuildAgentTransportClient
         try
         {
             result = master.returnBuildResult( buildResult, buildAgentUrl );
-            log.info( "Build finished. Returning the build result for project {} to master {}", projectInfo, masterServerUrl );
+            log.info( "Build finished. Returning the build result for project {} to master {}", projectInfo,
+                      masterServerUrl );
         }
         catch ( Exception e )
         {
-            log.error( "Failed to finish the build and return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
-            throw new Exception( "Failed to finish the build and return the build result for project " + projectInfo + " to master " + masterServerUrl, e );
+            log.error(
+                "Failed to finish the build and return the build result for project " + projectInfo + " to master " +
+                    masterServerUrl, e );
+            throw new Exception(
+                "Failed to finish the build and return the build result for project " + projectInfo + " to master " +
+                    masterServerUrl, e );
         }
 
         return result;
@@ -150,7 +154,8 @@ public class MasterBuildAgentTransportClient
         catch ( Exception e )
         {
             log.error( "Failed to start build of projectId=" + projectId + " to master " + masterServerUrl, e );
-            throw new Exception( "Failed to start build of projectId=" + projectId + " to master " + masterServerUrl, e );
+            throw new Exception( "Failed to start build of projectId=" + projectId + " to master " + masterServerUrl,
+                                 e );
         }
 
         return result;
@@ -184,14 +189,15 @@ public class MasterBuildAgentTransportClient
         {
             result = master.getEnvironments( buildDefinitionId, installationType );
             log.debug( "Retrieved environments. buildDefinitionId={}, installationType={} from master {}",
-                       new Object[] { buildDefinitionId, installationType, masterServerUrl } );
+                       new Object[]{buildDefinitionId, installationType, masterServerUrl} );
         }
         catch ( Exception e )
         {
             log.error( "Failed to retrieve environments. buildDefinitionId=" + buildDefinitionId +
-                       ", installationType=" + installationType + " from master " + masterServerUrl, e );
+                           ", installationType=" + installationType + " from master " + masterServerUrl, e );
             throw new Exception( "Failed to retrieve environments. buildDefinitionId=" +
-                                  buildDefinitionId + ", installationType=" + installationType + " from master " + masterServerUrl, e );
+                                     buildDefinitionId + ", installationType=" + installationType + " from master " +
+                                     masterServerUrl, e );
         }
 
         return result;
@@ -230,8 +236,10 @@ public class MasterBuildAgentTransportClient
         }
         catch ( Exception e )
         {
-            log.error( "Failed to determine if project " + projectInfo + " should build from master " + masterServerUrl, e );
-            throw new Exception( "Failed to determine if project " + projectInfo + " should build from master " + masterServerUrl, e );
+            log.error( "Failed to determine if project " + projectInfo + " should build from master " + masterServerUrl,
+                       e );
+            throw new Exception(
+                "Failed to determine if project " + projectInfo + " should build from master " + masterServerUrl, e );
         }
 
         return result;

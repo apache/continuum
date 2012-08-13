@@ -52,12 +52,11 @@ public class CleanWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );        
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
         String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
 
-        File workingDirectory =
-        	            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
-        	                                                         projectsWithCommonScmRoot );
+        File workingDirectory = workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+                                                                             projectsWithCommonScmRoot );
 
         if ( workingDirectory.exists() )
         {

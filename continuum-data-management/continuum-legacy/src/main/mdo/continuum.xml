@@ -900,7 +900,7 @@
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
-          <description>type of the buid defintion</description>          
+          <description>type of the buid defintion</description>
         </field>
         <field>
           <name>schedule</name>
@@ -939,7 +939,7 @@
           <description>
             true if this buildDefinition is a template
           </description>
-        </field>        
+        </field>
       </fields>
     </class>
     <class>
@@ -972,8 +972,8 @@
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
-          <description>type of the buid BuildDefinitionTemplate use for default</description>          
-        </field>                                
+          <description>type of the buid BuildDefinitionTemplate use for default</description>
+        </field>
         <field xml.reference="true" stash.part="true" jpox.fetch-groups="build-template-build-definitions">
           <name>buildDefinitions</name>
           <version>1.1.0+</version>
@@ -1250,8 +1250,8 @@
       </fields>
       <codeSegments>
         <codeSegment>
-           <version>1.1.0+</version>
-           <code><![CDATA[
+          <version>1.1.0+</version>
+          <code><![CDATA[
     public final static int NEW = 1;
     public final static int OK = 2;
     public final static int FAILED = 3;

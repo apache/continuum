@@ -64,7 +64,7 @@ public abstract class AbstractInstallationTest
         assertPage( "Continuum - Installation Type Choice" );
         assertTextPresent( "Installation Type Choice" );
         assertTextPresent( "Installation Type" );
-        assertOptionPresent( "installationType", new String[] { "Tool", "Environment Variable" } );
+        assertOptionPresent( "installationType", new String[]{"Tool", "Environment Variable"} );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -83,7 +83,7 @@ public abstract class AbstractInstallationTest
         assertTextPresent( "Name" );
         assertElementPresent( "installation.name" );
         assertTextPresent( "Type" );
-        assertOptionPresent( "installation.type", new String[] { "JDK", "Maven", "Maven 1", "ANT" } );
+        assertOptionPresent( "installation.type", new String[]{"JDK", "Maven", "Maven 1", "ANT"} );
         assertTextPresent( "Value/Path" );
         assertElementPresent( "installation.varValue" );
         assertButtonWithValuePresent( "Save" );

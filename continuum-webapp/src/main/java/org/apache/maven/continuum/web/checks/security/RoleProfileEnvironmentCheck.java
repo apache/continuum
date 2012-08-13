@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,7 +61,7 @@ public class RoleProfileEnvironmentCheck
 
             Collection<ProjectGroup> projectGroups = continuum.getAllProjectGroups();
 
-            for ( ProjectGroup group: projectGroups )
+            for ( ProjectGroup group : projectGroups )
             {
                 // gets the role, making it if it doesn't exist
                 //TODO: use continuum.executeAction( "add-assignable-roles", context ); or something like that to avoid code duplication

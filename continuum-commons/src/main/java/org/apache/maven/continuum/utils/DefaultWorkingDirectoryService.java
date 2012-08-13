@@ -26,14 +26,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
-
 import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-@Service("workingDirectoryService")
+@Service( "workingDirectoryService" )
 public class DefaultWorkingDirectoryService
     implements WorkingDirectoryService
 {
@@ -56,7 +55,7 @@ public class DefaultWorkingDirectoryService
 
     public File getWorkingDirectory( Project project )
     {
-    	return getWorkingDirectory( project, null, null );
+        return getWorkingDirectory( project, null, null );
     }
 
     public File getWorkingDirectory( Project project, boolean shouldSet )
@@ -65,10 +64,9 @@ public class DefaultWorkingDirectoryService
     }
 
     /**
-     * 
      * @param project
      * @param projectScmRoot
-     * @param projects projects under the same projectScmRoot
+     * @param projects       projects under the same projectScmRoot
      * @return
      */
     public File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects )
@@ -77,10 +75,9 @@ public class DefaultWorkingDirectoryService
     }
 
     /**
-     * 
      * @param project
      * @param projectScmRoot
-     * @param projects projects under the same projectScmRoot
+     * @param projects       projects under the same projectScmRoot
      * @param shouldSet
      * @return
      */
@@ -93,49 +90,49 @@ public class DefaultWorkingDirectoryService
 //                         project.getPath() );
 
         String workingDirectory = project.getWorkingDirectory();
-    	
+
         if ( project.getWorkingDirectory() == null || "".equals( project.getWorkingDirectory() ) )
-        {   
+        {
             if ( project.isCheckedOutInSingleDirectory() && projectScmRoot != null && !"".equals( projectScmRoot ) )
-            {                
+            {
                 Project rootProject = project;
-                if( projects != null )
+                if ( projects != null )
                 {
                     // the root project should have the lowest id since it's always added first                    
-                    for( Project projectUnderScmRoot : projects )
+                    for ( Project projectUnderScmRoot : projects )
                     {
-                        if( projectUnderScmRoot.getId() < rootProject.getId() )
+                        if ( projectUnderScmRoot.getId() < rootProject.getId() )
                         {
                             rootProject = projectUnderScmRoot;
                         }
                     }
-                }                
-                
-             // determine the path
+                }
+
+                // determine the path
                 String projectScmUrl = project.getScmUrl();
                 int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
-                                
+
                 String pathToProject = "";
-                if( indexDiff != -1 )
+                if ( indexDiff != -1 )
                 {
                     pathToProject = projectScmUrl.substring( indexDiff );
                 }
-                
-                if( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
+
+                if ( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
                 {
                     workingDirectory = Integer.toString( rootProject.getId() ) + pathToProject;
                 }
                 else
                 {
                     workingDirectory = Integer.toString( rootProject.getId() ) + File.separatorChar + pathToProject;
-                }                
+                }
             }
             else
             {
                 workingDirectory = Integer.toString( project.getId() );
             }
         }
-    	
+
         if ( shouldSet )
         {
             project.setWorkingDirectory( workingDirectory );
@@ -143,7 +140,7 @@ public class DefaultWorkingDirectoryService
 
         File workDir;
         File projectWorkingDirectory = new File( workingDirectory );
-        
+
         if ( projectWorkingDirectory.isAbsolute() )
         {
             // clean the project working directory path if it's a subdirectory of the global working directory
@@ -156,7 +153,7 @@ public class DefaultWorkingDirectoryService
                 {
                     pwd = pwd.substring( 1 );
                 }
-               
+
                 if ( shouldSet )
                 {
                     project.setWorkingDirectory( pwd );
@@ -167,11 +164,11 @@ public class DefaultWorkingDirectoryService
         }
         else
         {
-            File baseWorkingDir = getConfigurationService().getWorkingDirectory();            
-        	            
+            File baseWorkingDir = getConfigurationService().getWorkingDirectory();
+
             workDir = new File( baseWorkingDir, workingDirectory );
         }
-        
+
         return workDir;
     }
 }

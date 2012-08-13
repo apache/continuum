@@ -1,8 +1,5 @@
 package org.apache.maven.continuum.web.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -14,6 +11,9 @@ import org.codehaus.plexus.redback.rbac.UserAssignment;
 import org.codehaus.plexus.redback.rbac.jdo.JdoRole;
 import org.codehaus.plexus.redback.rbac.jdo.JdoUserAssignment;
 import org.jmock.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectGroupActionTest
     extends AbstractActionTest
@@ -51,7 +51,7 @@ public class ProjectGroupActionTest
         Role role2 = new JdoRole();
         role2.setName( "Continuum Manage Scheduling" );
         roles.add( role2 );
-        
+
         Role role3 = new JdoRole();
         role3.setName( "Project Developer - Project A" );
         roles.add( role3 );
@@ -98,7 +98,7 @@ public class ProjectGroupActionTest
         Role role2 = new JdoRole();
         role2.setName( "Continuum Manage Scheduling" );
         roles.add( role2 );
-        
+
         Role role3 = new JdoRole();
         role3.setName( "Project Developer - test-group" );
         roles.add( role3 );

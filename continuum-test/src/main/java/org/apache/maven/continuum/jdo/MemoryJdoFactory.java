@@ -1,8 +1,8 @@
 package org.apache.maven.continuum.jdo;
 
-import java.util.Properties;
-
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
+
+import java.util.Properties;
 
 public class MemoryJdoFactory
     extends DefaultConfigurableJdoFactory

@@ -20,16 +20,16 @@ package org.apache.maven.continuum.builddefinition;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 15 sept. 07
  * @version $Id$
+ * @since 15 sept. 07
  */
 public class BuildDefinitionServiceException
     extends Exception
 {
-	private static final long serialVersionUID = -399833410192238226L;
+    private static final long serialVersionUID = -399833410192238226L;
 
-	/**
-     * 
+    /**
+     *
      */
     public BuildDefinitionServiceException()
     {

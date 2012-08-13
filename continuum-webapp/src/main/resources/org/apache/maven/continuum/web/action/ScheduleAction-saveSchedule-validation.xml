@@ -49,7 +49,7 @@
   <field name="delay">
     <field-validator type="regex">
       <param name="expression"><![CDATA[([0-9])]]></param>
-      <message key="schedule.delay.invalid"/>  
+      <message key="schedule.delay.invalid"/>
     </field-validator>
   </field>
   <validator type="cronexpression">

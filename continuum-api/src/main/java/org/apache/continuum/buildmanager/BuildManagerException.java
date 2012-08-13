@@ -21,7 +21,6 @@ package org.apache.continuum.buildmanager;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @version
  */
 public class BuildManagerException
     extends Exception

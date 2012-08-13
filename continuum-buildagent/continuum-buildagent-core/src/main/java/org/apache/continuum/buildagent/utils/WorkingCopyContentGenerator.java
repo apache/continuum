@@ -19,14 +19,14 @@ package org.apache.continuum.buildagent.utils;
  * under the License.
  */
 
+import org.codehaus.plexus.util.StringUtils;
+
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @plexus.component role="org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator"
@@ -103,8 +103,8 @@ public class WorkingCopyContentGenerator
                 }
                 else
                 {
-                    userDirectory =
-                        f.getParentFile().getAbsolutePath().substring( basedir.getAbsolutePath().length() + 1 );
+                    userDirectory = f.getParentFile().getAbsolutePath().substring(
+                        basedir.getAbsolutePath().length() + 1 );
                 }
 
                 userDirectory = StringUtils.replace( userDirectory, "\\", "/" );
@@ -115,8 +115,8 @@ public class WorkingCopyContentGenerator
                     imagesBaseUrl ).append( "file.gif\">&nbsp;<a href=\"" ).append( baseUrl ).append(
                     urlParamSeparator ).append( "userDirectory=" ).append( userDirectory ).append( "&file=" ).append(
                     fileName ).append( "\">" ).append( fileName ).append( "</a></td><td width=\"1%\">" ).append(
-                    getReadableFileSize( f.length() ) ).append( "</td><td width=\"1%\">" ).append(
-                    getFormattedDate( f.lastModified() ) ).append( "</td>\n" );
+                    getReadableFileSize( f.length() ) ).append( "</td><td width=\"1%\">" ).append( getFormattedDate(
+                    f.lastModified() ) ).append( "</td>\n" );
                 buf.append( "</tr>\n" );
 
                 odd = !odd;

@@ -69,14 +69,14 @@ public class DefaultContinuumPurgeManagerTest
 
         localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
 
-        directoryPurgeConfigurationDao =
-            (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class.getName() );
+        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup(
+            DirectoryPurgeConfigurationDao.class.getName() );
 
-        repositoryPurgeConfigurationDao =
-            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class.getName() );
-        
-        distributedDirectoryPurgeConfigurationDao =
-            (DistributedDirectoryPurgeConfigurationDao) lookup( DistributedDirectoryPurgeConfigurationDao.class.getName() );
+        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
+            RepositoryPurgeConfigurationDao.class.getName() );
+
+        distributedDirectoryPurgeConfigurationDao = (DistributedDirectoryPurgeConfigurationDao) lookup(
+            DistributedDirectoryPurgeConfigurationDao.class.getName() );
 
         purgeManager = (ContinuumPurgeManager) lookup( ContinuumPurgeManager.ROLE );
 
@@ -169,11 +169,12 @@ public class DefaultContinuumPurgeManagerTest
         dirPurge.setDirectoryType( "releases" );
         dirPurge.setLocation( getTestFile( "target/working-directory" ).getAbsolutePath() );
         dirPurge = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( dirPurge );
-        
+
         distDirPurge = new DistributedDirectoryPurgeConfiguration();
         distDirPurge.setDirectoryType( "releases" );
         distDirPurge.setBuildAgentUrl( "http://localhost:8186/continuum-buildagent/xmlrpc" );
-        distDirPurge = distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration( distDirPurge );
+        distDirPurge = distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration(
+            distDirPurge );
     }
 
     private void assertNextBuildIs( int expectedPurgeConfigId )
@@ -197,7 +198,7 @@ public class DefaultContinuumPurgeManagerTest
         if ( task != null )
         {
             fail( "Got a non-null purge task returned. Purge Config id: " +
-                ( (PurgeTask) task ).getPurgeConfigurationId() );
+                      ( (PurgeTask) task ).getPurgeConfigurationId() );
         }
     }
 }

@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "shellProject" } )
+@Test( groups = {"shellProject"} )
 public class ShellProjectTest
     extends AbstractAdminTest
 {
@@ -46,11 +46,11 @@ public class ShellProjectTest
         String DEFAULT_PROJ_GRP_ID = getProperty( "DEFAULT_PROJ_GRP_ID" );
         String DEFAULT_PROJ_GRP_DESCRIPTION = getProperty( "DEFAULT_PROJ_GRP_DESCRIPTION" );
         goToAddShellProjectPage();
-        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, DEFAULT_PROJ_GRP_NAME, true, "shell" );
+        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME, SHELL_SCM_PASSWORD,
+                    SHELL_TAG, DEFAULT_PROJ_GRP_NAME, true, "shell" );
         assertProjectGroupSummaryPage( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
     }
-    
+
     public void testAddShellProjectWithInvalidValues()
         throws Exception
     {
@@ -81,7 +81,7 @@ public class ShellProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    @Test( dependsOnMethods = { "testAddShellProject" } )
+    @Test( dependsOnMethods = {"testAddShellProject"} )
     public void testAddDuplicateShellProject()
         throws Exception
     {
@@ -93,8 +93,8 @@ public class ShellProjectTest
         String SHELL_SCM_USERNAME = getProperty( "SHELL_SCM_USERNAME" );
         String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD" );
         goToAddShellProjectPage();
-        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME,
-                    SHELL_SCM_PASSWORD, SHELL_TAG, null, false, "shell" );
+        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME, SHELL_SCM_PASSWORD,
+                    SHELL_TAG, null, false, "shell" );
         assertTextPresent( "Project name already exist" );
     }
 

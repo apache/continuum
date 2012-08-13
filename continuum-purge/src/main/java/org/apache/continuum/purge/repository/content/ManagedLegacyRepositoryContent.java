@@ -19,12 +19,6 @@ package org.apache.continuum.purge.repository.content;
  * under the License.
  */
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.repository.utils.FileTypes;
@@ -36,6 +30,12 @@ import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.content.ArtifactExtensionMapping;
 import org.apache.maven.archiva.repository.content.PathParser;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Taken from Archiva's ManagedLegacyRepositoryContent and made some few changes

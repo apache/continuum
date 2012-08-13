@@ -19,10 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.utils.build.BuildTrigger;
@@ -33,6 +29,10 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>

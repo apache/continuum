@@ -19,11 +19,11 @@ package org.apache.continuum.buildagent.configuration;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.model.LocalRepository;
+
+import java.io.File;
+import java.util.List;
 
 public interface BuildAgentConfigurationService
 {

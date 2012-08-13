@@ -19,16 +19,15 @@ package org.apache.continuum.distributed.transport.tests;
  * under the License.
  */
 
-import java.net.URL;
-import java.util.Collections;
-
 import junit.framework.TestCase;
-
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+
+import java.net.URL;
+import java.util.Collections;
 
 /**
  * SlaveBuildAgentTransportServiceTest
@@ -37,15 +36,15 @@ public class SlaveBuildAgentTransportServiceTest
     extends TestCase
 {
     private SlaveBuildAgentTransportService slaveProxy;
-    
+
     private BeanFactory beanFactory = new XmlBeanFactory( new ClassPathResource( "applicationContext.xml" ) );
-    
+
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        
-        slaveProxy = new SlaveBuildAgentTransportClient( new URL( "http://localhost:9191/slave-xmlrpc"), null , null );
+
+        slaveProxy = new SlaveBuildAgentTransportClient( new URL( "http://localhost:9191/slave-xmlrpc" ), null, null );
     }
 
     public void testBuildProjects()
@@ -107,7 +106,7 @@ public class SlaveBuildAgentTransportServiceTest
             fail( e.getMessage() );
         }
     }
-    
+
     public void testExecuteDirectoryPurge()
     {
         try

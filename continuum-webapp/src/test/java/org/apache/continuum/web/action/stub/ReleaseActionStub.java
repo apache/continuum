@@ -19,41 +19,41 @@ package org.apache.continuum.web.action.stub;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.maven.continuum.model.system.Profile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReleaseActionStub
     extends AbstractReleaseAction
 {
     private Map<String, String> environmentVariables;
-    
+
     private Profile profile;
-    
+
     private String defaultBuildagent;
-    
+
     public ReleaseActionStub()
     {
         this.environmentVariables = new HashMap<String, String>();
     }
-    
+
     public void getEnvironments()
     {
         this.environmentVariables = getEnvironments( profile, defaultBuildagent );
     }
-    
+
     public Map<String, String> getEnvironmentVariables()
     {
         return this.environmentVariables;
     }
-    
+
     public void setProfile( Profile profile )
     {
         this.profile = profile;
     }
-    
+
     public void setDefaultBuildagent( String defaultBuildagent )
     {
         this.defaultBuildagent = defaultBuildagent;

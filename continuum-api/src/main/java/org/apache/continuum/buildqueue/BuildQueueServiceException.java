@@ -20,9 +20,7 @@ package org.apache.continuum.buildqueue;
  */
 
 /**
- * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- *
  */
 public class BuildQueueServiceException
     extends Exception
@@ -31,12 +29,12 @@ public class BuildQueueServiceException
     {
         super( message );
     }
-    
+
     public BuildQueueServiceException( Throwable cause )
     {
         super( cause );
     }
-    
+
     public BuildQueueServiceException( String message, Throwable cause )
     {
         super( message, cause );

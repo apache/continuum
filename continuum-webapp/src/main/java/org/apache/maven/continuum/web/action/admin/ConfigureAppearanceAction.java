@@ -19,11 +19,7 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.ModelDriven;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
@@ -49,7 +45,10 @@ import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 
-import com.opensymphony.xwork2.ModelDriven;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -145,9 +144,10 @@ public class ConfigureAppearanceAction
                     {
                         for ( Repository repo : repos )
                         {
-                            remoteRepositories.add(
-                                artifactRepositoryFactory.createArtifactRepository( repo.getId(), repo
-                                    .getUrl(), layout, null, null ) );
+                            remoteRepositories.add( artifactRepositoryFactory.createArtifactRepository( repo.getId(),
+                                                                                                        repo.getUrl(),
+                                                                                                        layout, null,
+                                                                                                        null ) );
                         }
                     }
                 }

@@ -45,8 +45,8 @@ public class ContinuumNotificationDispatcherTest
     public void testNotificationDispatcher()
         throws Exception
     {
-        ContinuumNotificationDispatcher notificationDispatcher =
-            (ContinuumNotificationDispatcher) lookup( ContinuumNotificationDispatcher.ROLE );
+        ContinuumNotificationDispatcher notificationDispatcher = (ContinuumNotificationDispatcher) lookup(
+            ContinuumNotificationDispatcher.ROLE );
 
         Project project = addProject( "Notification Dispatcher Test Project" );
 

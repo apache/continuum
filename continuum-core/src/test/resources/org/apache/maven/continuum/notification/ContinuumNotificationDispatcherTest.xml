@@ -19,12 +19,12 @@
 
 <plexus>
   <components>
-   
+
     <component>
       <role>org.springframework.mail.javamail.JavaMailSender</role>
       <implementation>org.apache.continuum.notification.mail.MockJavaMailSender</implementation>
       <role-hint>continuum</role-hint>
-    </component>    
+    </component>
 
     <component>
       <role>org.apache.maven.continuum.notification.Notifier</role>

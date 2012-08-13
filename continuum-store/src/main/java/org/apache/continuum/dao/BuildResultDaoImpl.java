@@ -19,30 +19,29 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.jdo.Extent;
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.jdo.Extent;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.BuildResultDao"
  */
-@Repository("buildResultDao")
+@Repository( "buildResultDao" )
 public class BuildResultDaoImpl
     extends AbstractDao
     implements BuildResultDao
@@ -308,7 +307,7 @@ public class BuildResultDaoImpl
             tx.begin();
 
             Query query = pm.newQuery( "SELECT FROM " + BuildResult.class.getName() +
-                " WHERE project.id == projectId PARAMETERS int projectId ORDER BY endTime DESC" );
+                                           " WHERE project.id == projectId PARAMETERS int projectId ORDER BY endTime DESC" );
 
             query.declareImports( "import java.lang.Integer" );
 
@@ -750,9 +749,10 @@ public class BuildResultDaoImpl
 
         return null;
     }
-    
+
     @SuppressWarnings( "unchecked" )
-    public List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy, int projectGroupId )
+    public List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy,
+                                                     int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -774,7 +774,7 @@ public class BuildResultDaoImpl
             Map params = new HashMap();
 
             int ctr = 0;
-            
+
             if ( state > 0 )
             {
                 params.put( "state", state );
@@ -819,11 +819,11 @@ public class BuildResultDaoImpl
                 parameters += "long toDate";
                 filter += "this.startTime < toDate";
             }
-            
+
             if ( filter.endsWith( "&& " ) )
             {
-               filter = filter.substring( 0, filter.length() - 3 );
-               parameters = parameters.substring( 0, parameters.length() - 2 );
+                filter = filter.substring( 0, filter.length() - 3 );
+                parameters = parameters.substring( 0, parameters.length() - 2 );
             }
 
             query.declareParameters( parameters );
@@ -832,7 +832,7 @@ public class BuildResultDaoImpl
             List<BuildResult> result = (List<BuildResult>) query.executeWithMap( params );
 
             result = (List<BuildResult>) pm.detachCopyAll( result );
-            
+
             tx.commit();
 
             return result;

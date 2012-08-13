@@ -30,13 +30,13 @@ import javax.jdo.PersistenceManagerFactory;
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.StoreUtilities"
  */
-@Service("storeUtilities")
+@Service( "storeUtilities" )
 public class StoreUtilities
 {
     /**
      * @plexus.requirement role-hint="continuum"
      */
-    @Resource(name="jdoFactory#continuum")
+    @Resource( name = "jdoFactory#continuum" )
     private JdoFactory continuumJdoFactory;
 
     private PersistenceManagerFactory continuumPersistenceManagerFactory;

@@ -180,7 +180,8 @@
           <version>1.0.9+</version>
           <type>String</type>
         </field>
-        <field jpox.mapped-by="projectGroup" jpox.fetch-groups="projectgroup-projects project-build-details project-with-scm-result">
+        <field jpox.mapped-by="projectGroup"
+               jpox.fetch-groups="projectgroup-projects project-build-details project-with-scm-result">
           <name>projects</name>
           <version>1.0.9+</version>
           <association jpox.join="false">
@@ -1005,7 +1006,7 @@
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
-          <description>type of the buid defintion</description>          
+          <description>type of the buid defintion</description>
         </field>
         <field>
           <name>schedule</name>
@@ -1083,8 +1084,8 @@
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
-          <description>type of the buid BuildDefinitionTemplate use for default</description>          
-        </field>                                
+          <description>type of the buid BuildDefinitionTemplate use for default</description>
+        </field>
         <field xml.reference="true" stash.part="true" jpox.fetch-groups="build-template-build-definitions">
           <name>buildDefinitions</name>
           <version>1.1.0+</version>
@@ -1097,7 +1098,7 @@
     </class>
     <class>
       <name>BuildQueue</name>
-      <version>1.1.4+</version>    
+      <version>1.1.4+</version>
       <description><![CDATA[
        Build queue.
       ]]></description>
@@ -1114,9 +1115,9 @@
           <type>String</type>
           <required>true</required>
           <defaultValue></defaultValue>
-        </field>        
+        </field>
       </fields>
-    </class>    
+    </class>
     <class>
       <name>Schedule</name>
       <version>1.0.9+</version>
@@ -1230,7 +1231,7 @@
           <type>String</type>
           <required>false</required>
           <defaultValue></defaultValue>
-        </field>        
+        </field>
         <field>
           <name>jdk</name>
           <version>1.1.0+</version>
@@ -1417,8 +1418,8 @@
       </fields>
       <codeSegments>
         <codeSegment>
-           <version>1.1.0+</version>
-           <code><![CDATA[
+          <version>1.1.0+</version>
+          <code><![CDATA[
     public final static int NEW = 1;
     public final static int OK = 2;
     public final static int FAILED = 3;
@@ -1492,7 +1493,7 @@
           <type>String</type>
           <required>true</required>
           <description>
-          The file system location for this repository
+            The file system location for this repository
           </description>
         </field>
         <field>
@@ -1501,12 +1502,12 @@
           <type>String</type>
           <defaultValue>default</defaultValue>
           <description>
-          The layout of the repository. Valid values are "default" and "legacy"
+            The layout of the repository. Valid values are "default" and "legacy"
           </description>
         </field>
       </fields>
     </class>
-    
+
     <class>
       <name>AbstractPurgeConfiguration</name>
       <version>1.1.1+</version>
@@ -1536,7 +1537,7 @@
           <type>int</type>
           <defaultValue>2</defaultValue>
           <description>
-          The total count of the artifact for each snapshot or the release/build output folder to be retained.
+            The total count of the artifact for each snapshot or the release/build output folder to be retained.
           </description>
         </field>
         <field>
@@ -1545,7 +1546,7 @@
           <type>int</type>
           <defaultValue>100</defaultValue>
           <description>
-          The number of days old which will be the basis for removing a snapshot or a folder.
+            The number of days old which will be the basis for removing a snapshot or a folder.
           </description>
         </field>
         <field>
@@ -1644,7 +1645,7 @@
         </field>
       </fields>
     </class>
-       
+
     <class>
       <name>ContinuumReleaseResult</name>
       <version>1.1.2+</version>
@@ -1696,7 +1697,7 @@
           <type>String</type>
         </field>
       </fields>
-    </class> 
+    </class>
 
     <class>
       <name>ProjectScmRoot</name>
@@ -1739,6 +1740,6 @@
           <required>true</required>
         </field>
       </fields>
-    </class>    
+    </class>
   </classes>
 </model>

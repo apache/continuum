@@ -21,6 +21,7 @@ package org.apache.maven.continuum.management;
 
 /**
  * Exception wrapper for application errors that can't be recovered from.
+ *
  * @version $Id$
  */
 public class DataManagementException

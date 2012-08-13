@@ -20,14 +20,13 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
-import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "buildDefinition" } )
+@Test( groups = {"buildDefinition"} )
 public class BuildDefinitionTest
     extends AbstractAdminTest
 {
@@ -67,7 +66,7 @@ public class BuildDefinitionTest
         assertImgWithAlt( "Build" );
     }
 
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testAddInvalidGroupBuildDefinition()
         throws Exception
     {
@@ -80,8 +79,8 @@ public class BuildDefinitionTest
         clickButtonWithValue( "Save" );
         assertTextPresent( "Build file is required and cannot contain spaces only" );
     }
-    
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testAddGroupBuildDefinitionWithXSS()
         throws Exception
     {
@@ -96,7 +95,7 @@ public class BuildDefinitionTest
         assertTextPresent( "Build file contains invalid characters." );
     }
 
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testBuildFromGroupBuildDefinition()
         throws Exception
     {
@@ -108,7 +107,7 @@ public class BuildDefinitionTest
         assertProjectGroupSummaryPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
 
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testAddDefautltGroupBuildDefinition()
         throws Exception
     {
@@ -125,7 +124,7 @@ public class BuildDefinitionTest
                                      BUILD_DESCRIPTION, true, false, true );
     }
 
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testAddNotDefautltGroupBuildDefinition()
         throws Exception
     {
@@ -142,7 +141,7 @@ public class BuildDefinitionTest
                                      BUILD_DESCRIPTION, false, false, false );
     }
 
-    @Test( dependsOnMethods = { "testAddNotDefautltGroupBuildDefinition" } )
+    @Test( dependsOnMethods = {"testAddNotDefautltGroupBuildDefinition"} )
     public void testEditGroupBuildDefinition()
         throws Exception
     {
@@ -169,7 +168,7 @@ public class BuildDefinitionTest
                                      BUILD_DESCRIPTION, false, true, false );
     }
 
-    @Test( dependsOnMethods = { "testEditGroupBuildDefinition" } )
+    @Test( dependsOnMethods = {"testEditGroupBuildDefinition"} )
     public void testDeleteGroupBuildDefinition()
         throws Exception
     {
@@ -186,7 +185,7 @@ public class BuildDefinitionTest
         assertGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME );
     }
 
-    @Test( dependsOnMethods = { "testMoveProject" } )
+    @Test( dependsOnMethods = {"testMoveProject"} )
     public void testAddNotDefautltProjectBuildDefinition()
         throws Exception
     {
@@ -202,7 +201,7 @@ public class BuildDefinitionTest
                                      false, false );
     }
 
-    @Test( dependsOnMethods = { "testAddNotDefautltProjectBuildDefinition" } )
+    @Test( dependsOnMethods = {"testAddNotDefautltProjectBuildDefinition"} )
     public void testDeleteProjectBuildDefinition()
         throws Exception
     {

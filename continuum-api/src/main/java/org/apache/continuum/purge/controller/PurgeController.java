@@ -30,11 +30,11 @@ import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 public interface PurgeController
 {
     String ROLE = PurgeController.class.getName();
-    
+
     void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException;
-    
+
     void doPurge( AbstractPurgeConfiguration purgeConfig );
-    
+
     void doPurge( String path );
 }

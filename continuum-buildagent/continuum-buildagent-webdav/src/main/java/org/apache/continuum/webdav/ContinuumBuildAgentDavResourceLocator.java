@@ -36,9 +36,8 @@ public class ContinuumBuildAgentDavResourceLocator
 
     private final int projectId;
 
-    public ContinuumBuildAgentDavResourceLocator( String prefix, String resourcePath, 
-                                                  DavLocatorFactory davLocatorFactory,
-                                                  int projectId )
+    public ContinuumBuildAgentDavResourceLocator( String prefix, String resourcePath,
+                                                  DavLocatorFactory davLocatorFactory, int projectId )
     {
         this.prefix = prefix;
         this.davLocatorFactory = davLocatorFactory;
@@ -57,7 +56,7 @@ public class ContinuumBuildAgentDavResourceLocator
 
         String path = resourcePath;
 
-        if ( !resourcePath.startsWith("/") )
+        if ( !resourcePath.startsWith( "/" ) )
         {
             path = "/" + resourcePath;
         }
@@ -79,7 +78,7 @@ public class ContinuumBuildAgentDavResourceLocator
     public String getHref( boolean isCollection )
     {
         // avoid doubled trailing '/' for the root item
-        String suffix = ( isCollection && !isRootLocation() && !href.endsWith("/") ) ? "/" : "";
+        String suffix = ( isCollection && !isRootLocation() && !href.endsWith( "/" ) ) ? "/" : "";
         return href + suffix;
     }
 
@@ -115,7 +114,7 @@ public class ContinuumBuildAgentDavResourceLocator
 
     /**
      * Computes the hash code from the href, which is built using the final fields prefix and resourcePath.
-     * 
+     *
      * @return the hash code
      */
     public int hashCode()
@@ -141,7 +140,7 @@ public class ContinuumBuildAgentDavResourceLocator
     /**
      * Equality of path is achieved if the specified object is a <code>DavResourceLocator</code> object with the same
      * hash code.
-     * 
+     *
      * @param obj the object to compare to
      * @return <code>true</code> if the 2 objects are equal; <code>false</code> otherwise
      */

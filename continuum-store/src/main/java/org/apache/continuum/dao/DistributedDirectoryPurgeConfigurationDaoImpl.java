@@ -19,24 +19,23 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.springframework.stereotype.Repository;
+
 import java.util.Collections;
 import java.util.List;
-
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-
-import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
-import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.springframework.stereotype.Repository;
 
 /**
  * @author
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao"
  */
-@Repository("distributedDirectoryPurgeConfigurationDao")
+@Repository( "distributedDirectoryPurgeConfigurationDao" )
 public class DistributedDirectoryPurgeConfigurationDaoImpl
     extends AbstractDao
     implements DistributedDirectoryPurgeConfigurationDao
@@ -46,7 +45,8 @@ public class DistributedDirectoryPurgeConfigurationDaoImpl
         return getAllObjectsDetached( DistributedDirectoryPurgeConfiguration.class );
     }
 
-    public List<DistributedDirectoryPurgeConfiguration> getDistributedDirectoryPurgeConfigurationsBySchedule( int scheduleId )
+    public List<DistributedDirectoryPurgeConfiguration> getDistributedDirectoryPurgeConfigurationsBySchedule(
+        int scheduleId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -75,8 +75,9 @@ public class DistributedDirectoryPurgeConfigurationDaoImpl
             rollback( tx );
         }
     }
-    
-    public List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule( int scheduleId )
+
+    public List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
+        int scheduleId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -141,22 +142,26 @@ public class DistributedDirectoryPurgeConfigurationDaoImpl
     public DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int configurationId )
         throws ContinuumStoreException
     {
-        return (DistributedDirectoryPurgeConfiguration) getObjectById( DistributedDirectoryPurgeConfiguration.class, configurationId );
+        return (DistributedDirectoryPurgeConfiguration) getObjectById( DistributedDirectoryPurgeConfiguration.class,
+                                                                       configurationId );
     }
 
-    public DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration purgeConfiguration )
+    public DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration(
+        DistributedDirectoryPurgeConfiguration purgeConfiguration )
         throws ContinuumStoreException
     {
         return (DistributedDirectoryPurgeConfiguration) addObject( purgeConfiguration );
     }
 
-    public void updateDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration purgeConfiguration )
+    public void updateDistributedDirectoryPurgeConfiguration(
+        DistributedDirectoryPurgeConfiguration purgeConfiguration )
         throws ContinuumStoreException
     {
         updateObject( purgeConfiguration );
     }
 
-    public void removeDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration purgeConfiguration )
+    public void removeDistributedDirectoryPurgeConfiguration(
+        DistributedDirectoryPurgeConfiguration purgeConfiguration )
         throws ContinuumStoreException
     {
         removeObject( purgeConfiguration );

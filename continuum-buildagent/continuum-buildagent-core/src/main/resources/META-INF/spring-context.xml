@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+
+
 		http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-  <context:annotation-config />
+  <context:annotation-config/>
   <context:component-scan base-package="org.apache.continuum.buildagent"/>
 
   <bean name="continuumAgentBuildExecutor#maven2"
-         class="org.apache.continuum.buildagent.build.execution.maven.m2.MavenTwoBuildExecutor" autowire="byName">
+        class="org.apache.continuum.buildagent.build.execution.maven.m2.MavenTwoBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="mvn"/>
     <property name="buildAgentMavenBuilderHelper" ref="buildAgentMavenBuilderHelper"/>
     <property name="projectHelper" ref="mavenProjectHelper"/>
   </bean>
   <bean name="continuumAgentBuildExecutor#maven-1"
-         class="org.apache.continuum.buildagent.build.execution.maven.m1.MavenOneBuildExecutor" autowire="byName">
+        class="org.apache.continuum.buildagent.build.execution.maven.m1.MavenOneBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="maven"/>
   </bean>
   <bean name="continuumAgentBuildExecutor#ant"
-         class="org.apache.continuum.buildagent.build.execution.ant.AntBuildExecutor" autowire="byName">
+        class="org.apache.continuum.buildagent.build.execution.ant.AntBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="ant"/>
   </bean>
   <bean name="continuumAgentBuildExecutor#shell"
-         class="org.apache.continuum.buildagent.build.execution.shell.ShellBuildExecutor" autowire="byName">
+        class="org.apache.continuum.buildagent.build.execution.shell.ShellBuildExecutor" autowire="byName">
   </bean>
 
-  <bean id="buildAgentConfigurationService" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfigurationService"
+  <bean id="buildAgentConfigurationService"
+        class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfigurationService"
         init-method="initialize"/>
-  
-  <bean id="buildAgentConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfiguration"
-     init-method="initialize">
-    <property name="configurationFile" value="file:${appserver.base}/conf/continuum-buildagent.xml" />
+
+  <bean id="buildAgentConfiguration"
+        class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfiguration"
+        init-method="initialize">
+    <property name="configurationFile" value="file:${appserver.base}/conf/continuum-buildagent.xml"/>
   </bean>
 </beans>
 	

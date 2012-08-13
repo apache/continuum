@@ -33,12 +33,12 @@
     <param-value>org.codehaus.plexus.spring.PlexusWebApplicationContext</param-value>
   </context-param>
 
-   <context-param>
+  <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-        classpath*:/META-INF/plexus/components.xml
-        classpath*:/META-INF/spring-context.xml
-        target/test-classes/org/apache/continuum/webdav/WorkingCopyServletTest.xml
+      classpath*:/META-INF/plexus/components.xml
+      classpath*:/META-INF/spring-context.xml
+      target/test-classes/org/apache/continuum/webdav/WorkingCopyServletTest.xml
     </param-value>
   </context-param>
 

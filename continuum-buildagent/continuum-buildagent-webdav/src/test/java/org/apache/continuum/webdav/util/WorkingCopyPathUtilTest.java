@@ -36,11 +36,13 @@ public class WorkingCopyPathUtilTest
     public void testGetLogicalPath()
     {
         String href = "/workingcopy/1/src/main/java/org/apache/maven/someartifact.jar";
-        assertEquals("/src/main/java/org/apache/maven/someartifact.jar", WorkingCopyPathUtil.getLogicalResource( href ) );
+        assertEquals( "/src/main/java/org/apache/maven/someartifact.jar", WorkingCopyPathUtil.getLogicalResource(
+            href ) );
 
         href = "workingcopy/1/src/main/java/org/apache/maven/someartifact.jar";
-        assertEquals("/src/main/java/org/apache/maven/someartifact.jar", WorkingCopyPathUtil.getLogicalResource( href ) );
-        
+        assertEquals( "/src/main/java/org/apache/maven/someartifact.jar", WorkingCopyPathUtil.getLogicalResource(
+            href ) );
+
         href = "workingcopy/1/src/main/java/";
         assertEquals( "/src/main/java/", WorkingCopyPathUtil.getLogicalResource( href ) );
 

@@ -21,10 +21,6 @@ package org.apache.maven.continuum.web.action;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
-
-import java.text.SimpleDateFormat;
-import java.util.ResourceBundle;
-
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
@@ -36,6 +32,9 @@ import org.codehaus.plexus.redback.system.SecuritySystemConstants;
 import org.codehaus.plexus.redback.users.User;
 import org.codehaus.plexus.redback.users.UserNotFoundException;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.ResourceBundle;
 
 /**
  * ContinuumActionSupport
@@ -68,7 +67,7 @@ public class ContinuumActionSupport
      * @plexus.requirement
      */
     private Continuum continuum;
-    
+
     protected final SimpleDateFormat dateFormatter = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aaa z" );
 
     public void prepare()
@@ -76,8 +75,8 @@ public class ContinuumActionSupport
     {
         if ( securitySession == null )
         {
-            securitySession =
-                (SecuritySession) getContext().getSession().get( SecuritySystemConstants.SECURITY_SESSION_KEY );
+            securitySession = (SecuritySession) getContext().getSession().get(
+                SecuritySystemConstants.SECURITY_SESSION_KEY );
         }
     }
 
@@ -492,7 +491,7 @@ public class ContinuumActionSupport
     {
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_VIEW_REPORT );
     }
-    
+
     /**
      * Get the security session
      *
@@ -552,11 +551,11 @@ public class ContinuumActionSupport
     {
         return getTexts( "localization/Continuum" );
     }
-    
+
     protected String getPrincipal()
     {
         String principal = "guest";
-        
+
         if ( getSecuritySession() != null )
         {
             if ( getSecuritySession().getUser() != null )

@@ -1,9 +1,5 @@
 package org.apache.continuum.builder.distributed.work;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -18,6 +14,10 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @plexus.component role="org.apache.continuum.builder.distributed.work.ContinuumWorker"
@@ -66,7 +66,8 @@ public class DefaultContinuumWorker
 
         log.debug( "Start continuum worker..." );
 
-        List<ProjectRunSummary> currentRuns = new ArrayList<ProjectRunSummary>( distributedBuildManager.getCurrentRuns() );
+        List<ProjectRunSummary> currentRuns = new ArrayList<ProjectRunSummary>(
+            distributedBuildManager.getCurrentRuns() );
         List<ProjectRunSummary> runsToDelete = new ArrayList<ProjectRunSummary>();
 
         synchronized ( currentRuns )
@@ -77,39 +78,48 @@ public class DefaultContinuumWorker
                 {
                     // check for scm update
                     ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRoot( currentRun.getProjectScmRootId() );
-    
+
                     if ( scmRoot != null && scmRoot.getState() == ContinuumProjectState.UPDATING )
                     {
                         // check if it's still updating
-                        if ( !distributedBuildManager.isProjectCurrentlyPreparingBuild( currentRun.getProjectId(), currentRun.getBuildDefinitionId() ) )
+                        if ( !distributedBuildManager.isProjectCurrentlyPreparingBuild( currentRun.getProjectId(),
+                                                                                        currentRun.getBuildDefinitionId() ) )
                         {
                             // no longer updating, but state was not updated.
                             scmRoot.setState( ContinuumProjectState.ERROR );
-                            scmRoot.setError( "Problem encountered while returning scm update result to master by build agent '" + currentRun.getBuildAgentUrl() + "'. \n" +
-                                              "Make sure build agent is configured properly. Check the logs for more information." );
+                            scmRoot.setError(
+                                "Problem encountered while returning scm update result to master by build agent '" +
+                                    currentRun.getBuildAgentUrl() + "'. \n" +
+                                    "Make sure build agent is configured properly. Check the logs for more information." );
                             projectScmRootDao.updateProjectScmRoot( scmRoot );
-    
-                            log.debug( "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
-                                       new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(), currentRun.getBuildAgentUrl() } );
+
+                            log.debug(
+                                "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
+                                new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
+                                    currentRun.getBuildAgentUrl()} );
                             runsToDelete.add( currentRun );
                         }
                     }
                     else if ( scmRoot != null && scmRoot.getState() == ContinuumProjectState.ERROR )
                     {
-                        log.debug( "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
-                                   new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(), currentRun.getBuildAgentUrl() } );
+                        log.debug(
+                            "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
+                            new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
+                                currentRun.getBuildAgentUrl()} );
                         runsToDelete.add( currentRun );
                     }
                     else
                     {
                         Project project = projectDao.getProject( currentRun.getProjectId() );
-    
+
                         if ( project != null && project.getState() == ContinuumProjectState.BUILDING )
                         {
                             // check if it's still building
-                            if ( !distributedBuildManager.isProjectCurrentlyBuilding( currentRun.getProjectId(), currentRun.getBuildDefinitionId() ) )
+                            if ( !distributedBuildManager.isProjectCurrentlyBuilding( currentRun.getProjectId(),
+                                                                                      currentRun.getBuildDefinitionId() ) )
                             {
-                                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( currentRun.getBuildDefinitionId() );
+                                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition(
+                                    currentRun.getBuildDefinitionId() );
 
                                 // no longer building, but state was not updated
                                 BuildResult buildResult = new BuildResult();
@@ -122,16 +132,20 @@ public class DefaultContinuumWorker
                                 buildResult.setStartTime( new Date().getTime() );
                                 buildResult.setEndTime( new Date().getTime() );
                                 buildResult.setExitCode( 1 );
-                                buildResult.setError( "Problem encountered while returning build result to master by build agent '" + currentRun.getBuildAgentUrl() + "'. \n" +
-                                                      "Make sure build agent is configured properly. Check the logs for more information." );
+                                buildResult.setError(
+                                    "Problem encountered while returning build result to master by build agent '" +
+                                        currentRun.getBuildAgentUrl() + "'. \n" +
+                                        "Make sure build agent is configured properly. Check the logs for more information." );
                                 buildResultDao.addBuildResult( project, buildResult );
-    
+
                                 project.setState( ContinuumProjectState.ERROR );
                                 project.setLatestBuildId( buildResult.getId() );
                                 projectDao.updateProject( project );
-    
-                                log.debug( "projectId={}, buildDefinitionId={} is not building anymore. Problem encountered while return build result by build agent {}. Stopping the build.",
-                                           new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(), currentRun.getBuildAgentUrl() } );
+
+                                log.debug(
+                                    "projectId={}, buildDefinitionId={} is not building anymore. Problem encountered while return build result by build agent {}. Stopping the build.",
+                                    new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
+                                        currentRun.getBuildAgentUrl()} );
 
                                 // create a build result
                                 runsToDelete.add( currentRun );
@@ -141,8 +155,9 @@ public class DefaultContinuumWorker
                 }
                 catch ( Exception e )
                 {
-                    log.error( "Unable to check if projectId={}, buildDefinitionId={} is still updating or building: {}",
-                               new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(), e.getMessage() } );
+                    log.error(
+                        "Unable to check if projectId={}, buildDefinitionId={} is still updating or building: {}",
+                        new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(), e.getMessage()} );
                 }
             }
 

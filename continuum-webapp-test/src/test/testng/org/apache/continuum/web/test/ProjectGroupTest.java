@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "projectGroup" } )
+@Test( groups = {"projectGroup"} )
 public class ProjectGroupTest
     extends AbstractAdminTest
 {
@@ -54,14 +54,14 @@ public class ProjectGroupTest
         addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, true );
         showProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
-    
+
     public void testAddProjectGroupWithInvalidValues()
         throws Exception
     {
         String TEST2_PROJ_GRP_NAME = "!@#$<>?etch";
         String TEST2_PROJ_GRP_ID = "-!@#<>etc";
         String TEST2_PROJ_GRP_DESCRIPTION = "![]<>'^&etc";
-        
+
         addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, false );
         assertTextPresent( "Name contains invalid characters." );
         assertTextPresent( "Id contains invalid characters." );
@@ -83,7 +83,7 @@ public class ProjectGroupTest
         assertTextPresent( "Project Group ID is required" );
     }
 
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testEditProjectGroupWithValidValues()
         throws Exception
     {
@@ -103,7 +103,7 @@ public class ProjectGroupTest
         assertProjectGroupSummaryPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
 
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testEditProjectGroupWithInvalidValues()
         throws Exception
     {
@@ -115,8 +115,8 @@ public class ProjectGroupTest
                           TEST2_PROJ_GRP_DESCRIPTION );
         assertTextPresent( "Project Group Name is required" );
     }
-    
-    @Test( dependsOnMethods = { "testAddProjectGroup2" } )
+
+    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
     public void testEditProjectGroupWithXSS()
         throws Exception
     {
@@ -136,7 +136,7 @@ public class ProjectGroupTest
         String TEST_GRP_NAME = getProperty( "TEST_DELETE_GRP_NAME" );
         String TEST_GRP_ID = getProperty( "TEST_DELETE_GRP_ID" );
         String TEST_GRP_DESCRIPTION = getProperty( "TEST_DELETE_GRP_DESCRIPTION" );
-        
+
         // delete group - delete icon
         addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
         assertLinkPresent( TEST_GRP_NAME );
@@ -145,7 +145,7 @@ public class ProjectGroupTest
         clickButtonWithValue( "Delete" );
         assertProjectGroupsSummaryPage();
         assertLinkNotPresent( TEST_GRP_NAME );
-        
+
         // delete group - "Delete Group" button
         addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
         assertLinkPresent( TEST_GRP_NAME );

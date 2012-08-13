@@ -19,6 +19,15 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.maven.archiva.common.utils.VersionComparator;
+import org.apache.maven.archiva.common.utils.VersionUtil;
+import org.apache.maven.archiva.model.ArtifactReference;
+import org.apache.maven.archiva.model.VersionedReference;
+import org.apache.maven.archiva.repository.ContentNotFoundException;
+import org.apache.maven.archiva.repository.layout.LayoutException;
+
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,15 +38,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
-import org.apache.maven.archiva.common.utils.VersionComparator;
-import org.apache.maven.archiva.common.utils.VersionUtil;
-import org.apache.maven.archiva.model.ArtifactReference;
-import org.apache.maven.archiva.model.VersionedReference;
-import org.apache.maven.archiva.repository.ContentNotFoundException;
-import org.apache.maven.archiva.repository.layout.LayoutException;
 
 /**
  * Codes were taken from  Archiva's DaysOldRepositoryPurge and made some few changes.
@@ -107,8 +107,8 @@ public class DaysOldRepositoryPurgeExecutor
                     break;
                 }
 
-                ArtifactReference newArtifactReference =
-                    repository.toArtifactReference( artifactFile.getAbsolutePath() );
+                ArtifactReference newArtifactReference = repository.toArtifactReference(
+                    artifactFile.getAbsolutePath() );
                 newArtifactReference.setVersion( version );
 
                 File newArtifactFile = repository.toFile( newArtifactReference );

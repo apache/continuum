@@ -19,12 +19,12 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+
+import java.util.Map;
 
 /**
  * Common base class that consolidates the common properties used by extending

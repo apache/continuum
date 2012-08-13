@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
   <bean name="continuumBuildExecutor#maven2"
-         class="org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor" autowire="byName">
+        class="org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="mvn"/>
     <property name="builderHelper" ref="mavenBuilderHelper"/>
     <property name="projectHelper" ref="mavenProjectHelper"/>
   </bean>
   <bean name="continuumBuildExecutor#maven-1"
-         class="org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor" autowire="byName">
+        class="org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="maven"/>
     <property name="metadataHelper" ref="mavenOneMetadataHelper"/>
   </bean>
   <bean name="continuumBuildExecutor#ant"
-         class="org.apache.maven.continuum.execution.ant.AntBuildExecutor" autowire="byName">
+        class="org.apache.maven.continuum.execution.ant.AntBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="ant"/>
   </bean>
   <bean name="continuumBuildExecutor#shell"
-         class="org.apache.maven.continuum.execution.shell.ShellBuildExecutor" autowire="byName">
+        class="org.apache.maven.continuum.execution.shell.ShellBuildExecutor" autowire="byName">
   </bean>
 
   <bean id="notifierManager"
-    class="org.apache.maven.continuum.notification.manager.DefaultNotifierManager">
+        class="org.apache.maven.continuum.notification.manager.DefaultNotifierManager">
     <property name="notifiers">
       <bean class="org.apache.maven.continuum.notification.manager.spring.NotifierFactoryBean"/>
     </property>
   </bean>
-  
-  <bean name="buildsManager#parallel" 
-  		class="org.apache.continuum.buildmanager.ParallelBuildsManager" autowire="byName"/>
-    
-  <bean name="overallBuildQueue" 
-  		class="org.apache.continuum.taskqueue.DefaultOverallBuildQueue" scope="prototype" autowire="byName">
-     <property name="buildTaskQueueExecutor" ref="taskQueueExecutor#build-project"/>
-     <property name="checkoutTaskQueueExecutor" ref="taskQueueExecutor#check-out-project"/>
-     <property name="prepareBuildTaskQueueExecutor" ref="taskQueueExecutor#prepare-build-project"/>
+
+  <bean name="buildsManager#parallel"
+        class="org.apache.continuum.buildmanager.ParallelBuildsManager" autowire="byName"/>
+
+  <bean name="overallBuildQueue"
+        class="org.apache.continuum.taskqueue.DefaultOverallBuildQueue" scope="prototype" autowire="byName">
+    <property name="buildTaskQueueExecutor" ref="taskQueueExecutor#build-project"/>
+    <property name="checkoutTaskQueueExecutor" ref="taskQueueExecutor#check-out-project"/>
+    <property name="prepareBuildTaskQueueExecutor" ref="taskQueueExecutor#prepare-build-project"/>
   </bean>
-  
+
   <!-- jobs -->
   <bean name="continuumBuildJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-    <property name="targetObject" ref="continuumWorker" />
-    <property name="targetMethod" value="work" />
-    <property name="concurrent" value="false" />
+    <property name="targetObject" ref="continuumWorker"/>
+    <property name="targetMethod" value="work"/>
+    <property name="concurrent" value="false"/>
   </bean>
 </beans>

@@ -27,7 +27,7 @@ public class ContinuumBuildAgentDavResourceLocatorTest
     private ContinuumBuildAgentDavLocatorFactory factory;
 
     private ContinuumBuildAgentDavResourceLocator locator;
-    
+
     @Override
     protected void setUp()
         throws Exception

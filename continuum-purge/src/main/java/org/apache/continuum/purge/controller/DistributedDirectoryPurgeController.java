@@ -19,8 +19,6 @@ package org.apache.continuum.purge.controller;
  * under the License.
  */
 
-import java.net.URL;
-
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
@@ -29,6 +27,8 @@ import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URL;
 
 /**
  * DirectoryPurgeController
@@ -45,9 +45,9 @@ public class DistributedDirectoryPurgeController
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
-    
+
     private SlaveBuildAgentTransportService transportClient;
-    
+
     public void doPurge( String path )
     {
         log.warn( "doPurge( String ) is not supported for DistributedDirectoryPurgeController" );
@@ -60,15 +60,16 @@ public class DistributedDirectoryPurgeController
         {
             transportClient.ping();
 
-            StringBuilder logMsg = new StringBuilder().append( "Executing directory purge with the following settings[directoryType=" ).
-                                                    append( dirPurge.getDirectoryType() ).append( ",daysOlder=" ).
-                                                    append( dirPurge.getDaysOlder() ).append( ", retentionCount=" ).
-                                                    append( dirPurge.getRetentionCount() ).append( ", deleteAll=" ).
-                                                    append( dirPurge.isDeleteAll() ).append( "]" );
-            
+            StringBuilder logMsg = new StringBuilder().append(
+                "Executing directory purge with the following settings[directoryType=" ).
+                append( dirPurge.getDirectoryType() ).append( ",daysOlder=" ).
+                append( dirPurge.getDaysOlder() ).append( ", retentionCount=" ).
+                append( dirPurge.getRetentionCount() ).append( ", deleteAll=" ).
+                append( dirPurge.isDeleteAll() ).append( "]" );
+
             log.debug( logMsg.toString() );
-            
-            transportClient.executeDirectoryPurge( dirPurge.getDirectoryType(), dirPurge.getDaysOlder(), 
+
+            transportClient.executeDirectoryPurge( dirPurge.getDirectoryType(), dirPurge.getDaysOlder(),
                                                    dirPurge.getRetentionCount(), dirPurge.isDeleteAll() );
         }
         catch ( Exception e )
@@ -84,7 +85,7 @@ public class DistributedDirectoryPurgeController
 
         try
         {
-            transportClient = new SlaveBuildAgentTransportClient( new URL( dirPurge.getBuildAgentUrl() ), "", 
+            transportClient = new SlaveBuildAgentTransportClient( new URL( dirPurge.getBuildAgentUrl() ), "",
                                                                   configurationService.getSharedSecretPassword() );
         }
         catch ( Exception e )

@@ -26,12 +26,13 @@ import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
 import org.codehaus.plexus.redback.users.UserManager;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * JDO implementation the database management tool API.
+ *
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="redback-jdo"
  */

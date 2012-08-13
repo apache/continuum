@@ -19,11 +19,11 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavSession;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MockContinuumBuildAgentDavResourceFactory
     extends ContinuumBuildAgentDavResourceFactory
@@ -38,7 +38,7 @@ public class MockContinuumBuildAgentDavResourceFactory
     protected DavResource createResource( File resourceFile, String logicalResource, DavSession session,
                                           ContinuumBuildAgentDavResourceLocator locator )
     {
-        return new MockContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource, session, 
+        return new MockContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource, session,
                                                        locator, this, getMimeTypes() );
     }
 
@@ -51,7 +51,7 @@ public class MockContinuumBuildAgentDavResourceFactory
             basedir = new File( "" ).getAbsolutePath();
         }
 
-        File dir = new File( basedir, "target/appserver-base/data/working-directory/" + projectId  );
+        File dir = new File( basedir, "target/appserver-base/data/working-directory/" + projectId );
 
         try
         {

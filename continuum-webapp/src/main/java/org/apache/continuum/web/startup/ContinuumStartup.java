@@ -19,11 +19,8 @@ package org.apache.continuum.web.startup;
  * under the License.
  */
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.Continuum;
 import org.codehaus.plexus.spring.PlexusToSpringUtils;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
@@ -32,18 +29,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 15 mars 2008
  * @version $Id$
+ * @since 15 mars 2008
  */
 public class ContinuumStartup
     implements ServletContextListener
 {
 
     private Logger log = LoggerFactory.getLogger( getClass() );
-    
-    /** 
+
+    /**
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed( ServletContextEvent sce )
@@ -52,35 +52,36 @@ public class ContinuumStartup
 
     }
 
-    /** 
+    /**
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     public void contextInitialized( ServletContextEvent sce )
     {
-        WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext( sce
-            .getServletContext() );
+        WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(
+            sce.getServletContext() );
 
         // to simulate Plexus load on start with Spring
         Continuum continuum = (Continuum) wac.getBean( PlexusToSpringUtils.buildSpringId( Continuum.class ) );
 
-        BuildsManager buildsManager = (BuildsManager) wac.getBean( PlexusToSpringUtils.buildSpringId( BuildsManager.class, "parallel" ) );
+        BuildsManager buildsManager = (BuildsManager) wac.getBean( PlexusToSpringUtils.buildSpringId(
+            BuildsManager.class, "parallel" ) );
 
-        TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "prepare-release" ) );
+        TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils.buildSpringId(
+            TaskQueueExecutor.class, "prepare-release" ) );
 
-        TaskQueueExecutor performRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "perform-release" ) );
+        TaskQueueExecutor performRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils.buildSpringId(
+            TaskQueueExecutor.class, "perform-release" ) );
 
-        TaskQueueExecutor rollbackRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "rollback-release" ) );        
-        
-        TaskQueueExecutor purge = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "purge" ) );
+        TaskQueueExecutor rollbackRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils.buildSpringId(
+            TaskQueueExecutor.class, "rollback-release" ) );
 
-        TaskQueueExecutor prepareBuildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "prepare-build-project" ) );
+        TaskQueueExecutor purge = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils.buildSpringId(
+            TaskQueueExecutor.class, "purge" ) );
 
-        DistributedBuildManager distributedBuildManager = (DistributedBuildManager) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( DistributedBuildManager.class ) );
+        TaskQueueExecutor prepareBuildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils.buildSpringId(
+            TaskQueueExecutor.class, "prepare-build-project" ) );
+
+        DistributedBuildManager distributedBuildManager = (DistributedBuildManager) wac.getBean(
+            PlexusToSpringUtils.buildSpringId( DistributedBuildManager.class ) );
     }
 }

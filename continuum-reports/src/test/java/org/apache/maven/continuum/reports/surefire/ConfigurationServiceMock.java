@@ -1,8 +1,8 @@
 package org.apache.maven.continuum.reports.surefire;
 
-import java.io.File;
-
 import org.apache.maven.continuum.configuration.ConfigurationException;
+
+import java.io.File;
 
 public class ConfigurationServiceMock
     extends org.apache.maven.continuum.configuration.ConfigurationServiceMock
@@ -11,6 +11,6 @@ public class ConfigurationServiceMock
         throws ConfigurationException
     {
         return new File( "src" + File.separatorChar + "test" + File.separatorChar + "resources" + File.separatorChar +
-            "continuum-core" );
+                             "continuum-core" );
     }
 }

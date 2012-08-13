@@ -19,12 +19,12 @@ package org.apache.maven.continuum.installation;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -96,7 +96,8 @@ public interface InstallationService
      * @return the cli output of $path/ec.relativePath.ec.executable ec.versionArgument
      * @throws InstallationException
      */
-    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator, Profile profile )
+    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator,
+                                                        Profile profile )
         throws InstallationException;
 
 }

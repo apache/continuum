@@ -175,13 +175,13 @@ public abstract class AbstractContinuumStoreTestCase
 
         createStore();
 
-        directoryPurgeConfigurationDao =
-            (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class.getName() );
+        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup(
+            DirectoryPurgeConfigurationDao.class.getName() );
 
         localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
 
-        repositoryPurgeConfigurationDao =
-            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class.getName() );
+        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
+            RepositoryPurgeConfigurationDao.class.getName() );
 
         installationDao = (InstallationDao) lookup( InstallationDao.class.getName() );
 
@@ -301,8 +301,8 @@ public abstract class AbstractContinuumStoreTestCase
         defaultProjectGroup = createTestProjectGroup( "Default Group", "The Default Group",
                                                       "org.apache.maven.test.default", localRepository1 );
 
-        testProjectGroup2 =
-            createTestProjectGroup( "test group 2", "test group 2 desc", "test group 2 groupId", localRepository2 );
+        testProjectGroup2 = createTestProjectGroup( "test group 2", "test group 2 desc", "test group 2 groupId",
+                                                    localRepository2 );
 
         testProject1 = createTestProject( "artifactId1", 1, "description1", defaultProjectGroup.getGroupId(), "name1",
                                           "scmUrl1", 1, "url1", "version1", "workingDirectory1" );
@@ -314,21 +314,21 @@ public abstract class AbstractContinuumStoreTestCase
         testSchedule1 = createTestSchedule( "name1", "description1", 1, "cronExpression1", true );
         testSchedule1.addBuildQueue( buildQueue1 );
         testSchedule1.addBuildQueue( buildQueue2 );
-        
+
         testSchedule2 = createTestSchedule( "name2", "description2", 2, "cronExpression2", true );
         testSchedule2.addBuildQueue( buildQueue2 );
         testSchedule2.addBuildQueue( buildQueue3 );
 
         testSchedule3 = createTestSchedule( "name3", "description3", 3, "cronExpression3", true );
 
-        testInstallationJava13 =
-            createTestInstallation( "JDK 1.3", InstallationService.JDK_TYPE, "JAVA_HOME", "/usr/local/java-1.3" );
-        testInstallationJava14 =
-            createTestInstallation( "JDK 1.4", InstallationService.JDK_TYPE, "JAVA_HOME", "/usr/local/java-1.4" );
+        testInstallationJava13 = createTestInstallation( "JDK 1.3", InstallationService.JDK_TYPE, "JAVA_HOME",
+                                                         "/usr/local/java-1.3" );
+        testInstallationJava14 = createTestInstallation( "JDK 1.4", InstallationService.JDK_TYPE, "JAVA_HOME",
+                                                         "/usr/local/java-1.4" );
         testInstallationMaven20a3 = createTestInstallation( "Maven 2.0 alpha 3", InstallationService.MAVEN2_TYPE,
                                                             "M2_HOME", "/usr/local/maven-2.0-alpha-3" );
-        testInstallationEnvVar =
-            createTestInstallation( "Maven Heap Size", InstallationService.ENVVAR_TYPE, "MAVEN_OPTS", "-Xms256m -Xmx256m" );
+        testInstallationEnvVar = createTestInstallation( "Maven Heap Size", InstallationService.ENVVAR_TYPE,
+                                                         "MAVEN_OPTS", "-Xms256m -Xmx256m" );
 
         ProjectNotifier testGroupNotifier1 = createTestNotifier( 1, true, false, true, "type1" );
         ProjectNotifier testGroupNotifier2 = createTestNotifier( 2, false, true, false, "type2" );
@@ -352,7 +352,7 @@ public abstract class AbstractContinuumStoreTestCase
         Calendar cal = Calendar.getInstance();
         cal.setTime( new Date( baseTime ) );
         cal.add( Calendar.DAY_OF_MONTH, 1 );
-        
+
         long newTime = cal.getTimeInMillis();
 
         // successful forced build
@@ -460,14 +460,14 @@ public abstract class AbstractContinuumStoreTestCase
             installationEnvVar.setInstallationId( 4 );
         }
 
-        testProfile1 =
-            createTestProfile( "name1", "description1", 1, true, true, installationJava13, installationMaven20a3 );
-        testProfile2 =
-            createTestProfile( "name2", "description2", 2, false, true, installationJava14, installationMaven20a3 );
-        testProfile3 =
-            createTestProfile( "name3", "description3", 3, true, false, installationJava14, installationMaven20a3 );
-        testProfile4 =
-            createTestProfile( "name4", "description4", 4, false, false, installationJava14, installationMaven20a3 );
+        testProfile1 = createTestProfile( "name1", "description1", 1, true, true, installationJava13,
+                                          installationMaven20a3 );
+        testProfile2 = createTestProfile( "name2", "description2", 2, false, true, installationJava14,
+                                          installationMaven20a3 );
+        testProfile3 = createTestProfile( "name3", "description3", 3, true, false, installationJava14,
+                                          installationMaven20a3 );
+        testProfile4 = createTestProfile( "name4", "description4", 4, false, false, installationJava14,
+                                          installationMaven20a3 );
         testProfile4.addEnvironmentVariable( installationEnvVar );
 
         Profile profile1 = createTestProfile( testProfile1 );
@@ -514,76 +514,77 @@ public abstract class AbstractContinuumStoreTestCase
             profile4.setId( 4 );
         }
 
-        testRepoPurgeConfiguration1 =
-            createTestRepositoryPurgeConfiguration( true, 5, 50, false, schedule2, true, localRepository1 );
+        testRepoPurgeConfiguration1 = createTestRepositoryPurgeConfiguration( true, 5, 50, false, schedule2, true,
+                                                                              localRepository1 );
         if ( addToStore )
         {
-            testRepoPurgeConfiguration1 =
-                repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration1 );
+            testRepoPurgeConfiguration1 = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration(
+                testRepoPurgeConfiguration1 );
         }
         else
         {
             testRepoPurgeConfiguration1.setId( 1 );
         }
 
-        testRepoPurgeConfiguration2 =
-            createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule1, true, localRepository2 );
+        testRepoPurgeConfiguration2 = createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule1, true,
+                                                                              localRepository2 );
         if ( addToStore )
         {
-            testRepoPurgeConfiguration2 =
-                repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration2 );
+            testRepoPurgeConfiguration2 = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration(
+                testRepoPurgeConfiguration2 );
         }
         else
         {
             testRepoPurgeConfiguration2.setId( 2 );
         }
 
-        testRepoPurgeConfiguration3 =
-            createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule2, true, localRepository1 );
+        testRepoPurgeConfiguration3 = createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule2, true,
+                                                                              localRepository1 );
         if ( addToStore )
         {
-            testRepoPurgeConfiguration3 =
-                repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration3 );
+            testRepoPurgeConfiguration3 = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration(
+                testRepoPurgeConfiguration3 );
         }
         else
         {
             testRepoPurgeConfiguration3.setId( 3 );
         }
 
-        testDirectoryPurgeConfig =
-            createTestDirectoryPurgeConfiguration( "location1", "directoryType1", true, 10, 50, schedule2, true );
+        testDirectoryPurgeConfig = createTestDirectoryPurgeConfiguration( "location1", "directoryType1", true, 10, 50,
+                                                                          schedule2, true );
         if ( addToStore )
         {
-            testDirectoryPurgeConfig =
-                directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( testDirectoryPurgeConfig );
+            testDirectoryPurgeConfig = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration(
+                testDirectoryPurgeConfig );
         }
         else
         {
             testDirectoryPurgeConfig.setId( 1 );
         }
 
-        BuildDefinition testGroupBuildDefinition1 =
-            createTestBuildDefinition( "arguments1", "buildFile1", "goals1", profile1, schedule2, false, false );
-        BuildDefinition testGroupBuildDefinition2 =
-            createTestBuildDefinition( "arguments2", "buildFile2", "goals2", profile1, schedule1, false, false );
-        BuildDefinition testGroupBuildDefinition3 =
-            createTestBuildDefinition( "arguments3", "buildFile3", "goals3", profile2, schedule1, false, false );
-        BuildDefinition testGroupBuildDefinition4 =
-            createTestBuildDefinition( null, null, "deploy", null, null, false, false );
+        BuildDefinition testGroupBuildDefinition1 = createTestBuildDefinition( "arguments1", "buildFile1", "goals1",
+                                                                               profile1, schedule2, false, false );
+        BuildDefinition testGroupBuildDefinition2 = createTestBuildDefinition( "arguments2", "buildFile2", "goals2",
+                                                                               profile1, schedule1, false, false );
+        BuildDefinition testGroupBuildDefinition3 = createTestBuildDefinition( "arguments3", "buildFile3", "goals3",
+                                                                               profile2, schedule1, false, false );
+        BuildDefinition testGroupBuildDefinition4 = createTestBuildDefinition( null, null, "deploy", null, null, false,
+                                                                               false );
 
-        BuildDefinition testBuildDefinition1 =
-            createTestBuildDefinition( "arguments11", "buildFile11", "goals11", profile2, schedule1, false, false );
-        BuildDefinition testBuildDefinition2 =
-            createTestBuildDefinition( "arguments12", "buildFile12", "goals12", profile2, schedule2, false, false );
-        BuildDefinition testBuildDefinition3 =
-            createTestBuildDefinition( "arguments13", "buildFile13", "goals13", profile1, schedule2, false, false );
-        BuildDefinition testBuildDefinition4 =
-            createTestBuildDefinition( null, null, "deploy", null, null, false, false );
-        BuildDefinition testBuildDefinition5 =
-            createTestBuildDefinition( "arguments14", "buildFile14", "goals14", profile1, schedule1, false, false );
+        BuildDefinition testBuildDefinition1 = createTestBuildDefinition( "arguments11", "buildFile11", "goals11",
+                                                                          profile2, schedule1, false, false );
+        BuildDefinition testBuildDefinition2 = createTestBuildDefinition( "arguments12", "buildFile12", "goals12",
+                                                                          profile2, schedule2, false, false );
+        BuildDefinition testBuildDefinition3 = createTestBuildDefinition( "arguments13", "buildFile13", "goals13",
+                                                                          profile1, schedule2, false, false );
+        BuildDefinition testBuildDefinition4 = createTestBuildDefinition( null, null, "deploy", null, null, false,
+                                                                          false );
+        BuildDefinition testBuildDefinition5 = createTestBuildDefinition( "arguments14", "buildFile14", "goals14",
+                                                                          profile1, schedule1, false, false );
         testBuildDefinition5.setTemplate( true );
-            
-        BuildDefinitionTemplate testBuildDefinitionTemplate1 = createTestBuildDefinitionTemplate( "template2", "type2", false );
+
+        BuildDefinitionTemplate testBuildDefinitionTemplate1 = createTestBuildDefinitionTemplate( "template2", "type2",
+                                                                                                  false );
         testBuildDefinitionTemplate1.addBuildDefinition( testBuildDefinition5 );
 
         if ( addToStore )
@@ -723,7 +724,7 @@ public abstract class AbstractContinuumStoreTestCase
         systemConfiguration.setWorkingDirectory( "workingDirectory" );
 
         if ( addToStore && !isTestFromDataManagementTool )
-        {   
+        {
             systemConfiguration = systemConfigurationDao.addSystemConfiguration( systemConfiguration );
         }
         else
@@ -741,8 +742,8 @@ public abstract class AbstractContinuumStoreTestCase
             {
                 isExisting = true;
             }
-            
-            if( !isExisting )
+
+            if ( !isExisting )
             {
                 systemConfiguration = systemConfigurationDao.getSystemConfiguration();
                 systemConfiguration.setBaseUrl( "baseUrl" );
@@ -753,11 +754,11 @@ public abstract class AbstractContinuumStoreTestCase
                 systemConfiguration.setGuestAccountEnabled( false );
                 systemConfiguration.setInitialized( true );
                 systemConfiguration.setWorkingDirectory( "workingDirectory" );
-                
+
                 systemConfigurationDao.updateSystemConfiguration( systemConfiguration );
             }
         }
-        
+
         testProjectScmRoot = createTestProjectScmRoot( "scmRootAddress1", 1, 0, "error1", group );
         ProjectScmRoot scmRoot = createTestProjectScmRoot( testProjectScmRoot );
 
@@ -967,9 +968,12 @@ public abstract class AbstractContinuumStoreTestCase
 */
         assertSystemConfiguration( systemConfiguration, systemConfigurationDao.getSystemConfiguration() );
 
-        assertLocalRepositoryEquals( testLocalRepository1, localRepositoryDao.getLocalRepository( testLocalRepository1.getId() ) );
-        assertLocalRepositoryEquals( testLocalRepository2, localRepositoryDao.getLocalRepository( testLocalRepository2.getId() ) );
-        assertLocalRepositoryEquals( testLocalRepository3, localRepositoryDao.getLocalRepository( testLocalRepository3.getId() ) );
+        assertLocalRepositoryEquals( testLocalRepository1, localRepositoryDao.getLocalRepository(
+            testLocalRepository1.getId() ) );
+        assertLocalRepositoryEquals( testLocalRepository2, localRepositoryDao.getLocalRepository(
+            testLocalRepository2.getId() ) );
+        assertLocalRepositoryEquals( testLocalRepository3, localRepositoryDao.getLocalRepository(
+            testLocalRepository3.getId() ) );
 
 /*
         assertRepositoryPurgeConfigurationEquals( testRepoPurgeConfiguration1,
@@ -982,9 +986,11 @@ public abstract class AbstractContinuumStoreTestCase
         assertDirectoryPurgeConfigurationEquals( testDirectoryPurgeConfig, 
                                                  directoryPurgeConfigurationDao.getDirectoryPurgeConfiguration( testDirectoryPurgeConfig.getId() ) );
 */
-        assertProjectScmRootEquals( testProjectScmRoot, projectScmRootDao.getProjectScmRoot( testProjectScmRoot.getId() ) );
+        assertProjectScmRootEquals( testProjectScmRoot, projectScmRootDao.getProjectScmRoot(
+            testProjectScmRoot.getId() ) );
 
-        assertReleaseResultEquals( testContinuumReleaseResult, releaseResultDao.getContinuumReleaseResult( testContinuumReleaseResult.getId() ) );
+        assertReleaseResultEquals( testContinuumReleaseResult, releaseResultDao.getContinuumReleaseResult(
+            testContinuumReleaseResult.getId() ) );
     }
 
     private void assertSystemConfiguration( SystemConfiguration expected, SystemConfiguration actual )
@@ -1007,7 +1013,7 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( 0, profileDao.getAllProfilesByName().size() );
         assertEquals( 0, projectGroupDao.getAllProjectGroups().size() );
         assertEquals( 0, projectDao.getAllProjectsByName().size() );
-        if( !isTestFromDataManagementTool )
+        if ( !isTestFromDataManagementTool )
         {
             assertNull( systemConfigurationDao.getSystemConfiguration() );
         }
@@ -1016,9 +1022,9 @@ public abstract class AbstractContinuumStoreTestCase
     protected static BuildDefinition createTestBuildDefinition( BuildDefinition buildDefinition )
     {
         return createTestBuildDefinition( buildDefinition.getArguments(), buildDefinition.getBuildFile(),
-                                          buildDefinition.getGoals(), buildDefinition.getProfile(), buildDefinition
-            .getSchedule(), buildDefinition.isDefaultForProject(), buildDefinition
-            .isBuildFresh() );
+                                          buildDefinition.getGoals(), buildDefinition.getProfile(),
+                                          buildDefinition.getSchedule(), buildDefinition.isDefaultForProject(),
+                                          buildDefinition.isBuildFresh() );
     }
 
     protected static BuildDefinition createTestBuildDefinition( String arguments, String buildFile, String goals,
@@ -1111,7 +1117,8 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     private static BuildResult createTestBuildResult( int trigger, boolean success, int state, int exitCode,
-                                                      String error, int buildNumber, long startTime, long endTime, String triggeredBy )
+                                                      String error, int buildNumber, long startTime, long endTime,
+                                                      String triggeredBy )
     {
         BuildResult result = new BuildResult();
         result.setBuildNumber( buildNumber );
@@ -1144,8 +1151,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected static Schedule createTestSchedule( Schedule schedule )
     {
-        return createTestSchedule( schedule.getName(), schedule.getDescription(), schedule.getDelay(), schedule
-            .getCronExpression(), schedule.isActive(), schedule.getBuildQueues() );
+        return createTestSchedule( schedule.getName(), schedule.getDescription(), schedule.getDelay(),
+                                   schedule.getCronExpression(), schedule.isActive(), schedule.getBuildQueues() );
     }
 
     protected static Schedule createTestSchedule( String name, String description, int delay, String cronExpression,
@@ -1153,7 +1160,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         return createTestSchedule( name, description, delay, cronExpression, active, null );
     }
-                                                  
+
     protected static Schedule createTestSchedule( String name, String description, int delay, String cronExpression,
                                                   boolean active, List<BuildQueue> buildQueues )
     {
@@ -1170,9 +1177,9 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected static Profile createTestProfile( Profile profile )
     {
-        return createTestProfile( profile.getName(), profile.getDescription(), profile.getScmMode(), profile
-            .isBuildWithoutChanges(), profile.isActive(), profile.getJdk(), profile.getBuilder(),
-                                      profile.getEnvironmentVariables() );
+        return createTestProfile( profile.getName(), profile.getDescription(), profile.getScmMode(),
+                                  profile.isBuildWithoutChanges(), profile.isActive(), profile.getJdk(),
+                                  profile.getBuilder(), profile.getEnvironmentVariables() );
     }
 
     protected static Profile createTestProfile( String name, String description, int scmMode,
@@ -1217,9 +1224,9 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected static Project createTestProject( Project project )
     {
-        return createTestProject( project.getArtifactId(), project.getBuildNumber(), project.getDescription(), project
-            .getGroupId(), project.getName(), project.getScmUrl(), project.getState(), project.getUrl(), project
-            .getVersion(), project.getWorkingDirectory() );
+        return createTestProject( project.getArtifactId(), project.getBuildNumber(), project.getDescription(),
+                                  project.getGroupId(), project.getName(), project.getScmUrl(), project.getState(),
+                                  project.getUrl(), project.getVersion(), project.getWorkingDirectory() );
     }
 
     protected static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
@@ -1250,14 +1257,14 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare expectedProject - groupId", expectedProject.getGroupId(), project.getGroupId() );
         assertEquals( "compare expectedProject - artifactId", expectedProject.getArtifactId(),
                       project.getArtifactId() );
-        assertEquals( "compare expectedProject - buildNumber", expectedProject.getBuildNumber(), project
-            .getBuildNumber() );
+        assertEquals( "compare expectedProject - buildNumber", expectedProject.getBuildNumber(),
+                      project.getBuildNumber() );
         assertEquals( "compare expectedProject - scmUrl", expectedProject.getScmUrl(), project.getScmUrl() );
         assertEquals( "compare expectedProject - state", expectedProject.getState(), project.getState() );
         assertEquals( "compare expectedProject - url", expectedProject.getUrl(), project.getUrl() );
         assertEquals( "compare expectedProject - version", expectedProject.getVersion(), project.getVersion() );
-        assertEquals( "compare expectedProject - workingDirectory", expectedProject.getWorkingDirectory(), project
-            .getWorkingDirectory() );
+        assertEquals( "compare expectedProject - workingDirectory", expectedProject.getWorkingDirectory(),
+                      project.getWorkingDirectory() );
     }
 
     protected static void assertProjectGroupEquals( ProjectGroup expectedGroup, ProjectGroup actualGroup )
@@ -1281,8 +1288,8 @@ public abstract class AbstractContinuumStoreTestCase
             assertEquals( "compare schedule - desc", expectedSchedule.getDescription(),
                           actualSchedule.getDescription() );
             assertEquals( "compare schedule - delay", expectedSchedule.getDelay(), actualSchedule.getDelay() );
-            assertEquals( "compare schedule - cron", expectedSchedule.getCronExpression(), actualSchedule
-                .getCronExpression() );
+            assertEquals( "compare schedule - cron", expectedSchedule.getCronExpression(),
+                          actualSchedule.getCronExpression() );
             assertEquals( "compare schedule - active", expectedSchedule.isActive(), actualSchedule.isActive() );
         }
     }
@@ -1296,8 +1303,8 @@ public abstract class AbstractContinuumStoreTestCase
             assertEquals( "compare profile - name", expectedProfile.getName(), actualProfile.getName() );
             assertEquals( "compare profile - desc", expectedProfile.getDescription(), actualProfile.getDescription() );
             assertEquals( "compare profile - scmMode", expectedProfile.getScmMode(), actualProfile.getScmMode() );
-            assertEquals( "compare profile - build w/o changes", expectedProfile.isBuildWithoutChanges(), actualProfile
-                .isBuildWithoutChanges() );
+            assertEquals( "compare profile - build w/o changes", expectedProfile.isBuildWithoutChanges(),
+                          actualProfile.isBuildWithoutChanges() );
             assertEquals( "compare profile - active", expectedProfile.isActive(), actualProfile.isActive() );
         }
     }
@@ -1329,8 +1336,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare SCM result - changes size", actual.getChanges().size(), expected.getChanges().size() );
         for ( int i = 0; i < actual.getChanges().size(); i++ )
         {
-            assertChangeSetEquals( (ChangeSet) expected.getChanges().get( i ),
-                                   (ChangeSet) actual.getChanges().get( i ) );
+            assertChangeSetEquals( (ChangeSet) expected.getChanges().get( i ), (ChangeSet) actual.getChanges().get(
+                i ) );
         }
     }
 
@@ -1343,8 +1350,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare change set result - files size", expected.getFiles().size(), actual.getFiles().size() );
         for ( int i = 0; i < actual.getFiles().size(); i++ )
         {
-            assertChangeFileEquals( (ChangeFile) expected.getFiles().get( i ),
-                                    (ChangeFile) actual.getFiles().get( i ) );
+            assertChangeFileEquals( (ChangeFile) expected.getFiles().get( i ), (ChangeFile) actual.getFiles().get(
+                i ) );
         }
     }
 
@@ -1392,8 +1399,8 @@ public abstract class AbstractContinuumStoreTestCase
                       actualBuildDefinition.getArguments() );
         assertEquals( "compare build definition - build file", expectedBuildDefinition.getBuildFile(),
                       actualBuildDefinition.getBuildFile() );
-        assertEquals( "compare build definition - goals", expectedBuildDefinition.getGoals(), actualBuildDefinition
-            .getGoals() );
+        assertEquals( "compare build definition - goals", expectedBuildDefinition.getGoals(),
+                      actualBuildDefinition.getGoals() );
         assertEquals( "compare build definition - build fresh", expectedBuildDefinition.isBuildFresh(),
                       actualBuildDefinition.isBuildFresh() );
         assertEquals( "compare build definition - defaultForProject", expectedBuildDefinition.isDefaultForProject(),
@@ -1405,8 +1412,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         for ( int i = 0; i < actualDevelopers.size(); i++ )
         {
-            assertDeveloperEquals( expectedDevelopers.get( i ), actualDevelopers
-                .get( i ) );
+            assertDeveloperEquals( expectedDevelopers.get( i ), actualDevelopers.get( i ) );
         }
     }
 
@@ -1415,8 +1421,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare developer - name", expectedDeveloper.getName(), actualDeveloper.getName() );
         assertEquals( "compare developer - email", expectedDeveloper.getEmail(), actualDeveloper.getEmail() );
         assertEquals( "compare developer - scmId", expectedDeveloper.getScmId(), actualDeveloper.getScmId() );
-        assertEquals( "compare developer - continuumId", expectedDeveloper.getContinuumId(), actualDeveloper
-            .getContinuumId() );
+        assertEquals( "compare developer - continuumId", expectedDeveloper.getContinuumId(),
+                      actualDeveloper.getContinuumId() );
     }
 
     protected static void assertDependenciesEqual( List<ProjectDependency> expectedDependencies,
@@ -1432,8 +1438,8 @@ public abstract class AbstractContinuumStoreTestCase
                                                   ProjectDependency actualDependency )
     {
         assertEquals( "compare dependency - groupId", expectedDependency.getGroupId(), actualDependency.getGroupId() );
-        assertEquals( "compare dependency - artifactId", expectedDependency.getArtifactId(), actualDependency
-            .getArtifactId() );
+        assertEquals( "compare dependency - artifactId", expectedDependency.getArtifactId(),
+                      actualDependency.getArtifactId() );
         assertEquals( "compare dependency - version", expectedDependency.getVersion(), actualDependency.getVersion() );
     }
 
@@ -1444,8 +1450,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected static ProjectDeveloper createTestDeveloper( ProjectDeveloper developer )
     {
-        return createTestDeveloper( developer.getContinuumId(), developer.getEmail(), developer.getName(), developer
-            .getScmId() );
+        return createTestDeveloper( developer.getContinuumId(), developer.getEmail(), developer.getName(),
+                                    developer.getScmId() );
     }
 
     protected static ProjectDependency createTestDependency( String groupId, String artifactId, String version )
@@ -1587,38 +1593,38 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare directory purge configuration - enabled", expectedConfig.isEnabled(),
                       actualConfig.isEnabled() );
     }
-    
+
     protected static ProjectScmRoot createTestProjectScmRoot( String scmRootAddress, int state, int oldState,
                                                               String error, ProjectGroup group )
     {
         ProjectScmRoot projectScmRoot = new ProjectScmRoot();
-        
+
         projectScmRoot.setScmRootAddress( scmRootAddress );
         projectScmRoot.setState( state );
         projectScmRoot.setOldState( oldState );
         projectScmRoot.setError( error );
         projectScmRoot.setProjectGroup( group );
-        
+
         return projectScmRoot;
     }
 
     protected static ProjectScmRoot createTestProjectScmRoot( ProjectScmRoot scmRoot )
     {
-        return createTestProjectScmRoot( scmRoot.getScmRootAddress(), scmRoot.getState(), scmRoot.getOldState(), 
+        return createTestProjectScmRoot( scmRoot.getScmRootAddress(), scmRoot.getState(), scmRoot.getOldState(),
                                          scmRoot.getError(), scmRoot.getProjectGroup() );
     }
 
     protected static void assertProjectScmRootEquals( ProjectScmRoot expectedConfig, ProjectScmRoot actualConfig )
     {
         assertEquals( "compare project scm root - id", expectedConfig.getId(), actualConfig.getId() );
-        assertEquals( "compare project scm root - scmUrl", expectedConfig.getScmRootAddress(), 
-                                                           actualConfig.getScmRootAddress() );
+        assertEquals( "compare project scm root - scmUrl", expectedConfig.getScmRootAddress(),
+                      actualConfig.getScmRootAddress() );
         assertEquals( "compare project scm root - state", expectedConfig.getState(), actualConfig.getState() );
         assertEquals( "compare project scm root - oldState", expectedConfig.getOldState(), actualConfig.getOldState() );
         assertEquals( "compare project scm root - error", expectedConfig.getError(), actualConfig.getError() );
     }
 
-    protected static ContinuumReleaseResult createTestContinuumReleaseResult( ProjectGroup group, Project project, 
+    protected static ContinuumReleaseResult createTestContinuumReleaseResult( ProjectGroup group, Project project,
                                                                               String releaseGoal, int resultCode,
                                                                               long startTime, long endTime )
     {
@@ -1629,26 +1635,26 @@ public abstract class AbstractContinuumStoreTestCase
         releaseResult.setResultCode( resultCode );
         releaseResult.setStartTime( startTime );
         releaseResult.setEndTime( endTime );
-        
+
         return releaseResult;
     }
 
     protected static ContinuumReleaseResult createTestContinuumReleaseResult( ContinuumReleaseResult releaseResult )
     {
-        return createTestContinuumReleaseResult( releaseResult.getProjectGroup(), releaseResult.getProject(), 
+        return createTestContinuumReleaseResult( releaseResult.getProjectGroup(), releaseResult.getProject(),
                                                  releaseResult.getReleaseGoal(), releaseResult.getResultCode(),
                                                  releaseResult.getStartTime(), releaseResult.getEndTime() );
     }
 
-    protected static void assertReleaseResultEquals( ContinuumReleaseResult expectedConfig, 
+    protected static void assertReleaseResultEquals( ContinuumReleaseResult expectedConfig,
                                                      ContinuumReleaseResult actualConfig )
     {
         assertEquals( "compare continuum release result - id", expectedConfig.getId(), actualConfig.getId() );
         assertEquals( "compare continuum release result - releaseGoal", expectedConfig.getReleaseGoal(),
                       actualConfig.getReleaseGoal() );
-        assertEquals( "compare continuum release result - resultCode", expectedConfig.getResultCode(), 
+        assertEquals( "compare continuum release result - resultCode", expectedConfig.getResultCode(),
                       actualConfig.getResultCode() );
-        assertEquals( "compare continuum release result - startTime", expectedConfig.getStartTime(), 
+        assertEquals( "compare continuum release result - startTime", expectedConfig.getStartTime(),
                       actualConfig.getStartTime() );
         assertEquals( "compare continuum release result - endTime", expectedConfig.getEndTime(),
                       actualConfig.getEndTime() );
@@ -1673,7 +1679,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare build queue - name", expectedConfig.getName(), actualConfig.getName() );
     }
 
-    protected static BuildDefinitionTemplate createTestBuildDefinitionTemplate( String name, String type, boolean continuumDefault )
+    protected static BuildDefinitionTemplate createTestBuildDefinitionTemplate( String name, String type,
+                                                                                boolean continuumDefault )
     {
         BuildDefinitionTemplate template = new BuildDefinitionTemplate();
         template.setName( name );
@@ -1691,8 +1698,8 @@ public abstract class AbstractContinuumStoreTestCase
     protected void createStore()
         throws Exception
     {
-        DefaultConfigurableJdoFactory jdoFactory =
-            (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE, "continuum" );
+        DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE,
+                                                                                           "continuum" );
 
         jdoFactory.setUrl( "jdbc:hsqldb:mem:" + getName() );
 

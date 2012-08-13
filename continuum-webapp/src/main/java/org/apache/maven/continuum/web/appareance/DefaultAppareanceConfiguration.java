@@ -18,11 +18,6 @@
  */
 package org.apache.maven.continuum.web.appareance;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Calendar;
-
 import org.apache.continuum.web.appearance.ContinuumAppearance;
 import org.apache.continuum.web.appearance.io.xpp3.ContinuumAppearanceModelsXpp3Reader;
 import org.apache.continuum.web.appearance.io.xpp3.ContinuumAppearanceModelsXpp3Writer;
@@ -35,6 +30,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -82,7 +82,7 @@ public class DefaultAppareanceConfiguration
             catch ( XmlPullParserException e )
             {
                 log.warn( "skip XmlPullParserException reading appearance file " + APPEARANCE_FILE_NAME + ", msg " +
-                    e.getMessage() );
+                              e.getMessage() );
             }
         }
         if ( StringUtils.isEmpty( this.footer ) )
@@ -138,7 +138,7 @@ public class DefaultAppareanceConfiguration
 
     private File getAppearanceConfigurationFile()
     {
-        return new File(
-            System.getProperty( "appserver.base" ) + File.separator + "conf" + File.separator + APPEARANCE_FILE_NAME );
+        return new File( System.getProperty( "appserver.base" ) + File.separator + "conf" + File.separator +
+                             APPEARANCE_FILE_NAME );
     }
 }

@@ -19,8 +19,7 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import java.util.List;
-
+import com.opensymphony.xwork2.Preparable;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -33,7 +32,7 @@ import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 
-import com.opensymphony.xwork2.Preparable;
+import java.util.List;
 
 /**
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildQueueAction"
@@ -49,9 +48,9 @@ public class BuildQueueAction
     private List<BuildQueue> buildQueueList;
 
     private BuildQueue buildQueue;
-    
+
     private String message;
-    
+
     private boolean confirmed;
 
     public void prepare()
@@ -98,10 +97,11 @@ public class BuildQueueAction
                     BuildQueue buildQueue = new BuildQueue();
                     buildQueue.setName( name );
                     BuildQueue addedBuildQueue = getContinuum().addBuildQueue( buildQueue );
-    
+
                     getContinuum().getBuildsManager().addOverallBuildQueue( addedBuildQueue );
 
-                    AuditLog event = new AuditLog( "Build Queue id=" + addedBuildQueue.getId(), AuditLogConstants.ADD_BUILD_QUEUE );
+                    AuditLog event = new AuditLog( "Build Queue id=" + addedBuildQueue.getId(),
+                                                   AuditLogConstants.ADD_BUILD_QUEUE );
                     event.setCategory( AuditLogConstants.BUILD_QUEUE );
                     event.setCurrentUser( getPrincipal() );
                     event.log();
@@ -144,7 +144,7 @@ public class BuildQueueAction
 
     public String delete()
         throws Exception
-    {        
+    {
         if ( confirmed )
         {
             BuildQueue buildQueueToBeDeleted = getContinuum().getBuildQueue( this.buildQueue.getId() );
@@ -153,7 +153,8 @@ public class BuildQueueAction
 
             this.buildQueueList = getContinuum().getAllBuildQueues();
 
-            AuditLog event = new AuditLog( "Build Queue id=" + buildQueue.getId(), AuditLogConstants.REMOVE_BUILD_QUEUE );
+            AuditLog event = new AuditLog( "Build Queue id=" + buildQueue.getId(),
+                                           AuditLogConstants.REMOVE_BUILD_QUEUE );
             event.setCategory( AuditLogConstants.BUILD_QUEUE );
             event.setCurrentUser( getPrincipal() );
             event.log();
@@ -162,7 +163,7 @@ public class BuildQueueAction
         {
             return CONFIRM;
         }
-        
+
         return SUCCESS;
     }
 
@@ -172,7 +173,7 @@ public class BuildQueueAction
         SecureActionBundle bundle = new SecureActionBundle();
         bundle.setRequiresAuthentication( true );
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PARALLEL_BUILDS, Resource.GLOBAL );
-    
+
         return bundle;
     }
 
@@ -225,14 +226,14 @@ public class BuildQueueAction
     {
         this.message = message;
     }
-    
+
     private boolean isDuplicate( String queueName )
         throws ContinuumException
     {
         boolean isExisting = false;
-        
+
         List<BuildQueue> buildQueues = getContinuum().getAllBuildQueues();
-        
+
         for ( BuildQueue bq : buildQueues )
         {
             if ( queueName.equals( bq.getName() ) )
@@ -241,7 +242,7 @@ public class BuildQueueAction
                 break;
             }
         }
-        
+
         return isExisting;
     }
 

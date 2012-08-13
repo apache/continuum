@@ -1,8 +1,5 @@
 package org.apache.continuum.builder.distributed.work;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -20,6 +17,9 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultContinuumWorkerTest
     extends PlexusInSpringTestCase
@@ -115,7 +115,7 @@ public class DefaultContinuumWorkerTest
                 one( projectDao ).getProject( 2 );
                 will( returnValue( getProject( 2, ContinuumProjectState.OK ) ) );
             }
-        });
+        } );
     }
 
     private void recordOfStuckScm()
@@ -142,7 +142,7 @@ public class DefaultContinuumWorkerTest
                 one( projectScmRootDao ).getProjectScmRoot( 1 );
                 will( returnValue( getScmRoot( ContinuumProjectState.ERROR ) ) );
             }
-        });
+        } );
     }
 
     private List<ProjectRunSummary> getCurrentRuns()

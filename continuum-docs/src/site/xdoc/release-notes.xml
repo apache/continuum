@@ -1,120 +1,162 @@
 <document>
   <properties>
     <title>Release Notes</title>
-  </properties>  
-<body>
+  </properties>
+  <body>
 
-  <h2>Apache Continuum 1.4.0 Release Notes</h2>
-  
-  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.0.</p>
+    <h2>Apache Continuum 1.4.0 Release Notes</h2>
 
-  <p>This release includes the following new features:</p>
+    <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.0.</p>
 
-  <p><b>Improved user recognition</b> - information on who executed releases and forced builds, and better handling of sending notifications to developers who made a change</p>
+    <p>This release includes the following new features:</p>
 
-  <p>To learn more about how the Continuum dev team versions releases, see our
-      <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.</p>  
+    <p>
+      <b>Improved user recognition</b>
+      - information on who executed releases and forced builds, and better handling of sending notifications to
+      developers who made a change
+    </p>
 
-<h2>        Bug
-</h2>
-<ul>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1578'>CONTINUUM-1578</a>] -         No output after a successful perform release
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2114'>CONTINUUM-2114</a>] -         cannot login with perforce scm until new version of scm is included
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2170'>CONTINUUM-2170</a>] -         No such object error when forcing a build from the group-level Build Definitions tab
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2267'>CONTINUUM-2267</a>] -         Error with backslash in Windows path for inatallation tests
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2270'>CONTINUUM-2270</a>] -         Selenium tests fail when run with JDK 1.6
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2285'>CONTINUUM-2285</a>] -         Queues page turns to blank if build queues are not empty
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2349'>CONTINUUM-2349</a>] -         Project should only build in agents that are in the Build agent group assigned to it
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2371'>CONTINUUM-2371</a>] -         Unable to view queues after loss of build agent
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2381'>CONTINUUM-2381</a>] -         Project is not building even when there is an enabled build agent configured
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2386'>CONTINUUM-2386</a>] -         Build environment selection is ignored when releasing with distributed build enabled
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2391'>CONTINUUM-2391</a>] -         Master should not pass full path to local repository to the agent
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2395'>CONTINUUM-2395</a>] -         Build Environment accepts duplicate name during edit
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2397'>CONTINUUM-2397</a>] -         Unable to edit the added local repository
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2440'>CONTINUUM-2440</a>] -         Unable to download html file from working copy
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2450'>CONTINUUM-2450</a>] -         Intermittent error when releasing in a distributed build
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2451'>CONTINUUM-2451</a>] -         Unable to release a project using the &quot;provide parameters&quot; option with distributed builds
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2466'>CONTINUUM-2466</a>] -         authorization failed when building ant / shell projects
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2474'>CONTINUUM-2474</a>] -         Fix selenium failing test in windows
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2476'>CONTINUUM-2476</a>] -         Projects are not built in the correct build agent when the project is already in the build queue and then triggered to be built again
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2479'>CONTINUUM-2479</a>] -         Link to cron-help is wrong
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2487'>CONTINUUM-2487</a>] -         Selenium tests fail if run at certain times crossing the 'on the hour' default schedule trigger
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2490'>CONTINUUM-2490</a>] -         Getting permission denied when running selenium tests in IE
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2493'>CONTINUUM-2493</a>] -         &quot;Users Wiki&quot; link on home page points at old wiki
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2494'>CONTINUUM-2494</a>] -         Unable to build a project even though the build agent is there.
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2504'>CONTINUUM-2504</a>] -         Queues page shows distributedBuild.table.agentUrl for the Agent URL field instead of the actual value
-</li>
-</ul>
-    
-<h2>        Improvement
-</h2>
-<ul>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-493'>CONTINUUM-493</a>] -         Allow to add all developpers address in a notifier without duplicate developpers addresses
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-565'>CONTINUUM-565</a>] -         Forced builds should say who (which continuum user) forced the build
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2160'>CONTINUUM-2160</a>] -         Upgrade to last scm version (1.2) and last release-manager version
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2373'>CONTINUUM-2373</a>] -         Distributed Master needs more detailed logging
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2458'>CONTINUUM-2458</a>] -         Continuum Release should do a checkout if there is no working copy
-</li>
-</ul>
-    
-<h2>        New Feature
-</h2>
-<ul>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2265'>CONTINUUM-2265</a>] -         Need information on who executed a release
-</li>
-</ul>
-    
-<h2>        Task
-</h2>
-<ul>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2252'>CONTINUUM-2252</a>] -         Add documentation for Selenium tests
-</li>
-</ul>
-    
-<h2>        Test
-</h2>
-<ul>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2073'>CONTINUUM-2073</a>] -         Revive the automated Selenium integration tests
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2268'>CONTINUUM-2268</a>] -         Continuum Webapp Tests Capture Screenshot for AbstractSeleniumTest.java
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2271'>CONTINUUM-2271</a>] -         Continuum Build Agent Tests and Improvement on Build Queue Test
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2378'>CONTINUUM-2378</a>] -         Selenium Test for deleting projects and project groups
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2467'>CONTINUUM-2467</a>] -         Selenium test: check for project group SCM update when building projects
-</li>
-<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2482'>CONTINUUM-2482</a>] -         Replace the use of Thread.sleep to Selenium waitForCondition
-</li>
-</ul>
+    <p>To learn more about how the Continuum dev team versions releases, see our
+      <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.
+    </p>
 
-</body>
+    <h2>Bug
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1578'>CONTINUUM-1578</a>] - No output after a successful
+        perform release
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2114'>CONTINUUM-2114</a>] - cannot login with perforce scm
+        until new version of scm is included
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2170'>CONTINUUM-2170</a>] - No such object error when
+        forcing a build from the group-level Build Definitions tab
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2267'>CONTINUUM-2267</a>] - Error with backslash in
+        Windows path for inatallation tests
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2270'>CONTINUUM-2270</a>] - Selenium tests fail when run
+        with JDK 1.6
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2285'>CONTINUUM-2285</a>] - Queues page turns to blank if
+        build queues are not empty
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2349'>CONTINUUM-2349</a>] - Project should only build in
+        agents that are in the Build agent group assigned to it
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2371'>CONTINUUM-2371</a>] - Unable to view queues after
+        loss of build agent
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2381'>CONTINUUM-2381</a>] - Project is not building even
+        when there is an enabled build agent configured
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2386'>CONTINUUM-2386</a>] - Build environment selection is
+        ignored when releasing with distributed build enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2391'>CONTINUUM-2391</a>] - Master should not pass full
+        path to local repository to the agent
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2395'>CONTINUUM-2395</a>] - Build Environment accepts
+        duplicate name during edit
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2397'>CONTINUUM-2397</a>] - Unable to edit the added local
+        repository
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2440'>CONTINUUM-2440</a>] - Unable to download html file
+        from working copy
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2450'>CONTINUUM-2450</a>] - Intermittent error when
+        releasing in a distributed build
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2451'>CONTINUUM-2451</a>] - Unable to release a project
+        using the &quot;provide parameters&quot; option with distributed builds
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2466'>CONTINUUM-2466</a>] - authorization failed when
+        building ant / shell projects
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2474'>CONTINUUM-2474</a>] - Fix selenium failing test in
+        windows
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2476'>CONTINUUM-2476</a>] - Projects are not built in the
+        correct build agent when the project is already in the build queue and then triggered to be built again
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2479'>CONTINUUM-2479</a>] - Link to cron-help is wrong
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2487'>CONTINUUM-2487</a>] - Selenium tests fail if run at
+        certain times crossing the 'on the hour' default schedule trigger
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2490'>CONTINUUM-2490</a>] - Getting permission denied when
+        running selenium tests in IE
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2493'>CONTINUUM-2493</a>] - &quot;Users Wiki&quot; link on
+        home page points at old wiki
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2494'>CONTINUUM-2494</a>] - Unable to build a project even
+        though the build agent is there.
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2504'>CONTINUUM-2504</a>] - Queues page shows
+        distributedBuild.table.agentUrl for the Agent URL field instead of the actual value
+      </li>
+    </ul>
+
+    <h2>Improvement
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-493'>CONTINUUM-493</a>] - Allow to add all developpers
+        address in a notifier without duplicate developpers addresses
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-565'>CONTINUUM-565</a>] - Forced builds should say who
+        (which continuum user) forced the build
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2160'>CONTINUUM-2160</a>] - Upgrade to last scm version
+        (1.2) and last release-manager version
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2373'>CONTINUUM-2373</a>] - Distributed Master needs more
+        detailed logging
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2458'>CONTINUUM-2458</a>] - Continuum Release should do a
+        checkout if there is no working copy
+      </li>
+    </ul>
+
+    <h2>New Feature
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2265'>CONTINUUM-2265</a>] - Need information on who
+        executed a release
+      </li>
+    </ul>
+
+    <h2>Task
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2252'>CONTINUUM-2252</a>] - Add documentation for Selenium
+        tests
+      </li>
+    </ul>
+
+    <h2>Test
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2073'>CONTINUUM-2073</a>] - Revive the automated Selenium
+        integration tests
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2268'>CONTINUUM-2268</a>] - Continuum Webapp Tests Capture
+        Screenshot for AbstractSeleniumTest.java
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2271'>CONTINUUM-2271</a>] - Continuum Build Agent Tests
+        and Improvement on Build Queue Test
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2378'>CONTINUUM-2378</a>] - Selenium Test for deleting
+        projects and project groups
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2467'>CONTINUUM-2467</a>] - Selenium test: check for
+        project group SCM update when building projects
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2482'>CONTINUUM-2482</a>] - Replace the use of
+        Thread.sleep to Selenium waitForCondition
+      </li>
+    </ul>
+
+  </body>
 </document>

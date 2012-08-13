@@ -38,8 +38,8 @@ public class DefaultContinuumInitializerTest
         super.setUp();
         DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
         daoUtils.eraseDatabase();
-        ContinuumInitializer continuumInitializer =
-            (ContinuumInitializer) lookup( ContinuumInitializer.ROLE, "default" );
+        ContinuumInitializer continuumInitializer = (ContinuumInitializer) lookup( ContinuumInitializer.ROLE,
+                                                                                   "default" );
         continuumInitializer.initialize();
     }
 

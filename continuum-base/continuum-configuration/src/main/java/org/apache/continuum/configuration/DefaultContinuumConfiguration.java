@@ -19,14 +19,6 @@ package org.apache.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.configuration.model.ContinuumConfigurationModel;
 import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Reader;
@@ -35,6 +27,14 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -127,18 +127,18 @@ public class DefaultContinuumConfiguration
             this.generalConfiguration.setNumberOfBuildsInParallel( configuration.getNumberOfBuildsInParallel() );
             this.generalConfiguration.setBaseUrl( configuration.getBaseUrl() );
             this.generalConfiguration.setSharedSecretPassword( configuration.getSharedSecretPassword() );
-            
+
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
             {
                 // TODO take care if file exists ?
-                this.generalConfiguration.setBuildOutputDirectory(
-                    new File( configuration.getBuildOutputDirectory() ) );
+                this.generalConfiguration.setBuildOutputDirectory( new File(
+                    configuration.getBuildOutputDirectory() ) );
             }
             if ( StringUtils.isNotEmpty( configuration.getDeploymentRepositoryDirectory() ) )
             {
                 // TODO take care if file exists ?
-                this.generalConfiguration.setDeploymentRepositoryDirectory(
-                    new File( configuration.getDeploymentRepositoryDirectory() ) );
+                this.generalConfiguration.setDeploymentRepositoryDirectory( new File(
+                    configuration.getDeploymentRepositoryDirectory() ) );
             }
             if ( StringUtils.isNotEmpty( configuration.getWorkingDirectory() ) )
             {
@@ -147,23 +147,23 @@ public class DefaultContinuumConfiguration
             }
             if ( configuration.getProxyConfiguration() != null )
             {
-                ProxyConfiguration proxyConfiguration =
-                    new ProxyConfiguration( configuration.getProxyConfiguration().getProxyHost(),
-                                            configuration.getProxyConfiguration().getProxyPassword(),
-                                            configuration.getProxyConfiguration().getProxyPort(),
-                                            configuration.getProxyConfiguration().getProxyUser() );
+                ProxyConfiguration proxyConfiguration = new ProxyConfiguration(
+                    configuration.getProxyConfiguration().getProxyHost(),
+                    configuration.getProxyConfiguration().getProxyPassword(),
+                    configuration.getProxyConfiguration().getProxyPort(),
+                    configuration.getProxyConfiguration().getProxyUser() );
                 this.generalConfiguration.setProxyConfiguration( proxyConfiguration );
             }
             if ( StringUtils.isNotEmpty( configuration.getReleaseOutputDirectory() ) )
             {
                 // TODO take care if file exists?
-                this.generalConfiguration.setReleaseOutputDirectory(
-                    new File( configuration.getReleaseOutputDirectory() ) );
+                this.generalConfiguration.setReleaseOutputDirectory( new File(
+                    configuration.getReleaseOutputDirectory() ) );
             }
-            
+
             // set the configuration for diistributedBuildEnabled
             this.generalConfiguration.setDistributedBuildEnabled( configuration.isDistributedBuildEnabled() );
-            
+
             if ( configuration.getBuildAgents() != null )
             {
                 List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
@@ -172,8 +172,9 @@ public class DefaultContinuumConfiguration
                     configuration.getBuildAgents();
                 for ( org.apache.continuum.configuration.model.BuildAgentConfiguration agent : agents )
                 {
-                    BuildAgentConfiguration buildAgent =
-                        new BuildAgentConfiguration( agent.getUrl(), agent.getDescription(), agent.isEnabled() );
+                    BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( agent.getUrl(),
+                                                                                      agent.getDescription(),
+                                                                                      agent.isEnabled() );
                     buildAgents.add( buildAgent );
                 }
 
@@ -192,14 +193,14 @@ public class DefaultContinuumConfiguration
                         group.getBuildAgents();
                     for ( org.apache.continuum.configuration.model.BuildAgentConfiguration modelAgent : modelAgents )
                     {
-                        BuildAgentConfiguration buildAgent =
-                            new BuildAgentConfiguration( modelAgent.getUrl(), modelAgent.getDescription(),
-                                                         modelAgent.isEnabled() );
+                        BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( modelAgent.getUrl(),
+                                                                                          modelAgent.getDescription(),
+                                                                                          modelAgent.isEnabled() );
                         agents.add( buildAgent );
                     }
 
-                    BuildAgentGroupConfiguration groupAgent =
-                        new BuildAgentGroupConfiguration( group.getName(), agents );
+                    BuildAgentGroupConfiguration groupAgent = new BuildAgentGroupConfiguration( group.getName(),
+                                                                                                agents );
                     buildAgentGroups.add( groupAgent );
                 }
 
@@ -268,10 +269,10 @@ public class DefaultContinuumConfiguration
                 configurationModel.setReleaseOutputDirectory(
                     this.generalConfiguration.getReleaseOutputDirectory().getPath() );
             }
-            
+
             // set configuration for distributedBuildEnabled.
             configurationModel.setDistributedBuildEnabled( this.generalConfiguration.isDistributedBuildEnabled() );
-            
+
             if ( this.generalConfiguration.getBuildAgents() != null )
             {
                 List<org.apache.continuum.configuration.model.BuildAgentConfiguration> buildAgents =

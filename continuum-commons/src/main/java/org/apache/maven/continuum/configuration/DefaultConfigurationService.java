@@ -19,13 +19,6 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
@@ -43,6 +36,12 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -301,7 +300,7 @@ public class DefaultConfigurationService
     {
         // trim trailing space
         buildAgent.setUrl( buildAgent.getUrl().trim() );
-        
+
         List<BuildAgentConfiguration> buildAgents = generalConfiguration.getBuildAgents();
         if ( buildAgents == null )
         {
@@ -360,7 +359,7 @@ public class DefaultConfigurationService
     }
 
     public boolean isDistributedBuildEnabled()
-    {   
+    {
         return generalConfiguration.isDistributedBuildEnabled();
     }
 
@@ -729,7 +728,7 @@ public class DefaultConfigurationService
                 systemConf = new SystemConfiguration();
                 systemConf = getSystemConfigurationDao().addSystemConfiguration( systemConf );
             }
-            
+
             loaded = true;
         }
         catch ( ContinuumStoreException e )
@@ -749,7 +748,7 @@ public class DefaultConfigurationService
         throws ConfigurationStoringException, ContinuumConfigurationException
     {
         configuration.setGeneralConfiguration( generalConfiguration );
-        
+
         configuration.save();
         try
         {

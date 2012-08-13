@@ -26,18 +26,19 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "installation" } )
+@Test( groups = {"installation"} )
 public class InstallationTest
     extends AbstractInstallationTest
 {
     public void testAddJdkToolWithoutBuildEnvironment()
     {
         String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-		String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
-		goToAddInstallationTool();
-		addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
+        String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) : getEscapeProperty(
+            "INSTALL_TOOL_JDK_PATH" );
+        goToAddInstallationTool();
+        addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
     }
-    
+
     public void testAddJdkToolWithoutBuildEnvironmentWithInvalidValues()
     {
         String INSTALL_TOOL_JDK_NAME = "!@#$<>?etc";
@@ -51,11 +52,12 @@ public class InstallationTest
     public void testAddMavenToolWithBuildEnvironment()
     {
         String INSTALL_TOOL_MAVEN_NAME = getProperty( "INSTALL_TOOL_MAVEN_NAME" );
-		String INSTALL_TOOL_MAVEN_PATH = isWindows() ? getProperty( "INSTALL_TOOL_MAVEN_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_MAVEN_PATH" );
-		goToAddInstallationTool();
-		addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven", INSTALL_TOOL_MAVEN_PATH, true, true, true );
-		// TODO: Validate build environment
-		
+        String INSTALL_TOOL_MAVEN_PATH = isWindows() ? getProperty( "INSTALL_TOOL_MAVEN_PATH" ) : getEscapeProperty(
+            "INSTALL_TOOL_MAVEN_PATH" );
+        goToAddInstallationTool();
+        addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven", INSTALL_TOOL_MAVEN_PATH, true, true, true );
+        // TODO: Validate build environment
+
     }
 
     public void testAddInstallationVariableWithBuildEnvironment()
@@ -76,7 +78,7 @@ public class InstallationTest
         goToAddInstallationVariable();
         addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, false, true );
     }
-    
+
     public void testAddInstallationVariableWithoutBuildEnvironmentWithInvalidValues()
     {
         String INSTALL_VAR_NAME = "!@#$<>?etc";
@@ -119,18 +121,19 @@ public class InstallationTest
         assertTextPresent( "You must define an environment variable" );
     }
 
-    @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvironment" } )
+    @Test( dependsOnMethods = {"testAddJdkToolWithoutBuildEnvironment"} )
     public void testAddDuplicatedInstallationTool()
     {
         String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-		String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
-		goToAddInstallationTool();
-		addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
-		assertTextPresent( "Installation name already exists" );
-		
+        String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) : getEscapeProperty(
+            "INSTALL_TOOL_JDK_PATH" );
+        goToAddInstallationTool();
+        addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
+        assertTextPresent( "Installation name already exists" );
+
     }
 
-    @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvironment" } )
+    @Test( dependsOnMethods = {"testAddInstallationVariableWithBuildEnvironment"} )
     public void testAddDuplicatedInstallationVariable()
     {
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
@@ -141,19 +144,20 @@ public class InstallationTest
         assertTextPresent( "Installation name already exists" );
     }
 
-    @Test( dependsOnMethods = { "testAddJdkToolWithoutBuildEnvironment" } )
+    @Test( dependsOnMethods = {"testAddJdkToolWithoutBuildEnvironment"} )
     public void testEditInstallationTool()
     {
         String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-		String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) :  getEscapeProperty( "INSTALL_TOOL_JDK_PATH" );
-		String newName = "new_name";
-		goToEditInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true );
-		editInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
-		goToEditInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true );
-		editInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
+        String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) : getEscapeProperty(
+            "INSTALL_TOOL_JDK_PATH" );
+        String newName = "new_name";
+        goToEditInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true );
+        editInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
+        goToEditInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true );
+        editInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
     }
 
-    @Test( dependsOnMethods = { "testAddInstallationVariableWithBuildEnvironment" } )
+    @Test( dependsOnMethods = {"testAddInstallationVariableWithBuildEnvironment"} )
     public void testEditInstallationVariable()
     {
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
@@ -168,24 +172,24 @@ public class InstallationTest
         editInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, true );
     }
 
-    @Test( dependsOnMethods = { "testEditInstallationTool", "testAddDuplicatedInstallationTool" } )
+    @Test( dependsOnMethods = {"testEditInstallationTool", "testAddDuplicatedInstallationTool"} )
     public void testDeleteInstallationTool()
     {
         String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
         removeInstallation( INSTALL_TOOL_JDK_NAME );
     }
 
-    @Test( dependsOnMethods = { "testEditInstallationVariable", "testAddDuplicatedInstallationVariable" } )
+    @Test( dependsOnMethods = {"testEditInstallationVariable", "testAddDuplicatedInstallationVariable"} )
     public void testDeleteInstallationVariable()
     {
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
         removeInstallation( INSTALL_VAR_NAME );
     }
 
-	public static boolean isWindows()
-	{
-		String os = System.getProperty("os.name").toLowerCase();
-		//windows
-	    return os.contains( "win" );
-	}
+    public static boolean isWindows()
+    {
+        String os = System.getProperty( "os.name" ).toLowerCase();
+        //windows
+        return os.contains( "win" );
+    }
 }

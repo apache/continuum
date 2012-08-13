@@ -22,10 +22,6 @@ package org.apache.maven.continuum.web.action.component;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.continuum.web.util.GenerateRecipentNotifier;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
@@ -36,6 +32,10 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.NotifierSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Component Action that prepares and provides Project Group Notifier and

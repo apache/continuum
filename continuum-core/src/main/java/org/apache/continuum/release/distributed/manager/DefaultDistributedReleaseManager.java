@@ -19,21 +19,6 @@ package org.apache.continuum.release.distributed.manager;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
@@ -56,6 +41,20 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * @plexus.component role="org.apache.continuum.release.distributed.manager.DistributedReleaseManager"
@@ -103,14 +102,17 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 return client.getReleasePluginParameters( projectId, pomFilename );
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to retrieve release plugin parameters because build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException(
+                "Failed to retrieve release plugin parameters because build agent " + buildAgentUrl +
+                    " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -140,14 +142,16 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 return client.processProject( projectId, pomFilename, autoVersionSubmodules );
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to process project for releasing because build agent " + buildAgentUrl + " is unavailable" );
+            throw new ContinuumReleaseException(
+                "Failed to process project for releasing because build agent " + buildAgentUrl + " is unavailable" );
         }
         catch ( MalformedURLException e )
         {
@@ -162,7 +166,8 @@ public class DefaultDistributedReleaseManager
     }
 
     public String releasePrepare( Project project, Properties releaseProperties, Map<String, String> releaseVersion,
-                                  Map<String, String> developmentVersion, Map<String, String> environments, String username )
+                                  Map<String, String> developmentVersion, Map<String, String> environments,
+                                  String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = environments.get( DistributedReleaseUtil.KEY_BUILD_AGENT_URL );
@@ -176,23 +181,25 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
-    
-                String releaseId =
-                    client.releasePrepare( createProjectMap( project ), releaseProperties,
-                                           releaseVersion, developmentVersion, environments, username );
-    
-                addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ), "prepare", releaseProperties.getProperty( "preparation-goals" ), username );
-    
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
+
+                String releaseId = client.releasePrepare( createProjectMap( project ), releaseProperties,
+                                                          releaseVersion, developmentVersion, environments, username );
+
+                addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ), "prepare",
+                                   releaseProperties.getProperty( "preparation-goals" ), username );
+
                 addReleaseInProgress( releaseId, "prepare", project.getId(), username );
-    
+
                 return releaseId;
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to prepare release project because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException(
+                "Failed to prepare release project because the build agent " + buildAgentUrl + " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -220,23 +227,25 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 Map<String, Object> result = client.getReleaseResult( releaseId );
-    
+
                 ReleaseResult releaseResult = new ReleaseResult();
                 releaseResult.setStartTime( DistributedReleaseUtil.getStartTime( result ) );
                 releaseResult.setEndTime( DistributedReleaseUtil.getEndTime( result ) );
                 releaseResult.setResultCode( DistributedReleaseUtil.getReleaseResultCode( result ) );
                 releaseResult.getOutputBuffer().append( DistributedReleaseUtil.getReleaseOutput( result ) );
-    
+
                 return releaseResult;
             }
 
             // call reload in case we disable a build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to get release result of " + releaseId + 
-                                                 " because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException( "Failed to get release result of " + releaseId +
+                                                     " because the build agent " + buildAgentUrl +
+                                                     " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -264,15 +273,17 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 return client.getListener( releaseId );
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to get listener for " + releaseId + 
-                                                 " because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException( "Failed to get listener for " + releaseId +
+                                                     " because the build agent " + buildAgentUrl +
+                                                     " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -300,15 +311,17 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 client.removeListener( releaseId );
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to remove listener of " + releaseId + 
-                                                 " because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException( "Failed to remove listener of " + releaseId +
+                                                     " because the build agent " + buildAgentUrl +
+                                                     " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -337,15 +350,17 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 return client.getPreparedReleaseName( releaseId );
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to get prepared release name of " + releaseId + 
-                                                 " because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException( "Failed to get prepared release name of " + releaseId +
+                                                     " because the build agent " + buildAgentUrl +
+                                                     " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -365,7 +380,7 @@ public class DefaultDistributedReleaseManager
     {
         List<PreparedRelease> releases = getPreparedReleases();
 
-        for ( PreparedRelease release: releases )
+        for ( PreparedRelease release : releases )
         {
             if ( release.getReleaseId().equals( releaseId ) )
             {
@@ -396,17 +411,18 @@ public class DefaultDistributedReleaseManager
         map.put( DistributedReleaseUtil.KEY_USERNAME, username );
 
         if ( repository != null )
-        {   
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );         
+        {
+            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );
         }
 
         try
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 client.releasePerform( releaseId, goals, arguments, useReleaseProfile, map, username );
-    
+
                 addReleaseInProgress( releaseId, "perform", projectId, username );
             }
             else
@@ -414,8 +430,9 @@ public class DefaultDistributedReleaseManager
                 // call reload in case we disable the build agent
                 distributedBuildManager.reload();
 
-                throw new ContinuumReleaseException( "Failed to perform release of " + releaseId + 
-                                                     " because the build agent " + buildAgentUrl + " is not available" );
+                throw new ContinuumReleaseException( "Failed to perform release of " + releaseId +
+                                                         " because the build agent " + buildAgentUrl +
+                                                         " is not available" );
             }
         }
         catch ( MalformedURLException e )
@@ -432,7 +449,8 @@ public class DefaultDistributedReleaseManager
 
     public String releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile,
                                          LocalRepository repository, String scmUrl, String scmUsername,
-                                         String scmPassword, String scmTag, String scmTagBase, Map environments, String username )
+                                         String scmPassword, String scmTag, String scmTagBase, Map environments,
+                                         String username )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = (String) environments.get( DistributedReleaseUtil.KEY_BUILD_AGENT_URL );
@@ -456,29 +474,31 @@ public class DefaultDistributedReleaseManager
         map.put( DistributedReleaseUtil.KEY_USERNAME, username );
 
         if ( repository != null )
-        {            
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );         
+        {
+            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );
         }
 
         try
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
-                String releaseId =
-                    client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername,
-                                                  scmPassword, scmTag, scmTagBase, environments, username );
-    
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
+                String releaseId = client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl,
+                                                                 scmUsername, scmPassword, scmTag, scmTagBase,
+                                                                 environments, username );
+
                 addReleasePrepare( releaseId, buildAgentUrl, scmTag, "perform", goals, username );
                 addReleaseInProgress( releaseId, "perform", projectId, username );
-    
+
                 return releaseId;
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to perform release because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException(
+                "Failed to perform release because the build agent " + buildAgentUrl + " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -506,16 +526,18 @@ public class DefaultDistributedReleaseManager
         {
             if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
             {
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 client.releaseRollback( releaseId, projectId );
                 return;
             }
-            
+
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Unable to rollback release " + releaseId + 
-                                                 " because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException( "Unable to rollback release " + releaseId +
+                                                     " because the build agent " + buildAgentUrl +
+                                                     " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -546,17 +568,19 @@ public class DefaultDistributedReleaseManager
                 removeFromReleaseInProgress( releaseId );
                 removeFromPreparedReleases( releaseId );
 
-                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                    buildAgentUrl );
                 String result = client.releaseCleanup( releaseId );
-    
+
                 return result;
             }
 
             // call reload in case we disable the build agent
             distributedBuildManager.reload();
 
-            throw new ContinuumReleaseException( "Failed to cleanup release of " + releaseId + 
-                                                 " because the build agent " + buildAgentUrl + " is not available" );
+            throw new ContinuumReleaseException( "Failed to cleanup release of " + releaseId +
+                                                     " because the build agent " + buildAgentUrl +
+                                                     " is not available" );
         }
         catch ( MalformedURLException e )
         {
@@ -593,17 +617,18 @@ public class DefaultDistributedReleaseManager
                     {
                         if ( distributedBuildManager.isAgentAvailable( buildAgentUrl ) )
                         {
-                            SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection( buildAgentUrl );
+                            SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
+                                buildAgentUrl );
                             Map map = client.getListener( releaseId );
-    
+
                             if ( map != null && !map.isEmpty() )
                             {
                                 Map<String, Object> release = releasesInProgress.get( releaseId );
                                 release.put( DistributedReleaseUtil.KEY_RELEASE_ID, releaseId );
                                 release.put( DistributedReleaseUtil.KEY_BUILD_AGENT_URL, buildAgentUrl );
-    
+
                                 releases.add( release );
-    
+
                                 releasesMap.put( releaseId, releasesInProgress.get( releaseId ) );
                             }
                         }
@@ -636,11 +661,11 @@ public class DefaultDistributedReleaseManager
 
         return releases;
     }
-    
+
     public String getDefaultBuildagent( int projectId )
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
-        
+
         return buildResult != null ? buildResult.getBuildUrl() : null;
     }
 
@@ -651,8 +676,7 @@ public class DefaultDistributedReleaseManager
 
         for ( PreparedRelease release : releases )
         {
-            if ( release.getReleaseId().equals( releaseId ) &&
-                            release.getReleaseType().equals( releaseType ) )
+            if ( release.getReleaseId().equals( releaseId ) && release.getReleaseType().equals( releaseType ) )
             {
                 return release;
             }
@@ -661,10 +685,11 @@ public class DefaultDistributedReleaseManager
         return null;
     }
 
-    public SlaveBuildAgentTransportService createSlaveBuildAgentTransportClientConnection( String buildAgentUrl ) 
+    public SlaveBuildAgentTransportService createSlaveBuildAgentTransportClientConnection( String buildAgentUrl )
         throws MalformedURLException, Exception
     {
-        return new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ), "", configurationService.getSharedSecretPassword() );
+        return new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ), "",
+                                                   configurationService.getSharedSecretPassword() );
     }
 
     private Map createProjectMap( Project project )
@@ -722,7 +747,7 @@ public class DefaultDistributedReleaseManager
         return null;
     }
 
-    private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName, String releaseType, 
+    private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName, String releaseType,
                                     String releaseGoals, String username )
         throws ContinuumReleaseException
     {
@@ -800,7 +825,7 @@ public class DefaultDistributedReleaseManager
     private File getPreparedReleasesFile()
     {
         return new File( System.getProperty( "appserver.base" ) + File.separator + "conf" + File.separator +
-            PREPARED_RELEASES_FILENAME );
+                             PREPARED_RELEASES_FILENAME );
     }
 
     private boolean checkBuildAgent( String buildAgentUrl )
@@ -835,7 +860,7 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    private void savePreparedReleases( List<PreparedRelease> preparedReleases)
+    private void savePreparedReleases( List<PreparedRelease> preparedReleases )
         throws ContinuumReleaseException
     {
         File file = getPreparedReleasesFile();
@@ -865,9 +890,9 @@ public class DefaultDistributedReleaseManager
             throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
         }
     }
-    
+
     // for unit test
-    
+
     public void setBuildResultDao( BuildResultDao buildResultDao )
     {
         this.buildResultDao = buildResultDao;

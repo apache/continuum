@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "repository" } )
+@Test( groups = {"repository"} )
 public class LocalRepositoriesTest
     extends AbstractLocalRepositoryTest
 {
@@ -57,7 +57,7 @@ public class LocalRepositoriesTest
         assertTextPresent( "Local repository location contains invalid characters." );
     }
 
-    @Test( dependsOnMethods = { "testAddLocalRepository" } )
+    @Test( dependsOnMethods = {"testAddLocalRepository"} )
     public void testAddDuplicatedLocalRepository()
     {
         String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
@@ -67,8 +67,8 @@ public class LocalRepositoriesTest
         assertTextPresent( "Local repository name must be unique" );
         assertTextPresent( "Local repository location must be unique" );
     }
-    
-    @Test( dependsOnMethods = { "testAddDuplicatedLocalRepository" } )
+
+    @Test( dependsOnMethods = {"testAddDuplicatedLocalRepository"} )
     public void testAddDuplicateLocalRepositoryWithTrailingWhitespaces()
     {
         String duplicateRepositoryName = addTrailingWhitespace( getProperty( "LOCAL_REPOSITORY_NAME" ) );
@@ -79,7 +79,7 @@ public class LocalRepositoriesTest
         assertTextPresent( "Local repository location must be unique" );
     }
 
-    @Test( dependsOnMethods = { "testAddDuplicateLocalRepositoryWithTrailingWhitespaces" } )
+    @Test( dependsOnMethods = {"testAddDuplicateLocalRepositoryWithTrailingWhitespaces"} )
     public void testEditLocalRepository()
     {
         String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );
@@ -92,7 +92,7 @@ public class LocalRepositoriesTest
         addEditLocalRepository( LOCAL_REPOSITORY_NAME, LOCAL_REPOSITORY_LOCATION, true );
     }
 
-    @Test( dependsOnMethods = { "testEditLocalRepository" } )
+    @Test( dependsOnMethods = {"testEditLocalRepository"} )
     public void testDeleteLocalRepository()
     {
         String LOCAL_REPOSITORY_NAME = getProperty( "LOCAL_REPOSITORY_NAME" );

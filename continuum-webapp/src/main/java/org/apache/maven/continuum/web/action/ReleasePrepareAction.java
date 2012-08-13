@@ -35,21 +35,13 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
-import org.apache.maven.shared.release.versions.DefaultVersionInfo;
-import org.apache.maven.shared.release.versions.VersionInfo;
-import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -170,7 +162,8 @@ public class ReleasePrepareAction
 
             try
             {
-                getReleasePluginParameters( distributedReleaseManager.getReleasePluginParameters( projectId, "pom.xml" ) );
+                getReleasePluginParameters( distributedReleaseManager.getReleasePluginParameters( projectId,
+                                                                                                  "pom.xml" ) );
 
                 projects = distributedReleaseManager.processProject( projectId, "pom.xml", autoVersionSubmodules );
             }
@@ -188,13 +181,13 @@ public class ReleasePrepareAction
             try
             {
                 String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
-        
+
                 getReleasePluginParameters( workingDirectory, "pom.xml" );
-        
+
                 ReleaseUtil.processProject( workingDirectory, "pom.xml", autoVersionSubmodules, projects );
             }
             catch ( Exception e )
-            {   
+            {
                 List<Object> args = new ArrayList<Object>();
                 args.add( e.getMessage() );
 
@@ -263,7 +256,7 @@ public class ReleasePrepareAction
         }
 
         Project project = getContinuum().getProject( projectId );
-        
+
         name = project.getName();
         if ( name == null )
         {
@@ -276,7 +269,7 @@ public class ReleasePrepareAction
         {
             profile = getContinuum().getProfileService().getProfile( profileId );
         }
-        
+
         String username = getPrincipal();
 
         Map<String, String> environments = new HashMap<String, String>();
@@ -284,12 +277,13 @@ public class ReleasePrepareAction
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
-            
+
             environments = getEnvironments( profile, distributedReleaseManager.getDefaultBuildagent( projectId ) );
 
             try
             {
-                releaseId = distributedReleaseManager.releasePrepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), 
+                releaseId = distributedReleaseManager.releasePrepare( project, getReleaseProperties(),
+                                                                      getRelVersionMap(), getDevVersionMap(),
                                                                       environments, username );
 
                 if ( releaseId == null )
@@ -310,32 +304,32 @@ public class ReleasePrepareAction
         else
         {
             environments = getEnvironments( profile, null );
-            
+
             listener = new DefaultReleaseManagerListener();
-            
+
             listener.setUsername( username );
 
             String workingDirectory = getContinuum().getWorkingDirectory( projectId ).getPath();
 
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
-            String executable = getContinuum().getInstallationService()
-                                .getExecutorConfigurator( InstallationService.MAVEN2_TYPE ).getExecutable();
+            String executable = getContinuum().getInstallationService().getExecutorConfigurator(
+                InstallationService.MAVEN2_TYPE ).getExecutable();
 
             if ( environments != null )
             {
-                String m2Home = environments.get( getContinuum().getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
+                String m2Home = environments.get( getContinuum().getInstallationService().getEnvVar(
+                    InstallationService.MAVEN2_TYPE ) );
                 if ( StringUtils.isNotEmpty( m2Home ) )
                 {
                     executable = m2Home + File.separator + "bin" + File.separator + executable;
                 }
             }
 
-            releaseId =
-                releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener,
-                                        workingDirectory, environments, executable );
+            releaseId = releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(),
+                                                listener, workingDirectory, environments, executable );
         }
-        
+
         AuditLog event = new AuditLog( "Release id=" + releaseId, AuditLogConstants.PREPARE_RELEASE );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( username );
@@ -400,14 +394,14 @@ public class ReleasePrepareAction
             Map listenerMap;
             try
             {
-                listenerMap  = distributedReleaseManager.getListener( releaseId );
+                listenerMap = distributedReleaseManager.getListener( releaseId );
             }
             catch ( BuildAgentConfigurationException e )
             {
                 addActionError( "Failed to retrieve listener for release: " + releaseId );
                 return "";
             }
-                
+
             if ( listenerMap != null && !listenerMap.isEmpty() )
             {
                 int state = DistributedReleaseUtil.getReleaseState( listenerMap );
@@ -415,9 +409,9 @@ public class ReleasePrepareAction
                 if ( state == ContinuumReleaseManagerListener.FINISHED )
                 {
                     distributedReleaseManager.removeListener( releaseId );
-    
+
                     result = distributedReleaseManager.getReleaseResult( releaseId );
-    
+
                     status = "finished";
                 }
                 else
@@ -438,17 +432,17 @@ public class ReleasePrepareAction
         else
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-    
+
             listenerSummary = releaseManager.getListener( releaseId );
-    
+
             if ( listenerSummary != null )
             {
                 if ( listenerSummary.getState() == ContinuumReleaseManagerListener.FINISHED )
                 {
                     releaseManager.getListeners().remove( releaseId );
-    
+
                     result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
-    
+
                     status = "finished";
                 }
                 else

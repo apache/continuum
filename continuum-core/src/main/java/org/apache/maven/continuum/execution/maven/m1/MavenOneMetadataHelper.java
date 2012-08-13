@@ -33,7 +33,7 @@ public interface MavenOneMetadataHelper
     String ROLE = MavenOneMetadataHelper.class.getName();
 
     /**
-     * @deprecated Use {@link #mapMetadata(ContinuumProjectBuildingResult,File,Project)} instead
+     * @deprecated Use {@link #mapMetadata(ContinuumProjectBuildingResult, File, Project)} instead
      */
     void mapMetadata( File metadata, Project project )
         throws MavenOneMetadataHelperException;
@@ -45,6 +45,6 @@ public interface MavenOneMetadataHelper
      * @throws MavenOneMetadataHelperException
      *
      */
-    void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project, boolean updateDefinition)
+    void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project, boolean updateDefinition )
         throws MavenOneMetadataHelperException;
 }

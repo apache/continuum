@@ -19,13 +19,13 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -102,5 +102,6 @@ public interface BuildResultDao
 
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 
-    List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy, int projectGroupId );
+    List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy,
+                                              int projectGroupId );
 }

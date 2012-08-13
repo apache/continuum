@@ -19,9 +19,6 @@ package org.apache.continuum.buildagent.build.execution.shell;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
@@ -30,6 +27,9 @@ import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecut
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+
+import java.io.File;
+import java.util.Map;
 
 public class ShellBuildExecutor
     extends AbstractBuildExecutor
@@ -44,9 +44,8 @@ public class ShellBuildExecutor
         super( ID, false );
     }
 
-    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, 
-                                                     File buildOutput, Map<String, String> environments,
-                                                     String localRepository )
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                                     Map<String, String> environments, String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getBuildFileForProject( buildDefinition );

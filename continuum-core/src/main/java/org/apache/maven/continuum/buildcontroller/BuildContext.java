@@ -141,12 +141,12 @@ public class BuildContext
 
     public BuildTrigger getBuildTrigger()
     {
-    	return buildTrigger;
+        return buildTrigger;
     }
 
     public void setBuildTrigger( BuildTrigger buildTrigger )
     {
-    	this.buildTrigger = buildTrigger;
+        this.buildTrigger = buildTrigger;
     }
 
     public List<ProjectDependency> getModifiedDependencies()

@@ -20,7 +20,6 @@ package org.apache.continuum.configuration;
  */
 
 
-
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 /**
@@ -37,12 +36,12 @@ public class ProxyConfiguration
     private String proxyUser;
 
     private String proxyPassword;
-    
+
     public ProxyConfiguration()
     {
         // nothing here
     }
-    
+
     public ProxyConfiguration( String proxyHost, String proxyPassword, int proxyPort, String proxyUser )
     {
         super();

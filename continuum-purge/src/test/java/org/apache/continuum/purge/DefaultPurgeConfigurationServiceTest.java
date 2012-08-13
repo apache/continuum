@@ -19,13 +19,13 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.ManagedDefaultRepositoryContent;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+
+import java.util.List;
 
 /**
  * @author Maria Catherine Tan
@@ -56,8 +56,8 @@ public class DefaultPurgeConfigurationServiceTest
 
         assertNotNull( repoConfig );
 
-        RepositoryPurgeConfiguration retrieved =
-            repositoryPurgeConfigurationDao.getRepositoryPurgeConfiguration( repoConfig.getId() );
+        RepositoryPurgeConfiguration retrieved = repositoryPurgeConfigurationDao.getRepositoryPurgeConfiguration(
+            repoConfig.getId() );
         assertEquals( repoConfig, retrieved );
 
         purgeConfigurationService.removeRepositoryPurgeConfiguration( repoConfig );
@@ -66,8 +66,8 @@ public class DefaultPurgeConfigurationServiceTest
             purgeConfigurationService.getAllRepositoryPurgeConfigurations();
 
         assertFalse( "check if repo purge configuration was removed", repoConfigs.contains( repoConfig ) );
-        assertNotNull( "check if repository still exists",
-                       localRepositoryDao.getLocalRepository( defaultRepository.getId() ) );
+        assertNotNull( "check if repository still exists", localRepositoryDao.getLocalRepository(
+            defaultRepository.getId() ) );
     }
 
     public void testDirectoryPurgeConfiguration()
@@ -84,8 +84,8 @@ public class DefaultPurgeConfigurationServiceTest
 
         assertNotNull( dirConfig );
 
-        DirectoryPurgeConfiguration retrieved =
-            directoryPurgeConfigurationDao.getDirectoryPurgeConfiguration( dirConfig.getId() );
+        DirectoryPurgeConfiguration retrieved = directoryPurgeConfigurationDao.getDirectoryPurgeConfiguration(
+            dirConfig.getId() );
         assertEquals( dirConfig, retrieved );
 
         dirConfig.setDirectoryType( TEST_BUILDOUTPUT_DIRECTORY_TYPE );
@@ -119,20 +119,22 @@ public class DefaultPurgeConfigurationServiceTest
 
         dirConfig.setDirectoryType( TEST_WORKING_DIRECTORY_TYPE );
         purgeConfigurationService.updateDistributedDirectoryPurgeConfiguration( dirConfig );
-        retrieved = distributedDirectoryPurgeConfigurationDao.getDistributedDirectoryPurgeConfiguration( dirConfig.getId() );
+        retrieved = distributedDirectoryPurgeConfigurationDao.getDistributedDirectoryPurgeConfiguration(
+            dirConfig.getId() );
         assertEquals( dirConfig, retrieved );
 
         purgeConfigurationService.removeDistributedDirectoryPurgeConfiguration( dirConfig );
 
-        List<DistributedDirectoryPurgeConfiguration> dirConfigs = purgeConfigurationService.getAllDistributedDirectoryPurgeConfigurations();
+        List<DistributedDirectoryPurgeConfiguration> dirConfigs =
+            purgeConfigurationService.getAllDistributedDirectoryPurgeConfigurations();
         assertFalse( "check if dir purge configuration was removed", dirConfigs.contains( dirConfig ) );
     }
 
     public void testRepositoryManagedContent()
         throws Exception
     {
-        RepositoryManagedContent repo =
-            purgeConfigurationService.getManagedRepositoryContent( defaultRepository.getId() );
+        RepositoryManagedContent repo = purgeConfigurationService.getManagedRepositoryContent(
+            defaultRepository.getId() );
 
         assertTrue( "check repository managed content", ( repo instanceof ManagedDefaultRepositoryContent ) );
         assertEquals( "check repository of the managed content", defaultRepository, repo.getRepository() );

@@ -57,8 +57,8 @@ public class LegacyPathParser
         {
             // Illegal Path Parts Length.
             throw new LayoutException( INVALID_ARTIFACT_PATH +
-                "legacy paths should only have 3 parts [groupId]/[type]s/[artifactId]-[version].[type], found " +
-                pathParts.length + " instead." );
+                                           "legacy paths should only have 3 parts [groupId]/[type]s/[artifactId]-[version].[type], found " +
+                                           pathParts.length + " instead." );
         }
 
         // The Group ID.
@@ -71,7 +71,7 @@ public class LegacyPathParser
         if ( !expectedType.endsWith( "s" ) )
         {
             throw new LayoutException( INVALID_ARTIFACT_PATH +
-                "legacy paths should have an expected type ending in [s] in the second part of the path." );
+                                           "legacy paths should have an expected type ending in [s] in the second part of the path." );
         }
 
         // The Filename.
@@ -148,8 +148,8 @@ public class LegacyPathParser
 
         // Set Type
         String defaultExtension = expectedType.substring( 0, expectedType.length() - 1 );
-        artifact.setType(
-            ArtifactExtensionMapping.mapExtensionAndClassifierToType( classifier, extension, defaultExtension ) );
+        artifact.setType( ArtifactExtensionMapping.mapExtensionAndClassifierToType( classifier, extension,
+                                                                                    defaultExtension ) );
 
         // Sanity Check: does it have an extension?
         if ( StringUtils.isEmpty( artifact.getType() ) )
@@ -170,8 +170,9 @@ public class LegacyPathParser
             if ( !expectedExtension.equals( extension ) )
             {
                 throw new LayoutException( INVALID_ARTIFACT_PATH + "mismatch on extension [" + extension +
-                    "] and layout specified type [" + artifact.getType() + "] (which maps to extension: [" +
-                    expectedExtension + "]) on path [" + path + "]" );
+                                               "] and layout specified type [" + artifact.getType() +
+                                               "] (which maps to extension: [" +
+                                               expectedExtension + "]) on path [" + path + "]" );
             }
         }
 

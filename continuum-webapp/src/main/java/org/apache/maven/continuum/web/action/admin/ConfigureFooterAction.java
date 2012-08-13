@@ -18,16 +18,16 @@
  */
 package org.apache.maven.continuum.web.action.admin;
 
-import java.io.IOException;
-
 import org.apache.maven.continuum.web.action.component.AbstractFooterAction;
 import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
 
+import java.io.IOException;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 9 nov. 07
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configureFooter"
+ * @since 9 nov. 07
  */
 public class ConfigureFooterAction
     extends AbstractFooterAction
@@ -35,7 +35,7 @@ public class ConfigureFooterAction
 
     /**
      * @plexus.requirement
-     */    
+     */
     private AppareanceConfiguration appareanceConfiguration;
 
     public String saveFooter()

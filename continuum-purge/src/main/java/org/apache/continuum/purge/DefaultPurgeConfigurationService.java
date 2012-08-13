@@ -66,7 +66,7 @@ public class DefaultPurgeConfigurationService
      * @plexus.requirement
      */
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
-    
+
     /**
      * @plexus.requirement
      */
@@ -89,7 +89,8 @@ public class DefaultPurgeConfigurationService
         }
         else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
         {
-            purgeConfiguration = addDistributedDirectoryPurgeConfiguration( ( DistributedDirectoryPurgeConfiguration ) purgeConfig );
+            purgeConfiguration = addDistributedDirectoryPurgeConfiguration(
+                (DistributedDirectoryPurgeConfiguration) purgeConfig );
         }
 
         return purgeConfiguration;
@@ -108,7 +109,7 @@ public class DefaultPurgeConfigurationService
         }
         else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
         {
-            updateDistributedDirectoryPurgeConfiguration( ( DistributedDirectoryPurgeConfiguration ) purgeConfig );
+            updateDistributedDirectoryPurgeConfiguration( (DistributedDirectoryPurgeConfiguration) purgeConfig );
         }
     }
 
@@ -127,7 +128,7 @@ public class DefaultPurgeConfigurationService
         }
         else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
         {
-            removeDistributedDirectoryPurgeConfiguration( ( DistributedDirectoryPurgeConfiguration ) purgeConfig );
+            removeDistributedDirectoryPurgeConfiguration( (DistributedDirectoryPurgeConfiguration) purgeConfig );
         }
     }
 
@@ -228,7 +229,7 @@ public class DefaultPurgeConfigurationService
     {
         return directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsBySchedule( scheduleId );
     }
-    
+
     public List<DirectoryPurgeConfiguration> getEnableDirectoryPurgeConfigurationsBySchedule( int scheduleId )
     {
         return directoryPurgeConfigurationDao.getEnableDirectoryPurgeConfigurationsBySchedule( scheduleId );
@@ -243,7 +244,7 @@ public class DefaultPurgeConfigurationService
     {
         return repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsBySchedule( scheduleId );
     }
-    
+
     public List<RepositoryPurgeConfiguration> getEnableRepositoryPurgeConfigurationsBySchedule( int scheduleId )
     {
         return repositoryPurgeConfigurationDao.getEnableRepositoryPurgeConfigurationsBySchedule( scheduleId );
@@ -359,7 +360,7 @@ public class DefaultPurgeConfigurationService
                 // purgeConfigId is not of type directory purge configuration
             }
         }
-        
+
         if ( purgeConfig == null )
         {
             try
@@ -384,8 +385,8 @@ public class DefaultPurgeConfigurationService
 
             RepositoryManagedContent repoContent;
 
-            repoContent =
-                (RepositoryManagedContent) container.lookup( RepositoryManagedContent.class, repository.getLayout() );
+            repoContent = (RepositoryManagedContent) container.lookup( RepositoryManagedContent.class,
+                                                                       repository.getLayout() );
             repoContent.setRepository( repository );
 
             return repoContent;
@@ -412,14 +413,16 @@ public class DefaultPurgeConfigurationService
         return distributedDirectoryPurgeConfigurationDao.getAllDistributedDirectoryPurgeConfigurations();
     }
 
-    public DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
+    public DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration(
+        DistributedDirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException
     {
         DistributedDirectoryPurgeConfiguration dirPurgeConfig;
-        
+
         try
         {
-            dirPurgeConfig = distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration( dirPurge );
+            dirPurgeConfig = distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration(
+                dirPurge );
         }
         catch ( ContinuumStoreException e )
         {
@@ -427,7 +430,7 @@ public class DefaultPurgeConfigurationService
         }
 
         return dirPurgeConfig;
-        
+
     }
 
     public DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int dirPurgeId )
@@ -446,7 +449,7 @@ public class DefaultPurgeConfigurationService
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
+
     public void updateDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException
     {
@@ -472,10 +475,12 @@ public class DefaultPurgeConfigurationService
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
-    public List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule( int scheduleId )
+
+    public List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
+        int scheduleId )
     {
-            return distributedDirectoryPurgeConfigurationDao.getEnableDistributedDirectoryPurgeConfigurationsBySchedule( scheduleId );
+        return distributedDirectoryPurgeConfigurationDao.getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
+            scheduleId );
     }
 
     public void contextualize( Context context )

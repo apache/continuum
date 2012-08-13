@@ -19,10 +19,6 @@ package org.apache.maven.continuum.xmlrpc;
  * under the License.
  */
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -48,6 +44,10 @@ import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
@@ -60,7 +60,7 @@ public interface ContinuumService
 
     /**
      * Get All projects.
-     * 
+     *
      * @param projectGroupId The project group Id
      * @return List of {@link ProjectSummary}
      * @throws Exception
@@ -70,7 +70,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId The project group Id
      * @return List of {@link ProjectSummary} as RPC value
      * @throws Exception
@@ -80,7 +80,7 @@ public interface ContinuumService
 
     /**
      * Get a project.
-     * 
+     *
      * @param projectId the project id
      * @return The project summary
      * @throws Exception
@@ -90,7 +90,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId the project id
      * @return The project summary as RPC value
      * @throws Exception
@@ -100,7 +100,7 @@ public interface ContinuumService
 
     /**
      * Get a project with all details.
-     * 
+     *
      * @param projectId The project id
      * @return The project
      * @throws Exception
@@ -110,7 +110,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId the project id
      * @return The project as RPC value
      * @throws Exception
@@ -120,7 +120,7 @@ public interface ContinuumService
 
     /**
      * Remove a project.
-     * 
+     *
      * @param projectId The project id
      * @throws Exception
      */
@@ -129,7 +129,7 @@ public interface ContinuumService
 
     /**
      * Update a project. Useful to change the scm parameters.
-     * 
+     *
      * @param project The project to update
      * @throws Exception
      */
@@ -138,7 +138,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param project The project to update
      * @return The project as RPC value
      * @throws Exception
@@ -152,7 +152,7 @@ public interface ContinuumService
 
     /**
      * Get a project groups.
-     * 
+     *
      * @param projectGroupId the id
      * @return project group
      * @throws Exception
@@ -162,7 +162,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId the id
      * @return project group as RPC value
      * @throws Exception
@@ -172,7 +172,7 @@ public interface ContinuumService
 
     /**
      * Get all project groups.
-     * 
+     *
      * @return All project groups
      * @throws Exception
      */
@@ -181,7 +181,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return List of {@link ProjectGroupSummary} as RPC value
      * @throws Exception
      */
@@ -190,7 +190,7 @@ public interface ContinuumService
 
     /**
      * Get all project groups with all details (project summaries, notifiers, build definitions).
-     * 
+     *
      * @return All project groups
      * @throws Exception
      */
@@ -199,7 +199,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return List of {@link ProjectGroup} as RPC value
      * @throws Exception
      */
@@ -208,7 +208,7 @@ public interface ContinuumService
 
     /**
      * Get all project groups with all details.
-     * 
+     *
      * @return All project groups
      * @throws Exception
      * @deprecated
@@ -218,7 +218,7 @@ public interface ContinuumService
 
     /**
      * Get a project group.
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The project group summary
      * @throws Exception
@@ -228,7 +228,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The project group summary as RPC value
      * @throws Exception
@@ -238,7 +238,7 @@ public interface ContinuumService
 
     /**
      * Get a project group with all details.
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The project group
      * @throws Exception
@@ -248,7 +248,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The project group as RPC value
      * @throws Exception
@@ -258,7 +258,7 @@ public interface ContinuumService
 
     /**
      * Remove a project group.
-     * 
+     *
      * @param projectGroupId The project group id
      * @throws Exception
      */
@@ -267,7 +267,7 @@ public interface ContinuumService
 
     /**
      * Update a project Group.
-     * 
+     *
      * @param projectGroup The project group to update
      * @throws Exception
      */
@@ -276,7 +276,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroup The project group to update
      * @return The project group as RPC value
      * @throws Exception
@@ -286,9 +286,9 @@ public interface ContinuumService
 
     /**
      * Add a project Group.
-     * 
-     * @param groupName The project group name
-     * @param groupId The project group id
+     *
+     * @param groupName   The project group name
+     * @param groupId     The project group id
      * @param description The project group description
      * @return the project group summary of the created project group
      * @throws Exception
@@ -301,9 +301,9 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
-     * @param groupName The project group name
-     * @param groupId The project group id
+     *
+     * @param groupName   The project group name
+     * @param groupId     The project group id
      * @param description The project group description
      * @return the project group summary of the created project group as RPC value
      * @throws Exception
@@ -359,7 +359,7 @@ public interface ContinuumService
 
     /**
      * Get the build definitions list of the project.
-     * 
+     *
      * @param projectId The project id
      * @return The build definitions list
      * @throws Exception
@@ -369,7 +369,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId The project id
      * @return The build definitions list as RPC value
      * @throws Exception
@@ -379,7 +379,7 @@ public interface ContinuumService
 
     /**
      * Get the build definitions list of the project group.
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The build definitions list
      * @throws Exception
@@ -389,7 +389,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The build definitions list as RPC value
      * @throws Exception
@@ -399,6 +399,7 @@ public interface ContinuumService
 
     /**
      * Get the build definition
+     *
      * @param buildDefinitionId The build definition id
      * @return The build definition
      * @throws Exception
@@ -408,6 +409,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
+     *
      * @param buildDefinitionId The build definition id
      * @return The build definition as RPC value
      * @throws Exception
@@ -417,9 +419,9 @@ public interface ContinuumService
 
     /**
      * Update a project build definition.
-     * 
+     *
      * @param projectId The project id
-     * @param buildDef The build definition to update
+     * @param buildDef  The build definition to update
      * @return the updated build definition
      * @throws Exception
      */
@@ -428,9 +430,9 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId The project id
-     * @param buildDef The build definition to update
+     * @param buildDef  The build definition to update
      * @return the updated build definition as RPC value
      * @throws Exception
      */
@@ -439,9 +441,9 @@ public interface ContinuumService
 
     /**
      * Update a project group build definition.
-     * 
+     *
      * @param projectGroupId The project group id
-     * @param buildDef The build definition to update
+     * @param buildDef       The build definition to update
      * @return the updated build definition
      * @throws Exception
      */
@@ -450,9 +452,9 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId The project group id
-     * @param buildDef The build definition to update
+     * @param buildDef       The build definition to update
      * @return the updated build definition as RPC value
      * @throws Exception
      */
@@ -461,9 +463,9 @@ public interface ContinuumService
 
     /**
      * Add a project build definition.
-     * 
+     *
      * @param projectId The project id
-     * @param buildDef The build definition to update
+     * @param buildDef  The build definition to update
      * @return the added build definition
      * @throws Exception
      */
@@ -472,9 +474,9 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId The project id
-     * @param buildDef The build definition to update
+     * @param buildDef  The build definition to update
      * @return the added build definition as RPC value
      * @throws Exception
      */
@@ -483,9 +485,9 @@ public interface ContinuumService
 
     /**
      * Add a project group buildDefinition.
-     * 
+     *
      * @param projectGroupId The project group id
-     * @param buildDef The build definition to update
+     * @param buildDef       The build definition to update
      * @return the build definition added
      * @throws Exception
      */
@@ -494,9 +496,9 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId The project group id
-     * @param buildDef The build definition to update
+     * @param buildDef       The build definition to update
      * @return the added build definition as RPC value
      * @throws Exception
      */
@@ -505,7 +507,7 @@ public interface ContinuumService
 
     /**
      * Get the build definition templates list.
-     * 
+     *
      * @return The build definitions templates list
      * @throws Exception
      */
@@ -514,7 +516,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return The build definitions templates list as RPC value
      * @throws Exception
      */
@@ -527,7 +529,7 @@ public interface ContinuumService
 
     /**
      * Add the project to the build queue.
-     * 
+     *
      * @param projectId The project id
      * @throws Exception
      */
@@ -536,8 +538,8 @@ public interface ContinuumService
 
     /**
      * Add the project to the build queue.
-     * 
-     * @param projectId The project id
+     *
+     * @param projectId         The project id
      * @param buildDefinitionId The build definition id
      * @throws Exception
      */
@@ -546,7 +548,7 @@ public interface ContinuumService
 
     /**
      * Build the project
-     * 
+     *
      * @param projectId The project id
      * @throws Exception
      */
@@ -555,8 +557,8 @@ public interface ContinuumService
 
     /**
      * Build the project
-     * 
-     * @param projectId The project id
+     *
+     * @param projectId         The project id
      * @param buildDefinitionId The build definition id
      * @throws Exception
      */
@@ -565,21 +567,21 @@ public interface ContinuumService
 
     /**
      * Forced build the project
-     * 
-     * @param projectId The project id
+     *
+     * @param projectId    The project id
      * @param buildTrigger The build trigger
      * @return
      * @throws Exception
      */
     int buildProject( int projectId, BuildTrigger buildTrigger )
         throws Exception;
-    
+
     /**
      * Forced build the project
-     * 
-     * @param projectId The project id
+     *
+     * @param projectId         The project id
      * @param buildDefinitionId The build definition id
-     * @param buildTrigger The build trigger
+     * @param buildTrigger      The build trigger
      * @return
      * @throws Exception
      */
@@ -588,7 +590,7 @@ public interface ContinuumService
 
     /**
      * Build the project group with the default build definition.
-     * 
+     *
      * @param projectGroupId The project group id
      * @throws Exception
      */
@@ -597,8 +599,8 @@ public interface ContinuumService
 
     /**
      * Build the project group with the specified build definition.
-     * 
-     * @param projectGroupId The project group id
+     *
+     * @param projectGroupId    The project group id
      * @param buildDefinitionId The build definition id
      * @throws Exception
      */
@@ -611,7 +613,7 @@ public interface ContinuumService
 
     /**
      * Get the SCM roots for all projects in a project group
-     * 
+     *
      * @param projectGroupId the project group id
      * @return
      * @throws Exception
@@ -621,7 +623,7 @@ public interface ContinuumService
 
     /**
      * Get the SCM root for a specific project
-     * 
+     *
      * @param projectId the project id
      * @return
      * @throws Exception
@@ -635,7 +637,7 @@ public interface ContinuumService
 
     /**
      * Returns the latest build result for the project.
-     * 
+     *
      * @param projectId The project id
      * @return The build result
      * @throws Exception
@@ -645,7 +647,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId The project id
      * @return The build result as RPC value
      * @throws Exception
@@ -655,9 +657,9 @@ public interface ContinuumService
 
     /**
      * Returns the build result.
-     * 
+     *
      * @param projectId The project id
-     * @param buildId The build id
+     * @param buildId   The build id
      * @return The build result
      * @throws Exception
      */
@@ -666,9 +668,9 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId The project id
-     * @param buildId The build id
+     * @param buildId   The build id
      * @return The build result as RPC value
      * @throws Exception
      */
@@ -677,7 +679,7 @@ public interface ContinuumService
 
     /**
      * Returns the project build result summary list.
-     * 
+     *
      * @param projectId The project id
      * @return The build result list
      * @throws Exception
@@ -687,7 +689,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectId The project id
      * @return The build result list as RPC value
      * @throws Exception
@@ -697,7 +699,7 @@ public interface ContinuumService
 
     /**
      * Remove the project build result.
-     * 
+     *
      * @param br The project build result
      * @return 0
      * @throws Exception
@@ -707,7 +709,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param br The project build result
      * @return 0
      * @throws Exception
@@ -717,9 +719,9 @@ public interface ContinuumService
 
     /**
      * Returns the build output.
-     * 
+     *
      * @param projectId The project id
-     * @param buildId The build id
+     * @param buildId   The build id
      * @return The build output
      * @throws Exception
      */
@@ -732,7 +734,7 @@ public interface ContinuumService
 
     /**
      * Add a maven 2.x project from an url.
-     * 
+     *
      * @param url The POM url
      * @return The result of the action with the list of projects created
      * @throws Exception
@@ -742,7 +744,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param url The POM url
      * @return The result of the action with the list of projects created as RPC value
      * @throws Exception
@@ -752,8 +754,8 @@ public interface ContinuumService
 
     /**
      * Add a maven 2.x project from an url.
-     * 
-     * @param url The POM url
+     *
+     * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
      * @return The result of the action with the list of projects created
      * @throws Exception
@@ -763,8 +765,8 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
-     * @param url The POM url
+     *
+     * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
      * @return The result of the action with the list of projects created as RPC value
      * @throws Exception
@@ -774,24 +776,24 @@ public interface ContinuumService
 
     /**
      * Add a maven 2.x project from an url.
-     * 
-     * @param url The POM url
+     *
+     * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
-     * @Param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
      * @return The result of the action with the list of projects created
      * @throws Exception
+     * @Param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
      */
     AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkoutInSingleDirectory )
         throws Exception;
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
-     * @param url The POM url
+     *
+     * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
-     * @Param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
      * @return The result of the action with the list of projects created as RPC value
      * @throws Exception
+     * @Param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
      */
     Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkoutInSingleDirectory )
         throws Exception;
@@ -801,7 +803,7 @@ public interface ContinuumService
      * multiple projects (one project per module). To add a multi-module project with its modules as separate Continuum
      * projects, use ContinuumService#addMavenTwoProject( String url, int projectGroupId, boolean
      * checkoutInSingleDirectory) instead.
-     * 
+     *
      * @param url
      * @param projectGroupId
      * @return
@@ -812,40 +814,39 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param url
      * @param projectGroupId
-     * @return 
+     * @return
      * @throws Exception
      */
     Map<String, Object> addMavenTwoProjectAsSingleProjectRPC( String url, int projectGroupId )
         throws Exception;
-    
+
     /**
      * Add a maven 2.x multi-module project from a url
-     * 
-     * @param url The POM url
-     * @param projectGroupId The id of the group where projects will be stored
-     * @param checkProtocol Determines whether the protocol will be checked
-     * @param useCredentialsCache Determines whether user credentials will be cached
-     * @param recursiveProjects Determines whether to load recursive projects
+     *
+     * @param url                       The POM url
+     * @param projectGroupId            The id of the group where projects will be stored
+     * @param checkProtocol             Determines whether the protocol will be checked
+     * @param useCredentialsCache       Determines whether user credentials will be cached
+     * @param recursiveProjects         Determines whether to load recursive projects
      * @param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
      * @return The result of the action with the list of projects created
      * @throws Exception
      */
-    AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkProtocol,
-                                     boolean useCredentialsCache, boolean recursiveProjects,
-                                     boolean checkoutInSingleDirectory )
+    AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkProtocol, boolean useCredentialsCache,
+                                     boolean recursiveProjects, boolean checkoutInSingleDirectory )
         throws Exception;
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
-     * @param url The POM url
-     * @param projectGroupId The id of the group where projects will be stored
-     * @param checkProtocol Determines whether the protocol will be checked
-     * @param useCredentialsCache Determines whether user credentials will be cached
-     * @param recursiveProjects Determines whether to load recursive projects
+     *
+     * @param url                       The POM url
+     * @param projectGroupId            The id of the group where projects will be stored
+     * @param checkProtocol             Determines whether the protocol will be checked
+     * @param useCredentialsCache       Determines whether user credentials will be cached
+     * @param recursiveProjects         Determines whether to load recursive projects
      * @param checkoutInSingleDirectory Determines whether the project will be stored on a single directory
      * @return The result of the action with the list of projects created as RPC value
      * @throws Exception
@@ -854,16 +855,15 @@ public interface ContinuumService
                                                boolean useCredentialsCache, boolean recursiveProjects,
                                                boolean checkoutInSingleDirectory )
         throws Exception;
-    
-    
+
     // ----------------------------------------------------------------------
     // Maven 1.x projects
     // ----------------------------------------------------------------------
 
     /**
      * Add a maven 1.x project from an url.
-     * 
-     * @param url The POM url
+     *
+     * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
      * @return The result of the action with the list of projects created
      * @throws Exception
@@ -873,8 +873,8 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
-     * @param url The POM url
+     *
+     * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
      * @return The result of the action with the list of projects created as RPC value
      * @throws Exception
@@ -888,8 +888,8 @@ public interface ContinuumService
 
     /**
      * Add an ANT project in the specified group.
-     * 
-     * @param project The project to add. name, version and scm informations are required
+     *
+     * @param project        The project to add. name, version and scm informations are required
      * @param projectGroupId The id of the group where projects will be stored
      * @return The project populated with the id.
      * @throws Exception
@@ -899,8 +899,8 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
-     * @param project The project to add. name, version and scm informations are required
+     *
+     * @param project        The project to add. name, version and scm informations are required
      * @param projectGroupId The id of the group where projects will be stored
      * @return The project populated with the id as RPC value
      * @throws Exception
@@ -914,8 +914,8 @@ public interface ContinuumService
 
     /**
      * Add an shell project in the specified group.
-     * 
-     * @param project The project to add. name, version and scm informations are required
+     *
+     * @param project        The project to add. name, version and scm informations are required
      * @param projectGroupId The id of the group where projects will be stored
      * @return The project populated with the id.
      * @throws Exception
@@ -925,8 +925,8 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
-     * @param project The project to add. name, version and scm informations are required
+     *
+     * @param project        The project to add. name, version and scm informations are required
      * @param projectGroupId The id of the group where projects will be stored
      * @return The project populated with the id as RPC value
      * @throws Exception
@@ -944,7 +944,7 @@ public interface ContinuumService
 
     /**
      * Return the schedules list.
-     * 
+     *
      * @return The schedule list.
      * @throws Exception
      */
@@ -953,7 +953,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return The schedule list as RPC value.
      * @throws Exception
      */
@@ -962,7 +962,7 @@ public interface ContinuumService
 
     /**
      * Return the schedule defined by this id.
-     * 
+     *
      * @param scheduleId The schedule id
      * @return The schedule.
      * @throws Exception
@@ -972,7 +972,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param scheduleId The schedule id
      * @return The schedule as RPC value.
      * @throws Exception
@@ -982,7 +982,7 @@ public interface ContinuumService
 
     /**
      * Add the schedule.
-     * 
+     *
      * @param schedule The schedule
      * @return The schedule.
      * @throws Exception
@@ -992,7 +992,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param schedule The schedule
      * @return The schedule as RPC value.
      * @throws Exception
@@ -1002,7 +1002,7 @@ public interface ContinuumService
 
     /**
      * Update the schedule.
-     * 
+     *
      * @param schedule The schedule
      * @return The schedule.
      * @throws Exception
@@ -1012,7 +1012,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param schedule The schedule
      * @return The schedule as RPC value.
      * @throws Exception
@@ -1026,7 +1026,7 @@ public interface ContinuumService
 
     /**
      * Return the profiles list.
-     * 
+     *
      * @return The profiles list.
      * @throws Exception
      */
@@ -1035,7 +1035,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return The profiles list as RPC value.
      * @throws Exception
      */
@@ -1044,7 +1044,7 @@ public interface ContinuumService
 
     /**
      * Return the profile defined by this id.
-     * 
+     *
      * @param profileId The profile id
      * @return The profile.
      * @throws Exception
@@ -1054,7 +1054,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param profileId The profile id
      * @return The profile.
      * @throws Exception
@@ -1089,7 +1089,7 @@ public interface ContinuumService
 
     /**
      * Return the installations list.
-     * 
+     *
      * @return The installations list.
      * @throws Exception
      */
@@ -1098,7 +1098,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return The installations list.
      * @throws Exception
      */
@@ -1107,7 +1107,7 @@ public interface ContinuumService
 
     /**
      * Return the installation defined by this id.
-     * 
+     *
      * @param installationId The installation id
      * @return The installation.
      * @throws Exception
@@ -1117,7 +1117,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param installationId The installation id
      * @return The installation.
      * @throws Exception
@@ -1127,7 +1127,7 @@ public interface ContinuumService
 
     /**
      * Return the installation defined by this name
-     * 
+     *
      * @param installationName The installation name
      * @return The installation
      * @throws Exception
@@ -1137,7 +1137,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param installationName The installation name
      * @return The installation
      * @throws Exception
@@ -1147,7 +1147,7 @@ public interface ContinuumService
 
     /**
      * Return the installations list defined by this URL.
-     * 
+     *
      * @param url The build agent URL
      * @return The installations list.
      * @throws Exception
@@ -1157,12 +1157,12 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param url The build agent URL
      * @return The installations list.
      * @throws Exception
      */
-    List<Object> getBuildAgentInstallationsRPC(String url)
+    List<Object> getBuildAgentInstallationsRPC( String url )
         throws Exception;
 
     Installation addInstallation( Installation installation )
@@ -1196,7 +1196,7 @@ public interface ContinuumService
 
     /**
      * Return true if the project is in prepare build queue
-     * 
+     *
      * @param projectId The project id
      * @throws ContinuumException
      */
@@ -1205,8 +1205,8 @@ public interface ContinuumService
 
     /**
      * Return true if the project is in prepare build queue
-     * 
-     * @param projectId The project id
+     *
+     * @param projectId         The project id
      * @param buildDefinitionId The build definition id
      * @throws ContinuumException
      */
@@ -1215,7 +1215,7 @@ public interface ContinuumService
 
     /**
      * Return true if the project is in building queue.
-     * 
+     *
      * @param projectId The project id
      * @throws ContinuumException
      */
@@ -1224,8 +1224,8 @@ public interface ContinuumService
 
     /**
      * Return true if the project is in building queue.
-     * 
-     * @param projectId The project id
+     *
+     * @param projectId         The project id
      * @param buildDefinitionId The build definition id
      * @throws ContinuumException
      */
@@ -1234,7 +1234,7 @@ public interface ContinuumService
 
     /**
      * Return true if the project is currently preparing build
-     * 
+     *
      * @param projectId The project id
      * @return
      * @throws Exception
@@ -1244,8 +1244,8 @@ public interface ContinuumService
 
     /**
      * Return true if the project is currently preparing build
-     * 
-     * @param projectId The project id
+     *
+     * @param projectId         The project id
      * @param buildDefinitionId The build definition id
      * @return
      * @throws Exception
@@ -1255,7 +1255,7 @@ public interface ContinuumService
 
     /**
      * Return true if the project is currently building
-     * 
+     *
      * @param projectId The project id
      * @return
      * @throws Exception
@@ -1265,8 +1265,8 @@ public interface ContinuumService
 
     /**
      * Return true if the project is currently building
-     * 
-     * @param projectId The project id 
+     *
+     * @param projectId         The project id
      * @param buildDefinitionId The build definition id
      * @return
      * @throws Exception
@@ -1276,7 +1276,7 @@ public interface ContinuumService
 
     /**
      * Return projects building queue.
-     * 
+     *
      * @throws ContinuumException
      */
     public List<BuildProjectTask> getProjectsInBuildQueue()
@@ -1284,7 +1284,7 @@ public interface ContinuumService
 
     /**
      * Remove projects from build queue
-     * 
+     *
      * @param projectsId project id to be removed from the building queue
      * @return
      * @throws Exception
@@ -1294,7 +1294,7 @@ public interface ContinuumService
 
     /**
      * Cancel the current project build
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -1303,8 +1303,8 @@ public interface ContinuumService
 
     /**
      * Cancel a project build
-     * 
-     * @param projectId the project id
+     *
+     * @param projectId         the project id
      * @param buildDefinitionId the build definition id
      * @return
      * @throws Exception
@@ -1329,7 +1329,7 @@ public interface ContinuumService
 
     /**
      * Add a local repository
-     * 
+     *
      * @param repository the local repository to add
      * @return
      * @throws Exception
@@ -1339,7 +1339,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @param repository the local repository to add
      * @return
      * @throws Exception
@@ -1349,7 +1349,7 @@ public interface ContinuumService
 
     /**
      * Update the local repository
-     * 
+     *
      * @param repository the local repository to update
      * @return
      * @throws Exception
@@ -1359,7 +1359,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @param repository the local repository to update
      * @return
      * @throws Exception
@@ -1369,7 +1369,7 @@ public interface ContinuumService
 
     /**
      * Remove the local repository
-     * 
+     *
      * @param repositoryId
      * @return
      * @throws Exception
@@ -1379,7 +1379,7 @@ public interface ContinuumService
 
     /**
      * Returns the local repository
-     * 
+     *
      * @param repositoryId the local repository id
      * @return
      * @throws Exception
@@ -1389,7 +1389,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @param repositoryId
      * @return
      * @throws Exception
@@ -1399,7 +1399,7 @@ public interface ContinuumService
 
     /**
      * Returns all local repositories
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -1408,7 +1408,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -1421,7 +1421,7 @@ public interface ContinuumService
 
     /**
      * Add a repository purge configuration
-     * 
+     *
      * @param repoPurge the repository purge configuration
      * @return
      * @throws Exception
@@ -1431,7 +1431,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @param repoPurge the repository purge configuration
      * @return
      * @throws Exception
@@ -1441,7 +1441,7 @@ public interface ContinuumService
 
     /**
      * Update the repository purge configuration
-     * 
+     *
      * @param repoPurge the repository purge configuration
      * @return
      * @throws Exception
@@ -1451,7 +1451,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @param repoPurge the repository purge configuration
      * @return
      * @throws Exception
@@ -1461,7 +1461,7 @@ public interface ContinuumService
 
     /**
      * Remove repository purge configuration
-     * 
+     *
      * @param repoPurgeId the repository purge configuration id
      * @return
      * @throws Exception
@@ -1471,7 +1471,7 @@ public interface ContinuumService
 
     /**
      * Returns the repository purge configuration
-     * 
+     *
      * @param purgeConfigId the repository purge configuration id
      * @return the repository purge configuration
      * @throws Exception
@@ -1481,7 +1481,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param purgeConfigId the repository purge configuration id
      * @return the repository purge configuration
      * @throws Exception
@@ -1491,7 +1491,7 @@ public interface ContinuumService
 
     /**
      * Returns repository purge configurations list
-     * 
+     *
      * @return list of repository purge configurations
      * @throws Exception
      */
@@ -1500,7 +1500,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return list of repository purge configurations
      * @throws Exception
      */
@@ -1509,7 +1509,7 @@ public interface ContinuumService
 
     /**
      * Add a directory purge configuration
-     * 
+     *
      * @param dirPurge the directory purge configuration
      * @return
      * @throws Exception
@@ -1519,7 +1519,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @param dirPurge the directory purge configuration
      * @return
      * @throws Exception
@@ -1529,7 +1529,7 @@ public interface ContinuumService
 
     /**
      * Update the directory purge configuration
-     * 
+     *
      * @param dirPurge the directory purge configuration
      * @return
      * @throws Exception
@@ -1539,7 +1539,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with the standard XMLRPC
-     * 
+     *
      * @param dirPurge the directory purge configuration
      * @return
      * @throws Exception
@@ -1549,7 +1549,7 @@ public interface ContinuumService
 
     /**
      * Removes the directory purge configuration
-     * 
+     *
      * @param dirPurgeId the directory purge configuration id
      * @return
      * @throws Exception
@@ -1559,7 +1559,7 @@ public interface ContinuumService
 
     /**
      * Returns the directory purge configuration
-     * 
+     *
      * @param purgeConfigId the directory purge configuration id
      * @return the directory purge configuration
      * @throws Exception
@@ -1569,7 +1569,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param purgeConfigId the directory purge configuration id
      * @return the directory purge configuration
      * @throws Exception
@@ -1579,7 +1579,7 @@ public interface ContinuumService
 
     /**
      * Returns directory purge configurations list
-     * 
+     *
      * @return list of directory purge configurations
      * @throws Exception
      */
@@ -1588,7 +1588,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return list of directory purge configurations
      * @throws Exception
      */
@@ -1607,7 +1607,7 @@ public interface ContinuumService
 
     /**
      * Returns the release result.
-     * 
+     *
      * @param releaseId The release id
      * @return The release result
      * @throws Exception
@@ -1617,7 +1617,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param releaseId The release id
      * @return The release result as RPC value
      * @throws Exception
@@ -1627,7 +1627,7 @@ public interface ContinuumService
 
     /**
      * Returns the project group release result list.
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The release result list
      * @throws Exception
@@ -1637,7 +1637,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param projectGroupId The project group id
      * @return The release result list as RPC value
      * @throws Exception
@@ -1647,7 +1647,7 @@ public interface ContinuumService
 
     /**
      * Remove the project release result.
-     * 
+     *
      * @param releaseResult The project release result
      * @return 0
      * @throws Exception
@@ -1657,7 +1657,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param rr The project release result
      * @return 0
      * @throws Exception
@@ -1667,7 +1667,7 @@ public interface ContinuumService
 
     /**
      * Returns the release output.
-     * 
+     *
      * @param releaseId The release id
      * @return The release output
      * @throws Exception
@@ -1677,7 +1677,7 @@ public interface ContinuumService
 
     /**
      * Release prepare a project
-     * 
+     *
      * @param projectId
      * @param releaseProperties
      * @param releaseVersions
@@ -1693,7 +1693,7 @@ public interface ContinuumService
 
     /**
      * Release perform a project
-     * 
+     *
      * @param projectId
      * @param releaseId
      * @param goals
@@ -1710,7 +1710,7 @@ public interface ContinuumService
 
     /**
      * Get release listener
-     * 
+     *
      * @param projectId
      * @param releaseId
      * @return
@@ -1721,7 +1721,7 @@ public interface ContinuumService
 
     /**
      * Cleanup the release
-     * 
+     *
      * @param projectId
      * @param releaseId
      * @return
@@ -1732,7 +1732,7 @@ public interface ContinuumService
 
     /**
      * Cleanup the release
-     * 
+     *
      * @param projectId
      * @param releaseId
      * @param releaseType
@@ -1744,7 +1744,7 @@ public interface ContinuumService
 
     /**
      * Rollback a release
-     * 
+     *
      * @param projectId
      * @param releaseId
      * @return
@@ -1755,19 +1755,20 @@ public interface ContinuumService
 
     /**
      * Get release plugin parameters
-     * 
+     *
      * @param projectId
      * @return
      */
     Map<String, Object> getReleasePluginParameters( int projectId )
         throws Exception;
 
-    List<Map<String, String>> getProjectReleaseAndDevelopmentVersions( int projectId, String pomFilename, boolean autoVersionSubmodules )
+    List<Map<String, String>> getProjectReleaseAndDevelopmentVersions( int projectId, String pomFilename,
+                                                                       boolean autoVersionSubmodules )
         throws Exception;
 
     /**
      * Add/Register build agent to Continuum Master
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -1776,7 +1777,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -1785,25 +1786,25 @@ public interface ContinuumService
 
     /**
      * Get build agent in Continuum Master
-     * 
+     *
      * @param url - build agent URL
      * @return
      */
     BuildAgentConfiguration getBuildAgent( String url );
-    
+
     /**
      * Get the url of the build agent that is processing the project
-     * 
-     * @param projectId project Id
+     *
+     * @param projectId         project Id
      * @param buildDefinitionId build definition Id
-     * 
      * @return build agent url
      */
-    String getBuildAgentUrl( int projectId, int buildDefinition ) throws Exception;
+    String getBuildAgentUrl( int projectId, int buildDefinition )
+        throws Exception;
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @param url - build agent URL
      * @return
      */
@@ -1811,7 +1812,7 @@ public interface ContinuumService
 
     /**
      * Update build agent in Continuum Master
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -1820,7 +1821,7 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -1829,7 +1830,7 @@ public interface ContinuumService
 
     /**
      * remove build agent in Continuum Master
-     * 
+     *
      * @param url - build agent URL
      * @return Exception
      */
@@ -1838,20 +1839,21 @@ public interface ContinuumService
 
     /**
      * List all build agent in Continuum Master
-     * 
+     *
      * @return
      */
     List<BuildAgentConfiguration> getAllBuildAgents();
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return
      */
     List<Object> getAllBuildAgentsRPC();
 
     /**
      * Retrieve all enabled build agents with their available installations
+     *
      * @return
      * @throws Exception
      */
@@ -1860,13 +1862,13 @@ public interface ContinuumService
 
     /**
      * Same method but compatible with standard XMLRPC
-     * 
+     *
      * @return
      * @throws Exception
      */
     List<Object> getBuildAgentsWithInstallationsRPC()
         throws Exception;
-    
+
     boolean pingBuildAgent( String buildAgentUrl )
         throws Exception;
 

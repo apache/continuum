@@ -70,7 +70,9 @@
       <role>org.codehaus.plexus.redback.role.processor.RoleModelProcessor</role>
       <role-hint>default</role-hint>
       <implementation>org.codehaus.plexus.redback.role.processor.DefaultRoleModelProcessor</implementation>
-      <description>DefaultRoleModelProcessor: inserts the components of the model that can be populated into the rbac manager</description>
+      <description>DefaultRoleModelProcessor: inserts the components of the model that can be populated into the rbac
+        manager
+      </description>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.redback.rbac.RBACManager</role>
@@ -95,7 +97,8 @@
       <role>org.codehaus.plexus.redback.role.template.RoleTemplateProcessor</role>
       <role-hint>default</role-hint>
       <implementation>org.codehaus.plexus.redback.role.template.DefaultRoleTemplateProcessor</implementation>
-      <description>DefaultRoleTemplateProcessor: inserts the components of a template into the rbac manager</description>
+      <description>DefaultRoleTemplateProcessor: inserts the components of a template into the rbac manager
+      </description>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.redback.rbac.RBACManager</role>
@@ -110,7 +113,7 @@
       <implementation>org.codehaus.plexus.redback.role.DefaultRoleManager</implementation>
       <instantiation-strategy>singleton</instantiation-strategy>
       <description>RoleProfileManager:</description>
-      <requirements>        
+      <requirements>
         <requirement>
           <role>org.codehaus.plexus.redback.role.validator.RoleModelValidator</role>
           <role-hint>default</role-hint>

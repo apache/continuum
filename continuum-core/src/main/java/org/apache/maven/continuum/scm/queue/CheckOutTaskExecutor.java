@@ -19,9 +19,6 @@ package org.apache.maven.continuum.scm.queue;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
@@ -34,6 +31,9 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -95,10 +95,11 @@ public class CheckOutTaskExecutor
         CheckoutProjectContinuumAction.setScmUsername( context, task.getScmUserName() );
 
         CheckoutProjectContinuumAction.setScmPassword( context, task.getScmPassword() );
-        
+
         AbstractContinuumAction.setProjectScmRootUrl( context, task.getScmRootUrl() );
-        
-        AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context, task.getProjectsWithCommonScmRoot() );
+
+        AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context,
+                                                                           task.getProjectsWithCommonScmRoot() );
 
         try
         {

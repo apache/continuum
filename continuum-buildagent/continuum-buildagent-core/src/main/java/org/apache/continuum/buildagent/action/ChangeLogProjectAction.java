@@ -19,11 +19,6 @@ package org.apache.continuum.buildagent.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.scm.ContinuumScm;
@@ -34,6 +29,11 @@ import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.command.changelog.ChangeLogScmResult;
 import org.apache.maven.scm.command.changelog.ChangeLogSet;
 import org.codehaus.plexus.action.AbstractAction;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="changelog-agent-project"

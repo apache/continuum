@@ -19,16 +19,6 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
@@ -50,6 +40,15 @@ import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -64,7 +63,7 @@ public abstract class AbstractContinuumTest
     private ProjectGroupDao projectGroupDao;
 
     private ScheduleDao scheduleDao;
-    
+
     private ProjectScmRootDao projectScmRootDao;
 
     // ----------------------------------------------------------------------
@@ -84,7 +83,7 @@ public abstract class AbstractContinuumTest
         getProjectGroupDao();
 
         getScheduleDao();
-        
+
         getProjectScmRootDao();
 
         setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
@@ -213,8 +212,8 @@ public abstract class AbstractContinuumTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/package.jdo" )}, new URL[]{}, null,
-                                       false, null );
+        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/package.jdo" )}, new URL[]{}, null, false,
+                                       null );
 
         // ----------------------------------------------------------------------
         //
@@ -249,7 +248,7 @@ public abstract class AbstractContinuumTest
         }
         return scheduleDao;
     }
-    
+
     protected ProjectScmRootDao getProjectScmRootDao()
     {
         if ( projectScmRootDao == null )
@@ -420,9 +419,8 @@ public abstract class AbstractContinuumTest
 
                 assertEquals( "project.notifiers.notifier.type", notifier.getType(), actualNotifier.getType() );
 
-                assertEquals( "project.notifiers.notifier.configuration.address",
-                              notifier.getConfiguration().get( "address" ),
-                              actualNotifier.getConfiguration().get( "address" ) );
+                assertEquals( "project.notifiers.notifier.configuration.address", notifier.getConfiguration().get(
+                    "address" ), actualNotifier.getConfiguration().get( "address" ) );
             }
         }
 

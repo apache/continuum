@@ -19,17 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -61,6 +50,16 @@ import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.users.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ProjectGroupAction:
@@ -151,10 +150,10 @@ public class ProjectGroupAction
         throws Exception
     {
         super.prepare();
-    
+
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
     }
-    
+
     public String summary()
         throws ContinuumException
     {
@@ -176,8 +175,8 @@ public class ProjectGroupAction
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
 
-        List<BuildDefinition> projectGroupBuildDefs =
-            getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
+        List<BuildDefinition> projectGroupBuildDefs = getContinuum().getBuildDefinitionsForProjectGroup(
+            projectGroupId );
 
         if ( projectGroupBuildDefs != null )
         {
@@ -187,7 +186,8 @@ public class ProjectGroupAction
 
                 if ( !buildDefinition.isDefaultForProject() )
                 {
-                    String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
+                    String key = StringUtils.isEmpty( buildDefinition.getDescription() )
+                        ? buildDefinition.getGoals()
                         : buildDefinition.getDescription();
                     buildDefinitions.put( key, buildDefinition.getId() );
                 }
@@ -199,7 +199,7 @@ public class ProjectGroupAction
         }
 
         if ( projectGroup != null )
-        {   
+        {
             if ( projectGroup.getProjects() != null && projectGroup.getProjects().size() > 0 )
             {
                 int nbMaven2Projects = 0;
@@ -318,8 +318,8 @@ public class ProjectGroupAction
         catch ( ContinuumException e )
         {
             logger.error( "Error while removing project group with id " + projectGroupId, e );
-            addActionError( getText( "projectGroup.delete.error", "Unable to remove project group",
-                                     Integer.toString( projectGroupId ) ) );
+            addActionError( getText( "projectGroup.delete.error", "Unable to remove project group", Integer.toString(
+                projectGroupId ) ) );
         }
 
         AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.REMOVE_PROJECT_GROUP );
@@ -565,18 +565,18 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        
+
         BuildTrigger buildTrigger = new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, getPrincipal() );
 
         try
         {
             if ( this.getBuildDefinitionId() == -1 )
             {
-            	getContinuum().buildProjectGroup( projectGroupId, buildTrigger );
+                getContinuum().buildProjectGroup( projectGroupId, buildTrigger );
             }
             else
             {
-            	getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
+                getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
             }
         }
         catch ( NoBuildAgentException e )
@@ -648,7 +648,7 @@ public class ProjectGroupAction
                     else
                     {
                         logger.info( "Attempt to release group '" + projectGroup.getName() + "' failed as project '" +
-                            p.getName() + "' and project '" + parent.getName() + "' are both parents" );
+                                         p.getName() + "' and project '" + parent.getName() + "' are both parents" );
 
                         // currently, we have no provisions for releasing 2 or more parents
                         // at the same time, this will be implemented in the future

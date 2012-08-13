@@ -19,9 +19,6 @@ package org.apache.continuum.buildagent.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
@@ -31,6 +28,9 @@ import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.action.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.action.Action"
@@ -62,8 +62,8 @@ public class UpdateProjectFromWorkingDirectoryAction
 
         File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
 
-        ContinuumAgentBuildExecutor buildExecutor =
-            buildAgentBuildExecutorManager.getBuildExecutor( project.getExecutorId() );
+        ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor(
+            project.getExecutorId() );
 
         buildExecutor.updateProjectFromWorkingDirectory( workingDirectory, project, buildDefinition );
     }

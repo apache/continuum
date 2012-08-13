@@ -1,7 +1,5 @@
 package org.apache.continuum.profile;
 
-import java.util.List;
-
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -9,6 +7,8 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
+
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -224,7 +224,7 @@ public class DefaultProfileServiceTest
         try
         {
             getProfileService().updateProfile( profile );
-            
+
             fail( "no AlreadyExistsProfileException with duplicate name" );
         }
         catch ( AlreadyExistsProfileException e )

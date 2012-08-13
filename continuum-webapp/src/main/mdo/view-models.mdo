@@ -41,7 +41,7 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
-         <field>
+        <field>
           <name>groupSummarys</name>
           <version>1.0.0+</version>
           <description></description>
@@ -51,7 +51,7 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
-         <field>
+        <field>
           <name>buildDefinitionSummarys</name>
           <version>1.0.0+</version>
           <description></description>
@@ -204,7 +204,7 @@
           <description>name of the project group</description>
           <type>String</type>
         </field>
-         <field>
+        <field>
           <name>groupId</name>
           <version>1.0.0+</version>
           <required>false</required>
@@ -240,7 +240,7 @@
           <type>String</type>
         </field>
         <field>
-         <name>nextScheduledBuild</name>
+          <name>nextScheduledBuild</name>
           <version>1.0.0+</version>
           <required>false</required>
           <description>timestamp for the next scheduled build</description>
@@ -396,7 +396,7 @@
           <required>true</required>
           <description>id of the profile for build definition</description>
           <type>int</type>
-        </field> 
+        </field>
         <field>
           <name>description</name>
           <version>1.0.0+</version>
@@ -408,20 +408,20 @@
           <version>1.0.0+</version>
           <type>String</type>
           <description>type of the buid defintion</description>
-        </field>   
+        </field>
         <field>
           <name>alwaysBuild</name>
           <version>1.0.0+</version>
           <type>boolean</type>
           <defaultValue>false</defaultValue>
           <description>true if the build had to be forced even if there is no scm change</description>
-        </field>                    
+        </field>
       </fields>
     </class>
     <class>
       <name>NotifierSummary</name>
       <version>1.0.0+</version>
-       <fields>
+      <fields>
         <field>
           <name>id</name>
           <version>1.0.0+</version>
@@ -493,7 +493,7 @@
           <type>boolean</type>
         </field>
       </fields>
-    </class>    
+    </class>
     <class>
       <name>PrepareBuildSummary</name>
       <version>1.0.0+</version>

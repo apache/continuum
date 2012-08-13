@@ -19,20 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
-import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -45,6 +37,12 @@ import org.apache.maven.continuum.web.util.StateGenerator;
 import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -119,8 +117,8 @@ public class BuildResultAction
 
                 if ( ServletActionContext.getRequest() != null )
                 {
-                    state =
-                        StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+                    state = StateGenerator.generate( buildResult.getState(),
+                                                     ServletActionContext.getRequest().getContextPath() );
                 }
             }
             changeSet = null;
@@ -134,8 +132,7 @@ public class BuildResultAction
             buildResult = getContinuum().getBuildResult( getBuildId() );
 
             // directory contains files ?
-            File surefireReportsDirectory =
-                configuration.getTestReportsDirectory( buildId, getProjectId() );
+            File surefireReportsDirectory = configuration.getTestReportsDirectory( buildId, getProjectId() );
             File[] files = surefireReportsDirectory.listFiles();
             hasSurefireResults = files != null && files.length > 0;
             changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
@@ -144,8 +141,8 @@ public class BuildResultAction
 
             if ( ServletActionContext.getRequest() != null )
             {
-                state =
-                    StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+                state = StateGenerator.generate( buildResult.getState(),
+                                                 ServletActionContext.getRequest().getContextPath() );
             }
 
             this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
@@ -180,8 +177,8 @@ public class BuildResultAction
             }
             catch ( ContinuumException e )
             {
-                addActionError( getText( "buildResult.delete.error", "Unable to delete build result",
-                                         new Integer( buildId ).toString() ) );
+                addActionError( getText( "buildResult.delete.error", "Unable to delete build result", new Integer(
+                    buildId ).toString() ) );
             }
             catch ( BuildManagerException e )
             {
@@ -192,7 +189,7 @@ public class BuildResultAction
             event.setCategory( AuditLogConstants.BUILD_RESULT );
             event.setCurrentUser( getPrincipal() );
             event.log();
-            
+
             return SUCCESS;
         }
 

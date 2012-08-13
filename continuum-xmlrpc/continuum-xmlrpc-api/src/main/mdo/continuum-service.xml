@@ -533,8 +533,8 @@
       </fields>
       <codeSegments>
         <codeSegment>
-           <version>1.1.0+</version>
-           <code><![CDATA[
+          <version>1.1.0+</version>
+          <code><![CDATA[
             private java.util.List errors = new java.util.ArrayList();
 
             /**
@@ -826,8 +826,8 @@
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
-          <description>type of the buid defintion</description>          
-        </field>                
+          <description>type of the buid defintion</description>
+        </field>
         <field>
           <name>schedule</name>
           <version>1.1.0+</version>
@@ -859,7 +859,7 @@
           <description>
             true if this buildDefinition is a template
           </description>
-        </field>         
+        </field>
       </fields>
     </class>
     <class>
@@ -892,8 +892,8 @@
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
-          <description>type of the buid BuildDefinitionTemplate use for default</description>          
-        </field>                                
+          <description>type of the buid BuildDefinitionTemplate use for default</description>
+        </field>
         <field xml.reference="true" stash.part="true">
           <name>buildDefinitions</name>
           <version>1.1.0+</version>
@@ -1021,7 +1021,7 @@
           <name>buildAgentGroup</name>
           <version>1.4.1+</version>
           <type>String</type>
-        </field>  
+        </field>
       </fields>
     </class>
 
@@ -1044,7 +1044,7 @@
           <name>varName</name>
           <version>1.1.0+</version>
           <type>String</type>
-        </field>          
+        </field>
         <field>
           <name>name</name>
           <version>1.1.0+</version>
@@ -1126,8 +1126,8 @@
       </fields>
       <codeSegments>
         <codeSegment>
-           <version>1.1.0+</version>
-           <code><![CDATA[
+          <version>1.1.0+</version>
+          <code><![CDATA[
     public final static int NEW = 1;
     public final static int OK = 2;
     public final static int FAILED = 3;
@@ -1218,7 +1218,7 @@
           <type>String</type>
         </field>
       </fields>
-    </class>    
+    </class>
 
     <class>
       <name>LocalRepository</name>
@@ -1243,7 +1243,7 @@
           <type>String</type>
           <required>true</required>
           <description>
-          The file system location for this repository
+            The file system location for this repository
           </description>
         </field>
         <field>
@@ -1252,12 +1252,12 @@
           <type>String</type>
           <defaultValue>default</defaultValue>
           <description>
-          The layout of the repository. Valid values are "default" and "legacy"
+            The layout of the repository. Valid values are "default" and "legacy"
           </description>
         </field>
       </fields>
     </class>
-    
+
     <class>
       <name>AbstractPurgeConfiguration</name>
       <version>1.1.1+</version>
@@ -1287,7 +1287,7 @@
           <type>int</type>
           <defaultValue>2</defaultValue>
           <description>
-          The total count of the artifact for each snapshot or the release/build output folder to be retained.
+            The total count of the artifact for each snapshot or the release/build output folder to be retained.
           </description>
         </field>
         <field>
@@ -1296,7 +1296,7 @@
           <type>int</type>
           <defaultValue>100</defaultValue>
           <description>
-          The number of days old which will be the basis for removing a snapshot or a folder.
+            The number of days old which will be the basis for removing a snapshot or a folder.
           </description>
         </field>
         <field>
@@ -1370,7 +1370,7 @@
         </field>
       </fields>
     </class>
-       
+
     <class>
       <name>ContinuumReleaseResult</name>
       <version>1.1.1+</version>
@@ -1422,7 +1422,7 @@
           <type>String</type>
         </field>
       </fields>
-    </class> 
+    </class>
     <class>
       <name>BuildTrigger</name>
       <version>1.4.1+</version>
@@ -1496,7 +1496,7 @@
           <name>description</name>
           <version>1.4.1+</version>
           <type>String</type>
-        </field>        
+        </field>
         <field>
           <name>enabled</name>
           <version>1.4.1+</version>

@@ -40,8 +40,8 @@ public interface ContinuumReleaseManagerListener
     String getError();
 
     int getState();
-    
+
     String getUsername();
-     
+
     void setUsername( String username );
 }

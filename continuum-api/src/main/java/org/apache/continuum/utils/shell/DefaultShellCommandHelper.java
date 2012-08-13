@@ -19,12 +19,6 @@ package org.apache.continuum.utils.shell;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
-import java.util.Arrays;
-import java.util.Map;
-
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.exec.MavenExecutorException;
 import org.apache.maven.shared.release.exec.TeeConsumer;
@@ -38,11 +32,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.Map;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-@Service("shellCommandHelper")
+@Service( "shellCommandHelper" )
 public class DefaultShellCommandHelper
     implements ShellCommandHelper
 {

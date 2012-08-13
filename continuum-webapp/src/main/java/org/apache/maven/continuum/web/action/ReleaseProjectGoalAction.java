@@ -84,14 +84,14 @@ public class ReleaseProjectGoalAction
         else
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-    
+
             Map preparedReleases = releaseManager.getPreparedReleases();
             if ( preparedReleases.containsKey( releaseId ) )
             {
                 ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
-    
+
                 preparedReleaseName = descriptor.getReleaseVersions().get( releaseId ).toString();
-    
+
                 preparedReleaseId = releaseId;
             }
         }

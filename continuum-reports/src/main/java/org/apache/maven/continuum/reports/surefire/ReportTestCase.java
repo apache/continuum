@@ -20,9 +20,10 @@ package org.apache.maven.continuum.reports.surefire;
 
 /**
  * Taken from maven-surefire-report-plugin
+ *
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 12 nov. 07
  * @version $Id$
+ * @since 12 nov. 07
  */
 public class ReportTestCase
 {

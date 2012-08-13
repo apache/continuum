@@ -27,5 +27,5 @@ import org.apache.maven.continuum.notification.Notifier;
  */
 public interface NotifierManager
 {
-    Notifier getNotifier(String notifierId);
+    Notifier getNotifier( String notifierId );
 }

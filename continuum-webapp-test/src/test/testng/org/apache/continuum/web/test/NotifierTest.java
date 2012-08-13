@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "notifier" } )
+@Test( groups = {"notifier"} )
 public class NotifierTest
     extends AbstractAdminTest
 {
@@ -119,7 +119,7 @@ public class NotifierTest
         assertTextPresent( "Address is invalid" );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMailProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMailProjectNotifier"} )
     public void testEditValidMailProjectNotifier()
         throws Exception
     {
@@ -129,7 +129,7 @@ public class NotifierTest
         editMailNotifier( projectGroupName, projectName, newMail, mailNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMailProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMailProjectNotifier"} )
     public void testEditInvalidMailProjectNotifier()
         throws Exception
     {
@@ -151,7 +151,7 @@ public class NotifierTest
         addMailNotifier( projectGroupName, null, mailNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMailGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMailGroupNotifier"} )
     public void testEditValidMailGroupNotifier()
         throws Exception
     {
@@ -163,7 +163,7 @@ public class NotifierTest
         editMailNotifier( projectGroupName, null, newMail, mailNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMailGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMailGroupNotifier"} )
     public void testEditInvalidMailGroupNotifier()
         throws Exception
     {
@@ -198,7 +198,7 @@ public class NotifierTest
         assertTextPresent( "Channel contains invalid character" );
     }
 
-    @Test( dependsOnMethods = { "testAddValidIrcProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidIrcProjectNotifier"} )
     public void testEditValidIrcProjectNotifier()
         throws Exception
     {
@@ -211,7 +211,7 @@ public class NotifierTest
                          true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidIrcProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidIrcProjectNotifier"} )
     public void testEditInvalidIrcProjectNotifier()
         throws Exception
     {
@@ -235,7 +235,7 @@ public class NotifierTest
         addIrcNotifier( projectGroupName, null, ircNotifierHost, ircNotifierChannel, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidIrcGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidIrcGroupNotifier"} )
     public void testEditValidIrcGroupNotifier()
         throws Exception
     {
@@ -248,7 +248,7 @@ public class NotifierTest
         editIrcNotifier( projectGroupName, null, newHost, newChannel, ircNotifierHost, ircNotifierChannel, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidIrcGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidIrcGroupNotifier"} )
     public void testEditInvalidIrcGroupNotifier()
         throws Exception
     {
@@ -287,7 +287,7 @@ public class NotifierTest
         assertTextPresent( "Address is invalid" );
     }
 
-    @Test( dependsOnMethods = { "testAddValidJabberProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidJabberProjectNotifier"} )
     public void testEditValidJabberProjectNotifier()
         throws Exception
     {
@@ -302,7 +302,7 @@ public class NotifierTest
                             jabberNotifierLogin, jabberNotifierPassword, jabberNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidJabberProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidJabberProjectNotifier"} )
     public void testEditInvalidJabberProjectNotifier()
         throws Exception
     {
@@ -330,7 +330,7 @@ public class NotifierTest
                            jabberNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidJabberGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidJabberGroupNotifier"} )
     public void testEditValidJabberGroupNotifier()
         throws Exception
     {
@@ -347,7 +347,7 @@ public class NotifierTest
                             jabberNotifierLogin, jabberNotifierPassword, jabberNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidJabberGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidJabberGroupNotifier"} )
     public void testEditInvalidJabberGroupNotifier()
         throws Exception
     {
@@ -387,7 +387,7 @@ public class NotifierTest
         assertTextPresent( "Address is invalid" );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMsnProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMsnProjectNotifier"} )
     public void testEditValidMsnProjectNotifier()
         throws Exception
     {
@@ -401,7 +401,7 @@ public class NotifierTest
                          msnNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMsnProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMsnProjectNotifier"} )
     public void testEditInvalidMsnProjectNotifier()
         throws Exception
     {
@@ -426,7 +426,7 @@ public class NotifierTest
         addMsnNotifier( projectGroupName, null, msnNotifierLogin, msnNotifierPassword, msnNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMsnGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMsnGroupNotifier"} )
     public void testEditValidMsnGroupNotifier()
         throws Exception
     {
@@ -442,7 +442,7 @@ public class NotifierTest
                          msnNotifierAddress, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidMsnGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidMsnGroupNotifier"} )
     public void testEditInvalidMsnGroupNotifier()
         throws Exception
     {
@@ -478,7 +478,7 @@ public class NotifierTest
         assertTextPresent( "Destination URL is invalid" );
     }
 
-    @Test( dependsOnMethods = { "testAddValidWagonProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidWagonProjectNotifier"} )
     public void testEditValidWagonProjectNotifier()
         throws Exception
     {
@@ -490,7 +490,7 @@ public class NotifierTest
                            true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidWagonProjectNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidWagonProjectNotifier"} )
     public void testEditInvalidWagonProjectNotifier()
         throws Exception
     {
@@ -514,7 +514,7 @@ public class NotifierTest
         addWagonNotifierPage( projectGroupName, null, wagonNotifierUrl, wagonServerId, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidWagonGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidWagonGroupNotifier"} )
     public void testEditValidWagonGroupNotifier()
         throws Exception
     {
@@ -526,7 +526,7 @@ public class NotifierTest
         editWagonNotifier( projectGroupName, null, wagonNotifierUrl, newId, wagonNotifierUrl, wagonServerId, true );
     }
 
-    @Test( dependsOnMethods = { "testAddValidWagonGroupNotifier" } )
+    @Test( dependsOnMethods = {"testAddValidWagonGroupNotifier"} )
     public void testEditInvalidWagonGroupNotifier()
         throws Exception
     {
@@ -545,7 +545,7 @@ public class NotifierTest
         assertTextPresent( "Server Id is required" );
     }
 
-    @Test( dependsOnMethods = { "testEditValidMailGroupNotifier", "testEditInvalidMailGroupNotifier" } )
+    @Test( dependsOnMethods = {"testEditValidMailGroupNotifier", "testEditInvalidMailGroupNotifier"} )
     public void testDeleteGroupNotifier()
         throws Exception
     {
@@ -559,7 +559,7 @@ public class NotifierTest
         assertGroupNotifierPage( projectGroupName );
     }
 
-    @Test( dependsOnMethods = { "testEditValidMailProjectNotifier", "testEditInvalidMailProjectNotifier" } )
+    @Test( dependsOnMethods = {"testEditValidMailProjectNotifier", "testEditInvalidMailProjectNotifier"} )
     public void testDeleteProjectNotifier()
         throws Exception
     {

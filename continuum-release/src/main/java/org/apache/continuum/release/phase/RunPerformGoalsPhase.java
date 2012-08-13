@@ -19,9 +19,6 @@ package org.apache.continuum.release.phase;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseFailureException;
@@ -30,8 +27,12 @@ import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.env.ReleaseEnvironment;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.io.File;
+import java.util.List;
+
 /**
  * Run Release Perform Goals
+ *
  * @plexus.component role="org.apache.maven.shared.release.phase.ReleasePhase" role-hint="run-release-perform-goals"
  */
 public class RunPerformGoalsPhase
@@ -43,11 +44,12 @@ public class RunPerformGoalsPhase
         return releaseDescriptor.getPerformGoals();
     }
 
-    public ReleaseResult execute(ReleaseDescriptor releaseDescriptor,
-			ReleaseEnvironment releaseEnvironment, List reactorProjects)
-			throws ReleaseExecutionException, ReleaseFailureException {
-		
-    	String additionalArguments = releaseDescriptor.getAdditionalArguments();
+    public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
+                                  List reactorProjects )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+
+        String additionalArguments = releaseDescriptor.getAdditionalArguments();
 
         if ( releaseDescriptor.isUseReleaseProfile() )
         {
@@ -60,10 +62,10 @@ public class RunPerformGoalsPhase
                 additionalArguments = "-DperformRelease=true";
             }
         }
-        
+
         return execute( releaseDescriptor, new File( releaseDescriptor.getCheckoutDirectory() ), additionalArguments );
-	}
-    
+    }
+
     public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException, ReleaseFailureException
     {

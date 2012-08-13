@@ -19,14 +19,6 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
-import java.io.File;
-import java.net.URL;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
@@ -38,6 +30,13 @@ import org.apache.maven.continuum.jdo.MemoryJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 
 /**
  * @author Maria Catherine Tan
@@ -52,7 +51,7 @@ public abstract class AbstractPurgeTest
     private static final String TEST_DEFAULT_RELEASES_DIR = "target/working-directory";
 
     private static final String TEST_DEFAULT_BUILDOUTPUT_DIR = "target/build-output-directory";
-    
+
     protected static final String TEST_BUILD_AGENT_URL = "http://localhost:8181/continuum-buildagent/xmlrpc";
 
     protected static final int TEST_DAYS_OLDER = 30;
@@ -62,7 +61,7 @@ public abstract class AbstractPurgeTest
     protected static final String TEST_RELEASES_DIRECTORY_TYPE = "releases";
 
     protected static final String TEST_BUILDOUTPUT_DIRECTORY_TYPE = "buildOutput";
-    
+
     protected static final String TEST_WORKING_DIRECTORY_TYPE = "working";
 
     protected LocalRepositoryDao localRepositoryDao;
@@ -91,14 +90,14 @@ public abstract class AbstractPurgeTest
 
         localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
 
-        repositoryPurgeConfigurationDao =
-            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class );
+        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
+            RepositoryPurgeConfigurationDao.class );
 
-        directoryPurgeConfigurationDao =
-            (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class );
-        
-        distributedDirectoryPurgeConfigurationDao =
-            (DistributedDirectoryPurgeConfigurationDao) lookup( DistributedDirectoryPurgeConfigurationDao.class );
+        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup(
+            DirectoryPurgeConfigurationDao.class );
+
+        distributedDirectoryPurgeConfigurationDao = (DistributedDirectoryPurgeConfigurationDao) lookup(
+            DistributedDirectoryPurgeConfigurationDao.class );
 
         if ( localRepositoryDao.getAllLocalRepositories().size() == 0 )
         {
@@ -181,8 +180,8 @@ public abstract class AbstractPurgeTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/package.jdo" )}, new URL[]{}, null,
-                                       false, null );
+        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/package.jdo" )}, new URL[]{}, null, false,
+                                       null );
     }
 
     protected File getDefaultRepositoryLocation()

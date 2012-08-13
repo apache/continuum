@@ -35,7 +35,8 @@ public interface MavenBuilderHelper
 {
     String ROLE = MavenBuilderHelper.class.getName();
 
-    void mapMetadataToProject( ContinuumProjectBuildingResult result, File metadata, Project project, boolean updateDefinition);
+    void mapMetadataToProject( ContinuumProjectBuildingResult result, File metadata, Project project,
+                               boolean updateDefinition );
 
     MavenProject getMavenProject( ContinuumProjectBuildingResult result, File file );
 
@@ -46,10 +47,10 @@ public interface MavenBuilderHelper
      * @param groupPom         map this project as if it is being used to initialize a project group
      */
     void mapMavenProjectToContinuumProject( ContinuumProjectBuildingResult result, MavenProject mavenProject,
-                                            Project continuumProject, boolean updateDefinition);
+                                            Project continuumProject, boolean updateDefinition );
 
     ArtifactRepository getLocalRepository()
         throws SettingsConfigurationException;
-    
+
     void setLocalRepository( LocalRepository repository );
 }

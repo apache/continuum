@@ -44,7 +44,7 @@ public class ContinuumBuildAgentDavSessionProvider
     public boolean attachSession( WebdavRequest request )
         throws DavException
     {
-        if( !isAuthorized( request ) )
+        if ( !isAuthorized( request ) )
         {
             throw new DavException( HttpServletResponse.SC_UNAUTHORIZED );
         }
@@ -56,7 +56,7 @@ public class ContinuumBuildAgentDavSessionProvider
 
     public void releaseSession( WebdavRequest request )
     {
-        request.setDavSession(null);
+        request.setDavSession( null );
     }
 
     private boolean isAuthorized( WebdavRequest request )
@@ -82,7 +82,7 @@ public class ContinuumBuildAgentDavSessionProvider
                 password = token.substring( delim + 1 );
             }
 
-            if( buildAgentConfigurationService.getSharedSecretPassword() != null &&
+            if ( buildAgentConfigurationService.getSharedSecretPassword() != null &&
                 buildAgentConfigurationService.getSharedSecretPassword().equals( password ) )
             {
                 log.debug( "Password matches configured shared key in continuum build agent." );

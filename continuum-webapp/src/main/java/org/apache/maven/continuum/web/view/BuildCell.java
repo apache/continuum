@@ -20,13 +20,6 @@ package org.apache.maven.continuum.web.view;
  */
 
 import com.opensymphony.xwork2.ActionContext;
-
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
-
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.struts2.views.util.UrlHelper;
@@ -40,6 +33,11 @@ import org.codehaus.plexus.redback.system.SecuritySystemConstants;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
+
+import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
 
 /**
  * Used in Summary view
@@ -142,8 +140,8 @@ public class BuildCell
         ActionContext context = ActionContext.getContext();
 
         PlexusContainer container = (PlexusContainer) context.getApplication().get( PlexusConstants.PLEXUS_KEY );
-        SecuritySession securitySession =
-            (SecuritySession) context.getSession().get( SecuritySystemConstants.SECURITY_SESSION_KEY );
+        SecuritySession securitySession = (SecuritySession) context.getSession().get(
+            SecuritySystemConstants.SECURITY_SESSION_KEY );
 
         try
         {

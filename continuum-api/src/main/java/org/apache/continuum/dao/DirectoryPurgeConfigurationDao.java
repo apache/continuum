@@ -35,7 +35,7 @@ public interface DirectoryPurgeConfigurationDao
     List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsBySchedule( int scheduleId );
 
     List<DirectoryPurgeConfiguration> getEnableDirectoryPurgeConfigurationsBySchedule( int scheduleId );
-    
+
     List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByLocation( String location );
 
     List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByType( String type );

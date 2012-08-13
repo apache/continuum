@@ -19,11 +19,11 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -37,12 +37,12 @@ public interface ContinuumReleaseResultDao
         throws ContinuumStoreException;
 
     List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId );
-    
+
     List<ContinuumReleaseResult> getAllContinuumReleaseResults();
 
     ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
-    
+
     ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
         throws ContinuumStoreException;
 

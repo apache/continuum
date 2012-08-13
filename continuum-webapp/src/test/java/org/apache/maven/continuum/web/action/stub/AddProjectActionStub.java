@@ -43,12 +43,12 @@ public class AddProjectActionStub
     {
         return true;
     }
-    
+
     protected void checkAddProjectGroupAuthorization()
     {
         // skip authorization check
     }
-    
+
     protected void checkAddProjectToGroupAuthorization( String projectGroupName )
     {
         // skip authorization check

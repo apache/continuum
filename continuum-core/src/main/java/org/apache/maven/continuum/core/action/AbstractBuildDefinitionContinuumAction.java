@@ -19,8 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.ContinuumException;
@@ -31,6 +29,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.List;
 
 /**
  * AbstractBuildDefinitionContinuumAction:
@@ -59,8 +59,8 @@ public abstract class AbstractBuildDefinitionContinuumAction
             // if buildDefinition passed in is not default then we are done
             if ( buildDefinition.isDefaultForProject() )
             {
-                BuildDefinition storedDefinition =
-                    buildDefinitionDao.getDefaultBuildDefinitionForProject( project.getId() );
+                BuildDefinition storedDefinition = buildDefinitionDao.getDefaultBuildDefinitionForProject(
+                    project.getId() );
 
                 if ( storedDefinition != null )
                 {
@@ -73,7 +73,7 @@ public abstract class AbstractBuildDefinitionContinuumAction
         catch ( ContinuumObjectNotFoundException nfe )
         {
             getLogger().debug( getClass().getName() +
-                ": safely ignoring the resetting of old build definition becuase it didn't exist" );
+                                   ": safely ignoring the resetting of old build definition becuase it didn't exist" );
         }
         catch ( ContinuumStoreException cse )
         {
@@ -99,8 +99,8 @@ public abstract class AbstractBuildDefinitionContinuumAction
     {
         try
         {
-            List<BuildDefinition> storedDefinitions =
-                buildDefinitionDao.getDefaultBuildDefinitionsForProjectGroup( projectGroup.getId() );
+            List<BuildDefinition> storedDefinitions = buildDefinitionDao.getDefaultBuildDefinitionsForProjectGroup(
+                projectGroup.getId() );
 
             for ( BuildDefinition storedDefinition : storedDefinitions )
             {
@@ -109,8 +109,8 @@ public abstract class AbstractBuildDefinitionContinuumAction
                 {
                     if ( storedDefinition != null && storedDefinition.getId() != buildDefinition.getId() )
                     {
-                        if ( buildDefinition.getType() != null &&
-                            buildDefinition.getType().equals( storedDefinition.getType() ) )
+                        if ( buildDefinition.getType() != null && buildDefinition.getType().equals(
+                            storedDefinition.getType() ) )
                         {
                             //Required to get build def from store because storedDefinition is readonly
                             BuildDefinition def = buildDefinitionDao.getBuildDefinition( storedDefinition.getId() );

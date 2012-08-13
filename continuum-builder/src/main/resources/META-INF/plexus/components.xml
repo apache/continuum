@@ -37,7 +37,8 @@
     <component>
       <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskExecutor</role>
       <role-hint>distributed-build-project</role-hint>
-      <implementation>org.apache.continuum.builder.distributed.executor.DistributedBuildProjectTaskExecutor</implementation>
+      <implementation>org.apache.continuum.builder.distributed.executor.DistributedBuildProjectTaskExecutor
+      </implementation>
       <instantiation-strategy>per-lookup</instantiation-strategy>
       <requirements>
         <requirement>
@@ -61,9 +62,10 @@
     <component>
       <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor</role>
       <role-hint>distributed-build-project</role-hint>
-      <implementation>org.apache.continuum.builder.distributed.executor.ThreadedDistributedBuildTaskQueueExecutor</implementation>
+      <implementation>org.apache.continuum.builder.distributed.executor.ThreadedDistributedBuildTaskQueueExecutor
+      </implementation>
       <instantiation-strategy>per-lookup</instantiation-strategy>
-	  <requirements>
+      <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
           <role-hint>distributed-build-project</role-hint>

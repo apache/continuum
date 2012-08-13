@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-@Test( groups = { "release" } )
+@Test( groups = {"release"} )
 public class ReleaseTest
     extends AbstractAdminTest
 {
@@ -187,7 +187,7 @@ public class ReleaseTest
         assertPreparedReleasesFileCreated();
     }
 
-    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildEnvironment" } )
+    @Test( dependsOnMethods = {"testReleasePrepareProjectWithNoBuildEnvironment"} )
     public void testReleasePerformUsingProvidedParametersWithDistributedBuilds()
         throws Exception
     {

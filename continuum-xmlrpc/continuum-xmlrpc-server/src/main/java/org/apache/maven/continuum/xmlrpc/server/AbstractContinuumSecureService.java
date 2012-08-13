@@ -534,7 +534,7 @@ public abstract class AbstractContinuumSecureService
         {
             throw new ContinuumException( "Authentication required." );
         }
-    
+
         try
         {
             checkAuthorization( ContinuumRoleConstants.SYSTEM_ADMINISTRATOR_ROLE );

@@ -19,9 +19,6 @@ package org.apache.maven.continuum.web.action.component;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -31,6 +28,9 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BuildDefinitionSummaryAction:
@@ -49,7 +49,7 @@ public class BuildDefinitionSummaryAction
     private String projectGroupName;
 
     private int projectId;
-    
+
     // Allow dont remove default group build definition in project list 
     private int defaultGroupDefinitionId;
 
@@ -107,7 +107,8 @@ public class BuildDefinitionSummaryAction
 
             for ( Project project : (List<Project>) projectGroup.getProjects() )
             {
-                projectBuildDefinitionSummaries.addAll( gatherProjectBuildDefinitionSummaries( project.getId(), projectGroupId ) );
+                projectBuildDefinitionSummaries.addAll( gatherProjectBuildDefinitionSummaries( project.getId(),
+                                                                                               projectGroupId ) );
 
             }
 
@@ -146,7 +147,7 @@ public class BuildDefinitionSummaryAction
             {
                 defaultGroupDefinitionId = bds.getId();
             }
-        
+
             if ( containsDefaultBDForProject )
             {
                 bds.setIsDefault( false );

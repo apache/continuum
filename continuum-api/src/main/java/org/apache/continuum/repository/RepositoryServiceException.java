@@ -31,12 +31,12 @@ public class RepositoryServiceException
     {
         super( message );
     }
-    
+
     public RepositoryServiceException( Throwable cause )
     {
         super( cause );
     }
-    
+
     public RepositoryServiceException( String message, Throwable cause )
     {
         super( message, cause );

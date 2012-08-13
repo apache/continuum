@@ -26,14 +26,14 @@
            http://www.springframework.org/schema/context 
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-  <context:annotation-config />
-  <context:component-scan 
-    base-package="org.apache.continuum.installation,org.apache.continuum.profile,
+  <context:annotation-config/>
+  <context:component-scan
+      base-package="org.apache.continuum.installation,org.apache.continuum.profile,
                   org.apache.maven.continuum.configuration,org.apache.maven.continuum.utils"/>
 
   <bean id="configurationService" class="org.apache.maven.continuum.configuration.DefaultConfigurationService"
         init-method="initialize">
     <property name="applicationHome" value="data"/>
-  </bean> 
+  </bean>
   <bean id="buildQueueService" class="org.apache.continuum.buildqueue.DefaultBuildQueueService"/>
 </beans>

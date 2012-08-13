@@ -19,13 +19,13 @@ package org.apache.maven.continuum.wagon;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.maven.wagon.authentication.AuthenticationInfo;
+
+import java.util.List;
 
 /**
  * Context
- * 
+ *
  * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
  */
 public class Context

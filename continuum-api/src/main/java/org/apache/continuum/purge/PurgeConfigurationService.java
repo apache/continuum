@@ -19,13 +19,13 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+
+import java.util.List;
 
 /**
  * @author Maria Catherine Tan
@@ -35,85 +35,88 @@ import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 public interface PurgeConfigurationService
 {
     String ROLE = PurgeConfigurationService.class.getName();
-    
+
     AbstractPurgeConfiguration addPurgeConfiguration( AbstractPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException;
-    
+
     void updatePurgeConfiguration( AbstractPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException;
 
     void removePurgeConfiguration( int purgeConfigId )
         throws PurgeConfigurationServiceException;
-    
+
     RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
         throws PurgeConfigurationServiceException;
-    
+
     void updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
         throws PurgeConfigurationServiceException;
-    
+
     void removeRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
         throws PurgeConfigurationServiceException;
-    
+
     RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int repoPurgeId )
         throws PurgeConfigurationServiceException;
-    
+
     RepositoryPurgeConfiguration getDefaultPurgeConfigurationForRepository( int repositoryId );
-    
+
     List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsBySchedule( int scheduleId );
-    
+
     List<RepositoryPurgeConfiguration> getEnableRepositoryPurgeConfigurationsBySchedule( int scheduleId );
-    
+
     List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByRepository( int repositoryId );
-    
+
     List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations();
-    
+
     DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException;
-    
+
     void updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException;
-    
+
     void removeDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException;
-    
+
     DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int dirPurgeId )
         throws PurgeConfigurationServiceException;
-    
+
     DirectoryPurgeConfiguration getDefaultPurgeConfigurationForDirectoryType( String directoryType );
-    
+
     List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsBySchedule( int scheduleId );
-    
+
     List<DirectoryPurgeConfiguration> getEnableDirectoryPurgeConfigurationsBySchedule( int scheduleId );
-    
+
     List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByLocation( String location );
-    
+
     List<DirectoryPurgeConfiguration> getAllDirectoryPurgeConfigurations();
-    
+
     List<AbstractPurgeConfiguration> getAllPurgeConfigurations();
-    
+
     List<DistributedDirectoryPurgeConfiguration> getAllDistributedDirectoryPurgeConfigurations();
-    
+
     DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int dirPurgeId )
         throws PurgeConfigurationServiceException;
-    
-    DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
+
+    DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration(
+        DistributedDirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException;
-    
+
     void updateDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException;
-    
+
     void removeDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException;
-    
+
     AbstractPurgeConfiguration getPurgeConfiguration( int purgeConfigId );
-    
-    List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule( int scheduleId );
-    
+
+    List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
+        int scheduleId );
+
     /**
      * @param repositoryId
      * @return
      * @throws PurgeConfigurationServiceException
+     *
      */
-    RepositoryManagedContent getManagedRepositoryContent( int repositoryId)
+    RepositoryManagedContent getManagedRepositoryContent( int repositoryId )
         throws PurgeConfigurationServiceException;
 }

@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "antProject" } )
+@Test( groups = {"antProject"} )
 public class AntProjectTest
     extends AbstractAdminTest
 {
@@ -108,7 +108,7 @@ public class AntProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    @Test( dependsOnMethods = { "testAddAntProject" } )
+    @Test( dependsOnMethods = {"testAddAntProject"} )
     public void testAddDuplicateAntProject()
         throws Exception
     {

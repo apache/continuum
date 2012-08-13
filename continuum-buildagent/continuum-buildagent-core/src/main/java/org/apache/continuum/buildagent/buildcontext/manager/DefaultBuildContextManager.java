@@ -19,12 +19,12 @@ package org.apache.continuum.buildagent.buildcontext.manager;
  * under the License.
  */
 
+import org.apache.continuum.buildagent.buildcontext.BuildContext;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.continuum.buildagent.buildcontext.BuildContext;
 
 /**
  * @author Jan Steven Ancajas

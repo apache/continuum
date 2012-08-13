@@ -19,24 +19,23 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  * @plexus.component role="org.apache.continuum.dao.ContinuumReleaseResultDao"
  */
-@Repository("continuumReleaseResultDao")
+@Repository( "continuumReleaseResultDao" )
 public class ContinuumReleaseResultDaoImpl
     extends AbstractDao
     implements ContinuumReleaseResultDao
@@ -58,7 +57,8 @@ public class ContinuumReleaseResultDaoImpl
         return (ContinuumReleaseResult) getObjectById( ContinuumReleaseResult.class, releaseResultId );
     }
 
-    public ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+    public ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime,
+                                                             long endTime )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -68,17 +68,18 @@ public class ContinuumReleaseResultDaoImpl
         try
         {
             tx.begin();
-            
+
             Extent extent = pm.getExtent( ContinuumReleaseResult.class, true );
 
             Query query = pm.newQuery( extent );
 
             query.declareImports( "import java.lang.String" );
-            
+
             query.declareParameters( "int projectId, String releaseGoal, long startTime, long endTime" );
-            
-            query.setFilter( "this.project.id == projectId && this.releaseGoal == releaseGoal && this.startTime == startTime && this.endTime == endTime" );
-            
+
+            query.setFilter(
+                "this.project.id == projectId && this.releaseGoal == releaseGoal && this.startTime == startTime && this.endTime == endTime" );
+
             Object[] params = new Object[4];
             params[0] = projectId;
             params[1] = releaseGoal;
@@ -97,7 +98,7 @@ public class ContinuumReleaseResultDaoImpl
             Object object = pm.detachCopy( result.iterator().next() );
 
             tx.commit();
-            
+
             return (ContinuumReleaseResult) object;
         }
         finally
@@ -106,7 +107,7 @@ public class ContinuumReleaseResultDaoImpl
         }
 
     }
-    
+
     public List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();

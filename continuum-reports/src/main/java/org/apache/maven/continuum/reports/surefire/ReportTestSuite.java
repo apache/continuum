@@ -18,6 +18,10 @@ package org.apache.maven.continuum.reports.surefire;
  * under the License.
  */
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -25,14 +29,9 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -178,14 +177,14 @@ public class ReportTestSuite
         else if ( "failure".equals( qName ) )
         {
             testCase.setFailureDetails( currentElement.toString() );
-            this.addReportFailure(
-                new ReportFailure( testCase.getFailureType(), testCase.getFailureDetails(), testCase.getName() ) );
+            this.addReportFailure( new ReportFailure( testCase.getFailureType(), testCase.getFailureDetails(),
+                                                      testCase.getName() ) );
         }
         else if ( "error".equals( qName ) )
         {
             testCase.setFailureDetails( currentElement.toString() );
-            this.addReportFailure(
-                new ReportFailure( testCase.getFailureType(), testCase.getFailureDetails(), testCase.getName() ) );
+            this.addReportFailure( new ReportFailure( testCase.getFailureType(), testCase.getFailureDetails(),
+                                                      testCase.getName() ) );
         }
     }
 
@@ -308,7 +307,7 @@ public class ReportTestSuite
         this.testCases = Collections.unmodifiableList( testCases );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<ReportFailure> getReportFailures()
     {
         return reportFailures == null ? Collections.EMPTY_LIST : reportFailures;

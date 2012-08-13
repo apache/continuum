@@ -47,8 +47,8 @@ public class DefaultRepositoryServiceTest
     {
         super.setUp();
 
-        repositoryPurgeConfigurationDao =
-            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class.getName() );
+        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
+            RepositoryPurgeConfigurationDao.class.getName() );
 
         repositoryService = (RepositoryService) lookup( RepositoryService.ROLE );
 

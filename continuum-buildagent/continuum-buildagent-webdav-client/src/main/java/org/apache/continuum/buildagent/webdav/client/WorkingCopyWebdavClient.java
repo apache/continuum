@@ -101,7 +101,7 @@ public class WorkingCopyWebdavClient
         HttpGet httpGet = new HttpGet( uri );
 
         httpClient.getCredentialsProvider().setCredentials( new AuthScope( uri.getHost(), uri.getPort() ),
-                                                new UsernamePasswordCredentials( username, password ) );
+                                                            new UsernamePasswordCredentials( username, password ) );
 
         HttpHost targetHost = new HttpHost( url.getHost(), url.getPort(), url.getProtocol() );
 
@@ -119,7 +119,8 @@ public class WorkingCopyWebdavClient
         System.out.println( "Response status code :: " + httpResponse.getStatusLine().getStatusCode() );
 
         InputStream is = IOUtils.toInputStream( EntityUtils.toString( httpResponse.getEntity(),
-                                                                      EntityUtils.getContentCharSet( httpResponse.getEntity() ) ) );
+                                                                      EntityUtils.getContentCharSet(
+                                                                          httpResponse.getEntity() ) ) );
         String content = IOUtils.toString( is );
 
         System.out.println( "Content :: " + content );
@@ -129,7 +130,7 @@ public class WorkingCopyWebdavClient
         throws IOException, URISyntaxException, DavException
     {
         int idx = filePath.lastIndexOf( "/" );
-        if( idx != -1 )
+        if ( idx != -1 )
         {
             filePath = StringUtils.substring( filePath, 0, idx + 1 );
         }
@@ -146,20 +147,22 @@ public class WorkingCopyWebdavClient
         MultiStatus multiStatus = pFind.getResponseBodyAsMultiStatus();
         MultiStatusResponse[] responses = multiStatus.getResponses();
         MultiStatusResponse currResponse;
-        System.out.println("Folders and files in " + filePath + ":");
+        System.out.println( "Folders and files in " + filePath + ":" );
 
-        for( int i = 0; i < responses.length; i++ )
+        for ( int i = 0; i < responses.length; i++ )
         {
             currResponse = responses[i];
-            if ( !( currResponse.getHref().equals( uri.toString() ) || currResponse.getHref().equals( uri.toString() + "/") ) )
+            if ( !( currResponse.getHref().equals( uri.toString() ) || currResponse.getHref().equals(
+                uri.toString() + "/" ) ) )
             {
                 String currResponseHref = StringUtils.trim( currResponse.getHref() );
 
                 System.out.println( "\nResource url :: " + currResponseHref );
 
-                DavProperty displayNameDavProperty = currResponse.getProperties( HttpStatus.SC_OK ).get( "displayname" );
+                DavProperty displayNameDavProperty = currResponse.getProperties( HttpStatus.SC_OK ).get(
+                    "displayname" );
                 String displayName;
-                if( displayNameDavProperty != null )
+                if ( displayNameDavProperty != null )
                 {
                     displayName = (String) displayNameDavProperty.getValue();
                 }
@@ -176,7 +179,7 @@ public class WorkingCopyWebdavClient
 
                 System.out.println( "Returned status code :: " + httpGet.getStatusCode() );
 
-                if( httpGet.getStatusCode() == HttpStatus.SC_OK )
+                if ( httpGet.getStatusCode() == HttpStatus.SC_OK )
                 {
                     InputStream is = httpGet.getResponseBodyAsStream();
 
@@ -202,17 +205,18 @@ public class WorkingCopyWebdavClient
         int maxHostConnections = 20;
 
         HttpConnectionManagerParams params = new HttpConnectionManagerParams();
-        params.setMaxConnectionsPerHost(hostConfig, maxHostConnections);
+        params.setMaxConnectionsPerHost( hostConfig, maxHostConnections );
 
         HttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
-        connectionManager.setParams(params);
+        connectionManager.setParams( params );
 
-        org.apache.commons.httpclient.HttpClient client = new org.apache.commons.httpclient.HttpClient(connectionManager);
+        org.apache.commons.httpclient.HttpClient client = new org.apache.commons.httpclient.HttpClient(
+            connectionManager );
 
         Credentials creds = new org.apache.commons.httpclient.UsernamePasswordCredentials( username, password );
 
-        client.getState().setCredentials(org.apache.commons.httpclient.auth.AuthScope.ANY, creds);
-        client.setHostConfiguration(hostConfig);
+        client.getState().setCredentials( org.apache.commons.httpclient.auth.AuthScope.ANY, creds );
+        client.setHostConfiguration( hostConfig );
         client.getParams().setAuthenticationPreemptive( true );
 
         client.executeMethod( hostConfig, pFind );

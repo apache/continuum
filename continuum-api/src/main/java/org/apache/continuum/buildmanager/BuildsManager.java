@@ -19,10 +19,6 @@ package org.apache.continuum.buildmanager;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
@@ -31,6 +27,10 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BuildsManager. All builds whether forced or triggered will go through (or have to be added through) a builds manager.
@@ -50,8 +50,8 @@ public interface BuildsManager
      * @param projectGroupId
      * @throws BuildManagerException
      */
-	void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap,
-			            BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
+    void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap,
+                        BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
         throws BuildManagerException;
 
     /**
@@ -67,7 +67,7 @@ public interface BuildsManager
      * @param projectGroupId
      * @throws BuildManagerException
      */
-	void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, BuildTrigger buildTrigger,
+    void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, BuildTrigger buildTrigger,
                        ScmResult scmResult, int projectGroupId )
         throws BuildManagerException;
 
@@ -81,8 +81,8 @@ public interface BuildsManager
      * @param scmRootId
      * @throws BuildManagerException
      */
-	void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
-			                   int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId )
+    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
+                               int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId )
         throws BuildManagerException;
 
     /**
@@ -92,15 +92,16 @@ public interface BuildsManager
      * @param projectId
      * @param projectName
      * @param workingDirectory
-     * @param scmRootUrl TODO
+     * @param scmRootUrl             TODO
      * @param scmUsername
      * @param scmPassword
      * @param defaultBuildDefinition
-     * @param subProjects TODO
+     * @param subProjects            TODO
      * @throws BuildManagerException
      */
-	void checkoutProject( int projectId, String projectName, File workingDirectory, String scmRootUrl,
-			                    String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition, List<Project> subProjects )
+    void checkoutProject( int projectId, String projectName, File workingDirectory, String scmRootUrl,
+                          String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition,
+                          List<Project> subProjects )
         throws BuildManagerException;
 
     /**
@@ -157,7 +158,7 @@ public interface BuildsManager
 
     /**
      * Cancels the specified project group prepare build
-     * 
+     *
      * @param projectGroupId
      * @param scmRootId
      * @return
@@ -168,7 +169,7 @@ public interface BuildsManager
 
     /**
      * Cancels the specified project prepare build
-     * 
+     *
      * @param projectId
      * @return
      * @throws BuildManagerException
@@ -196,10 +197,11 @@ public interface BuildsManager
      * @throws BuildManagerException
      */
     void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
-    		                          String projectName, int projectGroupId )
+                                      String projectName, int projectGroupId )
         throws BuildManagerException;
 
     // TODO: should we throw an exception when one of the projects cannot be removed?
+
     /**
      * Removes the specified projects from their build queues.
      *
@@ -319,7 +321,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Checks where the project group is already in the prepare-build queue
-     * 
+     *
      * @param projectGroupId
      * @param scmRootId
      * @return
@@ -340,6 +342,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Checks if at least one of the projects is currently preparing build
+     *
      * @param projectIds
      * @return
      * @throws BuildManagerException
@@ -394,6 +397,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Checks if at least one of the projects is currently building.
+     *
      * @param projectIds
      * @return
      * @throws BuildManagerException
@@ -403,7 +407,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Checks whether project is currently being checked out.
-     * 
+     *
      * @param projectId
      * @return
      * @throws BuildManagerException
@@ -413,7 +417,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Checks whether project is currently preparing build
-     * 
+     *
      * @param projectId
      * @return
      * @throws BuildManagerException
@@ -423,6 +427,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Checks whether project group is currently preparing build
+     *
      * @param projectGroupId
      * @param scmRootId
      * @return
@@ -433,6 +438,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Return currently preparing build project.
+     *
      * @return
      * @throws BuildManagerException
      */
@@ -441,6 +447,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Return all projects in prepare build queue.
+     *
      * @return
      * @throws BuildManagerException
      */
@@ -449,6 +456,7 @@ void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManager
 
     /**
      * Remove a project from a prepare build queue.
+     *
      * @param projectGroupId
      * @param scmRootId
      * @return

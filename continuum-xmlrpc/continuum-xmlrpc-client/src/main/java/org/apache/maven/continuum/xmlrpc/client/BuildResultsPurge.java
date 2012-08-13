@@ -19,11 +19,14 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
-import java.net.URL;
-import java.util.List;
-import java.util.Date;
+import org.apache.maven.continuum.xmlrpc.project.BuildResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 
-import org.apache.maven.continuum.xmlrpc.project.*;
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Utility class to purge old build results.
@@ -31,7 +34,8 @@ import org.apache.maven.continuum.xmlrpc.project.*;
  * The easiest way to use it is to change the exec plugin config in the pom to execute this class instead of
  * SampleClient, change RETENTION_DAYS if desired, and type 'mvn clean install exec:exec'
  */
-public class BuildResultsPurge {
+public class BuildResultsPurge
+{
 
     private static ContinuumXmlRpcClient client;
 
@@ -39,47 +43,53 @@ public class BuildResultsPurge {
 
     private static long DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
-    public static void main(String[] args)
-            throws Exception {
+    public static void main( String[] args )
+        throws Exception
+    {
 
-        client = new ContinuumXmlRpcClient(new URL(args[0]), args[1], args[2]);
+        client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
 
         long today = new Date().getTime();
 
-        System.out.println("Today is " + new Date(today));
+        System.out.println( "Today is " + new Date( today ) );
 
-        long purgeDate = today - (RETENTION_DAYS * DAY_IN_MILLISECONDS);
+        long purgeDate = today - ( RETENTION_DAYS * DAY_IN_MILLISECONDS );
         //long purgeDate = today - 1000;  // 1 second ago (for testing)
 
-        System.out.println("Purging build results older than " + new Date(purgeDate));
+        System.out.println( "Purging build results older than " + new Date( purgeDate ) );
 
         List<ProjectGroupSummary> groups = client.getAllProjectGroups();
 
-        for (ProjectGroupSummary group : groups) {
+        for ( ProjectGroupSummary group : groups )
+        {
 
-            System.out.println("Project Group [" + group.getId() + "] " + group.getName());
+            System.out.println( "Project Group [" + group.getId() + "] " + group.getName() );
 
-            List<ProjectSummary> projects = client.getProjects(group.getId());
+            List<ProjectSummary> projects = client.getProjects( group.getId() );
 
-            for (ProjectSummary project : projects) {
+            for ( ProjectSummary project : projects )
+            {
 
+                System.out.println( " Project [" + project.getId() + "] " + project.getName() );
 
-                System.out.println(" Project [" + project.getId() + "] " + project.getName());
+                List<BuildResultSummary> results = client.getBuildResultsForProject( project.getId() );
 
-                List<BuildResultSummary> results = client.getBuildResultsForProject(project.getId());
+                for ( BuildResultSummary brs : results )
+                {
 
-                for (BuildResultSummary brs : results) {
+                    BuildResult br = client.getBuildResult( project.getId(), brs.getId() );
 
-                    BuildResult br = client.getBuildResult(project.getId(), brs.getId());
+                    System.out.print( "  Build Result [" + br.getId() + "] ended " + new Date( br.getEndTime() ) );
 
-                    System.out.print("  Build Result [" + br.getId() + "] ended " + new Date(br.getEndTime()));
+                    if ( br.getEndTime() > 0 && br.getEndTime() < purgeDate )
+                    {
 
-                    if (br.getEndTime() > 0 && br.getEndTime() < purgeDate) {
-
-                        client.removeBuildResult(br);
-                        System.out.println(" ...removed.");
-                    } else {
-                        System.out.println(" ...retained.");
+                        client.removeBuildResult( br );
+                        System.out.println( " ...removed." );
+                    }
+                    else
+                    {
+                        System.out.println( " ...retained." );
                     }
                 }
             }

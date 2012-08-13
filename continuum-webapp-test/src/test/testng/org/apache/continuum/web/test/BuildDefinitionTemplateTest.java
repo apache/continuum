@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "buildDefinitionTemplate" } )
+@Test( groups = {"buildDefinitionTemplate"} )
 public class BuildDefinitionTemplateTest
     extends AbstractBuildDefinitionTemplateTest
 {
@@ -35,15 +35,16 @@ public class BuildDefinitionTemplateTest
     {
         String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         goToAddTemplate();
-        addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven Build Definition",
-            "Default Maven 1 Build Definition" }, new String[] {}, true );
+        addEditTemplate( TEMPLATE_NAME,
+                         new String[]{"Default Maven Build Definition", "Default Maven 1 Build Definition"},
+                         new String[]{}, true );
     }
 
     public void testAddInvalidTemplate()
         throws Exception
     {
         goToAddTemplate();
-        addEditTemplate( "", new String[] {}, new String[] {}, false );
+        addEditTemplate( "", new String[]{}, new String[]{}, false );
         assertTextPresent( "Name is required" );
     }
 
@@ -51,27 +52,26 @@ public class BuildDefinitionTemplateTest
         throws Exception
     {
         goToAddTemplate();
-        addEditTemplate( "Name <script>alert('gotcha')</script>", new String[] {}, new String[] {}, false );
+        addEditTemplate( "Name <script>alert('gotcha')</script>", new String[]{}, new String[]{}, false );
         assertTextPresent( "Name contains invalid characters" );
     }
 
-    @Test( dependsOnMethods = { "testAddTemplate" } )
+    @Test( dependsOnMethods = {"testAddTemplate"} )
     public void testEditTemplate()
         throws Exception
     {
         String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         String newName = "new_name";
-        goToEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven Build Definition",
-            "Default Maven 1 Build Definition" } );
-        addEditTemplate( newName, new String[] { "Default Shell Build Definition" },
-                         new String[] { "Default Maven Build Definition" }, true );
-        goToEditTemplate( newName,
-                          new String[] { "Default Maven 1 Build Definition", "Default Shell Build Definition" } );
-        addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven Build Definition" },
-                         new String[] { "Default Shell Build Definition" }, true );
+        goToEditTemplate( TEMPLATE_NAME,
+                          new String[]{"Default Maven Build Definition", "Default Maven 1 Build Definition"} );
+        addEditTemplate( newName, new String[]{"Default Shell Build Definition"},
+                         new String[]{"Default Maven Build Definition"}, true );
+        goToEditTemplate( newName, new String[]{"Default Maven 1 Build Definition", "Default Shell Build Definition"} );
+        addEditTemplate( TEMPLATE_NAME, new String[]{"Default Maven Build Definition"},
+                         new String[]{"Default Shell Build Definition"}, true );
     }
 
-    @Test( dependsOnMethods = { "testEditTemplate" } )
+    @Test( dependsOnMethods = {"testEditTemplate"} )
     public void testDeleteTemplate()
     {
         String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
@@ -104,13 +104,14 @@ public class BuildDefinitionTemplateTest
     {
         String invalidString = "<script>alert('gotcha')</script>";
         goToAddBuildDefinitionTemplate();
-        addEditBuildDefinitionTemplate( invalidString, invalidString, invalidString, invalidString, true, true, true, false );
+        addEditBuildDefinitionTemplate( invalidString, invalidString, invalidString, invalidString, true, true, true,
+                                        false );
         assertTextPresent( "BuildFile contains invalid characters" );
         assertTextPresent( "Goals contain invalid characters" );
         assertTextPresent( "Arguments contain invalid characters" );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildDefinitionTemplate" } )
+    @Test( dependsOnMethods = {"testAddBuildDefinitionTemplate"} )
     public void testEditBuildDefinitionTemplate()
         throws Exception
     {
@@ -123,7 +124,7 @@ public class BuildDefinitionTemplateTest
                                         TEMPLATE_BUILD_DESCRIPTION, false, false, false, true );
     }
 
-    @Test( dependsOnMethods = { "testEditBuildDefinitionTemplate" } )
+    @Test( dependsOnMethods = {"testEditBuildDefinitionTemplate"} )
     public void testDeleteBuildDefinitionTemplate()
     {
         String TEMPLATE_BUILD_DESCRIPTION = getProperty( "TEMPLATE_BUILD_DESCRIPTION" );

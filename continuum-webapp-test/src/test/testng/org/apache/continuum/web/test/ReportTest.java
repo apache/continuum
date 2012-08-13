@@ -20,17 +20,16 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
-import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
-@Test( groups = { "report" } )
+@Test( groups = {"report"} )
 public class ReportTest
     extends AbstractAdminTest
 {
-    @Test( dependsOnMethods = { "testProjectGroupAllBuildSuccess" } )
+    @Test( dependsOnMethods = {"testProjectGroupAllBuildSuccess"} )
     public void testViewBuildsReportWithSuccessfulBuild()
         throws Exception
-    {        
+    {
         goToProjectBuildsReport();
         selectValue( "buildStatus", "Ok" );
         clickButtonWithValue( "View Report" );
@@ -115,7 +114,6 @@ public class ReportTest
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
         assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
 
-        
         buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, false );
 
         goToProjectBuildsReport();

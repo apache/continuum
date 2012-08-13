@@ -19,10 +19,6 @@ package org.apache.maven.continuum.notification;
  * under the License.
  */
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -41,6 +37,9 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import javax.annotation.Resource;
 
 public abstract class AbstractContinuumNotifier
     implements Notifier

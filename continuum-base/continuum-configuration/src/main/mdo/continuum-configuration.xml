@@ -47,7 +47,7 @@
           <name>deploymentRepositoryDirectory</name>
           <version>1.1.0+</version>
           <type>String</type>
-        </field>   
+        </field>
         <field>
           <name>workingDirectory</name>
           <version>1.1.0+</version>
@@ -59,8 +59,8 @@
           <association>
             <type>ProxyConfiguration</type>
             <multiplicity>1</multiplicity>
-          </association>          
-        </field>     
+          </association>
+        </field>
         <field>
           <name>releaseOutputDirectory</name>
           <version>1.1.0+</version>
@@ -117,12 +117,12 @@
           <name>proxyUser</name>
           <version>1.1.0+</version>
           <type>String</type>
-        </field>   
+        </field>
         <field>
           <name>proxyPassword</name>
           <version>1.1.0+</version>
           <type>String</type>
-        </field>                     
+        </field>
       </fields>
     </class>
     <class xml.tagName="buildagent-configuration">
@@ -164,6 +164,6 @@
           </association>
         </field>
       </fields>
-    </class>    
+    </class>
   </classes>
 </model>

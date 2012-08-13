@@ -19,6 +19,17 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.model.ProjectBuildsSummary;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,17 +41,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
-import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.continuum.web.model.ProjectBuildsSummary;
 
 /**
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projectBuildsReport"
@@ -55,7 +55,7 @@ public class ViewBuildsReportAction
     private String startDate = "";
 
     private String endDate = "";
-    
+
     private int projectGroupId;
 
     private int rowCount = 30;
@@ -65,13 +65,13 @@ public class ViewBuildsReportAction
     private int numPages;
 
     private Map<Integer, String> buildStatuses;
-    
+
     private Map<Integer, String> projectGroups;
 
     private List<ProjectBuildsSummary> projectBuilds;
 
     private InputStream inputStream;
-    
+
     public static final String SEND_FILE = "send-file";
 
     private static final String[] datePatterns =
@@ -82,22 +82,22 @@ public class ViewBuildsReportAction
         throws Exception
     {
         super.prepare();
-        
+
         buildStatuses = new LinkedHashMap<Integer, String>();
         buildStatuses.put( 0, "ALL" );
         buildStatuses.put( ContinuumProjectState.OK, "Ok" );
         buildStatuses.put( ContinuumProjectState.FAILED, "Failed" );
         buildStatuses.put( ContinuumProjectState.ERROR, "Error" );
-        
+
         projectGroups = new LinkedHashMap<Integer, String>();
         projectGroups.put( 0, "ALL" );
-        
+
         List<ProjectGroup> groups = getContinuum().getAllProjectGroups();
         if ( groups != null )
         {
             for ( ProjectGroup group : groups )
             {
-                projectGroups.put( group.getId(),  group.getName() );
+                projectGroups.put( group.getId(), group.getName() );
             }
         }
     }
@@ -157,7 +157,8 @@ public class ViewBuildsReportAction
             return INPUT;
         }
 
-        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus, triggeredBy );
+        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate,
+                                                                                buildStatus, triggeredBy );
         projectBuilds = Collections.emptyList();
 
         if ( buildResults != null && !buildResults.isEmpty() )
@@ -166,17 +167,17 @@ public class ViewBuildsReportAction
 
             int extraPage = ( projectBuilds.size() % rowCount ) != 0 ? 1 : 0;
             numPages = ( projectBuilds.size() / rowCount ) + extraPage;
-    
+
             if ( page > numPages )
             {
                 addActionError(
-                "Error encountered while generating project builds report :: The requested page exceeds the total number of pages." );
+                    "Error encountered while generating project builds report :: The requested page exceeds the total number of pages." );
                 return ERROR;
             }
-    
+
             int start = rowCount * ( page - 1 );
             int end = ( start + rowCount );
-    
+
             if ( end > projectBuilds.size() )
             {
                 end = projectBuilds.size();
@@ -187,10 +188,10 @@ public class ViewBuildsReportAction
 
         return SUCCESS;
     }
-    
+
     /*
-     * Export Builds Report to .csv
-     */
+    * Export Builds Report to .csv
+    */
     public String downloadBuildsReport()
     {
         try
@@ -223,46 +224,54 @@ public class ViewBuildsReportAction
             return INPUT;
         }
 
-        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus, triggeredBy );
+        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate,
+                                                                                buildStatus, triggeredBy );
         List<ProjectBuildsSummary> builds = Collections.emptyList();
-        
+
         StringBuffer input = new StringBuffer( "Project Group,Project Name,Build Date,Triggered By,Build Status\n" );
 
         if ( buildResults != null && !buildResults.isEmpty() )
         {
             builds = mapBuildResultsToProjectBuildsSummaries( buildResults );
-            
+
             for ( ProjectBuildsSummary build : builds )
             {
                 input.append( build.getProjectGroupName() ).append( "," );
                 input.append( build.getProjectName() ).append( "," );
-                
+
                 input.append( new Date( build.getBuildDate() ) ).append( "," );
-                
+
                 input.append( build.getBuildTriggeredBy() ).append( "," );
-                
+
                 String status;
                 switch ( build.getBuildState() )
                 {
-                    case 2: status = "Ok";
-                            break;
-                    case 3: status = "Failed";
-                            break;
-                    case 4: status = "Error";
-                            break;
-                    case 6: status = "Building";
-                            break;
-                    case 7: status = "Checking Out";
-                            break;
-                    case 8: status = "Updating";
-                            break;
-                    default: status = "";
+                    case 2:
+                        status = "Ok";
+                        break;
+                    case 3:
+                        status = "Failed";
+                        break;
+                    case 4:
+                        status = "Error";
+                        break;
+                    case 6:
+                        status = "Building";
+                        break;
+                    case 7:
+                        status = "Checking Out";
+                        break;
+                    case 8:
+                        status = "Updating";
+                        break;
+                    default:
+                        status = "";
                 }
                 input.append( status );
                 input.append( "\n" );
             }
         }
-        
+
         StringReader reader = new StringReader( input.toString() );
 
         try
@@ -282,7 +291,7 @@ public class ViewBuildsReportAction
     {
         List<ProjectBuildsSummary> buildsSummary = new ArrayList<ProjectBuildsSummary>();
 
-        for( BuildResult buildResult : buildResults )
+        for ( BuildResult buildResult : buildResults )
         {
             Project project = buildResult.getProject();
 

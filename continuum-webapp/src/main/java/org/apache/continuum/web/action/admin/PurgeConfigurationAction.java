@@ -20,13 +20,6 @@ package org.apache.continuum.web.action.admin;
  */
 
 import com.opensymphony.xwork2.Preparable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
@@ -49,6 +42,12 @@ import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Maria Catherine Tan
@@ -301,7 +300,7 @@ public class PurgeConfigurationAction
             purgeConfig = purgeConfigService.getPurgeConfiguration( purgeConfigId );
 
             AuditLog event;
-            
+
             if ( purgeConfig instanceof RepositoryPurgeConfiguration )
             {
                 RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
@@ -627,8 +626,8 @@ public class PurgeConfigurationAction
     {
         if ( purgeConfig instanceof RepositoryPurgeConfiguration )
         {
-            RepositoryPurgeConfiguration repoPurge =
-                purgeConfigService.getDefaultPurgeConfigurationForRepository( repositoryId );
+            RepositoryPurgeConfiguration repoPurge = purgeConfigService.getDefaultPurgeConfigurationForRepository(
+                repositoryId );
 
             if ( repoPurge != null && repoPurge.getId() != purgeConfig.getId() )
             {
@@ -638,8 +637,8 @@ public class PurgeConfigurationAction
         }
         else if ( purgeConfig instanceof DirectoryPurgeConfiguration )
         {
-            DirectoryPurgeConfiguration dirPurge =
-                purgeConfigService.getDefaultPurgeConfigurationForDirectoryType( directoryType );
+            DirectoryPurgeConfiguration dirPurge = purgeConfigService.getDefaultPurgeConfigurationForDirectoryType(
+                directoryType );
 
             if ( dirPurge != null && dirPurge.getId() != purgeConfig.getId() )
             {

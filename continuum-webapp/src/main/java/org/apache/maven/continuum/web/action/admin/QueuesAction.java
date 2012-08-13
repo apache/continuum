@@ -19,16 +19,8 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
-import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
-import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
@@ -44,12 +36,16 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.apache.maven.continuum.web.model.PrepareBuildSummary;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -206,8 +202,9 @@ public class QueuesAction
     {
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-	        // current prepare build task
-            Map<String, PrepareBuildProjectsTask> currentPrepareBuildMap = getContinuum().getDistributedBuildManager().getProjectsCurrentlyPreparingBuild();
+            // current prepare build task
+            Map<String, PrepareBuildProjectsTask> currentPrepareBuildMap =
+                getContinuum().getDistributedBuildManager().getProjectsCurrentlyPreparingBuild();
 
             for ( String url : currentPrepareBuildMap.keySet() )
             {
@@ -226,7 +223,8 @@ public class QueuesAction
             }
 
             // current builds
-            Map<String, BuildProjectTask> currentBuildMap = getContinuum().getDistributedBuildManager().getProjectsCurrentlyBuilding();
+            Map<String, BuildProjectTask> currentBuildMap =
+                getContinuum().getDistributedBuildManager().getProjectsCurrentlyBuilding();
 
             for ( String url : currentBuildMap.keySet() )
             {
@@ -245,9 +243,10 @@ public class QueuesAction
 
                 currentDistributedBuilds.add( summary );
             }
-            
+
             // prepare build queues
-            Map<String, List<PrepareBuildProjectsTask>> prepareBuildMap = getContinuum().getDistributedBuildManager().getProjectsInPrepareBuildQueue();
+            Map<String, List<PrepareBuildProjectsTask>> prepareBuildMap =
+                getContinuum().getDistributedBuildManager().getProjectsInPrepareBuildQueue();
 
             for ( String url : prepareBuildMap.keySet() )
             {
@@ -268,7 +267,8 @@ public class QueuesAction
             }
 
             // build queues
-            Map<String, List<BuildProjectTask>> buildMap = getContinuum().getDistributedBuildManager().getProjectsInBuildQueue();
+            Map<String, List<BuildProjectTask>> buildMap =
+                getContinuum().getDistributedBuildManager().getProjectsInBuildQueue();
 
             for ( String url : buildMap.keySet() )
             {
@@ -297,7 +297,8 @@ public class QueuesAction
             try
             {
                 // current prepare builds
-                Map<String, PrepareBuildProjectsTask> currentPrepareBuildTasks = getContinuum().getBuildsManager().getCurrentProjectInPrepareBuild();
+                Map<String, PrepareBuildProjectsTask> currentPrepareBuildTasks =
+                    getContinuum().getBuildsManager().getCurrentProjectInPrepareBuild();
 
                 Set<String> keySet = currentPrepareBuildTasks.keySet();
                 for ( String key : keySet )
@@ -342,7 +343,7 @@ public class QueuesAction
             try
             {
                 // queued prepare builds
-                Map<String, List<PrepareBuildProjectsTask>> prepareBuilds = 
+                Map<String, List<PrepareBuildProjectsTask>> prepareBuilds =
                     getContinuum().getBuildsManager().getProjectsInPrepareBuildQueue();
 
                 Set<String> keySet = prepareBuilds.keySet();
@@ -456,8 +457,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getBuildsManager().removeProjectFromBuildQueue( projectId, buildDefinitionId,
-        		                                     new BuildTrigger( trigger, "" ), projectName, projectGroupId );
+        getContinuum().getBuildsManager().removeProjectFromBuildQueue( projectId, buildDefinitionId, new BuildTrigger(
+            trigger, "" ), projectName, projectGroupId );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
         getContinuum().updateProject( project );
@@ -483,8 +484,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getBuildsManager().removeProjectsFromBuildQueueWithHashcodes(
-            listToIntArray( this.getSelectedBuildTaskHashCodes() ) );
+        getContinuum().getBuildsManager().removeProjectsFromBuildQueueWithHashcodes( listToIntArray(
+            this.getSelectedBuildTaskHashCodes() ) );
         return SUCCESS;
     }
 
@@ -506,8 +507,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getBuildsManager().removeProjectsFromCheckoutQueueWithHashcodes(
-            listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
+        getContinuum().getBuildsManager().removeProjectsFromCheckoutQueueWithHashcodes( listToIntArray(
+            this.getSelectedCheckOutTaskHashCodes() ) );
         return SUCCESS;
     }
 
@@ -551,8 +552,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getBuildsManager().removeProjectsFromPrepareBuildQueueWithHashCodes( 
-            listToIntArray( this.selectedPrepareBuildTaskHashCodes ) );
+        getContinuum().getBuildsManager().removeProjectsFromPrepareBuildQueueWithHashCodes( listToIntArray(
+            this.selectedPrepareBuildTaskHashCodes ) );
         return SUCCESS;
     }
 
@@ -597,7 +598,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue( buildAgentUrl, projectGroupId, scmRootId );
+        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue( buildAgentUrl, projectGroupId,
+                                                                                 scmRootId );
 
         return SUCCESS;
     }
@@ -620,7 +622,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue(  this.getSelectedPrepareBuildTaskHashCodes() );
+        getContinuum().getDistributedBuildManager().removeFromPrepareBuildQueue(
+            this.getSelectedPrepareBuildTaskHashCodes() );
 
         return SUCCESS;
     }

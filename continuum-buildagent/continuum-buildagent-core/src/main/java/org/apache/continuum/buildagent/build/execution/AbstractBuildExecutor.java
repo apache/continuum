@@ -19,14 +19,6 @@ package org.apache.continuum.buildagent.build.execution;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
@@ -48,6 +40,14 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public abstract class AbstractBuildExecutor
     implements ContinuumAgentBuildExecutor, Initializable
@@ -167,7 +167,7 @@ public abstract class AbstractBuildExecutor
             if ( StringUtils.isEmpty( defaultExecutable ) )
             {
                 log.warn( "The default executable for build executor '" + id + "' is not set. " +
-                    "This will cause a problem unless the project has a executable configured." );
+                              "This will cause a problem unless the project has a executable configured." );
             }
             else
             {
@@ -181,7 +181,7 @@ public abstract class AbstractBuildExecutor
                 else
                 {
                     log.info( "Resolved the executable '" + defaultExecutable + "' to " + "'" +
-                        resolvedExecutable.getAbsolutePath() + "'." );
+                                  resolvedExecutable.getAbsolutePath() + "'." );
                 }
             }
         }
@@ -267,9 +267,9 @@ public abstract class AbstractBuildExecutor
 
         try
         {
-            ExecutionResult result =
-                getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable, arguments, output,
-                                                             project.getId(), environments );
+            ExecutionResult result = getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
+                                                                                  arguments, output, project.getId(),
+                                                                                  environments );
 
             log.info( "Exit code: " + result.getExitCode() );
 
@@ -385,10 +385,10 @@ public abstract class AbstractBuildExecutor
             projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_URL, "" );
         }
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_PARENT, getProjectParent( project.getParent() ) );
-        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPERS,
-                        getProjectDevelopers( project.getDevelopers() ) );
-        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEPENDENCIES,
-                        getProjectDependencies( project.getDependencies() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPERS, getProjectDevelopers(
+            project.getDevelopers() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEPENDENCIES, getProjectDependencies(
+            project.getDependencies() ) );
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_NOTIFIERS, getProjectNotifiers( project.getNotifiers() ) );
 
         try
@@ -421,15 +421,15 @@ public abstract class AbstractBuildExecutor
                 }
                 if ( StringUtils.isNotEmpty( developer.getEmail() ) )
                 {
-                	map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, developer.getEmail() );
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, developer.getEmail() );
                 }
                 else
                 {
-                	map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, "" );
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, "" );
                 }
                 if ( StringUtils.isNotEmpty( developer.getScmId() ) )
                 {
-                	map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_SCMID, developer.getScmId() );
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_SCMID, developer.getScmId() );
                 }
                 else
                 {
@@ -550,7 +550,7 @@ public abstract class AbstractBuildExecutor
                 map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_FAILURE, notifier.isSendOnFailure() );
                 map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SCMFAILURE, notifier.isSendOnScmFailure() );
                 map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_WARNING, notifier.isSendOnWarning() );
-                pNotifiers.add(map);
+                pNotifiers.add( map );
             }
         }
         return pNotifiers;
@@ -558,8 +558,8 @@ public abstract class AbstractBuildExecutor
 
     public boolean isBuilding( Project project )
     {
-        return project.getState() == ContinuumProjectState.BUILDING ||
-            getShellCommandHelper().isRunning( project.getId() );
+        return project.getState() == ContinuumProjectState.BUILDING || getShellCommandHelper().isRunning(
+            project.getId() );
     }
 
     public void killProcess( Project project )

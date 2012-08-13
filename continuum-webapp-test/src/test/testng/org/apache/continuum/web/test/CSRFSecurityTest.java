@@ -20,13 +20,12 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
-import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
  * Test actions that are vulnerable to CSRF.
  */
-@Test( groups = { "csrf" } )
+@Test( groups = {"csrf"} )
 public class CSRFSecurityTest
     extends AbstractAdminTest
 {
@@ -35,13 +34,14 @@ public class CSRFSecurityTest
         getSelenium().open( baseUrl );
         getSelenium().open( baseUrl + "/deleteProject!default.action?projectGroupId=2&projectId=2" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
-        assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );   
+        assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
 
     public void testCSRFRemoveProjectBuildDefinition()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/removeProjectBuildDefinition.action?projectId=1&buildDefinitionId=9&confirmed=true" );
+        getSelenium().open(
+            baseUrl + "/removeProjectBuildDefinition.action?projectId=1&buildDefinitionId=9&confirmed=true" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
@@ -49,7 +49,8 @@ public class CSRFSecurityTest
     public void testCSRFRemoveGroupBuildDefinition()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/removeGroupBuildDefinition.action?projectGroupId=2&buildDefinitionId=8&confirmed=true" );
+        getSelenium().open(
+            baseUrl + "/removeGroupBuildDefinition.action?projectGroupId=2&buildDefinitionId=8&confirmed=true" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
@@ -60,7 +61,7 @@ public class CSRFSecurityTest
         getSelenium().open( baseUrl + "/removeProjectGroup.action?projectGroupId=2" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
-    } 
+    }
 
     public void testCSRFRemoveBuildResult()
     {
@@ -81,9 +82,10 @@ public class CSRFSecurityTest
     public void testCSRFRemoveReleaseResults()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/removeReleaseResults.action?projectGroupId=2&selectedReleaseResults=1&confirmed=true" );
+        getSelenium().open(
+            baseUrl + "/removeReleaseResults.action?projectGroupId=2&selectedReleaseResults=1&confirmed=true" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
-        assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );   
+        assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
 
     public void testCSRFSaveFooter()
@@ -113,7 +115,8 @@ public class CSRFSecurityTest
     public void testCSRFDeleteBuildDefinitionTemplate()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/deleteDefinitionTemplate.action?buildDefinitionTemplate.id=5&buildDefinitionTemplate.name=Test+Template" );
+        getSelenium().open( baseUrl +
+                                "/deleteDefinitionTemplate.action?buildDefinitionTemplate.id=5&buildDefinitionTemplate.name=Test+Template" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
@@ -145,7 +148,8 @@ public class CSRFSecurityTest
     public void testCSRFDeleteBuildAgent()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/security/deleteBuildAgent.action?buildAgent.url=http%3A%2F%2Flocalhost%3A8181%2Fcontinuum-buildagent%2Fxmlrpc&confirmed=true" );
+        getSelenium().open( baseUrl +
+                                "/security/deleteBuildAgent.action?buildAgent.url=http%3A%2F%2Flocalhost%3A8181%2Fcontinuum-buildagent%2Fxmlrpc&confirmed=true" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
@@ -153,15 +157,17 @@ public class CSRFSecurityTest
     public void testCSRFDeleteBuildAgentGroup()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/security/deleteBuildAgentGroup.action?buildAgentGroup.name=Test+Agent+Group&confirmed=true" );
+        getSelenium().open(
+            baseUrl + "/security/deleteBuildAgentGroup.action?buildAgentGroup.name=Test+Agent+Group&confirmed=true" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
-        assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );    
+        assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
 
     public void testCSRFDeleteProjectGroupNotifier()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/deleteProjectGroupNotifier.action?projectGroupId=2&notifierId=1&notifierType=mail" );
+        getSelenium().open(
+            baseUrl + "/deleteProjectGroupNotifier.action?projectGroupId=2&notifierId=1&notifierType=mail" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }

@@ -19,27 +19,25 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 /**
- * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  * @plexus.component role="org.apache.continuum.dao.BuildQueueDao"
  */
-@Repository("buildQueueDao")
+@Repository( "buildQueueDao" )
 public class BuildQueueDaoImpl
     extends AbstractDao
     implements BuildQueueDao
@@ -126,7 +124,7 @@ public class BuildQueueDaoImpl
             rollback( tx );
         }
     }
-    
+
     public void removeBuildQueue( BuildQueue buildQueue )
         throws ContinuumStoreException
     {

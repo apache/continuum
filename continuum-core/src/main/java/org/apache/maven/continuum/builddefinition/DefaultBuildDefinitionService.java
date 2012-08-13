@@ -18,9 +18,6 @@
  */
 package org.apache.maven.continuum.builddefinition;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -41,6 +38,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -270,8 +270,8 @@ public class DefaultBuildDefinitionService
     public BuildDefinitionTemplate getDefaultAntBuildDefinitionTemplate()
         throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template =
-            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template = getContinuumDefaultWithType(
+            ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
         if ( template != null )
         {
             return template;
@@ -307,8 +307,8 @@ public class DefaultBuildDefinitionService
     public BuildDefinitionTemplate getDefaultMavenOneBuildDefinitionTemplate()
         throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template =
-            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template = getContinuumDefaultWithType(
+            ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
         if ( template != null )
         {
             log.debug( "found default maven template " + template.getType() );
@@ -346,8 +346,8 @@ public class DefaultBuildDefinitionService
     public BuildDefinitionTemplate getDefaultMavenTwoBuildDefinitionTemplate()
         throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template =
-            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template = getContinuumDefaultWithType(
+            ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
         if ( template != null )
         {
             return template;
@@ -384,8 +384,8 @@ public class DefaultBuildDefinitionService
     public BuildDefinitionTemplate getDefaultShellBuildDefinitionTemplate()
         throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template =
-            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template = getContinuumDefaultWithType(
+            ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
         if ( template != null )
         {
             return template;
@@ -476,8 +476,8 @@ public class DefaultBuildDefinitionService
             // first remove links to buildDefs
             // TODO in the same db transaction ?
             buildDefinitionTemplate.setBuildDefinitions( null );
-            buildDefinitionTemplate =
-                buildDefinitionTemplateDao.updateBuildDefinitionTemplate( buildDefinitionTemplate );
+            buildDefinitionTemplate = buildDefinitionTemplateDao.updateBuildDefinitionTemplate(
+                buildDefinitionTemplate );
             buildDefinitionTemplateDao.removeBuildDefinitionTemplate( buildDefinitionTemplate );
         }
         catch ( ContinuumStoreException e )
@@ -503,7 +503,7 @@ public class DefaultBuildDefinitionService
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
-        
+
         return null;
     }
 
@@ -521,7 +521,7 @@ public class DefaultBuildDefinitionService
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
-        
+
         return null;
     }
 
@@ -609,8 +609,8 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            ProjectGroup projectGroup =
-                projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+            ProjectGroup projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId(
+                projectGroupId );
             if ( template.getBuildDefinitions().isEmpty() )
             {
                 return null;
@@ -657,13 +657,13 @@ public class DefaultBuildDefinitionService
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
     }
-    
+
     private boolean hasDuplicateTemplateName( BuildDefinitionTemplate buildDefinitionTemplate )
         throws BuildDefinitionServiceException
     {
         boolean isDuplicate = false;
         List<BuildDefinitionTemplate> allBuildDefinitionTemplate = this.getAllBuildDefinitionTemplate();
-    
+
         for ( BuildDefinitionTemplate template : allBuildDefinitionTemplate )
         {
             String name = buildDefinitionTemplate.getName();

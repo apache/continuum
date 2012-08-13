@@ -36,23 +36,23 @@ public class WorkingCopyPathUtil
         if ( requestPathInfo.startsWith( "/" ) )
         {
             requestPathInfo = requestPathInfo.substring( 1 );
-        }        
+        }
 
         int slash = requestPathInfo.indexOf( '/' );
         if ( slash > 0 )
-        {   
+        {
             logicalResource = requestPathInfo.substring( slash );
-         
-            if (logicalResource.endsWith( "/.." ) )
+
+            if ( logicalResource.endsWith( "/.." ) )
             {
                 logicalResource += "/";
             }
-            
+
             if ( logicalResource != null && logicalResource.startsWith( "//" ) )
             {
                 logicalResource = logicalResource.substring( 1 );
             }
-            
+
             if ( logicalResource == null )
             {
                 logicalResource = "/";
@@ -79,7 +79,7 @@ public class WorkingCopyPathUtil
         }
 
         int projectId = 0;
-        
+
         try
         {
             // Find first element, if slash exists.
@@ -109,13 +109,13 @@ public class WorkingCopyPathUtil
         {
             return "/";
         }
-        
-        String joinedString = StringUtils.join( parts, '/' );        
-        if( href.endsWith( "/" ) )
+
+        String joinedString = StringUtils.join( parts, '/' );
+        if ( href.endsWith( "/" ) )
         {
             joinedString = joinedString + "/";
         }
-        
+
         return joinedString;
     }
 }

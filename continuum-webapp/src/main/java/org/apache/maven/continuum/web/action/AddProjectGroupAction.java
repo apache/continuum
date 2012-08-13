@@ -19,8 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryServiceException;
@@ -31,6 +29,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * @author Henry Isidro <hisidro@exist.com>
@@ -131,8 +131,9 @@ public class AddProjectGroupAction
 
             return ERROR;
         }
-        
-        AuditLog event = new AuditLog( "Project Group id=" + projectGroup.getId(), AuditLogConstants.ADD_PROJECT_GROUP );
+
+        AuditLog event = new AuditLog( "Project Group id=" + projectGroup.getId(),
+                                       AuditLogConstants.ADD_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();

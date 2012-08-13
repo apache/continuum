@@ -19,13 +19,6 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
@@ -35,6 +28,13 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * For the CONTINUUM-2391 tests, checking of the local repository details is in ContinuumReleaseManagerStub. An
@@ -102,7 +102,7 @@ public class BuildAgentReleaseManagerTest
         {
             fail( "An exception should not have been thrown!" );
         }
-    }    
+    }
 
     // CONTINUUM-2391
     public void testLocalRepositoryNameMismatchedCaseInReleasePrepare()
@@ -129,8 +129,8 @@ public class BuildAgentReleaseManagerTest
 
         try
         {
-            releaseManager.releasePrepare( map, createProperties(), createReleaseVersionMap(),
-                                           createDevVersionMap(), createEnvironmentsMap(), "user" );
+            releaseManager.releasePrepare( map, createProperties(), createReleaseVersionMap(), createDevVersionMap(),
+                                           createEnvironmentsMap(), "user" );
         }
         catch ( ContinuumReleaseException e )
         {
@@ -223,13 +223,8 @@ public class BuildAgentReleaseManagerTest
 
         try
         {
-            releaseManager.releasePerformFromScm(
-                                                  "clean deploy",
-                                                  "",
-                                                  true,
-                                                  repository,
-                                                  "scm:svn:http://svn.example.com/repos/test-project",
-                                                  "user",
+            releaseManager.releasePerformFromScm( "clean deploy", "", true, repository,
+                                                  "scm:svn:http://svn.example.com/repos/test-project", "user",
                                                   "mypasswrd",
                                                   "scm:svn:http://svn.example.com/repos/test-project/tags/test-project-1.0",
                                                   "scm:svn:http://svn.example.com/repos/test-project/tags", null,
@@ -260,12 +255,12 @@ public class BuildAgentReleaseManagerTest
 
         return localRepos;
     }
-    
+
     private Map<String, String> createEnvironmentsMap()
     {
         Map<String, String> environments = new HashMap<String, String>();
         environments.put( "M2_HOME", "/tmp/bin/apache-maven-2.2.1" );
-        
+
         return environments;
     }
 
@@ -273,7 +268,7 @@ public class BuildAgentReleaseManagerTest
     {
         Map<String, String> devVersion = new HashMap<String, String>();
         devVersion.put( "1.1-SNAPSHOT", "1.1-SNAPSHOT" );
-     
+
         return devVersion;
     }
 
@@ -281,7 +276,7 @@ public class BuildAgentReleaseManagerTest
     {
         Map<String, String> releaseVersion = new HashMap<String, String>();
         releaseVersion.put( "1.0", "1.0" );
-        
+
         return releaseVersion;
     }
 
@@ -295,7 +290,7 @@ public class BuildAgentReleaseManagerTest
         properties.put( ContinuumBuildAgentUtil.KEY_PREPARE_GOALS, "clean install" );
         properties.put( ContinuumBuildAgentUtil.KEY_ARGUMENTS, "" );
         properties.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, "test-project-1.0" );
-        
+
         return properties;
     }
 
@@ -307,17 +302,17 @@ public class BuildAgentReleaseManagerTest
         map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, "1" );
         map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, "test-project" );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_URL, "scm:svn:http://svn.example.com/repos/test-project/trunk" );
-        
+
         return map;
     }
-    
+
     @SuppressWarnings( "unchecked" )
     private Map createRepositoryMap()
     {
         Map repository = new HashMap();
         repository.put( ContinuumBuildAgentUtil.KEY_USERNAME, "user" );
         repository.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, "default" );
-        
+
         return repository;
     }
 }

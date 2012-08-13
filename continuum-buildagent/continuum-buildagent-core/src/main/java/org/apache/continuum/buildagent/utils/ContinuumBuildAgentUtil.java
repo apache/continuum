@@ -19,16 +19,6 @@ package org.apache.continuum.buildagent.utils;
  * under the License.
  */
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
@@ -39,6 +29,16 @@ import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ContinuumBuildAgentUtil
 {
@@ -55,7 +55,7 @@ public class ContinuumBuildAgentUtil
     public static final String KEY_BUILD_DEFINITION_LABEL = "builddefinition-label";
 
     public static final String KEY_TRIGGER = "trigger";
-    
+
     public static final String KEY_USERNAME = "username";
 
     public static final String KEY_EXECUTOR_ID = "executor-id";
@@ -360,15 +360,15 @@ public class ContinuumBuildAgentUtil
     {
         return getInteger( context, KEY_TRIGGER );
     }
-    
+
     public static String getUsername( Map<String, Object> context )
     {
-         return getString( context, KEY_USERNAME, "scheduled" );
+        return getString( context, KEY_USERNAME, "scheduled" );
     }
-    
+
     public static BuildTrigger getBuildTrigger( Map<String, Object> context )
     {
-         return new BuildTrigger( getTrigger( context ), getUsername( context ) );
+        return new BuildTrigger( getTrigger( context ), getUsername( context ) );
     }
 
     public static BuildResult getBuildResult( Map<String, Object> context, Object defaultValue )

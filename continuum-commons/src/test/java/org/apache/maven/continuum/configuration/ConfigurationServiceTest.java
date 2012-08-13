@@ -19,14 +19,14 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -143,8 +143,8 @@ public class ConfigurationServiceTest
         assertEquals( "check # build agent groups", 2, service.getBuildAgentGroups().get( 0 ).getBuildAgents().size() );
         assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
         assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription() );
-        assertEquals( "http://machine-1/xmlrpc",
-                      service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getUrl() );
+        assertEquals( "http://machine-1/xmlrpc", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get(
+            1 ).getUrl() );
         assertEquals( "node-1", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getDescription() );
         assertEquals( true, service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).isEnabled() );
 

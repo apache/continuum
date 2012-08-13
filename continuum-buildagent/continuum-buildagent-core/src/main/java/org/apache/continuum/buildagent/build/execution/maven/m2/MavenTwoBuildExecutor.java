@@ -19,13 +19,6 @@ package org.apache.continuum.buildagent.build.execution.maven.m2;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
@@ -42,6 +35,13 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class MavenTwoBuildExecutor
     extends AbstractBuildExecutor
@@ -86,25 +86,24 @@ public class MavenTwoBuildExecutor
         this.buildAgentMavenBuilderHelper = builderHelper;
     }
 
-    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, 
-                                                     File buildOutput, Map<String, String> environments,
-                                                     String localRepository )
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                                     Map<String, String> environments, String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
-        String executable = getBuildAgentInstallationService().getExecutorConfigurator( BuildAgentInstallationService.MAVEN2_TYPE )
-        .getExecutable();
+        String executable = getBuildAgentInstallationService().getExecutorConfigurator(
+            BuildAgentInstallationService.MAVEN2_TYPE ).getExecutable();
 
         StringBuffer arguments = new StringBuffer();
-    
+
         String buildFile = getBuildFileForProject( buildDefinition );
-    
+
         if ( !StringUtils.isEmpty( buildFile ) && !"pom.xml".equals( buildFile ) )
         {
             arguments.append( "-f " ).append( buildFile ).append( " " );
         }
-    
+
         arguments.append( StringUtils.clean( buildDefinition.getArguments() ) ).append( " " );
-    
+
         Properties props = getContinuumSystemProperties( project );
         for ( Enumeration itr = props.propertyNames(); itr.hasMoreElements(); )
         {
@@ -124,7 +123,8 @@ public class MavenTwoBuildExecutor
 
         if ( environments != null )
         {
-            m2Home = environments.get( getBuildAgentInstallationService().getEnvVar( BuildAgentInstallationService.MAVEN2_TYPE ) );
+            m2Home = environments.get( getBuildAgentInstallationService().getEnvVar(
+                BuildAgentInstallationService.MAVEN2_TYPE ) );
         }
 
         if ( StringUtils.isNotEmpty( m2Home ) )
@@ -138,7 +138,7 @@ public class MavenTwoBuildExecutor
 
     @Override
     public List<Artifact> getDeployableArtifacts( Project continuumProject, File workingDirectory,
-                                        BuildDefinition buildDefinition )
+                                                  BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException
     {
         MavenProject project = getMavenProject( workingDirectory, buildDefinition );
@@ -231,23 +231,25 @@ public class MavenTwoBuildExecutor
         return artifacts;
     }
 
-    public void updateProjectFromWorkingDirectory( File workingDirectory, Project project, BuildDefinition buildDefinition )
+    public void updateProjectFromWorkingDirectory( File workingDirectory, Project project,
+                                                   BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException
     {
         File f = getPomFile( getBuildFileForProject( buildDefinition ), workingDirectory );
-    
+
         if ( !f.exists() )
         {
             throw new ContinuumAgentBuildExecutorException( "Could not find Maven project descriptor." );
         }
-    
+
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
-    
+
         buildAgentMavenBuilderHelper.mapMetadataToProject( result, f, project );
-    
+
         if ( result.hasErrors() )
         {
-            throw new ContinuumAgentBuildExecutorException( "Error while mapping metadata:" + result.getErrorsAsString() );
+            throw new ContinuumAgentBuildExecutorException(
+                "Error while mapping metadata:" + result.getErrorsAsString() );
         }
         else
         {

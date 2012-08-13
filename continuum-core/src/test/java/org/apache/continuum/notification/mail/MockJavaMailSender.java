@@ -19,14 +19,13 @@ package org.apache.continuum.notification.mail;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.mail.internet.MimeMessage;
-
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.mail.internet.MimeMessage;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>

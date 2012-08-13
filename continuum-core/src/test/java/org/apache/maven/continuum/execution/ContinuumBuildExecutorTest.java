@@ -19,11 +19,7 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import junit.framework.TestCase;
 import org.apache.continuum.utils.shell.ExecutionResult;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -36,7 +32,10 @@ import org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 
-import junit.framework.TestCase;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ContinuumBuildExecutorTest
     extends TestCase
@@ -109,7 +108,8 @@ public class ContinuumBuildExecutorTest
                 one( helper ).executeShellCommand( chrootJailFile, "sudo", toSystemPath( cmd ), output, project.getId(),
                                                    environments );
                 will( returnValue( result ) );
-            }} );
+            }
+        } );
 
         executor.executeShellCommand( project, executable, arguments, output, environments, null, null );
 
@@ -138,7 +138,8 @@ public class ContinuumBuildExecutorTest
             return null;
         }
 
-        public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput, List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
+        public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                                    List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
             throws ContinuumBuildExecutorException
         {
             // TODO Auto-generated method stub

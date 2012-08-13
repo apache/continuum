@@ -21,13 +21,13 @@ package org.apache.maven.continuum.xmlrpc.backup;
 
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
 import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.maven.continuum.xmlrpc.client.ContinuumXmlRpcClient;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
@@ -138,7 +138,7 @@ public class Backup
         if ( !command.overwrite && out.exists() )
         {
             System.err.println( out.getAbsolutePath() +
-                " already exists and will not be overwritten unless the -overwrite flag is used." );
+                                    " already exists and will not be overwritten unless the -overwrite flag is used." );
             Args.usage( command );
             return;
         }
@@ -173,32 +173,32 @@ public class Backup
     private static class Commands
     {
 
-        @Argument(description = "Display help information", value = "help", alias = "h")
+        @Argument( description = "Display help information", value = "help", alias = "h" )
         private boolean help;
 
-        @Argument(description = "Display version information", value = "version", alias = "v")
+        @Argument( description = "Display version information", value = "version", alias = "v" )
         private boolean version;
 
-        @Argument(description = "Continuum XMLRPC URL", value = "url")
+        @Argument( description = "Continuum XMLRPC URL", value = "url" )
         private URL url;
 
-        @Argument(description = "Username", value = "username", alias = "u")
+        @Argument( description = "Username", value = "username", alias = "u" )
         private String username;
 
-        @Argument(description = "Password", value = "password", alias = "p")
+        @Argument( description = "Password", value = "password", alias = "p" )
         private String password;
 
-        @Argument(description = "Backup file", value = "outputFile", alias = "o")
+        @Argument( description = "Backup file", value = "outputFile", alias = "o" )
         private File outputFile;
 
         @Argument(
             description = "Whether to overwrite the designated backup file if it already exists in export mode. Default is false.",
-            value = "overwrite")
+            value = "overwrite" )
         private boolean overwrite;
 
         @Argument(
             description = "Turn on debugging information. Default is off.",
-            value = "debug")
+            value = "debug" )
         private boolean debug;
     }
 
@@ -570,8 +570,8 @@ public class Backup
             startTag( "environmentVariables", true );
             for ( Installation env : (List<Installation>) profile.getEnvironmentVariables() )
             {
-                writeTagWithParameter( "environmentVariable", "installationId",
-                                       String.valueOf( env.getInstallationId() ) );
+                writeTagWithParameter( "environmentVariable", "installationId", String.valueOf(
+                    env.getInstallationId() ) );
             }
             endTag( "environmentVariables", true );
         }
@@ -583,8 +583,8 @@ public class Backup
 
         if ( profile.getBuilder() != null )
         {
-            writeTagWithParameter( "builder", "installationId",
-                                   String.valueOf( profile.getBuilder().getInstallationId() ) );
+            writeTagWithParameter( "builder", "installationId", String.valueOf(
+                profile.getBuilder().getInstallationId() ) );
         }
 
         endTag( "profile", true );
@@ -719,7 +719,7 @@ public class Backup
         }
         startTag( "repositoryPurgeConfiguration", true );
         writeSimpleFields( repoPurge );
-        
+
         if ( repoPurge.getRepository() != null )
         {
             writeTagWithParameter( "repository", "id", String.valueOf( repoPurge.getRepository().getId() ) );
@@ -756,7 +756,7 @@ public class Backup
         {
             return;
         }
-        startTag( "directoryPurgeConfiguration", true);
+        startTag( "directoryPurgeConfiguration", true );
         writeSimpleFields( dirPurge );
 
         if ( dirPurge.getSchedule() != null )

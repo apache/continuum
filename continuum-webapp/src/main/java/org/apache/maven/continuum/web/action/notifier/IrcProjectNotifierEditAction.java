@@ -19,10 +19,10 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
+import org.apache.maven.continuum.model.project.ProjectNotifier;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.maven.continuum.model.project.ProjectNotifier;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>

@@ -19,9 +19,9 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
-import java.net.URL;
-
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+
+import java.net.URL;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>

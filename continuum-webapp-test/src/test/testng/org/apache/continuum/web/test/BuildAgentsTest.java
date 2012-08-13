@@ -20,14 +20,14 @@ package org.apache.continuum.web.test;
  */
 
 //import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-@Test( groups = { "agent" } )
+@Test( groups = {"agent"} )
 public class BuildAgentsTest
     extends AbstractBuildAgentsTest
 {
@@ -64,29 +64,31 @@ public class BuildAgentsTest
 
     public void testViewBuildAgentInstallationXSS()
     {
-        getSelenium().open( baseUrl + "/security/viewBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        getSelenium().open( baseUrl +
+                                "/security/viewBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "<script>alert('xss')</script>" );
     }
 
     public void testEditBuildAgentXSS()
     {
-        getSelenium().open( baseUrl + "/security/editBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        getSelenium().open( baseUrl +
+                                "/security/editBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
         Assert.assertFalse( getSelenium().isAlertPresent() );
     }
 
-    @Test( dependsOnMethods = { "testEditBuildAgent" } )
+    @Test( dependsOnMethods = {"testEditBuildAgent"} )
     public void testAddAnExistingBuildAgent()
     {
         String BUILD_AGENT_NAME = getBuildAgentUrl();
         String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
 
         goToAddBuildAgent();
-        addBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION, false, false, true ) ;
+        addBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION, false, false, true );
         assertTextPresent( "Build agent already exists" );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgent" } )
+    @Test( dependsOnMethods = {"testAddBuildAgent"} )
     public void testEditBuildAgent()
     {
         String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
@@ -98,11 +100,11 @@ public class BuildAgentsTest
 
         goToEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
         addEditBuildAgent( BUILD_AGENT_NAME, new_agentDescription );
-        goToEditBuildAgent( BUILD_AGENT_NAME, new_agentDescription);
+        goToEditBuildAgent( BUILD_AGENT_NAME, new_agentDescription );
         addEditBuildAgent( BUILD_AGENT_NAME, BUILD_AGENT_DESCRIPTION );
     }
 
-    @Test( dependsOnMethods = { "testAddAnExistingBuildAgent", "testDeleteBuildAgentGroup" } )
+    @Test( dependsOnMethods = {"testAddAnExistingBuildAgent", "testDeleteBuildAgentGroup"} )
     public void testDeleteBuildAgent()
         throws Exception
     {
@@ -112,17 +114,17 @@ public class BuildAgentsTest
         assertTextNotPresent( BUILD_AGENT_NAME );
     }
 
-	@Test( dependsOnMethods = { "testDeleteBuildAgent" } )
+    @Test( dependsOnMethods = {"testDeleteBuildAgent"} )
     public void testAddEmptyBuildAgent()
     {
-    	String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
+        String BUILD_AGENT_DESCRIPTION = getProperty( "BUILD_AGENT_DESCRIPTION" );
 
         goToAddBuildAgent();
-        addBuildAgent( "", BUILD_AGENT_DESCRIPTION, false, false, false ) ;
+        addBuildAgent( "", BUILD_AGENT_DESCRIPTION, false, false, false );
         assertTextPresent( "Build agent url is required." );
     }
 
-    @Test( dependsOnMethods = { "testDeleteBuildAgent" }, enabled=false )
+    @Test( dependsOnMethods = {"testDeleteBuildAgent"}, enabled = false )
     public void testBuildSuccessWithDistributedBuildsAfterDisableEnableOfBuildAgent()
         throws Exception
     {
@@ -158,20 +160,22 @@ public class BuildAgentsTest
 
     //TESTS FOR BUILD AGENT GROUPS
 
-    @Test( dependsOnMethods = { "testAddBuildAgent" } )
+    @Test( dependsOnMethods = {"testAddBuildAgent"} )
     public void testAddBuildAgentGroupXSS()
         throws Exception
     {
         addBuildAgent( getBuildAgentUrl() );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[] {}, false );
+        addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[]{},
+                                false );
         assertTextPresent( "Build agent group name contains invalid characters" );
     }
 
     public void testEditBuildAgentGroupXSS()
     {
-        getSelenium().open( baseUrl + "/security/editBuildAgentGroup.action?buildAgentGroup.name=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
+        getSelenium().open( baseUrl +
+                                "/security/editBuildAgentGroup.action?buildAgentGroup.name=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E" );
         Assert.assertFalse( getSelenium().isAlertPresent() );
     }
 
@@ -184,10 +188,10 @@ public class BuildAgentsTest
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME }, new String[] {}, true );
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[]{BUILD_AGENT_NAME}, new String[]{}, true );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgentGroup" } )
+    @Test( dependsOnMethods = {"testAddBuildAgentGroup"} )
     public void testEditBuildAgentGroup()
         throws Exception
     {
@@ -195,15 +199,13 @@ public class BuildAgentsTest
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
         String newName = "new_agentgroupname";
-        goToEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME } );
-        addEditBuildAgentGroup( newName, new String[] {},
-                         new String[] { BUILD_AGENT_NAME }, true );
-        goToEditBuildAgentGroup( newName, new String[] {  } );
-        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME },
-                         new String[] {}, true );
+        goToEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[]{BUILD_AGENT_NAME} );
+        addEditBuildAgentGroup( newName, new String[]{}, new String[]{BUILD_AGENT_NAME}, true );
+        goToEditBuildAgentGroup( newName, new String[]{} );
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[]{BUILD_AGENT_NAME}, new String[]{}, true );
     }
 
-    @Test( dependsOnMethods = { "testEditBuildAgentGroup" } )
+    @Test( dependsOnMethods = {"testEditBuildAgentGroup"} )
     public void testAddAnExistingBuildAgentGroup()
         throws Exception
     {
@@ -211,20 +213,20 @@ public class BuildAgentsTest
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] { BUILD_AGENT_NAME }, new String[] {}, false );
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[]{BUILD_AGENT_NAME}, new String[]{}, false );
         assertTextPresent( "Build agent group already exists." );
     }
 
-    @Test( dependsOnMethods = { "testAddAnExistingBuildAgentGroup" } )
+    @Test( dependsOnMethods = {"testAddAnExistingBuildAgentGroup"} )
     public void testAddEmptyBuildAgentGroupName()
         throws Exception
     {
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( "", new String[] {}, new String[] {}, false );
+        addEditBuildAgentGroup( "", new String[]{}, new String[]{}, false );
         assertTextPresent( "Build agent group name is required." );
     }
 
-    @Test( dependsOnMethods = { "testAddEmptyBuildAgentGroupName" } )
+    @Test( dependsOnMethods = {"testAddEmptyBuildAgentGroupName"} )
     public void testDeleteBuildAgentGroup()
     {
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
@@ -232,13 +234,13 @@ public class BuildAgentsTest
         removeBuildAgentGroup( BUILD_AGENT_GROUPNAME );
     }
 
-    @Test( dependsOnMethods = { "testDeleteBuildAgentGroup" } )
+    @Test( dependsOnMethods = {"testDeleteBuildAgentGroup"} )
     public void testAddBuildAgentGroupWithEmptyBuildAgent()
         throws Exception
     {
         String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[] {}, new String[] {}, true );
+        addEditBuildAgentGroup( BUILD_AGENT_GROUPNAME, new String[]{}, new String[]{}, true );
     }
 }

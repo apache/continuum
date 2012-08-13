@@ -19,12 +19,6 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
@@ -52,6 +46,12 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -181,7 +181,8 @@ public interface Continuum
     public void buildProjectGroup( int projectGroupId, BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
-    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId, BuildTrigger buildTrigger )
+    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId,
+                                                      BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     // ----------------------------------------------------------------------
@@ -208,7 +209,8 @@ public interface Continuum
     void removeBuildResult( int buildId )
         throws ContinuumException;
 
-    List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state, String triggeredBy );
+    List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state,
+                                              String triggeredBy );
 
     // ----------------------------------------------------------------------
     // Projects
@@ -316,12 +318,12 @@ public interface Continuum
     /**
      * Add a Maven 2 project to the list of projects.
      *
-     * @param metadataUrl              url of the pom.xml
-     * @param projectGroupId           id of the project group to use
-     * @param checkProtocol            check if the protocol is allowed, use false if the pom is uploaded
-     * @param useCredentialsCache      whether to use cached scm account credentials or not
-     * @param loadRecursiveProjects    if multi modules project record all projects (if false only root project added)
-     * @param buildDefintionTemplateId buildDefintionTemplateId
+     * @param metadataUrl               url of the pom.xml
+     * @param projectGroupId            id of the project group to use
+     * @param checkProtocol             check if the protocol is allowed, use false if the pom is uploaded
+     * @param useCredentialsCache       whether to use cached scm account credentials or not
+     * @param loadRecursiveProjects     if multi modules project record all projects (if false only root project added)
+     * @param buildDefintionTemplateId  buildDefintionTemplateId
      * @param checkoutInSingleDirectory TODO
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
@@ -329,7 +331,8 @@ public interface Continuum
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
                                                               boolean checkProtocol, boolean useCredentialsCache,
                                                               boolean loadRecursiveProjects,
-                                                              int buildDefintionTemplateId, boolean checkoutInSingleDirectory )
+                                                              int buildDefintionTemplateId,
+                                                              boolean checkoutInSingleDirectory )
         throws ContinuumException;
 
     /**

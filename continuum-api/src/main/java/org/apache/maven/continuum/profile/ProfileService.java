@@ -1,9 +1,9 @@
 package org.apache.maven.continuum.profile;
 
-import java.util.List;
-
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

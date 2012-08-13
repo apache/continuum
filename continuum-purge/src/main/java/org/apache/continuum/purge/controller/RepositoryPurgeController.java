@@ -65,8 +65,8 @@ public class RepositoryPurgeController
 
         try
         {
-            repositoryContent =
-                purgeConfigurationService.getManagedRepositoryContent( repoPurge.getRepository().getId() );
+            repositoryContent = purgeConfigurationService.getManagedRepositoryContent(
+                repoPurge.getRepository().getId() );
         }
         catch ( PurgeConfigurationServiceException e )
         {
@@ -86,8 +86,8 @@ public class RepositoryPurgeController
             }
             else
             {
-                purgeExecutor =
-                    new RetentionCountRepositoryPurgeExecutor( repositoryContent, repoPurge.getRetentionCount() );
+                purgeExecutor = new RetentionCountRepositoryPurgeExecutor( repositoryContent,
+                                                                           repoPurge.getRetentionCount() );
             }
 
             purgeReleasedSnapshotsExecutor = new ReleasedSnapshotsRepositoryPurgeExecutor( repositoryContent );
@@ -98,13 +98,13 @@ public class RepositoryPurgeController
     public void doPurge( AbstractPurgeConfiguration purgeConfig )
     {
         RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-        log.info( "--- Start: Purging repository [{}] {} ---", repoPurge.getRepository().getId(), 
+        log.info( "--- Start: Purging repository [{}] {} ---", repoPurge.getRepository().getId(),
                   repoPurge.getRepository().getLocation() );
         doPurge( repoPurge.getRepository().getLocation() );
         log.info( "--- End: Purging repository [{}] {} ---", repoPurge.getRepository().getId(),
                   repoPurge.getRepository().getLocation() );
     }
-    
+
     public void doPurge( String path )
     {
         try

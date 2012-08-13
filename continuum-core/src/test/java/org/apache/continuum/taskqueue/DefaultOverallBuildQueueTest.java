@@ -19,12 +19,6 @@ package org.apache.continuum.taskqueue;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.continuum.utils.build.BuildTrigger;
@@ -36,6 +30,12 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * DefaultOverallBuildQueueTest
@@ -72,11 +72,11 @@ public class DefaultOverallBuildQueueTest
 
         buildTaskQueueExecutor = context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "build-queue-executor" );
 
-        checkoutTaskQueueExecutor =
-            context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "checkout-queue-executor" );
+        checkoutTaskQueueExecutor = context.mock( ParallelBuildsThreadedTaskQueueExecutor.class,
+                                                  "checkout-queue-executor" );
 
-        prepareBuildTaskQueueExecutor = 
-            context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "prepare-build-queue-executor" );
+        prepareBuildTaskQueueExecutor = context.mock( ParallelBuildsThreadedTaskQueueExecutor.class,
+                                                      "prepare-build-queue-executor" );
 
         overallQueue.setBuildDefinitionDao( buildDefinitionDao );
 
@@ -92,9 +92,9 @@ public class DefaultOverallBuildQueueTest
     public void testAddToCheckoutQueue()
         throws Exception
     {
-        final CheckOutTask checkoutTask =
-            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-            			"dummy", "dummypass", null, null );
+        final CheckOutTask checkoutTask = new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
+                                                            "continuum-project-test-1", "dummy", "dummypass", null,
+                                                            null );
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
 
         context.checking( new Expectations()
@@ -104,7 +104,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( checkoutQueue ) );
 
                 one( checkoutQueue ).put( checkoutTask );
-            }} );
+            }
+        } );
 
         overallQueue.addToCheckoutQueue( checkoutTask );
         context.assertIsSatisfied();
@@ -115,9 +116,8 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add(
-            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-            			"dummy", "dummypass", null, null ) );
+        tasks.add( new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
+                                     "continuum-project-test-1", "dummy", "dummypass", null, null ) );
 
         context.checking( new Expectations()
         {
@@ -127,7 +127,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         List<CheckOutTask> returnedTasks = overallQueue.getProjectsInCheckoutQueue();
         context.assertIsSatisfied();
@@ -141,9 +142,8 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add(
-            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-            			"dummy", "dummypass", null, null ) );
+        tasks.add( new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
+                                     "continuum-project-test-1", "dummy", "dummypass", null, null ) );
 
         context.checking( new Expectations()
         {
@@ -153,7 +153,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         assertTrue( overallQueue.isInCheckoutQueue( 1 ) );
         context.assertIsSatisfied();
@@ -162,9 +163,8 @@ public class DefaultOverallBuildQueueTest
     public void testRemoveProjectFromCheckoutQueue()
         throws Exception
     {
-        final Task checkoutTask =
-            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
-            			"dummy", "dummypass", null, null );
+        final Task checkoutTask = new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
+                                                    "continuum-project-test-1", "dummy", "dummypass", null, null );
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add( checkoutTask );
@@ -182,7 +182,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( checkoutQueue ) );
 
                 one( checkoutQueue ).remove( checkoutTask );
-            }} );
+            }
+        } );
 
         overallQueue.removeProjectFromCheckoutQueue( 1 );
         context.assertIsSatisfied();
@@ -193,8 +194,8 @@ public class DefaultOverallBuildQueueTest
     public void testAddToBuildQueue()
         throws Exception
     {
-        final BuildProjectTask buildTask =
-        	new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 );
+        final BuildProjectTask buildTask = new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ),
+                                                                 "continuum-project-test-2", "BUILD_DEF", null, 2 );
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
 
         context.checking( new Expectations()
@@ -204,7 +205,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildQueue ) );
 
                 one( buildQueue ).put( buildTask );
-            }} );
+            }
+        } );
 
         overallQueue.addToBuildQueue( buildTask );
         context.assertIsSatisfied();
@@ -215,7 +217,8 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
+        tasks.add( new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2",
+                                         "BUILD_DEF", null, 2 ) );
 
         context.checking( new Expectations()
         {
@@ -225,7 +228,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         List<BuildProjectTask> returnedTasks = overallQueue.getProjectsInBuildQueue();
         context.assertIsSatisfied();
@@ -239,7 +243,8 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 ) );
+        tasks.add( new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2",
+                                         "BUILD_DEF", null, 2 ) );
 
         context.checking( new Expectations()
         {
@@ -249,7 +254,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         assertTrue( overallQueue.isInBuildQueue( 2 ) );
         context.assertIsSatisfied();
@@ -258,7 +264,8 @@ public class DefaultOverallBuildQueueTest
     public void testCancelBuildTask()
         throws Exception
     {
-    	final Task buildTask = new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 );
+        final Task buildTask = new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ),
+                                                     "continuum-project-test-2", "BUILD_DEF", null, 2 );
 
         context.checking( new Expectations()
         {
@@ -267,7 +274,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildTask ) );
 
                 one( buildTaskQueueExecutor ).cancelTask( buildTask );
-            }} );
+            }
+        } );
 
         overallQueue.cancelBuildTask( 2 );
         context.assertIsSatisfied();
@@ -276,7 +284,8 @@ public class DefaultOverallBuildQueueTest
     public void testCancelCurrentBuild()
         throws Exception
     {
-    	final Task buildTask = new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 2 );
+        final Task buildTask = new BuildProjectTask( 2, 1, new BuildTrigger( 1, "test-user" ),
+                                                     "continuum-project-test-2", "BUILD_DEF", null, 2 );
 
         context.checking( new Expectations()
         {
@@ -285,7 +294,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildTask ) );
 
                 one( buildTaskQueueExecutor ).cancelTask( buildTask );
-            }} );
+            }
+        } );
 
         overallQueue.cancelCurrentBuild();
         context.assertIsSatisfied();
@@ -310,16 +320,19 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildQueue ) );
 
                 one( buildQueue ).remove( with( any( Task.class ) ) );
-            }} );
+            }
+        } );
 
-        overallQueue.removeProjectFromBuildQueue( 1, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-1", 1 );
+        overallQueue.removeProjectFromBuildQueue( 1, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-1",
+                                                  1 );
         context.assertIsSatisfied();
     }
 
     public void testRemoveProjectFromBuildQueue()
         throws Exception
     {
-    	final Task buildTask = new BuildProjectTask( 1, 1, new BuildTrigger( 1, "test-user" ), "continuum-project-test-2", "BUILD_DEF", null, 1 );
+        final Task buildTask = new BuildProjectTask( 1, 1, new BuildTrigger( 1, "test-user" ),
+                                                     "continuum-project-test-2", "BUILD_DEF", null, 1 );
 
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
@@ -338,7 +351,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildQueue ) );
 
                 one( buildQueue ).remove( buildTask );
-            }} );
+            }
+        } );
 
         overallQueue.removeProjectFromBuildQueue( 1 );
         context.assertIsSatisfied();
@@ -349,9 +363,11 @@ public class DefaultOverallBuildQueueTest
     public void testAddToPrepareBuildQueue()
         throws Exception
     {
-        final PrepareBuildProjectsTask prepareBuildTask =
-            new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 1, 
-                                          "Project Group A", "http://scmRootAddress", 1 );
+        final PrepareBuildProjectsTask prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(),
+                                                                                        new BuildTrigger( 1,
+                                                                                                          "test-user" ),
+                                                                                        1, "Project Group A",
+                                                                                        "http://scmRootAddress", 1 );
         final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
 
         context.checking( new Expectations()
@@ -361,7 +377,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( prepareBuildQueue ) );
 
                 one( prepareBuildQueue ).put( prepareBuildTask );
-            }} );
+            }
+        } );
 
         overallQueue.addToPrepareBuildQueue( prepareBuildTask );
         context.assertIsSatisfied();
@@ -370,9 +387,8 @@ public class DefaultOverallBuildQueueTest
     public void testCancelCurrentPrepareBuild()
         throws Exception
     {
-        final Task prepareBuildTask = 
-            new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 1, 
-                                          "Project Group A", "http://scm.root.address", 1 );
+        final Task prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger(
+            1, "test-user" ), 1, "Project Group A", "http://scm.root.address", 1 );
 
         context.checking( new Expectations()
         {
@@ -381,7 +397,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( prepareBuildTask ) );
 
                 one( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
-            }} );
+            }
+        } );
 
         overallQueue.cancelCurrentPrepareBuild();
         context.assertIsSatisfied();
@@ -393,9 +410,8 @@ public class DefaultOverallBuildQueueTest
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         map.put( 1, 1 );
 
-        final Task prepareBuildTask = 
-            new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, 
-                                          "Project Group A", "http://scm.root.address", 1 );
+        final Task prepareBuildTask = new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1,
+                                                                    "Project Group A", "http://scm.root.address", 1 );
 
         context.checking( new Expectations()
         {
@@ -404,7 +420,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( prepareBuildTask ) );
 
                 one( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
-            }} );
+            }
+        } );
 
         overallQueue.cancelPrepareBuildTask( 1 );
         context.assertIsSatisfied();
@@ -416,9 +433,8 @@ public class DefaultOverallBuildQueueTest
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         map.put( 1, 1 );
 
-        final Task prepareBuildTask = 
-            new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, 
-                                          "Project Group A", "http://scm.root.address", 2 );
+        final Task prepareBuildTask = new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1,
+                                                                    "Project Group A", "http://scm.root.address", 2 );
 
         context.checking( new Expectations()
         {
@@ -427,7 +443,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( prepareBuildTask ) );
 
                 one( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
-            }} );
+            }
+        } );
 
         overallQueue.cancelPrepareBuildTask( 1, 2 );
         context.assertIsSatisfied();
@@ -438,7 +455,7 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 2, 
+        tasks.add( new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 2,
                                                  "Project Group A", "http://scm.root.address", 2 ) );
 
         context.checking( new Expectations()
@@ -449,7 +466,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( prepareBuildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         List<PrepareBuildProjectsTask> returnedTasks = overallQueue.getProjectsInPrepareBuildQueue();
         context.assertIsSatisfied();
@@ -467,7 +485,7 @@ public class DefaultOverallBuildQueueTest
         map.put( 2, 1 );
 
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A", 
+        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A",
                                                  "http://scm.root.address", 2 ) );
 
         context.checking( new Expectations()
@@ -478,7 +496,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( prepareBuildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         assertTrue( overallQueue.isInPrepareBuildQueue( 2 ) );
         context.assertIsSatisfied();
@@ -493,7 +512,7 @@ public class DefaultOverallBuildQueueTest
         map.put( 2, 1 );
 
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A", 
+        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A",
                                                  "http://scm.root.address", 2 ) );
 
         context.checking( new Expectations()
@@ -504,7 +523,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( prepareBuildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         assertTrue( overallQueue.isInPrepareBuildQueue( 1, 2 ) );
         context.assertIsSatisfied();
@@ -519,7 +539,7 @@ public class DefaultOverallBuildQueueTest
         map.put( 2, 1 );
 
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A", 
+        tasks.add( new PrepareBuildProjectsTask( map, new BuildTrigger( 1, "test-user" ), 1, "Project Group A",
                                                  "http://scm.root.address", 2 ) );
 
         context.checking( new Expectations()
@@ -530,7 +550,8 @@ public class DefaultOverallBuildQueueTest
 
                 one( prepareBuildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }} );
+            }
+        } );
 
         assertTrue( overallQueue.isInPrepareBuildQueue( 1, "http://scm.root.address" ) );
         context.assertIsSatisfied();
@@ -539,8 +560,8 @@ public class DefaultOverallBuildQueueTest
     public void testRemoveProjectsFromPrepareBuildQueueByProjectGroupAndScmRootId()
         throws Exception
     {
-        final Task prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 
-                                                                    1, "Project Group A", "http://scm.root.address", 1 );
+        final Task prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger(
+            1, "test-user" ), 1, "Project Group A", "http://scm.root.address", 1 );
 
         final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
@@ -559,7 +580,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( prepareBuildQueue ) );
 
                 one( prepareBuildQueue ).remove( prepareBuildTask );
-            }} );
+            }
+        } );
 
         overallQueue.removeProjectFromPrepareBuildQueue( 1, 1 );
         context.assertIsSatisfied();
@@ -568,8 +590,8 @@ public class DefaultOverallBuildQueueTest
     public void testRemoveProjectsFromPrepareBuildQueueByProjectGroupAndScmRootAddress()
         throws Exception
     {
-        final Task prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger( 1, "test-user" ), 
-                                                                    1, "Project Group A", "http://scm.root.address", 1 );
+        final Task prepareBuildTask = new PrepareBuildProjectsTask( new HashMap<Integer, Integer>(), new BuildTrigger(
+            1, "test-user" ), 1, "Project Group A", "http://scm.root.address", 1 );
 
         final TaskQueue prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
         final List<Task> tasks = new ArrayList<Task>();
@@ -588,7 +610,8 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( prepareBuildQueue ) );
 
                 one( prepareBuildQueue ).remove( prepareBuildTask );
-            }} );
+            }
+        } );
 
         overallQueue.removeProjectFromPrepareBuildQueue( 1, "http://scm.root.address" );
         context.assertIsSatisfied();

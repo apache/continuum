@@ -19,13 +19,13 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>

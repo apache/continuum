@@ -19,12 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
@@ -36,6 +30,12 @@ import org.apache.maven.continuum.web.action.stub.SummaryActionStub;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.jmock.Mock;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SummaryActionTest
     extends AbstractActionTest
@@ -62,7 +62,7 @@ public class SummaryActionTest
         buildsManager = mock( BuildsManager.class );
 
         action.setContinuum( (Continuum) continuum.proxy() );
-        action.setParallelBuildsManager( (BuildsManager ) buildsManager.proxy() );
+        action.setParallelBuildsManager( (BuildsManager) buildsManager.proxy() );
     }
 
     public void testLatestBuildIdWhenCurrentlyBuildingInDistributedBuild()
@@ -77,10 +77,11 @@ public class SummaryActionTest
         continuum.expects( once() ).method( "getBuildResultsInSuccess" ).will( returnValue( buildResultsInSuccess ) );
 
         buildsManager.expects( once() ).method( "isInAnyBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInPrepareBuildQueue").will( returnValue( false ) );
+        buildsManager.expects( once() ).method( "isInPrepareBuildQueue" ).will( returnValue( false ) );
         buildsManager.expects( once() ).method( "isInAnyCheckoutQueue" ).will( returnValue( false ) );
 
-        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue( (ConfigurationService) configurationService.proxy()  ) );
+        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue(
+            (ConfigurationService) configurationService.proxy() ) );
         configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( true ) );
 
         action.execute();
@@ -107,10 +108,11 @@ public class SummaryActionTest
         continuum.expects( once() ).method( "getBuildResultsInSuccess" ).will( returnValue( buildResultsInSuccess ) );
 
         buildsManager.expects( once() ).method( "isInAnyBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInPrepareBuildQueue").will( returnValue( false ) );
+        buildsManager.expects( once() ).method( "isInPrepareBuildQueue" ).will( returnValue( false ) );
         buildsManager.expects( once() ).method( "isInAnyCheckoutQueue" ).will( returnValue( false ) );
 
-        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue( (ConfigurationService) configurationService.proxy()  ) );
+        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue(
+            (ConfigurationService) configurationService.proxy() ) );
         configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( true ) );
 
         action.execute();
@@ -137,10 +139,11 @@ public class SummaryActionTest
         continuum.expects( once() ).method( "getBuildResultsInSuccess" ).will( returnValue( buildResultsInSuccess ) );
 
         buildsManager.expects( once() ).method( "isInAnyBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInPrepareBuildQueue").will( returnValue( false ) );
+        buildsManager.expects( once() ).method( "isInPrepareBuildQueue" ).will( returnValue( false ) );
         buildsManager.expects( once() ).method( "isInAnyCheckoutQueue" ).will( returnValue( false ) );
 
-        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue( (ConfigurationService) configurationService.proxy()  ) );
+        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue(
+            (ConfigurationService) configurationService.proxy() ) );
         configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( false ) );
 
         action.execute();
@@ -157,8 +160,8 @@ public class SummaryActionTest
 
     private Collection<Project> createProjectsInGroup( int projectId, int state )
     {
-        Collection<Project> projectsInGroup = new ArrayList<Project>(); 
-        
+        Collection<Project> projectsInGroup = new ArrayList<Project>();
+
         ProjectGroup group = new ProjectGroup();
         group.setId( 1 );
         group.setName( "test-group" );
@@ -186,7 +189,7 @@ public class SummaryActionTest
         br.setStartTime( System.currentTimeMillis() );
         br.setEndTime( System.currentTimeMillis() );
         br.setState( state );
-        
+
         buildResults.put( projectId, br );
 
         return buildResults;

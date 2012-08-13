@@ -19,8 +19,6 @@ package org.apache.continuum.repository;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
@@ -33,6 +31,8 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * DefaultRepositoryService

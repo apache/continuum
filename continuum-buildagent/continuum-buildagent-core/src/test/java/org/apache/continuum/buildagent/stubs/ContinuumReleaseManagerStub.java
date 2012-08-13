@@ -19,31 +19,32 @@ package org.apache.continuum.buildagent.stubs;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultContinuumReleaseManager;
 
+import java.io.File;
+
 public class ContinuumReleaseManagerStub
     extends DefaultContinuumReleaseManager
 {
     public void perform( String releaseId, File buildDirectory, String goals, String arguments,
-                         boolean useReleaseProfile, ContinuumReleaseManagerListener listener, LocalRepository repository )
+                         boolean useReleaseProfile, ContinuumReleaseManagerListener listener,
+                         LocalRepository repository )
         throws ContinuumReleaseException
     {
-        if( !repository.getName().equalsIgnoreCase( "default" ) )
+        if ( !repository.getName().equalsIgnoreCase( "default" ) )
         {
             throw new ContinuumReleaseException( "Incorrect local repository name!" );
         }
-        
-        if( !repository.getLocation().equals( "/home/user/.m2/repository" ) )
+
+        if ( !repository.getLocation().equals( "/home/user/.m2/repository" ) )
         {
             throw new ContinuumReleaseException( "Incorrect local repository location!" );
         }
-        
-        if( !repository.getLayout().equals( "default" ) )
+
+        if ( !repository.getLayout().equals( "default" ) )
         {
             throw new ContinuumReleaseException( "Incorrect local repository layout!" );
         }

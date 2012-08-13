@@ -19,11 +19,6 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import java.io.File;
-
-import javax.activation.MimetypesFileTypeMap;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.webdav.util.WebdavMethodUtil;
 import org.apache.continuum.webdav.util.WorkingCopyPathUtil;
@@ -36,6 +31,10 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.DavSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @plexus.component role="org.apache.continuum.webdav.ContinuumBuildAgentDavResourceFactory"
@@ -63,8 +62,8 @@ public class ContinuumBuildAgentDavResourceFactory
     public DavResource createResource( final DavResourceLocator locator, final DavSession davSession )
         throws DavException
     {
-        ContinuumBuildAgentDavResourceLocator continuumLocator = 
-            checkLocatorIsInstanceOfContinuumBuildAgentLocator( locator );
+        ContinuumBuildAgentDavResourceLocator continuumLocator = checkLocatorIsInstanceOfContinuumBuildAgentLocator(
+            locator );
 
         String logicalResource = WorkingCopyPathUtil.getLogicalResource( locator.getResourcePath() );
         if ( logicalResource.startsWith( "/" ) )
@@ -74,7 +73,8 @@ public class ContinuumBuildAgentDavResourceFactory
 
         File resourceFile = getResourceFile( continuumLocator.getProjectId(), logicalResource );
 
-        if ( !resourceFile.exists() || ( continuumLocator.getHref( false ).endsWith( "/" ) && !resourceFile.isDirectory() ) )
+        if ( !resourceFile.exists() || ( continuumLocator.getHref( false ).endsWith( "/" ) &&
+            !resourceFile.isDirectory() ) )
         {
             // force a resource not found
             log.error( "Resource file '" + resourceFile.getAbsolutePath() + "' does not exist" );
@@ -86,12 +86,12 @@ public class ContinuumBuildAgentDavResourceFactory
         }
     }
 
-    public DavResource createResource( DavResourceLocator locator, DavServletRequest request, 
+    public DavResource createResource( DavResourceLocator locator, DavServletRequest request,
                                        DavServletResponse response )
         throws DavException
     {
-        ContinuumBuildAgentDavResourceLocator continuumLocator = 
-            checkLocatorIsInstanceOfContinuumBuildAgentLocator( locator );
+        ContinuumBuildAgentDavResourceLocator continuumLocator = checkLocatorIsInstanceOfContinuumBuildAgentLocator(
+            locator );
 
         if ( !WebdavMethodUtil.isReadMethod( request.getMethod() ) )
         {
@@ -107,7 +107,8 @@ public class ContinuumBuildAgentDavResourceFactory
 
         File resourceFile = getResourceFile( continuumLocator.getProjectId(), logicalResource );
 
-        if ( !resourceFile.exists() || ( continuumLocator.getHref( false ).endsWith( "/" ) && !resourceFile.isDirectory() ) )
+        if ( !resourceFile.exists() || ( continuumLocator.getHref( false ).endsWith( "/" ) &&
+            !resourceFile.isDirectory() ) )
         {
             // force a resource not found
             log.error( "Resource file '" + resourceFile.getAbsolutePath() + "' does not exist" );
@@ -134,7 +135,8 @@ public class ContinuumBuildAgentDavResourceFactory
         this.buildAgentConfigurationService = buildAgentConfigurationService;
     }
 
-    private ContinuumBuildAgentDavResourceLocator checkLocatorIsInstanceOfContinuumBuildAgentLocator( DavResourceLocator locator )
+    private ContinuumBuildAgentDavResourceLocator checkLocatorIsInstanceOfContinuumBuildAgentLocator(
+        DavResourceLocator locator )
         throws DavException
     {
         if ( !( locator instanceof ContinuumBuildAgentDavResourceLocator ) )
@@ -169,7 +171,7 @@ public class ContinuumBuildAgentDavResourceFactory
     protected DavResource createResource( File resourceFile, String logicalResource, DavSession session,
                                           ContinuumBuildAgentDavResourceLocator locator )
     {
-        return new ContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource, session, 
-                                                   locator, this, mimeTypes );
+        return new ContinuumBuildAgentDavResource( resourceFile.getAbsolutePath(), logicalResource, session, locator,
+                                                   this, mimeTypes );
     }
 }

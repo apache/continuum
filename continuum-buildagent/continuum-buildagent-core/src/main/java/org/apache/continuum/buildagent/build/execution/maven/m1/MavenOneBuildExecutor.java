@@ -19,13 +19,6 @@ package org.apache.continuum.buildagent.build.execution.maven.m1;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.annotation.Resource;
-
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
@@ -37,6 +30,12 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import javax.annotation.Resource;
 
 public class MavenOneBuildExecutor
     extends AbstractBuildExecutor
@@ -54,25 +53,24 @@ public class MavenOneBuildExecutor
         super( ID, true );
     }
 
-    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, 
-                                                     File buildOutput, Map<String, String> environments,
-                                                     String localRepository )
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                                     Map<String, String> environments, String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
-        String executable = getBuildAgentInstallationService().getExecutorConfigurator( BuildAgentInstallationService.MAVEN1_TYPE )
-        .getExecutable();
-    
+        String executable = getBuildAgentInstallationService().getExecutorConfigurator(
+            BuildAgentInstallationService.MAVEN1_TYPE ).getExecutable();
+
         StringBuffer arguments = new StringBuffer();
-    
+
         String buildFile = getBuildFileForProject( buildDefinition );
-    
+
         if ( !StringUtils.isEmpty( buildFile ) && !"project.xml".equals( buildFile ) )
         {
             arguments.append( "-p " ).append( buildFile ).append( " " );
         }
-    
+
         arguments.append( StringUtils.clean( buildDefinition.getArguments() ) ).append( " " );
-    
+
         Properties props = getContinuumSystemProperties( project );
         for ( Enumeration itr = props.propertyNames(); itr.hasMoreElements(); )
         {
@@ -92,13 +90,14 @@ public class MavenOneBuildExecutor
 
         if ( environments != null )
         {
-            m1Home = environments.get( getBuildAgentInstallationService().getEnvVar( BuildAgentInstallationService.MAVEN1_TYPE ) );
+            m1Home = environments.get( getBuildAgentInstallationService().getEnvVar(
+                BuildAgentInstallationService.MAVEN1_TYPE ) );
         }
 
         if ( StringUtils.isNotEmpty( m1Home ) )
         {
             executable = m1Home + File.separator + "bin" + File.separator + executable;
-                setResolveExecutable( false );
+            setResolveExecutable( false );
         }
 
         return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
@@ -133,12 +132,13 @@ public class MavenOneBuildExecutor
         try
         {
             ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
-            
+
             buildAgentMavenOneMetadataHelper.mapMetadata( result, projectXmlFile, project );
 
             if ( result.hasErrors() )
             {
-                throw new ContinuumAgentBuildExecutorException( "Error while mapping metadata:" + result.getErrorsAsString() );
+                throw new ContinuumAgentBuildExecutorException(
+                    "Error while mapping metadata:" + result.getErrorsAsString() );
             }
 
             updateProject( project );

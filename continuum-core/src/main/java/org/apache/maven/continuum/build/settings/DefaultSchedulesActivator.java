@@ -19,11 +19,6 @@ package org.apache.maven.continuum.build.settings;
  * under the License.
  */
 
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
@@ -48,6 +43,11 @@ import org.quartz.JobDetail;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -120,8 +120,8 @@ public class DefaultSchedulesActivator
                     }
                     catch ( ContinuumStoreException e1 )
                     {
-                        throw new SchedulesActivationException( "Can't desactivate schedule '" + schedule.getName()
-                            + "'", e );
+                        throw new SchedulesActivationException(
+                            "Can't desactivate schedule '" + schedule.getName() + "'", e );
                     }
                 }
             }
@@ -296,8 +296,9 @@ public class DefaultSchedulesActivator
             repositoryPurgeConfigurationDao.getEnableRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
         List<DirectoryPurgeConfiguration> dirPurgeConfigs =
             directoryPurgeConfigurationDao.getEnableDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
-        List<DistributedDirectoryPurgeConfiguration> distriDirPurgeConfigs = 
-            distributedDirectoryPurgeConfigurationDao.getEnableDistributedDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+        List<DistributedDirectoryPurgeConfiguration> distriDirPurgeConfigs =
+            distributedDirectoryPurgeConfigurationDao.getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
+                schedule.getId() );
 
         return repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0 || distriDirPurgeConfigs.size() > 0;
 

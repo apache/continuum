@@ -22,16 +22,15 @@ import org.apache.maven.continuum.ContinuumException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 9 mai 2008
  * @version $Id$
  * @since 1.2
  */
 public class AlreadyExistsInstallationException
     extends ContinuumException
 {
-	private static final long serialVersionUID = -7673670059441370868L;
+    private static final long serialVersionUID = -7673670059441370868L;
 
-	/**
+    /**
      * @param message
      */
     public AlreadyExistsInstallationException( String message )

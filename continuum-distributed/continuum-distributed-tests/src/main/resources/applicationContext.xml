@@ -4,9 +4,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-  <bean id="masterBuildAgentTransportServer" class="org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportServer"/>
-  
-  <bean id="slaveBuildAgentTransportServer" class="org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportServer">
+  <bean id="masterBuildAgentTransportServer"
+        class="org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportServer"/>
+
+  <bean id="slaveBuildAgentTransportServer"
+        class="org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportServer">
     <constructor-arg ref="continuumBuildAgentService"/>
   </bean>
 
@@ -18,5 +20,5 @@
       </list>
     </constructor-arg>
   </bean>
-  
+
 </beans>

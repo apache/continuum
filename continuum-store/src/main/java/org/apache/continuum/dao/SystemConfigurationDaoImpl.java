@@ -30,7 +30,7 @@ import java.util.List;
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.SystemConfigurationDao"
  */
-@Repository("systemConfigurationDao")
+@Repository( "systemConfigurationDao" )
 public class SystemConfigurationDaoImpl
     extends AbstractDao
     implements SystemConfigurationDao

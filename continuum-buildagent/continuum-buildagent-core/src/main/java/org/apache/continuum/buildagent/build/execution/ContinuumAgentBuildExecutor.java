@@ -19,14 +19,14 @@ package org.apache.continuum.buildagent.build.execution;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.project.MavenProject;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public interface ContinuumAgentBuildExecutor
 {

@@ -44,7 +44,8 @@
   </field>
   <validator type="expression">
     <param name="expression">
-      password.equals(passwordTwo)</param>
+      password.equals(passwordTwo)
+    </param>
     <message key="user.passwordTwo.nomatch"/>
   </validator>
 </validators>

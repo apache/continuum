@@ -19,11 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
@@ -33,6 +28,11 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Add a Maven 2 project to Continuum.
@@ -51,7 +51,7 @@ public class AddMavenTwoProjectAction
     public static final String ERROR_READING_POM_EXCEPTION_MESSAGE = "Error reading POM";
 
     public static final String FILE_SCHEME = "file:/";
-    
+
     private String checkoutOption;
 
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
@@ -59,7 +59,7 @@ public class AddMavenTwoProjectAction
         throws ContinuumException
     {
         ContinuumProjectBuildingResult result = null;
-        
+
         // TODO: remove this part once uploading of an m2 project with modules is supported ( CONTINUUM-1098 )
         if ( !checkProtocol )
         {
@@ -103,16 +103,16 @@ public class AddMavenTwoProjectAction
                 throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
             }
         }
-        
+
         boolean nonRecursiveProject;
         boolean checkoutInSingleDirectory;
-        
-        if( "checkoutInSingleDirectory".equals( checkoutOption ) )
+
+        if ( "checkoutInSingleDirectory".equals( checkoutOption ) )
         {
             checkoutInSingleDirectory = true;
             nonRecursiveProject = false;
         }
-        else if( "nonRecursiveProject".equals( checkoutOption ) )
+        else if ( "nonRecursiveProject".equals( checkoutOption ) )
         {
             checkoutInSingleDirectory = false;
             nonRecursiveProject = true;
@@ -126,8 +126,7 @@ public class AddMavenTwoProjectAction
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
-                                                        !nonRecursiveProject,
-                                                        this.getBuildDefinitionTemplateId(),
+                                                        !nonRecursiveProject, this.getBuildDefinitionTemplateId(),
                                                         checkoutInSingleDirectory );
         }
 
@@ -143,7 +142,7 @@ public class AddMavenTwoProjectAction
         event.log();
         return result;
     }
-    
+
     /**
      * @deprecated Use {@link #getPomFile()} instead
      */
@@ -175,7 +174,7 @@ public class AddMavenTwoProjectAction
     {
         setPomUrl( pomUrl );
     }
-    
+
     public String getCheckoutOption()
     {
         return checkoutOption;

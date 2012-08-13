@@ -19,11 +19,10 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
-import java.net.URL;
-
 import junit.framework.TestCase;
-
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+
+import java.net.URL;
 
 /**
  * Test for {@link AbstractContinuumProjectBuilder}
@@ -69,7 +68,8 @@ public abstract class AbstractContinuumProjectBuilderTest
         }
 
         public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-        					boolean recursiveProjects, boolean checkoutInSingleDirectory )
+                                                                         boolean recursiveProjects,
+                                                                         boolean checkoutInSingleDirectory )
             throws ContinuumProjectBuilderException
         {
             return null;
@@ -77,7 +77,8 @@ public abstract class AbstractContinuumProjectBuilderTest
 
         public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                          boolean recursiveProjects,
-                                                                         BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
+                                                                         BuildDefinitionTemplate buildDefinitionTemplate,
+                                                                         boolean checkoutInSingleDirectory )
             throws ContinuumProjectBuilderException
         {
             return null;

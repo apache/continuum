@@ -50,7 +50,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -61,6 +60,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.activation.MimetypesFileTypeMap;
 
 /**
  * @plexus.component role="org.apache.continuum.buildagent.ContinuumBuildAgentService"
@@ -101,7 +101,7 @@ public class ContinuumBuildAgentServiceImpl
      * @plexus.requirement
      */
     private BuildAgentManager buildAgentManager;
-    
+
     /**
      * @plexus.requirement
      */
@@ -219,8 +219,8 @@ public class ContinuumBuildAgentServiceImpl
             {
                 if ( buildResult.getStartTime() <= 0 )
                 {
-                    result.put( ContinuumBuildAgentUtil.KEY_START_TIME,
-                                Long.toString( buildContext.getBuildStartTime() ) );
+                    result.put( ContinuumBuildAgentUtil.KEY_START_TIME, Long.toString(
+                        buildContext.getBuildStartTime() ) );
                 }
                 else
                 {
@@ -259,12 +259,13 @@ public class ContinuumBuildAgentServiceImpl
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_OUTPUT, buildOutput );
             }
 
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT,
-                        ContinuumBuildAgentUtil.createScmResult( buildContext ) );
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, ContinuumBuildAgentUtil.createScmResult(
+                buildContext ) );
         }
         else
         {
-            log.debug( "Unable to get build result because project {} is not currently building in the agent", projectId );
+            log.debug( "Unable to get build result because project {} is not currently building in the agent",
+                       projectId );
         }
         return result;
     }
@@ -341,7 +342,7 @@ public class ContinuumBuildAgentServiceImpl
         boolean isStream = false;
 
         if ( ( mimeType.indexOf( "image" ) >= 0 ) || ( mimeType.indexOf( "java-archive" ) >= 0 ) ||
-             ( mimeType.indexOf( "java-class" ) >= 0 ) || ( userFile.length() > 100000 ) )
+            ( mimeType.indexOf( "java-class" ) >= 0 ) || ( userFile.length() > 100000 ) )
         {
             fileContent = "";
             isStream = true;
@@ -457,7 +458,8 @@ public class ContinuumBuildAgentServiceImpl
         try
         {
             log.debug( "Performing release" );
-            buildAgentReleaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
+            buildAgentReleaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository,
+                                                     username );
         }
         catch ( ContinuumReleaseException e )
         {
@@ -507,7 +509,7 @@ public class ContinuumBuildAgentServiceImpl
     public int getBuildSizeOfAgent()
     {
         int size = 0;
-        
+
         try
         {
             log.debug( "Getting number of projects in any queue" );
@@ -565,10 +567,11 @@ public class ContinuumBuildAgentServiceImpl
 
             return projects;
         }
-        catch( TaskQueueManagerException e )
+        catch ( TaskQueueManagerException e )
         {
             log.error( "Error occurred while retrieving projects in prepare build queue", e );
-            throw new ContinuumBuildAgentException( "Error occurred while retrieving projects in prepare build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving projects in prepare build queue",
+                                                    e );
         }
     }
 
@@ -595,10 +598,11 @@ public class ContinuumBuildAgentServiceImpl
 
             return projects;
         }
-        catch( TaskQueueManagerException e )
+        catch ( TaskQueueManagerException e )
         {
             log.error( "Error occurred while retrieving projects in prepare build queue", e );
-            throw new ContinuumBuildAgentException( "Error occurred while retrieving projects in prepare build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving projects in prepare build queue",
+                                                    e );
         }
     }
 
@@ -625,7 +629,7 @@ public class ContinuumBuildAgentServiceImpl
 
             return projects;
         }
-        catch( TaskQueueManagerException e )
+        catch ( TaskQueueManagerException e )
         {
             log.error( "Error occurred while retrieving projects in build queue", e );
             throw new ContinuumBuildAgentException( "Error occurred while retrieving projects in build queue", e );
@@ -656,7 +660,8 @@ public class ContinuumBuildAgentServiceImpl
         catch ( TaskQueueManagerException e )
         {
             log.error( "Error occurred while retrieving current project in prepare build", e );
-            throw new ContinuumBuildAgentException( "Error occurred while retrieving current project in prepare build", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving current project in prepare build",
+                                                    e );
         }
     }
 
@@ -688,9 +693,11 @@ public class ContinuumBuildAgentServiceImpl
         catch ( TaskQueueManagerException e )
         {
             log.error( "Error occurred while retrieving current projects in prepare build", e );
-            throw new ContinuumBuildAgentException( "Error occurred while retrieving current projects in prepare build", e );
+            throw new ContinuumBuildAgentException( "Error occurred while retrieving current projects in prepare build",
+                                                    e );
         }
     }
+
     public Map<String, Object> getProjectCurrentlyBuilding()
         throws ContinuumBuildAgentException
     {
@@ -704,7 +711,8 @@ public class ContinuumBuildAgentServiceImpl
             if ( task != null )
             {
                 project.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( task.getProjectId() ) );
-                project.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( task.getBuildDefinitionId() ) );
+                project.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer(
+                    task.getBuildDefinitionId() ) );
                 project.put( ContinuumBuildAgentUtil.KEY_TRIGGER, task.getBuildTrigger().getTrigger() );
                 project.put( ContinuumBuildAgentUtil.KEY_USERNAME, task.getBuildTrigger().getTriggeredBy() );
                 project.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( task.getProjectGroupId() ) );
@@ -734,7 +742,8 @@ public class ContinuumBuildAgentServiceImpl
                 }
             }
 
-            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+            PrepareBuildProjectsTask currentPrepareBuildTask =
+                buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
 
             if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
             {
@@ -757,11 +766,11 @@ public class ContinuumBuildAgentServiceImpl
             {
                 log.debug( "projectGroup {} is currently building", projectGroupId );
                 return true;
-            }            
+            }
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if project group " + projectGroupId + " is queued in agent", e);
+            log.error( "Error while checking if project group " + projectGroupId + " is queued in agent", e );
         }
 
         return false;
@@ -772,7 +781,8 @@ public class ContinuumBuildAgentServiceImpl
         try
         {
             log.debug( "Checking if projects {} is in any queue", projectIds );
-            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+            PrepareBuildProjectsTask currentPrepareBuildTask =
+                buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
 
             if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getScmRootId() == projectScmRootId )
             {
@@ -780,7 +790,7 @@ public class ContinuumBuildAgentServiceImpl
             }
 
             BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
-            
+
             if ( currentBuildTask != null )
             {
                 int projectId = currentBuildTask.getProjectId();
@@ -817,7 +827,7 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if project scm root " + projectScmRootId + " is queued in agent", e);
+            log.error( "Error while checking if project scm root " + projectScmRootId + " is queued in agent", e );
         }
 
         return false;
@@ -838,7 +848,8 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if project group " + projectGroupId + " is in prepare build queue in agent", e);
+            log.error(
+                "Error while checking if project group " + projectGroupId + " is in prepare build queue in agent", e );
         }
 
         return false;
@@ -848,15 +859,16 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId, buildDefinitionId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId,
+                       buildDefinitionId );
             for ( PrepareBuildProjectsTask task : buildAgentTaskQueueManager.getProjectsInPrepareBuildQueue() )
             {
                 if ( task != null )
                 {
                     for ( BuildContext context : task.getBuildContexts() )
                     {
-                        if ( context.getProjectId() == projectId && 
-                             ( buildDefinitionId == -1 || context.getBuildDefinitionId() == buildDefinitionId ) )
+                        if ( context.getProjectId() == projectId &&
+                            ( buildDefinitionId == -1 || context.getBuildDefinitionId() == buildDefinitionId ) )
                         {
                             log.debug( "projectId={}, buildDefinitionId={} is in prepare build queue" );
                             return true;
@@ -867,8 +879,8 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
-                       " is in prepare build queue in agent", e);
+            log.error( "Error while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId +
+                           " is in prepare build queue in agent", e );
         }
 
         return false;
@@ -879,7 +891,8 @@ public class ContinuumBuildAgentServiceImpl
         try
         {
             log.debug( "Checking if project group {} currently preparing build", projectGroupId );
-            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+            PrepareBuildProjectsTask currentPrepareBuildTask =
+                buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
 
             if ( currentPrepareBuildTask != null && currentPrepareBuildTask.getProjectGroupId() == projectGroupId )
             {
@@ -888,7 +901,9 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if project group " + projectGroupId + " is currently preparing build in agent", e);
+            log.error(
+                "Error while checking if project group " + projectGroupId + " is currently preparing build in agent",
+                e );
         }
 
         return false;
@@ -898,15 +913,17 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Checking if projectId={}, buildDefinitionId={} currently preparing build", projectId, buildDefinitionId );
-            PrepareBuildProjectsTask currentPrepareBuildTask = buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
+            log.debug( "Checking if projectId={}, buildDefinitionId={} currently preparing build", projectId,
+                       buildDefinitionId );
+            PrepareBuildProjectsTask currentPrepareBuildTask =
+                buildAgentTaskQueueManager.getCurrentProjectInPrepareBuild();
 
             if ( currentPrepareBuildTask != null )
             {
                 for ( BuildContext context : currentPrepareBuildTask.getBuildContexts() )
                 {
-                    if ( context.getProjectId() == projectId && 
-                         ( buildDefinitionId == -1 || context.getBuildDefinitionId() == buildDefinitionId ) )
+                    if ( context.getProjectId() == projectId &&
+                        ( buildDefinitionId == -1 || context.getBuildDefinitionId() == buildDefinitionId ) )
                     {
                         log.debug( "projectId={}, buildDefinitionId={} is currently preparing build" );
                         return true;
@@ -916,8 +933,8 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
-                       " is currently preparing build in agent", e);
+            log.error( "Error while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId +
+                           " is currently preparing build in agent", e );
         }
 
         return false;
@@ -927,11 +944,12 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Checking if projectId={}, buildDefinitionId={} is currently building", projectId, buildDefinitionId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is currently building", projectId,
+                       buildDefinitionId );
             BuildProjectTask currentBuildTask = buildAgentTaskQueueManager.getCurrentProjectInBuilding();
 
-            if ( currentBuildTask != null && currentBuildTask.getProjectId() == projectId && 
-                 ( buildDefinitionId == -1 || currentBuildTask.getBuildDefinitionId() == buildDefinitionId ) )
+            if ( currentBuildTask != null && currentBuildTask.getProjectId() == projectId &&
+                ( buildDefinitionId == -1 || currentBuildTask.getBuildDefinitionId() == buildDefinitionId ) )
             {
                 log.debug( "projectId={}, buildDefinitionId={} is currently building" );
                 return true;
@@ -939,8 +957,9 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error occurred while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
-                       " is currently building in agent", e );
+            log.error(
+                "Error occurred while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId +
+                    " is currently building in agent", e );
         }
 
         return false;
@@ -950,15 +969,16 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            log.debug( "Checking if projectId={}, buildDefinitionId={} is in build queue", projectId, buildDefinitionId );
+            log.debug( "Checking if projectId={}, buildDefinitionId={} is in build queue", projectId,
+                       buildDefinitionId );
             List<BuildProjectTask> buildTasks = buildAgentTaskQueueManager.getProjectsInBuildQueue();
 
             if ( buildTasks != null )
             {
                 for ( BuildProjectTask task : buildTasks )
                 {
-                    if ( task.getProjectId() == projectId && 
-                         ( buildDefinitionId == -1 || task.getBuildDefinitionId() == buildDefinitionId ) )
+                    if ( task.getProjectId() == projectId &&
+                        ( buildDefinitionId == -1 || task.getBuildDefinitionId() == buildDefinitionId ) )
                     {
                         log.debug( "projectId={}, buildDefinitionId={} is in build queue" );
                         return true;
@@ -968,8 +988,9 @@ public class ContinuumBuildAgentServiceImpl
         }
         catch ( TaskQueueManagerException e )
         {
-            log.error( "Error occurred while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId + 
-                       " is in build queue of agent", e );
+            log.error(
+                "Error occurred while checking if projectId=" + projectId + ", buildDefinitionId=" + buildDefinitionId +
+                    " is in build queue of agent", e );
         }
 
         return false;
@@ -986,7 +1007,8 @@ public class ContinuumBuildAgentServiceImpl
         catch ( TaskQueueManagerException e )
         {
             log.error( "Error occurred while removing projects from prepare build queue", e );
-            throw new ContinuumBuildAgentException( "Error occurred while removing projects from prepare build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while removing projects from prepare build queue",
+                                                    e );
         }
     }
 
@@ -1001,7 +1023,8 @@ public class ContinuumBuildAgentServiceImpl
         catch ( TaskQueueManagerException e )
         {
             log.error( "Error occurred while removing projects from prepare build queue", e );
-            throw new ContinuumBuildAgentException( "Error occurred while removing projects from prepare build queue", e );
+            throw new ContinuumBuildAgentException( "Error occurred while removing projects from prepare build queue",
+                                                    e );
         }
     }
 
@@ -1049,7 +1072,7 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
-    public String getBuildAgentPlatform() 
+    public String getBuildAgentPlatform()
         throws ContinuumBuildAgentException
     {
         try
@@ -1063,13 +1086,14 @@ public class ContinuumBuildAgentServiceImpl
             throw new ContinuumBuildAgentException( "Error in when trying to get build agent's platform", e );
         }
     }
-    
+
     public boolean isExecutingBuild()
     {
         return getBuildSizeOfAgent() > 0;
     }
-    
-    public boolean isExecutingRelease() throws ContinuumBuildAgentException
+
+    public boolean isExecutingRelease()
+        throws ContinuumBuildAgentException
     {
         try
         {
@@ -1080,23 +1104,25 @@ public class ContinuumBuildAgentServiceImpl
             throw new ContinuumBuildAgentException( e.getMessage(), e );
         }
     }
-    
+
     public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws ContinuumBuildAgentException
     {
-        String logMsgFormat = "Directory purge [directoryType={0}, daysOlder={1}, retentionCount={2}, deleteAll={3}] not possible; {4}";
+        String logMsgFormat =
+            "Directory purge [directoryType={0}, daysOlder={1}, retentionCount={2}, deleteAll={3}] not possible; {4}";
         if ( isExecutingBuild() )
         {
-            log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll, "Build Agent busy" ) );
+            log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll,
+                                            "Build Agent busy" ) );
             return;
-        } 
-       
+        }
+
         try
         {
             if ( isExecutingRelease() )
             {
-                log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll, 
-                                                    "Build Agent is executing a release." ) );
+                log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll,
+                                                "Build Agent is executing a release." ) );
                 return;
             }
         }
@@ -1104,9 +1130,9 @@ public class ContinuumBuildAgentServiceImpl
         {
             if ( isExecutingRelease() )
             {
-                 log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll, 
-                                                 "Unable to determine if Build Agent is executing a release." ) );
-                 return;
+                log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll,
+                                                "Unable to determine if Build Agent is executing a release." ) );
+                return;
             }
         }
 
@@ -1229,8 +1255,10 @@ public class ContinuumBuildAgentServiceImpl
         if ( buildContexts != null && buildContexts.size() > 0 )
         {
             BuildContext context = buildContexts.get( 0 );
-            return new PrepareBuildProjectsTask( buildContexts, new BuildTrigger( context.getTrigger(), context.getUsername() ),
-            		                             context.getProjectGroupId(), context.getScmRootAddress(), context.getScmRootId() );
+            return new PrepareBuildProjectsTask( buildContexts, new BuildTrigger( context.getTrigger(),
+                                                                                  context.getUsername() ),
+                                                 context.getProjectGroupId(), context.getScmRootAddress(),
+                                                 context.getScmRootId() );
         }
         else
         {

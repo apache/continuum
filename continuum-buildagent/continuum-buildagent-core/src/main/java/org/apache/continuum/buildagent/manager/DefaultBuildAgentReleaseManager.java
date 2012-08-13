@@ -19,12 +19,6 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.model.Installation;
@@ -42,6 +36,12 @@ import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @plexus.component role="org.apache.continuum.buildagent.manager.BuildAgentReleaseManager" role-hint="default"
@@ -74,7 +74,7 @@ public class DefaultBuildAgentReleaseManager
         Project project = getProject( projectMap );
 
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
-        
+
         listener.setUsername( username );
 
         String workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getPath();
@@ -101,9 +101,8 @@ public class DefaultBuildAgentReleaseManager
 
         if ( environments != null )
         {
-            String m2Home =
-                environments.get( buildAgentInstallationService.getEnvVar( BuildAgentInstallationService.MAVEN2_TYPE ) )
-                ;
+            String m2Home = environments.get( buildAgentInstallationService.getEnvVar(
+                BuildAgentInstallationService.MAVEN2_TYPE ) );
             if ( StringUtils.isNotEmpty( m2Home ) )
             {
                 executable = m2Home + File.separator + "bin" + File.separator + executable;
@@ -129,17 +128,17 @@ public class DefaultBuildAgentReleaseManager
 
     public Map<String, Object> getListener( String releaseId )
     {
-        ContinuumReleaseManagerListener listener =
-            (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+        ContinuumReleaseManagerListener listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get(
+            releaseId );
 
         Map<String, Object> map = new HashMap<String, Object>();
 
         if ( listener != null )
         {
             map.put( ContinuumBuildAgentUtil.KEY_RELEASE_STATE, listener.getState() );
-            
+
             map.put( ContinuumBuildAgentUtil.KEY_USERNAME, listener.getUsername() );
-            
+
             if ( listener.getPhases() != null )
             {
                 map.put( ContinuumBuildAgentUtil.KEY_RELEASE_PHASES, listener.getPhases() );
@@ -185,30 +184,32 @@ public class DefaultBuildAgentReleaseManager
         throws ContinuumReleaseException
     {
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
-        
+
         listener.setUsername( username );
 
         LocalRepository repo = null;
 
         if ( !repository.isEmpty() )
         {
-            List<org.apache.continuum.buildagent.model.LocalRepository>  localRepos = buildAgentConfigurationService.getLocalRepositories();
-            for( org.apache.continuum.buildagent.model.LocalRepository localRepo : localRepos )
+            List<org.apache.continuum.buildagent.model.LocalRepository> localRepos =
+                buildAgentConfigurationService.getLocalRepositories();
+            for ( org.apache.continuum.buildagent.model.LocalRepository localRepo : localRepos )
             {
-                if( localRepo.getName().equalsIgnoreCase( ContinuumBuildAgentUtil.getLocalRepositoryName( repository ) ) )
+                if ( localRepo.getName().equalsIgnoreCase( ContinuumBuildAgentUtil.getLocalRepositoryName(
+                    repository ) ) )
                 {
                     repo = new LocalRepository();
                     repo.setLayout( localRepo.getLayout() );
                     repo.setName( localRepo.getName() );
                     repo.setLocation( localRepo.getLocation() );
-                    
+
                     break;
-                }   
+                }
             }
         }
 
-        File performDirectory =
-            new File( buildAgentConfigurationService.getWorkingDirectory(), "releases-" + System.currentTimeMillis() );
+        File performDirectory = new File( buildAgentConfigurationService.getWorkingDirectory(),
+                                          "releases-" + System.currentTimeMillis() );
         performDirectory.mkdirs();
 
         releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener, repo );
@@ -300,7 +301,7 @@ public class DefaultBuildAgentReleaseManager
         ProjectGroup group = new ProjectGroup();
 
         String localRepo = ContinuumBuildAgentUtil.getLocalRepositoryName( context );
-        
+
         if ( StringUtils.isBlank( localRepo ) )
         {
             group.setLocalRepository( null );
@@ -308,10 +309,11 @@ public class DefaultBuildAgentReleaseManager
         else
         {
             LocalRepository localRepository = new LocalRepository();
-            List<org.apache.continuum.buildagent.model.LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();
-            for( org.apache.continuum.buildagent.model.LocalRepository localRepoBA : localRepos )
+            List<org.apache.continuum.buildagent.model.LocalRepository> localRepos =
+                buildAgentConfigurationService.getLocalRepositories();
+            for ( org.apache.continuum.buildagent.model.LocalRepository localRepoBA : localRepos )
             {
-                if( localRepoBA.getName().equalsIgnoreCase( localRepo ) )
+                if ( localRepoBA.getName().equalsIgnoreCase( localRepo ) )
                 {
                     localRepository.setLocation( localRepoBA.getLocation() );
                     group.setLocalRepository( localRepository );
@@ -328,8 +330,8 @@ public class DefaultBuildAgentReleaseManager
     public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
     {
         this.buildAgentConfigurationService = buildAgentConfigurationService;
-    }    
-    
+    }
+
     public ContinuumReleaseManager getReleaseManager()
     {
         return releaseManager;

@@ -1,11 +1,5 @@
 package org.apache.continuum.xmlrpc.server;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -28,6 +22,12 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ContinuumServiceImplTest
     extends PlexusInSpringTestCase
 {
@@ -40,7 +40,7 @@ public class ContinuumServiceImplTest
     private DistributedReleaseManager distributedReleaseManager;
 
     private ContinuumReleaseManager releaseManager;
-    
+
     private DistributedBuildManager distributedBuildManager;
 
     private ConfigurationService configurationService;
@@ -149,17 +149,18 @@ public class ContinuumServiceImplTest
         assertEquals( "incomplete-phase", summary.getPhases().get( 0 ) );
         assertEquals( "completed-phase", summary.getCompletedPhases().get( 0 ) );
     }
-    
+
     public void testPopulateBuildDefinition()
         throws Exception
     {
         ContinuumServiceImplStub continuumServiceStub = new ContinuumServiceImplStub();
-        
+
         BuildDefinition buildDef = createBuildDefinition();
-        org.apache.maven.continuum.model.project.BuildDefinition buildDefinition = new org.apache.maven.continuum.model.project.BuildDefinition();
-        
+        org.apache.maven.continuum.model.project.BuildDefinition buildDefinition =
+            new org.apache.maven.continuum.model.project.BuildDefinition();
+
         buildDefinition = continuumServiceStub.getBuildDefinition( buildDef, buildDefinition );
-        
+
         assertEquals( buildDef.getArguments(), buildDefinition.getArguments() );
         assertEquals( buildDef.getBuildFile(), buildDefinition.getBuildFile() );
         assertEquals( buildDef.getDescription(), buildDefinition.getDescription() );
@@ -169,34 +170,34 @@ public class ContinuumServiceImplTest
         assertEquals( buildDef.isBuildFresh(), buildDefinition.isBuildFresh() );
         assertEquals( buildDef.isDefaultForProject(), buildDefinition.isDefaultForProject() );
     }
-    
+
     public void testBuildProjectWithBuildTrigger()
         throws Exception
     {
         final ProjectGroup projectGroup = new ProjectGroup();
         projectGroup.setName( "test-group" );
-        
+
         BuildTrigger buildTrigger = new BuildTrigger();
         buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
         buildTrigger.setTriggeredBy( "username" );
 
         BuildDefinition buildDef = createBuildDefinition();
         buildDef.setId( 1 );
-    
+
         context.checking( new Expectations()
         {
             {
                 atLeast( 1 ).of( continuum ).getProject( project.getId() );
                 will( returnValue( project ) );
-                
+
                 atLeast( 1 ).of( continuum ).getProjectGroupByProjectId( project.getId() );
                 will( returnValue( projectGroup ) );
             }
-        });
-    
+        } );
+
         int result = continuumService.buildProject( project.getId(), buildDef.getId(), buildTrigger );
         assertEquals( 0, result );
-    
+
     }
 
     public void testGetProjectScmRootByProjectGroup()
@@ -270,29 +271,31 @@ public class ContinuumServiceImplTest
         assertEquals( 3, projectScmRoot.getOldState() );
         assertEquals( "address1", projectScmRoot.getScmRootAddress() );
     }
-    
-    public void testGetBuildAgentUrl() throws Exception
+
+    public void testGetBuildAgentUrl()
+        throws Exception
     {
-        context.checking( new Expectations() 
+        context.checking( new Expectations()
         {
             {
                 one( continuum ).getConfiguration();
                 will( returnValue( configurationService ) );
-                
+
                 one( configurationService ).isDistributedBuildEnabled();
-                will( returnValue ( true ) );
-                
+                will( returnValue( true ) );
+
                 one( distributedBuildManager ).getBuildAgentUrl( 1, 1 );
                 will( returnValue( "http://localhost:8181/continuum-buildagent/xmlrpc" ) );
             }
-        });
+        } );
         String buildAgentUrl = continuumService.getBuildAgentUrl( 1, 1 );
         assertEquals( "http://localhost:8181/continuum-buildagent/xmlrpc", buildAgentUrl );
 
         context.assertIsSatisfied();
     }
-    
-    public void testGetBuildAgentUrlNotSupported() throws Exception
+
+    public void testGetBuildAgentUrlNotSupported()
+        throws Exception
     {
         context.checking( new Expectations()
         {
@@ -305,11 +308,11 @@ public class ContinuumServiceImplTest
             }
         } );
 
-        try 
+        try
         {
             String buildAgentUrl = continuumService.getBuildAgentUrl( 1, 1 );
-            fail ( "ContinuumException is expected to occur here." ); 
-        } 
+            fail( "ContinuumException is expected to occur here." );
+        }
         catch ( ContinuumException e )
         {
             ; //pass
@@ -317,18 +320,19 @@ public class ContinuumServiceImplTest
         context.assertIsSatisfied();
     }
 
-    public void testGetNonExistingBuildAgentGroup() throws Exception
+    public void testGetNonExistingBuildAgentGroup()
+        throws Exception
     {
-        context.checking( new Expectations() 
+        context.checking( new Expectations()
         {
             {
                 one( continuum ).getConfiguration();
                 will( returnValue( configurationService ) );
-                
+
                 one( configurationService ).getBuildAgentGroup( "Agent Group Name" );
-                will( returnValue ( null ) );
+                will( returnValue( null ) );
             }
-        });
+        } );
         int result = continuumService.removeBuildAgentGroup( "Agent Group Name" );
         assertEquals( 0, result );
 
@@ -338,18 +342,19 @@ public class ContinuumServiceImplTest
     public void testRemoveNonExistingBuildAgentGroup()
         throws Exception
     {
-        context.checking( new Expectations() 
+        context.checking( new Expectations()
         {
             {
                 one( continuum ).getConfiguration();
                 will( returnValue( configurationService ) );
-                
+
                 one( configurationService ).getBuildAgentGroup( "Agent Group Name" );
-                will( returnValue ( null ) );
-                
-                never( configurationService ).removeBuildAgentGroup( with( any( BuildAgentGroupConfiguration.class ) ) );
+                will( returnValue( null ) );
+
+                never( configurationService ).removeBuildAgentGroup( with( any(
+                    BuildAgentGroupConfiguration.class ) ) );
             }
-        });
+        } );
 
         continuumService.removeBuildAgentGroup( "Agent Group Name" );
         context.assertIsSatisfied();
@@ -358,25 +363,25 @@ public class ContinuumServiceImplTest
     public void testGetBuildAgentsWithInstallations()
         throws Exception
     {
-        final List<org.apache.continuum.configuration.BuildAgentConfiguration> buildAgents = 
+        final List<org.apache.continuum.configuration.BuildAgentConfiguration> buildAgents =
             new ArrayList<org.apache.continuum.configuration.BuildAgentConfiguration>();
 
-        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent = 
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
             new org.apache.continuum.configuration.BuildAgentConfiguration();
         buildAgent.setUrl( "http://localhost:8080/xmlrpc" );
         buildAgent.setEnabled( true );
         buildAgents.add( buildAgent );
 
-        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent2 = 
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgent2 =
             new org.apache.continuum.configuration.BuildAgentConfiguration();
         buildAgent2.setUrl( "http://localhost:8181/xmlrpc" );
         buildAgent2.setEnabled( false );
         buildAgents.add( buildAgent2 );
 
-        final List<org.apache.maven.continuum.model.system.Installation> buildAgentInstallations = 
+        final List<org.apache.maven.continuum.model.system.Installation> buildAgentInstallations =
             new ArrayList<org.apache.maven.continuum.model.system.Installation>();
 
-        org.apache.maven.continuum.model.system.Installation buildAgentInstallation = 
+        org.apache.maven.continuum.model.system.Installation buildAgentInstallation =
             new org.apache.maven.continuum.model.system.Installation();
         buildAgentInstallation.setInstallationId( 1 );
         buildAgentInstallation.setName( "JDK 6" );
@@ -400,7 +405,7 @@ public class ContinuumServiceImplTest
                 one( distributedBuildManager ).getAvailableInstallations( "http://localhost:8080/xmlrpc" );
                 will( returnValue( buildAgentInstallations ) );
             }
-        });
+        } );
         List<BuildAgentConfiguration> agents = continuumService.getBuildAgentsWithInstallations();
         assertEquals( 1, agents.size() );
         BuildAgentConfiguration agent = agents.get( 0 );
@@ -422,14 +427,14 @@ public class ContinuumServiceImplTest
         buildDef.setDefaultForProject( true );
         buildDef.setGoals( "clean install" );
         buildDef.setDescription( "Test Build Definition" );
-        
+
         return buildDef;
     }
 
     private Map<String, Object> getListenerMap()
     {
         Map<String, Object> map = new HashMap<String, Object>();
-        
+
         map.put( "release-phases", Arrays.asList( "incomplete-phase" ) );
         map.put( "completed-release-phases", Arrays.asList( "completed-phase" ) );
         return map;

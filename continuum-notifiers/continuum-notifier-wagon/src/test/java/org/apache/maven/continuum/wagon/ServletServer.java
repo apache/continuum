@@ -19,11 +19,6 @@ package org.apache.maven.continuum.wagon;
  * under the License.
  */
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.apache.maven.wagon.authentication.AuthenticationInfo;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -40,16 +35,21 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.servlet.ServletHttpContext;
 import org.mortbay.util.MultiException;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  * Plexus Component to start a Jetty Server with servlet settings.
- * 
+ *
  * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
  */
 public class ServletServer
     implements Initializable, Startable
 {
     public static final String ROLE = ServletServer.class.getName();
-    
+
     private Server server;
 
     private int port;

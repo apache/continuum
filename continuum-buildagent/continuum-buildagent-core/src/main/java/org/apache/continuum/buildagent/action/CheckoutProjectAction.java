@@ -19,12 +19,6 @@ package org.apache.continuum.buildagent.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.scm.ContinuumScm;
@@ -35,11 +29,13 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
-import org.apache.maven.scm.provider.ScmProvider;
-import org.apache.maven.scm.provider.ScmUrlUtils;
-import org.apache.maven.scm.provider.git.repository.GitScmProviderRepository;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.AbstractAction;
+
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="checkout-agent-project"
@@ -72,13 +68,13 @@ public class CheckoutProjectAction
 
         try
         {
-            String scmUserName =
-                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_USERNAME, project.getScmUsername() );
-            String scmPassword =
-                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, project.getScmPassword() );
+            String scmUserName = ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_USERNAME,
+                                                                    project.getScmUsername() );
+            String scmPassword = ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_PASSWORD,
+                                                                    project.getScmPassword() );
 
-            ContinuumScmConfiguration config =
-                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, scmUserName,
+                                                                       scmPassword );
 
             String tag = config.getTag();
             getLogger().info(
@@ -166,7 +162,7 @@ public class CheckoutProjectAction
 
         // CONTINUUM-2628
         config = ContinuumScmUtils.setSCMCredentialsforSSH( config, project.getScmUrl(), scmUserName, scmPassword );
-        
+
         config.setUrl( project.getScmUrl() );
         config.setUseCredentialsCache( project.isScmUseCache() );
         config.setWorkingDirectory( workingDirectory );

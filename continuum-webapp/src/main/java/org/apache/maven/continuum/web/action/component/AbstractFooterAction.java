@@ -18,24 +18,23 @@
  */
 package org.apache.maven.continuum.web.action.component;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 8 nov. 07
  * @version $Id$
+ * @since 8 nov. 07
  */
 public abstract class AbstractFooterAction
     extends ContinuumActionSupport
 {
-    
+
     private String footer;
-    
+
     /**
      * @plexus.requirement
-     */    
+     */
     private AppareanceConfiguration appareanceConfiguration;
 
     public String getContinuumFooter()

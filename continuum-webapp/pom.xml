@@ -17,7 +17,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
@@ -27,7 +28,7 @@ under the License.
   <artifactId>continuum-webapp</artifactId>
   <name>Continuum :: Web APP</name>
   <packaging>war</packaging>
-  <build> 
+  <build>
     <resources>
       <resource>
         <filtering>true</filtering>
@@ -52,12 +53,12 @@ under the License.
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>        
+        <artifactId>maven-clean-plugin</artifactId>
         <configuration>
           <filesets>
             <fileset>
               <directory>${basedir}/data</directory>
-            </fileset>            
+            </fileset>
           </filesets>
         </configuration>
       </plugin>
@@ -68,8 +69,9 @@ under the License.
           <!-- Some versions of maven-war-plugin (snapshots) have this incorrectly defaulted to true.
                Specifically setting this to false to avoid accidental jar file creation. -->
           <archiveClasses>false</archiveClasses>
-          <dependentWarExcludes>META-INF/**,WEB-INF/web.xml,WEB-INF/classes/xwork.xml,WEB-INF/lib/**</dependentWarExcludes>
-        </configuration>       
+          <dependentWarExcludes>META-INF/**,WEB-INF/web.xml,WEB-INF/classes/xwork.xml,WEB-INF/lib/**
+          </dependentWarExcludes>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
@@ -83,7 +85,7 @@ under the License.
             <roleDefault>
               <role>com.opensymphony.xwork2.validator.Validator</role>
               <instantiation-strategy>per-lookup</instantiation-strategy>
-            </roleDefault>            
+            </roleDefault>
           </roleDefaults>
         </configuration>
         <executions>
@@ -124,7 +126,7 @@ under the License.
               <goal>xpp3-reader</goal>
               <goal>xpp3-writer</goal>
             </goals>
-          </execution>    
+          </execution>
         </executions>
         <configuration>
           <useJava5>true</useJava5>
@@ -154,7 +156,7 @@ under the License.
           -->
         </configuration>
       </plugin>
-      
+
       <!-- hack for jetty:run, continuum web config files are checked in /WEB-INF/ dir -->
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -167,11 +169,11 @@ under the License.
             <phase>compile</phase>
             <configuration>
               <tasks>
-                <mkdir dir="${basedir}/target/continuum/WEB-INF/" />
+                <mkdir dir="${basedir}/target/continuum/WEB-INF/"/>
                 <copy todir="${basedir}/target/continuum/WEB-INF/">
-                  <fileset dir="${basedir}/target" includes="classes/" excludes="**/struts.xml" />         
+                  <fileset dir="${basedir}/target" includes="classes/" excludes="**/struts.xml"/>
                 </copy>
-              </tasks>              
+              </tasks>
             </configuration>
           </execution>
         </executions>
@@ -182,21 +184,21 @@ under the License.
           <execution>
             <id>unpack-redback-war</id>
             <goals>
-             <goal>unpack</goal>
+              <goal>unpack</goal>
             </goals>
             <phase>compile</phase>
             <configuration>
-               <artifactItems>
-                 <artifactItem>
-                   <groupId>org.codehaus.redback</groupId>
-                   <artifactId>redback-struts2-content</artifactId>
-                   <version>${redback.version}</version>
-                   <type>war</type>
-                   <overWrite>false</overWrite>
-                   <outputDirectory>${project.build.directory}/redback</outputDirectory>
-                   <excludes>**/struts-security.xml</excludes>
-                 </artifactItem>
-               </artifactItems>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.codehaus.redback</groupId>
+                  <artifactId>redback-struts2-content</artifactId>
+                  <version>${redback.version}</version>
+                  <type>war</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/redback</outputDirectory>
+                  <excludes>**/struts-security.xml</excludes>
+                </artifactItem>
+              </artifactItems>
             </configuration>
           </execution>
         </executions>
@@ -206,13 +208,13 @@ under the License.
         <artifactId>maven-jetty-plugin</artifactId>
         <configuration>
           <webAppConfig>
-	        <contextPath>/</contextPath>	          
-	        <baseResource implementation="org.mortbay.resource.ResourceCollection">
-	          <resourcesAsCSV>src/main/webapp,target/continuum,target/redback</resourcesAsCSV>
-	        </baseResource>   
+            <contextPath>/</contextPath>
+            <baseResource implementation="org.mortbay.resource.ResourceCollection">
+              <resourcesAsCSV>src/main/webapp,target/continuum,target/redback</resourcesAsCSV>
+            </baseResource>
           </webAppConfig>
           <scanIntervalSeconds>10</scanIntervalSeconds>
-          <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>          
+          <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
               <port>9090</port>
@@ -227,12 +229,12 @@ under the License.
             <systemProperty>
               <name>appserver.home</name>
               <value>${project.build.directory}/appserver-home</value>
-            </systemProperty>            
+            </systemProperty>
             <systemProperty>
               <name>derby.system.home</name>
               <value>${project.build.directory}/appserver-base/logs</value>
             </systemProperty>
-          </systemProperties>          
+          </systemProperties>
         </configuration>
         <dependencies>
           <dependency>
@@ -253,7 +255,7 @@ under the License.
             <appserver.base>${project.build.directory}/appserver-base</appserver.base>
             <appserver.home>${project.build.directory}/appserver-home</appserver.home>
             <derby.system.home>${project.build.directory}/appserver-base/logs</derby.system.home>
-          </systemProperties>          
+          </systemProperties>
         </configuration>
         <dependencies>
           <dependency>
@@ -266,7 +268,7 @@ under the License.
             <artifactId>mail</artifactId>
             <version>1.4</version>
           </dependency>
-        </dependencies>        
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -291,10 +293,10 @@ under the License.
             <configuration>
               <tasks>
                 <copy todir="${project.build.directory}/appserver-base">
-                  <fileset dir="src/appserver-base" />
+                  <fileset dir="src/appserver-base"/>
                 </copy>
                 <copy todir="src/main/webapp/template">
-                  <fileset file="src/main/resources/template/default/validation.js" />
+                  <fileset file="src/main/resources/template/default/validation.js"/>
                 </copy>
               </tasks>
             </configuration>
@@ -472,7 +474,7 @@ under the License.
           <artifactId>plexus-container-default</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-irc</artifactId>
@@ -518,7 +520,7 @@ under the License.
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-distributed-master-server</artifactId>
       <scope>runtime</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-file</artifactId>
@@ -578,7 +580,7 @@ under the License.
       <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-struts2-content</artifactId>
       <type>war</type>
-      <scope>runtime</scope> 
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
@@ -629,7 +631,7 @@ under the License.
           <artifactId>commons-logging</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
@@ -647,7 +649,7 @@ under the License.
           <artifactId>xml-apis</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
@@ -655,7 +657,7 @@ under the License.
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
@@ -709,7 +711,7 @@ under the License.
             </configuration>
           </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
     <profile>
       <id>mysql</id>
@@ -748,8 +750,10 @@ under the License.
                 </goals>
                 <configuration>
                   <tasks>
-                    <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${basedir}/src/main/webapp/WEB-INF/classes" />
-					          <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${project.build.directory}/classes" />
+                    <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml"
+                          todir="${basedir}/src/main/webapp/WEB-INF/classes"/>
+                    <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml"
+                          todir="${project.build.directory}/classes"/>
                   </tasks>
                 </configuration>
               </execution>
@@ -776,8 +780,8 @@ under the License.
             </configuration>
           </plugin>
         </plugins>
-      </build>      
-    </profile>  
+      </build>
+    </profile>
     <profile>
       <!-- local dev settings use a file which is ignore in svn -->
       <id>local-tomcat-env</id>
@@ -796,7 +800,7 @@ under the License.
             </configuration>
           </plugin>
         </plugins>
-      </build>      
-    </profile>    
+      </build>
+    </profile>
   </profiles>
 </project>

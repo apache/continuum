@@ -19,17 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
@@ -38,6 +27,16 @@ import org.apache.maven.continuum.web.util.WorkingCopyContentGenerator;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.util.UrlHelper;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.activation.MimetypesFileTypeMap;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -115,20 +114,20 @@ public class WorkingCopyAction
         String baseUrl = UrlHelper.buildUrl( "/workingCopy.action", ServletActionContext.getRequest(),
                                              ServletActionContext.getResponse(), params );
 
-        String imagesBaseUrl =
-            UrlHelper.buildUrl( "/images/", ServletActionContext.getRequest(), ServletActionContext.getResponse(),
-                                params );
+        String imagesBaseUrl = UrlHelper.buildUrl( "/images/", ServletActionContext.getRequest(),
+                                                   ServletActionContext.getResponse(), params );
 
         imagesBaseUrl = imagesBaseUrl.substring( 0, imagesBaseUrl.indexOf( "/images/" ) + "/images/".length() );
 
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            output =
-                distributedBuildManager.generateWorkingCopyContent( projectId, userDirectory, baseUrl, imagesBaseUrl );
+            output = distributedBuildManager.generateWorkingCopyContent( projectId, userDirectory, baseUrl,
+                                                                         imagesBaseUrl );
 
             if ( currentFile != null && !currentFile.equals( "" ) )
             {
-                Map<String, Object> projectFile = distributedBuildManager.getFileContent( projectId, userDirectory, currentFile );
+                Map<String, Object> projectFile = distributedBuildManager.getFileContent( projectId, userDirectory,
+                                                                                          currentFile );
 
                 if ( projectFile == null )
                 {
@@ -136,13 +135,13 @@ public class WorkingCopyAction
                 }
                 else
                 {
-                    downloadFileInputStream =  new ByteArrayInputStream( (byte[]) projectFile.get( "downloadFile" ) );
+                    downloadFileInputStream = new ByteArrayInputStream( (byte[]) projectFile.get( "downloadFile" ) );
                     downloadFileLength = (String) projectFile.get( "downloadFileLength" );
                     downloadFileName = (String) projectFile.get( "downloadFileName" );
                     currentFileContent = (String) projectFile.get( "fileContent" );
                     mimeType = (String) projectFile.get( "mimeType" );
 
-                    if ( (Boolean) projectFile.get( "isStream" ) ) 
+                    if ( (Boolean) projectFile.get( "isStream" ) )
                     {
                         return "stream";
                     }
@@ -157,8 +156,8 @@ public class WorkingCopyAction
         {
             List<File> files = getContinuum().getFiles( projectId, userDirectory );
 
-            output =
-                generator.generate( files, baseUrl, imagesBaseUrl, getContinuum().getWorkingDirectory( projectId ) );
+            output = generator.generate( files, baseUrl, imagesBaseUrl, getContinuum().getWorkingDirectory(
+                projectId ) );
 
             if ( currentFile != null && !currentFile.equals( "" ) )
             {
@@ -265,7 +264,7 @@ public class WorkingCopyAction
             {
                 throw new ContinuumException( "Error accessing file.", fne );
             }
-    
+
             return fis;
         }
     }

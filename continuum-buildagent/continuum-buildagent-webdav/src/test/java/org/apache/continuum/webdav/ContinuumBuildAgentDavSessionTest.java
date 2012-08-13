@@ -28,11 +28,11 @@ public class ContinuumBuildAgentDavSessionTest
     {
         ContinuumBuildAgentDavSession session = new ContinuumBuildAgentDavSession();
         final String myToken = "thisisadavtoken";
-        
+
         session.addLockToken( myToken );
         assertEquals( 1, session.getLockTokens().length );
         assertEquals( myToken, session.getLockTokens()[0] );
-        
+
         session.removeLockToken( myToken );
         assertEquals( 0, session.getLockTokens().length );
     }
@@ -48,9 +48,9 @@ public class ContinuumBuildAgentDavSessionTest
         catch ( UnsupportedOperationException e )
         {
             assertTrue( true );
-        } 
+        }
     }
-    
+
     public void testRemoveReferencesThrowsUnsupportedOperationException()
     {
         ContinuumBuildAgentDavSession session = new ContinuumBuildAgentDavSession();

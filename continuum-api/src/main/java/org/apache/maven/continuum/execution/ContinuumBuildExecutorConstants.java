@@ -21,18 +21,18 @@ package org.apache.maven.continuum.execution;
 
 /**
  * @author <a href="mailto:olamy at apache.org">olamy</a>
- * @since 11 sept. 07
  * @version $Id$
+ * @since 11 sept. 07
  */
 public class ContinuumBuildExecutorConstants
 {
-    
+
     public static final String MAVEN_TWO_BUILD_EXECUTOR = "maven2";
-    
+
     public static final String MAVEN_ONE_BUILD_EXECUTOR = "maven-1";
-    
+
     public static final String ANT_BUILD_EXECUTOR = "ant";
-    
+
     public static final String SHELL_BUILD_EXECUTOR = "shell";
 
 }

@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "mavenOneProject" } )
+@Test( groups = {"mavenOneProject"} )
 public class MavenOneProjectTest
     extends AbstractAdminTest
 {

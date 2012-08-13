@@ -19,12 +19,6 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -74,6 +68,12 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -118,7 +118,8 @@ public class DefaultMavenBuilderHelper
     // MavenBuilderHelper Implementation
     // ----------------------------------------------------------------------
 
-    public void mapMetadataToProject( ContinuumProjectBuildingResult result, File metadata, Project continuumProject, boolean update )
+    public void mapMetadataToProject( ContinuumProjectBuildingResult result, File metadata, Project continuumProject,
+                                      boolean update )
     {
         MavenProject mavenProject = getMavenProject( result, metadata );
 
@@ -129,11 +130,11 @@ public class DefaultMavenBuilderHelper
             return;
         }
 
-        mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, update);
+        mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, update );
     }
 
     public void mapMavenProjectToContinuumProject( ContinuumProjectBuildingResult result, MavenProject mavenProject,
-                                                   Project continuumProject, boolean update)
+                                                   Project continuumProject, boolean update )
     {
         if ( mavenProject == null )
         {
@@ -141,26 +142,27 @@ public class DefaultMavenBuilderHelper
             return;
         }
 
-         if (update){
+        if ( update )
+        {
             // ----------------------------------------------------------------------
             // Name
             // ----------------------------------------------------------------------
-            
+
             continuumProject.setName( getProjectName( mavenProject ) );
-               
+
             // ----------------------------------------------------------------------
             // Version
             // ----------------------------------------------------------------------
-    
+
             continuumProject.setVersion( getVersion( mavenProject ) );
-            
+
             // ----------------------------------------------------------------------
             // Description
             // ----------------------------------------------------------------------
 
             continuumProject.setDescription( mavenProject.getDescription() );
-         }
-         
+        }
+
         // ----------------------------------------------------------------------
         // SCM Url
         // ----------------------------------------------------------------------
@@ -389,7 +391,7 @@ public class DefaultMavenBuilderHelper
 
             ProfileManager profileManager = new DefaultProfileManager( container, settings );
 
-            project = projectBuilder.build( file, getLocalRepository(), profileManager, true);
+            project = projectBuilder.build( file, getLocalRepository(), profileManager, true );
 
             if ( log.isDebugEnabled() )
             {
@@ -481,8 +483,8 @@ public class DefaultMavenBuilderHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM_CONNECTION, getProjectName( project ) );
 
-            log.error(
-                "Missing 'connection' element in the 'scm' element in the " + getProjectName( project ) + " POM." );
+            log.error( "Missing 'connection' element in the 'scm' element in the " + getProjectName( project ) +
+                           " POM." );
 
             return null;
         }

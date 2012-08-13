@@ -20,24 +20,11 @@ package org.apache.continuum.web.action.admin;
  */
 
 import com.opensymphony.xwork2.Preparable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
-import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
-import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
@@ -49,11 +36,15 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="purge"
- * @since
  */
 public class PurgeAction
     extends ContinuumConfirmAction
@@ -70,7 +61,7 @@ public class PurgeAction
     private static final String PURGE_DIRECTORY_RELEASES = "releases";
 
     private static final String PURGE_DIRECTORY_BUILDOUTPUT = "buildOutput";
-    
+
     private static final String PURGE_DIRECTORY_WORKING = "working";
 
     private Map<Integer, String> repositories;
@@ -80,7 +71,7 @@ public class PurgeAction
     private List<RepositoryPurgeConfiguration> repoPurgeConfigs;
 
     private List<DirectoryPurgeConfiguration> dirPurgeConfigs;
-    
+
     private List<DistributedDirectoryPurgeConfiguration> distributedDirPurgeConfigs;
 
     private List<String> directoryTypes;
@@ -94,7 +85,7 @@ public class PurgeAction
      * @plexus.requirement
      */
     private RepositoryService repositoryService;
-    
+
     private Schedule sched = null;
 
     public String display()
@@ -120,7 +111,7 @@ public class PurgeAction
                 addActionError( getText( errorMessage ) );
             }
             distributedDirPurgeConfigs = purgeConfigService.getAllDistributedDirectoryPurgeConfigurations();
-            
+
             return DISTRIBUTED_BUILD_SUCCESS;
         }
         else

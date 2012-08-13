@@ -19,17 +19,6 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.UnknownHostException;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -63,6 +52,17 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.UnknownHostException;
+
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -76,7 +76,7 @@ public abstract class AbstractContinuumProjectBuilder
     protected final Logger log = LoggerFactory.getLogger( getClass() );
 
     private HttpParams params;
-    
+
     private ClientConnectionManager cm;
 
     public void initialize()
@@ -131,7 +131,7 @@ public abstract class AbstractContinuumProjectBuilder
             HttpResponse httpResponse = httpClient.execute( httpGet );
 
             // CONTINUUM-2627
-            if( httpResponse.getStatusLine().getStatusCode() != 200 )
+            if ( httpResponse.getStatusLine().getStatusCode() != 200 )
             {
                 log.debug( "Initial attempt did not return a 200 status code. Trying pre-emptive authentication.." );
 
@@ -141,11 +141,11 @@ public abstract class AbstractContinuumProjectBuilder
                 AuthCache authCache = new BasicAuthCache();
                 // Generate BASIC scheme object and add it to the local auth cache
                 BasicScheme basicAuth = new BasicScheme();
-                authCache.put(targetHost, basicAuth);
+                authCache.put( targetHost, basicAuth );
 
                 // Add AuthCache to the execution context
                 BasicHttpContext localcontext = new BasicHttpContext();
-                localcontext.setAttribute( ClientContext.AUTH_CACHE, authCache);
+                localcontext.setAttribute( ClientContext.AUTH_CACHE, authCache );
 
                 httpResponse = httpClient.execute( targetHost, httpGet, localcontext );
             }

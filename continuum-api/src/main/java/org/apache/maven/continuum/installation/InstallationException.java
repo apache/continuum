@@ -18,6 +18,7 @@ package org.apache.maven.continuum.installation;
 * specific language governing permissions and limitations
 * under the License.
 */
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
@@ -26,9 +27,9 @@ package org.apache.maven.continuum.installation;
 public class InstallationException
     extends Exception
 {
-	private static final long serialVersionUID = 5055136446336281496L;
+    private static final long serialVersionUID = 5055136446336281496L;
 
-	public InstallationException( String message )
+    public InstallationException( String message )
     {
         super( message );
     }

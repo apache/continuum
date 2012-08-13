@@ -19,9 +19,9 @@ package org.apache.maven.continuum.project.builder.manager;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>

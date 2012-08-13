@@ -25,12 +25,12 @@ import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
 
+import java.util.List;
 import javax.annotation.Resource;
 import javax.jdo.FetchPlan;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -59,8 +59,8 @@ public class AbstractDao
     protected static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
 
     /**
-    * @plexus.requirement
-    */
+     * @plexus.requirement
+     */
     @Resource
     private StoreUtilities storeUtilities;
 

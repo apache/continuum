@@ -28,11 +28,11 @@ public class URLUserInfo
 {
 
     private String username;
-    
+
     private String password;
-    
+
     /**
-     * 
+     *
      */
     public URLUserInfo()
     {

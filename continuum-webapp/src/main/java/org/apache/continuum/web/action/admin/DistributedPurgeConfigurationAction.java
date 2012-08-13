@@ -19,13 +19,7 @@ package org.apache.continuum.web.action.admin;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Preparable;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
@@ -43,13 +37,17 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.opensymphony.xwork2.Preparable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="distributedPurgeConfiguration"
- * @since
  */
 public class DistributedPurgeConfigurationAction
     extends ContinuumConfirmAction
@@ -60,7 +58,7 @@ public class DistributedPurgeConfigurationAction
     private static final String PURGE_TYPE_DIRECTORY = "directory";
 
     private static final String PURGE_DIRECTORY_RELEASES = "releases";
-    
+
     private static final String PURGE_DIRECTORY_WORKING = "working";
 
     private static final int DEFAULT_RETENTION_COUNT = 2;
@@ -92,7 +90,7 @@ public class DistributedPurgeConfigurationAction
     private int scheduleId;
 
     private int purgeConfigId;
-    
+
     private String buildAgentUrl;
 
     private AbstractPurgeConfiguration purgeConfig;
@@ -100,20 +98,20 @@ public class DistributedPurgeConfigurationAction
     private Map<Integer, String> schedules;
 
     private List<String> directoryTypes;
-    
+
     private List<String> buildAgentUrls;
 
     /**
      * @plexus.requirement
      */
     private PurgeConfigurationService purgeConfigService;
-    
+
     @Override
     public void prepare()
         throws Exception
     {
         super.prepare();
-        
+
         // build schedules
         if ( schedules == null )
         {
@@ -184,7 +182,7 @@ public class DistributedPurgeConfigurationAction
         throws Exception
     {
         if ( purgeConfigId == 0 )
-        {   
+        {
             purgeConfig = new DistributedDirectoryPurgeConfiguration();
 
             purgeConfig = setupPurgeConfiguration( purgeConfig );
@@ -198,7 +196,7 @@ public class DistributedPurgeConfigurationAction
 
             purgeConfigService.updatePurgeConfiguration( purgeConfig );
         }
-        
+
         /*if ( purgeConfig.isDefaultPurge() )
         {
             updateDefaultPurgeConfiguration();
@@ -215,7 +213,7 @@ public class DistributedPurgeConfigurationAction
     public String remove()
         throws Exception
     {
-        
+
         if ( confirmed )
         {
             purgeConfigService.removePurgeConfiguration( purgeConfigId );
@@ -231,14 +229,14 @@ public class DistributedPurgeConfigurationAction
     public String purge()
         throws Exception
     {
-        
+
         ContinuumPurgeManager purgeManager = getContinuum().getPurgeManager();
 
         if ( purgeConfigId > 0 )
         {
             purgeConfig = purgeConfigService.getPurgeConfiguration( purgeConfigId );
 
-            DistributedDirectoryPurgeConfiguration dirPurge = ( DistributedDirectoryPurgeConfiguration ) purgeConfig;
+            DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
             purgeManager.purgeDistributedDirectory( dirPurge );
         }
 
@@ -444,7 +442,7 @@ public class DistributedPurgeConfigurationAction
         dirPurge.setDirectoryType( this.directoryType );
         dirPurge.setDefaultPurge( this.defaultPurgeConfiguration );
         dirPurge.setBuildAgentUrl( buildAgentUrl );
-        
+
         // escape xml to prevent xss attacks
         dirPurge.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( this.description ) ) );
 
@@ -453,15 +451,15 @@ public class DistributedPurgeConfigurationAction
             Schedule schedule = getContinuum().getSchedule( scheduleId );
             dirPurge.setSchedule( schedule );
         }
-        
+
         return dirPurge;
     }
 
     private void updateDefaultPurgeConfiguration()
         throws Exception
     {
-        DirectoryPurgeConfiguration dirPurge =
-            purgeConfigService.getDefaultPurgeConfigurationForDirectoryType( directoryType );
+        DirectoryPurgeConfiguration dirPurge = purgeConfigService.getDefaultPurgeConfigurationForDirectoryType(
+            directoryType );
 
         if ( dirPurge != null && dirPurge.getId() != purgeConfig.getId() )
         {

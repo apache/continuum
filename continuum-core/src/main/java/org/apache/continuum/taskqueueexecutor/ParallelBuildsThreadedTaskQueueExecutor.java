@@ -19,6 +19,13 @@ package org.apache.continuum.taskqueueexecutor;
  * under the License.
  */
 
+import edu.emory.mathcs.backport.java.util.concurrent.CancellationException;
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutionException;
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
+import edu.emory.mathcs.backport.java.util.concurrent.Executors;
+import edu.emory.mathcs.backport.java.util.concurrent.Future;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -32,14 +39,6 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.emory.mathcs.backport.java.util.concurrent.CancellationException;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutionException;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-import edu.emory.mathcs.backport.java.util.concurrent.Executors;
-import edu.emory.mathcs.backport.java.util.concurrent.Future;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 
 /**
  * Modified plexus ThreadedTaskQueueExecutor
@@ -99,8 +98,9 @@ public class ParallelBuildsThreadedTaskQueueExecutor
                 }
                 catch ( InterruptedException e )
                 {
-                    log.info( "Executor thread interrupted, command: " +
-                        ( command == SHUTDOWN ? "Shutdown" : command == CANCEL_TASK ? "Cancel task" : "Unknown" ) );
+                    log.info( "Executor thread interrupted, command: " + ( command == SHUTDOWN
+                        ? "Shutdown"
+                        : command == CANCEL_TASK ? "Cancel task" : "Unknown" ) );
                     continue;
                 }
 

@@ -19,17 +19,6 @@ package org.apache.continuum.installation;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.annotation.Resource;
-
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
@@ -52,13 +41,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
  *          TODO use some cache mechanism to prevent always reading from store ?
  * @since 13 juin 07
  */
-@Service("installationService")
+@Service( "installationService" )
 public class DefaultInstallationService
     implements InstallationService, Initializable
 {
@@ -80,16 +79,16 @@ public class DefaultInstallationService
         throws InitializationException
     {
         this.typesValues = new HashMap<String, ExecutorConfigurator>();
-        this.typesValues.put( InstallationService.ANT_TYPE,
-                              new ExecutorConfigurator( "ant", "bin", "ANT_HOME", "-version" ) );
+        this.typesValues.put( InstallationService.ANT_TYPE, new ExecutorConfigurator( "ant", "bin", "ANT_HOME",
+                                                                                      "-version" ) );
 
         this.typesValues.put( InstallationService.ENVVAR_TYPE, null );
-        this.typesValues.put( InstallationService.JDK_TYPE,
-                              new ExecutorConfigurator( "java", "bin", "JAVA_HOME", "-version" ) );
-        this.typesValues.put( InstallationService.MAVEN1_TYPE,
-                              new ExecutorConfigurator( "maven", "bin", "MAVEN_HOME", "-v" ) );
-        this.typesValues.put( InstallationService.MAVEN2_TYPE,
-                              new ExecutorConfigurator( "mvn", "bin", "M2_HOME", "-v" ) );
+        this.typesValues.put( InstallationService.JDK_TYPE, new ExecutorConfigurator( "java", "bin", "JAVA_HOME",
+                                                                                      "-version" ) );
+        this.typesValues.put( InstallationService.MAVEN1_TYPE, new ExecutorConfigurator( "maven", "bin", "MAVEN_HOME",
+                                                                                         "-v" ) );
+        this.typesValues.put( InstallationService.MAVEN2_TYPE, new ExecutorConfigurator( "mvn", "bin", "M2_HOME",
+                                                                                         "-v" ) );
     }
 
     /**
@@ -170,7 +169,7 @@ public class DefaultInstallationService
     /**
      * @see org.apache.maven.continuum.installation.InstallationService#getAllInstallations()
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Installation> getAllInstallations()
         throws InstallationException
     {
@@ -353,18 +352,19 @@ public class DefaultInstallationService
         final List<String> cliOutput = new ArrayList<String>();
         //TODO ShellCommandHelper ?
         int result = CommandLineUtils.executeCommandLine( commandline, new StreamConsumer()
-        {
-            public void consumeLine( String line )
-            {
-                cliOutput.add( line );
-            }
-        }, new StreamConsumer()
-        {
-            public void consumeLine( String line )
-            {
-                cliOutput.add( line );
-            }
-        } );
+                                                          {
+                                                              public void consumeLine( String line )
+                                                              {
+                                                                  cliOutput.add( line );
+                                                              }
+                                                          }, new StreamConsumer()
+                                                          {
+                                                              public void consumeLine( String line )
+                                                              {
+                                                                  cliOutput.add( line );
+                                                              }
+                                                          }
+        );
         if ( result != 0 )
         {
             throw new CommandLineException( "cli to get JAVA_HOME informations return code " + result );
@@ -398,9 +398,9 @@ public class DefaultInstallationService
     }
 
     /**
-     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfiguratorVersion(java.lang.String,org.apache.maven.continuum.execution.ExecutorConfigurator,Profile)
+     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfiguratorVersion(java.lang.String, org.apache.maven.continuum.execution.ExecutorConfigurator, Profile)
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator,
                                                         Profile profile )
         throws InstallationException
@@ -439,18 +439,19 @@ public class DefaultInstallationService
             final List<String> cliOutput = new ArrayList<String>();
             //TODO ShellCommandHelper ?
             int result = CommandLineUtils.executeCommandLine( commandline, new StreamConsumer()
-            {
-                public void consumeLine( String line )
-                {
-                    cliOutput.add( line );
-                }
-            }, new StreamConsumer()
-            {
-                public void consumeLine( String line )
-                {
-                    cliOutput.add( line );
-                }
-            } );
+                                                              {
+                                                                  public void consumeLine( String line )
+                                                                  {
+                                                                      cliOutput.add( line );
+                                                                  }
+                                                              }, new StreamConsumer()
+                                                              {
+                                                                  public void consumeLine( String line )
+                                                                  {
+                                                                      cliOutput.add( line );
+                                                                  }
+                                                              }
+            );
             if ( result != 0 )
             {
                 throw new InstallationException( "cli to get " + executable + " version return code " + result );

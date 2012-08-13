@@ -19,11 +19,11 @@ package org.apache.continuum.buildagent.taskqueue;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.taskqueue.Task;
+
+import java.util.List;
 
 public class PrepareBuildProjectsTask
     implements Task
@@ -61,7 +61,7 @@ public class PrepareBuildProjectsTask
 
     public BuildTrigger getBuildTrigger()
     {
-    	return buildTrigger;
+        return buildTrigger;
     }
 
     public int getProjectGroupId()
@@ -81,6 +81,6 @@ public class PrepareBuildProjectsTask
 
     public int getHashCode()
     {
-    	return projectGroupId + scmRootId + buildTrigger.getTrigger();
+        return projectGroupId + scmRootId + buildTrigger.getTrigger();
     }
 }

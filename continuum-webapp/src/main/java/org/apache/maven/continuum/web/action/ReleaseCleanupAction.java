@@ -19,9 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
@@ -30,11 +27,13 @@ import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Edwin Punzalan
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseCleanup"
- * 
  */
 public class ReleaseCleanupAction
     extends ContinuumActionSupport
@@ -64,7 +63,7 @@ public class ReleaseCleanupAction
             try
             {
                 String goal = releaseManager.releaseCleanup( releaseId );
-    
+
                 if ( StringUtils.isNotBlank( goal ) )
                 {
                     return goal;
@@ -86,16 +85,16 @@ public class ReleaseCleanupAction
         else
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-    
+
             releaseManager.getReleaseResults().remove( releaseId );
-    
+
             ContinuumReleaseManagerListener listener =
                 (ContinuumReleaseManagerListener) releaseManager.getListeners().remove( releaseId );
-    
+
             if ( listener != null )
             {
                 String goal = listener.getGoalName();
-    
+
                 return goal + "Finished";
             }
             else

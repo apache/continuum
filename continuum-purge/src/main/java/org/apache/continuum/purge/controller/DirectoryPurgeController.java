@@ -47,7 +47,7 @@ public class DirectoryPurgeController
         DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
         doPurge( dirPurge.getLocation() );
     }
-    
+
     public void doPurge( String path )
     {
         log.info( "--- Start: Purging directory path '{}'---", path );
@@ -78,8 +78,8 @@ public class DirectoryPurgeController
         }
         else
         {
-            purgeExecutor =
-                new RetentionCountDirectoryPurgeExecutor( dirPurge.getRetentionCount(), dirPurge.getDirectoryType() );
+            purgeExecutor = new RetentionCountDirectoryPurgeExecutor( dirPurge.getRetentionCount(),
+                                                                      dirPurge.getDirectoryType() );
         }
     }
 }

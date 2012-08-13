@@ -43,8 +43,8 @@ public abstract class AbstractPurgeTest
     protected void removeRepositoryPurge( String purgeDescription )
     {
         goToGeneralPurgePage();
-        clickLinkWithXPath( "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription
-            + "')])//img" );
+        clickLinkWithXPath(
+            "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription + "')])//img" );
         assertTextPresent( "Delete Purge Configuration" );
         assertTextPresent( "Are you sure you want to delete Purge Configuration \"" + purgeDescription + "\"?" );
         assertButtonWithValuePresent( "Delete" );
@@ -56,8 +56,8 @@ public abstract class AbstractPurgeTest
     protected void removeDirectoryPurge( String purgeDescription )
     {
         goToGeneralPurgePage();
-        clickLinkWithXPath( "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription
-            + "')])//img" );
+        clickLinkWithXPath(
+            "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription + "')])//img" );
         assertTextPresent( "Delete Purge Configuration" );
         assertTextPresent( "Are you sure you want to delete Purge Configuration \"" + purgeDescription + "\"?" );
         assertButtonWithValuePresent( "Delete" );
@@ -111,7 +111,8 @@ public abstract class AbstractPurgeTest
     {
         goToGeneralPurgePage();
         assertGeneralPurgePage();
-        clickLinkWithXPath( "//preceding::input[@value='repository' and @type='hidden']//following::input[@type='submit']" );
+        clickLinkWithXPath(
+            "//preceding::input[@value='repository' and @type='hidden']//following::input[@type='submit']" );
         assertAddRepositoryPurgePage();
     }
 
@@ -160,7 +161,8 @@ public abstract class AbstractPurgeTest
     {
         goToGeneralPurgePage();
         assertGeneralPurgePage();
-        clickLinkWithXPath( "//preceding::input[@value='directory' and @type='hidden']//following::input[@type='submit']" );
+        clickLinkWithXPath(
+            "//preceding::input[@value='directory' and @type='hidden']//following::input[@type='submit']" );
         assertAddEditDirectoryPurgePage();
     }
 

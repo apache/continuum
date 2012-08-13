@@ -48,8 +48,8 @@ public abstract class AbstractAddProjectTest
         File localRepo = new File( repo.getBasedir() );
         mkdirs( localRepo );
 
-        File artifact =
-            new File( localRepo, "org/apache/maven/continuum/continuum-parent/1.0.3/continuum-parent-1.0.3.pom" );
+        File artifact = new File( localRepo,
+                                  "org/apache/maven/continuum/continuum-parent/1.0.3/continuum-parent-1.0.3.pom" );
         mkdirs( artifact.getParentFile() );
 
         FileUtils.copyFile( getTestFile( "src/test/resources/projects/continuum/pom.xml" ), artifact );

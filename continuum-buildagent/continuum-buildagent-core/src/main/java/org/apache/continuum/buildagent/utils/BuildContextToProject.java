@@ -29,7 +29,7 @@ public class BuildContextToProject
 {
     public static Project getProject( BuildContext buildContext )
     {
-        Project project = new Project();    
+        Project project = new Project();
 
         project.setId( buildContext.getProjectId() );
 

@@ -35,7 +35,7 @@
                 <parameters>
                   <property>
                     <name>rootPath</name>
-                      <value>${basedir}/target</value>
+                    <value>${basedir}/target</value>
                   </property>
                   <property>
                     <name>xmlOnly</name>
@@ -48,7 +48,7 @@
         </contexts>
       </configuration>
     </component>
-    
+
     <component>
       <role>org.apache.maven.continuum.notification.Notifier</role>
       <role-hint>wagon</role-hint>
@@ -71,16 +71,16 @@
         <localRepository>~/.m2/repository</localRepository>
       </configuration>
     </component>
-    
+
     <component>
       <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
       <implementation>org.apache.maven.continuum.configuration.ConfigurationServiceMock</implementation>
     </component>
-    
+
     <component>
       <role>org.apache.maven.artifact.manager.WagonManager</role>
       <implementation>org.apache.maven.artifact.manager.DefaultWagonManager</implementation>
     </component>
-    
+
   </components>
 </plexus>

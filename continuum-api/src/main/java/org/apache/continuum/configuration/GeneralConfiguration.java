@@ -40,15 +40,15 @@ public class GeneralConfiguration
     private String baseUrl;
 
     private ProxyConfiguration proxyConfiguration;
-    
+
     private File releaseOutputDirectory;
-    
+
     private int numberOfBuildsInParallel = 1;
 
     private List<BuildAgentConfiguration> buildAgents;
-    
+
     private List<BuildAgentGroupConfiguration> buildAgentGroups;
-    
+
     private boolean distributedBuildEnabled;
 
     private String sharedSecretPassword;
@@ -118,7 +118,7 @@ public class GeneralConfiguration
     {
         return releaseOutputDirectory;
     }
-    
+
     public void setReleaseOutputDirectory( File releaseOutputDirectory )
     {
         this.releaseOutputDirectory = releaseOutputDirectory;

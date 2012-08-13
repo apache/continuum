@@ -19,15 +19,14 @@ package org.apache.maven.continuum.web.view.jsp.ui;
  * under the License.
  */
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.maven.continuum.web.components.SubmitCancel;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
 
-import com.opensymphony.xwork2.ognl.OgnlValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -55,10 +54,10 @@ public class SubmitCancelTag
     {
         this.cancel = cancel;
     }
-    
+
     public Component getBean( ValueStack valueStack, HttpServletRequest request, HttpServletResponse response )
     {
         return new SubmitCancel( valueStack, request, response );
     }
-    
+
 }

@@ -39,8 +39,8 @@ public class MavenOneContinuumProjectBuilderTest
     public void testBuildingAProjectFromMetadataWithACompleteMaven1Pom()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder =
-            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenOneContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
+                                                                                   MavenOneContinuumProjectBuilder.ID );
 
         BuildDefinition bd = new BuildDefinition();
 
@@ -62,8 +62,8 @@ public class MavenOneContinuumProjectBuilderTest
         bdt = service.addBuildDefinitionTemplate( bdt );
         bdt = service.addBuildDefinitionInTemplate( bdt, bd, false );
 
-        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata(
-        		getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false, bdt, false );
+        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( getTestFile(
+            "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false, bdt, false );
 
         assertOnResult( result );
 
@@ -72,14 +72,15 @@ public class MavenOneContinuumProjectBuilderTest
     public void testBuildingAProjectFromMetadataWithACompleteMaven1PomWithDefaultBuildDef()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder =
-            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenOneContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
+                                                                                   MavenOneContinuumProjectBuilder.ID );
 
         BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
 
-        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata(
-            getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false,
-            service.getDefaultMavenOneBuildDefinitionTemplate(), false );
+        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( getTestFile(
+            "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false,
+                                                                                          service.getDefaultMavenOneBuildDefinitionTemplate(),
+                                                                                          false );
 
         assertOnResult( result );
 

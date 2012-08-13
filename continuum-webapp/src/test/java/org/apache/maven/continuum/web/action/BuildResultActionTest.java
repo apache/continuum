@@ -19,9 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.HashMap;
-
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.taskqueue.BuildProjectTask;
@@ -33,6 +30,9 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.action.stub.BuildResultActionStub;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.jmock.Mock;
+
+import java.io.File;
+import java.util.HashMap;
 
 public class BuildResultActionTest
     extends AbstractActionTest
@@ -70,13 +70,17 @@ public class BuildResultActionTest
 
         continuum.expects( once() ).method( "getProject" ).will( returnValue( project ) );
         continuum.expects( once() ).method( "getBuildResult" ).will( returnValue( buildResult ) );
-        continuum.expects( atLeastOnce() ).method( "getConfiguration" ).will( returnValue( (ConfigurationService) configurationService.proxy()  ) );
+        continuum.expects( atLeastOnce() ).method( "getConfiguration" ).will( returnValue(
+            (ConfigurationService) configurationService.proxy() ) );
         configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( false ) );
-        configurationService.expects( once() ).method( "getTestReportsDirectory" ).will( returnValue( new File( "testReportsDir" ) ) );
+        configurationService.expects( once() ).method( "getTestReportsDirectory" ).will( returnValue( new File(
+            "testReportsDir" ) ) );
         continuum.expects( once() ).method( "getChangesSinceLastSuccess" ).will( returnValue( null ) );
-        configurationService.expects( once() ).method( "getBuildOutputFile" ).will( returnValue( new File( "buildOutputFile" ) ) );
+        configurationService.expects( once() ).method( "getBuildOutputFile" ).will( returnValue( new File(
+            "buildOutputFile" ) ) );
         continuum.expects( once() ).method( "getBuildsManager" ).will( returnValue( buildsManager.proxy() ) );
-        buildsManager.expects( once() ).method( "getCurrentBuilds" ).will( returnValue( new HashMap<String, BuildProjectTask>() ) );
+        buildsManager.expects( once() ).method( "getCurrentBuilds" ).will( returnValue(
+            new HashMap<String, BuildProjectTask>() ) );
 
         action.execute();
         continuum.verify();
@@ -88,9 +92,11 @@ public class BuildResultActionTest
         Project project = createProject( "stub-project" );
 
         continuum.expects( once() ).method( "getProject" ).will( returnValue( project ) );
-        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue( (ConfigurationService) configurationService.proxy()  ) );
+        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue(
+            (ConfigurationService) configurationService.proxy() ) );
         configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( true ) );
-        distributedBuildManager.expects( once() ).method( "getBuildResult" ).will( returnValue( new HashMap<String, Object>() ) );
+        distributedBuildManager.expects( once() ).method( "getBuildResult" ).will( returnValue(
+            new HashMap<String, Object>() ) );
 
         action.execute();
         continuum.verify();

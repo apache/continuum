@@ -23,70 +23,68 @@
 <Configure class="org.mortbay.jetty.webapp.WebAppContext">
 
 
+  <New id="validation_mail" class="org.mortbay.jetty.plus.naming.Resource">
+    <Arg>mail/Session</Arg>
+    <Arg>
+      <New class="org.mortbay.naming.factories.MailSessionReference">
+        <Set name="user"></Set>
+        <Set name="password"></Set>
+        <Set name="properties">
+          <New class="java.util.Properties">
+            <Put name="mail.smtp.host">localhost</Put>
+            <Put name="mail.from">continuum@localhost</Put>
+            <Put name="mail.senderName">Continuum</Put>
+            <Put name="mail.debug">true</Put>
+          </New>
+        </Set>
+      </New>
+    </Arg>
+  </New>
 
-
-<New id="validation_mail" class="org.mortbay.jetty.plus.naming.Resource">
-  <Arg>mail/Session</Arg>
-  <Arg>
-    <New class="org.mortbay.naming.factories.MailSessionReference">
-      <Set name="user"></Set>
-      <Set name="password"></Set>
-      <Set name="properties">
-        <New class="java.util.Properties">
-          <Put name="mail.smtp.host">localhost</Put>
-          <Put name="mail.from">continuum@localhost</Put>
-          <Put name="mail.senderName">Continuum</Put>
-          <Put name="mail.debug">true</Put>
-        </New>
-      </Set>
-    </New>
-  </Arg>
-</New>
-
-<New id="continuum" class="org.mortbay.jetty.plus.naming.Resource">
-  <Arg>jdbc/continuum</Arg>
-  <Arg>
-    <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
-      <Set name="serverName">localhost</Set>
-      <Set name="databaseName">continuum</Set>
-      <Set name="user">root</Set>
-      <Set name="password"></Set>
-    </New>
-  </Arg>
-</New>
-<New id="continuum_shutdown" class="org.mortbay.jetty.plus.naming.Resource">
-  <Arg>jdbc/continuum_shutdown</Arg>
-  <Arg>
-    <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
-      <Set name="serverName">localhost</Set>
-      <Set name="databaseName">continuum</Set>
-      <Set name="user">root</Set>
-      <Set name="password"></Set>  
-    </New>
-  </Arg>
-</New>
-<New id="users" class="org.mortbay.jetty.plus.naming.Resource">
-  <Arg>jdbc/users</Arg>
-  <Arg>
-    <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
-      <Set name="serverName">localhost</Set>
-      <Set name="databaseName">users</Set>
-      <Set name="user">root</Set>
-      <Set name="password"></Set>
-    </New>
-  </Arg>
-</New>
-<New id="users_shutdown" class="org.mortbay.jetty.plus.naming.Resource">
-  <Arg>jdbc/users_shutdown</Arg>
-  <Arg>
-    <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
-      <Set name="serverName">localhost</Set>
-      <Set name="databaseName">users</Set>
-      <Set name="user">root</Set>
-      <Set name="password"></Set>  
-    </New>
-  </Arg>
-</New>
+  <New id="continuum" class="org.mortbay.jetty.plus.naming.Resource">
+    <Arg>jdbc/continuum</Arg>
+    <Arg>
+      <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+        <Set name="serverName">localhost</Set>
+        <Set name="databaseName">continuum</Set>
+        <Set name="user">root</Set>
+        <Set name="password"></Set>
+      </New>
+    </Arg>
+  </New>
+  <New id="continuum_shutdown" class="org.mortbay.jetty.plus.naming.Resource">
+    <Arg>jdbc/continuum_shutdown</Arg>
+    <Arg>
+      <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+        <Set name="serverName">localhost</Set>
+        <Set name="databaseName">continuum</Set>
+        <Set name="user">root</Set>
+        <Set name="password"></Set>
+      </New>
+    </Arg>
+  </New>
+  <New id="users" class="org.mortbay.jetty.plus.naming.Resource">
+    <Arg>jdbc/users</Arg>
+    <Arg>
+      <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+        <Set name="serverName">localhost</Set>
+        <Set name="databaseName">users</Set>
+        <Set name="user">root</Set>
+        <Set name="password"></Set>
+      </New>
+    </Arg>
+  </New>
+  <New id="users_shutdown" class="org.mortbay.jetty.plus.naming.Resource">
+    <Arg>jdbc/users_shutdown</Arg>
+    <Arg>
+      <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+        <Set name="serverName">localhost</Set>
+        <Set name="databaseName">users</Set>
+        <Set name="user">root</Set>
+        <Set name="password"></Set>
+      </New>
+    </Arg>
+  </New>
 
 </Configure>
 

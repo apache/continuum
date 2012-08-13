@@ -19,15 +19,6 @@ package org.apache.maven.continuum.release;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -37,9 +28,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.RollbackReleaseProjectTask;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.scm.manager.ScmManager;
 import org.apache.maven.scm.provider.ScmProvider;
 import org.apache.maven.scm.repository.ScmRepository;
@@ -47,8 +35,6 @@ import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStore;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
-import org.apache.maven.shared.release.versions.DefaultVersionInfo;
-import org.apache.maven.shared.release.versions.VersionInfo;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -59,10 +45,12 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
-import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Jason van Zyl
@@ -72,11 +60,13 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 public class DefaultContinuumReleaseManager
     implements ContinuumReleaseManager, Contextualizable
 {
-    
+
     private static final String PLEXUS_KEY_PERFORM_RELEASE_TASKQUEUE_EXECUTOR = "perform-release";
+
     private static final String PLEXUS_KEY_PREPARE_RELEASE_TASKQUEUE_EXECUTOR = "prepare-release";
+
     private static final String PLEXUS_KEY_ROLLBACK_RELEASE_TASKQUEUE_EXECUTOR = "rollback-release";
-    
+
     /**
      * @plexus.requirement
      */
@@ -136,9 +126,8 @@ public class DefaultContinuumReleaseManager
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
         String id = releaseId;
 
-        ReleaseDescriptor descriptor =
-            getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, environments, workingDirectory,
-                                  executable );
+        ReleaseDescriptor descriptor = getReleaseDescriptor( project, releaseProperties, relVersions, devVersions,
+                                                             environments, workingDirectory, executable );
 
         if ( listener == null )
         {
@@ -156,8 +145,8 @@ public class DefaultContinuumReleaseManager
 
         try
         {
-            prepareReleaseQueue.put(
-                new PrepareReleaseProjectTask( releaseId, descriptor, (ReleaseManagerListener) listener ) );
+            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, descriptor,
+                                                                    (ReleaseManagerListener) listener ) );
         }
         catch ( TaskQueueException e )
         {
@@ -217,9 +206,9 @@ public class DefaultContinuumReleaseManager
         {
             getListeners().put( releaseId, listener );
 
-            performReleaseQueue.put(
-                new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory, goals, useReleaseProfile,
-                                               (ReleaseManagerListener) listener, repository ) );
+            performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory, goals,
+                                                                    useReleaseProfile,
+                                                                    (ReleaseManagerListener) listener, repository ) );
         }
         catch ( TaskQueueException e )
         {
@@ -298,8 +287,8 @@ public class DefaultContinuumReleaseManager
         descriptor.setPreparationGoals( releaseProperties.getProperty( "preparation-goals" ) );
         descriptor.setAdditionalArguments( releaseProperties.getProperty( "arguments" ) );
         descriptor.setAddSchema( Boolean.valueOf( releaseProperties.getProperty( "add-schema" ) ) );
-        descriptor.setAutoVersionSubmodules(
-            Boolean.valueOf( releaseProperties.getProperty( "auto-version-submodules" ) ) );
+        descriptor.setAutoVersionSubmodules( Boolean.valueOf( releaseProperties.getProperty(
+            "auto-version-submodules" ) ) );
 
         String useEditMode = releaseProperties.getProperty( "use-edit-mode" );
         if ( BooleanUtils.toBoolean( useEditMode ) )
@@ -315,8 +304,8 @@ public class DefaultContinuumReleaseManager
 
             if ( StringUtils.isNotEmpty( args ) )
             {
-                descriptor.setAdditionalArguments( args + 
-                                                   " \"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
+                descriptor.setAdditionalArguments( args +
+                                                       " \"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
             }
             else
             {
@@ -339,7 +328,8 @@ public class DefaultContinuumReleaseManager
         }
         if ( releaseProperties.containsKey( "use-release-profile" ) )
         {
-            descriptor.setUseReleaseProfile( Boolean.valueOf( releaseProperties.getProperty( "use-release-profile" ) ) );
+            descriptor.setUseReleaseProfile( Boolean.valueOf( releaseProperties.getProperty(
+                "use-release-profile" ) ) );
         }
 
         //forced properties
@@ -405,53 +395,60 @@ public class DefaultContinuumReleaseManager
             listenerSummary.setPhases( listener.getPhases() );
             listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
             listenerSummary.setUsername( listener.getUsername() );
-    
+
             return listenerSummary;
         }
 
         return null;
     }
-    
-    public boolean isExecutingRelease() throws Exception
+
+    public boolean isExecutingRelease()
+        throws Exception
     {
-        return prepareReleaseQueue.getQueueSnapshot().size() > 0 || 
-            performReleaseQueue.getQueueSnapshot().size() > 0 || 
+        return prepareReleaseQueue.getQueueSnapshot().size() > 0 ||
+            performReleaseQueue.getQueueSnapshot().size() > 0 ||
             rollbackReleaseQueue.getQueueSnapshot().size() > 0 ||
-            getPerformReleaseTaskQueueExecutor().getCurrentTask() != null || 
+            getPerformReleaseTaskQueueExecutor().getCurrentTask() != null ||
             getPrepareReleaseTaskQueueExecutor().getCurrentTask() != null ||
             getRollbackReleaseTaskQueueExecutor().getCurrentTask() != null;
     }
-    
 
-    public TaskQueueExecutor getPerformReleaseTaskQueueExecutor() throws TaskQueueManagerException
+
+    public TaskQueueExecutor getPerformReleaseTaskQueueExecutor()
+        throws TaskQueueManagerException
     {
         try
         {
-            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, PLEXUS_KEY_PERFORM_RELEASE_TASKQUEUE_EXECUTOR );
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class,
+                                                         PLEXUS_KEY_PERFORM_RELEASE_TASKQUEUE_EXECUTOR );
         }
         catch ( ComponentLookupException e )
         {
             throw new TaskQueueManagerException( e.getMessage(), e );
         }
     }
-    
-    public TaskQueueExecutor getPrepareReleaseTaskQueueExecutor() throws TaskQueueManagerException
+
+    public TaskQueueExecutor getPrepareReleaseTaskQueueExecutor()
+        throws TaskQueueManagerException
     {
         try
         {
-            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, PLEXUS_KEY_PREPARE_RELEASE_TASKQUEUE_EXECUTOR );
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class,
+                                                         PLEXUS_KEY_PREPARE_RELEASE_TASKQUEUE_EXECUTOR );
         }
         catch ( ComponentLookupException e )
         {
             throw new TaskQueueManagerException( e.getMessage(), e );
         }
     }
-    
-    public TaskQueueExecutor getRollbackReleaseTaskQueueExecutor() throws TaskQueueManagerException
+
+    public TaskQueueExecutor getRollbackReleaseTaskQueueExecutor()
+        throws TaskQueueManagerException
     {
         try
         {
-            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, PLEXUS_KEY_ROLLBACK_RELEASE_TASKQUEUE_EXECUTOR );
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class,
+                                                         PLEXUS_KEY_ROLLBACK_RELEASE_TASKQUEUE_EXECUTOR );
         }
         catch ( ComponentLookupException e )
         {

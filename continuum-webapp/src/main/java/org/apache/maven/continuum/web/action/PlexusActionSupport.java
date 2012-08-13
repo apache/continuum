@@ -21,8 +21,6 @@ package org.apache.maven.continuum.web.action;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.interceptor.SessionAware;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 
 import java.util.Map;
 

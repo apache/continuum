@@ -19,12 +19,9 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -38,10 +35,13 @@ import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.continuum.web.util.AuditLog;
-import org.apache.continuum.web.util.AuditLogConstants;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BuildDefinitionAction:
@@ -94,9 +94,9 @@ public class BuildDefinitionAction
     private String buildDefinitionType;
 
     private boolean alwaysBuild;
-    
+
     private int updatePolicy = BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ALWAYS;
-    
+
     private Map<Integer, String> buildDefinitionUpdatePolicies;
 
     /**
@@ -133,7 +133,7 @@ public class BuildDefinitionAction
         buildDefinitionTypes.add( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
         buildDefinitionTypes.add( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
         buildDefinitionTypes.add( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
-        
+
         buildDefinitionUpdatePolicies = new HashMap<Integer, String>();
         String text = getText( "buildDefinition.updatePolicy.always" );
         buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ALWAYS, text );
@@ -306,7 +306,7 @@ public class BuildDefinitionAction
     {
 
         AuditLog event = null;
-        String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
+        String resource = "Project id=" + projectId + ":" + goals + " " + arguments;
 
         try
         {
@@ -388,7 +388,7 @@ public class BuildDefinitionAction
 
         if ( projectId != 0 )
         {
-            String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
+            String resource = "Project id=" + projectId + ":" + goals + " " + arguments;
             AuditLog event = null;
             if ( buildDefinitionId == 0 )
             {
@@ -432,8 +432,8 @@ public class BuildDefinitionAction
             if ( confirmed )
             {
                 getContinuum().removeBuildDefinitionFromProject( projectId, buildDefinitionId );
-                
-                String resource = "Project id=" + projectId + ":" +  goals + " " + arguments;
+
+                String resource = "Project id=" + projectId + ":" + goals + " " + arguments;
                 AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
                 event.setCategory( AuditLogConstants.BUILD_DEFINITION );
                 event.setCurrentUser( getPrincipal() );
@@ -466,8 +466,8 @@ public class BuildDefinitionAction
             if ( confirmed )
             {
                 getContinuum().removeBuildDefinitionFromProjectGroup( projectGroupId, buildDefinitionId );
-                
-                String resource = "Project Group id=" + projectGroupId + ":" +  goals + " " + arguments;
+
+                String resource = "Project Group id=" + projectGroupId + ":" + goals + " " + arguments;
                 AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
                 event.setCategory( AuditLogConstants.BUILD_DEFINITION );
                 event.setCurrentUser( getPrincipal() );

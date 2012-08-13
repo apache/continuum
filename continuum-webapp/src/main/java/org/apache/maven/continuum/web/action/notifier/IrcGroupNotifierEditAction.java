@@ -19,11 +19,11 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'IRC' from the

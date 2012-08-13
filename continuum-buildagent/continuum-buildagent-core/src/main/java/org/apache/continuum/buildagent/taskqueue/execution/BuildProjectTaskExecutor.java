@@ -19,13 +19,6 @@ package org.apache.continuum.buildagent.taskqueue.execution;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutorException;
@@ -63,6 +56,13 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
@@ -110,21 +110,21 @@ public class BuildProjectTaskExecutor
             log.info( "Initializing build (projectId={})", projectId );
             BuildContext context = buildContextManager.getBuildContext( projectId );
             initializeBuildContext( context );
-    
+
             if ( !checkScmResult( context ) )
             {
                 return;
             }
-    
+
             log.info( "Checking if project '{}' should build", context.getProjectName() );
             if ( !shouldBuild( context ) )
             {
                 return;
             }
-    
+
             log.info( "Starting build of {}", context.getProjectName() );
             startBuild( context );
-    
+
             try
             {
                 try
@@ -134,13 +134,13 @@ public class BuildProjectTaskExecutor
                 catch ( TaskExecutionException e )
                 {
                     updateBuildResult( context, ContinuumBuildAgentUtil.throwableToString( e ) );
-    
+
                     //just log the error but don't stop the build from progressing in order not to suppress any build result messages there
                     log.error( "Error executing action update-project-from-agent-working-directory '", e );
                 }
-    
+
                 performAction( "execute-agent-builder", context );
-    
+
                 log.info( "Updating build result of project '{}'", context.getProjectName() );
                 updateBuildResult( context, null );
             }
@@ -175,24 +175,23 @@ public class BuildProjectTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_USERNAME, buildContext.getUsername() );
-        actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS,
-                           getEnvironments( buildContext.getBuildDefinitionId(),
-                                            getInstallationType( buildContext ) ) );
-        
+        actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS, getEnvironments(
+            buildContext.getBuildDefinitionId(), getInstallationType( buildContext ) ) );
+
         // CONTINUUM-2391        
-        if( buildContext.getLocalRepository() != null )
+        if ( buildContext.getLocalRepository() != null )
         {
-            List<LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();        
-            for( LocalRepository local : localRepos )
+            List<LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();
+            for ( LocalRepository local : localRepos )
             {
-                if( local.getName().equalsIgnoreCase( buildContext.getLocalRepository() ) )
+                if ( local.getName().equalsIgnoreCase( buildContext.getLocalRepository() ) )
                 {
                     actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, local.getLocation() );
                     break;
                 }
             }
-        }        
-        
+        }
+
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, buildContext.getScmResult() );
         buildContext.setActionContext( actionContext );
 
@@ -335,7 +334,7 @@ public class BuildProjectTaskExecutor
             build.setState( ContinuumProjectState.ERROR );
 
             build.setTrigger( context.getTrigger() );
-            
+
             build.setUsername( context.getUsername() );
 
             build.setStartTime( context.getBuildStartTime() );
@@ -456,12 +455,12 @@ public class BuildProjectTaskExecutor
         map.put( ContinuumBuildAgentUtil.KEY_USERNAME, context.getUsername() );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
         map.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL, context.getBuildAgentUrl() );
-        
-        if( context.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) )
+
+        if ( context.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) )
         {
-            map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );    
+            map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );
         }
-        
+
         if ( context.getLatestUpdateDate() != null )
         {
             map.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, context.getLatestUpdateDate() );
@@ -564,8 +563,8 @@ public class BuildProjectTaskExecutor
 
         try
         {
-            ContinuumAgentBuildExecutor buildExecutor =
-                buildAgentBuildExecutorManager.getBuildExecutor( context.getExecutorId() );
+            ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor(
+                context.getExecutorId() );
 
             BuildDefinition buildDefinition = BuildContextToBuildDefinition.getBuildDefinition( context );
 
@@ -591,7 +590,7 @@ public class BuildProjectTaskExecutor
 
         return mavenProject;
     }
-    
+
     public void setBuildContextManager( BuildContextManager buildContextManager )
     {
         this.buildContextManager = buildContextManager;

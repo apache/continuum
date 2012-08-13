@@ -24,14 +24,15 @@ import java.util.Date;
 
 /**
  * Configuration for a project's source control.
- * 
- * @todo JAXB for persistence
- * 
+ *
  * @version $Id$
+ * @todo JAXB for persistence
  */
 public class ContinuumScmConfiguration
 {
-    /** The SCM URL, in the format specified by Maven SCM. */
+    /**
+     * The SCM URL, in the format specified by Maven SCM.
+     */
     private String url;
 
     /**
@@ -41,33 +42,35 @@ public class ContinuumScmConfiguration
 
     /**
      * The SCM password to use in connecting.
-     * 
+     *
      * @todo using some service to obtain this rather than configuring it would be preferable
      */
     private String password;
 
-    /** The tag, branch, or equivalent to check out from. */
+    /**
+     * The tag, branch, or equivalent to check out from.
+     */
     private String tag;
 
     /**
      * The location of the working directory.
-     * 
+     *
      * @todo is this a File that is absolute, or is it a relative path under the working directories? How will JAXB
-     *       manage? Don't want to store absolute path in the config unless that's what the user configured, so the base
-     *       can be relocated.
+     * manage? Don't want to store absolute path in the config unless that's what the user configured, so the base
+     * can be relocated.
      */
     private File workingDirectory;
 
     /**
      * For SCM clients that support it, use cached credentials on the system to avoid needing to pass them in.
-     * 
+     *
      * @todo using some service to obtain them rather than configuring it would be preferable
      */
     private boolean useCredentialsCache;
 
     /**
      * What was the last time this checkout was updated.
-     * 
+     *
      * @todo we need to improve on the techniques to achieve this
      */
     private Date latestUpdateDate;
@@ -136,7 +139,7 @@ public class ContinuumScmConfiguration
     {
         return latestUpdateDate;
     }
-    
+
     public void setLatestUpdateDate( Date latestUpdateDate )
     {
         this.latestUpdateDate = latestUpdateDate;

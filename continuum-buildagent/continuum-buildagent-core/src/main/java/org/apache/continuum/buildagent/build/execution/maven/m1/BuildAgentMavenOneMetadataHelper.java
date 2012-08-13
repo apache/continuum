@@ -19,10 +19,10 @@ package org.apache.continuum.buildagent.build.execution.maven.m1;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+
+import java.io.File;
 
 public interface BuildAgentMavenOneMetadataHelper
 {

@@ -26,9 +26,9 @@ package org.apache.maven.continuum.project.builder;
 public class ContinuumProjectBuilderException
     extends Exception
 {
-	private static final long serialVersionUID = 2666582644236201183L;
+    private static final long serialVersionUID = 2666582644236201183L;
 
-	public ContinuumProjectBuilderException( String message )
+    public ContinuumProjectBuilderException( String message )
     {
         super( message );
     }

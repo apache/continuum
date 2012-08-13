@@ -19,9 +19,6 @@ package org.apache.continuum.builder.distributed.manager;
  * under the License.
  */
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.NoBuildAgentException;
 import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
@@ -32,6 +29,9 @@ import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.system.Installation;
+
+import java.util.List;
+import java.util.Map;
 
 public interface DistributedBuildManager
 {
@@ -53,7 +53,7 @@ public interface DistributedBuildManager
 
     List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException;
-    
+
     String getBuildAgentPlatform( String buildAgentUrl )
         throws ContinuumException;
 
@@ -72,8 +72,9 @@ public interface DistributedBuildManager
     Map<String, Object> getFileContent( int projectId, String directory, String filename )
         throws ContinuumException;
 
-    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger, int projectGroupId,  
-                               String projectGroupName, String scmRootAddress, int scmRootId, List<ProjectScmRoot> scmRoots )
+    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
+                               int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId,
+                               List<ProjectScmRoot> scmRoots )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException;
 
     Map<String, PrepareBuildProjectsTask> getProjectsCurrentlyPreparingBuild()
@@ -111,7 +112,7 @@ public interface DistributedBuildManager
 
     boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws ContinuumException;
-        
+
     String getBuildAgentUrl( int projectId, int buildDefinitionId )
         throws ContinuumException;
 

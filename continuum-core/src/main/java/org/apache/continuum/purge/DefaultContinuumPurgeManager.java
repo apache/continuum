@@ -19,8 +19,6 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
@@ -36,6 +34,8 @@ import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * DefaultContinuumPurgeManager
  *
@@ -48,7 +48,7 @@ public class DefaultContinuumPurgeManager
     implements ContinuumPurgeManager
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultContinuumPurgeManager.class );
-    
+
     /**
      * @plexus.requirement
      */
@@ -63,12 +63,12 @@ public class DefaultContinuumPurgeManager
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
-    
+
     /**
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
-    
+
     public void purge( Schedule schedule )
         throws ContinuumPurgeManagerException
     {
@@ -78,12 +78,13 @@ public class DefaultContinuumPurgeManager
 
         repoPurgeList = purgeConfigurationService.getEnableRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
         dirPurgeList = purgeConfigurationService.getEnableDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
-        distributedDirPurgeList = purgeConfigurationService.getEnableDistributedDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+        distributedDirPurgeList = purgeConfigurationService.getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
+            schedule.getId() );
 
         boolean hasRepoPurge = repoPurgeList != null && repoPurgeList.size() > 0;
         boolean hasDirPurge = dirPurgeList != null && dirPurgeList.size() > 0;
         boolean hasDitributedDirPurge = distributedDirPurgeList != null && distributedDirPurgeList.size() > 0;
-        
+
         if ( hasRepoPurge )
         {
             for ( RepositoryPurgeConfiguration repoPurge : repoPurgeList )
@@ -99,7 +100,7 @@ public class DefaultContinuumPurgeManager
                 purgeDirectory( dirPurge );
             }
         }
-        
+
         if ( hasDitributedDirPurge )
         {
             for ( DistributedDirectoryPurgeConfiguration dirPurge : distributedDirPurgeList )
@@ -107,7 +108,7 @@ public class DefaultContinuumPurgeManager
                 purgeDistributedDirectory( dirPurge );
             }
         }
-        
+
         if ( !hasRepoPurge && !hasDirPurge && !hasDitributedDirPurge )
         {
             // This purge is not enable for a purge process.
@@ -131,8 +132,8 @@ public class DefaultContinuumPurgeManager
             LocalRepository repository = repoPurge.getRepository();
 
             // do not purge if repository is in use and if repository is already in purge queue
-            if ( !taskQueueManager.isRepositoryInUse( repository.getId() ) && 
-                 !taskQueueManager.isInPurgeQueue( repoPurge.getId() ) )
+            if ( !taskQueueManager.isRepositoryInUse( repository.getId() ) && !taskQueueManager.isInPurgeQueue(
+                repoPurge.getId() ) )
             {
                 taskQueueManager.getPurgeQueue().put( new PurgeTask( repoPurge.getId() ) );
             }
@@ -155,8 +156,7 @@ public class DefaultContinuumPurgeManager
             if ( "releases".equals( dirPurge.getDirectoryType() ) )
             {
                 // do not purge if release in progress
-                if ( !taskQueueManager.releaseInProgress() && 
-                     !taskQueueManager.isInPurgeQueue( dirPurge.getId() ) )
+                if ( !taskQueueManager.releaseInProgress() && !taskQueueManager.isInPurgeQueue( dirPurge.getId() ) )
                 {
                     taskQueueManager.getPurgeQueue().put( new PurgeTask( dirPurge.getId() ) );
                 }
@@ -164,8 +164,8 @@ public class DefaultContinuumPurgeManager
             else if ( "buildOutput".equals( dirPurge.getDirectoryType() ) )
             {
                 // do not purge if build in progress
-                if ( !parallelBuildsManager.isBuildInProgress() && 
-                     !taskQueueManager.isInPurgeQueue( dirPurge.getId() ) )
+                if ( !parallelBuildsManager.isBuildInProgress() && !taskQueueManager.isInPurgeQueue(
+                    dirPurge.getId() ) )
                 {
                     taskQueueManager.getPurgeQueue().put( new PurgeTask( dirPurge.getId() ) );
                 }

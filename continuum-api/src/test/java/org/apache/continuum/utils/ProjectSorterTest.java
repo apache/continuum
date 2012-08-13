@@ -19,15 +19,14 @@ package org.apache.continuum.utils;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import junit.framework.TestCase;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 
-import junit.framework.TestCase;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:jmcconnell@apache.org">Jesse McConnell</a>
@@ -104,7 +103,7 @@ public class ProjectSorterTest
         Project p4 = sortedList.get( 3 ); //ear1 project must be the latest
         assertEquals( ear1.getArtifactId(), p4.getArtifactId() );
     }
-    
+
     /**
      * test project build order
      * build order: B -> A -> D -> C -> E
@@ -121,13 +120,13 @@ public class ProjectSorterTest
         Project projectC = getNewProject( "C" );
         Project projectD = getNewProject( "D" );
         Project projectE = getNewProject( "E" );
-        
+
         projectA.setParent( generateProjectDependency( projectB ) );
         projectE.setParent( generateProjectDependency( projectB ) );
         projectC.setParent( generateProjectDependency( projectA ) );
         projectC.setDependencies( Collections.singletonList( generateProjectDependency( projectD ) ) );
         projectD.setParent( generateProjectDependency( projectA ) );
-                
+
         list.add( projectA );
         list.add( projectB );
         list.add( projectC );
@@ -136,15 +135,15 @@ public class ProjectSorterTest
 
         List<Project> sortedList = ProjectSorter.getSortedProjects( list, null );
         assertNotNull( sortedList );
-        
+
         List<Project> expectedList = new ArrayList<Project>();
-        
+
         expectedList.add( projectB );
         expectedList.add( projectA );
         expectedList.add( projectD );
         expectedList.add( projectC );
         expectedList.add( projectE );
-        
+
         for ( int i = 0; i < sortedList.size(); i++ )
         {
             Project sorted = sortedList.get( i );

@@ -19,17 +19,18 @@ package org.apache.continuum.release.phase;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.env.ReleaseEnvironment;
 
+import java.io.File;
+import java.util.List;
+
 /**
  * Run Release Preparation Goals
+ *
  * @plexus.component role="org.apache.maven.shared.release.phase.ReleasePhase" role-hint="run-release-prepare-goals"
  */
 public class RunPrepareGoalsPhase
@@ -41,13 +42,14 @@ public class RunPrepareGoalsPhase
         return releaseDescriptor.getPreparationGoals();
     }
 
-    public ReleaseResult execute(ReleaseDescriptor releaseDescriptor,
-			ReleaseEnvironment releaseEnvironment, List reactorProjects)
-			throws ReleaseExecutionException, ReleaseFailureException {
-		
-    	return execute( releaseDescriptor, new File( releaseDescriptor.getWorkingDirectory() ), 
-                releaseDescriptor.getAdditionalArguments() );
-	}
+    public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
+                                  List reactorProjects )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+
+        return execute( releaseDescriptor, new File( releaseDescriptor.getWorkingDirectory() ),
+                        releaseDescriptor.getAdditionalArguments() );
+    }
 
     public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
                                    List reactorProjects )

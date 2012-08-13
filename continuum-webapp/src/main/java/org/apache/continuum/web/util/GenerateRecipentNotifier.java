@@ -1,11 +1,11 @@
 package org.apache.continuum.web.util;
 
-import java.util.Map;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.Map;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -37,7 +37,7 @@ public final class GenerateRecipentNotifier
 
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public static String generate( ProjectNotifier notifier )
     {
         Map<String, String> configuration = notifier.getConfiguration();
@@ -63,11 +63,16 @@ public final class GenerateRecipentNotifier
                     }
                 }
             }
-            if (StringUtils.isNotEmpty(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD))) {
-                if (Boolean.parseBoolean(configuration.get(AbstractContinuumNotifier.DEVELOPER_FIELD))) {
-                    if ("unknown".equals(recipent)) {
+            if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.DEVELOPER_FIELD ) ) )
+            {
+                if ( Boolean.parseBoolean( configuration.get( AbstractContinuumNotifier.DEVELOPER_FIELD ) ) )
+                {
+                    if ( "unknown".equals( recipent ) )
+                    {
                         recipent = "project developers";
-                    } else {
+                    }
+                    else
+                    {
                         recipent += ", " + "project developers";
                     }
                 }

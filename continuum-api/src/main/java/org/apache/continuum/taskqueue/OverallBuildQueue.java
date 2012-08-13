@@ -19,12 +19,12 @@ package org.apache.continuum.taskqueue;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
@@ -186,6 +186,7 @@ public interface OverallBuildQueue
 
     /**
      * Checks if the specified project group and scm root is in the prepare build queue.
+     *
      * @param projectGroupId
      * @param scmRootId
      * @return
@@ -196,6 +197,7 @@ public interface OverallBuildQueue
 
     /**
      * Checks if the specified project group and scm root is in the prepare build queue.
+     *
      * @param projectGroupId
      * @param scmRootAddress
      * @return
@@ -214,7 +216,7 @@ public interface OverallBuildQueue
 
     /**
      * Cancel the prepare build task of the corresponding project
-     * 
+     *
      * @param projectId
      */
     void cancelPrepareBuildTask( int projectId );
@@ -388,7 +390,7 @@ public interface OverallBuildQueue
 
     /**
      * Returns the prepare build task queue executor used.
-     * 
+     *
      * @return
      */
     TaskQueueExecutor getPrepareBuildTaskQueueExecutor();

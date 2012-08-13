@@ -19,12 +19,6 @@ package org.apache.maven.continuum.notification.msn;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -42,11 +36,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */
-@Service("notifier#msn")
+@Service( "notifier#msn" )
 public class MsnContinuumNotifier
     extends AbstractContinuumNotifier
 {
@@ -102,8 +101,8 @@ public class MsnContinuumNotifier
 
         ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
 
-        boolean isPrepareBuildComplete =
-            messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE );
+        boolean isPrepareBuildComplete = messageId.equals(
+            ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE );
 
         if ( projectScmRoot == null && isPrepareBuildComplete )
         {

@@ -19,11 +19,6 @@ package org.apache.continuum.purge.repository.content;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -38,6 +33,11 @@ import org.apache.maven.archiva.repository.content.ArtifactExtensionMapping;
 import org.apache.maven.archiva.repository.content.DefaultPathParser;
 import org.apache.maven.archiva.repository.content.PathParser;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Taken from Archiva's ManagedDefaultRepositoryContent and made some few changes.
@@ -356,7 +356,7 @@ public class ManagedDefaultRepositoryContent
         if ( !repoDir.exists() )
         {
             throw new IOException( "Unable to gather the list of snapshot versions on a non-existant directory: " +
-                repoDir.getAbsolutePath() );
+                                       repoDir.getAbsolutePath() );
         }
 
         if ( !repoDir.isDirectory() )

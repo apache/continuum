@@ -53,7 +53,7 @@
 
   <filter>
     <filter-name>encodingFilter</filter-name>
-    <filter-class> org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
     <init-param>
       <param-name>encoding</param-name>
       <param-value>UTF-8</param-value>
@@ -62,13 +62,13 @@
       <param-name>forceEncoding</param-name>
       <param-value>true</param-value>
     </init-param>
-  </filter>  
+  </filter>
 
-  
+
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>  
+  </filter-mapping>
   <filter-mapping>
     <filter-name>struts-prepare</filter-name>
     <url-pattern>/*</url-pattern>
@@ -81,14 +81,14 @@
     <filter-name>struts-execute</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
+
 
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   <listener>
     <!-- TODO: some Spring technique for this? -->
-  	<listener-class>org.apache.continuum.web.startup.ContinuumStartup</listener-class>
+    <listener-class>org.apache.continuum.web.startup.ContinuumStartup</listener-class>
   </listener>
 
   <context-param>
@@ -99,11 +99,11 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-        classpath*:/META-INF/plexus/components.xml
-        classpath*:/META-INF/spring-context.xml
-        /WEB-INF/classes/META-INF/plexus/application.xml
-        /WEB-INF/classes/META-INF/plexus/components.xml
-        /WEB-INF/applicationContext.xml
+      classpath*:/META-INF/plexus/components.xml
+      classpath*:/META-INF/spring-context.xml
+      /WEB-INF/classes/META-INF/plexus/application.xml
+      /WEB-INF/classes/META-INF/plexus/components.xml
+      /WEB-INF/applicationContext.xml
     </param-value>
   </context-param>
 
@@ -147,7 +147,7 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
- 
+
   <servlet-mapping>
     <servlet-name>XmlRpcServlet</servlet-name>
     <url-pattern>/xmlrpc</url-pattern>

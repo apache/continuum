@@ -19,14 +19,14 @@ package org.apache.continuum.scm;
  * under the License.
  */
 
-import java.io.IOException;
-
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.command.changelog.ChangeLogScmResult;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
+
+import java.io.IOException;
 
 /**
  * Component that manages SCM interactions and checkouts within Continuum.

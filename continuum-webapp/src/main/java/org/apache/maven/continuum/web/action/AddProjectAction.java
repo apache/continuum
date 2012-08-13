@@ -19,10 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -39,12 +41,9 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Nick Gonzalez
@@ -102,7 +101,7 @@ public class AddProjectAction
     {
         initializeProjectGroupName();
         initializeActionContext();
-        
+
         try
         {
             if ( StringUtils.isEmpty( getProjectGroupName() ) )
@@ -152,7 +151,8 @@ public class AddProjectAction
 
         if ( projectDescription != null )
         {
-            project.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( projectDescription.trim() ) ) );
+            project.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml(
+                projectDescription.trim() ) ) );
         }
 
         project.setVersion( versionTrim );
@@ -248,7 +248,7 @@ public class AddProjectAction
             configurationManager.addContainerProvider( new XWorkConfigurationProvider() );
             com.opensymphony.xwork2.config.Configuration config = configurationManager.getConfiguration();
             Container container = config.getContainer();
-    
+
             ValueStack stack = container.getInstance( ValueStackFactory.class ).createValueStack();
             stack.getContext().put( ActionContext.CONTAINER, container );
             ActionContext.setContext( new ActionContext( stack.getContext() ) );

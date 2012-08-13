@@ -20,11 +20,6 @@ package org.apache.maven.continuum.web.action.admin;
  */
 
 import com.opensymphony.xwork2.Preparable;
-
-import java.io.File;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
@@ -39,6 +34,9 @@ import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>

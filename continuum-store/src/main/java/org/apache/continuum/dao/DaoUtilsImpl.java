@@ -19,20 +19,6 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.jdo.Extent;
-import javax.jdo.JDOUserException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
@@ -58,12 +44,25 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.jdo.Extent;
+import javax.jdo.JDOUserException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.DaoUtils"
  */
-@Repository("daoUtils")
+@Repository( "daoUtils" )
 public class DaoUtilsImpl
     extends AbstractDao
     implements DaoUtils

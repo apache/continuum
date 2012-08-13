@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.view.jsp.ui;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.views.jsp.ui.TextareaTag;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -29,10 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import javax.servlet.jsp.JspException;
-
-import org.apache.struts2.views.jsp.ui.TextareaTag;
 
 /**
  * First attempt at creating a date tag for the webwork framework. The tag will
@@ -147,8 +145,8 @@ public class DateTag
 
                     if ( globalFormat != null )
                     {
-                        msg =
-                            new SimpleDateFormat( globalFormat, ActionContext.getContext().getLocale() ).format( date );
+                        msg = new SimpleDateFormat( globalFormat, ActionContext.getContext().getLocale() ).format(
+                            date );
                     }
                     else
                     {

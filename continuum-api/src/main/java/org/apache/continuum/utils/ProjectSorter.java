@@ -19,18 +19,18 @@ package org.apache.continuum.utils;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.dag.DAG;
 import org.codehaus.plexus.util.dag.TopologicalSorter;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Sort projects by dependencies.
@@ -79,7 +79,7 @@ public class ProjectSorter
         for ( Project project : projects )
         {
             String id = getProjectId( project );
-            
+
             String projectGroupId = "[" + project.getProjectGroup().getId() + "]";
 
             // Dependencies
@@ -163,7 +163,7 @@ public class ProjectSorter
         {
             artifactId = project.getArtifactId();
         }
-        
+
         String projectGroupId = "[" + project.getProjectGroup().getId() + "]";
 
         return projectGroupId + ":" + groupId + ":" + artifactId + ":" + project.getVersion();

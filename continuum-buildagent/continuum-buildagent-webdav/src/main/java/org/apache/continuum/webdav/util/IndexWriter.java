@@ -19,6 +19,10 @@ package org.apache.continuum.webdav.util;
  * under the License.
  */
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.webdav.DavResource;
+import org.apache.jackrabbit.webdav.io.OutputContext;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -27,14 +31,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.DavResource;
-import org.apache.jackrabbit.webdav.io.OutputContext;
-
 public class IndexWriter
 {
     private final String logicalResource;
-    
+
     private final List<File> localResources;
 
     public IndexWriter( DavResource resource, File localResource, String logicalResource )
@@ -88,7 +88,7 @@ public class IndexWriter
             writer.println( "<li><a href=\"../\">" + parentName + "</a> <i><small>(Parent)</small></i></li>" );
             writer.println( "</ul>" );
         }
-        
+
         writer.println( "</ul>" );
     }
 
@@ -103,9 +103,9 @@ public class IndexWriter
     {
         for ( File localResource : localResources )
         {
-            List<File> files = new ArrayList<File>( Arrays.asList( localResource.listFiles() ) ); 
+            List<File> files = new ArrayList<File>( Arrays.asList( localResource.listFiles() ) );
             Collections.sort( files );
-            
+
             for ( File file : files )
             {
                 writeHyperlink( writer, file.getName(), file.isDirectory() );
@@ -114,13 +114,14 @@ public class IndexWriter
     }
 
     private void writeHyperlink( PrintWriter writer, String resourceName, boolean directory )
-    {        
-        if ( directory && !"CVS".equals( resourceName ) && !".svn".equals( resourceName ) && !"SCCS".equals( resourceName ) )
+    {
+        if ( directory && !"CVS".equals( resourceName ) && !".svn".equals( resourceName ) && !"SCCS".equals(
+            resourceName ) )
         {
             writer.println( "<li><a href=\"" + resourceName + "/\">" + resourceName + "</a></li>" );
         }
         else if ( !directory && !".cvsignore".equals( resourceName ) && !"vssver.scc".equals( resourceName ) &&
-                !".DS_Store".equals( resourceName ) && !"release.properties".equals( resourceName ) )
+            !".DS_Store".equals( resourceName ) && !"release.properties".equals( resourceName ) )
         {
             writer.println( "<li><a href=\"" + resourceName + "\">" + resourceName + "</a></li>" );
         }

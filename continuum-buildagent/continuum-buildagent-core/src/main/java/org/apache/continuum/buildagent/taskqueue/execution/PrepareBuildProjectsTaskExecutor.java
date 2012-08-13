@@ -19,11 +19,6 @@ package org.apache.continuum.buildagent.taskqueue.execution;
  * under the License.
  */
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
@@ -45,6 +40,11 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
@@ -86,19 +86,19 @@ public class PrepareBuildProjectsTaskExecutor
                     for ( BuildContext buildContext : buildContexts )
                     {
                         BuildDefinition buildDef = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
-    
-                        log.debug( "Check scm root state of project group '{}'",  buildContext.getProjectGroupName() );
+
+                        log.debug( "Check scm root state of project group '{}'", buildContext.getProjectGroupName() );
                         if ( !checkProjectScmRoot( context ) )
                         {
                             break;
                         }
-    
+
                         log.info( "Starting prepare build of project group '{}'", buildContext.getProjectGroupName() );
                         startPrepareBuild( buildContext );
-    
+
                         log.info( "Initializing prepare build" );
                         initializeActionContext( buildContext );
-    
+
                         try
                         {
                             if ( buildDef.isBuildFresh() )
@@ -106,10 +106,10 @@ public class PrepareBuildProjectsTaskExecutor
                                 log.info( "Clean up working directory of project '{}'", buildContext.getProjectName() );
                                 cleanWorkingDirectory( buildContext );
                             }
-    
+
                             log.info( "Updating working directory of project '{}'", buildContext.getProjectName() );
                             updateWorkingDirectory( buildContext );
-    
+
                             //CONTINUUM-1393
                             if ( !buildDef.isBuildFresh() )
                             {
@@ -128,7 +128,7 @@ public class PrepareBuildProjectsTaskExecutor
                 {
                     endPrepareBuild( context );
                 }
-    
+
                 if ( checkProjectScmRoot( context ) )
                 {
                     log.debug( "Successful prepare build. Creating build task" );
@@ -151,8 +151,8 @@ public class PrepareBuildProjectsTaskExecutor
     {
         Map<String, Object> actionContext = buildContext.getActionContext();
 
-        if ( actionContext == null ||
-            !( ContinuumBuildAgentUtil.getScmRootState( actionContext ) == ContinuumProjectState.UPDATING ) )
+        if ( actionContext == null || !( ContinuumBuildAgentUtil.getScmRootState( actionContext ) ==
+            ContinuumProjectState.UPDATING ) )
         {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, buildContext.getProjectGroupId() );
@@ -194,8 +194,8 @@ public class PrepareBuildProjectsTaskExecutor
 
     private boolean checkProjectScmRoot( Map<String, Object> context )
     {
-        return !( context != null &&
-            ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR );
+        return !( context != null && ContinuumBuildAgentUtil.getScmRootState( context ) ==
+            ContinuumProjectState.ERROR );
 
     }
 
@@ -212,8 +212,8 @@ public class PrepareBuildProjectsTaskExecutor
 
         performAction( "check-agent-working-directory", buildContext );
 
-        boolean workingDirectoryExists =
-            ContinuumBuildAgentUtil.getBoolean( actionContext, ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY_EXISTS );
+        boolean workingDirectoryExists = ContinuumBuildAgentUtil.getBoolean( actionContext,
+                                                                             ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY_EXISTS );
 
         ScmResult scmResult;
 
@@ -274,14 +274,14 @@ public class PrepareBuildProjectsTaskExecutor
         if ( context != null )
         {
             Map<String, Object> result = new HashMap<String, Object>();
-            result.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID,
-                        ContinuumBuildAgentUtil.getProjectGroupId( context ) );
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS,
-                        ContinuumBuildAgentUtil.getScmRootAddress( context ) );
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE,
-                        ContinuumBuildAgentUtil.getScmRootState( context ) );
-            result.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL,
-                        ContinuumBuildAgentUtil.getBuildAgentUrl( context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, ContinuumBuildAgentUtil.getProjectGroupId(
+                context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, ContinuumBuildAgentUtil.getScmRootAddress(
+                context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, ContinuumBuildAgentUtil.getScmRootState(
+                context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL, ContinuumBuildAgentUtil.getBuildAgentUrl(
+                context ) );
 
             if ( ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR )
             {
@@ -303,7 +303,8 @@ public class PrepareBuildProjectsTaskExecutor
 
             try
             {
-                log.debug( "End prepare build of project group '{}'", ContinuumBuildAgentUtil.getProjectGroupId( context ) );
+                log.debug( "End prepare build of project group '{}'", ContinuumBuildAgentUtil.getProjectGroupId(
+                    context ) );
                 buildAgentManager.endPrepareBuild( result );
             }
             catch ( ContinuumException e )

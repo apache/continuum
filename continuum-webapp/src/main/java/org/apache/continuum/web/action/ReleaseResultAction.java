@@ -19,10 +19,6 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.maven.continuum.ContinuumException;
@@ -34,6 +30,10 @@ import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -61,7 +61,7 @@ public class ReleaseResultAction
     private String projectName;
 
     private String releaseGoal;
-    
+
     private String username;
 
     public String list()
@@ -150,8 +150,7 @@ public class ReleaseResultAction
         {
             File releaseOutputFile = getContinuum().getConfiguration().getReleaseOutputFile( projectGroupId,
                                                                                              "releases-" +
-                                                                                                 releaseResult.getStartTime() )
-                ;
+                                                                                                 releaseResult.getStartTime() );
 
             if ( releaseOutputFile.exists() )
             {
@@ -285,12 +284,12 @@ public class ReleaseResultAction
     {
         this.releaseGoal = releaseGoal;
     }
-    
+
     public void setUsername( String username )
     {
         this.username = username;
     }
-    
+
     public String getUsername()
     {
         return username;

@@ -19,12 +19,12 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+
+import java.util.Map;
 
 /**
  * AddBuildDefinitionToProjectAction:

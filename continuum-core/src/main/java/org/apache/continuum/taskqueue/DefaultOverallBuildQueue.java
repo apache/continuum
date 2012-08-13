@@ -19,13 +19,6 @@ package org.apache.continuum.taskqueue;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
@@ -39,6 +32,12 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Resource;
 
 /**
  * "Overall" build queue which has a checkout queue and a build queue.
@@ -292,7 +291,7 @@ public class DefaultOverallBuildQueue
         if ( task != null && task.getProjectId() == projectId )
         {
             log.info( "Cancelling checkout task for project '" + projectId + "' in task executor '" +
-                checkoutTaskQueueExecutor );
+                          checkoutTaskQueueExecutor );
             checkoutTaskQueueExecutor.cancelTask( task );
         }
     }
@@ -331,7 +330,7 @@ public class DefaultOverallBuildQueue
      * @see OverallBuildQueue#removeProjectFromBuildQueue(int, int, BuildTrigger, String, int)
      */
     public boolean removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
-    		                                    String projectName, int projectGroupId )
+                                                String projectName, int projectGroupId )
         throws TaskQueueException
     {
         BuildDefinition buildDefinition;
@@ -352,9 +351,9 @@ public class DefaultOverallBuildQueue
             buildDefinitionLabel = buildDefinition.getGoals();
         }
 
-        BuildProjectTask buildProjectTask =
-        	                      new BuildProjectTask( projectId, buildDefinitionId, buildTrigger, projectName, 
-                                  buildDefinitionLabel, null, projectGroupId );
+        BuildProjectTask buildProjectTask = new BuildProjectTask( projectId, buildDefinitionId, buildTrigger,
+                                                                  projectName, buildDefinitionLabel, null,
+                                                                  projectGroupId );
 
         return getBuildQueue().remove( buildProjectTask );
     }
@@ -502,7 +501,8 @@ public class DefaultOverallBuildQueue
         {
             if ( task != null && task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
             {
-                log.info( "Project group {} with scm root {} is in prepare build queue {}", new Object[] { projectGroupId, scmRootId, task } );
+                log.info( "Project group {} with scm root {} is in prepare build queue {}",
+                          new Object[]{projectGroupId, scmRootId, task} );
                 return true;
             }
         }
@@ -519,9 +519,11 @@ public class DefaultOverallBuildQueue
         List<PrepareBuildProjectsTask> queue = getProjectsInPrepareBuildQueue();
         for ( PrepareBuildProjectsTask task : queue )
         {
-            if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+            if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals(
+                scmRootAddress ) )
             {
-                log.info( "Project group {} with scm root {} is in prepare build queue {}", new Object[] { projectGroupId, scmRootAddress, task } );
+                log.info( "Project group {} with scm root {} is in prepare build queue {}",
+                          new Object[]{projectGroupId, scmRootAddress, task} );
                 return true;
             }
         }
@@ -537,9 +539,8 @@ public class DefaultOverallBuildQueue
         PrepareBuildProjectsTask task = (PrepareBuildProjectsTask) prepareBuildTaskQueueExecutor.getCurrentTask();
         if ( task != null && task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
         {
-            log.info(
-                "Cancelling prepare build task for project group '{}' with scmRootId '{}' in task executor '{}'", 
-                new Object[] { projectGroupId, scmRootId, prepareBuildTaskQueueExecutor } );
+            log.info( "Cancelling prepare build task for project group '{}' with scmRootId '{}' in task executor '{}'",
+                      new Object[]{projectGroupId, scmRootId, prepareBuildTaskQueueExecutor} );
             prepareBuildTaskQueueExecutor.cancelTask( task );
         }
     }
@@ -560,8 +561,8 @@ public class DefaultOverallBuildQueue
 
                 if ( projectIds.contains( new Integer( projectId ) ) )
                 {
-                    log.info(
-                             "Cancelling prepare build task for project '{}' in task executor '{}'", projectId, prepareBuildTaskQueueExecutor );
+                    log.info( "Cancelling prepare build task for project '{}' in task executor '{}'", projectId,
+                              prepareBuildTaskQueueExecutor );
                     prepareBuildTaskQueueExecutor.cancelTask( task );
                 }
             }

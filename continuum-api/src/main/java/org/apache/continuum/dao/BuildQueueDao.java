@@ -19,10 +19,10 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>

@@ -45,10 +45,8 @@ public abstract class AbstractBuildDefinitionTemplateTest
     {
         goToBuildDefinitionTemplatePage();
         clickSubmitWithLocator( "buildDefinitionTemplate_0" );
-        String[] options =
-            new String[] { "--- Available Build Definitions ---", "Default Ant Build Definition",
-                "Default Maven 1 Build Definition", "Default Maven Build Definition",
-                "Default Shell Build Definition" };
+        String[] options = new String[]{"--- Available Build Definitions ---", "Default Ant Build Definition",
+            "Default Maven 1 Build Definition", "Default Maven Build Definition", "Default Shell Build Definition"};
         assertAddEditTemplatePage( options, null );
     }
 
@@ -114,8 +112,8 @@ public abstract class AbstractBuildDefinitionTemplateTest
     protected void removeTemplate( String name )
     {
         goToBuildDefinitionTemplatePage();
-        clickLinkWithXPath( "(//a[contains(@href,'deleteDefinitionTemplate') and contains(@href, '" + name
-            + "')])//img" );
+        clickLinkWithXPath(
+            "(//a[contains(@href,'deleteDefinitionTemplate') and contains(@href, '" + name + "')])//img" );
         assertPage( "Continuum - Delete Build Definition Template" );
         assertTextPresent( "Delete Build Definition Template" );
         assertTextPresent( "Are you sure you want to delete build definition template \"" + name + "\"?" );

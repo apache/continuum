@@ -21,17 +21,17 @@ package org.apache.maven.continuum.web.action.component;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 8 nov. 07
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="bottom"
+ * @since 8 nov. 07
  */
 public class BottomAction
     extends AbstractFooterAction
 {
-   
+
     public String execute()
     {
         return SUCCESS;
     }
-    
+
 }

@@ -19,16 +19,7 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.continuum.webdav.util.IndexWriter;
 import org.apache.jackrabbit.util.Text;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
@@ -57,6 +48,13 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.activation.MimetypesFileTypeMap;
+
 public class ContinuumBuildAgentDavResource
     implements DavResource
 {
@@ -82,9 +80,9 @@ public class ContinuumBuildAgentDavResource
 
     public static final String SUPPORTED_METHODS = "OPTIONS, GET, HEAD, TRACE, PROPFIND";
 
-    public ContinuumBuildAgentDavResource( String localResource, String logicalResource,
-                                           DavSession session, ContinuumBuildAgentDavResourceLocator locator,
-                                           DavResourceFactory factory, MimetypesFileTypeMap mimeTypes )
+    public ContinuumBuildAgentDavResource( String localResource, String logicalResource, DavSession session,
+                                           ContinuumBuildAgentDavResourceLocator locator, DavResourceFactory factory,
+                                           MimetypesFileTypeMap mimeTypes )
     {
         this.localResource = new File( localResource );
         this.logicalResource = logicalResource;
@@ -138,7 +136,7 @@ public class ContinuumBuildAgentDavResource
                 parentPath = "/";
             }
 
-            DavResourceLocator parentloc = locator.getFactory().createResourceLocator( locator.getPrefix(), 
+            DavResourceLocator parentloc = locator.getFactory().createResourceLocator( locator.getPrefix(),
                                                                                        parentPath );
 
             try

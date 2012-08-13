@@ -19,9 +19,9 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.maven.continuum.ContinuumException;
+
+import java.util.Map;
 
 public interface BuildAgentManager
 {

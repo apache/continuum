@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "myAccount" } )
+@Test( groups = {"myAccount"} )
 public class MyAccountTest
     extends AbstractAdminTest
 {

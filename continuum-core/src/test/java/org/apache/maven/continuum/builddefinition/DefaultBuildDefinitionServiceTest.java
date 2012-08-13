@@ -18,8 +18,6 @@
  */
 package org.apache.maven.continuum.builddefinition;
 
-import java.util.List;
-
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -28,6 +26,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -72,8 +72,8 @@ public class DefaultBuildDefinitionServiceTest
         buildDefinitionTemplate = new BuildDefinitionTemplate();
         buildDefinitionTemplate.setName( "test" );
         buildDefinitionTemplate = getBuildDefinitionService().addBuildDefinitionTemplate( buildDefinitionTemplate );
-        buildDefinitionTemplate =
-            getBuildDefinitionService().addBuildDefinitionInTemplate( buildDefinitionTemplate, buildDefinition, false );
+        buildDefinitionTemplate = getBuildDefinitionService().addBuildDefinitionInTemplate( buildDefinitionTemplate,
+                                                                                            buildDefinition, false );
 
 
     }
@@ -168,14 +168,14 @@ public class DefaultBuildDefinitionServiceTest
         assertEquals( 5, all.size() );
 
     }
-    
+
     public void testAddDuplicateBuildDefinitionTemplate()
-	      throws Exception
-	  {
-	      BuildDefinitionTemplate template = new BuildDefinitionTemplate();
-	      template.setName( "test" );
-	      
-	      template = getBuildDefinitionService().addBuildDefinitionTemplate( template );
-	      assertNull( template );
-	  }
+        throws Exception
+    {
+        BuildDefinitionTemplate template = new BuildDefinitionTemplate();
+        template.setName( "test" );
+
+        template = getBuildDefinitionService().addBuildDefinitionTemplate( template );
+        assertNull( template );
+    }
 }

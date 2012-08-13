@@ -37,9 +37,10 @@ public interface ContinuumBuildExecutor
     String ROLE = ContinuumBuildExecutor.class.getName();
 
     // TODO: stream the build output
-    ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput, List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
+    ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                         List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
         throws ContinuumBuildExecutorException;
-    
+
     // TODO: rename to be clearer
     void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,
                                     ScmResult scmResult )
@@ -54,7 +55,8 @@ public interface ContinuumBuildExecutor
         throws ContinuumBuildExecutorException;
 
     //TODO: Move as a plugin
-    void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot );
+    void backupTestFiles( Project project, int buildId, String projectScmRootUrl,
+                          List<Project> projectsWithCommonScmRoot );
 
     boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
                          BuildDefinition buildDefinition )

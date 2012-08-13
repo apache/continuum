@@ -19,16 +19,6 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.mail.Address;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
-
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.notification.mail.MockJavaMailSender;
@@ -45,6 +35,15 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -95,8 +94,8 @@ public class MailContinuumNotifierTest
         build = brDao.getLatestBuildResultForProjectWithDetails( project.getId() );
         assertEquals( ContinuumProjectState.OK, build.getState() );
 
-        MimeMessage mailMessage =
-            sendNotificationAndGetMessage( project, build, buildDef, "lots out build output", toOverride );
+        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, buildDef, "lots out build output",
+                                                                 toOverride );
 
         assertEquals( "[continuum] BUILD SUCCESSFUL: foo.bar Test Project", mailMessage.getSubject() );
 
@@ -158,10 +157,10 @@ public class MailContinuumNotifierTest
         {
             assertEquals( "foo@bar", ( (InternetAddress) tos[0] ).getAddress() );
         }
-        assertTrue( "The template isn't loaded correctly.",
-                    ( (String) mailMessage.getContent() ).indexOf( "#shellBuildResult()" ) < 0 );
-        assertTrue( "The template isn't loaded correctly.",
-                    ( (String) mailMessage.getContent() ).indexOf( "Build statistics" ) > 0 );
+        assertTrue( "The template isn't loaded correctly.", ( (String) mailMessage.getContent() ).indexOf(
+            "#shellBuildResult()" ) < 0 );
+        assertTrue( "The template isn't loaded correctly.", ( (String) mailMessage.getContent() ).indexOf(
+            "Build statistics" ) > 0 );
 
         String mailContent = (String) mailMessage.getContent();
 

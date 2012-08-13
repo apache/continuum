@@ -19,13 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.ContinuumException;
@@ -38,6 +31,13 @@ import org.apache.maven.continuum.web.model.GroupSummary;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Used to render the list of projects in the project group page.
@@ -113,7 +113,8 @@ public class SummaryAction
 
             try
             {
-                if ( parallelBuildsManager.isInAnyBuildQueue( project.getId() ) || parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) )
+                if ( parallelBuildsManager.isInAnyBuildQueue( project.getId() ) ||
+                    parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) )
                 {
                     model.setInBuildingQueue( true );
                 }
@@ -160,8 +161,7 @@ public class SummaryAction
 
                 ConfigurationService configuration = getContinuum().getConfiguration();
 
-                if ( configuration.isDistributedBuildEnabled() && 
-                                project.getState() == ContinuumProjectState.BUILDING )
+                if ( configuration.isDistributedBuildEnabled() && project.getState() == ContinuumProjectState.BUILDING )
                 {
                     model.setLatestBuildId( 0 );
                 }

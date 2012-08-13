@@ -19,13 +19,6 @@ package org.apache.continuum.scm;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.scm.ScmException;
@@ -41,12 +34,18 @@ import org.apache.maven.scm.repository.ScmRepository;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  * @todo consider folding some of this into Maven SCM itself
  */
-@Service("continuumScm")
+@Service( "continuumScm" )
 public class DefaultContinuumScm
     implements ContinuumScm
 {

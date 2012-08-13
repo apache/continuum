@@ -337,7 +337,7 @@ public abstract class AbstractContinuumTest
 
         // wait for project to finish building
         waitForProjectBuild();
-        
+
         // wait for the success status of project
         if ( success )
         {
@@ -353,7 +353,7 @@ public abstract class AbstractContinuumTest
                 waitForElementPresent( "//a/img[@alt='Failed']" );
             }
         }
-        
+
         // wait for the projectName link
         if ( !isLinkPresent( projectName ) )
         {
@@ -404,8 +404,9 @@ public abstract class AbstractContinuumTest
 
     protected void assertDeleteBuildDefinitionPage( String description, String goals )
     {
-        assertTextPresent( "Are you sure you want to delete the build definition with description \"" + description
-            + "\", goals \"" + goals + "\" and id" );
+        assertTextPresent(
+            "Are you sure you want to delete the build definition with description \"" + description + "\", goals \"" +
+                goals + "\" and id" );
         isButtonWithValuePresent( "Cancel" );
         isButtonWithValuePresent( "Delete" );
     }
@@ -527,10 +528,10 @@ public abstract class AbstractContinuumTest
                                               String projectName, String newProjectGroup )
     {
         showProjectGroup( groupName, groupId, groupDescription );
-        
+
         // wait for project not being used
         waitForProjectBuild();
-        
+
         String id = getFieldValue( "name=projectGroupId" );
         String url = baseUrl + "/editProjectGroup.action?projectGroupId=" + id;
         getSelenium().open( url );
@@ -623,11 +624,12 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "m1PomFile" );
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertOptionPresent( "selectedProjectGroup", new String[] { "Defined by POM", "Default Project Group" } );
+        assertOptionPresent( "selectedProjectGroup", new String[]{"Defined by POM", "Default Project Group"} );
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
-        assertOptionPresent( "buildDefinitionTemplateId", new String[] { "Default", "Default Ant Template",
-            "Default Maven 1 Template", "Default Maven Template", "Default Shell Template" } );
+        assertOptionPresent( "buildDefinitionTemplateId",
+                             new String[]{"Default", "Default Ant Template", "Default Maven 1 Template",
+                                 "Default Maven Template", "Default Shell Template"} );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -696,11 +698,12 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "projectScmUseCache" );
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertOptionPresent( "selectedProjectGroup", new String[] { "Default Project Group" } );
+        assertOptionPresent( "selectedProjectGroup", new String[]{"Default Project Group"} );
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
-        assertOptionPresent( "buildDefinitionTemplateId", new String[] { "Default", "Default Ant Template",
-            "Default Maven 1 Template", "Default Maven Template", "Default Shell Template" } );
+        assertOptionPresent( "buildDefinitionTemplateId",
+                             new String[]{"Default", "Default Ant Template", "Default Maven 1 Template",
+                                 "Default Maven Template", "Default Shell Template"} );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -743,7 +746,7 @@ public abstract class AbstractContinuumTest
             int maxIt = 20;
 
             // there's a problem with ie using waitForCondition
-            while( getTitle().equals( "" ) && currentIt <= maxIt )
+            while ( getTitle().equals( "" ) && currentIt <= maxIt )
             {
                 waitPage();
                 currentIt++;
@@ -751,7 +754,8 @@ public abstract class AbstractContinuumTest
         }
         else
         {
-            String condition = "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != '' && selenium.browserbot.getCurrentWindow().document.getElementById('footer') != null";
+            String condition =
+                "selenium.browserbot.getCurrentWindow().document.title.replace(/^\\s*/, \"\").replace(/\\s*$/, \"\") != '' && selenium.browserbot.getCurrentWindow().document.getElementById('footer') != null";
             waitForCondition( condition );
         }
 
@@ -807,32 +811,33 @@ public abstract class AbstractContinuumTest
         // wait for project to finish checking out
         waitForElementPresent( "//img[@alt='Checking Out']", false );
     }
-    
+
     void waitForProjectUpdate()
     {
         if ( isElementPresent( "//img[@alt='Checking Out']" ) )
         {
             waitForProjectCheckout();
         }
-        
+
         // wait for project to finish updating
         waitForElementPresent( "//img[@alt='Updating']", false );
     }
-    
+
     void waitForProjectBuild()
     {
         if ( isElementPresent( "//img[@alt='Checking Out']" ) || isElementPresent( "//img[@alt='Updating']" ) )
         {
             waitForProjectUpdate();
         }
-        
+
         // wait for project to finish building
         waitForElementPresent( "//img[@alt='Building']", false );
     }
 
     void assignContinuumResourceRoleToUser( String groupName )
     {
-        clickLinkWithXPath( "//input[@name='addDSelectedRoles' and @value='" + "Project Developer" + " - " + groupName + "']", false );
+        clickLinkWithXPath(
+            "//input[@name='addDSelectedRoles' and @value='" + "Project Developer" + " - " + groupName + "']", false );
     }
 
     protected void removeDefaultBuildDefinitionFromTemplate( String type )
@@ -848,8 +853,8 @@ public abstract class AbstractContinuumTest
 
         if ( "maven2".equals( type ) )
         {
-            getSelenium().addSelection(
-                "saveBuildDefinitionTemplate_buildDefinitionIds", "label=" + "Default Maven Build Definition" );
+            getSelenium().addSelection( "saveBuildDefinitionTemplate_buildDefinitionIds",
+                                        "label=" + "Default Maven Build Definition" );
         }
 
         clickLinkWithXPath( "//input[@value='->']", false );
@@ -895,7 +900,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Default Maven Build Definition" );
         assertTextPresent( "Default Shell Build Definition" );
     }
-    
+
     // ////////////////////////////////////
     // Distributed Builds
     // ////////////////////////////////////
@@ -933,15 +938,15 @@ public abstract class AbstractContinuumTest
 
     protected void goToBuildAgentPage()
     {
-        clickAndWait("link=Build Agents");
-        assertPage("Continuum - Build Agents");
+        clickAndWait( "link=Build Agents" );
+        assertPage( "Continuum - Build Agents" );
     }
 
     void assertBuildAgentPage()
     {
-        assertPage("Continuum - Build Agents");
-        assertTextPresent("Build Agents");
-        assertTextPresent("Build Agent Groups");
+        assertPage( "Continuum - Build Agents" );
+        assertTextPresent( "Build Agents" );
+        assertTextPresent( "Build Agent Groups" );
         assertButtonWithValuePresent( "Add" );
     }
 
@@ -975,7 +980,7 @@ public abstract class AbstractContinuumTest
         assertTextNotPresent( "No Results Found" );
         assertTextNotPresent( "Export to CSV" );
     }
-    
+
     protected void assertProjectBuildReportWithResult()
     {
         assertTextPresent( "Results" );
@@ -1010,7 +1015,7 @@ public abstract class AbstractContinuumTest
     }
 
     @BeforeSuite( alwaysRun = true )
-    @Parameters( { "baseUrl", "browser", "seleniumHost", "seleniumPort" } )
+    @Parameters( {"baseUrl", "browser", "seleniumHost", "seleniumPort"} )
     public void initializeContinuum( @Optional( "http://localhost:9595/continuum" ) String baseUrl,
                                      @Optional( "*firefox" ) String browser,
                                      @Optional( "localhost" ) String seleniumHost,

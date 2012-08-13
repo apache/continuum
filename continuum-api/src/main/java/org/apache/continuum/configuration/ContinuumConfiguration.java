@@ -31,6 +31,7 @@ public interface ContinuumConfiguration
     /**
      * @return an empty or a filled on but never null !
      * @throws ContinuumConfigurationException
+     *
      */
     GeneralConfiguration getGeneralConfiguration()
         throws ContinuumConfigurationException;
@@ -44,9 +45,9 @@ public interface ContinuumConfiguration
     void save( File file )
         throws ContinuumConfigurationException;
 
-    void reload( )
-    throws ContinuumConfigurationException;    
-    
+    void reload()
+        throws ContinuumConfigurationException;
+
     void reload( File file )
         throws ContinuumConfigurationException;
 }

@@ -55,8 +55,8 @@ public class AbstractReleaseAction
         if ( defaultBuildagent != null && defaultBuildagent.length() > 0 )
         {
             // get buildagent to be used from the buildagent group for distributed builds setup
-            BuildAgentGroupConfiguration group =
-                getContinuum().getConfiguration().getBuildAgentGroup( profile.getBuildAgentGroup() );
+            BuildAgentGroupConfiguration group = getContinuum().getConfiguration().getBuildAgentGroup(
+                profile.getBuildAgentGroup() );
 
             if ( group != null )
             {

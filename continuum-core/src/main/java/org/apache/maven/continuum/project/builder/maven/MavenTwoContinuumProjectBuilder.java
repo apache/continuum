@@ -19,12 +19,6 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -45,6 +39,12 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -83,7 +83,7 @@ public class MavenTwoContinuumProjectBuilder
      * @plexus.configuration
      */
     private List<String> excludedPackagingTypes = new ArrayList<String>();
-        
+
     private Project rootProject;
 
     // ----------------------------------------------------------------------
@@ -92,18 +92,19 @@ public class MavenTwoContinuumProjectBuilder
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password )
         throws ContinuumProjectBuilderException
     {
-    	return buildProjectsFromMetadata( url, username, password, true, false );
+        return buildProjectsFromMetadata( url, username, password, true, false );
     }
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-    				boolean loadRecursiveProjects, boolean checkoutInSingleDirectory )
+                                                                     boolean loadRecursiveProjects,
+                                                                     boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
     {
         try
         {
             return buildProjectsFromMetadata( url, username, password, loadRecursiveProjects,
-            						buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate(),
-                                    checkoutInSingleDirectory );
+                                              buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate(),
+                                              checkoutInSingleDirectory );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -113,7 +114,8 @@ public class MavenTwoContinuumProjectBuilder
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                      boolean loadRecursiveProjects,
-                                                                     BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
+                                                                     BuildDefinitionTemplate buildDefinitionTemplate,
+                                                                     boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
     {
         // ----------------------------------------------------------------------
@@ -124,7 +126,8 @@ public class MavenTwoContinuumProjectBuilder
 
         try
         {
-        	readModules( url, result, true, username, password, null, loadRecursiveProjects, buildDefinitionTemplate, checkoutInSingleDirectory );
+            readModules( url, result, true, username, password, null, loadRecursiveProjects, buildDefinitionTemplate,
+                         checkoutInSingleDirectory );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -182,8 +185,8 @@ public class MavenTwoContinuumProjectBuilder
             log.debug( "projectGroup != null" + ( projectGroup != null ) );
             if ( projectGroup != null )
             {
-                List<BuildDefinition> buildDefinitions =
-                    getBuildDefinitions( buildDefinitionTemplate, loadRecursiveProjects );
+                List<BuildDefinition> buildDefinitions = getBuildDefinitions( buildDefinitionTemplate,
+                                                                              loadRecursiveProjects );
                 boolean defaultSetted = false;
                 for ( BuildDefinition buildDefinition : buildDefinitions )
                 {
@@ -204,8 +207,8 @@ public class MavenTwoContinuumProjectBuilder
                     {
                         try
                         {
-                            Schedule schedule =
-                                scheduleDao.getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
+                            Schedule schedule = scheduleDao.getScheduleByName(
+                                ConfigurationService.DEFAULT_SCHEDULE_NAME );
 
                             buildDefinition.setSchedule( schedule );
                         }
@@ -243,11 +246,11 @@ public class MavenTwoContinuumProjectBuilder
                     continuumProject.setScmPassword( password );
                 }
             }
-            
+
             continuumProject.setCheckedOutInSingleDirectory( checkoutInSingleDirectory );
-            
+
             // New project
-            builderHelper.mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, true);
+            builderHelper.mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, true );
 
             if ( result.hasErrors() )
             {
@@ -293,8 +296,8 @@ public class MavenTwoContinuumProjectBuilder
                             arguments = arguments.replace( "-N", "" );
                             projectBuildDef.setArguments( arguments );
 
-                            log.info( "Adding default build definition for project '" + continuumProject.getName()
-                                + "' without '--non-recursive' flag." );
+                            log.info( "Adding default build definition for project '" + continuumProject.getName() +
+                                          "' without '--non-recursive' flag." );
 
                             continuumProject.addBuildDefinition( projectBuildDef );
 
@@ -306,11 +309,11 @@ public class MavenTwoContinuumProjectBuilder
 
             result.addProject( continuumProject, MavenTwoBuildExecutor.ID );
 
-	        if( checkoutInSingleDirectory && rootProject == null )
-	        {
-	            rootProject = continuumProject;
-	            result.setRootProject( rootProject );
-	        }
+            if ( checkoutInSingleDirectory && rootProject == null )
+            {
+                rootProject = continuumProject;
+                result.setRootProject( rootProject );
+            }
         }
 
         List<String> modules = mavenProject.getModules();
@@ -347,7 +350,7 @@ public class MavenTwoContinuumProjectBuilder
 
                     try
                     {
-                    	urlString = StringUtils.replace( urlString, '\\', '/' );
+                        urlString = StringUtils.replace( urlString, '\\', '/' );
                         moduleUrl = new URL( urlString );
                     }
                     catch ( MalformedURLException e )
@@ -356,34 +359,35 @@ public class MavenTwoContinuumProjectBuilder
                         result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL, urlString );
                         continue;
                     }
-                    
-                    String moduleScmUrl = "";                    
-                 
+
+                    String moduleScmUrl = "";
+
                     String modulePath = StringUtils.replace( new String( module ), '\\', '/' );
-                    
+
                     // check if module is relative
-                    if( modulePath.indexOf( "../" ) != -1 )
-                    {   
-                        int depth =
-                            StringUtils.countMatches( StringUtils.substring( modulePath, 0,
-                                                                             modulePath.lastIndexOf( '/' ) + 1 ), "/" );
-                        
+                    if ( modulePath.indexOf( "../" ) != -1 )
+                    {
+                        int depth = StringUtils.countMatches( StringUtils.substring( modulePath, 0,
+                                                                                     modulePath.lastIndexOf( '/' ) +
+                                                                                         1 ), "/" );
+
                         String baseUrl = "";
-                        for( int j = 1; j <= depth; j++ )
+                        for ( int j = 1; j <= depth; j++ )
                         {
                             scmUrl = StringUtils.chompLast( new String( scmUrl ), "/" );
-                            baseUrl = StringUtils.substring( scmUrl, 0, scmUrl.lastIndexOf( '/' ) );                            
+                            baseUrl = StringUtils.substring( scmUrl, 0, scmUrl.lastIndexOf( '/' ) );
                         }
-                        moduleScmUrl = baseUrl + "/" + StringUtils.substring( modulePath, modulePath.lastIndexOf( "../" ) + 3 );
+                        moduleScmUrl = baseUrl + "/" + StringUtils.substring( modulePath, modulePath.lastIndexOf(
+                            "../" ) + 3 );
                     }
                     else
                     {
-                    	scmUrl = StringUtils.chompLast( scmUrl, "/" );
-                    	moduleScmUrl = scmUrl + "/" + modulePath;
+                        scmUrl = StringUtils.chompLast( scmUrl, "/" );
+                        moduleScmUrl = scmUrl + "/" + modulePath;
                     }
                     // we are in recursive loading mode
                     readModules( moduleUrl, result, false, username, password, moduleScmUrl, true,
-                    		buildDefinitionTemplate, checkoutInSingleDirectory );
+                                 buildDefinitionTemplate, checkoutInSingleDirectory );
                 }
             }
         }

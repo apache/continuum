@@ -19,11 +19,6 @@ package org.apache.continuum.profile;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.dao.ProfileDao;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -36,13 +31,17 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
- * TODO use some cache mechanism to prevent always reading from store ?
+ *          TODO use some cache mechanism to prevent always reading from store ?
  * @since 15 juin 07
  */
-@Service("profileService")
+@Service( "profileService" )
 public class DefaultProfileService
     implements ProfileService
 {
@@ -177,7 +176,7 @@ public class DefaultProfileService
     }
 
     /**
-     * @see org.apache.maven.continuum.profile.ProfileService#setBuilderInProfile(org.apache.maven.continuum.model.system.Profile,org.apache.maven.continuum.model.system.Installation)
+     * @see org.apache.maven.continuum.profile.ProfileService#setBuilderInProfile(org.apache.maven.continuum.model.system.Profile, org.apache.maven.continuum.model.system.Installation)
      */
     public void setBuilderInProfile( Profile profile, Installation builder )
         throws ProfileException
@@ -195,7 +194,7 @@ public class DefaultProfileService
     }
 
     /**
-     * @see org.apache.maven.continuum.profile.ProfileService#setJdkInProfile(org.apache.maven.continuum.model.system.Profile,org.apache.maven.continuum.model.system.Installation)
+     * @see org.apache.maven.continuum.profile.ProfileService#setJdkInProfile(org.apache.maven.continuum.model.system.Profile, org.apache.maven.continuum.model.system.Installation)
      */
     public void setJdkInProfile( Profile profile, Installation jdk )
         throws ProfileException
@@ -213,7 +212,7 @@ public class DefaultProfileService
     }
 
     /**
-     * @see org.apache.maven.continuum.profile.ProfileService#addEnvVarInProfile(org.apache.maven.continuum.model.system.Profile,org.apache.maven.continuum.model.system.Installation)
+     * @see org.apache.maven.continuum.profile.ProfileService#addEnvVarInProfile(org.apache.maven.continuum.model.system.Profile, org.apache.maven.continuum.model.system.Installation)
      */
     public void addEnvVarInProfile( Profile profile, Installation envVar )
         throws ProfileException

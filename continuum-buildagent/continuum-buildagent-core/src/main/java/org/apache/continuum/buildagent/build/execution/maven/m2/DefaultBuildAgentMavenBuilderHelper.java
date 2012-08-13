@@ -19,12 +19,6 @@ package org.apache.continuum.buildagent.build.execution.maven.m2;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
@@ -72,6 +66,12 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.BuildAgentMavenBuilderHelper"
@@ -214,8 +214,8 @@ public class DefaultBuildAgentMavenBuilderHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM_CONNECTION, getProjectName( project ) );
 
-            log.error(
-                "Missing 'connection' element in the 'scm' element in the " + getProjectName( project ) + " POM." );
+            log.error( "Missing 'connection' element in the 'scm' element in the " + getProjectName( project ) +
+                           " POM." );
 
             return null;
         }

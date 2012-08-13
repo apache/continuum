@@ -19,9 +19,9 @@ package org.apache.continuum.buildagent.buildcontext.manager;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
+
+import java.util.List;
 
 /**
  * @author Jan Stevens Ancajas

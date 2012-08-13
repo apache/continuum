@@ -57,7 +57,7 @@ public class DeleteProjectAction
         {
             return REQUIRES_AUTHORIZATION;
         }
-        
+
         AuditLog event = new AuditLog( "Project id=" + projectId, AuditLogConstants.REMOVE_PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.setCategory( AuditLogConstants.PROJECT );
@@ -70,8 +70,8 @@ public class DeleteProjectAction
         catch ( ContinuumException e )
         {
             logger.error( "Error removing project with id " + projectId, e );
-            addActionError( getText( "deleteProject.error", "Unable to delete project", 
-                                     new Integer( projectId ).toString() ) );
+            addActionError( getText( "deleteProject.error", "Unable to delete project", new Integer(
+                projectId ).toString() ) );
         }
 
         return SUCCESS;

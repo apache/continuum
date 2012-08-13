@@ -18,14 +18,14 @@
  */
 package org.apache.maven.continuum.web.appareance;
 
-import java.io.IOException;
-
 import org.codehaus.plexus.registry.RegistryException;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 10 nov. 07
  * @version $Id$
+ * @since 10 nov. 07
  */
 public interface AppareanceConfiguration
 {
@@ -38,11 +38,11 @@ public interface AppareanceConfiguration
         throws IOException;
 
     /**
-     * If no user configuration a default one will be user 
+     * If no user configuration a default one will be user
      * with Apache copyright content
-     * 
+     *
      * @return htmlFooter
      */
     public String getFooter();
-    
+
 }

@@ -78,13 +78,14 @@ public interface ContinuumReleaseManager
 
     /**
      * Perform a release based on a given releaseId
-     * @deprecated to remove as not used anymore
+     *
      * @param releaseId
      * @param buildDirectory
      * @param goals
      * @param useReleaseProfile
      * @param listener
      * @throws ContinuumReleaseException
+     * @deprecated to remove as not used anymore
      */
     void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener )
@@ -92,7 +93,7 @@ public interface ContinuumReleaseManager
 
     /**
      * Perform a release based on a release descriptor received by the Maven Release Plugin.
-     * @deprecated to remove as not used anymore
+     *
      * @param releaseId
      * @param workingDirectory
      * @param buildDirectory
@@ -100,6 +101,7 @@ public interface ContinuumReleaseManager
      * @param useReleaseProfile
      * @param listener
      * @throws ContinuumReleaseException
+     * @deprecated to remove as not used anymore
      */
     void perform( String releaseId, String workingDirectory, File buildDirectory, String goals, String arguments,
                   boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
@@ -108,6 +110,7 @@ public interface ContinuumReleaseManager
 
     /**
      * FIXME use a bean to replace such very huge parameter number (ContinuumReleaseRequest)
+     *
      * @param releaseId
      * @param buildDirectory
      * @param goals
@@ -119,8 +122,8 @@ public interface ContinuumReleaseManager
      */
     void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener, LocalRepository repository )
-        throws ContinuumReleaseException;    
-    
+        throws ContinuumReleaseException;
+
     /**
      * Rollback changes made by a previous release.
      *
@@ -154,41 +157,41 @@ public interface ContinuumReleaseManager
      * @return
      */
     ReleaseListenerSummary getListener( String releaseId );
-    
+
     /**
      * Determines if there is an ongoing release
-     * 
+     *
      * @return true if there is an ongoing release; false otherwise
-     * 
      * @throws Exception if unable to determine if release is ongoing
      */
-    boolean isExecutingRelease() throws Exception;
-    
+    boolean isExecutingRelease()
+        throws Exception;
+
     /**
      * Retrieve the Release TaskQueueExecutor instance
-     * 
+     *
      * @return Release TaskQueueExecutor instance
-     * 
      * @throws TaskQueueManagerException if unable to retrieve the Release TaskQueueExecutor instance
      */
-    TaskQueueExecutor getPerformReleaseTaskQueueExecutor() throws TaskQueueManagerException;
-    
+    TaskQueueExecutor getPerformReleaseTaskQueueExecutor()
+        throws TaskQueueManagerException;
+
     /**
      * Retrieve the PrepareRelease TaskQueueExecutor instance
-     * 
+     *
      * @return PrepareRelease TaskQueueExecutor instance
-     * 
      * @throws TaskQueueManagerException if unable to retrieve the PrepareRelease TaskQueueExecutor instance
      */
-    TaskQueueExecutor getPrepareReleaseTaskQueueExecutor() throws TaskQueueManagerException;
-    
+    TaskQueueExecutor getPrepareReleaseTaskQueueExecutor()
+        throws TaskQueueManagerException;
+
     /**
      * Retrieve the RollbackRelease TaskQueueExecutor instance
-     * 
+     *
      * @return RollbackRelease TaskQueueExecutor instance
-     * 
      * @throws TaskQueueManagerException if unable to retrieve the RollbackRelease TaskQueueExecutor instance
      */
-    TaskQueueExecutor getRollbackReleaseTaskQueueExecutor() throws TaskQueueManagerException;
+    TaskQueueExecutor getRollbackReleaseTaskQueueExecutor()
+        throws TaskQueueManagerException;
 
 }

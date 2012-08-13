@@ -19,21 +19,9 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
-import org.apache.maven.continuum.builddefinition.BuildDefinitionUpdatePolicyConstants;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
@@ -56,6 +44,16 @@ import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -139,8 +137,8 @@ public class MavenTwoBuildExecutor
                                                 List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
         throws ContinuumBuildExecutorException
     {
-        String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN2_TYPE )
-            .getExecutable();
+        String executable = getInstallationService().getExecutorConfigurator(
+            InstallationService.MAVEN2_TYPE ).getExecutable();
 
         StringBuffer arguments = new StringBuffer();
 
@@ -165,11 +163,12 @@ public class MavenTwoBuildExecutor
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
         if ( repository != null )
         {
-            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean( repository.getLocation() ) ).append( "\" " );
+            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean( repository.getLocation() ) ).append(
+                "\" " );
         }
-        
+
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
-        
+
         Map<String, String> environments = getEnvironments( buildDefinition );
         String m2Home = environments.get( getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
         if ( StringUtils.isNotEmpty( m2Home ) )
@@ -200,7 +199,7 @@ public class MavenTwoBuildExecutor
             throw new ContinuumBuildExecutorException( "Error while mapping metadata:" + result.getErrorsAsString() );
         }
     }
-    
+
     private static File getPomFile( String projectBuildFile, File workingDirectory )
     {
         File f = null;
@@ -222,7 +221,7 @@ public class MavenTwoBuildExecutor
 
     @Override
     public List<Artifact> getDeployableArtifacts( Project continuumProject, File workingDirectory,
-                                        BuildDefinition buildDefinition )
+                                                  BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
         MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
@@ -339,7 +338,8 @@ public class MavenTwoBuildExecutor
     }
 
     @Override
-    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
+    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl,
+                                 List<Project> projectsWithCommonScmRoot )
     {
         File backupDirectory = null;
         try
@@ -354,7 +354,8 @@ public class MavenTwoBuildExecutor
         {
             log.info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
         }
-        backupTestFiles( getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ), backupDirectory );
+        backupTestFiles( getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ),
+                         backupDirectory );
     }
 
     private void backupTestFiles( File workingDir, File backupDirectory )
@@ -398,10 +399,10 @@ public class MavenTwoBuildExecutor
     {
         //Check if it's a recursive build
         boolean isRecursive = false;
-        if (StringUtils.isNotEmpty( buildDefinition.getArguments() ) )
+        if ( StringUtils.isNotEmpty( buildDefinition.getArguments() ) )
         {
-            isRecursive =  buildDefinition.getArguments().indexOf( "-N" ) < 0 &&
-                buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 ;
+            isRecursive = buildDefinition.getArguments().indexOf( "-N" ) < 0 && buildDefinition.getArguments().indexOf(
+                "--non-recursive" ) < 0;
         }
         if ( isRecursive && changes != null && !changes.isEmpty() )
         {
@@ -422,7 +423,7 @@ public class MavenTwoBuildExecutor
             }
             return false;
         }
-        
+
         //check if changes are only in sub-modules or not
         List<String> modules = project.getModules();
 
@@ -449,12 +450,12 @@ public class MavenTwoBuildExecutor
                     if ( log.isDebugEnabled() )
                     {
                         log.debug( "changeFile.name " + file.getName() + " removed because in a module" );
-                    }                    
+                    }
                     files.remove( file );
                     found = true;
                     break;
                 }
-                if (log.isDebugEnabled())
+                if ( log.isDebugEnabled() )
                 {
                     log.debug( "no remving file " + file.getName() + " not in module " + module );
                 }

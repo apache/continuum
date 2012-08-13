@@ -19,10 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.deployer.ArtifactDeployer;
@@ -38,6 +34,10 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -101,14 +101,16 @@ public class DeployArtifactContinuumAction
             if ( project.getState() == ContinuumProjectState.OK )
             {
                 BuildDefinition buildDefinition = getBuildDefinition( context );
-                
+
                 String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
-                
+
                 List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
 
                 List<Artifact> artifacts = buildExecutor.getDeployableArtifacts( project,
-                									workingDirectoryService.getWorkingDirectory( 
-                									project, projectScmRootUrl, projectsWithCommonScmRoot ), buildDefinition );
+                                                                                 workingDirectoryService.getWorkingDirectory(
+                                                                                     project, projectScmRootUrl,
+                                                                                     projectsWithCommonScmRoot ),
+                                                                                 buildDefinition );
 
                 LocalRepository repository = project.getProjectGroup().getLocalRepository();
 

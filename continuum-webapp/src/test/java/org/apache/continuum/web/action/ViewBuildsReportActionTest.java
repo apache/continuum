@@ -19,19 +19,18 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.io.IOUtils;
 import org.apache.continuum.web.action.stub.ViewBuildsReportActionStub;
+import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.Continuum;
 import org.jmock.Mock;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class ViewBuildsReportActionTest
     extends AbstractActionTest
@@ -101,7 +100,7 @@ public class ViewBuildsReportActionTest
     public void testStartDateSameWithEndDate()
     {
         continuum.expects( once() ).method( "getBuildResultsInRange" ).will( returnValue( buildResults ) );
-        
+
         action.setStartDate( "04/25/2010" );
         action.setEndDate( "04/25/2010" );
         String result = action.execute();
@@ -125,18 +124,18 @@ public class ViewBuildsReportActionTest
     {
         Calendar cal = Calendar.getInstance();
         cal.set( 2010, 1, 1, 1, 1, 1 );
-        
+
         List<BuildResult> results = createBuildResult( cal.getTimeInMillis() );
-        
+
         continuum.expects( once() ).method( "getBuildResultsInRange" ).will( returnValue( results ) );
         action.setProjectGroupId( 0 );
         action.setBuildStatus( 0 );
         action.setStartDate( "" );
         action.setEndDate( "" );
         action.setTriggeredBy( "" );
-        
+
         String result = action.downloadBuildsReport();
-        
+
         assertEquals( "send-file", result );
         assertFileContentsEqual( IOUtils.toString( action.getInputStream() ), cal.getTime().toString() );
         continuum.verify();
@@ -148,16 +147,16 @@ public class ViewBuildsReportActionTest
         assertFalse( action.hasFieldErrors() );
         assertFalse( action.hasActionErrors() );
     }
-    
+
     private List<BuildResult> createBuildResult( long timeInMillis )
     {
         List<BuildResult> results = new ArrayList<BuildResult>();
-        
+
         BuildResult result = new BuildResult();
-        
+
         ProjectGroup group = new ProjectGroup();
         group.setName( "Test Group" );
-        
+
         Project project = new Project();
         project.setName( "Test Project" );
         project.setProjectGroup( group );
@@ -166,17 +165,17 @@ public class ViewBuildsReportActionTest
         result.setState( 2 );
         result.setStartTime( timeInMillis );
         result.setUsername( "test-admin" );
-        
+
         results.add( result );
-        
+
         return results;
     }
-    
+
     private void assertFileContentsEqual( String report, String buildDate )
     {
         String result = "Project Group,Project Name,Build Date,Triggered By,Build Status\n" +
-                        "Test Group,Test Project," + buildDate + ",test-admin,Ok\n";
-        
+            "Test Group,Test Project," + buildDate + ",test-admin,Ok\n";
+
         assertEquals( report, result );
     }
 }

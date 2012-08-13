@@ -26,9 +26,9 @@ package org.apache.maven.continuum.store;
 public class ContinuumStoreException
     extends Exception
 {
-	private static final long serialVersionUID = 5183507100399672781L;
+    private static final long serialVersionUID = 5183507100399672781L;
 
-	public ContinuumStoreException( String msg )
+    public ContinuumStoreException( String msg )
     {
         super( msg );
     }

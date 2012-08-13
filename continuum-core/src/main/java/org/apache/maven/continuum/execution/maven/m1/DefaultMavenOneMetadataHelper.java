@@ -19,14 +19,6 @@ package org.apache.maven.continuum.execution.maven.m1;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectDeveloper;
@@ -39,6 +31,14 @@ import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -56,7 +56,7 @@ public class DefaultMavenOneMetadataHelper
     // ----------------------------------------------------------------------
 
     /**
-     * @deprecated Use {@link #mapMetadata(ContinuumProjectBuildingResult,File,Project)} instead
+     * @deprecated Use {@link #mapMetadata(ContinuumProjectBuildingResult, File, Project)} instead
      */
     public void mapMetadata( File metadata, Project project )
         throws MavenOneMetadataHelperException
@@ -64,7 +64,8 @@ public class DefaultMavenOneMetadataHelper
         mapMetadata( new ContinuumProjectBuildingResult(), metadata, project, true );
     }
 
-    public void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project, boolean updateDefinition )
+    public void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project,
+                             boolean updateDefinition )
         throws MavenOneMetadataHelperException
     {
         Xpp3Dom mavenProject;
@@ -348,7 +349,7 @@ public class DefaultMavenOneMetadataHelper
         project.setGroupId( groupId );
 
         project.setArtifactId( artifactId );
-        
+
         if ( updateDefinition )
         {
             project.setVersion( version );

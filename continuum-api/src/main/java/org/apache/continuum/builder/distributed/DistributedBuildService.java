@@ -1,8 +1,8 @@
 package org.apache.continuum.builder.distributed;
 
-import java.util.Map;
-
 import org.apache.maven.continuum.ContinuumException;
+
+import java.util.Map;
 
 public interface DistributedBuildService
 {
@@ -18,7 +18,7 @@ public interface DistributedBuildService
 
     void startProjectBuild( int projectId )
         throws ContinuumException;
-    
+
     void updateBuildResult( Map<String, Object> context )
         throws ContinuumException;
 

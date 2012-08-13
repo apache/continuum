@@ -19,13 +19,13 @@ package org.apache.continuum.buildagent.build.execution.manager;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.maven.continuum.ContinuumException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager"

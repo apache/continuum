@@ -18,14 +18,14 @@
  */
 package org.apache.maven.continuum.execution.maven.m2;
 
-import java.io.File;
-
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>

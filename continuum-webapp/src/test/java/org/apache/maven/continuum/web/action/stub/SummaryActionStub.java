@@ -28,7 +28,7 @@ public class SummaryActionStub
     {
         return "test-group";
     }
-    
+
     protected void checkViewProjectGroupAuthorization( String resource )
     {
         // skip authorization check

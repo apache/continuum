@@ -38,7 +38,7 @@ public abstract class AbstractBuildAgentsTest
         if ( failIfMissing || isElementPresent( deleteButton ) )
         {
             clickLinkWithXPath( deleteButton );
-            assertPage("Continuum - Delete Build Agent");
+            assertPage( "Continuum - Delete Build Agent" );
             assertTextPresent( "Delete Build Agent" );
             assertTextPresent( "Are you sure you want to delete build agent " + agentName + " ?" );
             assertButtonWithValuePresent( "Delete" );
@@ -52,11 +52,11 @@ public abstract class AbstractBuildAgentsTest
                                   boolean pingOk )
     {
         setFieldValue( "saveBuildAgent_buildAgent_url", agentURL );
-        setFieldValue("saveBuildAgent_buildAgent_description", description );
+        setFieldValue( "saveBuildAgent_buildAgent_description", description );
 
         if ( enabled )
         {
-            checkField("saveBuildAgent_buildAgent_enabled");
+            checkField( "saveBuildAgent_buildAgent_enabled" );
         }
 
         submit();
@@ -90,7 +90,7 @@ public abstract class AbstractBuildAgentsTest
         assertAddEditBuildAgentPage( false );
         assertFieldValue( name, "saveBuildAgent_buildAgent_url" );
         assertFieldValue( description, "saveBuildAgent_buildAgent_description" );
-	}
+    }
 
     protected void addEditBuildAgent( String agentName, String newDesc )
     {
@@ -104,7 +104,7 @@ public abstract class AbstractBuildAgentsTest
     protected void enableDisableBuildAgent( String agentName, boolean enable )
     {
         assertFieldValue( agentName, "saveBuildAgent_buildAgent_url" );
-        
+
         if ( enable )
         {
             checkField( "saveBuildAgent_buildAgent_enabled" );
@@ -121,9 +121,8 @@ public abstract class AbstractBuildAgentsTest
     protected void goToAddBuildAgentGroup()
     {
         goToBuildAgentPage();
-        clickAndWait("editBuildAgentGroup_0"); //add button
-        String[] options =
-            new String[] { "--- Available Build Agents ---" };
+        clickAndWait( "editBuildAgentGroup_0" ); //add button
+        String[] options = new String[]{"--- Available Build Agents ---"};
         assertAddEditBuildAgentGroupPage( options, null );
     }
 
@@ -190,8 +189,9 @@ public abstract class AbstractBuildAgentsTest
     protected void removeBuildAgentGroup( String name )
     {
         goToBuildAgentPage();
-        clickLinkWithXPath( "(//a[contains(@href,'deleteBuildAgentGroup.action') and contains(@href, '" + name + "')])//img" );
-        assertPage("Continuum - Delete Build Agent Group");
+        clickLinkWithXPath(
+            "(//a[contains(@href,'deleteBuildAgentGroup.action') and contains(@href, '" + name + "')])//img" );
+        assertPage( "Continuum - Delete Build Agent Group" );
         assertTextPresent( "Delete Build Agent" );
         assertTextPresent( "Are you sure you want to delete build agent group " + name + " ?" );
         assertButtonWithValuePresent( "Delete" );

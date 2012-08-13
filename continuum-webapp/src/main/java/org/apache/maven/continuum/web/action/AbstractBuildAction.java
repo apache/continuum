@@ -18,14 +18,14 @@
  */
 package org.apache.maven.continuum.web.action;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>

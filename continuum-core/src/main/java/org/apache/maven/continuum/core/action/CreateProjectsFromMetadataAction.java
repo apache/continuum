@@ -19,13 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -42,6 +35,13 @@ import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Resolve the project url being passed in and gather authentication information
@@ -63,13 +63,13 @@ public class CreateProjectsFromMetadataAction
 {
     /**
      * Metadata url for adding projects.
-    */
+     */
     private static final String KEY_URL = "url";
-    
-	private static final String KEY_PROJECT_BUILDER_ID = "builderId";
-	
-	private static final String KEY_PROJECT_BUILDING_RESULT = "projectBuildingResult";
-	
+
+    private static final String KEY_PROJECT_BUILDER_ID = "builderId";
+
+    private static final String KEY_PROJECT_BUILDING_RESULT = "projectBuildingResult";
+
     private static final String KEY_LOAD_RECURSIVE_PROJECTS = "loadRecursiveProjects";
 
     public static final String KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY = "checkoutProjectsInSingleDirectory";
@@ -93,13 +93,13 @@ public class CreateProjectsFromMetadataAction
         throws ContinuumException, ContinuumProjectBuilderManagerException, ContinuumProjectBuilderException
     {
         String projectBuilderId = getProjectBuilderId( context );
-    	
+
         boolean loadRecursiveProjects = isLoadRecursiveProject( context );
-    	        
+
         boolean checkoutProjectsInSingleDirectory = getBoolean( context, KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY );
 
         String curl = getUrl( context );
-        
+
         URL url;
 
         ContinuumProjectBuilder projectBuilder = projectBuilderManager.getProjectBuilder( projectBuilderId );
@@ -118,7 +118,8 @@ public class CreateProjectsFromMetadataAction
                 url = new URL( curl );
 
                 result = projectBuilder.buildProjectsFromMetadata( url, null, null, loadRecursiveProjects,
-                		 						buildDefinitionTemplate, checkoutProjectsInSingleDirectory );
+                                                                   buildDefinitionTemplate,
+                                                                   checkoutProjectsInSingleDirectory );
 
             }
             else
@@ -157,7 +158,8 @@ public class CreateProjectsFromMetadataAction
                 {
 
                     result = projectBuilder.buildProjectsFromMetadata( url, username, password, loadRecursiveProjects,
-                    											buildDefinitionTemplate, checkoutProjectsInSingleDirectory );
+                                                                       buildDefinitionTemplate,
+                                                                       checkoutProjectsInSingleDirectory );
 
                 }
                 else
@@ -263,9 +265,8 @@ public class CreateProjectsFromMetadataAction
             int indexDiff = StringUtils.differenceAt( path1, path2 );
             String commonPath = path1.substring( 0, indexDiff );
 
-            if ( commonPath.lastIndexOf( '/' ) != commonPath.length() - 1 &&
-                 !( path1.contains( new String( commonPath + "/" ) ) || 
-                    path2.contains( new String( commonPath + "/" ) ) ) )
+            if ( commonPath.lastIndexOf( '/' ) != commonPath.length() - 1 && !( path1.contains( new String(
+                commonPath + "/" ) ) || path2.contains( new String( commonPath + "/" ) ) ) )
             {
                 while ( commonPath.lastIndexOf( '/' ) != commonPath.length() - 1 )
                 {
@@ -306,7 +307,7 @@ public class CreateProjectsFromMetadataAction
     {
         this.urlValidator = urlValidator;
     }
-    
+
     public static String getUrl( Map<String, Object> context )
     {
         return getString( context, KEY_URL );
@@ -316,7 +317,7 @@ public class CreateProjectsFromMetadataAction
     {
         context.put( KEY_URL, url );
     }
-    
+
     public static String getProjectBuilderId( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_BUILDER_ID );
@@ -336,7 +337,7 @@ public class CreateProjectsFromMetadataAction
     {
         context.put( KEY_PROJECT_BUILDING_RESULT, result );
     }
-    
+
     public static boolean isLoadRecursiveProject( Map<String, Object> context )
     {
         return getBoolean( context, KEY_LOAD_RECURSIVE_PROJECTS );
@@ -346,13 +347,14 @@ public class CreateProjectsFromMetadataAction
     {
         context.put( KEY_LOAD_RECURSIVE_PROJECTS, loadRecursiveProject );
     }
-    
+
     public static boolean isCheckoutProjectsInSingleDirectory( Map<String, Object> context )
     {
         return getBoolean( context, KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY );
     }
-    
-    public static void setCheckoutProjectsInSingleDirectory( Map<String, Object> context, boolean checkoutProjectsInSingleDirectory )
+
+    public static void setCheckoutProjectsInSingleDirectory( Map<String, Object> context,
+                                                             boolean checkoutProjectsInSingleDirectory )
     {
         context.put( KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY, checkoutProjectsInSingleDirectory );
     }

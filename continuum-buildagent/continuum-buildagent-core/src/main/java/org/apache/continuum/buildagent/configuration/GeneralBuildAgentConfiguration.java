@@ -19,11 +19,11 @@ package org.apache.continuum.buildagent.configuration;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.model.LocalRepository;
+
+import java.io.File;
+import java.util.List;
 
 public class GeneralBuildAgentConfiguration
 {
@@ -34,7 +34,7 @@ public class GeneralBuildAgentConfiguration
     private String continuumServerUrl;
 
     private List<Installation> installations;
-    
+
     private List<LocalRepository> localRepositories;
 
     private String sharedSecretPassword;
@@ -78,7 +78,7 @@ public class GeneralBuildAgentConfiguration
     {
         this.installations = installations;
     }
-    
+
     public List<LocalRepository> getLocalRepositories()
     {
         return localRepositories;

@@ -1,6 +1,5 @@
 package org.apache.maven.continuum.release.tasks;
 
-import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 

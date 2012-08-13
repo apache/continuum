@@ -23,7 +23,7 @@ import java.util.Properties;
 
 /**
  * Servlet
- * 
+ *
  * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
  */
 public class Servlet
@@ -33,7 +33,7 @@ public class Servlet
     private Properties parameters;
 
     private String path;
-    
+
     private String servlet;
 
     public String getId()

@@ -19,11 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -40,6 +35,11 @@ import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -107,7 +107,7 @@ public class ExecuteBuilderContinuumAction
         buildResult.setState( ContinuumProjectState.BUILDING );
 
         buildResult.setTrigger( buildTrigger.getTrigger() );
-        
+
         buildResult.setUsername( buildTrigger.getTriggeredBy() );
 
         buildResult.setScmResult( scmResult );
@@ -123,19 +123,18 @@ public class ExecuteBuilderContinuumAction
         setCancelled( context, false );
 
         buildResult = buildResultDao.getBuildResult( buildResult.getId() );
-        
+
         String projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
         List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-        
+
         try
         {
             notifier.runningGoals( project, buildDefinition, buildResult );
 
             File buildOutputFile = configurationService.getBuildOutputFile( buildResult.getId(), project.getId() );
-            
-            ContinuumBuildExecutionResult result =
-                buildExecutor.build( project, buildDefinition, buildOutputFile, projectsWithCommonScmRoot,
-                                     projectScmRootUrl );
+
+            ContinuumBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile,
+                                                                        projectsWithCommonScmRoot, projectScmRootUrl );
 
             buildResult.setState( result.getExitCode() == 0 ? ContinuumProjectState.OK : ContinuumProjectState.FAILED );
 
@@ -209,7 +208,7 @@ public class ExecuteBuilderContinuumAction
             AbstractContinuumAction.setProject( context, project );
 
             projectDao.updateProject( project );
-            
+
             projectScmRootUrl = getProjectScmRootUrl( context, project.getScmUrl() );
             projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
 

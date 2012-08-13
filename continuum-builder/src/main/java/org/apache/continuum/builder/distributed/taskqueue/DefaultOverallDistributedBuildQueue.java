@@ -1,8 +1,5 @@
 package org.apache.continuum.builder.distributed.taskqueue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
 import org.apache.continuum.builder.distributed.executor.ThreadedDistributedBuildTaskQueueExecutor;
@@ -11,6 +8,9 @@ import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultOverallDistributedBuildQueue
     implements OverallDistributedBuildQueue
@@ -55,8 +55,7 @@ public class DefaultOverallDistributedBuildQueue
         {
             if ( task != null )
             {
-                if ( task.getProjectGroupId() == projectGroupId && 
-                     task.getProjectScmRootId() == scmRootId )
+                if ( task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
                 {
                     return true;
                 }
@@ -75,8 +74,7 @@ public class DefaultOverallDistributedBuildQueue
         {
             if ( task != null )
             {
-                if ( task.getProjectGroupId() == projectGroupId && 
-                     task.getProjectScmRootId() == scmRootId )
+                if ( task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
                 {
                     getDistributedBuildQueue().remove( task );
                     return;
@@ -132,7 +130,8 @@ public class DefaultOverallDistributedBuildQueue
         this.buildAgentUrl = buildAgentUrl;
     }
 
-    public void setDistributedBuildTaskQueueExecutor( DistributedBuildTaskQueueExecutor distributedBuildTaskQueueExecutor )
+    public void setDistributedBuildTaskQueueExecutor(
+        DistributedBuildTaskQueueExecutor distributedBuildTaskQueueExecutor )
     {
         this.distributedBuildTaskQueueExecutor = distributedBuildTaskQueueExecutor;
     }

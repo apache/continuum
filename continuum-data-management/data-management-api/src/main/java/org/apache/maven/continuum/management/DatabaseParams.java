@@ -23,6 +23,7 @@ import java.util.Properties;
 
 /**
  * Bean for storing database parameters.
+ *
  * @version $Id$
  */
 public class DatabaseParams

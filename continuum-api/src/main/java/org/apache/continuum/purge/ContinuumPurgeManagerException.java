@@ -31,12 +31,12 @@ public class ContinuumPurgeManagerException
     {
         super( message );
     }
-    
+
     public ContinuumPurgeManagerException( Throwable cause )
     {
         super( cause );
     }
-    
+
     public ContinuumPurgeManagerException( String message, Throwable cause )
     {
         super( message, cause );

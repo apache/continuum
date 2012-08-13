@@ -15,13 +15,13 @@ package org.apache.maven.continuum.core.action;
  * the License.
  */
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * AddBuildDefinitionToProjectAction:

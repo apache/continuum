@@ -19,16 +19,6 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sf.ehcache.CacheManager;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.WebLink;
@@ -36,7 +26,15 @@ import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
+import net.sf.ehcache.CacheManager;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.Base64;
+
+import java.io.File;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 
 public class WorkingCopyServletTest
     extends PlexusInSpringTestCase
@@ -118,7 +116,7 @@ public class WorkingCopyServletTest
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
-        String expectedLinks[] = new String[] { "pom.xml", "src/", "target/" };
+        String expectedLinks[] = new String[]{"pom.xml", "src/", "target/"};
         assertLinks( expectedLinks, response.getLinks() );
     }
 
@@ -131,15 +129,14 @@ public class WorkingCopyServletTest
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
-        String expectedLinks[] = new String[] { "../", "main/", "test/" };
+        String expectedLinks[] = new String[]{"../", "main/", "test/"};
         assertLinks( expectedLinks, response.getLinks() );
     }
 
     public void testGetFile()
         throws Exception
     {
-        request = new GetMethodWebRequest( REQUEST_PATH + 
-                                           "src/main/java/org/apache/continuum" );
+        request = new GetMethodWebRequest( REQUEST_PATH + "src/main/java/org/apache/continuum" );
         request.setHeaderField( "Authorization", getAuthorizationHeader() );
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
@@ -193,10 +190,10 @@ public class WorkingCopyServletTest
     {
         try
         {
-            String encodedPassword = IOUtils.toString( Base64.encodeBase64( ":secret".getBytes() ) ) ;
+            String encodedPassword = IOUtils.toString( Base64.encodeBase64( ":secret".getBytes() ) );
             return "Basic " + encodedPassword;
         }
-        catch( IOException e )
+        catch ( IOException e )
         {
             return "";
         }

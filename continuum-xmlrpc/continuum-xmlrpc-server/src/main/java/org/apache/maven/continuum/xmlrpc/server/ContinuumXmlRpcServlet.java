@@ -39,15 +39,15 @@ import org.codehaus.plexus.redback.system.DefaultSecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.users.UserNotFoundException;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -112,10 +112,10 @@ public class ContinuumXmlRpcServlet
         {
             XmlRpcServerConfigImpl cfg = (XmlRpcServerConfigImpl) server.getConfig();
             cfg.setEnabledForExtensions( true );
-            PropertiesHandlerMapping mapping =
-                (PropertiesHandlerMapping) lookup( PropertyHandlerMapping.class.getName() );
-            mapping.setRequestProcessorFactoryFactory(
-                (RequestProcessorFactoryFactory) lookup( RequestProcessorFactoryFactory.class.getName() ) );
+            PropertiesHandlerMapping mapping = (PropertiesHandlerMapping) lookup(
+                PropertyHandlerMapping.class.getName() );
+            mapping.setRequestProcessorFactoryFactory( (RequestProcessorFactoryFactory) lookup(
+                RequestProcessorFactoryFactory.class.getName() ) );
             mapping.load();
             mapping.setAuthenticationHandler( getAuthenticationHandler() );
             server.setHandlerMapping( mapping );
@@ -213,8 +213,8 @@ public class ContinuumXmlRpcServlet
         PlexusContainer pc;
         try
         {
-            pc = new DefaultPlexusContainer( "default", keys, "META-INF/plexus/application.xml",
-                                             new ClassWorld( "plexus.core", getClass().getClassLoader() ) );
+            pc = new DefaultPlexusContainer( "default", keys, "META-INF/plexus/application.xml", new ClassWorld(
+                "plexus.core", getClass().getClassLoader() ) );
 
             context.setAttribute( PlexusConstants.PLEXUS_KEY, pc );
         }

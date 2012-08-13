@@ -19,11 +19,6 @@ package org.apache.continuum.taskqueue.manager;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
@@ -50,6 +45,11 @@ import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -131,8 +131,8 @@ public class DefaultTaskQueueManager
             {
                 if ( task != null )
                 {
-                    if ( task.getProjectGroupId() == projectGroupId &&
-                        task.getScmRootAddress().equals( scmRootAddress ) )
+                    if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals(
+                        scmRootAddress ) )
                     {
                         return true;
                     }

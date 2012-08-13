@@ -96,38 +96,38 @@ public abstract class AbstractScheduleTest
                                     String dayMonth, String month, String dayWeek, String year, String maxTime,
                                     String period, boolean buildQueue, boolean success )
     {
-	if ( buildQueue ) 
-	{
-	        setFieldValue( "name", name );
-		setFieldValue( "description", description );
-		setFieldValue( "second", second );
-		setFieldValue( "minute", minute );
-		setFieldValue( "hour", hour );
-		setFieldValue( "dayOfMonth", dayMonth );
-		setFieldValue( "month", month );
-		setFieldValue( "dayOfWeek", dayWeek );
-		setFieldValue( "year", year );
-		setFieldValue( "maxJobExecutionTime", maxTime );
-		setFieldValue( "delay", period );
-		getSelenium().addSelection("saveSchedule_availableBuildQueuesIds", "label=DEFAULT_BUILD_QUEUE");
-		getSelenium().click("//input[@value='->']");
-		submit();
-	}
-	else
-	{
-		setFieldValue( "name", name );
-		setFieldValue( "description", description );
-		setFieldValue( "second", second );
-		setFieldValue( "minute", minute );
-		setFieldValue( "hour", hour );
-		setFieldValue( "dayOfMonth", dayMonth );
-		setFieldValue( "month", month );
-		setFieldValue( "dayOfWeek", dayWeek );
-		setFieldValue( "year", year );
-		setFieldValue( "maxJobExecutionTime", maxTime );
-		setFieldValue( "delay", period );
-		submit();
-	}
+        if ( buildQueue )
+        {
+            setFieldValue( "name", name );
+            setFieldValue( "description", description );
+            setFieldValue( "second", second );
+            setFieldValue( "minute", minute );
+            setFieldValue( "hour", hour );
+            setFieldValue( "dayOfMonth", dayMonth );
+            setFieldValue( "month", month );
+            setFieldValue( "dayOfWeek", dayWeek );
+            setFieldValue( "year", year );
+            setFieldValue( "maxJobExecutionTime", maxTime );
+            setFieldValue( "delay", period );
+            getSelenium().addSelection( "saveSchedule_availableBuildQueuesIds", "label=DEFAULT_BUILD_QUEUE" );
+            getSelenium().click( "//input[@value='->']" );
+            submit();
+        }
+        else
+        {
+            setFieldValue( "name", name );
+            setFieldValue( "description", description );
+            setFieldValue( "second", second );
+            setFieldValue( "minute", minute );
+            setFieldValue( "hour", hour );
+            setFieldValue( "dayOfMonth", dayMonth );
+            setFieldValue( "month", month );
+            setFieldValue( "dayOfWeek", dayWeek );
+            setFieldValue( "year", year );
+            setFieldValue( "maxJobExecutionTime", maxTime );
+            setFieldValue( "delay", period );
+            submit();
+        }
 
         if ( success )
         {

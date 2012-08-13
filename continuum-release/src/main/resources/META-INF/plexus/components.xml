@@ -339,7 +339,7 @@
         </requirement>
       </requirements>
     </component>
-    
+
     <!-- This needs to be removed once we can upgrade maven-project to 2.1-SNAPSHOT or later. -->
     <component>
       <role>org.apache.maven.artifact.metadata.ArtifactMetadataSource</role>

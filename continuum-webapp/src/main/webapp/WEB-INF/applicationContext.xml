@@ -25,23 +25,23 @@
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
   <bean id="loggerManager" class="org.codehaus.plexus.logging.slf4j.Slf4jLoggerManager"
-    init-method="initialize"/>
+        init-method="initialize"/>
 
-  <bean id="propertyConfigurer" 
-         class="org.codehaus.plexus.spring.PlexusServletContextPropertyPlaceholderConfigurer">
+  <bean id="propertyConfigurer"
+        class="org.codehaus.plexus.spring.PlexusServletContextPropertyPlaceholderConfigurer">
     <property name="locations">
       <list>
         <value>classpath:plexus.properties</value>
       </list>
-    </property> 
+    </property>
     <!-- ignore if plexus.properties not found -->
     <property name="ignoreResourceNotFound">
       <value>true</value>
-    </property>  
+    </property>
     <!-- ignore if a interpolated key not exists -->
     <property name="ignoreUnresolvablePlaceholders">
       <value>true</value>
-    </property> 
+    </property>
   </bean>
 
   <!-- to run builds in a chroot jail environment
@@ -55,20 +55,21 @@
   <bean id="mailSession" class="org.springframework.jndi.JndiObjectFactoryBean">
     <property name="jndiName" value="java:comp/env/mail/Session">
     </property>
-  </bean>  
-  
+  </bean>
+
   <bean name="mailSender#continuum" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="session" ref="mailSession"/>
-  </bean>   
-	
+  </bean>
+
   <bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="session" ref="mailSession"/>
-  </bean>	
-  
-  <bean id="masterBuildAgentTransportServer" class="org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportServer">
+  </bean>
+
+  <bean id="masterBuildAgentTransportServer"
+        class="org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportServer">
     <constructor-arg ref="distributedBuildService"/>
   </bean>
-  
+
   <bean name="xmlrpcServicesList" class="java.util.ArrayList">
     <constructor-arg>
       <list>
@@ -98,7 +99,7 @@
         class="org.codehaus.redback.xmlrpc.service.ResourceServiceImpl">
     <constructor-arg ref="rBACManager#cached"/>
   </bean>
-      
+
   <bean name="redbackUserService" lazy-init="true" scope="singleton"
         class="org.codehaus.redback.xmlrpc.service.UserServiceImpl">
     <constructor-arg ref="userManager#cached"/>
@@ -119,22 +120,22 @@
   <bean name="redbackXmlRpcAuthenticator" class="org.codehaus.redback.xmlrpc.security.XmlRpcAuthenticator">
     <constructor-arg ref="securitySystem"/>
   </bean>
-  
+
   <!-- triggers -->
   <bean id="continuumBuildTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-    <property name="jobDetail" ref="continuumBuildJob" />
-    <property name="cronExpression" value="0 * * * * ?" />
+    <property name="jobDetail" ref="continuumBuildJob"/>
+    <property name="cronExpression" value="0 * * * * ?"/>
   </bean>
-  
-   <!-- scheduler -->
+
+  <!-- scheduler -->
   <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
       <list>
-        <ref bean="continuumBuildTrigger" />
+        <ref bean="continuumBuildTrigger"/>
       </list>
     </property>
-    <property name="schedulerName" value="Continuum Scheduler" />
-    <property name="waitForJobsToCompleteOnShutdown" value="true" />
+    <property name="schedulerName" value="Continuum Scheduler"/>
+    <property name="waitForJobsToCompleteOnShutdown" value="true"/>
     <property name="quartzProperties">
       <props>
         <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>

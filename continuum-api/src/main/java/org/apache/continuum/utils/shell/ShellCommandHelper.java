@@ -19,11 +19,10 @@ package org.apache.continuum.utils.shell;
  * under the License.
  */
 
+import org.apache.maven.shared.release.ReleaseResult;
+
 import java.io.File;
 import java.util.Map;
-
-import org.apache.continuum.utils.shell.ExecutionResult;
-import org.apache.maven.shared.release.ReleaseResult;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>

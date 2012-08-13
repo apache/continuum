@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * MasterBuildAgentTransportService
  */
-@ServiceObject("MasterBuildAgentTransportService")
+@ServiceObject( "MasterBuildAgentTransportService" )
 public interface MasterBuildAgentTransportService
 {
     public Boolean returnBuildResult( Map<String, Object> buildResult, String buildAgentUrl )

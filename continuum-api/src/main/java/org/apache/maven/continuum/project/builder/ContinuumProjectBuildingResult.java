@@ -19,14 +19,14 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
 
 /**
  * Holder for results of adding projects to Continuum. Contains added projects, project groups
@@ -66,8 +66,8 @@ public class ContinuumProjectBuildingResult
 
     public static final String ERROR_MISSING_NOTIFIER_TYPE = "add.project.missing.notifier.type.error";
 
-    public static final String ERROR_MISSING_NOTIFIER_CONFIGURATION = "add.project.missing.notifier.configuration.error"
-        ;
+    public static final String ERROR_MISSING_NOTIFIER_CONFIGURATION =
+        "add.project.missing.notifier.configuration.error";
 
     public static final String ERROR_METADATA_TRANSFER = "add.project.metadata.transfer.error";
 
@@ -92,7 +92,7 @@ public class ContinuumProjectBuildingResult
     private final Map<String, String> errors = new HashMap<String, String>();
 
     private static final String LS = System.getProperty( "line.separator" );
-    
+
     private Project rootProject;
 
     public void addProject( Project project )

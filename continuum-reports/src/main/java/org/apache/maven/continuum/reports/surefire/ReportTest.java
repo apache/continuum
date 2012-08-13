@@ -23,8 +23,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 12 nov. 07
  * @version $Id$
+ * @since 12 nov. 07
  */
 public class ReportTest
 {

@@ -19,10 +19,6 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
-import java.io.File;
-import java.net.URL;
-import java.util.List;
-
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
@@ -37,6 +33,10 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.net.URL;
+import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -67,17 +67,19 @@ public class MavenOneContinuumProjectBuilder
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password )
         throws ContinuumProjectBuilderException
     {
-    	return buildProjectsFromMetadata( url, username, password, true, false );
+        return buildProjectsFromMetadata( url, username, password, true, false );
     }
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-    						boolean recursiveProjects, boolean checkoutInSingleDirectory )
+                                                                     boolean recursiveProjects,
+                                                                     boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
     {
         try
         {
             return buildProjectsFromMetadata( url, username, password, recursiveProjects,
-            				buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate(), false );
+                                              buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate(),
+                                              false );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -87,7 +89,8 @@ public class MavenOneContinuumProjectBuilder
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                      boolean recursiveProjects,
-                                                                     BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
+                                                                     BuildDefinitionTemplate buildDefinitionTemplate,
+                                                                     boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
@@ -105,7 +108,7 @@ public class MavenOneContinuumProjectBuilder
 
         try
         {
-            metadataHelper.mapMetadata( result, pomFile, project, true);
+            metadataHelper.mapMetadata( result, pomFile, project, true );
 
             if ( result.hasErrors() )
             {

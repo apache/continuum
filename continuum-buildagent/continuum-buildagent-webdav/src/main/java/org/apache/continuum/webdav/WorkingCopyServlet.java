@@ -19,11 +19,6 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavLocatorFactory;
@@ -45,6 +40,10 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.io.IOException;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class WorkingCopyServlet
     extends AbstractWebdavServlet
@@ -82,9 +81,8 @@ public class WorkingCopyServlet
 
         // DeltaV requires 'Cache-Control' header for all methods except 'VERSION-CONTROL' and 'REPORT'.
         int methodCode = DavMethods.getMethodCode( request.getMethod() );
-        boolean noCache =
-            DavMethods.isDeltaVMethod( webdavRequest )
-                && !( DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode );
+        boolean noCache = DavMethods.isDeltaVMethod( webdavRequest ) &&
+            !( DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode );
         WebdavResponse webdavResponse = new WebdavResponseImpl( response, noCache );
         DavResource resource = null;
 
@@ -97,8 +95,8 @@ public class WorkingCopyServlet
             }
 
             // check matching if=header for lock-token relevant operations
-            resource =
-                getResourceFactory().createResource( webdavRequest.getRequestLocator(), webdavRequest, webdavResponse );
+            resource = getResourceFactory().createResource( webdavRequest.getRequestLocator(), webdavRequest,
+                                                            webdavResponse );
 
             if ( !isPreconditionValid( webdavRequest, resource ) )
             {
@@ -135,18 +133,17 @@ public class WorkingCopyServlet
 
     public synchronized void initServers( ServletConfig servletConfig )
     {
-        WebApplicationContext wac =
-            WebApplicationContextUtils.getRequiredWebApplicationContext( servletConfig.getServletContext() );
+        WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(
+            servletConfig.getServletContext() );
 
-        resourceFactory =
-            (DavResourceFactory) wac.getBean( PlexusToSpringUtils.
-                                              buildSpringId( ContinuumBuildAgentDavResourceFactory.class ) );
+        resourceFactory = (DavResourceFactory) wac.getBean( PlexusToSpringUtils.
+            buildSpringId( ContinuumBuildAgentDavResourceFactory.class ) );
 
-        BuildAgentConfigurationService buildAgentConfigurationService = (BuildAgentConfigurationService)
-            wac.getBean( PlexusToSpringUtils.buildSpringId( BuildAgentConfigurationService.class ) );
+        BuildAgentConfigurationService buildAgentConfigurationService = (BuildAgentConfigurationService) wac.getBean(
+            PlexusToSpringUtils.buildSpringId( BuildAgentConfigurationService.class ) );
 
         locatorFactory = new ContinuumBuildAgentDavLocatorFactory();
-        sessionProvider = new ContinuumBuildAgentDavSessionProvider( buildAgentConfigurationService);
+        sessionProvider = new ContinuumBuildAgentDavSessionProvider( buildAgentConfigurationService );
     }
 
     @Override

@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "mavenTwoProject" } )
+@Test( groups = {"mavenTwoProject"} )
 public class MavenTwoProjectTest
     extends AbstractAdminTest
 {
@@ -59,7 +59,7 @@ public class MavenTwoProjectTest
         addDefaultBuildDefinitionFromTemplate( "maven2" );
     }
 
-    @Test( dependsOnMethods = { "testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate" } )
+    @Test( dependsOnMethods = {"testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate"} )
     public void testAddMavenTwoProject()
         throws Exception
     {
@@ -71,7 +71,7 @@ public class MavenTwoProjectTest
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
         String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_PROJ_GRP_SCM_ROOT_URL" );
-        
+
         // Enter values into Add Maven Two Project fields, and submit
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
         // Wait Struct Listener
@@ -118,7 +118,7 @@ public class MavenTwoProjectTest
         String M2_POM_URL = getProperty( "M2_POM_URL" );
         String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
         String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
-        
+
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, TEST_PROJ_GRP_NAME, true );
 
         assertProjectGroupSummaryPage( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
@@ -128,7 +128,7 @@ public class MavenTwoProjectTest
         removeProjectGroup( TEST_PROJ_GRP_NAME );
     }
 
-    @Test( dependsOnMethods = { "testProjectGroupAllBuildSuccess" } )
+    @Test( dependsOnMethods = {"testProjectGroupAllBuildSuccess"} )
     public void testMoveProject()
         throws Exception
     {
@@ -180,7 +180,8 @@ public class MavenTwoProjectTest
     {
         String pomUrl = "aaa";
         submitAddMavenTwoProjectPage( pomUrl );
-        assertTextPresent( "The specified resource cannot be accessed. Please try again later or contact your administrator." );
+        assertTextPresent(
+            "The specified resource cannot be accessed. Please try again later or contact your administrator." );
     }
 
     /**
@@ -213,7 +214,8 @@ public class MavenTwoProjectTest
     {
         String pomUrl = getProperty( "MISS_PARENT_POM_URL" );
         submitAddMavenTwoProjectPage( pomUrl );
-        assertTextPresent( "Missing artifact trying to build the POM. Check that its parent POM is available or add it first in Continuum." );
+        assertTextPresent(
+            "Missing artifact trying to build the POM. Check that its parent POM is available or add it first in Continuum." );
     }
 
     /**
@@ -235,7 +237,8 @@ public class MavenTwoProjectTest
     {
         String pomUrl = "http://localhost:9595/";
         submitAddMavenTwoProjectPage( pomUrl );
-        assertTextPresent( "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
+        assertTextPresent(
+            "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
     }
 
     /**
@@ -249,17 +252,17 @@ public class MavenTwoProjectTest
         assertAboutPage();
     }
 
-    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
+    @Test( dependsOnMethods = {"testAddMavenTwoProject"} )
     public void testDeleteMavenTwoProject()
         throws Exception
     {
         String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_SCM_ROOT_URL = getProperty( "M2_DELETE_PROJ_GRP_SCM_ROOT_URL" );
         goToProjectGroupsSummaryPage();
-        
+
         // delete project - delete icon
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ), getProperty(
+            "M2_POM_PASSWORD" ), null, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
@@ -284,8 +287,8 @@ public class MavenTwoProjectTest
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
 
         // delete project - "Delete Project(s)" button
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ), getProperty(
+            "M2_POM_PASSWORD" ), null, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );
@@ -314,21 +317,21 @@ public class MavenTwoProjectTest
         String M2_POM_URL = getProperty( "M2_PROJ_WITH_TAG_POM_URL" );
         String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
         String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
-    
+
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = "";
-    
+
         addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
         assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
-    
+
         buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
-    
+
         removeProjectGroup( M2_PROJ_GRP_NAME );
         assertLinkNotPresent( M2_PROJ_GRP_NAME );
     }
 
-    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
+    @Test( dependsOnMethods = {"testAddMavenTwoProject"} )
     public void testProjectGroupAllBuildSuccess()
         throws Exception
     {

@@ -19,13 +19,6 @@ package org.apache.maven.continuum.scm.queue;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.io.File;
-
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -58,6 +51,13 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -125,9 +125,9 @@ public class PrepareBuildProjectsTaskExecutor
 
         try
         {
-        	if ( !projectsId.isEmpty() )
+            if ( !projectsId.isEmpty() )
             {
-        	    int projectId = projectsId.iterator().next();
+                int projectId = projectsId.iterator().next();
                 Project project = projectDao.getProject( projectId );
                 ProjectGroup projectGroup = project.getProjectGroup();
                 projectGroupId = projectGroup.getId();
@@ -140,7 +140,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             for ( Project project : projectList )
             {
-	            if ( rootProject == null )
+                if ( rootProject == null )
                 {
                     // first project is the root project.
                     rootProject = project;
@@ -155,14 +155,14 @@ public class PrepareBuildProjectsTaskExecutor
 
                     log.info( "Initializing prepare build" );
                     context = initializeContext( project, buildDefinitionId, prepareTask.getBuildTrigger() );
-    
-                    log.info(
-                        "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+
+                    log.info( "Starting prepare build of project: " + AbstractContinuumAction.getProject(
+                        context ).getName() );
                     startPrepareBuild( context );
-    
+
                     if ( !checkProjectScmRoot( context ) )
                     {
-                    	break;
+                        break;
                     }
 
                     try
@@ -172,7 +172,7 @@ public class PrepareBuildProjectsTaskExecutor
                             log.info( "Purging existing working copy" );
                             cleanWorkingDirectory( context );
                         }
-    
+
                         // ----------------------------------------------------------------------
                         // TODO: Centralize the error handling from the SCM related actions.
                         // ContinuumScmResult should return a ContinuumScmResult from all
@@ -180,7 +180,7 @@ public class PrepareBuildProjectsTaskExecutor
                         // ----------------------------------------------------------------------
                         log.info( "Updating working dir" );
                         updateWorkingDirectory( context, rootProject );
-    
+
                         log.info( "Merging SCM results" );
                         //CONTINUUM-1393
                         if ( !AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
@@ -190,8 +190,8 @@ public class PrepareBuildProjectsTaskExecutor
                     }
                     finally
                     {
-                        log.info(
-                            "Ending prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+                        log.info( "Ending prepare build of project: " + AbstractContinuumAction.getProject(
+                            context ).getName() );
                         scmResultMap.put( AbstractContinuumAction.getProjectId( context ),
                                           AbstractContinuumAction.getScmResult( context, null ) );
                         endProjectPrepareBuild( context );
@@ -231,8 +231,8 @@ public class PrepareBuildProjectsTaskExecutor
 
             for ( ProjectScmRoot projectScmRoot : scmRoots )
             {
-            	projectScmRootAddress = projectScmRoot.getScmRootAddress();
-            	
+                projectScmRootAddress = projectScmRoot.getScmRootAddress();
+
                 if ( projectScmUrl.startsWith( projectScmRoot.getScmRootAddress() ) )
                 {
                     AbstractContinuumAction.setProjectScmRoot( context, projectScmRoot );
@@ -247,32 +247,32 @@ public class PrepareBuildProjectsTaskExecutor
             AbstractContinuumAction.setBuildTrigger( context, buildTrigger );
 
             AbstractContinuumAction.setBuildDefinitionId( context, buildDefinitionId );
-            AbstractContinuumAction.setBuildDefinition( context,
-                                                        buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
+            AbstractContinuumAction.setBuildDefinition( context, buildDefinitionDao.getBuildDefinition(
+                buildDefinitionId ) );
 
-             if( project.isCheckedOutInSingleDirectory() )
-             {
-                 List<Project> projectsInGroup =
-                     projectGroupDao.getProjectGroupWithProjects( projectGroup.getId() ).getProjects(); 
-                 List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
-                 for( Project projectInGroup : projectsInGroup )
-                 {
-                     if( projectInGroup.getScmUrl().startsWith( projectScmRootAddress ) )
-                     {
-                         projectsWithCommonScmRoot.add( projectInGroup );
-                     }
-                 }            
-                 AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context, projectsWithCommonScmRoot );
-             }
-            
-            BuildResult oldBuildResult =
-            	buildResultDao.getLatestBuildResultForBuildDefinition( project.getId(), buildDefinitionId );
+            if ( project.isCheckedOutInSingleDirectory() )
+            {
+                List<Project> projectsInGroup = projectGroupDao.getProjectGroupWithProjects(
+                    projectGroup.getId() ).getProjects();
+                List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();
+                for ( Project projectInGroup : projectsInGroup )
+                {
+                    if ( projectInGroup.getScmUrl().startsWith( projectScmRootAddress ) )
+                    {
+                        projectsWithCommonScmRoot.add( projectInGroup );
+                    }
+                }
+                AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context, projectsWithCommonScmRoot );
+            }
+
+            BuildResult oldBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( project.getId(),
+                                                                                                buildDefinitionId );
 
             if ( oldBuildResult != null )
             {
-                AbstractContinuumAction.setOldScmResult( context,
-                										getOldScmResults( project.getId(), oldBuildResult.getBuildNumber(),
-                                                                           oldBuildResult.getEndTime() ) );
+                AbstractContinuumAction.setOldScmResult( context, getOldScmResults( project.getId(),
+                                                                                    oldBuildResult.getBuildNumber(),
+                                                                                    oldBuildResult.getEndTime() ) );
             }
             else
             {
@@ -295,7 +295,7 @@ public class PrepareBuildProjectsTaskExecutor
 
     private void updateWorkingDirectory( Map<String, Object> context, Project rootProject )
         throws TaskExecutionException
-    {   
+    {
         performAction( "check-working-directory", context );
 
         boolean workingDirectoryExists = CheckWorkingDirectoryAction.isWorkingDirectoryExists( context );
@@ -314,8 +314,9 @@ public class PrepareBuildProjectsTaskExecutor
 
             AbstractContinuumAction.setWorkingDirectory( context, workingDirectoryService.getWorkingDirectory(
                 project ).getAbsolutePath() );
-            
-            List<Project> projectsWithCommonScmRoot = AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot( context );           
+
+            List<Project> projectsWithCommonScmRoot = AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot(
+                context );
             String projectScmRootUrl = AbstractContinuumAction.getProjectScmRootUrl( context, project.getScmUrl() );
             String workingDir = null;
 
@@ -341,13 +342,14 @@ public class PrepareBuildProjectsTaskExecutor
 
             if ( workingDir == null || new File( workingDir ).exists() )
             {
-                workingDir = workingDirectoryService.getWorkingDirectory( 
-                    project, projectScmRootUrl, projectsWithCommonScmRoot ).getAbsolutePath();
+                workingDir = workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+                                                                          projectsWithCommonScmRoot ).getAbsolutePath();
             }
 
             AbstractContinuumAction.setWorkingDirectory( context, workingDir );
 
-            if ( rootProject.getId() != project.getId() || ( rootProject.getId() == project.getId() && !isRootDirectory( workingDir, rootProject ) ) )
+            if ( rootProject.getId() != project.getId() || ( rootProject.getId() == project.getId() && !isRootDirectory(
+                workingDir, rootProject ) ) )
             {
                 AbstractContinuumAction.setRootDirectory( context, false );
             }
@@ -602,10 +604,11 @@ public class PrepareBuildProjectsTaskExecutor
         }
     }
 
-    private void buildProjects( int projectGroupId, List<Project> projectList, Map<Integer, Integer> projectsAndBuildDefinitionsMap, BuildTrigger buildTrigger,
-    		Map<Integer, ScmResult> scmResultMap )
+    private void buildProjects( int projectGroupId, List<Project> projectList,
+                                Map<Integer, Integer> projectsAndBuildDefinitionsMap, BuildTrigger buildTrigger,
+                                Map<Integer, ScmResult> scmResultMap )
         throws TaskExecutionException
-    {   
+    {
         List<Project> projectsToBeBuilt = new ArrayList<Project>();
         Map<Integer, BuildDefinition> projectsBuildDefinitionsMap = new HashMap<Integer, BuildDefinition>();
 
@@ -654,10 +657,10 @@ public class PrepareBuildProjectsTaskExecutor
             throw new TaskExecutionException( "Error executing action 'build-project'", e );
         }
     }
-    
+
     private boolean isRootDirectory( String workingDir, Project rootProject )
     {
-        return workingDir.endsWith( Integer.toString( rootProject.getId() ) + System.getProperty( "line.separator" ) )
-            || workingDir.endsWith( Integer.toString( rootProject.getId() ) );
+        return workingDir.endsWith( Integer.toString( rootProject.getId() ) + System.getProperty(
+            "line.separator" ) ) || workingDir.endsWith( Integer.toString( rootProject.getId() ) );
     }
 }

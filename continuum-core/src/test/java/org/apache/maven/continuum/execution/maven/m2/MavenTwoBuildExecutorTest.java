@@ -19,10 +19,6 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -30,16 +26,20 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author olamy
- * @since 1.2.3
  * @version $Id$
+ * @since 1.2.3
  */
 public class MavenTwoBuildExecutorTest
     extends AbstractContinuumTest
 {
-       
-    
+
+
     @Override
     protected String getSpringConfigLocation()
     {
@@ -52,15 +52,16 @@ public class MavenTwoBuildExecutorTest
         MavenTwoBuildExecutor executor = (MavenTwoBuildExecutor) lookup( ContinuumBuildExecutor.class, "maven2" );
         BuildDefinition buildDefinition = new BuildDefinition();
         buildDefinition.setArguments( "-N" );
-        Project continuumProject = new Project(){
+        Project continuumProject = new Project()
+        {
             {
                 setVersion( "1.0.3" );
             }
         };
-        assertFalse( executor.shouldBuild( new ArrayList<ChangeSet>(), continuumProject, new File( "target/test-classes/projects/continuum" ),
-                                           buildDefinition ) );
+        assertFalse( executor.shouldBuild( new ArrayList<ChangeSet>(), continuumProject, new File(
+            "target/test-classes/projects/continuum" ), buildDefinition ) );
     }
-    
+
     public void testShouldNotBuildNonRecursiveChangeInAModule()
         throws Exception
     {
@@ -74,7 +75,7 @@ public class MavenTwoBuildExecutorTest
             }
         };
         final ChangeFile changeFile = new ChangeFile();
-        changeFile.setName( "continuum-notifiers/pom.xml");
+        changeFile.setName( "continuum-notifiers/pom.xml" );
         ChangeSet changeSet = new ChangeSet()
         {
             {
@@ -83,10 +84,10 @@ public class MavenTwoBuildExecutorTest
         };
         List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         changeSets.add( changeSet );
-        assertFalse( executor.shouldBuild(changeSets , continuumProject,
-                                           new File( "target/test-classes/projects/continuum" ), buildDefinition ) );
-    }    
-    
+        assertFalse( executor.shouldBuild( changeSets, continuumProject, new File(
+            "target/test-classes/projects/continuum" ), buildDefinition ) );
+    }
+
     public void testShouldBuildRecursiveChangeInAModule()
         throws Exception
     {
@@ -109,7 +110,7 @@ public class MavenTwoBuildExecutorTest
         };
         List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         changeSets.add( changeSet );
-        assertTrue( executor.shouldBuild( changeSets, continuumProject,
-                                          new File( "target/test-classes/projects/continuum" ), buildDefinition ) );
-    }       
+        assertTrue( executor.shouldBuild( changeSets, continuumProject, new File(
+            "target/test-classes/projects/continuum" ), buildDefinition ) );
+    }
 }

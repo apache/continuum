@@ -19,18 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -41,12 +35,16 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Action to add a Maven project to Continuum, either Maven 1 or Maven 2.
@@ -123,7 +121,7 @@ public abstract class AddMavenProjectAction
             configurationManager.addContainerProvider( new XWorkConfigurationProvider() );
             com.opensymphony.xwork2.config.Configuration config = configurationManager.getConfiguration();
             Container container = config.getContainer();
-    
+
             ValueStack stack = container.getInstance( ValueStackFactory.class ).createValueStack();
             stack.getContext().put( ActionContext.CONTAINER, container );
             ActionContext.setContext( new ActionContext( stack.getContext() ) );

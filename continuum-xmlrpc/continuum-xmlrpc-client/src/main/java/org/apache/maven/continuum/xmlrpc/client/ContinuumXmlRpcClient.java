@@ -19,12 +19,6 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
-import java.net.URL;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -55,6 +49,12 @@ import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
 import org.apache.xmlrpc.client.util.ClientFactory;
+
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -336,7 +336,7 @@ public class ContinuumXmlRpcClient
     {
         return continuum.buildProject( projectId, buildTrigger );
     }
-    
+
     public int buildProject( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
         throws Exception
     {
@@ -432,16 +432,15 @@ public class ContinuumXmlRpcClient
     {
         return continuum.addMavenTwoProjectAsSingleProject( url, projectGroupId );
     }
-    
+
     public AddingResult addMavenTwoProject( String url, int projectGroupId, boolean checkProtocol,
                                             boolean useCredentialsCache, boolean recursiveProjects,
                                             boolean checkoutInSingleDirectory )
         throws Exception
     {
-        return continuum.addMavenTwoProject( url, projectGroupId, checkProtocol, useCredentialsCache,
-                                             recursiveProjects, checkoutInSingleDirectory );
+        return continuum.addMavenTwoProject( url, projectGroupId, checkProtocol, useCredentialsCache, recursiveProjects,
+                                             checkoutInSingleDirectory );
     }
-
 
     // ----------------------------------------------------------------------
     // Maven 1.x projects
@@ -854,7 +853,8 @@ public class ContinuumXmlRpcClient
         return continuum.addMavenTwoProjectRPC( url, projectGroupId );
     }
 
-    public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkoutInSingleDirectory )
+    public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId,
+                                                      boolean checkoutInSingleDirectory )
         throws Exception
     {
         return continuum.addMavenTwoProjectRPC( url, projectGroupId, checkoutInSingleDirectory );
@@ -865,7 +865,7 @@ public class ContinuumXmlRpcClient
     {
         return continuum.addMavenTwoProjectAsSingleProjectRPC( url, projectGroupId );
     }
-    
+
     public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId, boolean checkProtocol,
                                                       boolean useCredentialsCache, boolean recursiveProjects,
                                                       boolean checkoutInSingleDirectory )
@@ -1043,7 +1043,8 @@ public class ContinuumXmlRpcClient
         return continuum.removeBuildResultRPC( br );
     }
 
-    public Map<String, Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId, Map<String, Object> buildDef )
+    public Map<String, Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId,
+                                                                        Map<String, Object> buildDef )
         throws Exception
     {
         return continuum.updateBuildDefinitionForProjectGroupRPC( projectGroupId, buildDef );
@@ -1396,7 +1397,7 @@ public class ContinuumXmlRpcClient
     {
         return continuum.pingBuildAgent( buildAgentUrl );
     }
-    
+
     public String getBuildAgentUrl( int projectId, int buildDefinitionId )
         throws Exception
     {

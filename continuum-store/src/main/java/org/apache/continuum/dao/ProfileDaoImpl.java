@@ -23,19 +23,19 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.ProfileDao"
  */
-@Repository("profileDao")
+@Repository( "profileDao" )
 public class ProfileDaoImpl
     extends AbstractDao
     implements ProfileDao

@@ -42,11 +42,6 @@ import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.util.IOUtil;
 
-import javax.jdo.FetchPlan;
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -63,9 +58,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.jdo.FetchPlan;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * JDO implementation the database management tool API.
+ *
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-continuum-jdo"
  */
@@ -157,7 +158,7 @@ public class LegacyJdoDataManagementTool
         return result;
     }
 
-    @SuppressWarnings({"OverlyCoupledMethod"})
+    @SuppressWarnings( {"OverlyCoupledMethod"} )
     public void eraseDatabase()
     {
         PersistenceManagerFactory pmf = getPersistenceManagerFactory( "jdo109" );

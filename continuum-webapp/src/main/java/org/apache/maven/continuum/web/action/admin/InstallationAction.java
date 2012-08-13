@@ -1,11 +1,6 @@
 package org.apache.maven.continuum.web.action.admin;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
+import com.opensymphony.xwork2.Preparable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -18,7 +13,11 @@ import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 
-import com.opensymphony.xwork2.Preparable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -38,6 +37,7 @@ import com.opensymphony.xwork2.Preparable;
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
@@ -131,7 +131,8 @@ public class InstallationAction
             this.installation.setType( InstallationService.ENVVAR_TYPE );
             if ( StringUtils.isEmpty( installation.getVarName() ) )
             {
-                addFieldError( "installation.varName", getResourceBundle().getString( "installation.varName.required" ) );
+                addFieldError( "installation.varName", getResourceBundle().getString(
+                    "installation.varName.required" ) );
                 return INPUT;
             }
 
@@ -156,7 +157,8 @@ public class InstallationAction
         else
         {
             this.configureUiFlags();
-            try{
+            try
+            {
                 installationService.update( installation );
             }
             catch ( AlreadyExistsInstallationException e )
@@ -189,7 +191,8 @@ public class InstallationAction
         this.installationTypes = new LinkedHashMap<String, String>();
         ResourceBundle resourceBundle = getResourceBundle();
         this.installationTypes.put( TOOL_TYPE_KEY, resourceBundle.getString( "installationTypeChoice.tool.label" ) );
-        this.installationTypes.put( InstallationService.ENVVAR_TYPE, resourceBundle.getString( "installationTypeChoice.envar.label" ) );
+        this.installationTypes.put( InstallationService.ENVVAR_TYPE, resourceBundle.getString(
+            "installationTypeChoice.envar.label" ) );
 
         return SUCCESS;
     }
@@ -228,7 +231,6 @@ public class InstallationAction
         this.setInstallationType( this.getInstallation().getType() );
     }
 
-
     // -----------------------------------------------------
     // getter/setters
     // -----------------------------------------------------
@@ -259,14 +261,14 @@ public class InstallationAction
         {
             this.typesLabels = new LinkedHashMap<String, String>();
             ResourceBundle resourceBundle = getResourceBundle();
-            this.typesLabels.put( InstallationService.JDK_TYPE, resourceBundle
-                .getString( "installation.jdk.type.label" ) );
-            this.typesLabels.put( InstallationService.MAVEN2_TYPE, resourceBundle
-                .getString( "installation.maven2.type.label" ) );
-            this.typesLabels.put( InstallationService.MAVEN1_TYPE, resourceBundle
-                .getString( "installation.maven1.type.label" ) );
-            this.typesLabels.put( InstallationService.ANT_TYPE, resourceBundle
-                .getString( "installation.ant.type.label" ) );
+            this.typesLabels.put( InstallationService.JDK_TYPE, resourceBundle.getString(
+                "installation.jdk.type.label" ) );
+            this.typesLabels.put( InstallationService.MAVEN2_TYPE, resourceBundle.getString(
+                "installation.maven2.type.label" ) );
+            this.typesLabels.put( InstallationService.MAVEN1_TYPE, resourceBundle.getString(
+                "installation.maven1.type.label" ) );
+            this.typesLabels.put( InstallationService.ANT_TYPE, resourceBundle.getString(
+                "installation.ant.type.label" ) );
             // CONTINUUM-1430
             //this.typesLabels.put( InstallationService.ENVVAR_TYPE, resourceBundle
             //    .getString( "installation.envvar.type.label" ) );
@@ -293,7 +295,7 @@ public class InstallationAction
     {
         if ( this.types == null )
         {
-            this.types = new ArrayList<String>(5);
+            this.types = new ArrayList<String>( 5 );
             this.types.add( InstallationService.JDK_TYPE );
             this.types.add( InstallationService.MAVEN2_TYPE );
             this.types.add( InstallationService.MAVEN1_TYPE );

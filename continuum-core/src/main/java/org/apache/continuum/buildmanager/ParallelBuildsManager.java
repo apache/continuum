@@ -19,16 +19,6 @@ package org.apache.continuum.buildmanager;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -60,6 +50,15 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Resource;
+
 /**
  * Parallel builds manager.
  *
@@ -72,8 +71,8 @@ public class ParallelBuildsManager
     private static final Logger log = LoggerFactory.getLogger( ParallelBuildsManager.class );
 
     // map must be synchronized!
-    private Map<Integer, OverallBuildQueue> overallBuildQueues =
-        Collections.synchronizedMap( new HashMap<Integer, OverallBuildQueue>() );
+    private Map<Integer, OverallBuildQueue> overallBuildQueues = Collections.synchronizedMap(
+        new HashMap<Integer, OverallBuildQueue>() );
 
     private static final int BUILD_QUEUE = 1;
 
@@ -98,8 +97,8 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#buildProject(int, BuildDefinition, String, BuildTrigger, ScmResult, int)
      */
-    public void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, BuildTrigger buildTrigger,
-                              ScmResult scmResult, int projectGroupId )
+    public void buildProject( int projectId, BuildDefinition buildDefinition, String projectName,
+                              BuildTrigger buildTrigger, ScmResult scmResult, int projectGroupId )
         throws BuildManagerException
     {
         try
@@ -136,19 +135,20 @@ public class ParallelBuildsManager
             {
                 buildDefinitionLabel = buildDefinition.getGoals();
             }
-    
-            BuildProjectTask buildTask =
-            	new BuildProjectTask( projectId, buildDefinition.getId(), buildTrigger, projectName, buildDefinitionLabel,
-                                      scmResult, projectGroupId );
+
+            BuildProjectTask buildTask = new BuildProjectTask( projectId, buildDefinition.getId(), buildTrigger,
+                                                               projectName, buildDefinitionLabel, scmResult,
+                                                               projectGroupId );
             try
             {
-                log.info(
-                    "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
+                log.info( "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() +
+                              "'." );
                 overallBuildQueue.addToBuildQueue( buildTask );
             }
             catch ( TaskQueueException e )
             {
-                throw new BuildManagerException( "Error occurred while adding project to build queue: " + e.getMessage() );
+                throw new BuildManagerException(
+                    "Error occurred while adding project to build queue: " + e.getMessage() );
             }
         }
         else
@@ -161,7 +161,7 @@ public class ParallelBuildsManager
      * @see BuildsManager#buildProjects(List, Map, BuildTrigger, Map, int)
      */
     public void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap,
-    		                   BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
+                               BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
         throws BuildManagerException
     {
         int firstProjectId = 0;
@@ -185,13 +185,14 @@ public class ParallelBuildsManager
         if ( firstProjectId != 0 )
         {
             BuildDefinition buildDef = projectsBuildDefinitionsMap.get( firstProjectId );
-            
-            if ( buildDef.getArguments() == null || buildDef.getBuildFile() == null || buildDef.getGoals() == null || buildDef.getSchedule() == null )
+
+            if ( buildDef.getArguments() == null || buildDef.getBuildFile() == null || buildDef.getGoals() == null ||
+                buildDef.getSchedule() == null )
             {
                 log.error( "Null values set on build definition (id=" + buildDef.getId() + ")" );
                 throw new BuildManagerException( "Unable to build project due to null values set on " +
-                                                 "( GOALS , ARGUMENTS , BUILD_FILE, SCHEDULE_ID_OID ) of BUILDDEFINITION ID : " 
-                                                 + buildDef.getId() + " Please notify your system adminitrator");
+                                                     "( GOALS , ARGUMENTS , BUILD_FILE, SCHEDULE_ID_OID ) of BUILDDEFINITION ID : " +
+                                                     buildDef.getId() + " Please notify your system adminitrator" );
             }
             OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectsInGroupAreQueued( projectGroupId );
 
@@ -206,17 +207,17 @@ public class ParallelBuildsManager
                 {
                     try
                     {
-                        if ( isInQueue( project.getId(), BUILD_QUEUE,
-                                        projectsBuildDefinitionsMap.get( project.getId() ).getId() ) )
+                        if ( isInQueue( project.getId(), BUILD_QUEUE, projectsBuildDefinitionsMap.get(
+                            project.getId() ).getId() ) )
                         {
                             log.warn( "Project '" + project.getId() + "' - '" + project.getName() +
-                                "' is already in build queue." );
+                                          "' is already in build queue." );
                             continue;
                         }
                         else if ( isProjectInAnyCurrentBuild( project.getId() ) )
                         {
                             log.warn( "Project '" + project.getId() + "' - '" + project.getName() +
-                                      "' is already building." );
+                                          "' is already building." );
                             continue;
                         }
                     }
@@ -234,15 +235,16 @@ public class ParallelBuildsManager
                     }
 
                     ScmResult scmResult = scmResultMap.get( project.getId() );
-                    BuildProjectTask buildTask =
-                    	new BuildProjectTask( project.getId(), buildDefinition.getId(), buildTrigger, project.getName(),
-                                              buildDefinitionLabel, scmResult, projectGroupId );
+                    BuildProjectTask buildTask = new BuildProjectTask( project.getId(), buildDefinition.getId(),
+                                                                       buildTrigger, project.getName(),
+                                                                       buildDefinitionLabel, scmResult,
+                                                                       projectGroupId );
                     buildTask.setMaxExecutionTime( buildDefinition.getSchedule().getMaxJobExecutionTime() * 1000 );
 
                     try
                     {
                         log.info( "Project '" + project.getId() + "' - '" + project.getName() +
-                            "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
+                                      "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
 
                         overallBuildQueue.addToBuildQueue( buildTask );
                     }
@@ -414,7 +416,8 @@ public class ParallelBuildsManager
     {
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectGroupIsQueued( projectGroupId, scmRootId );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectGroupIsQueued( projectGroupId,
+                                                                                                 scmRootId );
 
             if ( overallBuildQueue != null )
             {
@@ -430,13 +433,15 @@ public class ParallelBuildsManager
                         overallBuildQueue = overallBuildQueues.get( key );
                         PrepareBuildProjectsTask task =
                             (PrepareBuildProjectsTask) overallBuildQueue.getPrepareBuildTaskQueueExecutor().getCurrentTask();
-                        if ( task != null && task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
+                        if ( task != null && task.getProjectGroupId() == projectGroupId &&
+                            task.getProjectScmRootId() == scmRootId )
                         {
                             overallBuildQueue.cancelPrepareBuildTask( projectGroupId, scmRootId );
                             return true;
                         }
                     }
-                    log.error( "Project group '{}' with scm root '{}' not found in any of the builds queues.", projectGroupId, scmRootId );
+                    log.error( "Project group '{}' with scm root '{}' not found in any of the builds queues.",
+                               projectGroupId, scmRootId );
                 }
             }
         }
@@ -453,7 +458,8 @@ public class ParallelBuildsManager
     {
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, PREPARE_BUILD_QUEUE );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId,
+                                                                                            PREPARE_BUILD_QUEUE );
 
             if ( overallBuildQueue != null )
             {
@@ -501,8 +507,8 @@ public class ParallelBuildsManager
      * @see BuildsManager#checkoutProject(int, String, File, String, String, String, BuildDefinition, List)
      */
     public void checkoutProject( int projectId, String projectName, File workingDirectory, String scmRootUrl,
-    		                                 String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition,
-    		                                 List<Project> subProjects )
+                                 String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition,
+                                 List<Project> subProjects )
         throws BuildManagerException
     {
         try
@@ -519,16 +525,16 @@ public class ParallelBuildsManager
                 "Error occurred while checking if the project is already in queue: " + e.getMessage() );
         }
 
-        OverallBuildQueue overallBuildQueue =
-            getOverallBuildQueue( CHECKOUT_QUEUE, defaultBuildDefinition.getSchedule().getBuildQueues() );
-        CheckOutTask checkoutTask =
-        	new CheckOutTask( projectId, workingDirectory, projectName, scmUsername, scmPassword, scmRootUrl, subProjects );
+        OverallBuildQueue overallBuildQueue = getOverallBuildQueue( CHECKOUT_QUEUE,
+                                                                    defaultBuildDefinition.getSchedule().getBuildQueues() );
+        CheckOutTask checkoutTask = new CheckOutTask( projectId, workingDirectory, projectName, scmUsername,
+                                                      scmPassword, scmRootUrl, subProjects );
         try
         {
             if ( overallBuildQueue != null )
             {
                 log.info( "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() +
-                    "'." );
+                              "'." );
                 overallBuildQueue.addToCheckoutQueue( checkoutTask );
             }
             else
@@ -629,27 +635,28 @@ public class ParallelBuildsManager
                 for ( Integer key : keySet )
                 {
                     OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
-    
+
                     if ( overallBuildQueue.isInPrepareBuildQueue( projectId ) )
                     {
                         return true;
                     }
                 }
-    
+
                 return false;
             }
         }
         catch ( TaskQueueException e )
         {
-            throw new BuildManagerException( "Unable to check if projectId " + projectId + " is in prepare build queue", e );
+            throw new BuildManagerException( "Unable to check if projectId " + projectId + " is in prepare build queue",
+                                             e );
         }
     }
 
     /**
-     * @see BuildsManager#isInPrepareBuildQueue(int, int)
      * @param projectGroupId
      * @param scmRootId
      * @return
+     * @see BuildsManager#isInPrepareBuildQueue(int, int)
      */
     public boolean isInPrepareBuildQueue( int projectGroupId, int scmRootId )
         throws BuildManagerException
@@ -662,20 +669,21 @@ public class ParallelBuildsManager
                 for ( Integer key : keySet )
                 {
                     OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
-    
+
                     if ( overallBuildQueue.isInPrepareBuildQueue( projectGroupId, scmRootId ) )
                     {
                         return true;
                     }
                 }
-    
+
                 return false;
             }
         }
         catch ( TaskQueueException e )
         {
-            throw new BuildManagerException( "Unable to check if projectGroupId " + projectGroupId + " with scmRootId " + scmRootId 
-                                             + " is in prepare build queue", e );
+            throw new BuildManagerException(
+                "Unable to check if projectGroupId " + projectGroupId + " with scmRootId " + scmRootId +
+                    " is in prepare build queue", e );
         }
     }
 
@@ -713,7 +721,8 @@ public class ParallelBuildsManager
     {
         if ( isInPrepareBuildQueue( projectGroupId, scmRootId ) )
         {
-            log.warn( "Project group {} with scm root id {} is already in prepare build queue. Will not queue anymore." );
+            log.warn(
+                "Project group {} with scm root id {} is already in prepare build queue. Will not queue anymore." );
             return;
         }
 
@@ -730,31 +739,35 @@ public class ParallelBuildsManager
         }
         catch ( ContinuumStoreException e )
         {
-            throw new BuildManagerException( "Error occurred while retrieving build definition of project group " + projectGroupId, e );
+            throw new BuildManagerException(
+                "Error occurred while retrieving build definition of project group " + projectGroupId, e );
         }
 
-        OverallBuildQueue overallBuildQueue =
-            getOverallBuildQueue( PREPARE_BUILD_QUEUE, buildDef.getSchedule().getBuildQueues() );
+        OverallBuildQueue overallBuildQueue = getOverallBuildQueue( PREPARE_BUILD_QUEUE,
+                                                                    buildDef.getSchedule().getBuildQueues() );
 
-        PrepareBuildProjectsTask task =
-            new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, buildTrigger, projectGroupId, projectGroupName,
-                                          scmRootAddress, scmRootId );
+        PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, buildTrigger,
+                                                                      projectGroupId, projectGroupName, scmRootAddress,
+                                                                      scmRootId );
 
         try
         {
             if ( overallBuildQueue != null )
             {
-                log.info( "Project group '{}' added to overall build queue '{}'", projectGroupId, overallBuildQueue.getName() );
+                log.info( "Project group '{}' added to overall build queue '{}'", projectGroupId,
+                          overallBuildQueue.getName() );
                 overallBuildQueue.addToPrepareBuildQueue( task );
             }
             else
             {
-                throw new BuildManagerException( "Unable to add project to prepare build queue. No overall build queue configured." );
+                throw new BuildManagerException(
+                    "Unable to add project to prepare build queue. No overall build queue configured." );
             }
         }
         catch ( TaskQueueException e )
         {
-            throw new BuildManagerException( "Error occurred while adding project to prepare build queue: " + e.getMessage() );
+            throw new BuildManagerException(
+                "Error occurred while adding project to prepare build queue: " + e.getMessage() );
         }
     }
 
@@ -787,7 +800,7 @@ public class ParallelBuildsManager
      * @see BuildsManager#removeProjectFromBuildQueue(int, int, BuildTrigger, String, int)
      */
     public void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, BuildTrigger buildTrigger,
-    		                                 String projectName, int projectGroupId )
+                                             String projectName, int projectGroupId )
         throws BuildManagerException
     {
         try
@@ -795,7 +808,7 @@ public class ParallelBuildsManager
             OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, BUILD_QUEUE );
             if ( overallBuildQueue != null )
             {
-            	overallBuildQueue.removeProjectFromBuildQueue( projectId, buildDefinitionId, buildTrigger, projectName,
+                overallBuildQueue.removeProjectFromBuildQueue( projectId, buildDefinitionId, buildTrigger, projectName,
                                                                projectGroupId );
             }
             else
@@ -844,8 +857,8 @@ public class ParallelBuildsManager
         {
             try
             {
-                OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, BUILD_QUEUE )
-                    ;
+                OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId,
+                                                                                                BUILD_QUEUE );
                 if ( overallBuildQueue != null )
                 {
                     overallBuildQueue.removeProjectFromBuildQueue( projectId );
@@ -871,8 +884,8 @@ public class ParallelBuildsManager
         {
             try
             {
-                OverallBuildQueue overallBuildQueue =
-                    getOverallBuildQueueWhereProjectIsQueued( projectId, CHECKOUT_QUEUE );
+                OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId,
+                                                                                                CHECKOUT_QUEUE );
                 if ( overallBuildQueue != null )
                 {
                     overallBuildQueue.removeProjectFromCheckoutQueue( projectId );
@@ -942,14 +955,16 @@ public class ParallelBuildsManager
     {
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectGroupIsQueued( projectGroupId, scmRootAddress );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectGroupIsQueued( projectGroupId,
+                                                                                                 scmRootAddress );
             if ( overallBuildQueue != null )
             {
                 overallBuildQueue.removeProjectFromPrepareBuildQueue( projectGroupId, scmRootAddress );
             }
             else
             {
-                log.info( "Project group '{}' with scm '{}' not found in any of the build queues.", projectGroupId, scmRootAddress );
+                log.info( "Project group '{}' with scm '{}' not found in any of the build queues.", projectGroupId,
+                          scmRootAddress );
             }
         }
         catch ( TaskQueueException e )
@@ -1057,11 +1072,11 @@ public class ParallelBuildsManager
         {
             try
             {
-                BuildDefinition buildDefinition =
-                    buildDefinitionDao.getBuildDefinition( buildTask.getBuildDefinitionId() );
+                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition(
+                    buildTask.getBuildDefinitionId() );
 
                 buildProject( buildTask.getProjectId(), buildDefinition, buildTask.getProjectName(),
-                		      buildTask.getBuildTrigger(), buildTask.getScmResult(), buildTask.getProjectGroupId() );
+                              buildTask.getBuildTrigger(), buildTask.getScmResult(), buildTask.getProjectGroupId() );
             }
             catch ( ContinuumStoreException e )
             {
@@ -1075,8 +1090,8 @@ public class ParallelBuildsManager
             {
                 BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( task.getProjectId() );
                 checkoutProject( task.getProjectId(), task.getProjectName(), task.getWorkingDirectory(),
-                		task.getScmRootUrl(), task.getScmUserName(), task.getScmPassword(), buildDefinition,
-                		task.getProjectsWithCommonScmRoot() );
+                                 task.getScmRootUrl(), task.getScmUserName(), task.getScmPassword(), buildDefinition,
+                                 task.getProjectsWithCommonScmRoot() );
             }
             catch ( ContinuumStoreException e )
             {
@@ -1086,8 +1101,9 @@ public class ParallelBuildsManager
 
         for ( PrepareBuildProjectsTask prepareTask : prepareBuildTasks )
         {
-            prepareBuildProjects( prepareTask.getProjectsBuildDefinitionsMap(), prepareTask.getBuildTrigger(), prepareTask.getProjectGroupId(),
-                                  prepareTask.getProjectGroupName(), prepareTask.getScmRootAddress(), prepareTask.getProjectScmRootId() );
+            prepareBuildProjects( prepareTask.getProjectsBuildDefinitionsMap(), prepareTask.getBuildTrigger(),
+                                  prepareTask.getProjectGroupId(), prepareTask.getProjectGroupName(),
+                                  prepareTask.getScmRootAddress(), prepareTask.getProjectScmRootId() );
         }
     }
 
@@ -1249,11 +1265,11 @@ public class ParallelBuildsManager
             for ( PrepareBuildProjectsTask task : tasks.values() )
             {
                 Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
-    
+
                 if ( map.size() > 0 )
                 {
                     Set<Integer> projectIds = map.keySet();
-    
+
                     if ( projectIds.contains( new Integer( projectId ) ) )
                     {
                         log.info( "Project '{}' is currently preparing build", projectId );
@@ -1275,9 +1291,11 @@ public class ParallelBuildsManager
         {
             for ( PrepareBuildProjectsTask task : tasks.values() )
             {
-                if ( task != null && task.getProjectGroupId() == projectGroupId && task.getProjectScmRootId() == scmRootId )
+                if ( task != null && task.getProjectGroupId() == projectGroupId &&
+                    task.getProjectScmRootId() == scmRootId )
                 {
-                    log.info( "Project group '{}' with scm root '{}' is currently preparing build", projectGroupId, scmRootId );
+                    log.info( "Project group '{}' with scm root '{}' is currently preparing build", projectGroupId,
+                              scmRootId );
                     return true;
                 }
             }
@@ -1286,7 +1304,7 @@ public class ParallelBuildsManager
         return false;
     }
 
-    public Map<String,PrepareBuildProjectsTask> getCurrentProjectInPrepareBuild()
+    public Map<String, PrepareBuildProjectsTask> getCurrentProjectInPrepareBuild()
         throws BuildManagerException
     {
         synchronized ( overallBuildQueues )
@@ -1312,20 +1330,22 @@ public class ParallelBuildsManager
     {
         synchronized ( overallBuildQueues )
         {
-            Map<String, List<PrepareBuildProjectsTask>> queuedPrepareBuilds = new HashMap<String, List<PrepareBuildProjectsTask>>();
+            Map<String, List<PrepareBuildProjectsTask>> queuedPrepareBuilds =
+                new HashMap<String, List<PrepareBuildProjectsTask>>();
             Set<Integer> keySet = overallBuildQueues.keySet();
             for ( Integer key : keySet )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                 try
                 {
-                    queuedPrepareBuilds.put( overallBuildQueue.getName(), overallBuildQueue.getProjectsInPrepareBuildQueue() );
+                    queuedPrepareBuilds.put( overallBuildQueue.getName(),
+                                             overallBuildQueue.getProjectsInPrepareBuildQueue() );
                 }
                 catch ( TaskQueueException e )
                 {
                     throw new BuildManagerException(
-                        "Error occurred while getting projects in prepare build queue '" + overallBuildQueue.getName() + "'.",
-                        e );
+                        "Error occurred while getting projects in prepare build queue '" + overallBuildQueue.getName() +
+                            "'.", e );
                 }
             }
             return queuedPrepareBuilds;
@@ -1337,14 +1357,16 @@ public class ParallelBuildsManager
     {
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectGroupIsQueued( projectGroupId, scmRootId );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectGroupIsQueued( projectGroupId,
+                                                                                                 scmRootId );
             if ( overallBuildQueue != null )
             {
                 overallBuildQueue.removeProjectFromPrepareBuildQueue( projectGroupId, scmRootId );
             }
             else
             {
-                log.info( "Project group '{}' with scm '{}' not found in any of the build queues.", projectGroupId, scmRootId );
+                log.info( "Project group '{}' with scm '{}' not found in any of the build queues.", projectGroupId,
+                          scmRootId );
             }
         }
         catch ( TaskQueueException e )
@@ -1590,11 +1612,13 @@ public class ParallelBuildsManager
         }
         catch ( ContinuumStoreException e )
         {
-            throw new BuildManagerException( "Error while retrieving overall build queue for project: " + e.getMessage() );
+            throw new BuildManagerException(
+                "Error while retrieving overall build queue for project: " + e.getMessage() );
         }
         catch ( TaskQueueException e )
         {
-            throw new BuildManagerException( "Error while retrieving overall build queue for project: " + e.getMessage() );
+            throw new BuildManagerException(
+                "Error while retrieving overall build queue for project: " + e.getMessage() );
         }
 
         return whereToBeQueued;
@@ -1629,17 +1653,17 @@ public class ParallelBuildsManager
         {
             OverallBuildQueue whereQueued = null;
             Set<Integer> keySet = overallBuildQueues.keySet();
-    
+
             for ( Integer key : keySet )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
-    
+
                 if ( overallBuildQueue.isInPrepareBuildQueue( projectGroupId, scmRootAddress ) )
                 {
                     whereQueued = overallBuildQueue;
                 }
             }
-    
+
             return whereQueued;
         }
     }
@@ -1666,10 +1690,10 @@ public class ParallelBuildsManager
         throws BuildManagerException
     {
         Map<String, CheckOutTask> checkouts = getCurrentCheckouts();
-        for( String key : checkouts.keySet() )
+        for ( String key : checkouts.keySet() )
         {
             CheckOutTask task = checkouts.get( key );
-            if( task.getProjectId() == projectId )
+            if ( task.getProjectId() == projectId )
             {
                 return true;
             }
@@ -1683,7 +1707,7 @@ public class ParallelBuildsManager
     {
         for ( int i = 0; i < projectIds.length; i++ )
         {
-            if ( isProjectInAnyCurrentBuild( projectIds[i] ) ) 
+            if ( isProjectInAnyCurrentBuild( projectIds[i] ) )
             {
                 return true;
             }

@@ -19,11 +19,6 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -57,6 +52,11 @@ import org.codehaus.plexus.action.ActionNotFoundException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -346,25 +346,25 @@ public class DefaultBuildController
             context.setProject( project );
 
             BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-            
+
             BuildTrigger newBuildTrigger = buildTrigger;
-            
+
             if ( newBuildTrigger.getTrigger() == ContinuumProjectState.TRIGGER_SCHEDULED )
             {
                 newBuildTrigger.setTriggeredBy( buildDefinition.getSchedule().getName() );
             }
-            
+
             context.setBuildTrigger( newBuildTrigger );
 
             context.setBuildDefinition( buildDefinition );
 
-            BuildResult oldBuildResult =
-                buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+            BuildResult oldBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId,
+                                                                                                buildDefinitionId );
 
             context.setOldBuildResult( oldBuildResult );
 
             context.setScmResult( scmResult );
-            
+
             // CONTINUUM-2193
             ProjectGroup projectGroup = project.getProjectGroup();
             List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );
@@ -381,19 +381,20 @@ public class DefaultBuildController
                 }
             }
 
-            if( project.isCheckedOutInSingleDirectory() )
+            if ( project.isCheckedOutInSingleDirectory() )
             {
-                List<Project> projectsInGroup =
-                    projectGroupDao.getProjectGroupWithProjects( projectGroup.getId() ).getProjects(); 
-                List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
-                for( Project projectInGroup : projectsInGroup )
+                List<Project> projectsInGroup = projectGroupDao.getProjectGroupWithProjects(
+                    projectGroup.getId() ).getProjects();
+                List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();
+                for ( Project projectInGroup : projectsInGroup )
                 {
-                    if( projectInGroup.getScmUrl().startsWith( projectScmRootAddress ) )
+                    if ( projectInGroup.getScmUrl().startsWith( projectScmRootAddress ) )
                     {
                         projectsWithCommonScmRoot.add( projectInGroup );
                     }
                 }
-                AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( actionContext, projectsWithCommonScmRoot );
+                AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( actionContext,
+                                                                                   projectsWithCommonScmRoot );
             }
 
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
@@ -410,7 +411,7 @@ public class DefaultBuildController
             throw new TaskExecutionException( "Error initializing the build context", e );
         }
 
-       // Map<String, Object> actionContext = context.getActionContext();
+        // Map<String, Object> actionContext = context.getActionContext();
 
         AbstractContinuumAction.setProjectId( actionContext, projectId );
 
@@ -555,31 +556,32 @@ public class DefaultBuildController
         }
 
         // Check changes
-        if ( !shouldBuild && ( ( !allChangesUnknown && context.getScmResult() != null && !context.getScmResult().getChanges().isEmpty() ) ||
-            project.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ) )
+        if ( !shouldBuild && ( ( !allChangesUnknown && context.getScmResult() != null &&
+            !context.getScmResult().getChanges().isEmpty() ) || project.getExecutorId().equals(
+            ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ) )
         {
             try
             {
                 ContinuumBuildExecutor executor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
-                
+
                 Map<String, Object> actionContext = context.getActionContext();
                 List<Project> projectsWithCommonScmRoot =
                     AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot( actionContext );
-                String projectScmRootUrl =
-                    AbstractContinuumAction.getProjectScmRootUrl( actionContext, project.getScmUrl() );
+                String projectScmRootUrl = AbstractContinuumAction.getProjectScmRootUrl( actionContext,
+                                                                                         project.getScmUrl() );
 
                 if ( executor == null )
                 {
-                    log.warn( "No continuum build executor found for project " + project.getId() + 
-                              " with executor '" + project.getExecutorId() + "'" );
+                    log.warn( "No continuum build executor found for project " + project.getId() +
+                                  " with executor '" + project.getExecutorId() + "'" );
                 }
                 else if ( context.getScmResult() != null )
                 {
-                    shouldBuild = 
-	                        executor.shouldBuild( context.getScmResult().getChanges(), project,
-	                                              workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
-	                                                                                           projectsWithCommonScmRoot ),
-	                                              context.getBuildDefinition() );
+                    shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project,
+                                                        workingDirectoryService.getWorkingDirectory( project,
+                                                                                                     projectScmRootUrl,
+                                                                                                     projectsWithCommonScmRoot ),
+                                                        context.getBuildDefinition() );
                 }
             }
             catch ( Exception e )
@@ -684,8 +686,8 @@ public class DefaultBuildController
 
             for ( ProjectDependency dep : dependencies )
             {
-                Project dependencyProject =
-                    projectDao.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
+                Project dependencyProject = projectDao.getProject( dep.getGroupId(), dep.getArtifactId(),
+                                                                   dep.getVersion() );
 
                 if ( dependencyProject != null )
                 {
@@ -694,19 +696,19 @@ public class DefaultBuildController
                     if ( nbBuild > 0 )
                     {
                         log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
-                            dep.getVersion() );
+                                       dep.getVersion() );
                         modifiedDependencies.add( dep );
                     }
                     else
                     {
                         log.debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
-                            dep.getVersion() );
+                                       dep.getVersion() );
                     }
                 }
                 else
                 {
                     log.debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
-                        dep.getVersion() );
+                                   dep.getVersion() );
                 }
             }
 
@@ -734,7 +736,7 @@ public class DefaultBuildController
         build.setState( ContinuumProjectState.ERROR );
 
         build.setTrigger( context.getBuildTrigger().getTrigger() );
-        
+
         build.setUsername( context.getBuildTrigger().getTriggeredBy() );
 
         build.setStartTime( context.getStartTime() );

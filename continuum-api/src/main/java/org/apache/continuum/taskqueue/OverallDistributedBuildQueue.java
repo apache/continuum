@@ -1,11 +1,11 @@
 package org.apache.continuum.taskqueue;
 
-import java.util.List;
-
 import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+
+import java.util.List;
 
 public interface OverallDistributedBuildQueue
 {

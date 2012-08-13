@@ -44,8 +44,8 @@ public abstract class AbstractBuildQueueTest
 
     protected void removeBuildQueue( String queueName )
     {
-        clickLinkWithXPath( "(//a[contains(@href,'deleteBuildQueue.action') and contains(@href, '" + queueName
-            + "')])//img" );
+        clickLinkWithXPath(
+            "(//a[contains(@href,'deleteBuildQueue.action') and contains(@href, '" + queueName + "')])//img" );
         assertTextPresent( "Delete Parallel Build Queue" );
         assertTextPresent( "Are you sure you want to delete the build queue \"" + queueName + "\"?" );
         assertButtonWithValuePresent( "Delete" );
@@ -64,31 +64,31 @@ public abstract class AbstractBuildQueueTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
-	protected void addBuildQueue( String name, boolean success )
-	{
-	    goToBuildQueuePage();
-	    assertBuildQueuePage();
-	    submit();
-	    assertAddBuildQueuePage();
-	    setFieldValue( "name", name );
-	    submit();
-	    if ( success )
-	    {
-	        assertBuildQueuePage();
-	        assertTextPresent( name );
-	    }
-	    else
-	    {
-	        assertAddBuildQueuePage();
-	    }
-	}
-	    
-	protected void buildProjectForQueuePageTest( String projectGroupName, String groupId, String description )
+    protected void addBuildQueue( String name, boolean success )
+    {
+        goToBuildQueuePage();
+        assertBuildQueuePage();
+        submit();
+        assertAddBuildQueuePage();
+        setFieldValue( "name", name );
+        submit();
+        if ( success )
+        {
+            assertBuildQueuePage();
+            assertTextPresent( name );
+        }
+        else
+        {
+            assertAddBuildQueuePage();
+        }
+    }
+
+    protected void buildProjectForQueuePageTest( String projectGroupName, String groupId, String description )
     {
         showProjectGroup( projectGroupName, groupId, description );
         clickButtonWithValue( "Build all projects" );
         waitForElementPresent( "//img[@alt='Building']" );
-     }
-	    
-	    
+    }
+
+
 }

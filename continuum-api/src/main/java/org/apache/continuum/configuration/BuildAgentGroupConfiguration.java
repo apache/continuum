@@ -21,7 +21,7 @@ public class BuildAgentGroupConfiguration
         this.buildAgents = buildAgents;
     }
 
-    public void addBuildAgent(BuildAgentConfiguration buildAgent)
+    public void addBuildAgent( BuildAgentConfiguration buildAgent )
     {
         buildAgents.add( buildAgent );
     }
@@ -31,13 +31,13 @@ public class BuildAgentGroupConfiguration
         Iterator<BuildAgentConfiguration> iterator = buildAgents.iterator();
         while ( iterator.hasNext() )
         {
-            BuildAgentConfiguration agent = iterator.next(); 
-            if( agent.getUrl().equals( buildAgent.getUrl() ) )
+            BuildAgentConfiguration agent = iterator.next();
+            if ( agent.getUrl().equals( buildAgent.getUrl() ) )
             {
                 iterator.remove();
             }
         }
-    }    
+    }
 
     public String getName()
     {

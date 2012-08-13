@@ -19,14 +19,14 @@ package org.apache.continuum.builder.utils;
  * under the License.
  */
 
+import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.maven.continuum.model.project.BuildResult;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.continuum.utils.build.BuildTrigger;
-import org.apache.maven.continuum.model.project.BuildResult;
 
 public class ContinuumBuildConstant
 {
@@ -41,9 +41,9 @@ public class ContinuumBuildConstant
     public static final String KEY_BUILD_DEFINITION_LABEL = "builddefinition-label";
 
     public static final String KEY_TRIGGER = "trigger";
-    
+
     public static final String KEY_USERNAME = "username";
-        
+
     public static final String KEY_BUILD_TRIGGER = "buildTrigger";
 
     public static final String KEY_EXECUTOR_ID = "executor-id";
@@ -207,12 +207,12 @@ public class ContinuumBuildConstant
     {
         return getInteger( context, KEY_TRIGGER );
     }
-    
+
     public static String getUsername( Map<String, Object> context )
     {
         return getString( context, KEY_USERNAME, "" );
     }
-    
+
     public static BuildTrigger getBuildTrigger( Map<String, Object> context )
     {
         BuildTrigger defaultValue = new BuildTrigger( 0, "" );

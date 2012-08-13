@@ -15,17 +15,6 @@ package org.apache.maven.continuum.management;
  * the License.
  */
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.maven.continuum.store.AbstractContinuumStoreTestCase;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.FileUtils;
@@ -35,6 +24,16 @@ import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Test the database management tool.
@@ -57,7 +56,7 @@ public class DataManagementToolTest
 
         targetDirectory = createBackupDirectory();
     }
-    
+
 /*
     protected ContinuumStore createStore()
         throws Exception
@@ -76,7 +75,7 @@ public class DataManagementToolTest
 
     public void testBackupBuilds()
         throws IOException, ContinuumStoreException, XMLStreamException, Exception
-    {           
+    {
         createBuildDatabase( true );
 
         // test sanity check
@@ -94,7 +93,8 @@ public class DataManagementToolTest
 
         //assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
         //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );        
-        assertXmlSimilar( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils.fileRead( backupFile ) ));
+        assertXmlSimilar( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils.fileRead(
+            backupFile ) ) );
     }
 
     public void testEraseBuilds()

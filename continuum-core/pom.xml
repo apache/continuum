@@ -17,8 +17,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>  
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
     <version>1.4.1-SNAPSHOT</version>
@@ -59,7 +60,7 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-reports</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
@@ -67,7 +68,7 @@ under the License.
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>file-management</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-velocity</artifactId>
@@ -87,7 +88,7 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-api</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
@@ -98,16 +99,16 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId> 
+      <artifactId>maven-project</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpcore</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-action</artifactId>
@@ -163,11 +164,11 @@ under the License.
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
@@ -175,14 +176,14 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-builder</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-distributed-slave-client</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>velocity</groupId>
-      <artifactId>velocity</artifactId>      
+      <artifactId>velocity</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.release</groupId>
@@ -191,7 +192,7 @@ under the License.
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
-    </dependency>    
+    </dependency>
     <!-- contains redback-core.xml that is needed to instantiate some test classes -->
     <dependency>
       <groupId>org.codehaus.redback</groupId>
@@ -245,7 +246,7 @@ under the License.
       <groupId>org.codehaus.redback</groupId>
       <artifactId>plexus-spring</artifactId>
       <scope>test</scope>
-    </dependency>  
+    </dependency>
     <dependency>
       <groupId>org.jmock</groupId>
       <artifactId>jmock-junit3</artifactId>
@@ -260,7 +261,7 @@ under the License.
     <!-- dependency of jmock3 -->
     <dependency>
       <groupId>org.objenesis</groupId>
-      <artifactId>objenesis</artifactId>  
+      <artifactId>objenesis</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -319,7 +320,7 @@ under the License.
             <!-- CONTINUUM-2559 -->
             <exclude>**/MailContinuumNotifierTest.*</exclude>
           </excludes>
-        </configuration>        
+        </configuration>
       </plugin>
     </plugins>
   </build>

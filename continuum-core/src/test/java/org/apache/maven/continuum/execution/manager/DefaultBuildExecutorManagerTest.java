@@ -46,8 +46,8 @@ public class DefaultBuildExecutorManagerTest
     public void testMavenTwoBuildExecutorDependencyInjection()
         throws Exception
     {
-        MavenTwoBuildExecutor executor =
-            (MavenTwoBuildExecutor) builderManager.getBuildExecutor( MavenTwoBuildExecutor.ID );
+        MavenTwoBuildExecutor executor = (MavenTwoBuildExecutor) builderManager.getBuildExecutor(
+            MavenTwoBuildExecutor.ID );
 
         assertCommonFields( executor );
         assertNotNull( executor.getBuilderHelper() );
@@ -58,8 +58,8 @@ public class DefaultBuildExecutorManagerTest
     public void testMavenOneBuildExecutorDependencyInjection()
         throws Exception
     {
-        MavenOneBuildExecutor executor =
-            (MavenOneBuildExecutor) builderManager.getBuildExecutor( MavenOneBuildExecutor.ID );
+        MavenOneBuildExecutor executor = (MavenOneBuildExecutor) builderManager.getBuildExecutor(
+            MavenOneBuildExecutor.ID );
 
         assertCommonFields( executor );
         assertNotNull( executor.getMetadataHelper() );

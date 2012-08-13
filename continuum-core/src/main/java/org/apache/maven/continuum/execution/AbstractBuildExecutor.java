@@ -19,14 +19,6 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.utils.shell.ExecutionResult;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
@@ -48,6 +40,14 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -159,7 +159,7 @@ public abstract class AbstractBuildExecutor
             if ( StringUtils.isEmpty( defaultExecutable ) )
             {
                 log.warn( "The default executable for build executor '" + id + "' is not set. " +
-                    "This will cause a problem unless the project has a executable configured." );
+                              "This will cause a problem unless the project has a executable configured." );
             }
             else
             {
@@ -173,7 +173,7 @@ public abstract class AbstractBuildExecutor
                 else
                 {
                     log.info( "Resolved the executable '" + defaultExecutable + "' to " + "'" +
-                        resolvedExecutable.getAbsolutePath() + "'." );
+                                  resolvedExecutable.getAbsolutePath() + "'." );
                 }
             }
         }
@@ -190,7 +190,7 @@ public abstract class AbstractBuildExecutor
      * @return The executable path
      */
     protected String findExecutable( String executable, String defaultExecutable, boolean resolveExecutable,
-                                   File workingDirectory )
+                                     File workingDirectory )
     {
         // ----------------------------------------------------------------------
         // If we're not searching the path for the executable, prefix the
@@ -250,7 +250,7 @@ public abstract class AbstractBuildExecutor
         throws ContinuumBuildExecutorException
     {
 
-    	File workingDirectory = getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot );
+        File workingDirectory = getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot );
 
         String actualExecutable = findExecutable( executable, defaultExecutable, resolveExecutable, workingDirectory );
 
@@ -281,9 +281,9 @@ public abstract class AbstractBuildExecutor
                 workingDirectory = chrootJailDirectory; // not really used but must exist
             }
 
-            ExecutionResult result =
-                getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable, arguments, output,
-                                                             project.getId(), environments );
+            ExecutionResult result = getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
+                                                                                  arguments, output, project.getId(),
+                                                                                  environments );
 
             log.info( "Exit code: " + result.getExitCode() );
 
@@ -342,7 +342,8 @@ public abstract class AbstractBuildExecutor
         return jdk.getVarValue();
     }
 
-    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
+    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl,
+                                 List<Project> projectsWithCommonScmRoot )
     {
         //Nothing to do, by default
     }
@@ -402,7 +403,7 @@ public abstract class AbstractBuildExecutor
 
         return relPath + File.separator + buildFile;
     }
-    
+
     protected boolean isDescriptionUpdated( BuildDefinition buildDefinition, ScmResult scmResult, Project project )
     {
         boolean update = true;
@@ -441,8 +442,8 @@ public abstract class AbstractBuildExecutor
 
     public boolean isBuilding( Project project )
     {
-        return project.getState() == ContinuumProjectState.BUILDING ||
-            getShellCommandHelper().isRunning( project.getId() );
+        return project.getState() == ContinuumProjectState.BUILDING || getShellCommandHelper().isRunning(
+            project.getId() );
     }
 
     public void killProcess( Project project )
@@ -458,9 +459,11 @@ public abstract class AbstractBuildExecutor
         return Collections.emptyList();
     }
 
-    public File getWorkingDirectory( Project project, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
+    public File getWorkingDirectory( Project project, String projectScmRootUrl,
+                                     List<Project> projectsWithCommonScmRoot )
     {
-        return getWorkingDirectoryService().getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot );
+        return getWorkingDirectoryService().getWorkingDirectory( project, projectScmRootUrl,
+                                                                 projectsWithCommonScmRoot );
     }
 
     public InstallationService getInstallationService()

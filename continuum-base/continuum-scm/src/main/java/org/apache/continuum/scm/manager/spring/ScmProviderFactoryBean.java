@@ -19,14 +19,14 @@ package org.apache.continuum.scm.manager.spring;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.maven.scm.provider.ScmProvider;
 import org.codehaus.plexus.spring.PlexusToSpringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -78,8 +78,8 @@ public class ScmProviderFactoryBean
             }
             providers.put( provider.getScmType(), provider );
         }*/
-        providers =
-            PlexusToSpringUtils.lookupMap( PlexusToSpringUtils.buildSpringId( ScmProvider.class ), applicationContext );
+        providers = PlexusToSpringUtils.lookupMap( PlexusToSpringUtils.buildSpringId( ScmProvider.class ),
+                                                   applicationContext );
         return providers;
     }
 

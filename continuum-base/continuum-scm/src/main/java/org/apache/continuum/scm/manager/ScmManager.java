@@ -19,23 +19,22 @@ package org.apache.continuum.scm.manager;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.maven.scm.log.ScmLogger;
 import org.apache.maven.scm.manager.AbstractScmManager;
 
+import java.util.Map;
+
 /**
  * Default implementation of the SCM manager.
- * 
- * @todo move to maven-scm as the default 
- * 
+ *
  * @version $Id$
+ * @todo move to maven-scm as the default
  */
 public class ScmManager
     extends AbstractScmManager
 {
     private ScmLogger scmLogger;
-    
+
     @Override
     protected ScmLogger getScmLogger()
     {

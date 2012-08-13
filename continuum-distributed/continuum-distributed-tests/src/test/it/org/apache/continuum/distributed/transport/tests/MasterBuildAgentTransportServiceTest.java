@@ -19,16 +19,15 @@ package org.apache.continuum.distributed.transport.tests;
  * under the License.
  */
 
-import java.net.URL;
-import java.util.HashMap;
-
 import junit.framework.TestCase;
-
 import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportClient;
 import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportService;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+
+import java.net.URL;
+import java.util.HashMap;
 
 /**
  * MasterBuildAgentTransportServiceTest
@@ -37,17 +36,18 @@ public class MasterBuildAgentTransportServiceTest
     extends TestCase
 {
     private MasterBuildAgentTransportService masterProxy;
-    
+
     private BeanFactory beanFactory = new XmlBeanFactory( new ClassPathResource( "applicationContext.xml" ) );
-    
+
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        
-        masterProxy = new MasterBuildAgentTransportClient( new URL( "http://localhost:9191/master-xmlrpc"), null , null );
+
+        masterProxy = new MasterBuildAgentTransportClient( new URL( "http://localhost:9191/master-xmlrpc" ), null,
+                                                           null );
     }
-    
+
     public void testReturnBuildResult()
     {
         try
@@ -59,7 +59,7 @@ public class MasterBuildAgentTransportServiceTest
             fail( e.getMessage() );
         }
     }
-    
+
     public void testReturnScmResult()
     {
         try

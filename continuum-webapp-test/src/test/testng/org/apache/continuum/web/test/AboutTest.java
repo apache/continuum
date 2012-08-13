@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "about" }, alwaysRun = true )
+@Test( groups = {"about"}, alwaysRun = true )
 public class AboutTest
     extends AbstractContinuumTest
 {

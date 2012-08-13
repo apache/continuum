@@ -19,15 +19,16 @@ package org.apache.continuum.distributed.transport.slave;
  * under the License.
  */
 
+import com.atlassian.xmlrpc.ServiceObject;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.atlassian.xmlrpc.ServiceObject;
 /**
  * SlaveBuildAgentTransportService
  */
-@ServiceObject("SlaveBuildAgentTransportService")
+@ServiceObject( "SlaveBuildAgentTransportService" )
 public interface SlaveBuildAgentTransportService
 {
     public Boolean buildProjects( List<Map<String, Object>> projectsBuildContext )
@@ -144,10 +145,10 @@ public interface SlaveBuildAgentTransportService
 
     public Boolean removeFromBuildQueue( List<String> hashCodes )
         throws Exception;
-    
+
     /**
      * Get build agent's platform.
-     * 
+     *
      * @return The operating system name of the build agent
      * @throws Exception
      */
@@ -156,13 +157,13 @@ public interface SlaveBuildAgentTransportService
 
     /**
      * Execute a directory purge on the build agent
-     * 
-     * @param directoryType valid types are <i>working</i> and <i>releases</i>
-     * @param daysOlder days older
+     *
+     * @param directoryType  valid types are <i>working</i> and <i>releases</i>
+     * @param daysOlder      days older
      * @param retentionCount retention count
-     * @param deleteAll delete all flag
-     * 
+     * @param deleteAll      delete all flag
      * @throws Exception error that will occur during the purge
      */
-    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll ) throws Exception;
+    public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
+        throws Exception;
 }

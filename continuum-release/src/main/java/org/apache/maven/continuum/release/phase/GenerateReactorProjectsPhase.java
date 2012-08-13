@@ -19,13 +19,6 @@ package org.apache.maven.continuum.release.phase;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.StringTokenizer;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -59,6 +52,13 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * Generate the reactor projects
@@ -104,21 +104,21 @@ public class GenerateReactorProjectsPhase
     {
         return execute( releaseDescriptor, settings, reactorProjects );
     }
-    
 
-	public ReleaseResult execute(ReleaseDescriptor releaseDescriptor,
-			ReleaseEnvironment releaseEnvironment, List reactorProjects)
-			throws ReleaseExecutionException, ReleaseFailureException {
-		return execute(releaseDescriptor, releaseEnvironment.getSettings(),
-				reactorProjects);
-	}
 
-	public ReleaseResult simulate(ReleaseDescriptor releaseDescriptor,
-			ReleaseEnvironment releaseEnvironment, List reactorProjects)
-			throws ReleaseExecutionException, ReleaseFailureException {
-		return execute(releaseDescriptor, releaseEnvironment.getSettings(),
-				reactorProjects);
-	}    
+    public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
+                                  List reactorProjects )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+        return execute( releaseDescriptor, releaseEnvironment.getSettings(), reactorProjects );
+    }
+
+    public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
+                                   List reactorProjects )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+        return execute( releaseDescriptor, releaseEnvironment.getSettings(), reactorProjects );
+    }
 
     private List getReactorProjects( ReleaseDescriptor descriptor )
         throws ContinuumReleaseException
@@ -137,8 +137,7 @@ public class GenerateReactorProjectsPhase
                 activateProfiles( arguments, profileManager );
             }
 
-            project = projectBuilder.build( getProjectDescriptorFile( descriptor ), repository,
-                                            profileManager );
+            project = projectBuilder.build( getProjectDescriptorFile( descriptor ), repository, profileManager );
 
             reactorProjects.add( project );
 
@@ -174,14 +173,14 @@ public class GenerateReactorProjectsPhase
     {
         for ( Object o : project.getModules() )
         {
-        	String moduleDir = StringUtils.replace( o.toString(), '\\', '/' );
+            String moduleDir = StringUtils.replace( o.toString(), '\\', '/' );
 
             File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
 
             try
             {
-                MavenProject reactorProject =
-                    projectBuilder.build( pomFile, repository, getProfileManager( getSettings() ) );
+                MavenProject reactorProject = projectBuilder.build( pomFile, repository, getProfileManager(
+                    getSettings() ) );
 
                 reactorProjects.add( reactorProject );
 
@@ -216,7 +215,7 @@ public class GenerateReactorProjectsPhase
         if ( arguments != null )
         {
             String[] args = arguments.split( " " );
-    
+
             for ( String arg : args )
             {
                 if ( arg.contains( "-Dmaven.repo.local=" ) )
@@ -245,7 +244,7 @@ public class GenerateReactorProjectsPhase
                 }
             }
         }
-    
+
         if ( localRepository == null )
         {
             localRepository = getSettings().getLocalRepository();
@@ -286,15 +285,11 @@ public class GenerateReactorProjectsPhase
 
         Options options = new Options();
 
-        options.addOption( OptionBuilder.withLongOpt( "activate-profiles" )
-                                    .withDescription( "Comma-delimited list of profiles to activate" )
-                                    .hasArg()
-                                    .create( ACTIVATE_PROFILES ) );
+        options.addOption( OptionBuilder.withLongOpt( "activate-profiles" ).withDescription(
+            "Comma-delimited list of profiles to activate" ).hasArg().create( ACTIVATE_PROFILES ) );
 
-        options.addOption( OptionBuilder.withLongOpt( "define" )
-                           .hasArg()
-                           .withDescription( "Define a system property" )
-                           .create( SET_SYSTEM_PROPERTY ) );
+        options.addOption( OptionBuilder.withLongOpt( "define" ).hasArg().withDescription(
+            "Define a system property" ).create( SET_SYSTEM_PROPERTY ) );
 
         String[] args = StringUtils.split( arguments );
 
@@ -302,7 +297,7 @@ public class GenerateReactorProjectsPhase
 
         if ( commandLine.hasOption( ACTIVATE_PROFILES ) )
         {
-            String [] profileOptionValues = commandLine.getOptionValues( ACTIVATE_PROFILES );
+            String[] profileOptionValues = commandLine.getOptionValues( ACTIVATE_PROFILES );
 
             if ( profileOptionValues != null )
             {
@@ -332,9 +327,11 @@ public class GenerateReactorProjectsPhase
         }
     }
 
-	public void contextualize(Context context) throws ContextException {
-		container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
-	}
+    public void contextualize( Context context )
+        throws ContextException
+    {
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+    }
 
 
 }

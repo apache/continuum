@@ -27,40 +27,40 @@ package org.apache.continuum.utils.build;
 public class BuildTrigger
 {
     private int trigger;
-    
+
     private String triggeredBy;
-    
+
     public BuildTrigger( int trigger )
     {
         this.trigger = trigger;
     }
-    
+
     public BuildTrigger( String triggeredBy )
     {
         this.triggeredBy = triggeredBy;
     }
-    
+
     public BuildTrigger( int trigger, String triggeredBy )
     {
         this.trigger = trigger;
         this.triggeredBy = triggeredBy;
     }
-    
+
     public void setTrigger( int trigger )
     {
         this.trigger = trigger;
     }
-    
+
     public int getTrigger()
     {
         return this.trigger;
     }
-    
+
     public void setTriggeredBy( String triggeredBy )
     {
         this.triggeredBy = triggeredBy;
     }
-    
+
     public String getTriggeredBy()
     {
         return this.triggeredBy;

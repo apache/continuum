@@ -19,8 +19,6 @@ package org.apache.continuum.buildagent.taskqueue.manager;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.BuildProjectTask;
@@ -38,6 +36,8 @@ import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * @plexus.component role="org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager" role-hint="default"
@@ -221,9 +221,9 @@ public class DefaultBuildAgentTaskQueueManager
             {
                 for ( PrepareBuildProjectsTask task : queues )
                 {
-                	if ( task != null && task.getProjectGroupId() == projectGroupId && 
-                             task.getBuildTrigger().getTrigger() == buildTrigger.getTrigger() &&
-                             task.getScmRootAddress().equals( scmRootAddress ) )
+                    if ( task != null && task.getProjectGroupId() == projectGroupId &&
+                        task.getBuildTrigger().getTrigger() == buildTrigger.getTrigger() &&
+                        task.getScmRootAddress().equals( scmRootAddress ) )
                     {
                         log.info( "project group {} in prepare build queue", task.getProjectGroupId() );
                         return true;
@@ -278,7 +278,8 @@ public class DefaultBuildAgentTaskQueueManager
 
         if ( task != null )
         {
-            log.debug( "Current project group preparing build: {}", ( (PrepareBuildProjectsTask) task ).getProjectGroupId() );
+            log.debug( "Current project group preparing build: {}",
+                       ( (PrepareBuildProjectsTask) task ).getProjectGroupId() );
             return (PrepareBuildProjectsTask) task;
         }
         return null;
@@ -291,7 +292,7 @@ public class DefaultBuildAgentTaskQueueManager
 
         if ( task != null )
         {
-            log.debug( "Current project building: {}", ( (BuildProjectTask) task).getProjectName() );
+            log.debug( "Current project building: {}", ( (BuildProjectTask) task ).getProjectName() );
             return (BuildProjectTask) task;
         }
 
@@ -345,9 +346,11 @@ public class DefaultBuildAgentTaskQueueManager
         {
             for ( BuildProjectTask task : tasks )
             {
-                if ( task != null && task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                if ( task != null && task.getProjectId() == projectId &&
+                    task.getBuildDefinitionId() == buildDefinitionId )
                 {
-                    log.debug( "Remove project {} with buildDefinition{} from build queue", task.getProjectName(), task.getBuildDefinitionId() );
+                    log.debug( "Remove project {} with buildDefinition{} from build queue", task.getProjectName(),
+                               task.getBuildDefinitionId() );
                     return getBuildQueue().remove( task );
                 }
             }

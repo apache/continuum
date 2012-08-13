@@ -19,16 +19,6 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.continuum.model.project.ProjectGroupSummary;
 import org.apache.continuum.model.project.ProjectSummaryResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -37,12 +27,21 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.ProjectDao"
  */
-@Repository("projectDao")
+@Repository( "projectDao" )
 public class ProjectDaoImpl
     extends AbstractDao
     implements ProjectDao

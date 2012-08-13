@@ -21,6 +21,7 @@ package org.apache.maven.continuum.management;
 
 /**
  * Enumeration of known database formats.
+ *
  * @version $Id$
  */
 public enum DatabaseFormat

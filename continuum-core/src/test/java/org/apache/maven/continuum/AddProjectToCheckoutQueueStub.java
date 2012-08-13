@@ -19,12 +19,11 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import java.util.Map;
-
 import junit.framework.Assert;
-
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.CheckoutProjectContinuumAction;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
@@ -35,11 +34,13 @@ public class AddProjectToCheckoutQueueStub
     @SuppressWarnings( "unchecked" )
     public void execute( Map context )
         throws Exception
-    {       
+    {
         getLogger().info( "Executing add-project-to-checkout-queue (stub for testing) action." );
-        
+
         // check if scm credentials were set in context (CONTINUUM-2466)
-        Assert.assertEquals( AddProjectTest.SCM_USERNAME, CheckoutProjectContinuumAction.getScmUsername( context, null ) );
-        Assert.assertEquals( AddProjectTest.SCM_PASSWORD, CheckoutProjectContinuumAction.getScmPassword( context, null ) );
+        Assert.assertEquals( AddProjectTest.SCM_USERNAME, CheckoutProjectContinuumAction.getScmUsername( context,
+                                                                                                         null ) );
+        Assert.assertEquals( AddProjectTest.SCM_PASSWORD, CheckoutProjectContinuumAction.getScmPassword( context,
+                                                                                                         null ) );
     }
 }

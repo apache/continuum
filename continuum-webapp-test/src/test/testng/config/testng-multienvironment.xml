@@ -20,29 +20,29 @@ under the License.
 -->
 
 <suite name="ContinuumTestMultiEnvironment" verbose="1" parallel="tests" thread-count="2">
-    <listeners>
-        <listener class-name="org.apache.continuum.web.test.listener.CaptureScreenShotsListener"/>
-    </listeners>
-    <test name="safari4Windows">
-        <parameter name="browser" value="Safari 4 on Windows"/>
-        <groups>
-            <run>
-                <include name="login" />
-            </run>
-        </groups>
-        <packages>
-            <package name="org.apache.continuum.web.test" />
-        </packages>
-    </test>
-	<test name="firefox3Linux">
-        <parameter name="browser" value="Firefox 3 on Linux"/>
-        <groups>
-            <run>
-                <include name="login" />
-            </run>
-        </groups>
-		<packages>
-			<package name="org.apache.continuum.web.test" />
-		</packages>
-	</test>
+  <listeners>
+    <listener class-name="org.apache.continuum.web.test.listener.CaptureScreenShotsListener"/>
+  </listeners>
+  <test name="safari4Windows">
+    <parameter name="browser" value="Safari 4 on Windows"/>
+    <groups>
+      <run>
+        <include name="login"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="org.apache.continuum.web.test"/>
+    </packages>
+  </test>
+  <test name="firefox3Linux">
+    <parameter name="browser" value="Firefox 3 on Linux"/>
+    <groups>
+      <run>
+        <include name="login"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="org.apache.continuum.web.test"/>
+    </packages>
+  </test>
 </suite>

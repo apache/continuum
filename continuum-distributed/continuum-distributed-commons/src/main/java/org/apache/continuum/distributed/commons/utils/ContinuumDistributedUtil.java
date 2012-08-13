@@ -27,7 +27,7 @@ import java.util.Map;
 public class ContinuumDistributedUtil
 {
     public static final String KEY_PROJECT_ID = "project-id";
-    
+
     public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
 
     public static final String KEY_PROJECT_NAME = "project-name";
@@ -53,11 +53,11 @@ public class ContinuumDistributedUtil
     {
         return getString( context, KEY_PROJECT_NAME );
     }
-    
+
     public static String getProjectNameAndId( Map<String, Object> context )
     {
         StringBuilder result = new StringBuilder();
-        
+
         if ( getProjectName( context ) != null )
         {
             result.append( getProjectName( context ) ).append( " " );
@@ -66,7 +66,7 @@ public class ContinuumDistributedUtil
         {
             result.append( getArtifactId( context ) ).append( " " );
         }
-        
+
         if ( context.containsKey( KEY_PROJECT_ID ) )
         {
             result.append( "(projectId=" ).append( getProjectId( context ) ).append( ")" );
@@ -75,7 +75,7 @@ public class ContinuumDistributedUtil
         {
             result.append( "(projectGroupId=" ).append( getProjectGroupId( context ) ).append( ")" );
         }
-        
+
         return result.toString();
     }
 

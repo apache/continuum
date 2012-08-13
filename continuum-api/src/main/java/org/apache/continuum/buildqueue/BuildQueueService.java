@@ -19,9 +19,9 @@ package org.apache.continuum.buildqueue;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.maven.continuum.model.project.BuildQueue;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>

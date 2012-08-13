@@ -19,25 +19,24 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  * @version $Id: $
- *  @plexus.component role="org.apache.continuum.dao.ProjectScmRootDao"
+ * @plexus.component role="org.apache.continuum.dao.ProjectScmRootDao"
  */
-@Repository("projectScmRootDao")
+@Repository( "projectScmRootDao" )
 public class ProjectScmRootDaoImpl
     extends AbstractDao
     implements ProjectScmRootDao
@@ -52,7 +51,7 @@ public class ProjectScmRootDaoImpl
     {
         return getAllObjectsDetached( ProjectScmRoot.class );
     }
-    
+
     public List<ProjectScmRoot> getProjectScmRootByProjectGroup( int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();
@@ -117,7 +116,7 @@ public class ProjectScmRootDaoImpl
             Object[] params = new Object[2];
             params[0] = projectGroupId;
             params[1] = scmRootAddress;
-            
+
             Collection result = (Collection) query.executeWithArray( params );
 
             if ( result.size() == 0 )
@@ -138,7 +137,7 @@ public class ProjectScmRootDaoImpl
             rollback( tx );
         }
     }
-    
+
     public ProjectScmRoot getProjectScmRoot( int projectScmRootId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {

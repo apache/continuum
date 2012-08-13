@@ -600,7 +600,8 @@ public class DefaultContinuum
         return ( builds.isEmpty() ? null : builds.get( 0 ) );
     }
 
-    public List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state, String triggeredBy )
+    public List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state,
+                                                     String triggeredBy )
     {
         return buildResultDao.getBuildResultsInRange( fromDate, toDate, state, triggeredBy, projectGroupId );
     }
@@ -652,8 +653,8 @@ public class DefaultContinuum
                 throw new ContinuumException( e.getMessage(), e );
             }
 
-            List<ContinuumReleaseResult> releaseResults =
-                releaseResultDao.getContinuumReleaseResultsByProject( projectId );
+            List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProject(
+                projectId );
 
             ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
 
@@ -664,8 +665,8 @@ public class DefaultContinuum
                     releaseResultDao.removeContinuumReleaseResult( releaseResult );
                 }
 
-                File releaseOutputDirectory =
-                    configurationService.getReleaseOutputDirectory( project.getProjectGroup().getId() );
+                File releaseOutputDirectory = configurationService.getReleaseOutputDirectory(
+                    project.getProjectGroup().getId() );
 
                 if ( releaseOutputDirectory != null )
                 {
@@ -783,7 +784,7 @@ public class DefaultContinuum
     public void buildProjects( String username )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
-    	buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
+        buildProjects( new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
     }
 
     public void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
@@ -791,7 +792,8 @@ public class DefaultContinuum
     {
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
 
-        prepareBuildProjects( filteredProjectsList, bds, true, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, "" ) );
+        prepareBuildProjects( filteredProjectsList, bds, true, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED,
+                                                                                 "" ) );
     }
 
     public void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
@@ -799,7 +801,8 @@ public class DefaultContinuum
     {
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
 
-        prepareBuildProjects( filteredProjectsList, buildDefinitionId, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, "" ) );
+        prepareBuildProjects( filteredProjectsList, buildDefinitionId, new BuildTrigger(
+            ContinuumProjectState.TRIGGER_FORCED, "" ) );
     }
 
     /**
@@ -847,7 +850,8 @@ public class DefaultContinuum
      * @param buildTrigger      the trigger state and the username
      * @throws ContinuumException
      */
-    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId, BuildTrigger buildTrigger )
+    public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId,
+                                                      BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         if ( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
@@ -868,11 +872,13 @@ public class DefaultContinuum
      * @param projectGroupId
      * @param bds
      * @param checkDefaultBuildDefinitionForProject
+     *
      * @param buildTrigger
      * @throws ContinuumException
      */
     private void buildProjectGroupWithBuildDefinition( int projectGroupId, List<BuildDefinition> bds,
-    		                                   boolean checkDefaultBuildDefinitionForProject, BuildTrigger buildTrigger )
+                                                       boolean checkDefaultBuildDefinitionForProject,
+                                                       BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         if ( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
@@ -880,7 +886,7 @@ public class DefaultContinuum
             Collection<Project> projectsList;
 
             projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
-            
+
             buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
 
             prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject, buildTrigger );
@@ -965,7 +971,9 @@ public class DefaultContinuum
                     }
                     else
                     {
-                        log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefId );
+                        log.info(
+                            "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building",
+                            projectId, buildDefId );
                     }
                 }
             }
@@ -982,13 +990,13 @@ public class DefaultContinuum
             }
             catch ( NoBuildAgentException e )
             {
-                log.error( "Unable to build projects in project group " + scmRoot.getProjectGroup().getName() 
-                           + " because there is no build agent configured" );
+                log.error( "Unable to build projects in project group " + scmRoot.getProjectGroup().getName() +
+                               " because there is no build agent configured" );
             }
             catch ( NoBuildAgentInGroupException e )
             {
-                log.error( "Unable to build projects in project group " + scmRoot.getProjectGroup().getName() 
-                           + " because there is no build agent configured in build agent group" );
+                log.error( "Unable to build projects in project group " + scmRoot.getProjectGroup().getName() +
+                               " because there is no build agent configured in build agent group" );
             }
         }
     }
@@ -996,14 +1004,14 @@ public class DefaultContinuum
     public void buildProject( int projectId, String username )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
-    	buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
+        buildProject( projectId, new BuildTrigger( ContinuumProjectState.TRIGGER_FORCED, username ) );
     }
 
     public void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
-    	buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
-    	buildProject( projectId, buildDefinitionId, buildTrigger );
+        buildTrigger.setTrigger( ContinuumProjectState.TRIGGER_FORCED );
+        buildProject( projectId, buildDefinitionId, buildTrigger );
     }
 
     public void buildProject( int projectId, BuildTrigger buildTrigger )
@@ -1024,7 +1032,9 @@ public class DefaultContinuum
 
         if ( !isProjectOkToBuild( projectId, buildDef.getId() ) )
         {
-            log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDef.getId() );
+            log.info(
+                "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building",
+                projectId, buildDef.getId() );
             return;
         }
 
@@ -1033,7 +1043,7 @@ public class DefaultContinuum
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
         List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
-        sortedScmRoot.add(scmRoot);
+        sortedScmRoot.add( scmRoot );
 
         prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, scmRoot.getScmRootAddress(),
                               scmRoot.getProjectGroup().getId(), scmRoot.getId(), sortedScmRoot );
@@ -1050,7 +1060,9 @@ public class DefaultContinuum
 
         if ( !isProjectOkToBuild( projectId, buildDefinitionId ) )
         {
-            log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefinitionId );
+            log.info(
+                "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building",
+                projectId, buildDefinitionId );
             return;
         }
 
@@ -1059,7 +1071,7 @@ public class DefaultContinuum
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
         List<ProjectScmRoot> sortedScmRoot = new ArrayList<ProjectScmRoot>();
-        sortedScmRoot.add(scmRoot);
+        sortedScmRoot.add( scmRoot );
 
         prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, scmRoot.getScmRootAddress(),
                               scmRoot.getProjectGroup().getId(), scmRoot.getId(), sortedScmRoot );
@@ -1131,8 +1143,8 @@ public class DefaultContinuum
             {
                 FileUtils.deleteDirectory( buildDirectory );
             }
-            File buildOutputFile =
-                getConfiguration().getBuildOutputFile( buildResult.getId(), buildResult.getProject().getId() );
+            File buildOutputFile = getConfiguration().getBuildOutputFile( buildResult.getId(),
+                                                                          buildResult.getProject().getId() );
             if ( buildOutputFile.exists() )
             {
                 FileUtils.forceDelete( buildOutputFile );
@@ -1361,7 +1373,8 @@ public class DefaultContinuum
         {
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
                                                            projectGroupId, checkProtocol, useCredentialsCache, true,
-                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getId(), false );
+                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getId(),
+                                                           false );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1379,7 +1392,8 @@ public class DefaultContinuum
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
                                                            projectGroupId, checkProtocol, useCredentialsCache,
                                                            recursiveProjects,
-                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getId(), false );
+                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getId(),
+                                                           false );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1463,19 +1477,19 @@ public class DefaultContinuum
         AbstractContinuumAction.setUnvalidatedProjectGroup( context, projectGroup );
 
         AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
-        
+
         StoreProjectAction.setUseScmCredentialsCache( context, project.isScmUseCache() );
-        
+
         // set for initial checkout
         String scmUsername = project.getScmUsername();
         String scmPassword = project.getScmPassword();
-        
-        if( scmUsername != null && !StringUtils.isEmpty( scmUsername ) )
+
+        if ( scmUsername != null && !StringUtils.isEmpty( scmUsername ) )
         {
             CheckoutProjectContinuumAction.setScmUsername( context, scmUsername );
         }
-        
-        if( scmPassword != null && !StringUtils.isEmpty( scmPassword ) )
+
+        if ( scmPassword != null && !StringUtils.isEmpty( scmPassword ) )
         {
             CheckoutProjectContinuumAction.setScmPassword( context, scmPassword );
         }
@@ -1512,8 +1526,8 @@ public class DefaultContinuum
                 }
             }
 
-            buildDefinitionService.addTemplateInProject( bdt.getId(), getProject(
-                AbstractContinuumAction.getProjectId( context ) ) );
+            buildDefinitionService.addTemplateInProject( bdt.getId(), getProject( AbstractContinuumAction.getProjectId(
+                context ) ) );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1523,8 +1537,8 @@ public class DefaultContinuum
         if ( !configurationService.isDistributedBuildEnabled() )
         {
             // used by BuildManager to determine on which build queue will the project be put
-            BuildDefinition bd = (BuildDefinition) getProjectWithBuildDetails(
-                AbstractContinuumAction.getProjectId( context ) ).getBuildDefinitions().get( 0 );
+            BuildDefinition bd = (BuildDefinition) getProjectWithBuildDetails( AbstractContinuumAction.getProjectId(
+                context ) ).getBuildDefinitions().get( 0 );
             AbstractContinuumAction.setBuildDefinition( context, bd );
 
             executeAction( "add-project-to-checkout-queue", context );
@@ -1543,7 +1557,7 @@ public class DefaultContinuum
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
-        						false, false, buildDefinitionTemplateId, false );
+                                                       false, false, buildDefinitionTemplateId, false );
     }
 
 
@@ -1571,15 +1585,15 @@ public class DefaultContinuum
         Map<String, Object> context = new HashMap<String, Object>();
 
         CreateProjectsFromMetadataAction.setProjectBuilderId( context, projectBuilderId );
-        
+
         CreateProjectsFromMetadataAction.setUrl( context, metadataUrl );
-        
+
         CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, loadRecursiveProjects );
-        
+
         StoreProjectAction.setUseScmCredentialsCache( context, useCredentialsCache );
-        
+
         AbstractContinuumAction.setWorkingDirectory( context, getWorkingDirectory() );
-                
+
         CreateProjectsFromMetadataAction.setCheckoutProjectsInSingleDirectory( context, checkoutInSingleDirectory );
 
         // CreateProjectsFromMetadataAction will check null and use default
@@ -1603,7 +1617,7 @@ public class DefaultContinuum
         executeAction( "create-projects-from-metadata", context );
 
         ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
-        
+
         if ( log.isInfoEnabled() )
         {
             if ( result.getProjects() != null )
@@ -1746,42 +1760,44 @@ public class DefaultContinuum
         {
             projectGroupDao.updateProjectGroup( projectGroup );
 
-            if( !checkoutInSingleDirectory )
+            if ( !checkoutInSingleDirectory )
             {
                 for ( Project project : projects )
                 {
-                	context = new HashMap<String, Object>();
+                    context = new HashMap<String, Object>();
 
                     Project fetchedProject = projectDao.getProjectWithBuildDetails( project.getId() );
 
-            	    addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context,
-            				                                               projectGroupCreation, scmUserName, scmPassword, project,
-                                                                           isDefaultProjectBuildDefSet( fetchedProject ) );
+                    addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context,
+                                               projectGroupCreation, scmUserName, scmPassword, project,
+                                               isDefaultProjectBuildDefSet( fetchedProject ) );
                 }
             }
             else
-            {   
+            {
                 Project project = result.getRootProject();
-                
-                if( project != null )
-                {
-                	String scmRootUrl = AbstractContinuumAction.getProjectScmRootUrl( context, null );
-                	context = new HashMap<String, Object>();
 
-                	AbstractContinuumAction.setProjectScmRootUrl( context, scmRootUrl );
-                	
+                if ( project != null )
+                {
+                    String scmRootUrl = AbstractContinuumAction.getProjectScmRootUrl( context, null );
+                    context = new HashMap<String, Object>();
+
+                    AbstractContinuumAction.setProjectScmRootUrl( context, scmRootUrl );
+
                     List<Project> projectsWithSimilarScmRoot = new ArrayList<Project>();
-                    for( Project projectWithSimilarScmRoot : projects )
+                    for ( Project projectWithSimilarScmRoot : projects )
                     {
-                    	projectsWithSimilarScmRoot.add( projectWithSimilarScmRoot );
+                        projectsWithSimilarScmRoot.add( projectWithSimilarScmRoot );
                     }
 
-                    AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context, projectsWithSimilarScmRoot );
+                    AbstractContinuumAction.setListOfProjectsInGroupWithCommonScmRoot( context,
+                                                                                       projectsWithSimilarScmRoot );
 
                     Project fetchedProject = projectDao.getProjectWithBuildDetails( project.getId() );
 
-                    addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context, projectGroupCreation,
-                                               scmUserName, scmPassword, project, isDefaultProjectBuildDefSet( fetchedProject ) );
+                    addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context,
+                                               projectGroupCreation, scmUserName, scmPassword, project,
+                                               isDefaultProjectBuildDefSet( fetchedProject ) );
                 }
             }
         }
@@ -1826,8 +1842,8 @@ public class DefaultContinuum
         // if no group creation
         if ( !projectGroupCreation && buildDefinitionTemplateId > 0 && !defaultProjectBuildDefSet )
         {
-            buildDefinitionService.addTemplateInProject( buildDefinitionTemplateId,
-                                                         projectDao.getProject( project.getId() ) );
+            buildDefinitionService.addTemplateInProject( buildDefinitionTemplateId, projectDao.getProject(
+                project.getId() ) );
         }
 
         AbstractContinuumAction.setUnvalidatedProject( context, project );
@@ -1836,7 +1852,7 @@ public class DefaultContinuum
         //
         //            executeAction( "store-project", context );
         //
-        
+
         AbstractContinuumAction.setProjectId( context, project.getId() );
 
         // does the scm username & password really have to be set in the project?
@@ -1854,14 +1870,14 @@ public class DefaultContinuum
         // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup );
         // remove object data -> we don't display the project name in the build queue
         AbstractContinuumAction.setProject( context, projectDao.getProject( project.getId() ) );
-        
+
         BuildDefinition defaultBuildDefinition = null;
         BuildDefinitionTemplate template = null;
         if ( projectBuilderId.equals( MavenTwoContinuumProjectBuilder.ID ) )
         {
             template = buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate();
 
-            if( template != null && template.getBuildDefinitions().size() > 0 )
+            if ( template != null && template.getBuildDefinitions().size() > 0 )
             {
                 defaultBuildDefinition = template.getBuildDefinitions().get( 0 );
             }
@@ -1886,7 +1902,7 @@ public class DefaultContinuum
         {
             // used by BuildManager to determine on which build queue will the project be put
             AbstractContinuumAction.setBuildDefinition( context, defaultBuildDefinition );
-            
+
             if ( !configurationService.isDistributedBuildEnabled() )
             {
                 executeAction( "add-project-to-checkout-queue", context );
@@ -2177,12 +2193,12 @@ public class DefaultContinuum
         catch ( ContinuumObjectNotFoundException cne )
         {
             throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                ") doesn't have a default build definition, this should be impossible, it should always have a default definition set." );
+                                              ") doesn't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
         catch ( ContinuumStoreException cse )
         {
             throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                ") doesn't have a default build definition, this should be impossible, it should always have a default definition set." );
+                                              ") doesn't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
     }
 
@@ -2576,7 +2592,7 @@ public class DefaultContinuum
         }
 
         String[] files = workingDirectory.list();
-        Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+        Arrays.sort( files, String.CASE_INSENSITIVE_ORDER );
 
         if ( files != null )
         {
@@ -2688,7 +2704,7 @@ public class DefaultContinuum
                 try
                 {
                     log.info( "Fix project state for project " + project.getId() + ":" + project.getName() + ":" +
-                        project.getVersion() );
+                                  project.getVersion() );
 
                     projectDao.updateProject( project );
 
@@ -2706,7 +2722,7 @@ public class DefaultContinuum
             }
 
             log.info( " " + project.getId() + ":" + project.getName() + ":" + project.getVersion() + ":" +
-                project.getExecutorId() );
+                          project.getExecutorId() );
         }
 
         for ( ProjectScmRoot projectScmRoot : projectScmRootDao.getAllProjectScmRoots() )
@@ -3189,7 +3205,8 @@ public class DefaultContinuum
             try
             {
                 result = (ReleaseResult) distributedReleaseManager.getReleaseResult( releaseId );
-                PreparedRelease preparedRelease = distributedReleaseManager.getPreparedRelease( releaseId, releaseType );
+                PreparedRelease preparedRelease = distributedReleaseManager.getPreparedRelease( releaseId,
+                                                                                                releaseType );
                 if ( preparedRelease != null )
                 {
                     releaseBy = preparedRelease.getReleaseBy();
@@ -3207,43 +3224,47 @@ public class DefaultContinuum
         else
         {
             result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
-            ContinuumReleaseDescriptor descriptor = (ContinuumReleaseDescriptor) releaseManager.getPreparedReleases().get( releaseId );
+            ContinuumReleaseDescriptor descriptor =
+                (ContinuumReleaseDescriptor) releaseManager.getPreparedReleases().get( releaseId );
             if ( descriptor != null )
             {
                 releaseBy = descriptor.getReleaseBy();
             }
         }
 
-        if ( result != null && getContinuumReleaseResult( projectId, releaseType, result.getStartTime(), result.getEndTime() ) == null )
+        if ( result != null && getContinuumReleaseResult( projectId, releaseType, result.getStartTime(),
+                                                          result.getEndTime() ) == null )
         {
-            ContinuumReleaseResult releaseResult = createContinuumReleaseResult( projectId, releaseType, result, releaseBy );
+            ContinuumReleaseResult releaseResult = createContinuumReleaseResult( projectId, releaseType, result,
+                                                                                 releaseBy );
             return addContinuumReleaseResult( releaseResult );
         }
 
         return null;
     }
 
-    private ContinuumReleaseResult createContinuumReleaseResult( int projectId, String releaseGoals, ReleaseResult result, String releaseBy )
+    private ContinuumReleaseResult createContinuumReleaseResult( int projectId, String releaseGoals,
+                                                                 ReleaseResult result, String releaseBy )
         throws ContinuumException
     {
         ContinuumReleaseResult releaseResult = new ContinuumReleaseResult();
         releaseResult.setStartTime( result.getStartTime() );
         releaseResult.setEndTime( result.getEndTime() );
         releaseResult.setResultCode( result.getResultCode() );
-    
+
         Project project = getProject( projectId );
         ProjectGroup projectGroup = project.getProjectGroup();
         releaseResult.setProjectGroup( projectGroup );
         releaseResult.setProject( project );
         releaseResult.setReleaseGoal( releaseGoals );
         releaseResult.setUsername( releaseBy );
-    
+
         String releaseName = "releases-" + result.getStartTime();
-    
+
         try
         {
             File logFile = getConfiguration().getReleaseOutputFile( projectGroup.getId(), releaseName );
-    
+
             PrintWriter writer = new PrintWriter( new FileWriter( logFile ) );
             writer.write( result.getOutput() );
             writer.close();
@@ -3256,7 +3277,7 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Unable to write output to file", e );
         }
-    
+
         return releaseResult;
     }
 
@@ -3550,7 +3571,7 @@ public class DefaultContinuum
     }
 
     private void prepareBuildProjects( Collection<Project> projects, List<BuildDefinition> bds,
-    		                           boolean checkDefaultBuildDefinitionForProject, BuildTrigger buildTrigger )
+                                       boolean checkDefaultBuildDefinitionForProject, BuildTrigger buildTrigger )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
@@ -3595,21 +3616,23 @@ public class DefaultContinuum
                 {
                     buildDefId = projectDefaultBD.getId();
                     log.debug( "Project " + project.getId() +
-                        " has own default build definition, will use it instead of group's." );
+                                   " has own default build definition, will use it instead of group's." );
                 }
             }
 
             if ( buildDefId == -1 )
             {
                 log.info( "Project " + projectId +
-                    " don't have a default build definition defined in the project or project group, will not be included in group build." );
+                              " don't have a default build definition defined in the project or project group, will not be included in group build." );
                 continue;
             }
 
             // check if project already in queue
             if ( !isProjectOkToBuild( projectId, buildDefId ) )
             {
-                log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefId );
+                log.info(
+                    "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building",
+                    projectId, buildDefId );
                 continue;
             }
 
@@ -3648,7 +3671,9 @@ public class DefaultContinuum
             // check if project already in queue
             if ( !isProjectOkToBuild( projectId, buildDefinitionId ) )
             {
-                log.info( "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building", projectId, buildDefinitionId );
+                log.info(
+                    "Not queueing the build with projectId={} and buildDefinitionId={} because it is already building",
+                    projectId, buildDefinitionId );
                 continue;
             }
 
@@ -3667,7 +3692,7 @@ public class DefaultContinuum
 
             if ( !sortedScmRoot.contains( scmRoot ) )
             {
-                    sortedScmRoot.add( scmRoot );
+                sortedScmRoot.add( scmRoot );
             }
         }
 
@@ -3680,13 +3705,14 @@ public class DefaultContinuum
     {
         for ( ProjectScmRoot scmRoot : scmRoots )
         {
-        	prepareBuildProjects( map.get( scmRoot ), buildTrigger, scmRoot.getScmRootAddress(),
+            prepareBuildProjects( map.get( scmRoot ), buildTrigger, scmRoot.getScmRootAddress(),
                                   scmRoot.getProjectGroup().getId(), scmRoot.getId(), scmRoots );
         }
     }
 
     private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, BuildTrigger buildTrigger,
-                                       String scmRootAddress, int projectGroupId, int scmRootId, List<ProjectScmRoot> scmRoots )
+                                       String scmRootAddress, int projectGroupId, int scmRootId,
+                                       List<ProjectScmRoot> scmRoots )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
         ProjectGroup group = getProjectGroup( projectGroupId );
@@ -3695,12 +3721,12 @@ public class DefaultContinuum
         {
             if ( configurationService.isDistributedBuildEnabled() )
             {
-            	distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, projectGroupId, 
+                distributedBuildManager.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, projectGroupId,
                                                               group.getName(), scmRootAddress, scmRootId, scmRoots );
             }
             else
             {
-            	parallelBuildsManager.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, projectGroupId,
+                parallelBuildsManager.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, projectGroupId,
                                                             group.getName(), scmRootAddress, scmRootId );
             }
         }
@@ -3715,23 +3741,23 @@ public class DefaultContinuum
     {
         List<Project> projectsList;
 
-        projectsList =
-            getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroup.getId() ) );
-        
+        projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId(
+            projectGroup.getId() ) );
+
         List<ProjectScmRoot> scmRoots = getProjectScmRootByProjectGroup( projectGroup.getId() );
 
         String url = "";
 
         for ( Project project : projectsList )
         {
-        	boolean found = false;
-        	
+            boolean found = false;
+
             if ( StringUtils.isEmpty( url ) || !project.getScmUrl().startsWith( url ) )
             {
-            	// this is a root project or the project is part of a flat multi module 
+                // this is a root project or the project is part of a flat multi module
                 url = project.getScmUrl();
                 //createProjectScmRoot( projectGroup, url );
-                
+
                 for ( ProjectScmRoot scmRoot : scmRoots )
                 {
                     if ( url.startsWith( scmRoot.getScmRootAddress() ) )
@@ -3751,15 +3777,15 @@ public class DefaultContinuum
     private ProjectScmRoot createProjectScmRoot( ProjectGroup projectGroup, String url )
         throws ContinuumException
     {
-    	if ( StringUtils.isEmpty( url ) )
+        if ( StringUtils.isEmpty( url ) )
         {
             return null;
         }
-    	
+
         try
         {
-            ProjectScmRoot scmRoot =
-                projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
+            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress(
+                projectGroup.getId(), url );
 
             if ( scmRoot != null )
             {
@@ -3786,9 +3812,8 @@ public class DefaultContinuum
         try
         {
             removeProjectScmRoot( oldScmRoot );
-            ProjectScmRoot scmRoot =
-                projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( project.getProjectGroup().getId(),
-                                                                                    project.getScmUrl() );
+            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress(
+                project.getProjectGroup().getId(), project.getScmUrl() );
             if ( scmRoot == null )
             {
                 ProjectScmRoot newScmRoot = new ProjectScmRoot();
@@ -3833,7 +3858,7 @@ public class DefaultContinuum
             if ( isProjectInReleaseStage( project ) )
             {
                 throw new ContinuumException( "Cannot build project group. Project (id=" + project.getId() +
-                    ") in group is currently in release stage." );
+                                                  ") in group is currently in release stage." );
             }
         }
         return false;
@@ -3902,10 +3927,10 @@ public class DefaultContinuum
     {
         if ( configurationService.isDistributedBuildEnabled() )
         {
-            if ( !distributedBuildManager.isProjectInAnyPrepareBuildQueue( projectId, buildDefinitionId ) && 
-                 !distributedBuildManager.isProjectInAnyBuildQueue( projectId, buildDefinitionId ) &&
-                 !distributedBuildManager.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId ) &&
-                 !distributedBuildManager.isProjectCurrentlyBuilding( projectId, buildDefinitionId ) )
+            if ( !distributedBuildManager.isProjectInAnyPrepareBuildQueue( projectId, buildDefinitionId ) &&
+                !distributedBuildManager.isProjectInAnyBuildQueue( projectId, buildDefinitionId ) &&
+                !distributedBuildManager.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId ) &&
+                !distributedBuildManager.isProjectCurrentlyBuilding( projectId, buildDefinitionId ) )
             {
                 return true;
             }
@@ -3915,9 +3940,9 @@ public class DefaultContinuum
             try
             {
                 if ( !parallelBuildsManager.isInAnyBuildQueue( projectId, buildDefinitionId ) &&
-                     !parallelBuildsManager.isInAnyCheckoutQueue( projectId ) &&
-                     !parallelBuildsManager.isInPrepareBuildQueue( projectId ) &&
-                     !parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) )
+                    !parallelBuildsManager.isInAnyCheckoutQueue( projectId ) &&
+                    !parallelBuildsManager.isInPrepareBuildQueue( projectId ) &&
+                    !parallelBuildsManager.isProjectCurrentlyPreparingBuild( projectId ) )
                 {
                     if ( parallelBuildsManager.isInAnyCheckoutQueue( projectId ) )
                     {
@@ -3935,6 +3960,7 @@ public class DefaultContinuum
 
         return false;
     }
+
     void setTaskQueueManager( TaskQueueManager taskQueueManager )
     {
         this.taskQueueManager = taskQueueManager;

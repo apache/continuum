@@ -44,7 +44,7 @@ public class ProjectGroupSummary
     {
         return projectGroupId;
     }
-    
+
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;

@@ -121,9 +121,9 @@ public class PerformReleaseTaskExecutor
             throw new TaskExecutionException( "Failed to build reactor projects.", e );
         }
 
-        ReleaseResult result =
-            releaseManager.performWithResult( descriptor, new DefaultReleaseEnvironment().setSettings( settings ),
-                                              reactorProjects, listener );
+        ReleaseResult result = releaseManager.performWithResult( descriptor,
+                                                                 new DefaultReleaseEnvironment().setSettings(
+                                                                     settings ), reactorProjects, listener );
 
         //override to show the actual start time
         result.setStartTime( getStartTime() );
@@ -175,8 +175,8 @@ public class PerformReleaseTaskExecutor
 
             try
             {
-                MavenProject reactorProject =
-                    projectBuilder.build( pomFile, getLocalRepository(), getProfileManager( settings ) );
+                MavenProject reactorProject = projectBuilder.build( pomFile, getLocalRepository(), getProfileManager(
+                    settings ) );
 
                 reactorProjects.add( reactorProject );
 

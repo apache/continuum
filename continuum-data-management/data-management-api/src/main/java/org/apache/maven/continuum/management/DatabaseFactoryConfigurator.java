@@ -20,7 +20,6 @@ package org.apache.maven.continuum.management;
  */
 
 /**
- * 
  * @version $Id$
  */
 public interface DatabaseFactoryConfigurator

@@ -19,9 +19,9 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>

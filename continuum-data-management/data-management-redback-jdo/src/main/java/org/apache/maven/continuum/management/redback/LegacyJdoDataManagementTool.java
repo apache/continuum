@@ -50,9 +50,6 @@ import org.codehaus.plexus.security.user.jdo.v0_9_0.io.stax.UserManagementStaxWr
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -62,9 +59,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * JDO implementation the database management tool API.
+ *
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-redback-jdo"
  */
@@ -136,8 +137,8 @@ public class LegacyJdoDataManagementTool
     {
         RbacDatabase database = new RbacDatabase();
         database.setRoles( PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), JdoRole.class ) );
-        database.setUserAssignments(
-            PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), JdoUserAssignment.class ) );
+        database.setUserAssignments( PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(),
+                                                                           JdoUserAssignment.class ) );
         database.setPermissions( PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), JdoPermission.class ) );
         database.setOperations( PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), JdoOperation.class ) );
         database.setResources( PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), JdoResource.class ) );
@@ -260,8 +261,8 @@ public class LegacyJdoDataManagementTool
                     else
                     {
                         RBACObjectAssertions.assertValid( operation );
-                        operation =
-                            (JdoOperation) PlexusJdoUtils.saveObject( getPersistenceManager(), operation, null );
+                        operation = (JdoOperation) PlexusJdoUtils.saveObject( getPersistenceManager(), operation,
+                                                                              null );
                         operations.put( operation.getName(), operation );
                     }
                     permission.setOperation( operation );
@@ -338,13 +339,13 @@ public class LegacyJdoDataManagementTool
             if ( !( user instanceof JdoUser ) )
             {
                 throw new UserManagerException( "Unable to Add User. User object " + user.getClass().getName() +
-                    " is not an instance of " + JdoUser.class.getName() );
+                                                    " is not an instance of " + JdoUser.class.getName() );
             }
 
             if ( StringUtils.isEmpty( user.getUsername() ) )
             {
-                throw new IllegalStateException(
-                    Messages.getString( "user.manager.cannot.add.user.without.username" ) ); //$NON-NLS-1$
+                throw new IllegalStateException( Messages.getString(
+                    "user.manager.cannot.add.user.without.username" ) ); //$NON-NLS-1$
             }
 
             PlexusJdoUtils.addObject( getPersistenceManager(), user );

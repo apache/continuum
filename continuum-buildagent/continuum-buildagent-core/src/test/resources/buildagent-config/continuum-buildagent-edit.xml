@@ -27,7 +27,7 @@ under the License.
       <name>Maven 2.2.1 Installation</name>
       <type>Tool</type>
       <varName>M2_HOME</varName>
-      <varValue>/tmp/apache-maven-2.2.1</varValue>      
+      <varValue>/tmp/apache-maven-2.2.1</varValue>
     </installation>
   </installations>
 </continuum-buildagent-configuration>

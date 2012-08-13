@@ -19,14 +19,14 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 /**
  * TestContinuumActionLogging:
@@ -53,8 +53,8 @@ public class ContinuumActionLoggingTest
 
     public void tearDown()
     {
-        System.setOut( new PrintStream(
-            new BufferedOutputStream( new FileOutputStream( java.io.FileDescriptor.out ), 128 ), true ) );
+        System.setOut( new PrintStream( new BufferedOutputStream( new FileOutputStream( java.io.FileDescriptor.out ),
+                                                                  128 ), true ) );
     }
 
 

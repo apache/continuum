@@ -19,16 +19,16 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.AbstractPurgeTest;
 import org.apache.continuum.purge.task.PurgeTask;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Maria Catherine Tan
@@ -351,8 +351,8 @@ public abstract class AbstractPurgeExecutorTest
             // create maven-metadata* files
             for ( String metadata_extension : metadata_extensions )
             {
-                File metadata =
-                    new File( versionDir.getParentFile().getAbsolutePath(), TEST_MAVEN_METADATA + metadata_extension );
+                File metadata = new File( versionDir.getParentFile().getAbsolutePath(),
+                                          TEST_MAVEN_METADATA + metadata_extension );
                 metadata.createNewFile();
             }
         }

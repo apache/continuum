@@ -19,10 +19,6 @@ package org.apache.continuum.buildagent.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Date;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
@@ -34,6 +30,10 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.action.AbstractAction;
+
+import java.io.File;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="execute-agent-builder"
@@ -57,7 +57,7 @@ public class ExecuteBuilderAction
         // ----------------------------------------------------------------------
         // Get parameters from the context
         // ----------------------------------------------------------------------
-        
+
         Project project = ContinuumBuildAgentUtil.getProject( context );
 
         BuildDefinition buildDefinition = ContinuumBuildAgentUtil.getBuildDefinition( context );
@@ -67,11 +67,12 @@ public class ExecuteBuilderAction
         String localRepository = ContinuumBuildAgentUtil.getLocalRepository( context );
 
         int trigger = ContinuumBuildAgentUtil.getTrigger( context );
-        
+
         String username = ContinuumBuildAgentUtil.getUsername( context );
 
-        ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor( project.getExecutorId() );
-        
+        ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor(
+            project.getExecutorId() );
+
         // ----------------------------------------------------------------------
         // Make the buildResult
         // ----------------------------------------------------------------------
@@ -83,7 +84,7 @@ public class ExecuteBuilderAction
         buildResult.setState( ContinuumProjectState.BUILDING );
 
         buildResult.setTrigger( trigger );
-        
+
         buildResult.setUsername( username );
 
         buildResult.setBuildDefinition( buildDefinition );
@@ -107,7 +108,7 @@ public class ExecuteBuilderAction
         catch ( ContinuumAgentBuildCancelledException e )
         {
             getLogger().info( "Cancelled build" );
-            
+
             buildResult.setState( ContinuumProjectState.CANCELLED );
         }
         catch ( Throwable e )
@@ -123,9 +124,9 @@ public class ExecuteBuilderAction
             buildResult.setEndTime( new Date().getTime() );
 
             if ( buildResult.getState() != ContinuumProjectState.OK &&
-                 buildResult.getState() != ContinuumProjectState.FAILED &&
-                 buildResult.getState() != ContinuumProjectState.ERROR &&
-                 buildResult.getState() != ContinuumProjectState.CANCELLED )
+                buildResult.getState() != ContinuumProjectState.FAILED &&
+                buildResult.getState() != ContinuumProjectState.ERROR &&
+                buildResult.getState() != ContinuumProjectState.CANCELLED )
             {
                 buildResult.setState( ContinuumProjectState.ERROR );
             }

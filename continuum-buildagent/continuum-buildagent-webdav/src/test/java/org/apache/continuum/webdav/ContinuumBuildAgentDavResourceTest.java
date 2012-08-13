@@ -1,9 +1,5 @@
 package org.apache.continuum.webdav;
 
-import java.io.File;
-
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
@@ -13,6 +9,9 @@ import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.DavSession;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+
+import java.io.File;
+import javax.activation.MimetypesFileTypeMap;
 
 public class ContinuumBuildAgentDavResourceTest
     extends PlexusInSpringTestCase
@@ -53,7 +52,7 @@ public class ContinuumBuildAgentDavResourceTest
 
         resourceFactory = new RootContextDavResourceFactory();
         resourceLocator = (ContinuumBuildAgentDavResourceLocator) new ContinuumBuildAgentDavLocatorFactory().
-                                createResourceLocator( "/", RESOURCE_FILE );
+            createResourceLocator( "/", RESOURCE_FILE );
         resource = getDavResource( resourceLocator.getHref( false ), resourceFile );
     }
 
@@ -136,7 +135,7 @@ public class ContinuumBuildAgentDavResourceTest
         {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
-    
+
         public DavResource createResource( DavResourceLocator locator, DavSession session )
             throws DavException
         {

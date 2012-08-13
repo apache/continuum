@@ -68,7 +68,8 @@ public interface ContinuumBuildAgentService
     String getPreparedReleaseName( String releaseId )
         throws ContinuumBuildAgentException;
 
-    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository, String username )
+    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository,
+                         String username )
         throws ContinuumBuildAgentException;
 
     String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
@@ -130,45 +131,43 @@ public interface ContinuumBuildAgentService
 
     boolean ping()
         throws ContinuumBuildAgentException;
-    
+
     /**
      * Get build agent's platform.
-     * 
+     *
      * @return The operating system name of the build agent
      * @throws Exception
      */
     String getBuildAgentPlatform()
         throws ContinuumBuildAgentException;
-    
+
     /**
      * Determines if build agent is currently executing a build
-     * 
+     *
      * @return true if executing build; false otherwise
      */
     boolean isExecutingBuild();
-    
+
     /**
      * Determines if build agent is currently executing a release
-     * 
+     *
      * @return true if executing release; false otherwise
-     * 
      * @throws ContinuumBuildAgentException if unable to determine if buildagent is executing a release
      */
-    boolean isExecutingRelease() throws ContinuumBuildAgentException;
-    
+    boolean isExecutingRelease()
+        throws ContinuumBuildAgentException;
+
     /**
      * Execute a directory purge on the build agent
-     * 
-     * @param directoryType valid types are <i>working</i> and <i>releases</i>
-     * @param daysOlder days older
+     *
+     * @param directoryType  valid types are <i>working</i> and <i>releases</i>
+     * @param daysOlder      days older
      * @param retentionCount retention count
-     * @param deleteAll delete all flag
-     * 
+     * @param deleteAll      delete all flag
      * @return true if purge is successful; false otherwise
-     * 
      * @throws ContinuumBuildAgentException error that will occur during the purge
      */
     void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws ContinuumBuildAgentException;
-    
+
 }

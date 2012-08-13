@@ -19,10 +19,10 @@ package org.apache.continuum.release.config;
  * under the License.
  */
 
+import org.apache.maven.shared.release.config.ReleaseDescriptor;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.maven.shared.release.config.ReleaseDescriptor;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -51,7 +51,7 @@ public class ContinuumReleaseDescriptor
         return environments;
     }
 
-    public void mapEnvironments( String name, String value)
+    public void mapEnvironments( String name, String value )
     {
         if ( environments == null )
         {

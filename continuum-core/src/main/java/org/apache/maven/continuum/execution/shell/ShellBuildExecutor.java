@@ -68,14 +68,15 @@ public class ShellBuildExecutor
     // ----------------------------------------------------------------------
 
     public synchronized ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition,
-                                                             File buildOutput, List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
+                                                             File buildOutput, List<Project> projectsWithCommonScmRoot,
+                                                             String projectScmRootUrl )
         throws ContinuumBuildExecutorException
     {
         // TODO: this should be validated earlier?
         String executable = getBuildFileForProject( project, buildDefinition );
 
-        return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput,
-                                    getEnvironments( buildDefinition ), null, null );
+        return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput, getEnvironments(
+            buildDefinition ), null, null );
     }
 
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )

@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "distributed" } )
+@Test( groups = {"distributed"} )
 public class DistributedBuildTest
     extends AbstractBuildAgentsTest
 {
@@ -56,7 +56,7 @@ public class DistributedBuildTest
         disableDistributedBuilds();
     }
 
-    @Test( dependsOnMethods = { "testDeleteBuildAgentGroup" } )
+    @Test( dependsOnMethods = {"testDeleteBuildAgentGroup"} )
     public void testBuildProjectGroupNoBuildAgentConfigured()
         throws Exception
     {
@@ -67,8 +67,8 @@ public class DistributedBuildTest
         String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
         projectGroupName = M2_PROJ_GRP_NAME;
 
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ), getProperty(
+            "M2_POM_PASSWORD" ), null, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( projectGroupName );
         clickLinkWithText( projectGroupName );
@@ -90,14 +90,14 @@ public class DistributedBuildTest
 
         addBuildAgent( getBuildAgentUrl() );
 
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ), getProperty(
+            "M2_POM_PASSWORD" ), null, true );
 
         buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME, true );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgentGroupWithEmptyBuildAgent",
-        "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    @Test(
+        dependsOnMethods = {"testAddBuildAgentGroupWithEmptyBuildAgent", "testAddBuildEnvironmentWithBuildAgentGroup"} )
     public void testProjectGroupNoBuildAgentConfiguredInBuildAgentGroup()
         throws Exception
     {
@@ -106,8 +106,8 @@ public class DistributedBuildTest
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         projectGroupName = M2_PROJ_GRP_NAME;
 
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ), getProperty(
+            "M2_POM_PASSWORD" ), null, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( M2_PROJ_GRP_NAME );
         clickLinkWithText( M2_PROJ_GRP_NAME );

@@ -19,10 +19,10 @@ package org.apache.continuum.buildagent.stubs;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.codehaus.plexus.action.AbstractAction;
+
+import java.util.Map;
 
 /**
  * This is used for testing the fix for CONTINUUM-2391. See BuildPRrojectTaskExecutorTest.java and

@@ -19,12 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
@@ -38,6 +32,12 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -122,7 +122,7 @@ public class CancelBuildAction
         {
             BuildsManager parallelBuildsManager = getContinuum().getBuildsManager();
             parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );
-    
+
             try
             {
                 // now we must check if the current build is one of this
@@ -131,13 +131,13 @@ public class CancelBuildAction
                 {
                     int projId = projectsId[index];
                     getContinuum().getBuildsManager().cancelBuild( projId );
-                    
+
                     AuditLog event = new AuditLog( "Project id=" + projId, AuditLogConstants.CANCEL_BUILD );
                     event.setCategory( AuditLogConstants.PROJECT );
                     event.setCurrentUser( getPrincipal() );
                     event.log();
                 }
-    
+
             }
             catch ( BuildManagerException e )
             {
@@ -195,16 +195,16 @@ public class CancelBuildAction
                 }
             }
             Collection<Project> projects = getContinuum().getProjectsInGroup( projectGroupId );
-    
+
             List<String> projectIds = new ArrayList<String>();
-    
+
             for ( Project project : projects )
             {
                 projectIds.add( Integer.toString( project.getId() ) );
             }
-    
+
             setSelectedProjects( projectIds );
-    
+
             return cancelBuilds();
         }
     }

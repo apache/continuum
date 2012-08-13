@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "schedule" } )
+@Test( groups = {"schedule"} )
 public class ScheduleTest
     extends AbstractScheduleTest
 {
@@ -47,10 +47,10 @@ public class ScheduleTest
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, false, false );
-	assertTextPresent( "Used Build Queues cannot be empty" );
+        assertTextPresent( "Used Build Queues cannot be empty" );
     }
 
-    @Test( dependsOnMethods = { "testAddScheduleNoBuildQueueToBeUsed" } )
+    @Test( dependsOnMethods = {"testAddScheduleNoBuildQueueToBeUsed"} )
     public void testAddSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
@@ -69,8 +69,8 @@ public class ScheduleTest
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true, true );
     }
-    
-    @Test( dependsOnMethods = { "testAddScheduleNoBuildQueueToBeUsed" } )
+
+    @Test( dependsOnMethods = {"testAddScheduleNoBuildQueueToBeUsed"} )
     public void testAddScheduleWithInvalidValues()
     {
         String SCHEDULE_NAME = "!@#$<>?etc";
@@ -100,7 +100,7 @@ public class ScheduleTest
         assertTextPresent( "Description is required and cannot contain spaces only" );
     }
 
-    @Test( dependsOnMethods = { "testAddSchedule" } )
+    @Test( dependsOnMethods = {"testAddSchedule"} )
     public void testAddDuplicatedSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
@@ -121,7 +121,7 @@ public class ScheduleTest
         assertTextPresent( "A Schedule with the same name already exists" );
     }
 
-    @Test( dependsOnMethods = { "testAddDuplicatedSchedule" } )
+    @Test( dependsOnMethods = {"testAddDuplicatedSchedule"} )
     public void testEditSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
@@ -149,14 +149,15 @@ public class ScheduleTest
         goToEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                           SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                           SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD );
-        addEditSchedule( name, description, second, minute, hour, dayMonth, month, dayWeek, year, maxTime, period, false, true );
+        addEditSchedule( name, description, second, minute, hour, dayMonth, month, dayWeek, year, maxTime, period,
+                         false, true );
         goToEditSchedule( name, description, second, minute, hour, dayMonth, month, dayWeek, year, maxTime, period );
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, false, true );
     }
 
-    @Test( dependsOnMethods = { "testEditSchedule" } )
+    @Test( dependsOnMethods = {"testEditSchedule"} )
     public void testDeleteSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );

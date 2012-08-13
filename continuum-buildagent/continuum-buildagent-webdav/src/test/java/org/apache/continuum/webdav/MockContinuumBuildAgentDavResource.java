@@ -19,16 +19,15 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.continuum.webdav.util.IndexWriter;
 import org.apache.jackrabbit.webdav.DavResourceFactory;
 import org.apache.jackrabbit.webdav.DavSession;
 import org.apache.jackrabbit.webdav.io.OutputContext;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import javax.activation.MimetypesFileTypeMap;
 
 public class MockContinuumBuildAgentDavResource
     extends ContinuumBuildAgentDavResource

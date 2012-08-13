@@ -19,11 +19,11 @@ package org.apache.continuum.webdav.util;
  * under the License.
  */
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
 
 public class WebdavMethodUtil
 {

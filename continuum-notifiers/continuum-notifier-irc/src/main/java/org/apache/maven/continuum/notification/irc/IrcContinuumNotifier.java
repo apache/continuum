@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 
 /**
@@ -55,9 +54,8 @@ import javax.annotation.Resource;
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * 
  */
-@Service("notifier#irc")
+@Service( "notifier#irc" )
 public class IrcContinuumNotifier
     extends AbstractContinuumNotifier
     implements Disposable
@@ -232,14 +230,14 @@ public class IrcContinuumNotifier
 
         ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
 
-        boolean isPrepareBuildComplete = 
-            messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE );
-        
+        boolean isPrepareBuildComplete = messageId.equals(
+            ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE );
+
         if ( projectScmRoot == null && isPrepareBuildComplete )
         {
             return;
         }
-        
+
         // ----------------------------------------------------------------------
         // If there wasn't any building done, don't notify
         // ----------------------------------------------------------------------
@@ -298,9 +296,9 @@ public class IrcContinuumNotifier
         {
             return;
         }
-        
+
         sendMessage( projectNotifier.getConfiguration(), generateMessage( projectScmRoot, configurationService ) );
-    }    
+    }
 
     private void sendMessage( Map<String, String> configuration, String message )
         throws NotificationException

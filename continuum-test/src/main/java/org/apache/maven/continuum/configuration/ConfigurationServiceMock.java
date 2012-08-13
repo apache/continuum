@@ -19,16 +19,16 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Mock class for testing WagonContinuumNotifier's call to ConfigurationService.getBuildOutputFile()
@@ -184,7 +184,7 @@ public class ConfigurationServiceMock
     }
 
     public void setSharedSecretPassword( String sharedSecretPassword )
-    {        
+    {
     }
 
     public boolean isLoaded()

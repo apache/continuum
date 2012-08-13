@@ -19,12 +19,12 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'MSN' from the

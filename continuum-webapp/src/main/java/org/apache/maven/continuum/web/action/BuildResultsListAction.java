@@ -19,10 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -33,6 +29,10 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -102,7 +102,8 @@ public class BuildResultsListAction
 
                         getContinuum().removeBuildResult( buildId );
 
-                        AuditLog event = new AuditLog( "Build Result id=" + buildId, AuditLogConstants.REMOVE_BUILD_RESULT );
+                        AuditLog event = new AuditLog( "Build Result id=" + buildId,
+                                                       AuditLogConstants.REMOVE_BUILD_RESULT );
                         event.setCategory( AuditLogConstants.BUILD_RESULT );
                         event.setCurrentUser( getPrincipal() );
                         event.log();

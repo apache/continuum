@@ -41,8 +41,8 @@ public class BuildStatusCell
 
         String success = StateGenerator.generate( ContinuumProjectState.OK, tableModel.getContext().getContextPath() );
 
-        String failed =
-            StateGenerator.generate( ContinuumProjectState.FAILED, tableModel.getContext().getContextPath() );
+        String failed = StateGenerator.generate( ContinuumProjectState.FAILED,
+                                                 tableModel.getContext().getContextPath() );
 
         String error = StateGenerator.generate( ContinuumProjectState.ERROR, tableModel.getContext().getContextPath() );
 

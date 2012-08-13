@@ -19,13 +19,6 @@ package org.apache.maven.continuum.notification.wagon;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
@@ -76,11 +69,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:hisidro@exist.com">Henry Isidro</a>
  * @author <a href="mailto:nramirez@exist.com">Napoleon Esmundo C. Ramirez</a>
  */
-@Service("notifier#wagon")
+@Service( "notifier#wagon" )
 public class WagonContinuumNotifier
     extends AbstractContinuumNotifier
     implements Contextualizable
@@ -293,8 +292,8 @@ public class WagonContinuumNotifier
     private MavenProject getMavenProject( Project project, BuildDefinition buildDefinition )
         throws ContinuumException
     {
-        File projectWorkingDir =
-            new File( configurationService.getWorkingDirectory(), Integer.toString( project.getId() ) );
+        File projectWorkingDir = new File( configurationService.getWorkingDirectory(), Integer.toString(
+            project.getId() ) );
         File pomFile = new File( projectWorkingDir, buildDefinition.getBuildFile() );
 
         MavenProject mavenProject;

@@ -20,14 +20,14 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractConfigurationTest;
-import org.testng.annotations.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "configuration" } )
+@Test( groups = {"configuration"} )
 public class ConfigurationTest
     extends AbstractConfigurationTest
 {
@@ -54,7 +54,7 @@ public class ConfigurationTest
         NUMBER_ALLOWED_PARALLEL = getFieldValue( "numberOfAllowedBuildsinParallel" );
     }
 
-    @Test( dependsOnMethods = { "defaultConfiguration" } )
+    @Test( dependsOnMethods = {"defaultConfiguration"} )
     public void editConfiguration()
     {
         String newWorking = "newWorking";
@@ -90,8 +90,8 @@ public class ConfigurationTest
     {
         String invalidString = "<script>alert('gotcha')</script>";
         goToConfigurationPage();
-        submitConfiguration( invalidString, invalidString, invalidString, invalidString, 
-                             invalidString, invalidString, true, false );
+        submitConfiguration( invalidString, invalidString, invalidString, invalidString, invalidString, invalidString,
+                             true, false );
         assertTextPresent( "Working directory contains invalid characters." );
         assertTextPresent( "Build output directory contains invalid characters." );
         assertTextPresent( "Release output directory contains invalid characters." );
@@ -102,60 +102,71 @@ public class ConfigurationTest
     public void testSetFooterXSS()
     {
         goToAppearancePage();
-        setFieldValue( "saveFooter_footer", "Copyright <SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
-        setFieldValue( "saveFooter_footer", "Copyright <SCRIPT SRC=http://ha.ckers.org/xss.js></SCRIPT> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <SCRIPT SRC=http://ha.ckers.org/xss.js></SCRIPT> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=\"javascript:alert('XSS');\"> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=\"javascript:alert('XSS');\"> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=JaVaScRiPt:alert('XSS')> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=JaVaScRiPt:alert('XSS')> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=javascript:alert(&quot;XSS&quot;)> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=javascript:alert(&quot;XSS&quot;)> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
         // unicode
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
         // utf-8
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
-        
+
         // hex encoding
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=\"jav    ascript:alert('XSS');\"> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=\"jav    ascript:alert('XSS');\"> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
-        setFieldValue( "saveFooter_footer", "Copyright <IMG SRC=\"jav&#x09;ascript:alert('XSS');\"> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <IMG SRC=\"jav&#x09;ascript:alert('XSS');\"> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
 
-        setFieldValue( "saveFooter_footer", "Copyright <STYLE>@import'http://ha.ckers.org/xss.css';</STYLE> 2005-2011&nbsp;The Apache Software Foundation" );
+        setFieldValue( "saveFooter_footer",
+                       "Copyright <STYLE>@import'http://ha.ckers.org/xss.css';</STYLE> 2005-2011&nbsp;The Apache Software Foundation" );
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );

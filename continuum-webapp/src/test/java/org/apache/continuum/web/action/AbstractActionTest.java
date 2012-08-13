@@ -19,14 +19,13 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
-import org.jmock.MockObjectTestCase;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.jmock.MockObjectTestCase;
 
 public abstract class AbstractActionTest
     extends MockObjectTestCase
@@ -42,12 +41,12 @@ public abstract class AbstractActionTest
             configurationManager.addContainerProvider( new XWorkConfigurationProvider() );
             com.opensymphony.xwork2.config.Configuration config = configurationManager.getConfiguration();
             Container container = config.getContainer();
-    
+
             ValueStack stack = container.getInstance( ValueStackFactory.class ).createValueStack();
             stack.getContext().put( ActionContext.CONTAINER, container );
             ActionContext.setContext( new ActionContext( stack.getContext() ) );
-    
-            assertNotNull(ActionContext.getContext());
+
+            assertNotNull( ActionContext.getContext() );
         }
     }
 }

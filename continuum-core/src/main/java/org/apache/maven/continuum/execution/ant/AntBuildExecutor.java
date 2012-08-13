@@ -71,11 +71,12 @@ public class AntBuildExecutor
     // ContinuumBuilder Implementation
     // ----------------------------------------------------------------------
 
-    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput, List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
+    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                                List<Project> projectsWithCommonScmRoot, String projectScmRootUrl )
         throws ContinuumBuildExecutorException
     {
-        String executable = getInstallationService().getExecutorConfigurator( InstallationService.ANT_TYPE )
-            .getExecutable();
+        String executable = getInstallationService().getExecutorConfigurator(
+            InstallationService.ANT_TYPE ).getExecutable();
 
         StringBuffer arguments = new StringBuffer();
 

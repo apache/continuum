@@ -19,9 +19,6 @@ package org.apache.maven.continuum.release.phase;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.scm.ContinuumScmUtils;
 import org.apache.maven.scm.ScmBranch;
@@ -49,6 +46,9 @@ import org.apache.maven.shared.release.phase.AbstractReleasePhase;
 import org.apache.maven.shared.release.scm.ReleaseScmCommandException;
 import org.apache.maven.shared.release.scm.ReleaseScmRepositoryException;
 import org.apache.maven.shared.release.scm.ScmRepositoryConfigurator;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Update working copy
@@ -81,7 +81,8 @@ public class UpdateWorkingCopyPhase
         String providerType = ScmUrlUtils.getProvider( releaseDescriptor.getScmSourceUrl() );
         String scmSpecificUrl = releaseDescriptor.getScmSourceUrl().substring( providerType.length() + 5 );
 
-        if( providerType.contains( ContinuumScmUtils.GIT_SCM_PROVIDERTYPE ) && scmSpecificUrl.startsWith( GitScmProviderRepository.PROTOCOL_SSH ) )
+        if ( providerType.contains( ContinuumScmUtils.GIT_SCM_PROVIDERTYPE ) && scmSpecificUrl.startsWith(
+            GitScmProviderRepository.PROTOCOL_SSH ) )
         {
             scmSpecificUrl = scmSpecificUrl.substring( GitScmProviderRepository.PROTOCOL_SSH.length() + 3 );
 
@@ -99,7 +100,7 @@ public class UpdateWorkingCopyPhase
                 // password is specified in the url
                 if ( indexPwdSep < 0 )
                 {
-                    sshScmUsername = userInfo.substring( indexPwdSep + 1);
+                    sshScmUsername = userInfo.substring( indexPwdSep + 1 );
                 }
                 else
                 {
@@ -108,10 +109,10 @@ public class UpdateWorkingCopyPhase
                 }
             }
 
-            if( !StringUtils.isBlank( sshScmUsername ) )
+            if ( !StringUtils.isBlank( sshScmUsername ) )
             {
                 releaseDescriptor.setScmUsername( sshScmUsername );
-                if( !StringUtils.isBlank( sshScmPassword ) )
+                if ( !StringUtils.isBlank( sshScmPassword ) )
                 {
                     releaseDescriptor.setScmPassword( sshScmPassword );
                 }
@@ -140,17 +141,17 @@ public class UpdateWorkingCopyPhase
 
         UpdateScmResult updateScmResult = null;
         CheckOutScmResult checkOutScmResult = null;
-        
+
         File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
         ScmFileSet workingDirSet = new ScmFileSet( workingDirectory );
-        
+
         try
         {
             if ( !workingDirectory.exists() )
             {
                 workingDirectory.mkdirs();
             }
-            
+
             ScmVersion scmTag = null;
 
             ScmProviderRepository providerRepo = repository.getProviderRepository();
@@ -158,13 +159,13 @@ public class UpdateWorkingCopyPhase
             // FIXME: This should be handled by the maven-scm git provider
             if ( providerRepo instanceof GitScmProviderRepository )
             {
-                String branchName =
-                    GitBranchCommand.getCurrentBranch( new PlexusLogger(getLogger()), (GitScmProviderRepository) providerRepo,
-                                                       workingDirSet );
+                String branchName = GitBranchCommand.getCurrentBranch( new PlexusLogger( getLogger() ),
+                                                                       (GitScmProviderRepository) providerRepo,
+                                                                       workingDirSet );
                 scmTag = new ScmBranch( branchName );
             }
 
-            if( workingDirectory.listFiles().length > 1 )
+            if ( workingDirectory.listFiles().length > 1 )
             {
                 updateScmResult = provider.update( repository, workingDirSet, scmTag );
             }
@@ -182,20 +183,20 @@ public class UpdateWorkingCopyPhase
 
         if ( updateScmResult != null )
         {
-            if( !updateScmResult.isSuccess() )
+            if ( !updateScmResult.isSuccess() )
             {
                 throw new ReleaseScmCommandException( "Unable to update current working copy", updateScmResult );
             }
-            
+
             copyUpdated = updateScmResult.getUpdatedFiles().size() > 0;
         }
         else
         {
-            if( !checkOutScmResult.isSuccess() )
+            if ( !checkOutScmResult.isSuccess() )
             {
                 throw new ReleaseScmCommandException( "Unable to checkout project", checkOutScmResult );
             }
-            
+
             copyUpdated = checkOutScmResult.getCheckedOutFiles().size() > 0;
         }
 
@@ -220,17 +221,17 @@ public class UpdateWorkingCopyPhase
         this.copyUpdated = copyUpdated;
     }
 
-	public ReleaseResult execute(ReleaseDescriptor releaseDescriptor,
-			ReleaseEnvironment releaseEnvironment, List reactorProjects)
-			throws ReleaseExecutionException, ReleaseFailureException {
-		return execute(releaseDescriptor, releaseEnvironment.getSettings(),
-				reactorProjects);
-	}
+    public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
+                                  List reactorProjects )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+        return execute( releaseDescriptor, releaseEnvironment.getSettings(), reactorProjects );
+    }
 
-	public ReleaseResult simulate(ReleaseDescriptor releaseDescriptor,
-			ReleaseEnvironment releaseEnvironment, List reactorProjects)
-			throws ReleaseExecutionException, ReleaseFailureException {
-		return execute(releaseDescriptor, releaseEnvironment.getSettings(),
-				reactorProjects);
-	}
+    public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, ReleaseEnvironment releaseEnvironment,
+                                   List reactorProjects )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+        return execute( releaseDescriptor, releaseEnvironment.getSettings(), reactorProjects );
+    }
 }

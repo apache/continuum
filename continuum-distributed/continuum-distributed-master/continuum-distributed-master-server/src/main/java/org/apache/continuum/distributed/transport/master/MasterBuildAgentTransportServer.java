@@ -19,12 +19,12 @@ package org.apache.continuum.distributed.transport.master;
  * under the License.
  */
 
-import java.util.Map;
-
 import org.apache.continuum.builder.distributed.DistributedBuildService;
 import org.apache.continuum.distributed.commons.utils.ContinuumDistributedUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * MasterBuildAgentTransportServer
@@ -45,7 +45,7 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         distributedBuildService.updateBuildResult( buildResult );
-        log.info( "Project {} build finished in build agent {}. Returned build result.", 
+        log.info( "Project {} build finished in build agent {}. Returned build result.",
                   ContinuumDistributedUtil.getProjectNameAndId( buildResult ), buildAgentUrl );
         return Boolean.TRUE;
     }
@@ -62,8 +62,8 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         distributedBuildService.prepareBuildFinished( prepareBuildResult );
-        log.info( "Prepare build finished for project {} in build agent {}", 
-                   ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ), buildAgentUrl );
+        log.info( "Prepare build finished for project {} in build agent {}",
+                  ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ), buildAgentUrl );
         return Boolean.TRUE;
     }
 
@@ -79,8 +79,8 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         distributedBuildService.startPrepareBuild( prepareBuildResult );
-        log.info( "Start preparing build of project {} in build agent {}",
-                   ContinuumDistributedUtil.getProjectNameAndId( prepareBuildResult ), buildAgentUrl );
+        log.info( "Start preparing build of project {} in build agent {}", ContinuumDistributedUtil.getProjectNameAndId(
+            prepareBuildResult ), buildAgentUrl );
         return Boolean.TRUE;
     }
 
@@ -88,8 +88,8 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         Map<String, String> envs = distributedBuildService.getEnvironments( buildDefinitionId, installationType );
-        log.debug( "Retrieving environments buildDefinitionId={}, installationType={}", 
-                   new Object[] { buildDefinitionId, installationType } );
+        log.debug( "Retrieving environments buildDefinitionId={}, installationType={}",
+                   new Object[]{buildDefinitionId, installationType} );
         return envs;
     }
 

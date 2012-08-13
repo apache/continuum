@@ -19,9 +19,6 @@ package org.apache.continuum.buildagent.action;
  * under the License.
  */
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
@@ -33,6 +30,9 @@ import org.codehaus.plexus.action.AbstractAction;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="create-agent-build-project-task"
@@ -54,12 +54,14 @@ public class CreateBuildProjectTaskAction
 
         for ( BuildContext buildContext : buildContexts )
         {
-        	BuildTrigger buildTrigger = new BuildTrigger( buildContext.getTrigger(), buildContext.getUsername() );
-        	
-        	BuildProjectTask buildProjectTask =
-                new BuildProjectTask( buildContext.getProjectId(), buildContext.getBuildDefinitionId(),
-                		              buildTrigger, buildContext.getProjectName(), buildContext.getBuildDefinitionLabel(),
-                                      buildContext.getScmResult(), buildContext.getProjectGroupId() );
+            BuildTrigger buildTrigger = new BuildTrigger( buildContext.getTrigger(), buildContext.getUsername() );
+
+            BuildProjectTask buildProjectTask = new BuildProjectTask( buildContext.getProjectId(),
+                                                                      buildContext.getBuildDefinitionId(), buildTrigger,
+                                                                      buildContext.getProjectName(),
+                                                                      buildContext.getBuildDefinitionLabel(),
+                                                                      buildContext.getScmResult(),
+                                                                      buildContext.getProjectGroupId() );
             buildProjectTask.setMaxExecutionTime( buildContext.getMaxExecutionTime() * 1000 );
 
             try

@@ -19,10 +19,10 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +53,8 @@ public interface ProjectGroupDao
      *
      * @param projectGroupId The project group id
      * @return The project group
-     * @throws org.apache.maven.continuum.store.ContinuumStoreException if the project group can't be obtain
+     * @throws org.apache.maven.continuum.store.ContinuumStoreException
+     *          if the project group can't be obtain
      */
     ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;

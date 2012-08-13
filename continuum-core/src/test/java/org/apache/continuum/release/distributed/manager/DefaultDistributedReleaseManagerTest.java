@@ -36,11 +36,11 @@ public class DefaultDistributedReleaseManagerTest
     private DefaultDistributedReleaseManager distributedReleaseManager;
 
     private BuildResultDao buildResultDao;
-    
+
     private BuildResult buildResult;
-    
+
     private Mockery context;
-    
+
     @Override
     protected void setUp()
         throws Exception
@@ -49,40 +49,40 @@ public class DefaultDistributedReleaseManagerTest
 
         context = new JUnit3Mockery();
         context.setImposteriser( ClassImposteriser.INSTANCE );
-        
+
         distributedReleaseManager = new DefaultDistributedReleaseManager();
-        
+
         buildResultDao = context.mock( BuildResultDao.class );
         distributedReleaseManager.setBuildResultDao( buildResultDao );
     }
-    
+
     public void testGetDefaultBuildagent()
         throws Exception
     {
         String defaultBuildagentUrl = "http://localhost:8181/continuum-buildagent/xmlrpc";
-        
+
         buildResult = new BuildResult();
         buildResult.setBuildUrl( defaultBuildagentUrl );
-        
+
         contextBuildResultDaoExpectations();
-        
+
         String returnedBuildagent = distributedReleaseManager.getDefaultBuildagent( 0 );
-        
+
         assertNotNull( returnedBuildagent );
         assertEquals( returnedBuildagent, defaultBuildagentUrl );
 
         context.assertIsSatisfied();
     }
-    
+
     public void testGetDefaultBuildagentNullBuildResult()
         throws Exception
     {
         buildResult = null;
-        
+
         contextBuildResultDaoExpectations();
-        
+
         String returnedBuildagent = distributedReleaseManager.getDefaultBuildagent( 0 );
-        
+
         assertNull( returnedBuildagent );
 
         context.assertIsSatisfied();
@@ -95,7 +95,7 @@ public class DefaultDistributedReleaseManagerTest
         {
             {
                 one( buildResultDao ).getLatestBuildResultForProject( 0 );
-                will( returnValue( buildResult )  );
+                will( returnValue( buildResult ) );
             }
         } );
     }

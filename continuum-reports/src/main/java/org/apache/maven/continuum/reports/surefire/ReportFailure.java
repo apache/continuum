@@ -20,15 +20,15 @@ package org.apache.maven.continuum.reports.surefire;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 13 nov. 07
  * @version $Id$
+ * @since 13 nov. 07
  */
 public class ReportFailure
 {
     private String type;
 
     private String exception;
-    
+
     private String testName;
 
     public ReportFailure( String type, String exception, String testName )
@@ -57,7 +57,7 @@ public class ReportFailure
     {
         this.exception = exception;
     }
-    
+
     public String getTestName()
     {
         return testName;
@@ -66,5 +66,5 @@ public class ReportFailure
     public void setTestName( String testName )
     {
         this.testName = testName;
-    }    
+    }
 }

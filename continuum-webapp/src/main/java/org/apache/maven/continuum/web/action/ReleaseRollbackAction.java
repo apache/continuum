@@ -19,19 +19,15 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
+import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -85,15 +81,16 @@ public class ReleaseRollbackAction
         else
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-    
+
             ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
-            
+
             listener.setUsername( getPrincipal() );
-    
+
             Project project = getContinuum().getProject( projectId );
-    
-            releaseManager.rollback( releaseId, workingDirectoryService.getWorkingDirectory( project ).getPath(), listener );
-    
+
+            releaseManager.rollback( releaseId, workingDirectoryService.getWorkingDirectory( project ).getPath(),
+                                     listener );
+
             //recurse until rollback is finished
             while ( listener.getState() != ContinuumReleaseManagerListener.FINISHED )
             {
@@ -106,12 +103,12 @@ public class ReleaseRollbackAction
                     //do nothing
                 }
             }
-            
+
             AuditLog event = new AuditLog( "Release id=" + releaseId, AuditLogConstants.ROLLBACK_RELEASE );
             event.setCategory( AuditLogConstants.PROJECT );
             event.setCurrentUser( getPrincipal() );
             event.log();
-    
+
             releaseManager.getPreparedReleases().remove( releaseId );
         }
 

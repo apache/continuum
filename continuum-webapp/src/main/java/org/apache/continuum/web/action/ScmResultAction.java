@@ -5,7 +5,6 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
-
 import org.apache.struts2.ServletActionContext;
 
 /**
@@ -15,85 +14,86 @@ import org.apache.struts2.ServletActionContext;
 public class ScmResultAction
     extends ContinuumActionSupport
 {
-   private int projectGroupId;
+    private int projectGroupId;
 
-   private int projectScmRootId;
+    private int projectScmRootId;
 
-   private String projectGroupName;
+    private String projectGroupName;
 
-   private String state;
+    private String state;
 
-   private ProjectScmRoot projectScmRoot;
+    private ProjectScmRoot projectScmRoot;
 
-   public String execute()
-       throws Exception
-   {
-       try
-       {
-           checkViewProjectGroupAuthorization( getProjectGroupName() );
-       }
-       catch ( AuthorizationRequiredException e )
-       {
-           return REQUIRES_AUTHORIZATION;
-       }
-
-       projectScmRoot = getContinuum().getProjectScmRoot( projectScmRootId );
-
-       state = StateGenerator.generate( projectScmRoot.getState(), ServletActionContext.getRequest().getContextPath() );
-       
-       return SUCCESS;
-   }
-
-   public int getProjectGroupId()
-   {
-       return projectGroupId;
-   }
-
-   public void setProjectGroupId( int projectGroupId )
-   {
-       this.projectGroupId = projectGroupId;
-   }
-
-   public int getProjectScmRootId()
-   {
-       return projectScmRootId;
-   }
-
-   public void setProjectScmRootId( int projectScmRootId )
-   {
-       this.projectScmRootId = projectScmRootId;
-   }
-
-   public ProjectScmRoot getProjectScmRoot()
-   {
-       return projectScmRoot;
-   }
-
-   public void setProjectScmRoot( ProjectScmRoot projectScmRoot )
-   {
-       this.projectScmRoot = projectScmRoot;
-   }
-
-   public String getProjectGroupName()
-       throws ContinuumException
+    public String execute()
+        throws Exception
     {
-       projectGroupName = getContinuum().getProjectGroup( getProjectGroupId() ).getName();
+        try
+        {
+            checkViewProjectGroupAuthorization( getProjectGroupName() );
+        }
+        catch ( AuthorizationRequiredException e )
+        {
+            return REQUIRES_AUTHORIZATION;
+        }
 
-       return projectGroupName;
+        projectScmRoot = getContinuum().getProjectScmRoot( projectScmRootId );
+
+        state = StateGenerator.generate( projectScmRoot.getState(),
+                                         ServletActionContext.getRequest().getContextPath() );
+
+        return SUCCESS;
     }
-   
-   public void setProjectGroupName( String projectGroupName )
-   {
-       this.projectGroupName = projectGroupName;
-   }
 
-   public String getState()
-   {
-       return state;
-   }
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
 
-   public void setState( String state )
-   {
-       this.state = state;
-   }
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
+    }
+
+    public int getProjectScmRootId()
+    {
+        return projectScmRootId;
+    }
+
+    public void setProjectScmRootId( int projectScmRootId )
+    {
+        this.projectScmRootId = projectScmRootId;
+    }
+
+    public ProjectScmRoot getProjectScmRoot()
+    {
+        return projectScmRoot;
+    }
+
+    public void setProjectScmRoot( ProjectScmRoot projectScmRoot )
+    {
+        this.projectScmRoot = projectScmRoot;
+    }
+
+    public String getProjectGroupName()
+        throws ContinuumException
+    {
+        projectGroupName = getContinuum().getProjectGroup( getProjectGroupId() ).getName();
+
+        return projectGroupName;
+    }
+
+    public void setProjectGroupName( String projectGroupName )
+    {
+        this.projectGroupName = projectGroupName;
+    }
+
+    public String getState()
+    {
+        return state;
+    }
+
+    public void setState( String state )
+    {
+        this.state = state;
+    }
 }

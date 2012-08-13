@@ -19,10 +19,10 @@ package org.apache.continuum.purge.repository.utils;
  * under the License.
  */
 
+import org.apache.maven.archiva.common.utils.VersionUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.maven.archiva.common.utils.VersionUtil;
 
 /**
  * Codes were taken from Archiva's FilenameParser
@@ -37,8 +37,8 @@ public class FilenameParser
 
     private static final Pattern mavenPluginPattern = Pattern.compile( "(maven-.*-plugin)|(.*-maven-plugin)" );
 
-    private static final Pattern extensionPattern =
-        Pattern.compile( "(\\.tar\\.gz$)|(\\.tar\\.bz2$)|(\\.[\\-a-z0-9]*$)", Pattern.CASE_INSENSITIVE );
+    private static final Pattern extensionPattern = Pattern.compile(
+        "(\\.tar\\.gz$)|(\\.tar\\.bz2$)|(\\.[\\-a-z0-9]*$)", Pattern.CASE_INSENSITIVE );
 
     private static final Pattern section = Pattern.compile( "([^-]*)" );
 

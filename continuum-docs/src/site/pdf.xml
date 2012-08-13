@@ -20,77 +20,77 @@
 
 <document outputName="apache-continuum">
 
- <meta>
-   <title>Apache Continuum ${project.version}</title>
-   <author>The Apache Continuum Project</author>
- </meta>
+  <meta>
+    <title>Apache Continuum ${project.version}</title>
+    <author>The Apache Continuum Project</author>
+  </meta>
 
-   <toc name="Documentation">
-     <item name="Index (category)" ref="index.html"/>
-     <item name="Getting Started" ref="getting-started.html"/>
+  <toc name="Documentation">
+    <item name="Index (category)" ref="index.html"/>
+    <item name="Getting Started" ref="getting-started.html"/>
 
-     <item name="Installation/Upgrade Guides" ref="installation/index.html"/>
-       <item name="System Requirements" ref="installation/requirements.html"/>
-       <item name="Installation" ref="installation/installation.html"/>
-         <item name="Standalone" ref="installation/standalone.html"/>
-         <item name="Tomcat" ref="installation/tomcat.html"/>
-       <item name="Upgrade" ref="installation/upgrade.html"/>
+    <item name="Installation/Upgrade Guides" ref="installation/index.html"/>
+    <item name="System Requirements" ref="installation/requirements.html"/>
+    <item name="Installation" ref="installation/installation.html"/>
+    <item name="Standalone" ref="installation/standalone.html"/>
+    <item name="Tomcat" ref="installation/tomcat.html"/>
+    <item name="Upgrade" ref="installation/upgrade.html"/>
 
-     <item name="User's Guides" ref="user_guides/index.html"/>
-       <item name="Managing Projects" ref="user_guides/managing_project/index.html"/>
-         <item name="Add a Project" ref="user_guides/managing_project/addProject.html"/>
-         <item name="Edit a Project" ref="user_guides/managing_project/editProject.html"/>
-         <item name="Remove a Project" ref="user_guides/managing_project/removeProject.html"/>
-       <item name="Managing Build Definitions" ref="user_guides/managing_builddef/index.html"/>
-         <item name="Project Build Definition" ref="user_guides/managing_builddef/builddefProject.html"/>
-         <item name="Project Group Build Definition" ref="user_guides/managing_builddef/builddefGroup.html"/>
-       <item name="Managing Notification" ref="user_guides/notification/index.html"/>
-         <item name="Mail Notification" ref="user_guides/notification/mail.html"/>
-         <item name="IRC Notification" ref="user_guides/notification/irc.html"/>
-         <item name="Jabber Notification" ref="user_guides/notification/jabber.html"/>
-         <item name="MSN Notification" ref="user_guides/notification/msn.html"/>
-         <item name="Wagon Notification" ref="user_guides/notification/wagon.html"/>
-       <item name="Building a project" ref="user_guides/building_project/index.html"/>
-         <item name="Scheduled Build" ref="user_guides/building_project/schedule_build.html"/>
-         <item name="Forced Build" ref="user_guides/building_project/forced_build.html"/>
-         <item name="Build Results Management" ref="user_guides/building_project/build_results.html"/>
-       <item name="Release Management" ref="user_guides/release/index.html"/>
-         <item name="Prepare Project Release" ref="user_guides/release/prepare.html"/>
-         <item name="Perform Project Release" ref="user_guides/release/perform.html"/>
-         <item name="Release Results Management" ref="user_guides/release/release_results.html"/>
+    <item name="User's Guides" ref="user_guides/index.html"/>
+    <item name="Managing Projects" ref="user_guides/managing_project/index.html"/>
+    <item name="Add a Project" ref="user_guides/managing_project/addProject.html"/>
+    <item name="Edit a Project" ref="user_guides/managing_project/editProject.html"/>
+    <item name="Remove a Project" ref="user_guides/managing_project/removeProject.html"/>
+    <item name="Managing Build Definitions" ref="user_guides/managing_builddef/index.html"/>
+    <item name="Project Build Definition" ref="user_guides/managing_builddef/builddefProject.html"/>
+    <item name="Project Group Build Definition" ref="user_guides/managing_builddef/builddefGroup.html"/>
+    <item name="Managing Notification" ref="user_guides/notification/index.html"/>
+    <item name="Mail Notification" ref="user_guides/notification/mail.html"/>
+    <item name="IRC Notification" ref="user_guides/notification/irc.html"/>
+    <item name="Jabber Notification" ref="user_guides/notification/jabber.html"/>
+    <item name="MSN Notification" ref="user_guides/notification/msn.html"/>
+    <item name="Wagon Notification" ref="user_guides/notification/wagon.html"/>
+    <item name="Building a project" ref="user_guides/building_project/index.html"/>
+    <item name="Scheduled Build" ref="user_guides/building_project/schedule_build.html"/>
+    <item name="Forced Build" ref="user_guides/building_project/forced_build.html"/>
+    <item name="Build Results Management" ref="user_guides/building_project/build_results.html"/>
+    <item name="Release Management" ref="user_guides/release/index.html"/>
+    <item name="Prepare Project Release" ref="user_guides/release/prepare.html"/>
+    <item name="Perform Project Release" ref="user_guides/release/perform.html"/>
+    <item name="Release Results Management" ref="user_guides/release/release_results.html"/>
 
-     <item name="Administrator's Guides" ref="administrator_guides/index.html"/>
-       <item name="Managing Users and Security" ref="administrator_guides/security/index.html"/>
-         <item name="Security Configuration" ref="administrator_guides/security/customising-security.html"/>
-         <item name="LDAP Configuration" ref="administrator_guides/security/ldap.html"/>
-       <item name="Managing Project Groups" ref="administrator_guides/projectgroup.html"/>
-       <item name="Managing Builders" ref="administrator_guides/builder.html"/>
-       <item name="Managing JDKs" ref="administrator_guides/jdk.html"/>
-       <item name="Managing Build Environments" ref="administrator_guides/profiles.html"/>
-       <item name="Managing Schedules" ref="administrator_guides/schedules.html"/>
-       <item name="Managing General Configuration" ref="administrator_guides/configuration.html"/>
-       <item name="Managing Local Repositories" ref="administrator_guides/localRepository.html"/>
-       <item name="Managing Purge Configuration" ref="administrator_guides/purgeConfiguration.html"/>
-       <item name="Managing Parallel Builds" ref="administrator_guides/parallelBuilds.html"/>
-       <item name="Managing Build Queues" ref="administrator_guides/buildQueue.html"/>
-       <item name="Managing Build Agents" ref="administrator_guides/build-agents.html"/>
-       <item name="Managing Build Agent Groups" ref="administrator_guides/build-agent-groups.html"/>
-       <item name="Managing Project Queues" ref="administrator_guides/queues.html"/>
-       <item name="External databases" ref="administrator_guides/external-db.html"/>
-       <item name="Monitoring Continuum" ref="administrator_guides/monitoring.html"/>
-       <item name="Log Files" ref="administrator_guides/logging.html"/>
-         <item name="Audit Logs" ref="administrator_guides/audit-logs.html"/>
-         <item name="Continuum Logs" ref="administrator_guides/continuum-logs.html"/>
-         <item name="Security Logs" ref="administrator_guides/security-logs.html"/>
-       <item name="Appearance Configuration" ref="administrator_guides/appearance.html"/>
-       <item name="Build Definition Template" ref="administrator_guides/builddefTemplate.html"/>
-       <item name="Shutdown Continuum" ref="administrator_guides/shutdown.html"/>
-       <item name="Understanding Distributed Builds" ref="administrator_guides/distributed-builds.html"/>
+    <item name="Administrator's Guides" ref="administrator_guides/index.html"/>
+    <item name="Managing Users and Security" ref="administrator_guides/security/index.html"/>
+    <item name="Security Configuration" ref="administrator_guides/security/customising-security.html"/>
+    <item name="LDAP Configuration" ref="administrator_guides/security/ldap.html"/>
+    <item name="Managing Project Groups" ref="administrator_guides/projectgroup.html"/>
+    <item name="Managing Builders" ref="administrator_guides/builder.html"/>
+    <item name="Managing JDKs" ref="administrator_guides/jdk.html"/>
+    <item name="Managing Build Environments" ref="administrator_guides/profiles.html"/>
+    <item name="Managing Schedules" ref="administrator_guides/schedules.html"/>
+    <item name="Managing General Configuration" ref="administrator_guides/configuration.html"/>
+    <item name="Managing Local Repositories" ref="administrator_guides/localRepository.html"/>
+    <item name="Managing Purge Configuration" ref="administrator_guides/purgeConfiguration.html"/>
+    <item name="Managing Parallel Builds" ref="administrator_guides/parallelBuilds.html"/>
+    <item name="Managing Build Queues" ref="administrator_guides/buildQueue.html"/>
+    <item name="Managing Build Agents" ref="administrator_guides/build-agents.html"/>
+    <item name="Managing Build Agent Groups" ref="administrator_guides/build-agent-groups.html"/>
+    <item name="Managing Project Queues" ref="administrator_guides/queues.html"/>
+    <item name="External databases" ref="administrator_guides/external-db.html"/>
+    <item name="Monitoring Continuum" ref="administrator_guides/monitoring.html"/>
+    <item name="Log Files" ref="administrator_guides/logging.html"/>
+    <item name="Audit Logs" ref="administrator_guides/audit-logs.html"/>
+    <item name="Continuum Logs" ref="administrator_guides/continuum-logs.html"/>
+    <item name="Security Logs" ref="administrator_guides/security-logs.html"/>
+    <item name="Appearance Configuration" ref="administrator_guides/appearance.html"/>
+    <item name="Build Definition Template" ref="administrator_guides/builddefTemplate.html"/>
+    <item name="Shutdown Continuum" ref="administrator_guides/shutdown.html"/>
+    <item name="Understanding Distributed Builds" ref="administrator_guides/distributed-builds.html"/>
 
-     <item name="Developer's Guides" ref="developer_guides/index.html"/>
-       <item name="Building Continuum" ref="developer_guides/building.html"/>
-       <item name="XML-RPC" ref="developer_guides/xmlrpc.html"/>
+    <item name="Developer's Guides" ref="developer_guides/index.html"/>
+    <item name="Building Continuum" ref="developer_guides/building.html"/>
+    <item name="XML-RPC" ref="developer_guides/xmlrpc.html"/>
 
-   </toc>
+  </toc>
 
 </document>

@@ -1,11 +1,5 @@
 package org.apache.continuum.utils.release;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -14,6 +8,12 @@ import org.apache.maven.shared.release.versions.VersionInfo;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class ReleaseUtil
 {
@@ -133,8 +133,7 @@ public class ReleaseUtil
         {
             String module = StringUtils.replace( modules.next().toString(), '\\', '/' );
 
-            processProject( workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules,
-                            projects );
+            processProject( workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules, projects );
         }
     }
 
@@ -142,15 +141,15 @@ public class ReleaseUtil
         throws Exception
     {
         Map<String, String> params = new HashMap<String, String>();
-    
+
         params.put( "key", model.getGroupId() + ":" + model.getArtifactId() );
-    
+
         if ( model.getName() == null )
         {
             model.setName( model.getArtifactId() );
         }
         params.put( "name", model.getName() );
-    
+
         if ( !autoVersionSubmodules || projects.size() == 0 )
         {
             VersionInfo version = new DefaultVersionInfo( model.getVersion() );

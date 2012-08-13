@@ -19,13 +19,13 @@ package org.apache.maven.continuum.web.view.buildresults;
  * under the License.
  */
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-
 import org.apache.maven.continuum.web.util.StateGenerator;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 
 /**
  * Used in BuildResults

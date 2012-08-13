@@ -31,12 +31,12 @@ public class PurgeConfigurationServiceException
     {
         super( message );
     }
-    
+
     public PurgeConfigurationServiceException( Throwable cause )
     {
         super( cause );
     }
-    
+
     public PurgeConfigurationServiceException( String message, Throwable cause )
     {
         super( message, cause );

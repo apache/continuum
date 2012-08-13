@@ -12,7 +12,7 @@ public class ProjectGroupActionStub
     {
         return "test-group";
     }
-    
+
     protected void checkViewProjectGroupAuthorization( String resource )
     {
         // skip authorization check

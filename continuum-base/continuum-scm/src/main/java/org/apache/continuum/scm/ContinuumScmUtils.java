@@ -25,15 +25,14 @@ import org.apache.maven.scm.provider.git.repository.GitScmProviderRepository;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @version
  */
 public class ContinuumScmUtils
 {
     public static final String GIT_SCM_PROVIDERTYPE = "git";
 
     // CONTINUUM-2628
-    public static ContinuumScmConfiguration setSCMCredentialsforSSH( ContinuumScmConfiguration config,
-                             String scmUrl, String scmUsername, String scmPassword )
+    public static ContinuumScmConfiguration setSCMCredentialsforSSH( ContinuumScmConfiguration config, String scmUrl,
+                                                                     String scmUsername, String scmPassword )
     {
         String sshScmUsername = "";
         String sshScmPassword = "";
@@ -41,7 +40,8 @@ public class ContinuumScmUtils
 
         String scmSpecificUrl = scmUrl.substring( providerType.length() + 5 );
 
-        if( providerType.contains( GIT_SCM_PROVIDERTYPE ) && scmSpecificUrl.startsWith( GitScmProviderRepository.PROTOCOL_SSH ) )
+        if ( providerType.contains( GIT_SCM_PROVIDERTYPE ) && scmSpecificUrl.startsWith(
+            GitScmProviderRepository.PROTOCOL_SSH ) )
         {
             scmSpecificUrl = scmSpecificUrl.substring( GitScmProviderRepository.PROTOCOL_SSH.length() + 3 );
 
@@ -55,7 +55,7 @@ public class ContinuumScmUtils
                 // password is specified in the url
                 if ( indexPwdSep < 0 )
                 {
-                    sshScmUsername = userInfo.substring( indexPwdSep + 1);
+                    sshScmUsername = userInfo.substring( indexPwdSep + 1 );
                 }
                 else
                 {
@@ -65,7 +65,7 @@ public class ContinuumScmUtils
             }
         }
 
-        if( StringUtils.isBlank( sshScmUsername ) )
+        if ( StringUtils.isBlank( sshScmUsername ) )
         {
             config.setUsername( scmUsername );
             config.setPassword( scmPassword );
@@ -73,7 +73,7 @@ public class ContinuumScmUtils
         else
         {
             config.setUsername( sshScmUsername );
-            if( !StringUtils.isBlank( sshScmPassword ) )
+            if ( !StringUtils.isBlank( sshScmPassword ) )
             {
                 config.setPassword( sshScmPassword );
             }

@@ -43,7 +43,7 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
  */
 public class PurgeTaskExecutor
     implements TaskExecutor, Contextualizable
-{                             
+{
     /**
      * @plexus.requirement
      */
@@ -61,8 +61,8 @@ public class PurgeTaskExecutor
     {
         PurgeTask purgeTask = (PurgeTask) task;
 
-        AbstractPurgeConfiguration purgeConfig =
-            purgeConfigurationService.getPurgeConfiguration( purgeTask.getPurgeConfigurationId() );
+        AbstractPurgeConfiguration purgeConfig = purgeConfigurationService.getPurgeConfiguration(
+            purgeTask.getPurgeConfigurationId() );
 
         try
         {
@@ -78,8 +78,8 @@ public class PurgeTaskExecutor
                         "Error while executing purge repository task: no repository set" );
                 }
 
-                PurgeController purgeController =
-                    (PurgeController) container.lookup( PurgeController.ROLE, "purge-repository" );
+                PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
+                                                                                      "purge-repository" );
 
                 purgeController.initializeExecutors( repoPurge );
 
@@ -96,8 +96,8 @@ public class PurgeTaskExecutor
             {
                 DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
 
-                PurgeController purgeController =
-                    (PurgeController) container.lookup( PurgeController.ROLE, "purge-directory" );
+                PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
+                                                                                      "purge-directory" );
 
                 purgeController.initializeExecutors( dirPurge );
 
@@ -105,13 +105,13 @@ public class PurgeTaskExecutor
             }
             else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
             {
-                DistributedDirectoryPurgeConfiguration dirPurge = ( DistributedDirectoryPurgeConfiguration ) purgeConfig;
-                
-                PurgeController purgeController = 
-                    ( PurgeController ) container.lookup( PurgeController.ROLE, "purge-distributed-directory" );
-                
+                DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
+
+                PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
+                                                                                      "purge-distributed-directory" );
+
                 purgeController.initializeExecutors( dirPurge );
-                
+
                 purgeController.doPurge( dirPurge );
             }
 

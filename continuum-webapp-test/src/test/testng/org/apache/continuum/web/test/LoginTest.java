@@ -27,13 +27,14 @@ import org.testng.annotations.Test;
  * http://code.google.com/p/testng/source/browse/trunk/CHANGES.txt
  * Waiting 5.9 release. It's comming soon.
  */
+
 /**
  * Based on LoginTest of Emmanuel Venisse test.
  *
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "login" } )
+@Test( groups = {"login"} )
 public class LoginTest
     extends AbstractContinuumTest
 {

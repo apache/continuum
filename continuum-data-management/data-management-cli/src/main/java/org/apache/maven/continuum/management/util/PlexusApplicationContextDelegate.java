@@ -19,14 +19,6 @@ package org.apache.maven.continuum.management.util;
  * under the License.
  */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.codehaus.plexus.spring.PlexusBeanDefinitionDocumentReader;
 import org.codehaus.plexus.spring.PlexusConfigurationPropertyEditor;
 import org.codehaus.plexus.spring.PlexusContainerAdapter;
@@ -41,9 +33,19 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class PlexusApplicationContextDelegate
 {
-    /** Logger used by this class. */
+    /**
+     * Logger used by this class.
+     */
     protected Logger logger = LoggerFactory.getLogger( getClass() );
 
     private PlexusLifecycleBeanPostProcessor lifecycleBeanPostProcessor;

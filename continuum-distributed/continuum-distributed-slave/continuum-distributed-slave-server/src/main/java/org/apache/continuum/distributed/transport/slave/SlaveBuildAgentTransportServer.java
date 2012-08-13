@@ -19,14 +19,14 @@ package org.apache.continuum.distributed.transport.slave;
  * under the License.
  */
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.continuum.buildagent.ContinuumBuildAgentException;
 import org.apache.continuum.buildagent.ContinuumBuildAgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * ProxyMasterBuildAgentTransportService
@@ -115,7 +115,7 @@ public class SlaveBuildAgentTransportServer
     public Boolean ping()
         throws Exception
     {
-        return continuumBuildAgentService.ping(); 
+        return continuumBuildAgentService.ping();
     }
 
     public Boolean cancelBuild()
@@ -144,7 +144,8 @@ public class SlaveBuildAgentTransportServer
         try
         {
             log.debug( "Generate working copy content for project '{}'", projectId );
-            return continuumBuildAgentService.generateWorkingCopyContent( projectId, directory, baseUrl, imagesBaseUrl );
+            return continuumBuildAgentService.generateWorkingCopyContent( projectId, directory, baseUrl,
+                                                                          imagesBaseUrl );
         }
         catch ( ContinuumBuildAgentException e )
         {
@@ -288,7 +289,8 @@ public class SlaveBuildAgentTransportServer
 
         try
         {
-            continuumBuildAgentService.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository, username );
+            continuumBuildAgentService.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository,
+                                                       username );
             result = Boolean.TRUE;
             log.debug( "Perform release of releaseId={}", releaseId );
         }
@@ -459,28 +461,32 @@ public class SlaveBuildAgentTransportServer
     public Boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is currently building in agent", projectId, buildDefinitionId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is currently building in agent", projectId,
+                  buildDefinitionId );
         return continuumBuildAgentService.isProjectCurrentlyBuilding( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectInBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is in build queue of agent", projectId, buildDefinitionId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is in build queue of agent", projectId,
+                  buildDefinitionId );
         return continuumBuildAgentService.isProjectInBuildQueue( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is currently preparing build", projectId, buildDefinitionId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is currently preparing build", projectId,
+                  buildDefinitionId );
         return continuumBuildAgentService.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId, buildDefinitionId );
+        log.info( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId,
+                  buildDefinitionId );
         return continuumBuildAgentService.isProjectInPrepareBuildQueue( projectId, buildDefinitionId );
     }
 
@@ -504,13 +510,13 @@ public class SlaveBuildAgentTransportServer
         try
         {
             log.info( "Remove projects from prepare build queue. projectGroupId=" + projectGroupId +
-                      ", scmRootId=" + scmRootId );
+                          ", scmRootId=" + scmRootId );
             return continuumBuildAgentService.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
         }
         catch ( ContinuumBuildAgentException e )
         {
             log.error( "Failed to remove projects from prepare build queue. projectGroupId=" + projectGroupId +
-                       ", scmRootId=" + scmRootId );
+                           ", scmRootId=" + scmRootId );
             throw e;
         }
     }
@@ -575,7 +581,7 @@ public class SlaveBuildAgentTransportServer
     {
         return continuumBuildAgentService.getBuildAgentPlatform();
     }
-    
+
     public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws Exception
     {

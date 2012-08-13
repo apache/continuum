@@ -19,9 +19,9 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import java.util.HashSet;
-
 import org.apache.jackrabbit.webdav.DavSession;
+
+import java.util.HashSet;
 
 public class ContinuumBuildAgentDavSession
     implements DavSession

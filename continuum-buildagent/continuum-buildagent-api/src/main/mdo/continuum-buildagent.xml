@@ -88,12 +88,12 @@
           <name>varName</name>
           <version>1.0.0+</version>
           <type>String</type>
-        </field>   
+        </field>
         <field>
           <name>name</name>
           <version>1.0.0+</version>
           <type>String</type>
-        </field>                     
+        </field>
       </fields>
     </class>
     <class>
@@ -112,7 +112,7 @@
           <type>String</type>
           <required>true</required>
           <description>
-          The file system location for this repository
+            The file system location for this repository
           </description>
         </field>
         <field>
@@ -121,7 +121,7 @@
           <type>String</type>
           <defaultValue>default</defaultValue>
           <description>
-          The layout of the repository. Valid values are "default" and "legacy"
+            The layout of the repository. Valid values are "default" and "legacy"
           </description>
         </field>
       </fields>

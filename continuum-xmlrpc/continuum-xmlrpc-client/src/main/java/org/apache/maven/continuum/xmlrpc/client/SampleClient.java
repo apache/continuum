@@ -31,10 +31,8 @@ import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
-import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
-import org.apache.maven.continuum.xmlrpc.system.Installation;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -53,10 +51,10 @@ public class SampleClient
         throws Exception
     {
         client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
-        
+
         // Test for [CONTINUUM-2641]: (test with distributed builds with multiple build agents or parallel builds with > 1 build queue)
         // make sure to set the projectIds to the actual projectIds of your projects added in Continuum
-        int projectIds[] = new int[] { 2, 3, 4, 5, 6 };
+        int projectIds[] = new int[]{2, 3, 4, 5, 6};
 
         List<Thread> threads = new ArrayList<Thread>();
 
@@ -64,7 +62,8 @@ public class SampleClient
         {
             final int order = i;
             final int projectId = projectIds[i];
-            Runnable task = new Runnable (){
+            Runnable task = new Runnable()
+            {
                 public void run()
                 {
                     BuildTrigger buildTrigger = new BuildTrigger();
@@ -81,16 +80,17 @@ public class SampleClient
                     }
                 }
             };
-            threads.add(new Thread(task));
+            threads.add( new Thread( task ) );
         }
-        
+
         for ( Thread thread : threads )
         {
             thread.start();
         }
 
         System.out.println( "Adding project..." );
-        AddingResult result = client.addMavenTwoProject( "http://svn.apache.org/repos/asf/continuum/sandbox/simple-example/pom.xml" );
+        AddingResult result = client.addMavenTwoProject(
+            "http://svn.apache.org/repos/asf/continuum/sandbox/simple-example/pom.xml" );
         if ( result.hasErrors() )
         {
             System.out.println( result.getErrorsAsString() );
@@ -126,7 +126,7 @@ public class SampleClient
         {
             ps = client.refreshProjectSummary( ps );
             System.out.println( "State of " + ps.getName() + "(" + ps.getId() + "): " +
-                client.getProjectStatusAsString( ps.getState() ) );
+                                    client.getProjectStatusAsString( ps.getState() ) );
             Thread.sleep( 1000 );
         }
 
@@ -151,8 +151,8 @@ public class SampleClient
 
         System.out.println( "Building..." );
         String state = "unknown";
-        while ( "Updating".equals( client.getProjectStatusAsString( ps.getState() ) ) ||
-                "Building".equals( client.getProjectStatusAsString( ps.getState() ) ) )
+        while ( "Updating".equals( client.getProjectStatusAsString( ps.getState() ) ) || "Building".equals(
+            client.getProjectStatusAsString( ps.getState() ) ) )
         {
             ps = client.refreshProjectSummary( ps );
             state = client.getProjectStatusAsString( ps.getState() );
@@ -182,9 +182,9 @@ public class SampleClient
             brs = (BuildResultSummary) i.next();
             System.out.print( "Removing build result (" + brs.getId() + ") - " );
             BuildResult br = client.getBuildResult( ps.getId(), brs.getId() );
-            System.out.println( (client.removeBuildResult( br ) == 0 ? "OK" : "Error" ) );
+            System.out.println( ( client.removeBuildResult( br ) == 0 ? "OK" : "Error" ) );
         }
-        System.out.println( "Done.");
+        System.out.println( "Done." );
 
         System.out.println();
 
@@ -243,7 +243,7 @@ public class SampleClient
         System.out.println( "Adding Directory Purge Configuration..." );
         dirPurgeConfig = client.addDirectoryPurgeConfiguration( dirPurgeConfig );
         System.out.println();
-        
+
         RepositoryPurgeConfiguration purgeConfig = new RepositoryPurgeConfiguration();
         purgeConfig.setDeleteAll( true );
         purgeConfig.setRepository( repository );
@@ -263,8 +263,8 @@ public class SampleClient
 
         System.out.println( "Remove local repository" );
         System.out.println( "=====================" );
-        System.out.println( "Removing Local Repository '" + repository.getName() + "' (" + 
-                            repository.getId() + ")..." );
+        System.out.println( "Removing Local Repository '" + repository.getName() + "' (" +
+                                repository.getId() + ")..." );
         client.removeLocalRepository( repository.getId() );
         System.out.println( "Done." );
     }
@@ -377,7 +377,7 @@ public class SampleClient
 
     public static void printLocalRepository( LocalRepository repo )
     {
-        System.out.println( "Id: " +repo.getId() );
+        System.out.println( "Id: " + repo.getId() );
         System.out.println( "Layout: " + repo.getLayout() );
         System.out.println( "Location: " + repo.getLocation() );
         System.out.println( "Name: " + repo.getName() );

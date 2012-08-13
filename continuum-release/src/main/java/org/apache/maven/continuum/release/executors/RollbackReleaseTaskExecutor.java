@@ -19,13 +19,13 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
-import java.util.ArrayList;
-
 import org.apache.maven.continuum.release.tasks.ReleaseProjectTask;
 import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+
+import java.util.ArrayList;
 
 /**
  * @author Edwin Punzalan

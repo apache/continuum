@@ -19,8 +19,7 @@ package org.apache.continuum.scm.manager;
  * under the License.
  */
 
-import java.util.Properties;
-
+import junit.framework.TestCase;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.provider.ScmProvider;
 import org.apache.maven.scm.provider.cvslib.cvsexe.CvsExeScmProvider;
@@ -30,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import junit.framework.TestCase;
+import java.util.Properties;
 
 /**
  * @version $Id$

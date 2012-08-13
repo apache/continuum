@@ -19,19 +19,6 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -40,12 +27,24 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @plexus.component role="org.apache.continuum.dao.ProjectGroupDao"
  */
-@Repository("projectGroupDao")
+@Repository( "projectGroupDao" )
 public class ProjectGroupDaoImpl
     extends AbstractDao
     implements ProjectGroupDao

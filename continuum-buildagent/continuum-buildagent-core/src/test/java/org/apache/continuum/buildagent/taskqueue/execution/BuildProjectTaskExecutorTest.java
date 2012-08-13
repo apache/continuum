@@ -19,13 +19,6 @@ package org.apache.continuum.buildagent.taskqueue.execution;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
@@ -47,6 +40,13 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BuildProjectTaskExecutorTest
     extends PlexusInSpringTestCase
@@ -84,8 +84,8 @@ public class BuildProjectTaskExecutorTest
     public void testBuildProjectLocalRepository()
         throws Exception
     {
-        BuildProjectTaskExecutor buildProjectExecutor =
-            (BuildProjectTaskExecutor) lookup( TaskExecutor.class, "build-agent" );
+        BuildProjectTaskExecutor buildProjectExecutor = (BuildProjectTaskExecutor) lookup( TaskExecutor.class,
+                                                                                           "build-agent" );
 
         buildProjectExecutor.setBuildAgentBuildExecutorManager( buildAgentBuildExecutorManager );
 
@@ -133,7 +133,8 @@ public class BuildProjectTaskExecutorTest
                 one( buildAgentManager ).shouldBuild( with( any( Map.class ) ) );
                 will( returnValue( true ) );
 
-                one( buildAgentBuildExecutorManager ).getBuildExecutor( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+                one( buildAgentBuildExecutorManager ).getBuildExecutor(
+                    ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
                 will( returnValue( executor ) );
 
                 one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
@@ -166,8 +167,8 @@ public class BuildProjectTaskExecutorTest
     public void testBuildProjectWithConfiguredInstallationsFromBuildAgent()
         throws Exception
     {
-        BuildProjectTaskExecutor buildProjectExecutor =
-            (BuildProjectTaskExecutor) lookup( TaskExecutor.class, "build-agent" );
+        BuildProjectTaskExecutor buildProjectExecutor = (BuildProjectTaskExecutor) lookup( TaskExecutor.class,
+                                                                                           "build-agent" );
 
         buildProjectExecutor.setBuildAgentBuildExecutorManager( buildAgentBuildExecutorManager );
 
@@ -222,7 +223,7 @@ public class BuildProjectTaskExecutorTest
                 will( returnValue( true ) );
 
                 one( buildAgentBuildExecutorManager ).getBuildExecutor(
-                                                                        ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+                    ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
                 will( returnValue( executor ) );
 
                 one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
@@ -246,8 +247,8 @@ public class BuildProjectTaskExecutorTest
         {
             buildProjectExecutor.executeTask( createBuildProjectTask() );
 
-            Map<String, String> environments =
-                (Map<String, String>) buildContext.getActionContext().get( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS );
+            Map<String, String> environments = (Map<String, String>) buildContext.getActionContext().get(
+                ContinuumBuildAgentUtil.KEY_ENVIRONMENTS );
             assertEquals( 2, environments.size() );
             assertTrue( environments.containsKey( "M2_HOME" ) );
             assertTrue( environments.containsKey( "EXTRA_VAR" ) );
@@ -264,8 +265,8 @@ public class BuildProjectTaskExecutorTest
     public void testBuildProjectWithNoConfiguredInstallationsFromBuildAgent()
         throws Exception
     {
-        BuildProjectTaskExecutor buildProjectExecutor =
-            (BuildProjectTaskExecutor) lookup( TaskExecutor.class, "build-agent" );
+        BuildProjectTaskExecutor buildProjectExecutor = (BuildProjectTaskExecutor) lookup( TaskExecutor.class,
+                                                                                           "build-agent" );
 
         buildProjectExecutor.setBuildAgentBuildExecutorManager( buildAgentBuildExecutorManager );
 
@@ -313,7 +314,8 @@ public class BuildProjectTaskExecutorTest
                 one( buildAgentManager ).shouldBuild( with( any( Map.class ) ) );
                 will( returnValue( true ) );
 
-                one( buildAgentBuildExecutorManager ).getBuildExecutor( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+                one( buildAgentBuildExecutorManager ).getBuildExecutor(
+                    ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
                 will( returnValue( executor ) );
 
                 one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
@@ -337,8 +339,8 @@ public class BuildProjectTaskExecutorTest
         {
             buildProjectExecutor.executeTask( createBuildProjectTask() );
 
-            Map<String, String> environments =
-                (Map<String, String>) buildContext.getActionContext().get( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS );
+            Map<String, String> environments = (Map<String, String>) buildContext.getActionContext().get(
+                ContinuumBuildAgentUtil.KEY_ENVIRONMENTS );
             assertEquals( 1, environments.size() );
             assertTrue( environments.containsKey( "M2_HOME" ) );
             assertEquals( "/tmp/apache-maven-2.2.1", environments.get( "M2_HOME" ) );
@@ -351,9 +353,8 @@ public class BuildProjectTaskExecutorTest
 
     private BuildProjectTask createBuildProjectTask()
     {
-        BuildProjectTask task =
-            new BuildProjectTask( 1, 1, new BuildTrigger( 1 ), "Test Project", "Default Build Definition",
-                                  new ScmResult(), 1 );
+        BuildProjectTask task = new BuildProjectTask( 1, 1, new BuildTrigger( 1 ), "Test Project",
+                                                      "Default Build Definition", new ScmResult(), 1 );
         return task;
     }
 

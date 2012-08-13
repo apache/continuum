@@ -20,10 +20,11 @@ package org.apache.continuum.webdav;
  */
 
 import org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfigurationService;
+
 import javax.servlet.ServletConfig;
 
 public class MockWorkingCopyServlet
-        extends WorkingCopyServlet
+    extends WorkingCopyServlet
 {
     @Override
     public synchronized void initServers( ServletConfig servletConfig )
