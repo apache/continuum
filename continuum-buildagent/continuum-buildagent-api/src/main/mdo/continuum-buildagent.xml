@@ -16,6 +16,7 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
+
 <model xsd.namespace="http://modello.codehaus.org/xsd/modello-1.0.0.xsd">
   <id>continuum-buildagent</id>
   <name>ContinuumBuildAgentConfigurationModel</name>

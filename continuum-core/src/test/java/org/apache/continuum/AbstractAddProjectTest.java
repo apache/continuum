@@ -1,3 +1,5 @@
+package org.apache.continuum;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.continuum;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.AbstractContinuumTest;
