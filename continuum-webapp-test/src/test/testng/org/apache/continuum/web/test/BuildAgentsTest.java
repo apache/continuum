@@ -19,8 +19,6 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-//import org.apache.continuum.web.test.parent.AbstractBuildQueueTest;
-
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
