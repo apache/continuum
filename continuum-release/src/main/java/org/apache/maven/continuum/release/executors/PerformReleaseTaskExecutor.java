@@ -19,10 +19,6 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
@@ -50,6 +46,10 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Edwin Punzalan
@@ -81,18 +81,18 @@ public class PerformReleaseTaskExecutor
         descriptor.setUseReleaseProfile( performTask.isUseReleaseProfile() );
         descriptor.setPerformGoals( performTask.getGoals() );
         descriptor.setCheckoutDirectory( performTask.getBuildDirectory().getAbsolutePath() );
-        
+
         repository = performTask.getLocalRepository();
 
         List reactorProjects = null;
         MavenProject mavenProject = null;
-        
+
         try
         {
-        	mavenProject = getMavenProject( performTask );
-            if( mavenProject != null )
+            mavenProject = getMavenProject( performTask );
+            if ( mavenProject != null )
             {
-                reactorProjects = getReactorProjects( descriptor, mavenProject ); 
+                reactorProjects = getReactorProjects( descriptor, mavenProject );
             }
         }
         catch ( ContinuumReleaseException e )
@@ -107,11 +107,11 @@ public class PerformReleaseTaskExecutor
 
             throw new TaskExecutionException( "Failed to build reactor projects.", e );
         }
-        
+
         ReleaseResult result =
             releaseManager.performWithResult( descriptor, new DefaultReleaseEnvironment().setSettings( settings ),
                                               reactorProjects, listener );
-        
+
         //override to show the actual start time
         result.setStartTime( getStartTime() );
 
@@ -132,7 +132,7 @@ public class PerformReleaseTaskExecutor
         List<MavenProject> reactorProjects = new ArrayList<MavenProject>();
 
         reactorProjects.add( project );
-       
+
         addModules( reactorProjects, project );
 
         try
@@ -218,30 +218,30 @@ public class PerformReleaseTaskExecutor
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
-    
+
     protected MavenProject getMavenProject( PerformReleaseProjectTask releaseTask )
-	    throws ContinuumReleaseException
-	{
-	    ReleaseDescriptor descriptor = releaseTask.getDescriptor();
-	
-	    if ( StringUtils.isEmpty( descriptor.getWorkingDirectory() ) )
-	    {
-	        //Perform with provided release parameters (CONTINUUM-1541)
-	        descriptor.setCheckoutDirectory( releaseTask.getBuildDirectory().getAbsolutePath() );
-	        return null;
-	    }
-	
-	    MavenProject project;
-	    try
-	    {
-	        project = projectBuilder.build( getProjectDescriptorFile( descriptor ), getLocalRepository(),
-	                                        getProfileManager( settings ) );
-	    }
-	    catch ( ProjectBuildingException e )
-	    {
-	        throw new ContinuumReleaseException( "Failed to build project.", e );
-	    }
-	    
-	    return project;
-	}   
+        throws ContinuumReleaseException
+    {
+        ReleaseDescriptor descriptor = releaseTask.getDescriptor();
+
+        if ( StringUtils.isEmpty( descriptor.getWorkingDirectory() ) )
+        {
+            //Perform with provided release parameters (CONTINUUM-1541)
+            descriptor.setCheckoutDirectory( releaseTask.getBuildDirectory().getAbsolutePath() );
+            return null;
+        }
+
+        MavenProject project;
+        try
+        {
+            project = projectBuilder.build( getProjectDescriptorFile( descriptor ), getLocalRepository(),
+                                            getProfileManager( settings ) );
+        }
+        catch ( ProjectBuildingException e )
+        {
+            throw new ContinuumReleaseException( "Failed to build project.", e );
+        }
+
+        return project;
+    }
 }
