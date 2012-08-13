@@ -49,6 +49,7 @@ import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,15 +85,27 @@ public class PerformReleaseTaskExecutor
 
         repository = performTask.getLocalRepository();
 
-        List reactorProjects = null;
-        MavenProject mavenProject = null;
+        List reactorProjects;
 
         try
         {
-            mavenProject = getMavenProject( performTask );
-            if ( mavenProject != null )
+            if ( !StringUtils.isEmpty( descriptor.getWorkingDirectory() ) )
             {
+                MavenProject mavenProject = getMavenProject( performTask );
                 reactorProjects = getReactorProjects( descriptor, mavenProject );
+            }
+            else
+            {
+                //Perform with provided release parameters (CONTINUUM-1541)
+                descriptor.setCheckoutDirectory( performTask.getBuildDirectory().getAbsolutePath() );
+
+                // Workaround bugs in maven-release-manager 2.1 that require a project even though it will ultimately
+                // not be used. TODO: check if upgrading will fix, and return to being an empty list
+                // The project is fake and won't exist in this location
+                MavenProject project = new MavenProject();
+                project.setFile( new File( descriptor.getCheckoutDirectory(), "pom.xml" ) );
+                reactorProjects = Collections.singletonList( project );
+//                reactorProjects = Collections.emptyList();
             }
         }
         catch ( ContinuumReleaseException e )
@@ -223,13 +236,6 @@ public class PerformReleaseTaskExecutor
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor = releaseTask.getDescriptor();
-
-        if ( StringUtils.isEmpty( descriptor.getWorkingDirectory() ) )
-        {
-            //Perform with provided release parameters (CONTINUUM-1541)
-            descriptor.setCheckoutDirectory( releaseTask.getBuildDirectory().getAbsolutePath() );
-            return null;
-        }
 
         MavenProject project;
         try

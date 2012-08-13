@@ -54,7 +54,7 @@ public class UpdateWorkingCopyPhaseTest
 
         File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
 
-        // assert no working directory yet
+        FileUtils.deleteDirectory( workingDirectory );
         assertFalse( workingDirectory.exists() );
 
         phase.execute( releaseDescriptor, new Settings(), null );
