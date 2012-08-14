@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-@Test( groups = {"release"} )
+@Test( groups = { "release" } )
 public class ReleaseTest
     extends AbstractAdminTest
 {
@@ -73,7 +73,7 @@ public class ReleaseTest
         String pomUrl = getProperty( "MAVEN2_POM_URL" );
         String pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
-        String projectName = getProperty( "MAVEN2_PROJECT_NAME" );
+        String projectName = getProperty( "MAVEN2_POM_PROJECT_NAME" );
 
         addProjectGroup( projectGroupName, projectGroupId, description, true, false );
         clickLinkWithText( projectGroupName );
@@ -187,7 +187,7 @@ public class ReleaseTest
         assertPreparedReleasesFileCreated();
     }
 
-    @Test( dependsOnMethods = {"testReleasePrepareProjectWithNoBuildEnvironment"} )
+    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildEnvironment" } )
     public void testReleasePerformUsingProvidedParametersWithDistributedBuilds()
         throws Exception
     {

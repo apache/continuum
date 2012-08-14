@@ -20,13 +20,55 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test( groups = {"report"} )
+@Test( groups = { "report" } )
 public class ReportTest
     extends AbstractAdminTest
 {
-    @Test( dependsOnMethods = {"testProjectGroupAllBuildSuccess"} )
+    private String projectGroupName;
+
+    private String failedProjectGroupName;
+
+    @BeforeClass
+    public void createProject()
+    {
+        projectGroupName = getProperty( "REPORT_PROJECT_GROUP_NAME" );
+        String projectGroupId = getProperty( "REPORT_PROJECT_GROUP_ID" );
+        String projectGroupDescription = getProperty( "REPORT_PROJECT_GROUP_DESCRIPTION" );
+
+        String projectName = getProperty( "MAVEN2_POM_PROJECT_NAME" );
+        String projectPomUrl = getProperty( "MAVEN2_POM_URL" );
+        String pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
+        String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
+
+        loginAsAdmin();
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
+        clickLinkWithText( projectGroupName );
+        if ( !isLinkPresent( projectName ) )
+        {
+            addMavenTwoProject( projectPomUrl, pomUsername, pomPassword, projectGroupName, true );
+
+            buildProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName, true );
+        }
+    }
+
+    @BeforeMethod
+    protected void setUp()
+        throws Exception
+    {
+        failedProjectGroupName = getProperty( "MAVEN2_FAILING_PROJECT_POM_PROJECT_GROUP_NAME" );
+    }
+
+    @AfterMethod
+    public void tearDown()
+    {
+        removeProjectGroup( failedProjectGroupName, false );
+    }
+
     public void testViewBuildsReportWithSuccessfulBuild()
         throws Exception
     {
@@ -35,7 +77,7 @@ public class ReportTest
         clickButtonWithValue( "View Report" );
 
         assertProjectBuildReportWithResult();
-        assertTextPresent( getProperty( "M2_PROJ_GRP_NAME" ) );
+        assertTextPresent( projectGroupName );
         assertImgWithAlt( "Success" );
     }
 
@@ -46,7 +88,7 @@ public class ReportTest
         String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
-        
+
         for ( int ctr = 0; ctr < 10; ctr++ )
         {
             buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
@@ -103,18 +145,18 @@ public class ReportTest
     public void testViewBuildsReportWithFailedBuild()
         throws Exception
     {
-        String M2_POM_URL = getProperty( "M2_FAILING_PROJ_POM_URL" );
-        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
-        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+        String pomUrl = getProperty( "MAVEN2_FAILING_PROJECT_POM_URL" );
+        String pomUsername = "";
+        String pomPassword = "";
 
-        String M2_PROJ_GRP_NAME = getProperty( "M2_FAILING_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_FAILING_PROJ_GRP_ID" );
-        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_FAILING_PROJ_DESCRIPTION" );
+        String failedProjectGroupId = getProperty( "MAVEN2_FAILING_PROJECT_POM_PROJECT_GROUP_ID" );
+        String failedProjectGroupDescription = getProperty( "MAVEN2_FAILING_PROJECT_POM_PROJECT_GROUP_DESCRIPTION" );
 
-        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
-        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
+        addMavenTwoProject( pomUrl, pomUsername, pomPassword, null, true );
+        assertProjectGroupSummaryPage( failedProjectGroupName, failedProjectGroupId, failedProjectGroupDescription );
 
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, false );
+        buildProjectGroup( failedProjectGroupName, failedProjectGroupId, failedProjectGroupDescription,
+                           failedProjectGroupName, false );
 
         goToProjectBuildsReport();
         selectValue( "buildStatus", "Failed" );
@@ -122,7 +164,7 @@ public class ReportTest
 
         assertProjectBuildReportWithResult();
         assertImgWithAlt( "Failed" );
-        assertTextPresent( M2_PROJ_GRP_NAME );
+        assertTextPresent( failedProjectGroupName );
     }
 
     public void testViewBuildsReportWithErrorBuild()

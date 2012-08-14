@@ -624,12 +624,12 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "m1PomFile" );
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertOptionPresent( "selectedProjectGroup", new String[]{"Defined by POM", "Default Project Group"} );
+        assertOptionPresent( "selectedProjectGroup", new String[]{ "Defined by POM", "Default Project Group" } );
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId",
-                             new String[]{"Default", "Default Ant Template", "Default Maven 1 Template",
-                                 "Default Maven Template", "Default Shell Template"} );
+                             new String[]{ "Default", "Default Ant Template", "Default Maven 1 Template",
+                                 "Default Maven Template", "Default Shell Template" } );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -698,12 +698,12 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "projectScmUseCache" );
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertOptionPresent( "selectedProjectGroup", new String[]{"Default Project Group"} );
+        assertOptionPresent( "selectedProjectGroup", new String[]{ "Default Project Group" } );
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId",
-                             new String[]{"Default", "Default Ant Template", "Default Maven 1 Template",
-                                 "Default Maven Template", "Default Shell Template"} );
+                             new String[]{ "Default", "Default Ant Template", "Default Maven 1 Template",
+                                 "Default Maven Template", "Default Shell Template" } );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -1015,7 +1015,7 @@ public abstract class AbstractContinuumTest
     }
 
     @BeforeSuite( alwaysRun = true )
-    @Parameters( {"baseUrl", "browser", "seleniumHost", "seleniumPort"} )
+    @Parameters( { "baseUrl", "browser", "seleniumHost", "seleniumPort" } )
     public void initializeContinuum( @Optional( "http://localhost:9595/continuum" ) String baseUrl,
                                      @Optional( "*firefox" ) String browser,
                                      @Optional( "localhost" ) String seleniumHost,
@@ -1078,5 +1078,146 @@ public abstract class AbstractContinuumTest
         getSelenium().type( "loginForm_password", password );
         getSelenium().click( "loginForm__login" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+    }
+
+    protected void goToSchedulePage()
+    {
+        clickLinkWithText( "Schedules" );
+
+        assertSchedulePage();
+    }
+
+    protected void assertSchedulePage()
+    {
+        assertPage( "Continuum - Schedules" );
+        assertTextPresent( "Schedules" );
+        assertTextPresent( "Name" );
+        assertTextPresent( "Description" );
+        assertTextPresent( "Quiet Period" );
+        assertTextPresent( "Cron Expression" );
+        assertTextPresent( "Max Job Time" );
+        assertTextPresent( "Active" );
+        assertTextPresent( "DEFAULT_SCHEDULE" );
+        assertImgWithAlt( "Edit" );
+        assertImgWithAlt( "Delete" );
+        assertButtonWithValuePresent( "Add" );
+    }
+
+    protected void assertAddSchedulePage()
+    {
+        assertPage( "Continuum - Edit Schedule" );
+        assertTextPresent( "Edit Schedule" );
+        assertTextPresent( "Name" );
+        assertElementPresent( "name" );
+        assertTextPresent( "Description" );
+        assertElementPresent( "description" );
+        assertTextPresent( "Cron Expression" );
+        assertTextPresent( "Second" );
+        assertElementPresent( "second" );
+        assertTextPresent( "Minute" );
+        assertElementPresent( "minute" );
+        assertTextPresent( "Hour" );
+        assertElementPresent( "hour" );
+        assertTextPresent( "Day of Month" );
+        assertElementPresent( "dayOfMonth" );
+        assertTextPresent( "Month" );
+        assertElementPresent( "month" );
+        assertTextPresent( "Day of Week" );
+        assertElementPresent( "dayOfWeek" );
+        assertTextPresent( "Year [optional]" );
+        assertElementPresent( "year" );
+        assertTextPresent( "Maximum job execution time" );
+        assertElementPresent( "maxJobExecutionTime" );
+        assertTextPresent( "Quiet Period (seconds):" );
+        assertElementPresent( "delay" );
+        assertTextPresent( "Add Build Queue" );
+        assertElementPresent( "availableBuildQueuesIds" );
+        assertElementPresent( "selectedBuildQueuesIds" );
+        assertElementPresent( "active" );
+        assertTextPresent( "Enable/Disable the schedule" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    public void goToEditSchedule( String name, String description, String second, String minute, String hour,
+                                  String dayMonth, String month, String dayWeek, String year, String maxTime,
+                                  String period )
+    {
+        goToSchedulePage();
+        String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        assertAddSchedulePage();
+        assertFieldValue( name, "name" );
+        assertFieldValue( description, "description" );
+        assertFieldValue( second, "second" );
+        assertFieldValue( minute, "minute" );
+        assertFieldValue( hour, "hour" );
+        assertFieldValue( dayMonth, "dayOfMonth" );
+        assertFieldValue( month, "month" );
+        assertFieldValue( dayWeek, "dayOfWeek" );
+        assertFieldValue( year, "year" );
+        assertFieldValue( maxTime, "maxJobExecutionTime" );
+        assertFieldValue( period, "delay" );
+    }
+
+    protected void buildProjectForQueuePageTest( String projectGroupName, String groupId, String description )
+    {
+        showProjectGroup( projectGroupName, groupId, description );
+        clickButtonWithValue( "Build all projects" );
+        waitForElementPresent( "//img[@alt='Building']" );
+    }
+
+    protected void goToAddSchedule()
+    {
+        goToSchedulePage();
+        clickButtonWithValue( "Add" );
+        assertAddSchedulePage();
+    }
+
+    protected void addEditSchedule( String name, String description, String second, String minute, String hour,
+                                    String dayMonth, String month, String dayWeek, String year, String maxTime,
+                                    String period, boolean buildQueue, boolean success )
+    {
+        if ( buildQueue )
+        {
+            setFieldValue( "name", name );
+            setFieldValue( "description", description );
+            setFieldValue( "second", second );
+            setFieldValue( "minute", minute );
+            setFieldValue( "hour", hour );
+            setFieldValue( "dayOfMonth", dayMonth );
+            setFieldValue( "month", month );
+            setFieldValue( "dayOfWeek", dayWeek );
+            setFieldValue( "year", year );
+            setFieldValue( "maxJobExecutionTime", maxTime );
+            setFieldValue( "delay", period );
+            getSelenium().addSelection( "saveSchedule_availableBuildQueuesIds", "label=DEFAULT_BUILD_QUEUE" );
+            getSelenium().click( "//input[@value='->']" );
+            submit();
+        }
+        else
+        {
+            setFieldValue( "name", name );
+            setFieldValue( "description", description );
+            setFieldValue( "second", second );
+            setFieldValue( "minute", minute );
+            setFieldValue( "hour", hour );
+            setFieldValue( "dayOfMonth", dayMonth );
+            setFieldValue( "month", month );
+            setFieldValue( "dayOfWeek", dayWeek );
+            setFieldValue( "year", year );
+            setFieldValue( "maxJobExecutionTime", maxTime );
+            setFieldValue( "delay", period );
+            submit();
+        }
+
+        if ( success )
+        {
+            assertSchedulePage();
+        }
+        else
+        {
+            assertAddSchedulePage();
+        }
     }
 }

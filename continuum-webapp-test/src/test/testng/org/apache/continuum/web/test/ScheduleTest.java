@@ -19,16 +19,16 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractScheduleTest;
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = {"schedule"} )
+@Test( groups = { "schedule" } )
 public class ScheduleTest
-    extends AbstractScheduleTest
+    extends AbstractAdminTest
 {
     public void testAddScheduleNoBuildQueueToBeUsed()
     {
@@ -50,7 +50,7 @@ public class ScheduleTest
         assertTextPresent( "Used Build Queues cannot be empty" );
     }
 
-    @Test( dependsOnMethods = {"testAddScheduleNoBuildQueueToBeUsed"} )
+    @Test( dependsOnMethods = { "testAddScheduleNoBuildQueueToBeUsed" } )
     public void testAddSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
@@ -70,7 +70,7 @@ public class ScheduleTest
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, true, true );
     }
 
-    @Test( dependsOnMethods = {"testAddScheduleNoBuildQueueToBeUsed"} )
+    @Test( dependsOnMethods = { "testAddScheduleNoBuildQueueToBeUsed" } )
     public void testAddScheduleWithInvalidValues()
     {
         String SCHEDULE_NAME = "!@#$<>?etc";
@@ -100,7 +100,7 @@ public class ScheduleTest
         assertTextPresent( "Description is required and cannot contain spaces only" );
     }
 
-    @Test( dependsOnMethods = {"testAddSchedule"} )
+    @Test( dependsOnMethods = { "testAddSchedule" } )
     public void testAddDuplicatedSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
@@ -121,7 +121,7 @@ public class ScheduleTest
         assertTextPresent( "A Schedule with the same name already exists" );
     }
 
-    @Test( dependsOnMethods = {"testAddDuplicatedSchedule"} )
+    @Test( dependsOnMethods = { "testAddDuplicatedSchedule" } )
     public void testEditSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
@@ -157,10 +157,23 @@ public class ScheduleTest
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, false, true );
     }
 
-    @Test( dependsOnMethods = {"testEditSchedule"} )
+    @Test( dependsOnMethods = { "testEditSchedule" } )
     public void testDeleteSchedule()
     {
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
         removeSchedule( SCHEDULE_NAME );
+    }
+
+    protected void removeSchedule( String name )
+    {
+        goToSchedulePage();
+        clickLinkWithXPath( "(//a[contains(@href,'removeSchedule.action') and contains(@href, '" + name + "')])//img" );
+        assertPage( "Continuum - Delete Schedule" );
+        assertTextPresent( "Delete Schedule" );
+        assertTextPresent( "Are you sure you want to delete the schedule \"" + name + "\"?" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertSchedulePage();
     }
 }
