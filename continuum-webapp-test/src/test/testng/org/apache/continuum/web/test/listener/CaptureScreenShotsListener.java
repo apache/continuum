@@ -61,7 +61,7 @@ public class CaptureScreenShotsListener
         captureScreenshotAndSource( tr.getTestClass().getName(), tr.getThrowable() );
     }
 
-    private static void captureScreenshotAndSource( String cName, Throwable throwable )
+    public static void captureScreenshotAndSource( String cName, Throwable throwable )
     {
         Selenium selenium = AbstractSeleniumTest.getSelenium();
         if ( selenium == null )
@@ -81,8 +81,20 @@ public class CaptureScreenShotsListener
         String time = sdf.format( new Date() );
         File targetPath = new File( "target", "screenshots" );
         StackTraceElement trace = getStackTraceOfCallingClass( cName, throwable.getStackTrace() );
-        String methodName = trace.getMethodName();
-        int lNumber = trace.getLineNumber();
+        String methodName;
+        int lNumber;
+        if ( trace == null )
+        {
+            System.err.println( "Unable to determine the calling method from class " + cName );
+            throwable.printStackTrace();
+            methodName = "unknown";
+            lNumber = 0;
+        }
+        else
+        {
+            methodName = trace.getMethodName();
+            lNumber = trace.getLineNumber();
+        }
         String lineNumber = Integer.toString( lNumber );
         String className = cName.substring( cName.lastIndexOf( '.' ) + 1 );
         if ( !targetPath.exists() && !targetPath.mkdirs() )
