@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -35,7 +35,7 @@ import java.util.Arrays;
 
 @Test( groups = { "release" } )
 public class ReleaseTest
-    extends AbstractAdminTest
+    extends AbstractBuildAgentsTest
 {
     private String projectGroupName;
 
@@ -68,7 +68,7 @@ public class ReleaseTest
 
         enableDistributedBuilds();
 
-        addBuildAgent( getBuildAgentUrl() );
+        addBuildAgent( buildAgentUrl );
 
         String pomUrl = getProperty( "MAVEN2_POM_URL" );
         String pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
@@ -90,14 +90,15 @@ public class ReleaseTest
     public void setUp()
         throws IOException
     {
-        releaseBuildEnvironment = getProperty( "M2_RELEASE_BUILD_ENV" );
-        releaseBuildAgentGroup = getProperty( "M2_RELEASE_AGENT_GROUP" );
+        releaseBuildEnvironment = getProperty( "RELEASE_BUILD_ENV" );
+        releaseBuildAgentGroup = getProperty( "RELEASE_BUILD_AGENT_GROUP" );
+        errorMessageNoAgent = getProperty( "RELEASE_NO_AGENT_MESSAGE" );
+
         tagBase = getProperty( "RELEASE_PROJECT_TAGBASE" );
         tag = getProperty( "RELEASE_PROJECT_TAG" );
         releaseVersion = getProperty( "RELEASE_PROJECT_VERSION" );
         developmentVersion = getProperty( "RELEASE_PROJECT_DEVELOPMENT_VERSION" );
         releaseProjectScmUrl = getProperty( "RELEASE_PROJECT_SCM_URL" );
-        errorMessageNoAgent = getProperty( "M2_RELEASE_NO_AGENT_MESSAGE" );
 
         File file = new File( "target/conf/prepared-releases.xml" );
 
@@ -108,7 +109,7 @@ public class ReleaseTest
 
         enableDistributedBuilds();
 
-        addBuildAgent( getBuildAgentUrl() );
+        addBuildAgent( buildAgentUrl );
 
         createBuildEnvAndBuildagentGroup( releaseBuildEnvironment, releaseBuildAgentGroup );
     }
@@ -118,6 +119,8 @@ public class ReleaseTest
         throws Exception
     {
         removeBuildagentGroupFromBuildEnv( releaseBuildAgentGroup );
+
+        removeBuildAgentGroup( releaseBuildAgentGroup );
 
         disableDistributedBuilds();
     }
@@ -251,7 +254,7 @@ public class ReleaseTest
 
     private void attachBuildagentInGroup( String projectAgentGroup )
     {
-        String buildAgent = getBuildAgentUrl();
+        String buildAgent = buildAgentUrl;
 
         clickLinkWithText( "Build Agents" );
         String xPath = "//preceding::td[text()='" + projectAgentGroup + "']//following::img[@alt='Edit']";
@@ -268,7 +271,7 @@ public class ReleaseTest
 
     private void detachBuildagentFromGroup( String projectAgentGroup )
     {
-        String buildAgent = getBuildAgentUrl();
+        String buildAgent = buildAgentUrl;
 
         clickLinkWithText( "Build Agents" );
         String xPath = "//preceding::td[text()='" + projectAgentGroup + "']//following::img[@alt='Edit']";
@@ -398,7 +401,6 @@ public class ReleaseTest
         FileInputStream fis = new FileInputStream( file );
         BufferedReader reader = new BufferedReader( new InputStreamReader( fis ) );
 
-        String BUILD_AGENT_URL = getBuildAgentUrl();
         String strLine;
         StringBuilder str = new StringBuilder();
         while ( ( strLine = reader.readLine() ) != null )
@@ -406,7 +408,7 @@ public class ReleaseTest
             str.append( strLine );
         }
 
-        Assert.assertTrue( str.toString().contains( "<buildAgentUrl>" + BUILD_AGENT_URL + "</buildAgentUrl>" ),
+        Assert.assertTrue( str.toString().contains( "<buildAgentUrl>" + buildAgentUrl + "</buildAgentUrl>" ),
                            "prepared-releases.xml was not populated" );
     }
 }

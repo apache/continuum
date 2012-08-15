@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractConfigurationTest;
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,9 +27,9 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = {"configuration"} )
+@Test( groups = { "configuration" } )
 public class ConfigurationTest
-    extends AbstractConfigurationTest
+    extends AbstractAdminTest
 {
     private String WORKING_DIRECTORY;
 
@@ -54,7 +54,7 @@ public class ConfigurationTest
         NUMBER_ALLOWED_PARALLEL = getFieldValue( "numberOfAllowedBuildsinParallel" );
     }
 
-    @Test( dependsOnMethods = {"defaultConfiguration"} )
+    @Test( dependsOnMethods = { "defaultConfiguration" } )
     public void editConfiguration()
     {
         String newWorking = "newWorking";
@@ -170,5 +170,78 @@ public class ConfigurationTest
         submit();
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "Copyright 2005-2011 The Apache Software Foundation" );
+    }
+
+    void assertEditedConfigurationPage( String working, String buildOutput, String releaseOutput,
+                                        String deploymentRepository, String baseUrl, String numberBuildParallel )
+    {
+        assertPage( "Continuum - Configuration" );
+        assertTextPresent( "General Configuration " );
+        assertTextPresent( "Working Directory" );
+        assertElementNotPresent( "workingDirectory" );
+        assertTextPresent( working );
+        assertTextPresent( "Build Output Directory" );
+        assertElementNotPresent( "buildOutputDirectory" );
+        assertTextPresent( buildOutput );
+        assertTextPresent( "Release Output Directory" );
+        assertElementNotPresent( "releaseOutputDirectory" );
+        assertTextPresent( releaseOutput );
+        assertTextPresent( "Deployment Repository Directory" );
+        assertElementNotPresent( "deploymentRepositoryDirectory" );
+        assertTextPresent( deploymentRepository );
+        assertTextPresent( "Base URL" );
+        assertElementNotPresent( "baseUrl" );
+        assertTextPresent( baseUrl );
+        assertTextPresent( "Number of Allowed Builds in Parallel" );
+        assertElementNotPresent( "numberOfAllowedBuildsinParallel" );
+        assertTextPresent( numberBuildParallel );
+        assertTextPresent( "Enable Distributed Builds" );
+        assertElementNotPresent( "distributedBuildEnabled" );
+        assertButtonWithValuePresent( "Edit" );
+
+    }
+
+    protected void submitConfiguration( String working, String buildOutput, String releaseOutput,
+                                        String deploymentRepository, String baseUrl, String numberBuildParallel,
+                                        boolean distributed, boolean success )
+    {
+        setFieldValue( "workingDirectory", working );
+        setFieldValue( "buildOutputDirectory", buildOutput );
+        setFieldValue( "releaseOutputDirectory", releaseOutput );
+        setFieldValue( "deploymentRepositoryDirectory", deploymentRepository );
+        setFieldValue( "baseUrl", baseUrl );
+        setFieldValue( "numberOfAllowedBuildsinParallel", numberBuildParallel );
+        setFieldValue( "sharedSecretPassword", SHARED_SECRET );
+        if ( distributed )
+        {
+            checkField( "distributedBuildEnabled" );
+        }
+        else
+        {
+            uncheckField( "distributedBuildEnabled" );
+        }
+        submit();
+        if ( success )
+        {
+            assertEditedConfigurationPage( working, buildOutput, releaseOutput, deploymentRepository, baseUrl,
+                                           numberBuildParallel );
+        }
+        else
+        {
+            assertEditConfigurationPage();
+        }
+    }
+
+    protected void goToAppearancePage()
+    {
+        clickLinkWithText( "Appearance" );
+        assertAppearancePage();
+    }
+
+    void assertAppearancePage()
+    {
+        assertPage( "Configure Appearance" );
+        assertTextPresent( "Company Details" );
+        assertTextPresent( "Footer Content" );
     }
 }

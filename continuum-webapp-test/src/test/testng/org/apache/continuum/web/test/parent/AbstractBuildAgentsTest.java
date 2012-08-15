@@ -1,5 +1,8 @@
 package org.apache.continuum.web.test.parent;
 
+import org.testng.annotations.BeforeClass;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /*
@@ -24,6 +27,57 @@ import java.net.URLEncoder;
 public abstract class AbstractBuildAgentsTest
     extends AbstractAdminTest
 {
+    protected String buildAgentUrl;
+
+    @BeforeClass( alwaysRun = true )
+    public void initializeBuildAgent()
+    {
+        buildAgentUrl = baseUrl.substring( 0, baseUrl.indexOf( "/continuum" ) ) + "/continuum-buildagent/xmlrpc";
+    }
+
+    protected void enableDistributedBuilds()
+    {
+        goToConfigurationPage();
+        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
+        if ( !isChecked( "configuration_distributedBuildEnabled" ) )
+        {
+            // must use click here so the JavaScript enabling the shared secret gets triggered
+            click( "configuration_distributedBuildEnabled" );
+        }
+        setFieldValue( "configuration_sharedSecretPassword", SHARED_SECRET );
+        clickAndWait( "configuration_" );
+        assertTextPresent( "true" );
+        assertTextPresent( "Distributed Builds" );
+        assertElementPresent( "link=Build Agents" );
+    }
+
+    protected void disableDistributedBuilds()
+    {
+        goToConfigurationPage();
+        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
+        if ( isChecked( "configuration_distributedBuildEnabled" ) )
+        {
+            uncheckField( "configuration_distributedBuildEnabled" );
+        }
+        submit();
+        assertTextPresent( "false" );
+        assertElementNotPresent( "link=Build Agents" );
+    }
+
+    protected void goToBuildAgentPage()
+    {
+        clickAndWait( "link=Build Agents" );
+        assertPage( "Continuum - Build Agents" );
+    }
+
+    void assertBuildAgentPage()
+    {
+        assertPage( "Continuum - Build Agents" );
+        assertTextPresent( "Build Agents" );
+        assertTextPresent( "Build Agent Groups" );
+        assertButtonWithValuePresent( "Add" );
+    }
+
     protected void removeBuildAgent( String agentName )
         throws Exception
     {
@@ -33,8 +87,10 @@ public abstract class AbstractBuildAgentsTest
     protected void removeBuildAgent( String agentName, boolean failIfMissing )
         throws Exception
     {
-        String deleteButton = "//a[contains(@href,'deleteBuildAgent.action') and contains(@href, '" + URLEncoder.encode(
-            agentName, "UTF-8" ) + "')]/img";
+        String deleteButton =
+            "//a[contains(@href,'deleteBuildAgent.action') and contains(@href, '" + URLEncoder.encode( agentName,
+                                                                                                       "UTF-8" )
+                + "')]/img";
         if ( failIfMissing || isElementPresent( deleteButton ) )
         {
             clickLinkWithXPath( deleteButton );
@@ -45,6 +101,7 @@ public abstract class AbstractBuildAgentsTest
             assertButtonWithValuePresent( "Cancel" );
             clickButtonWithValue( "Delete" );
             assertBuildAgentPage();
+            assertElementNotPresent( deleteButton );
         }
     }
 
@@ -122,7 +179,7 @@ public abstract class AbstractBuildAgentsTest
     {
         goToBuildAgentPage();
         clickAndWait( "editBuildAgentGroup_0" ); //add button
-        String[] options = new String[]{"--- Available Build Agents ---"};
+        String[] options = new String[]{ "--- Available Build Agents ---" };
         assertAddEditBuildAgentGroupPage( options, null );
     }
 
@@ -187,16 +244,83 @@ public abstract class AbstractBuildAgentsTest
     }
 
     protected void removeBuildAgentGroup( String name )
+        throws UnsupportedEncodingException
+    {
+        removeBuildAgentGroup( name, true );
+    }
+
+    protected void removeBuildAgentGroup( String name, boolean failIfMissing )
+        throws UnsupportedEncodingException
     {
         goToBuildAgentPage();
-        clickLinkWithXPath(
-            "(//a[contains(@href,'deleteBuildAgentGroup.action') and contains(@href, '" + name + "')])//img" );
-        assertPage( "Continuum - Delete Build Agent Group" );
-        assertTextPresent( "Delete Build Agent" );
-        assertTextPresent( "Are you sure you want to delete build agent group " + name + " ?" );
-        assertButtonWithValuePresent( "Delete" );
-        assertButtonWithValuePresent( "Cancel" );
-        clickButtonWithValue( "Delete" );
+        if ( isTextPresent( name ) || failIfMissing )
+        {
+            clickLinkWithXPath(
+                "(//a[contains(@href,'deleteBuildAgentGroup.action') and contains(@href, '" + URLEncoder.encode( name,
+                                                                                                                 "UTF-8" )
+                    + "')])//img" );
+            assertPage( "Continuum - Delete Build Agent Group" );
+            assertTextPresent( "Delete Build Agent" );
+            assertTextPresent( "Are you sure you want to delete build agent group " + name + " ?" );
+            assertButtonWithValuePresent( "Delete" );
+            assertButtonWithValuePresent( "Cancel" );
+            clickButtonWithValue( "Delete" );
+            assertBuildAgentPage();
+            assertTextNotPresent( name );
+        }
+    }
+
+    protected void addBuildAgent( String buildAgentUrl )
+    {
+        addBuildAgent( buildAgentUrl, "Default description" );
+    }
+
+    protected void addBuildAgent( String buildAgentUrl, String description )
+    {
+        goToBuildAgentPage();
         assertBuildAgentPage();
+
+        if ( !isElementPresent( "link=" + buildAgentUrl ) )
+        {
+
+            clickAndWait( "editBuildAgent_0" ); //add button
+            assertAddEditBuildAgentPage( true );
+
+            setFieldValue( "saveBuildAgent_buildAgent_url", buildAgentUrl );
+            setFieldValue( "saveBuildAgent_buildAgent_description", description );
+            checkField( "saveBuildAgent_buildAgent_enabled" );
+
+            submit();
+
+            assertBuildAgentPage();
+            assertElementPresent( "link=" + buildAgentUrl );
+        }
+    }
+
+    protected void goToAddBuildAgent()
+    {
+        goToBuildAgentPage();
+        assertBuildAgentPage();
+        clickAndWait( "editBuildAgent_0" ); //add button
+        assertAddEditBuildAgentPage( true );
+    }
+
+    void assertAddEditBuildAgentPage( boolean isChecked )
+    {
+        assertPage( "Continuum - Add/Edit Build Agent" );
+        assertTextPresent( "Add/Edit Build Agent" );
+        assertTextPresent( "Build Agent URL*:" );
+        assertTextPresent( "Description:" );
+        assertTextPresent( "Enabled" );
+        assertElementPresent( "saveBuildAgent_buildAgent_url" );
+        assertElementPresent( "saveBuildAgent_buildAgent_description" );
+
+        if ( isChecked )
+        {
+            assertIsChecked();
+        }
+
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
     }
 }

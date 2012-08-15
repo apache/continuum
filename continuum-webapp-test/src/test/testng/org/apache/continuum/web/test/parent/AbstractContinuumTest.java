@@ -19,7 +19,6 @@ package org.apache.continuum.web.test.parent;
  * under the License.
  */
 
-import org.apache.continuum.web.test.ConfigurationTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
@@ -37,7 +36,7 @@ public abstract class AbstractContinuumTest
     extends AbstractSeleniumTest
 {
 
-    static final String SHARED_SECRET = "continuum1234";
+    protected static final String SHARED_SECRET = "continuum1234";
 
     // ////////////////////////////////////
     // Create Admin User
@@ -126,7 +125,7 @@ public abstract class AbstractContinuumTest
     // Configuration
     // ////////////////////////////////////
 
-    void assertEditConfigurationPage()
+    protected void assertEditConfigurationPage()
     {
         assertPage( "Continuum - Configuration" );
         assertTextPresent( "General Configuration " );
@@ -902,55 +901,6 @@ public abstract class AbstractContinuumTest
     }
 
     // ////////////////////////////////////
-    // Distributed Builds
-    // ////////////////////////////////////
-
-    protected void enableDistributedBuilds()
-    {
-        ConfigurationTest config = new ConfigurationTest();
-        config.goToConfigurationPage();
-        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( !isChecked( "configuration_distributedBuildEnabled" ) )
-        {
-            // must use click here so the JavaScript enabling the shared secret gets triggered
-            click( "configuration_distributedBuildEnabled" );
-        }
-        setFieldValue( "configuration_sharedSecretPassword", SHARED_SECRET );
-        clickAndWait( "configuration_" );
-        assertTextPresent( "true" );
-        assertTextPresent( "Distributed Builds" );
-        assertElementPresent( "link=Build Agents" );
-    }
-
-    protected void disableDistributedBuilds()
-    {
-        ConfigurationTest config = new ConfigurationTest();
-        config.goToConfigurationPage();
-        setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( isChecked( "configuration_distributedBuildEnabled" ) )
-        {
-            uncheckField( "configuration_distributedBuildEnabled" );
-        }
-        submit();
-        assertTextPresent( "false" );
-        assertElementNotPresent( "link=Build Agents" );
-    }
-
-    protected void goToBuildAgentPage()
-    {
-        clickAndWait( "link=Build Agents" );
-        assertPage( "Continuum - Build Agents" );
-    }
-
-    void assertBuildAgentPage()
-    {
-        assertPage( "Continuum - Build Agents" );
-        assertTextPresent( "Build Agents" );
-        assertTextPresent( "Build Agent Groups" );
-        assertButtonWithValuePresent( "Add" );
-    }
-
-    // ////////////////////////////////////
     // Reports
     // ////////////////////////////////////
 
@@ -1218,6 +1168,104 @@ public abstract class AbstractContinuumTest
         else
         {
             assertAddSchedulePage();
+        }
+    }
+
+    protected void goToBuildEnvironmentPage()
+    {
+        clickLinkWithText( "Build Environments" );
+        assertBuildEnvironmentPage();
+    }
+
+    protected void assertBuildEnvironmentPage()
+    {
+        assertPage( "Continuum - Build Environments" );
+        assertTextPresent( "Build Environments" );
+        assertButtonWithValuePresent( "Add" );
+    }
+
+    protected void goToAddBuildEnvironment()
+    {
+        goToBuildEnvironmentPage();
+        clickButtonWithValue( "Add" );
+        assertAddBuildEnvironmentPage();
+    }
+
+    protected void assertAddBuildEnvironmentPage()
+    {
+        assertPage( "Continuum - Build Environment" );
+        assertTextPresent( "Build Environment" );
+        assertTextPresent( "Build Environment Name" );
+        assertElementPresent( "profile.name" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    protected void addBuildEnvironmentWithBuildAgentGroup( String name, String[] installations,
+                                                           String buildAgentGroupName )
+    {
+        setFieldValue( "profile.name", name );
+        submit();
+        editBuildEnvironmentWithBuildAgentGroup( name, installations, buildAgentGroupName, true );
+    }
+
+    protected void editBuildEnvironmentWithBuildAgentGroup( String name, String[] installations,
+                                                            String buildAgentGroupName, boolean success )
+    {
+        setFieldValue( "profile.name", name );
+        selectValue( "profile.buildAgentGroup", buildAgentGroupName );
+        for ( String i : installations )
+        {
+            selectValue( "installationId", i );
+            clickButtonWithValue( "Add" );
+        }
+        submit();
+        if ( success )
+        {
+            assertBuildEnvironmentPage();
+        }
+        else
+        {
+            assertAddBuildEnvironmentPage();
+        }
+    }
+
+    void assertEditBuildEnvironmentPage( String name )
+    {
+        assertAddBuildEnvironmentPage();
+        assertTextPresent( "Installation Name" );
+        assertTextPresent( "Type" );
+        assertFieldValue( name, "profile.name" );
+    }
+
+    protected void goToEditBuildEnvironment( String name )
+    {
+        goToBuildEnvironmentPage();
+        String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        assertEditBuildEnvironmentPage( name );
+    }
+
+    protected void removeBuildEnvironment( String name )
+    {
+        removeBuildEnvironment( name, true );
+    }
+
+    protected void removeBuildEnvironment( String name, boolean failIfMissing )
+    {
+        goToBuildEnvironmentPage();
+        String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Delete']";
+        if ( failIfMissing || isElementPresent( "xpath=" + xPath ) )
+        {
+            clickLinkWithXPath( xPath );
+            assertPage( "Continuum - Delete Build Environment" );
+            assertTextPresent( "Delete Build Environment" );
+            assertTextPresent( "Are you sure you want to delete Build Environment \"" + name + "\" ?" );
+            assertButtonWithValuePresent( "Delete" );
+            assertButtonWithValuePresent( "Cancel" );
+            clickButtonWithValue( "Delete" );
+            assertBuildEnvironmentPage();
+            assertElementNotPresent( "xpath=" + xPath );
         }
     }
 }

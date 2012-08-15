@@ -36,46 +36,75 @@ public class DistributedBuildTest
 {
     private String projectGroupName;
 
+    private String projectGroupId;
+
+    private String projectGroupDescription;
+
+    private String pomUrl;
+
+    private String pomUsername;
+
+    private String pomPassword;
+
+    private String projectName;
+
+    private String buildEnvName;
+
+    private String buildAgentGroupName;
+
+    private String newBuildEnv;
+
     @BeforeMethod
     public void setUp()
     {
         enableDistributedBuilds();
 
-        projectGroupName = null;
+        addBuildAgent( buildAgentUrl );
+
+        projectGroupName = getProperty( "DISTRIBUTED_PROJECT_GROUP_NAME" );
+        projectGroupId = getProperty( "DISTRIBUTED_PROJECT_GROUP_ID" );
+        projectGroupDescription = getProperty( "DISTRIBUTED_PROJECT_GROUP_DESCRIPTION" );
+
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
+
+        pomUrl = getProperty( "MAVEN2_POM_URL" );
+        pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
+        pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
+        projectName = getProperty( "MAVEN2_POM_PROJECT_NAME" );
+
+        buildAgentGroupName = getProperty( "DISTRIBUTED_BUILD_AGENT_GROUP_NAME" );
+        buildEnvName = getProperty( "DISTRIBUTED_BUILD_ENV_NAME" );
+        newBuildEnv = getProperty( "DISTRIBUTED_DUPLICATE_BUILD_ENV" );
     }
 
     @AfterMethod
     public void tearDown()
-        throws Exception
+        throws Throwable
     {
-        if ( projectGroupName != null )
-        {
-            removeProjectGroup( projectGroupName, false );
-        }
+        removeProjectGroup( projectGroupName, false );
+
+        removeBuildEnvironment( buildEnvName, false );
+
+        removeBuildEnvironment( newBuildEnv, false );
+
+        removeBuildAgentGroup( buildAgentGroupName, false );
 
         disableDistributedBuilds();
     }
 
-    @Test( dependsOnMethods = { "testDeleteBuildAgentGroup" } )
     public void testBuildProjectGroupNoBuildAgentConfigured()
         throws Exception
     {
         goToBuildAgentPage();
-        removeBuildAgent( getBuildAgentUrl(), false );
+        removeBuildAgent( buildAgentUrl, false );
 
-        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
-        projectGroupName = M2_PROJ_GRP_NAME;
-
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
+        addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( projectGroupName );
         clickLinkWithText( projectGroupName );
 
         assertPage( "Continuum - Project Group" );
 
-        showProjectGroup( projectGroupName, M2_PROJ_GRP_ID, "" );
         clickButtonWithValue( "Build all projects" );
 
         assertTextPresent( "Unable to build projects because no build agent is configured" );
@@ -84,43 +113,92 @@ public class DistributedBuildTest
     public void testProjectGroupAllBuildSuccessWithDistributedBuilds()
         throws Exception
     {
-        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
-        projectGroupName = M2_PROJ_GRP_NAME;
+        addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
 
-        addBuildAgent( getBuildAgentUrl() );
-
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
-
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "", M2_PROJ_GRP_NAME, true );
+        buildProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName, true );
     }
 
-    @Test(
-        dependsOnMethods = { "testAddBuildAgentGroupWithEmptyBuildAgent",
-            "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    public void testBuildMaven2ProjectWithTagDistributedBuild()
+        throws Exception
+    {
+        String pomUrl = getProperty( "MAVEN2_PROJECT_WITH_TAG_POM_URL" );
+        String pomUsername = "";
+        String pomPassword = "";
+        String projectName = getProperty( "MAVEN2_PROJECT_WITH_TAG_POM_PROJECT_NAME" );
+
+        addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
+
+        buildProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName, true );
+    }
+
+    public void testBuildShellProjectWithDistributedBuildsEnabled()
+        throws Exception
+    {
+        String projectName = getProperty( "SHELL_PROJECT_NAME" );
+        String projectDescription = getProperty( "SHELL_PROJECT_DESCRIPTION" );
+        String projectVersion = getProperty( "SHELL_PROJECT_VERSION" );
+        String projectTag = getProperty( "SHELL_PROJECT_TAG" );
+        String projectScmUrl = getProperty( "SHELL_PROJECT_SCM_URL" );
+        String projectScmUsername = getProperty( "SHELL_PROJECT_SCM_USERNAME" );
+        String projectScmPassword = getProperty( "SHELL_PROJECT_SCM_PASSWORD" );
+
+        goToAddShellProjectPage();
+        addProject( projectName, projectDescription, projectVersion, projectScmUrl, projectScmUsername,
+                    projectScmPassword, projectTag, projectGroupName, true, "shell" );
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
+
+        goToProjectGroupsSummaryPage();
+        clickLinkWithText( projectGroupName );
+        clickLinkWithText( "Build Definitions" );
+        clickLinkWithXPath( "//table[@id='ec_table']/tbody/tr/td[14]/a/img" );
+
+        editBuildDefinitionShellType();
+
+        buildProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName, true );
+    }
+
+    public void testQueuePageWithProjectCurrentlyBuildingInDistributedBuilds()
+        throws Exception
+    {
+        String pomUrl = getProperty( "MAVEN2_QUEUE_TEST_POM_URL" );
+        String pomUsername = getProperty( "MAVEN2_QUEUE_TEST_POM_USERNAME" );
+        String pomPassword = getProperty( "MAVEN2_QUEUE_TEST_POM_PASSWORD" );
+
+        goToAddMavenTwoProjectPage();
+        addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
+
+        buildProjectForQueuePageTest( projectGroupName, projectGroupId, projectGroupDescription );
+
+        //check queue page while building
+        getSelenium().open( "/continuum/admin/displayQueues!display.action" );
+        assertPage( "Continuum - View Distributed Builds" );
+        assertTextPresent( "Current Build" );
+        assertTextPresent( "Build Queue" );
+        assertTextPresent( "Current Prepare Build" );
+        assertTextPresent( "Prepare Build Queue" );
+        assertTextPresent( projectGroupName );
+        assertTextPresent( "Build Agent URL" );
+    }
+
+    public void testAddBuildEnvironmentWithBuildAgentGroup()
+    {
+        addBuildAgentGroupAndEnvironment( new String[]{ buildAgentUrl } );
+    }
+
     public void testProjectGroupNoBuildAgentConfiguredInBuildAgentGroup()
         throws Exception
     {
-        String M2_PROJ_GRP_NAME = getProperty( "M2_DELETE_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_DELETE_PROJ_GRP_ID" );
-        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
-        projectGroupName = M2_PROJ_GRP_NAME;
+        addBuildAgentGroupAndEnvironment( new String[]{ } );
 
-        addMavenTwoProject( getProperty( "M2_DELETE_POM_URL" ), getProperty( "M2_POM_USERNAME" ),
-                            getProperty( "M2_POM_PASSWORD" ), null, true );
-        goToProjectGroupsSummaryPage();
-        assertLinkPresent( M2_PROJ_GRP_NAME );
-        clickLinkWithText( M2_PROJ_GRP_NAME );
+        addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
 
-        assertPage( "Continuum - Project Group" );
-
-        goToGroupBuildDefinitionPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, "" );
+        goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
         clickImgWithAlt( "Edit" );
         assertAddEditBuildDefinitionPage();
-        selectValue( "profileId", BUILD_ENV_NAME );
+        selectValue( "profileId", buildEnvName );
         submit();
-        assertGroupBuildDefinitionPage( M2_PROJ_GRP_NAME );
+        assertGroupBuildDefinitionPage( projectGroupName );
 
         clickLinkWithText( "Project Group Summary" );
         clickButtonWithValue( "Build all projects" );
@@ -128,62 +206,41 @@ public class DistributedBuildTest
         assertTextPresent( "Unable to build projects because no build agent is configured in the build agent group" );
     }
 
-    public void testBuildMaven2ProjectWithTagDistributedBuild()
-        throws Exception
+    public void testEditDuplicatedBuildEnvironmentDistributedBuilds()
     {
-        String M2_POM_URL = getProperty( "M2_PROJ_WITH_TAG_POM_URL" );
-        String M2_POM_USERNAME = getProperty( "M2_POM_USERNAME" );
-        String M2_POM_PASSWORD = getProperty( "M2_POM_PASSWORD" );
+        addBuildAgentGroupAndEnvironment( new String[]{ buildAgentUrl } );
 
-        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_WITH_TAG_PROJ_GRP_ID" );
-        String M2_PROJ_GRP_DESCRIPTION = "";
+        goToAddBuildEnvironment();
+        addBuildEnvironmentWithBuildAgentGroup( newBuildEnv, new String[]{ }, buildAgentGroupName );
 
-        projectGroupName = M2_PROJ_GRP_NAME;
-
-        addBuildAgent( getBuildAgentUrl() );
-
-        addMavenTwoProject( M2_POM_URL, M2_POM_USERNAME, M2_POM_PASSWORD, null, true );
-        assertProjectGroupSummaryPage( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
-
-        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
+        goToEditBuildEnvironment( newBuildEnv );
+        editBuildEnvironmentWithBuildAgentGroup( buildEnvName, new String[]{ }, buildAgentGroupName, false );
+        assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
-    public void testBuildShellProjectWithDistributedBuildsEnabled()
+    public void testBuildSuccessWithDistributedBuildsAfterDisableEnableOfBuildAgent()
         throws Exception
     {
-        String SHELL_GROUP_NAME = getProperty( "SHELL_GROUP_NAME" );
-        String SHELL_GROUP_ID = getProperty( "SHELL_GROUP_ID" );
-        String SHELL_GROUP_DESC = getProperty( "SHELL_GROUP_DESC" );
+        addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
 
-        String SHELL_NAME = getProperty( "SHELL_NAME_TWO" );
-        String SHELL_DESCRIPTION = getProperty( "SHELL_DESCRIPTION_TWO" );
-        String SHELL_VERSION = getProperty( "SHELL_VERSION_TWO" );
-        String SHELL_TAG = getProperty( "SHELL_TAG_TWO" );
-        String SHELL_SCM_URL = getProperty( "SHELL_SCM_URL_TWO" );
-        String SHELL_SCM_USERNAME = getProperty( "SHELL_SCM_USERNAME_TWO" );
-        String SHELL_SCM_PASSWORD = getProperty( "SHELL_SCM_PASSWORD_TWO" );
+        // disable then enable build agent
+        goToBuildAgentPage();
+        clickImgWithAlt( "Edit" );
+        enableDisableBuildAgent( buildAgentUrl, false );
+        clickImgWithAlt( "Edit" );
+        enableDisableBuildAgent( buildAgentUrl, true );
 
-        addProjectGroup( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC, true );
+        buildProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName, true );
+    }
 
-        projectGroupName = SHELL_GROUP_NAME;
+    private void addBuildAgentGroupAndEnvironment( String[] buildAgents )
+    {
+        // create build agent group
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( buildAgentGroupName, buildAgents, new String[]{ }, true );
 
-        addBuildAgent( getBuildAgentUrl() );
-
-        goToAddShellProjectPage();
-        addProject( SHELL_NAME, SHELL_DESCRIPTION, SHELL_VERSION, SHELL_SCM_URL, SHELL_SCM_USERNAME, SHELL_SCM_PASSWORD,
-                    SHELL_TAG, SHELL_GROUP_NAME, true, "shell" );
-        assertProjectGroupSummaryPage( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC );
-
-        goToProjectGroupsSummaryPage();
-        clickLinkWithText( SHELL_GROUP_NAME );
-        clickLinkWithText( "Build Definitions" );
-        clickLinkWithXPath( "//table[@id='ec_table']/tbody/tr/td[14]/a/img" );
-
-        editBuildDefinitionShellType();
-
-        buildProjectGroup( SHELL_GROUP_NAME, SHELL_GROUP_ID, SHELL_GROUP_DESC, SHELL_NAME, true );
-
+        goToAddBuildEnvironment();
+        addBuildEnvironmentWithBuildAgentGroup( buildEnvName, new String[]{ }, buildAgentGroupName );
     }
 
     private void editBuildDefinitionShellType()
@@ -195,25 +252,5 @@ public class DistributedBuildTest
         checkField( "alwaysBuild" );
 
         submit();
-    }
-
-    public void testQueuePageWithProjectCurrentlyBuildingInDistributedBuilds()
-        throws Exception
-    {
-        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
-        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
-
-        buildProjectForQueuePageTest( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION );
-
-        //check queue page while building
-        getSelenium().open( "/continuum/admin/displayQueues!display.action" );
-        assertPage( "Continuum - View Distributed Builds" );
-        assertTextPresent( "Current Build" );
-        assertTextPresent( "Build Queue" );
-        assertTextPresent( "Current Prepare Build" );
-        assertTextPresent( "Prepare Build Queue" );
-        assertTextPresent( M2_PROJ_GRP_NAME );
-        assertTextPresent( "Build Agent URL" );
     }
 }

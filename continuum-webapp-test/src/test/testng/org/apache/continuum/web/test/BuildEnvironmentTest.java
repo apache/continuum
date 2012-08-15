@@ -19,123 +19,111 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractBuildEnvironmentTest;
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = {"buildEnvironment"} )
+@Test( groups = { "buildEnvironment" } )
 public class BuildEnvironmentTest
-    extends AbstractBuildEnvironmentTest
+    extends AbstractAdminTest
 {
     public void testAddBuildEnvironment()
     {
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         goToAddBuildEnvironment();
-        addBuildEnvironment( BUILD_ENV_NAME, new String[]{}, true );
+        addBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, true );
     }
 
     public void testAddInvalidBuildEnvironment()
     {
         goToAddBuildEnvironment();
-        addBuildEnvironment( "", new String[]{}, false );
+        addBuildEnvironment( "", new String[]{ }, false );
         assertTextPresent( "You must define a name" );
     }
 
     public void testAddBuildEnvironmentWithXSS()
     {
         goToAddBuildEnvironment();
-        addBuildEnvironment( "<script>alert('gotcha')</script>", new String[]{}, false );
+        addBuildEnvironment( "<script>alert('gotcha')</script>", new String[]{ }, false );
         assertTextPresent( "Build environment name contains invalid characters." );
     }
 
-    @Test( dependsOnMethods = {"testAddBuildEnvironment"} )
+    @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditInvalidBuildEnvironment()
     {
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         goToEditBuildEnvironment( BUILD_ENV_NAME );
-        editBuildEnvironment( "", new String[]{}, false );
+        editBuildEnvironment( "", new String[]{ }, false );
         assertTextPresent( "You must define a name" );
     }
 
-    @Test( dependsOnMethods = {"testAddBuildEnvironment"} )
+    @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testAddDuplicatedBuildEnvironment()
     {
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         goToAddBuildEnvironment();
-        addBuildEnvironment( BUILD_ENV_NAME, new String[]{}, false );
+        addBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
-    @Test( dependsOnMethods = {"testAddBuildEnvironment"} )
+    @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditBuildEnvironment()
     {
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         String newName = "new_name";
         goToEditBuildEnvironment( BUILD_ENV_NAME );
-        editBuildEnvironment( newName, new String[]{}, true );
+        editBuildEnvironment( newName, new String[]{ }, true );
         // TODO: ADD INSTALLATIONS TO ENVIROTMENT
         goToEditBuildEnvironment( newName );
-        editBuildEnvironment( BUILD_ENV_NAME, new String[]{}, true );
+        editBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, true );
     }
 
-    @Test( dependsOnMethods = {"testEditInvalidBuildEnvironment", "testEditBuildEnvironment",
-        "testAddDuplicatedBuildEnvironment", "testEditInvalidBuildEnvironment"} )
+    @Test( dependsOnMethods = { "testEditInvalidBuildEnvironment", "testEditBuildEnvironment",
+        "testAddDuplicatedBuildEnvironment", "testEditInvalidBuildEnvironment" } )
     public void testDeleteBuildEnvironment()
     {
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         removeBuildEnvironment( BUILD_ENV_NAME );
     }
 
-    @Test( dependsOnMethods = {"testDeleteBuildEnvironment", "testAddBuildAgentGroupWithEmptyBuildAgent"} )
-    public void testAddBuildEnvironmentWithBuildAgentGroup()
-    {
-        try
-        {
-            enableDistributedBuilds();
-
-            String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
-            String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
-            goToAddBuildEnvironment();
-            addBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[]{}, BUILD_AGENT_GROUPNAME );
-        }
-        finally
-        {
-            disableDistributedBuilds();
-        }
-    }
-
-    @Test( dependsOnMethods = {"testAddBuildEnvironmentWithBuildAgentGroup"} )
+    @Test( dependsOnMethods = { "testAddBuildEnvironmentWithBuildAgentGroup" } )
     public void testEditDuplicatedBuildEnvironmentParallelBuilds()
     {
         String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         String newName = "NEW_BUILD_ENV";
         goToAddBuildEnvironment();
-        addBuildEnvironment( newName, new String[]{}, true );
+        addBuildEnvironment( newName, new String[]{ }, true );
         goToEditBuildEnvironment( newName );
-        editBuildEnvironment( BUILD_ENV_NAME, new String[]{}, false );
+        editBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
-    @Test( dependsOnMethods = {"testEditDuplicatedBuildEnvironmentParallelBuilds"} )
-    public void testEditDuplicatedBuildEnvironmentDistributedBuilds()
+    protected void addBuildEnvironment( String name, String[] installations, boolean success )
     {
-        try
-        {
-            enableDistributedBuilds();
+        setFieldValue( "profile.name", name );
+        submit();
+        editBuildEnvironment( name, installations, success );
+    }
 
-            String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
-            String BUILD_AGENT_GROUPNAME = getProperty( "BUILD_AGENT_GROUPNAME" );
-            String newName = "NEW_BUILD_ENV";
-            goToEditBuildEnvironment( newName );
-            editBuildEnvironmentWithBuildAgentGroup( BUILD_ENV_NAME, new String[]{}, BUILD_AGENT_GROUPNAME, false );
-            assertTextPresent( "A Build Environment with the same name already exists" );
-        }
-        finally
+    protected void editBuildEnvironment( String name, String[] installations, boolean success )
+    {
+        setFieldValue( "profile.name", name );
+        for ( String i : installations )
         {
-            disableDistributedBuilds();
+            selectValue( "installationId", i );
+            clickButtonWithValue( "Add" );
+        }
+        submit();
+        if ( success )
+        {
+            assertBuildEnvironmentPage();
+        }
+        else
+        {
+            assertAddBuildEnvironmentPage();
         }
     }
 }

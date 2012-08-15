@@ -38,62 +38,9 @@ public abstract class AbstractAdminTest
         }
     }
 
-    protected String getBuildAgentUrl()
+    public void goToConfigurationPage()
     {
-        return baseUrl.substring( 0, baseUrl.indexOf( "/continuum" ) ) + "/continuum-buildagent/xmlrpc";
-    }
-
-    protected void addBuildAgent( String buildAgentUrl )
-    {
-        addBuildAgent( buildAgentUrl, "Default description" );
-    }
-
-    protected void addBuildAgent( String buildAgentUrl, String description )
-    {
-        goToBuildAgentPage();
-        assertBuildAgentPage();
-
-        if ( !isElementPresent( "link=" + buildAgentUrl ) )
-        {
-
-            clickAndWait( "editBuildAgent_0" ); //add button
-            assertAddEditBuildAgentPage( true );
-
-            setFieldValue( "saveBuildAgent_buildAgent_url", buildAgentUrl );
-            setFieldValue( "saveBuildAgent_buildAgent_description", description );
-            checkField( "saveBuildAgent_buildAgent_enabled" );
-
-            submit();
-
-            assertBuildAgentPage();
-            assertElementPresent( "link=" + buildAgentUrl );
-        }
-    }
-
-    protected void goToAddBuildAgent()
-    {
-        goToBuildAgentPage();
-        assertBuildAgentPage();
-        clickAndWait( "editBuildAgent_0" ); //add button
-        assertAddEditBuildAgentPage( true );
-    }
-
-    void assertAddEditBuildAgentPage( boolean isChecked )
-    {
-        assertPage( "Continuum - Add/Edit Build Agent" );
-        assertTextPresent( "Add/Edit Build Agent" );
-        assertTextPresent( "Build Agent URL*:" );
-        assertTextPresent( "Description:" );
-        assertTextPresent( "Enabled" );
-        assertElementPresent( "saveBuildAgent_buildAgent_url" );
-        assertElementPresent( "saveBuildAgent_buildAgent_description" );
-
-        if ( isChecked )
-        {
-            assertIsChecked();
-        }
-
-        assertButtonWithValuePresent( "Save" );
-        assertButtonWithValuePresent( "Cancel" );
+        clickLinkWithText( "Configuration" );
+        assertEditConfigurationPage();
     }
 }

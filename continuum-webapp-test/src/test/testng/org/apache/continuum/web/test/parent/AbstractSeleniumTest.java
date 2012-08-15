@@ -174,7 +174,7 @@ public abstract class AbstractSeleniumTest
         Assert.assertTrue( isElementPresent( elementLocator ), "'" + elementLocator + "' isn't present." );
     }
 
-    void assertElementNotPresent( String elementLocator )
+    protected void assertElementNotPresent( String elementLocator )
     {
         Assert.assertFalse( isElementPresent( elementLocator ), "'" + elementLocator + "' is present." );
     }
@@ -338,7 +338,7 @@ public abstract class AbstractSeleniumTest
         getSelenium().check( locator );
     }
 
-    void uncheckField( String locator )
+    protected void uncheckField( String locator )
     {
         getSelenium().uncheck( locator );
     }
