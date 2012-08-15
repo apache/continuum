@@ -47,9 +47,11 @@ public class BuildAgentsTest
 
     @AfterMethod
     public void tearDown()
-        throws UnsupportedEncodingException
+        throws Exception
     {
         removeBuildAgentGroup( buildAgentGroup, false );
+
+        removeBuildAgent( buildAgentUrl, false );
 
         disableDistributedBuilds();
     }
@@ -87,17 +89,19 @@ public class BuildAgentsTest
         Assert.assertFalse( getSelenium().isAlertPresent() );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testAddAnExistingBuildAgent()
     {
+        addBuildAgent( buildAgentUrl );
+
         goToAddBuildAgent();
         addBuildAgent( buildAgentUrl, buildAgentDescription, false, false, true );
         assertTextPresent( "Build agent already exists" );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgent" } )
     public void testEditBuildAgent()
+        throws Exception
     {
+        // reset agent to expected state
         addBuildAgent( buildAgentUrl, buildAgentDescription );
 
         String new_agentDescription = "new_agentDescription";
@@ -155,10 +159,14 @@ public class BuildAgentsTest
         addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgentGroup" } )
     public void testEditBuildAgentGroup()
         throws Exception
     {
+        addBuildAgent( buildAgentUrl );
+
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
+
         String newName = "new_agentgroupname";
         goToEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl } );
         addEditBuildAgentGroup( newName, new String[]{ }, new String[]{ buildAgentUrl }, true );
@@ -166,10 +174,14 @@ public class BuildAgentsTest
         addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildAgentGroup" } )
     public void testAddAnExistingBuildAgentGroup()
         throws Exception
     {
+        addBuildAgent( buildAgentUrl );
+
+        goToAddBuildAgentGroup();
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
+
         goToAddBuildAgentGroup();
         addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, false );
         assertTextPresent( "Build agent group already exists." );
@@ -178,6 +190,8 @@ public class BuildAgentsTest
     public void testAddEmptyBuildAgentGroupName()
         throws Exception
     {
+        addBuildAgent( buildAgentUrl );
+
         goToAddBuildAgentGroup();
         addEditBuildAgentGroup( "", new String[]{ }, new String[]{ }, false );
         assertTextPresent( "Build agent group name is required." );
@@ -197,6 +211,8 @@ public class BuildAgentsTest
     public void testAddBuildAgentGroupWithEmptyBuildAgent()
         throws Exception
     {
+        addBuildAgent( buildAgentUrl );
+
         goToAddBuildAgentGroup();
         addEditBuildAgentGroup( buildAgentGroup, new String[]{ }, new String[]{ }, true );
     }
