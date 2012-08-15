@@ -169,8 +169,8 @@ public class BuildAgentAction
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         // escape xml to prevent xss attacks
-        buildAgent.setDescription( StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml(
-            buildAgent.getDescription() ) ) );
+        buildAgent.setDescription(
+            StringEscapeUtils.escapeXml( StringEscapeUtils.unescapeXml( buildAgent.getDescription() ) ) );
 
         if ( configuration.getBuildAgents() != null )
         {
@@ -261,8 +261,8 @@ public class BuildAgentAction
                     configuration.removeBuildAgent( agent );
                     configuration.store();
 
-                    AuditLog event = new AuditLog( "Build Agent URL=" + agent.getUrl(),
-                                                   AuditLogConstants.REMOVE_BUILD_AGENT );
+                    AuditLog event =
+                        new AuditLog( "Build Agent URL=" + agent.getUrl(), AuditLogConstants.REMOVE_BUILD_AGENT );
                     event.setCategory( AuditLogConstants.BUILD_AGENT );
                     event.setCurrentUser( getPrincipal() );
                     event.log();
@@ -293,7 +293,7 @@ public class BuildAgentAction
         {
             if ( buildAgentGroup.getName().equals( profile.getBuildAgentGroup() ) )
             {
-                message = getText( "buildAgentGroup.error.remove.in.use" );
+                message = getText( "buildAgentGroup.error.remove.in.use", new String[]{ profile.getName() } );
                 return ERROR;
             }
         }
@@ -306,8 +306,8 @@ public class BuildAgentAction
             {
                 configuration.removeBuildAgentGroup( group );
 
-                AuditLog event = new AuditLog( "Build Agent Group=" + group.getName(),
-                                               AuditLogConstants.REMOVE_BUILD_AGENT_GROUP );
+                AuditLog event =
+                    new AuditLog( "Build Agent Group=" + group.getName(), AuditLogConstants.REMOVE_BUILD_AGENT_GROUP );
                 event.setCategory( AuditLogConstants.BUILD_AGENT );
                 event.setCurrentUser( getPrincipal() );
                 event.log();
