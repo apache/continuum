@@ -218,6 +218,7 @@ public class DistributedBuildTest
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
+    @Test( enabled = false )
     public void testBuildSuccessWithDistributedBuildsAfterDisableEnableOfBuildAgent()
         throws Exception
     {
