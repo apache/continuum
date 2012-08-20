@@ -18,6 +18,7 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -149,6 +150,7 @@
               <appserver.base>${project.build.directory}</appserver.base>
               <derby.system.home>${project.build.directory}</derby.system.home>
               <svn.base.url>${svn.base.url}</svn.base.url>
+              <plexus.system.path>${plexus.system.path}</plexus.system.path>
             </systemProperties>
             <dependencies>
               <dependency>
@@ -568,5 +570,6 @@
     <browser>*firefox</browser>
     <browserPath/>
     <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
+    <plexus.system.path/>
   </properties>
 </project>

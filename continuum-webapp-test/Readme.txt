@@ -9,6 +9,9 @@ Test with Firefox and Selenium IDE
 Run Selenium tests in src/test/testNG with Maven, TestNG and Cargo
  * mvn clean install
 
+The tests require Ant and Maven to be on your PATH. If they are not, pass the plexus.system.path argument:
+ * mvn clean install -Dplexus.system.path=/path/to/apache-maven-3.0.4/bin:/path/to/apache-ant-1.8.1/bin
+
 Run Selenium tests against an existing Continuum instance
   * mvn clean install -DbaseUrl=http://localhost:9090/continuum
 
