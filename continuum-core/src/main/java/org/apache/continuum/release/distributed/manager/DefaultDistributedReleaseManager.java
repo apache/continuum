@@ -873,13 +873,13 @@ public class DefaultDistributedReleaseManager
         PreparedReleaseModel model = new PreparedReleaseModel();
         model.setPreparedReleases( preparedReleases );
 
+        FileWriter fileWriter = null;
         try
         {
             ContinuumPrepareReleasesModelStaxWriter writer = new ContinuumPrepareReleasesModelStaxWriter();
-            FileWriter fileWriter = new FileWriter( file );
+            fileWriter = new FileWriter( file );
             writer.write( fileWriter, model );
             fileWriter.flush();
-            fileWriter.close();
         }
         catch ( IOException e )
         {
@@ -888,6 +888,10 @@ public class DefaultDistributedReleaseManager
         catch ( XMLStreamException e )
         {
             throw new ContinuumReleaseException( "Failed to write prepared releases in file", e );
+        }
+        finally
+        {
+            IOUtil.close( fileWriter );
         }
     }
 
