@@ -246,7 +246,7 @@ public class DistributedBuildTest
 
     private void editBuildDefinitionShellType()
     {
-        setFieldValue( "buildFile", "build.sh" );
+        setFieldValue( "buildFile", isWindows() ? "build.bat" : "build.sh" );
         setFieldValue( "arguments", "" );
         setFieldValue( "description", "description" );
         setFieldValue( "buildDefinitionType", "shell" );

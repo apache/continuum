@@ -185,11 +185,4 @@ public class InstallationTest
         String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
         removeInstallation( INSTALL_VAR_NAME );
     }
-
-    public static boolean isWindows()
-    {
-        String os = System.getProperty( "os.name" ).toLowerCase();
-        //windows
-        return os.contains( "win" );
-    }
 }

@@ -1268,4 +1268,11 @@ public abstract class AbstractContinuumTest
             assertElementNotPresent( "xpath=" + xPath );
         }
     }
+    
+    public static boolean isWindows()
+    {
+        String os = System.getProperty( "os.name" ).toLowerCase();
+        //windows
+        return os.contains( "win" );
+    }
 }
