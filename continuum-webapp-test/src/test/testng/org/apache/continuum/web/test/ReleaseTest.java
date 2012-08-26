@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.commons.io.IOUtils;
 import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -398,17 +399,28 @@ public class ReleaseTest
         File file = new File( "target/conf/prepared-releases.xml" );
         Assert.assertTrue( file.exists(), "prepared-releases.xml was not created" );
 
-        FileInputStream fis = new FileInputStream( file );
-        BufferedReader reader = new BufferedReader( new InputStreamReader( fis ) );
+        FileInputStream fis = null;
+        BufferedReader reader = null;
 
-        String strLine;
-        StringBuilder str = new StringBuilder();
-        while ( ( strLine = reader.readLine() ) != null )
+        try
         {
-            str.append( strLine );
-        }
+            fis = new FileInputStream( file );
+            reader = new BufferedReader( new InputStreamReader( fis ) );
 
-        Assert.assertTrue( str.toString().contains( "<buildAgentUrl>" + buildAgentUrl + "</buildAgentUrl>" ),
-                           "prepared-releases.xml was not populated" );
+            String strLine;
+            StringBuilder str = new StringBuilder();
+            while ( ( strLine = reader.readLine() ) != null )
+            {
+                str.append( strLine );
+            }
+
+            Assert.assertTrue( str.toString().contains( "<buildAgentUrl>" + buildAgentUrl + "</buildAgentUrl>" ),
+                               "prepared-releases.xml was not populated" );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( reader );
+            IOUtils.closeQuietly( fis );
+        }
     }
 }
