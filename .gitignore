@@ -1,4 +1,9 @@
 target
+build/
+.settings/
+.project
+.settings
+.classpath
 continuum-webapp/src/main/webapp/template/
 *.iml
 .idea
