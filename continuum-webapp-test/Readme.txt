@@ -9,6 +9,12 @@ Test with Firefox and Selenium IDE
 Run Selenium tests in src/test/testNG with Maven, TestNG and Cargo
  * mvn clean install
 
+Note that while tomcat7x is the default container, if you have activated any
+other profiles on the command line or in your settings.xml, you need to
+specify it explicitly:
+
+ * mvn clean install -Ptomcat7x
+
 The tests require Ant and Maven to be on your PATH. If they are not, pass the plexus.system.path argument:
  * mvn clean install -Dplexus.system.path=/path/to/apache-maven-3.0.4/bin:/path/to/apache-ant-1.8.1/bin
 
