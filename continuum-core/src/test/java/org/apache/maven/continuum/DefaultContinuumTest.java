@@ -346,11 +346,6 @@ public class DefaultContinuumTest
 
         assertTrue( "project group build definition is not default", pgbd.isDefaultForProject() );
 
-        // project was added as a single project (loadRecursiveProjects == false) so project should not
-        //   get the PG's build def which has '--non-recursive' flag set in its argument
-        assertTrue( "project group build definition should not be the default for project",
-                    continuum.getDefaultBuildDefinition( project.getId() ).getId() != pgbd.getId() );
-
         BuildDefinition nbd = new BuildDefinition();
         nbd.setGoals( "clean" );
         nbd.setArguments( "" );

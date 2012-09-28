@@ -483,12 +483,16 @@ public class MavenTwoContinuumProjectBuilderTest
 
         // assert the default project build definition
         List<BuildDefinition> buildDefs = project.getBuildDefinitions();
+        assertEquals( 0, buildDefs.size() );
+
+        // assert the default project build definition
+        buildDefs = projectGroup.getBuildDefinitions();
         assertEquals( 1, buildDefs.size() );
         for ( BuildDefinition buildDef : buildDefs )
         {
             if ( buildDef.isDefaultForProject() )
             {
-                assertEquals( "--batch-mode ", buildDef.getArguments() );
+                assertEquals( "--batch-mode", buildDef.getArguments() );
                 assertEquals( "clean install", buildDef.getGoals() );
                 assertEquals( "pom.xml", buildDef.getBuildFile() );
             }

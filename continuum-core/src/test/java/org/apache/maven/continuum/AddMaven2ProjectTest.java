@@ -45,6 +45,8 @@ public class AddMaven2ProjectTest
 
     protected BuildDefinition bd;
 
+    protected BuildDefinitionService bds;
+
     @Override
     protected void setUp()
         throws Exception
@@ -55,7 +57,7 @@ public class AddMaven2ProjectTest
         bd.setBuildFile( "pom.xml" );
         bd.setDescription( "my foo" );
         bd.setTemplate( true );
-        BuildDefinitionService bds = (BuildDefinitionService) lookup( BuildDefinitionService.class.getName(),
+        bds = (BuildDefinitionService) lookup( BuildDefinitionService.class.getName(),
                                                                       "default" );
         bd = bds.addBuildDefinition( bd );
 
@@ -84,6 +86,7 @@ public class AddMaven2ProjectTest
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
         // group created with the m2 default build def 
         assertEquals( 1, pg.getBuildDefinitions().size() );
+        assertEquals( "clean install", pg.getBuildDefinitions().get( 0 ).getGoals() );
 
         File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-core/pom.xml" );
 
@@ -100,11 +103,10 @@ public class AddMaven2ProjectTest
         Project project = result.getProjects().get( 0 );
         project = getContinuum().getProjectWithBuildDetails( project.getId() );
         assertNotNull( project );
-        pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
         log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
-        // project with the build def coming from template
         assertEquals( 1, project.getBuildDefinitions().size() );
-        assertEquals( "clean deploy", ( (BuildDefinition) project.getBuildDefinitions().get( 0 ) ).getGoals() );
+        // project with the build def coming from template
+        assertEquals( "clean deploy", project.getBuildDefinitions().get( 0 ).getGoals() );
     }
 
     public void testAddProjectWithGroupCreationWithBuildDefTemplate()
@@ -177,24 +179,26 @@ public class AddMaven2ProjectTest
 
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
 
-        log.info( " pg groupId " + pg.getGroupId() );
         //@ group level the db from template must be used
-        log.info( " mg builddefs size " + pg.getBuildDefinitions().size() );
-        log.info( "pg bd goals " + ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
-        assertEquals( "clean install", ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
+        assertEquals( "clean install", pg.getBuildDefinitions().get( 0 ).getGoals() );
 
     }
 
     public void testAddProjectToExistingGroupDefaultBuildDef()
         throws Exception
     {
-
         ProjectGroup pg = new ProjectGroup();
-        pg.setName( "foo" );
+        String groupId = "foo";
+        pg.setName( groupId );
+        pg.setGroupId( groupId );
         pg.setDescription( "foo pg" );
         getContinuum().addProjectGroup( pg );
-        pg = getContinuum().getAllProjectGroups().get( 1 );
-        assertEquals( 2, getContinuum().getAllProjectGroups().size() );
+        pg = getContinuum().getProjectGroupByGroupIdWithBuildDetails( groupId );
+
+        assertEquals( 1, pg.getBuildDefinitions().size() );
+        BuildDefinition buildDefinition = pg.getBuildDefinitions().get( 0 );
+        assertEquals( "clean install", buildDefinition.getGoals() );
+        assertEquals( "--batch-mode --non-recursive", buildDefinition.getArguments() );
 
         File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-core/pom.xml" );
 
@@ -211,16 +215,51 @@ public class AddMaven2ProjectTest
         Project project = result.getProjects().get( 0 );
         project = getContinuum().getProjectWithBuildDetails( project.getId() );
         assertNotNull( project );
-        pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
-        log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
         assertEquals( 1, project.getBuildDefinitions().size() );
-        pg = result.getProjectGroups().get( 0 );
 
-        pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
-
-        assertEquals( "clean install", pg.getBuildDefinitions().get( 0 ).getGoals() );
+        buildDefinition = project.getBuildDefinitions().get( 0 );
+        assertEquals( "clean install", buildDefinition.getGoals() );
+        assertEquals( "--batch-mode", buildDefinition.getArguments() );
     }
 
+    public void testAddProjectToExistingGroupMatchingBuildDef()
+        throws Exception
+    {
+        ProjectGroup pg = new ProjectGroup();
+        String groupId = "testAddProjectToExistingGroupMatchingBuildDef";
+        pg.setName( groupId );
+        pg.setGroupId( groupId );
+        pg.setDescription( "foo pg" );
+        getContinuum().addProjectGroup( pg );
+        pg = getContinuum().getProjectGroupByGroupIdWithBuildDetails( groupId );
+
+        assertEquals( 1, pg.getBuildDefinitions().size() );
+        BuildDefinition buildDefinition = pg.getBuildDefinitions().get( 0 );
+        buildDefinition.setArguments( "--batch-mode" );
+        bds.updateBuildDefinition( buildDefinition );
+
+        pg = getContinuum().getProjectGroupByGroupIdWithBuildDetails( groupId );
+        buildDefinition = pg.getBuildDefinitions().get( 0 );
+        assertEquals( "clean install", buildDefinition.getGoals() );
+        assertEquals( "--batch-mode", buildDefinition.getArguments() );
+
+        File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-core/pom.xml" );
+
+        assertTrue( rootPom.exists() );
+        //String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
+        ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
+            rootPom.toURI().toURL().toExternalForm(), pg.getId(), true, false, false, -1, false );
+        assertNotNull( result );
+
+        assertEquals( Collections.emptyList(), result.getErrors() );
+
+        assertEquals( 1, result.getProjects().size() );
+
+        Project project = result.getProjects().get( 0 );
+        project = getContinuum().getProjectWithBuildDetails( project.getId() );
+        assertNotNull( project );
+        assertEquals( 0, project.getBuildDefinitions().size() );
+    }
 
     private Continuum getContinuum()
         throws Exception
