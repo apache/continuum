@@ -161,7 +161,8 @@ public class CreateProjectsFromMetadataAction
 
                     result = projectBuilder.buildProjectsFromMetadata( url, username, password, loadRecursiveProjects,
                                                                        buildDefinitionTemplate,
-                                                                       checkoutProjectsInSingleDirectory );
+                                                                       checkoutProjectsInSingleDirectory,
+                                                                       projectGroupId );
 
                 }
                 else
