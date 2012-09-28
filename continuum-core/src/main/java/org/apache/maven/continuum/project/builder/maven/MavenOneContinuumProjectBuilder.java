@@ -19,6 +19,7 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
@@ -32,6 +33,7 @@ import org.apache.maven.continuum.project.builder.AbstractContinuumProjectBuilde
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -59,6 +61,11 @@ public class MavenOneContinuumProjectBuilder
      * @plexus.requirement
      */
     private MavenOneMetadataHelper metadataHelper;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     // ----------------------------------------------------------------------
     // ProjectCreator Implementation
@@ -92,6 +99,36 @@ public class MavenOneContinuumProjectBuilder
                                                                      BuildDefinitionTemplate buildDefinitionTemplate,
                                                                      boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
+    {
+        return buildProjectsFromMetadata( url, username, password, buildDefinitionTemplate, null );
+    }
+
+    public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                     boolean recursiveProjects,
+                                                                     BuildDefinitionTemplate buildDefinitionTemplate,
+                                                                     boolean checkoutInSingleDirectory,
+                                                                     int projectGroupId )
+        throws ContinuumProjectBuilderException
+    {
+        ProjectGroup projectGroup = null;
+        if ( projectGroupId > 0 )
+        {
+            try
+            {
+                projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumProjectBuilderException( e.getMessage(), e );
+            }
+        }
+
+        return buildProjectsFromMetadata( url, username, password, buildDefinitionTemplate, projectGroup );
+    }
+
+    private ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                      BuildDefinitionTemplate buildDefinitionTemplate,
+                                                                      ProjectGroup projectGroup )
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
@@ -136,37 +173,40 @@ public class MavenOneContinuumProjectBuilder
             }
         }
 
-        ProjectGroup projectGroup = new ProjectGroup();
-
-        // ----------------------------------------------------------------------
-        // Group id
-        // ----------------------------------------------------------------------
-
-        if ( StringUtils.isEmpty( project.getGroupId() ) )
+        if ( projectGroup != null )
         {
-            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_GROUPID );
+            projectGroup = new ProjectGroup();
+
+            // ----------------------------------------------------------------------
+            // Group id
+            // ----------------------------------------------------------------------
+
+            if ( StringUtils.isEmpty( project.getGroupId() ) )
+            {
+                result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_GROUPID );
+            }
+
+            projectGroup.setGroupId( project.getGroupId() );
+
+            // ----------------------------------------------------------------------
+            // Name
+            // ----------------------------------------------------------------------
+
+            String name = project.getName();
+
+            if ( StringUtils.isEmpty( name ) )
+            {
+                name = project.getGroupId();
+            }
+
+            projectGroup.setName( name );
+
+            // ----------------------------------------------------------------------
+            // Description
+            // ----------------------------------------------------------------------
+
+            projectGroup.setDescription( project.getDescription() );
         }
-
-        projectGroup.setGroupId( project.getGroupId() );
-
-        // ----------------------------------------------------------------------
-        // Name
-        // ----------------------------------------------------------------------
-
-        String name = project.getName();
-
-        if ( StringUtils.isEmpty( name ) )
-        {
-            name = project.getGroupId();
-        }
-
-        projectGroup.setName( name );
-
-        // ----------------------------------------------------------------------
-        // Description
-        // ----------------------------------------------------------------------
-
-        projectGroup.setDescription( project.getDescription() );
 
         result.addProjectGroup( projectGroup );
 

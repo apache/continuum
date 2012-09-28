@@ -84,6 +84,16 @@ public abstract class AbstractContinuumProjectBuilderTest
             return null;
         }
 
+        public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                         boolean recursiveProjects,
+                                                                         BuildDefinitionTemplate buildDefinitionTemplate,
+                                                                         boolean checkoutInSingleDirectory,
+                                                                         int projectGroupId )
+            throws ContinuumProjectBuilderException
+        {
+            return null;
+        }
+
         public BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
             throws ContinuumProjectBuilderException
         {

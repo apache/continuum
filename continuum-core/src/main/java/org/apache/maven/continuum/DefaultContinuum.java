@@ -1614,6 +1614,13 @@ public class DefaultContinuum
         // Create the projects from the URL
         // ----------------------------------------------------------------------
 
+        ProjectGroup projectGroup;
+
+        if ( projectGroupId != -1 )
+        {
+            CreateProjectsFromMetadataAction.setProjectGroupId( context, projectGroupId );
+        }
+
         executeAction( "create-projects-from-metadata", context );
 
         ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
@@ -1652,14 +1659,14 @@ public class DefaultContinuum
             throw new ContinuumException( "The project building result has to contain exactly one project group." );
         }
 
-        ProjectGroup projectGroup = result.getProjectGroups().iterator().next();
-
         boolean projectGroupCreation = false;
 
         try
         {
             if ( projectGroupId == -1 )
             {
+                projectGroup = result.getProjectGroups().iterator().next();
+
                 try
                 {
                     projectGroup = projectGroupDao.getProjectGroupByGroupId( projectGroup.getGroupId() );

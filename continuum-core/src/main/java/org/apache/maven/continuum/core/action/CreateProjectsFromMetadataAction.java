@@ -98,6 +98,8 @@ public class CreateProjectsFromMetadataAction
 
         boolean checkoutProjectsInSingleDirectory = getBoolean( context, KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY );
 
+        int projectGroupId = getProjectGroupId( context );
+
         String curl = getUrl( context );
 
         URL url;
@@ -119,7 +121,7 @@ public class CreateProjectsFromMetadataAction
 
                 result = projectBuilder.buildProjectsFromMetadata( url, null, null, loadRecursiveProjects,
                                                                    buildDefinitionTemplate,
-                                                                   checkoutProjectsInSingleDirectory );
+                                                                   checkoutProjectsInSingleDirectory, projectGroupId );
 
             }
             else

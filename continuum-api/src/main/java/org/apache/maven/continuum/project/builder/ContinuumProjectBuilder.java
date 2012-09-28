@@ -45,6 +45,13 @@ public interface ContinuumProjectBuilder
                                                               boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException;
 
+    ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                              boolean recursiveProjects,
+                                                              BuildDefinitionTemplate buildDefinitionTemplate,
+                                                              boolean checkoutInSingleDirectory,
+                                                              int projectGroupId )
+        throws ContinuumProjectBuilderException;
+
     BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
         throws ContinuumProjectBuilderException;
 }
