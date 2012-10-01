@@ -349,9 +349,9 @@
     </repository>
     <!-- remove when parent is released -->
     <repository>
-      <id>vmbuild.snapshots</id>
+      <id>archiva-repository.snapshots</id>
       <name>Apache Snapshot Repository</name>
-      <url>http://vmbuild.apache.org/archiva/repository/snapshots</url>
+      <url>https://archiva-repository.apache.org/archiva/repository/snapshots</url>
       <releases>
         <enabled>false</enabled>
       </releases>
