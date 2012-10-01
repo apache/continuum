@@ -262,18 +262,19 @@ public class DefaultContinuumReleaseManager
 
     public Map<String, String> getPreparedReleasesForProject( String groupId, String artifactId )
     {
-        String releaseId = ArtifactUtils.versionlessKey( groupId, artifactId );
+        String key = ArtifactUtils.versionlessKey( groupId, artifactId );
 
         Map<String, String> projectPreparedReleases = new LinkedHashMap<String, String>();
         Map<String, ReleaseDescriptor> preparedReleases = getPreparedReleases();
-        for ( String key : preparedReleases.keySet() )
+        for ( String releaseId : preparedReleases.keySet() )
         {
             // get exact match, or one with a timestamp appended
-            if ( key.equals( releaseId ) || key.startsWith( releaseId + ":" ) )
+            if ( releaseId.equals( key ) || releaseId.startsWith( key + ":" ) )
             {
-                ReleaseDescriptor descriptor = preparedReleases.get( key );
+                ReleaseDescriptor descriptor = preparedReleases.get( releaseId );
 
-                projectPreparedReleases.put( key, descriptor.getReleaseVersions().get( releaseId ).toString() );
+                // use key to lookup, not release ID - versions don't get any timestamp appended
+                projectPreparedReleases.put( releaseId, descriptor.getReleaseVersions().get( key ).toString() );
             }
         }
         return projectPreparedReleases;
