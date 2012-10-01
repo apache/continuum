@@ -34,10 +34,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-@Test( groups = { "release" } )
+@Test( groups = {"release"} )
 public class ReleaseTest
     extends AbstractBuildAgentsTest
 {
+
+    private static final String RELEASE_BUTTON_TEXT = "Release";
+
+    private static final String PROVIDE_RELEASE_PARAMETERS_TEXT = "Provide Release Parameters";
+
     private String projectGroupName;
 
     private String projectGroupId;
@@ -123,7 +128,68 @@ public class ReleaseTest
 
         removeBuildAgentGroup( releaseBuildAgentGroup );
 
+        // enable agent if disabled
+        goToBuildAgentPage();
+        clickImgWithAlt( "Edit" );
+        enableDisableBuildAgent( buildAgentUrl, true );
+
         disableDistributedBuilds();
+    }
+
+    public void testReleasePrepareWithoutInterveningPerform()
+        throws IOException
+    {
+        // CONTINUUM-2687
+        showProjectGroup( projectGroupName, projectGroupId, "" );
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
+
+        // first attempt
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
+                               true );
+        clickButtonWithValue( "Done" );
+
+        // second attempt
+        releasePrepareProject( "", "", tagBase, tag, "1.1", "1.2-SNAPSHOT", releaseBuildEnvironment, true );
+        clickButtonWithValue( "Done" );
+
+        // check prepared releases content (timestamp version)
+        String str = getPreparedReleasesContent();
+        Assert.assertTrue( str.contains( "<releaseId>org.apache.continuum.examples.simple:simple-example:" ) );
+
+        // check that two versions are present
+        Assert.assertEquals( Arrays.asList( getSelenium().getSelectOptions( "preparedReleaseId" ) ), Arrays.asList(
+            "1.0", "1.1", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
+    }
+
+    public void testReleasePrepareWhenAgentGoesDown()
+        throws IOException
+    {
+        // CONTINUUM-2686
+        showProjectGroup( projectGroupName, projectGroupId, "" );
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
+
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
+                               true );
+
+        // disable agent
+        goToBuildAgentPage();
+        clickImgWithAlt( "Edit" );
+        enableDisableBuildAgent( buildAgentUrl, false );
+
+        // check prepared releases content
+        String str = getPreparedReleasesContent();
+        Assert.assertTrue( str.contains( "<releaseId>org.apache.continuum.examples.simple:simple-example" ) );
+
+        // go back to release page
+        showProjectGroup( projectGroupName, projectGroupId, "" );
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
+
+        // check that the version is present
+        Assert.assertEquals( Arrays.asList( getSelenium().getSelectOptions( "preparedReleaseId" ) ), Arrays.asList(
+            "1.0", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
     }
 
     public void testReleasePrepareProjectWithInvalidUsernamePasswordInDistributedBuilds()
@@ -133,11 +199,11 @@ public class ReleaseTest
         String releasePassword = "invalid";
 
         showProjectGroup( projectGroupName, projectGroupId, "" );
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
         releasePrepareProject( releaseUsername, releasePassword, tagBase, tag, releaseVersion, developmentVersion,
                                releaseBuildEnvironment, true );
-        assertPreparedReleasesFileCreated();
+        assertPreparedReleasesFileContainsBuildAgent();
     }
 
     /*
@@ -150,8 +216,8 @@ public class ReleaseTest
 
         showProjectGroup( projectGroupName, projectGroupId, projectGroupId );
 
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
         releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
                                false );
 
@@ -168,8 +234,8 @@ public class ReleaseTest
 
         showProjectGroup( projectGroupName, projectGroupId, projectGroupId );
 
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
         releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
                                false );
 
@@ -184,14 +250,14 @@ public class ReleaseTest
     {
         showProjectGroup( projectGroupName, projectGroupId, projectGroupId );
 
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
         releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, "", true );
 
-        assertPreparedReleasesFileCreated();
+        assertPreparedReleasesFileContainsBuildAgent();
     }
 
-    @Test( dependsOnMethods = { "testReleasePrepareProjectWithNoBuildEnvironment" } )
+    @Test( dependsOnMethods = {"testReleasePrepareProjectWithNoBuildEnvironment"} )
     public void testReleasePerformUsingProvidedParametersWithDistributedBuilds()
         throws Exception
     {
@@ -199,11 +265,11 @@ public class ReleaseTest
         String releasePassword = "invalid";
 
         showProjectGroup( projectGroupName, projectGroupId, "" );
-        clickButtonWithValue( "Release" );
-        assertReleaseSuccess();
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
         releasePerformProjectWithProvideParameters( releaseUsername, releasePassword, tagBase, tag,
                                                     releaseProjectScmUrl, releaseBuildEnvironment );
-        assertPreparedReleasesFileCreated();
+        assertPreparedReleasesFileContainsBuildAgent();
     }
 
     private void createBuildEnvAndBuildagentGroup( String projectBuildEnv, String projectAgentGroup )
@@ -393,8 +459,17 @@ public class ReleaseTest
         }
     }
 
-    private void assertPreparedReleasesFileCreated()
+    private void assertPreparedReleasesFileContainsBuildAgent()
         throws Exception
+    {
+        String str = getPreparedReleasesContent();
+
+        Assert.assertTrue( str.contains( "<buildAgentUrl>" + buildAgentUrl + "</buildAgentUrl>" ),
+                           "prepared-releases.xml was not populated" );
+    }
+
+    private String getPreparedReleasesContent()
+        throws IOException
     {
         File file = new File( "target/conf/prepared-releases.xml" );
         Assert.assertTrue( file.exists(), "prepared-releases.xml was not created" );
@@ -413,9 +488,7 @@ public class ReleaseTest
             {
                 str.append( strLine );
             }
-
-            Assert.assertTrue( str.toString().contains( "<buildAgentUrl>" + buildAgentUrl + "</buildAgentUrl>" ),
-                               "prepared-releases.xml was not populated" );
+            return str.toString();
         }
         finally
         {

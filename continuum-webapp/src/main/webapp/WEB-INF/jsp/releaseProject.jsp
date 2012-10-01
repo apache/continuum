@@ -18,6 +18,7 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -37,11 +38,11 @@
           <br/>
           &nbsp;&nbsp;&nbsp;
           <select name="preparedReleaseId">
-            <s:if test="preparedReleaseName != null">
-              <option selected value="<s:property value="preparedReleaseId"/>">
-                <s:property value="preparedReleaseName"/>
+            <c:forEach var="preparedRelease" items="${preparedReleases}">
+              <option selected value="<c:out value="${preparedRelease.key}"/>">
+                <c:out value="${preparedRelease.value}"/>
               </option>
-            </s:if>
+            </c:forEach>
             <option value=""><s:text name="releaseProject.provideReleaseParameters"/></option>
           </select>
           <br/>

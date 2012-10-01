@@ -52,7 +52,11 @@ public interface DistributedReleaseManager
     void removeListener( String releaseId )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
+    @Deprecated
     String getPreparedReleaseName( String releaseId )
+        throws ContinuumReleaseException;
+
+    Map<String, String> getPreparedReleases( String groupId, String artifactId )
         throws ContinuumReleaseException;
 
     void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile,

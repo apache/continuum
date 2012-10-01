@@ -23,6 +23,7 @@ import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
 import java.io.File;
@@ -135,7 +136,9 @@ public interface ContinuumReleaseManager
     void rollback( String releaseId, String workingDirectory, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
-    Map getPreparedReleases();
+    Map<String, ReleaseDescriptor> getPreparedReleases();
+
+    Map<String, String> getPreparedReleasesForProject( String groupId, String artifactId );
 
     Map getReleaseResults();
 
@@ -193,5 +196,4 @@ public interface ContinuumReleaseManager
      */
     TaskQueueExecutor getRollbackReleaseTaskQueueExecutor()
         throws TaskQueueManagerException;
-
 }

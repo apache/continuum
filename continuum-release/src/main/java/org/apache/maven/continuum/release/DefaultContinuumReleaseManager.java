@@ -24,6 +24,7 @@ import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -48,7 +49,9 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -101,7 +104,7 @@ public class DefaultContinuumReleaseManager
      *
      * @todo remove static when singleton strategy is working
      */
-    private static Map preparedReleases;
+    private static Map<String, ReleaseDescriptor> preparedReleases;
 
     /**
      * contains results
@@ -124,7 +127,6 @@ public class DefaultContinuumReleaseManager
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
-        String id = releaseId;
 
         ReleaseDescriptor descriptor = getReleaseDescriptor( project, releaseProperties, relVersions, devVersions,
                                                              environments, workingDirectory, executable );
@@ -138,7 +140,7 @@ public class DefaultContinuumReleaseManager
         // check if releaseId exists
         while ( getListeners().get( releaseId ) != null )
         {
-            releaseId = id + ":" + String.valueOf( System.currentTimeMillis() );
+            releaseId = releaseId + ":" + String.valueOf( System.currentTimeMillis() );
         }
 
         getListeners().put( releaseId, listener );
@@ -168,7 +170,7 @@ public class DefaultContinuumReleaseManager
                          LocalRepository repository )
         throws ContinuumReleaseException
     {
-        ReleaseDescriptor descriptor = (ReleaseDescriptor) getPreparedReleases().get( releaseId );
+        ReleaseDescriptor descriptor = getPreparedReleases().get( releaseId );
         if ( descriptor != null )
         {
             perform( releaseId, descriptor, buildDirectory, goals, arguments, useReleaseProfile, listener, repository );
@@ -248,14 +250,33 @@ public class DefaultContinuumReleaseManager
         }
     }
 
-    public Map getPreparedReleases()
+    public Map<String, ReleaseDescriptor> getPreparedReleases()
     {
         if ( preparedReleases == null )
         {
-            preparedReleases = new Hashtable();
+            preparedReleases = Collections.synchronizedMap( new LinkedHashMap<String, ReleaseDescriptor>() );
         }
 
         return preparedReleases;
+    }
+
+    public Map<String, String> getPreparedReleasesForProject( String groupId, String artifactId )
+    {
+        String releaseId = ArtifactUtils.versionlessKey( groupId, artifactId );
+
+        Map<String, String> projectPreparedReleases = new LinkedHashMap<String, String>();
+        Map<String, ReleaseDescriptor> preparedReleases = getPreparedReleases();
+        for ( String key : preparedReleases.keySet() )
+        {
+            // get exact match, or one with a timestamp appended
+            if ( key.equals( releaseId ) || key.startsWith( releaseId + ":" ) )
+            {
+                ReleaseDescriptor descriptor = preparedReleases.get( key );
+
+                projectPreparedReleases.put( key, descriptor.getReleaseVersions().get( releaseId ).toString() );
+            }
+        }
+        return projectPreparedReleases;
     }
 
     public Map getReleaseResults()

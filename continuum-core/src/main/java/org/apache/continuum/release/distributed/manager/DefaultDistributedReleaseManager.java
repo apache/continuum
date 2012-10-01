@@ -31,6 +31,7 @@ import org.apache.continuum.release.model.PreparedRelease;
 import org.apache.continuum.release.model.PreparedReleaseModel;
 import org.apache.continuum.release.model.io.stax.ContinuumPrepareReleasesModelStaxReader;
 import org.apache.continuum.release.model.io.stax.ContinuumPrepareReleasesModelStaxWriter;
+import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -51,6 +52,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -187,7 +189,8 @@ public class DefaultDistributedReleaseManager
                 String releaseId = client.releasePrepare( createProjectMap( project ), releaseProperties,
                                                           releaseVersion, developmentVersion, environments, username );
 
-                addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ), "prepare",
+                String key = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );
+                addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( key ), "prepare",
                                    releaseProperties.getProperty( "preparation-goals" ), username );
 
                 addReleaseInProgress( releaseId, "prepare", project.getId(), username );
@@ -372,6 +375,24 @@ public class DefaultDistributedReleaseManager
             log.error( "Failed to get prepared release name of " + releaseId, e );
             throw new ContinuumReleaseException( "Failed to get prepared release name of " + releaseId, e );
         }
+    }
+
+    public Map<String, String> getPreparedReleases( String groupId, String artifactId )
+        throws ContinuumReleaseException
+    {
+        String releaseId = ArtifactUtils.versionlessKey( groupId, artifactId );
+
+        Map<String, String> projectPreparedReleases = new LinkedHashMap<String, String>();
+        for ( PreparedRelease release : getPreparedReleases() )
+        {
+            // get exact match, or one with a timestamp appended
+            String id = release.getReleaseId();
+            if ( id.equals( releaseId ) || id.startsWith( releaseId + ":" ) )
+            {
+                projectPreparedReleases.put( id, release.getReleaseName() );
+            }
+        }
+        return projectPreparedReleases;
     }
 
     public void releasePerform( int projectId, String releaseId, String goals, String arguments,
@@ -744,7 +765,7 @@ public class DefaultDistributedReleaseManager
             }
         }
 
-        return null;
+        return new ArrayList<PreparedRelease>();
     }
 
     private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName, String releaseType,
