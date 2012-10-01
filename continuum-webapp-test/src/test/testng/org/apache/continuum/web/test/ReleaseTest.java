@@ -206,6 +206,8 @@ public class ReleaseTest
             "2.0", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
     }
 
+    // can't test u/p locally and don't have a suitable SVN server to test against
+    @Test( enabled = false )
     public void testReleasePrepareProjectWithInvalidUsernamePasswordInDistributedBuilds()
         throws Exception
     {
@@ -215,7 +217,7 @@ public class ReleaseTest
         showProjectGroup( projectGroupName, projectGroupId, "" );
         clickButtonWithValue( RELEASE_BUTTON_TEXT );
         assertReleaseChoicePage();
-        releasePrepareProject( releaseUsername, releasePassword, tagBase, tag, releaseVersion, developmentVersion,
+        releasePrepareProject( releaseUsername, releasePassword, tagBase, "simple-example-3.0", "3.0", "3.1-SNAPSHOT",
                                releaseBuildEnvironment );
         assertReleasePhaseError();
         assertPreparedReleasesFileContainsBuildAgent();
