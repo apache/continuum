@@ -83,13 +83,6 @@ public class ReleaseProjectAction
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
             preparedReleases = releaseManager.getPreparedReleases( project.getGroupId(), project.getArtifactId() );
-
-            if ( !preparedReleases.isEmpty() )
-            {
-                // use last release as default choice
-                preparedReleaseId = new ArrayList<String>( preparedReleases.keySet() ).get(
-                    preparedReleases.size() - 1 );
-            }
         }
         else
         {
@@ -97,8 +90,16 @@ public class ReleaseProjectAction
 
             this.preparedReleases = releaseManager.getPreparedReleasesForProject( project.getGroupId(),
                                                                                   project.getArtifactId() );
+        }
 
+        if ( !preparedReleases.isEmpty() )
+        {
+            // use last release as default choice
             preparedReleaseId = new ArrayList<String>( preparedReleases.keySet() ).get( preparedReleases.size() - 1 );
+        }
+        else
+        {
+            preparedReleaseId = null;
         }
 
         projectName = project.getName();
