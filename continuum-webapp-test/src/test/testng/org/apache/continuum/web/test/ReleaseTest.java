@@ -145,12 +145,13 @@ public class ReleaseTest
         assertReleaseChoicePage();
 
         // first attempt
-        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
-                               true );
+        releasePrepareProject( "", "", tagBase, "simple-example-1.1", "1.1", "1.2-SNAPSHOT", releaseBuildEnvironment );
+        assertReleasePhaseSuccess();
         clickButtonWithValue( "Done" );
 
         // second attempt
-        releasePrepareProject( "", "", tagBase, tag, "1.1", "1.2-SNAPSHOT", releaseBuildEnvironment, true );
+        releasePrepareProject( "", "", tagBase, "simple-example-1.2", "1.2", "1.3-SNAPSHOT", releaseBuildEnvironment );
+        assertReleasePhaseSuccess();
         clickButtonWithValue( "Done" );
 
         // check prepared releases content (timestamp version)
@@ -159,7 +160,20 @@ public class ReleaseTest
 
         // check that two versions are present
         Assert.assertEquals( Arrays.asList( getSelenium().getSelectOptions( "preparedReleaseId" ) ), Arrays.asList(
-            "1.0", "1.1", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
+            "1.1", "1.2", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
+
+        // check that 1.2 is selected by default
+        Assert.assertEquals( getSelenium().getSelectedLabel( "preparedReleaseId" ), "1.2" );
+
+        // test perform on 1.1
+        selectPerformAndSubmit();
+
+        setFieldValue( "goals", "clean validate" );
+        submit();
+
+        waitForRelease();
+
+        assertReleasePhaseSuccess();
     }
 
     public void testReleasePrepareWhenAgentGoesDown()
@@ -170,8 +184,8 @@ public class ReleaseTest
         clickButtonWithValue( RELEASE_BUTTON_TEXT );
         assertReleaseChoicePage();
 
-        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
-                               true );
+        releasePrepareProject( "", "", tagBase, "simple-example-2.0", "2.0", "2.1-SNAPSHOT", releaseBuildEnvironment );
+        assertReleasePhaseSuccess();
 
         // disable agent
         goToBuildAgentPage();
@@ -189,7 +203,7 @@ public class ReleaseTest
 
         // check that the version is present
         Assert.assertEquals( Arrays.asList( getSelenium().getSelectOptions( "preparedReleaseId" ) ), Arrays.asList(
-            "1.0", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
+            "2.0", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
     }
 
     public void testReleasePrepareProjectWithInvalidUsernamePasswordInDistributedBuilds()
@@ -202,7 +216,8 @@ public class ReleaseTest
         clickButtonWithValue( RELEASE_BUTTON_TEXT );
         assertReleaseChoicePage();
         releasePrepareProject( releaseUsername, releasePassword, tagBase, tag, releaseVersion, developmentVersion,
-                               releaseBuildEnvironment, true );
+                               releaseBuildEnvironment );
+        assertReleasePhaseError();
         assertPreparedReleasesFileContainsBuildAgent();
     }
 
@@ -218,8 +233,9 @@ public class ReleaseTest
 
         clickButtonWithValue( RELEASE_BUTTON_TEXT );
         assertReleaseChoicePage();
-        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
-                               false );
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment );
+
+        assertReleaseError();
 
         assertTextPresent( errorMessageNoAgent );
     }
@@ -236,8 +252,9 @@ public class ReleaseTest
 
         clickButtonWithValue( RELEASE_BUTTON_TEXT );
         assertReleaseChoicePage();
-        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment,
-                               false );
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, releaseBuildEnvironment );
+
+        assertReleaseError();
 
         assertTextPresent( errorMessageNoAgent );
     }
@@ -252,7 +269,9 @@ public class ReleaseTest
 
         clickButtonWithValue( RELEASE_BUTTON_TEXT );
         assertReleaseChoicePage();
-        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, "", true );
+        releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, "" );
+
+        assertReleasePhaseSuccess();
 
         assertPreparedReleasesFileContainsBuildAgent();
     }
@@ -354,8 +373,7 @@ public class ReleaseTest
     }
 
     private void releasePrepareProject( String username, String password, String tagBase, String tag,
-                                        String releaseVersion, String developmentVersion, String buildEnv,
-                                        boolean success )
+                                        String releaseVersion, String developmentVersion, String buildEnv )
     {
         goToReleasePreparePage();
         setFieldValue( "scmUsername", username );
@@ -368,7 +386,7 @@ public class ReleaseTest
         setFieldValue( "devVersions", developmentVersion );
         submit();
 
-        assertRelease( success );
+        waitForRelease();
     }
 
     private void releasePerformProjectWithProvideParameters( String username, String password, String tagBase,
@@ -384,7 +402,9 @@ public class ReleaseTest
         selectValue( "profileId", buildEnv );
         submit();
 
-        assertRelease();
+        waitForRelease();
+
+        assertReleasePhaseError();
     }
 
     private void goToReleasePreparePage()
@@ -396,9 +416,14 @@ public class ReleaseTest
 
     private void goToReleasePerformProvideParametersPage()
     {
+        selectPerformAndSubmit();
+        assertReleasePerformProvideParametersPage();
+    }
+
+    private void selectPerformAndSubmit()
+    {
         clickLinkWithLocator( "//input[@name='goal' and @value='perform']", false );
         submit();
-        assertReleasePerformProvideParametersPage();
     }
 
     private void assertReleasePreparePage()
@@ -435,28 +460,30 @@ public class ReleaseTest
         assertButtonWithValuePresent( "Submit" );
     }
 
-    private void assertRelease()
+    private void assertReleaseError()
     {
-        assertRelease( true );
+        assertTextPresent( "Release Error" );
     }
 
-    private void assertRelease( boolean success )
+    private void assertReleasePhaseError()
+    {
+        assertButtonWithValuePresent( "Rollback changes" );
+        assertImgWithAlt( "Error" );
+    }
+
+    private void assertReleasePhaseSuccess()
+    {
+        assertButtonWithValuePresent( "Rollback changes" );
+        assertElementNotPresent( "//img[@alt='Error']" );
+    }
+
+    private void waitForRelease()
     {
         String doneButtonLocator = "//input[@id='releaseCleanup_0']";
         String errorTextLocator = "//h3[text()='Release Error']";
 
         // condition for release is complete; "Done" button or "Release Error" in page is present
         waitForOneOfElementsPresent( Arrays.asList( doneButtonLocator, errorTextLocator ), true );
-
-        if ( success )
-        {
-            assertButtonWithValuePresent( "Rollback changes" );
-            assertImgWithAlt( "Error" );
-        }
-        else
-        {
-            assertTextPresent( "Release Error" );
-        }
     }
 
     private void assertPreparedReleasesFileContainsBuildAgent()
