@@ -173,7 +173,7 @@ public class MavenOneContinuumProjectBuilder
             }
         }
 
-        if ( projectGroup != null )
+        if ( projectGroup == null )
         {
             projectGroup = new ProjectGroup();
 
