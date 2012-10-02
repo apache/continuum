@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -27,9 +27,9 @@ import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
 
-@Test( groups = { "agent" } )
+@Test( groups = {"agent"} )
 public class BuildAgentsTest
-    extends AbstractBuildAgentsTest
+    extends AbstractAdminTest
 {
     private String buildAgentGroup;
 
@@ -74,8 +74,8 @@ public class BuildAgentsTest
 
     public void testViewBuildAgentInstallationXSS()
     {
-        String url = baseUrl
-            + "/security/viewBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E";
+        String url = baseUrl +
+            "/security/viewBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E";
         getSelenium().open( url );
         Assert.assertFalse( getSelenium().isAlertPresent() );
         assertTextPresent( "<script>alert('xss')</script>" );
@@ -83,8 +83,8 @@ public class BuildAgentsTest
 
     public void testEditBuildAgentXSS()
     {
-        String url = baseUrl
-            + "/security/editBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E";
+        String url = baseUrl +
+            "/security/editBuildAgent.action?buildAgent.url=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E";
         getSelenium().open( url );
         Assert.assertFalse( getSelenium().isAlertPresent() );
     }
@@ -137,15 +137,15 @@ public class BuildAgentsTest
         addBuildAgent( buildAgentUrl );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{ }, new String[]{ },
+        addEditBuildAgentGroup( "%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E", new String[]{}, new String[]{},
                                 false );
         assertTextPresent( "Build agent group name contains invalid characters" );
     }
 
     public void testEditBuildAgentGroupXSS()
     {
-        String url = baseUrl
-            + "/security/editBuildAgentGroup.action?buildAgentGroup.name=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E";
+        String url = baseUrl +
+            "/security/editBuildAgentGroup.action?buildAgentGroup.name=test%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E";
         getSelenium().open( url );
         Assert.assertFalse( getSelenium().isAlertPresent() );
     }
@@ -156,7 +156,7 @@ public class BuildAgentsTest
         addBuildAgent( buildAgentUrl );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{buildAgentUrl}, new String[]{}, true );
     }
 
     public void testEditBuildAgentGroup()
@@ -165,13 +165,13 @@ public class BuildAgentsTest
         addBuildAgent( buildAgentUrl );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{buildAgentUrl}, new String[]{}, true );
 
         String newName = "new_agentgroupname";
-        goToEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl } );
-        addEditBuildAgentGroup( newName, new String[]{ }, new String[]{ buildAgentUrl }, true );
-        goToEditBuildAgentGroup( newName, new String[]{ } );
-        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
+        goToEditBuildAgentGroup( buildAgentGroup, new String[]{buildAgentUrl} );
+        addEditBuildAgentGroup( newName, new String[]{}, new String[]{buildAgentUrl}, true );
+        goToEditBuildAgentGroup( newName, new String[]{} );
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{buildAgentUrl}, new String[]{}, true );
     }
 
     public void testAddAnExistingBuildAgentGroup()
@@ -180,10 +180,10 @@ public class BuildAgentsTest
         addBuildAgent( buildAgentUrl );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{buildAgentUrl}, new String[]{}, true );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, false );
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{buildAgentUrl}, new String[]{}, false );
         assertTextPresent( "Build agent group already exists." );
     }
 
@@ -193,7 +193,7 @@ public class BuildAgentsTest
         addBuildAgent( buildAgentUrl );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( "", new String[]{ }, new String[]{ }, false );
+        addEditBuildAgentGroup( "", new String[]{}, new String[]{}, false );
         assertTextPresent( "Build agent group name is required." );
     }
 
@@ -203,7 +203,7 @@ public class BuildAgentsTest
         addBuildAgent( buildAgentUrl );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( buildAgentGroup, new String[]{ buildAgentUrl }, new String[]{ }, true );
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{buildAgentUrl}, new String[]{}, true );
 
         removeBuildAgentGroup( buildAgentGroup );
     }
@@ -214,6 +214,6 @@ public class BuildAgentsTest
         addBuildAgent( buildAgentUrl );
 
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( buildAgentGroup, new String[]{ }, new String[]{ }, true );
+        addEditBuildAgentGroup( buildAgentGroup, new String[]{}, new String[]{}, true );
     }
 }

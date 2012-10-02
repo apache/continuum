@@ -50,6 +50,7 @@
         <include name="report"/>
         <include name="agent"/>
         <include name="release"/>
+        <include name="distributedRelease"/>
         <include name="buildDefinition"/>
         <include name="notifier"/>
         <include name="myAccount"/>

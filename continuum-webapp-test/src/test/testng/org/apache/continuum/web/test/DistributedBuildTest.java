@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractBuildAgentsTest;
+import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -30,9 +30,9 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "distributed" } )
+@Test( groups = {"distributed"} )
 public class DistributedBuildTest
-    extends AbstractBuildAgentsTest
+    extends AbstractAdminTest
 {
     private String projectGroupName;
 
@@ -183,13 +183,13 @@ public class DistributedBuildTest
 
     public void testAddBuildEnvironmentWithBuildAgentGroup()
     {
-        addBuildAgentGroupAndEnvironment( new String[]{ buildAgentUrl } );
+        addBuildAgentGroupAndEnvironment( new String[]{buildAgentUrl} );
     }
 
     public void testProjectGroupNoBuildAgentConfiguredInBuildAgentGroup()
         throws Exception
     {
-        addBuildAgentGroupAndEnvironment( new String[]{ } );
+        addBuildAgentGroupAndEnvironment( new String[]{} );
 
         addMavenTwoProject( pomUrl, pomUsername, pomPassword, projectGroupName, true );
 
@@ -208,13 +208,13 @@ public class DistributedBuildTest
 
     public void testEditDuplicatedBuildEnvironmentDistributedBuilds()
     {
-        addBuildAgentGroupAndEnvironment( new String[]{ buildAgentUrl } );
+        addBuildAgentGroupAndEnvironment( new String[]{buildAgentUrl} );
 
         goToAddBuildEnvironment();
-        addBuildEnvironmentWithBuildAgentGroup( newBuildEnv, new String[]{ }, buildAgentGroupName );
+        addBuildEnvironmentWithBuildAgentGroup( newBuildEnv, new String[]{}, buildAgentGroupName );
 
         goToEditBuildEnvironment( newBuildEnv );
-        editBuildEnvironmentWithBuildAgentGroup( buildEnvName, new String[]{ }, buildAgentGroupName, false );
+        editBuildEnvironmentWithBuildAgentGroup( buildEnvName, new String[]{}, buildAgentGroupName, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
@@ -238,10 +238,10 @@ public class DistributedBuildTest
     {
         // create build agent group
         goToAddBuildAgentGroup();
-        addEditBuildAgentGroup( buildAgentGroupName, buildAgents, new String[]{ }, true );
+        addEditBuildAgentGroup( buildAgentGroupName, buildAgents, new String[]{}, true );
 
         goToAddBuildEnvironment();
-        addBuildEnvironmentWithBuildAgentGroup( buildEnvName, new String[]{ }, buildAgentGroupName );
+        addBuildEnvironmentWithBuildAgentGroup( buildEnvName, new String[]{}, buildAgentGroupName );
     }
 
     private void editBuildDefinitionShellType()
