@@ -138,7 +138,7 @@ public class DefaultContinuumReleaseManager
         }
 
         // check if releaseId exists
-        while ( getListeners().get( releaseId ) != null )
+        while ( getPreparedReleases().get( releaseId ) != null )
         {
             releaseId = releaseId + ":" + String.valueOf( System.currentTimeMillis() );
         }
