@@ -154,10 +154,10 @@ public class ReleaseTest
         Assert.assertEquals( Arrays.asList( getSelenium().getSelectOptions( "preparedReleaseId" ) ), Arrays.asList(
             "10.0", "10.1", "10.2", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
 
-        // check that 1.2 is selected by default
+        // check that 10.2 is selected by default
         Assert.assertEquals( getSelenium().getSelectedLabel( "preparedReleaseId" ), "10.2" );
 
-        // test perform on 1.1
+        // test perform on 10.2
         selectPerformAndSubmit();
 
         setFieldValue( "goals", "clean validate" );
@@ -166,6 +166,15 @@ public class ReleaseTest
         waitForRelease();
 
         assertReleasePhaseSuccess();
+        clickButtonWithValue( "Done" );
+
+        // verify that it is removed from the list again
+        showProjectGroup( projectGroupName, projectGroupId, "" );
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
+        Assert.assertEquals( Arrays.asList( getSelenium().getSelectOptions( "preparedReleaseId" ) ), Arrays.asList(
+            "10.0", "10.1", PROVIDE_RELEASE_PARAMETERS_TEXT ) );
+        Assert.assertEquals( getSelenium().getSelectedLabel( "preparedReleaseId" ), "10.1" );
     }
 
 }
