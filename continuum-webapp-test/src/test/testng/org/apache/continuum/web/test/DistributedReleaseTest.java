@@ -155,7 +155,6 @@ public class DistributedReleaseTest
 
         // check prepared releases content (timestamp version)
         String str = getPreparedReleasesContent();
-        System.out.println( str );
         Assert.assertTrue( str.contains( "<releaseId>org.apache.continuum.examples.simple:simple-example:" ) );
 
         // check that two versions are present
