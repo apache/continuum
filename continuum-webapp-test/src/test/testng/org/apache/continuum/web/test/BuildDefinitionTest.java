@@ -210,6 +210,15 @@ public class BuildDefinitionTest
                                      buildDefinitionDescription, false, false, false );
     }
 
+    public void testAddNotDefaultProjectBuildDefinitionWithLongMavenGoal()
+        throws Exception
+    {
+        goToProjectInformationPage( projectGroupName, projectName );
+        clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
+        addEditGroupBuildDefinition( null, buildDefinitionPomName, "clean org.apache.maven.plugins:maven-compile-plugin:2.4:compile", buildDefinitionArguments,
+                                     buildDefinitionDescription, false, false, false );
+    }
+
     @Test( dependsOnMethods = { "testAddNotDefaultProjectBuildDefinition" } )
     public void testDeleteProjectBuildDefinition()
         throws Exception

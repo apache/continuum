@@ -35,7 +35,7 @@
   <field name="goals">
     <field-validator type="regex">
       <param name="trim">true</param>
-      <param name="expression"><![CDATA[[A-Za-z0-9_:\s\-]*]]></param>
+      <param name="expression"><![CDATA[[A-Za-z0-9_:\s.\-]*]]></param>
       <message key="buildDefinition.goals.invalid"/>
     </field-validator>
   </field>
