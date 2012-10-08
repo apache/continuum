@@ -282,8 +282,19 @@ public class DistributedReleaseTest
         releasePrepareProject( "", "", tagBase, tag, releaseVersion, developmentVersion, "" );
 
         assertReleasePhaseSuccess();
+        clickButtonWithValue( "Done" );
 
         assertPreparedReleasesFileContainsBuildAgent();
+
+        // test subsequent perform
+        selectPerformAndSubmit();
+
+        setFieldValue( "goals", "clean validate" );
+        submit();
+
+        waitForRelease();
+
+        assertReleasePhaseSuccess();
     }
 
     @Test( dependsOnMethods = {"testReleasePrepareProjectWithNoBuildEnvironment"} )
@@ -298,6 +309,21 @@ public class DistributedReleaseTest
         assertReleaseChoicePage();
         releasePerformProjectWithProvideParameters( releaseUsername, releasePassword, tagBase, tag,
                                                     releaseProjectScmUrl, releaseBuildEnvironment );
+        assertPreparedReleasesFileContainsBuildAgent();
+    }
+
+    @Test( dependsOnMethods = {"testReleasePrepareProjectWithNoBuildEnvironment"} )
+    public void testReleasePerformUsingProvidedParametersWithNoBuildEnvironment()
+        throws Exception
+    {
+        String releaseUsername = "invalid";
+        String releasePassword = "invalid";
+
+        showProjectGroup( projectGroupName, projectGroupId, "" );
+        clickButtonWithValue( RELEASE_BUTTON_TEXT );
+        assertReleaseChoicePage();
+        releasePerformProjectWithProvideParameters( releaseUsername, releasePassword, tagBase, tag,
+                                                    releaseProjectScmUrl, "" );
         assertPreparedReleasesFileContainsBuildAgent();
     }
 

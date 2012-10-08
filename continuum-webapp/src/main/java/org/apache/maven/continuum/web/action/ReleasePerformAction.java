@@ -260,13 +260,14 @@ public class ReleasePerformAction
             LocalRepository repository = project.getProjectGroup().getLocalRepository();
 
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
-            Map<String, String> environments = new HashMap<String, String>();
 
+            Profile profile = null;
             if ( profileId != -1 )
             {
-                Profile profile = getContinuum().getProfileService().getProfile( profileId );
-                environments = getEnvironments( profile, releaseManager.getDefaultBuildagent( projectId ) );
+                profile = getContinuum().getProfileService().getProfile( profileId );
             }
+            Map<String, String> environments =
+                getEnvironments( profile, releaseManager.getDefaultBuildagent( projectId ) );
 
             try
             {
