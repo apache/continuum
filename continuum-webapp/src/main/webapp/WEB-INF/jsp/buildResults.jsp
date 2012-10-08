@@ -52,6 +52,8 @@
         <form id="buildResultsForm" action="removeBuildResults.action" method="post">
           <s:token/>
           <s:set name="buildResults" value="buildResults" scope="request"/>
+          <s:hidden name="projectGroupId"/>
+          <s:hidden name="projectId"/>
           <ec:table items="buildResults"
                     var="buildResult"
                     autoIncludeParameters="false"
@@ -103,8 +105,6 @@
                   <tr>
                     <td>
                       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                        <s:hidden name="projectGroupId"/>
-                        <s:hidden name="projectId"/>
                         <input type="button" name="delete-project" value="<s:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />
                       </redback:ifAuthorized>
                     </td>

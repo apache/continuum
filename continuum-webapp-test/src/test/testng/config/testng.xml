@@ -65,6 +65,7 @@
         <include name="userroles"/>
         <include name="csrf"/>
         <include name="distributed"/>
+        <include name="buildResult"/>
       </run>
     </groups>
     <packages>
