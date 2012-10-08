@@ -124,7 +124,7 @@ public class ReleasePerformAction
             args.add( e.getMessage() );
 
             addActionError( getText( "distributedBuild.releasePerform.input.error", args ) );
-            return ERROR;
+            return RELEASE_ERROR;
         }
 
         populateFromProject();
@@ -158,7 +158,7 @@ public class ReleasePerformAction
             args.add( e.getMessage() );
 
             addActionError( getText( "distributedBuild.releasePerform.input.error", args ) );
-            return ERROR;
+            return RELEASE_ERROR;
         }
 
         return SUCCESS;
@@ -222,7 +222,7 @@ public class ReleasePerformAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePerform.release.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
         }
         else
@@ -280,7 +280,7 @@ public class ReleasePerformAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePerform.release.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
 
             return SUCCESS;

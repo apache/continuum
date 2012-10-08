@@ -57,6 +57,8 @@ public class ContinuumActionSupport
 
     protected static final String REQUIRES_AUTHORIZATION = "requires-authorization";
 
+    protected static final String RELEASE_ERROR = "releaseError";
+
     protected static final String ERROR_MSG_AUTHORIZATION_REQUIRED = "You are not authorized to access this page. " +
         "Please contact your administrator to be granted the appropriate permissions.";
 

@@ -89,7 +89,7 @@ public class ReleaseInProgressAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releaseInProgress.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
 
             if ( map != null && !map.isEmpty() )
@@ -218,7 +218,7 @@ public class ReleaseInProgressAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "releaseViewResult.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
         }
         else

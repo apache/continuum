@@ -19,11 +19,13 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
@@ -72,10 +74,22 @@ public class ReleaseRollbackAction
             {
                 releaseManager.releaseRollback( releaseId, projectId );
             }
-            catch ( Exception e )
+            catch ( ContinuumReleaseException e )
             {
-                addActionError( e.getMessage() );
-                return ERROR;
+                if ( e.getMessage() != null )
+                {
+                    addActionError( e.getMessage() );
+                    return RELEASE_ERROR;
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                addActionError( "Error with configuration of build agent: " + e.getMessage() );
+                return RELEASE_ERROR;
             }
         }
         else

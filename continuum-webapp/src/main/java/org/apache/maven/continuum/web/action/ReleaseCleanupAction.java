@@ -79,7 +79,7 @@ public class ReleaseCleanupAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "releaseCleanup.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
         }
         else

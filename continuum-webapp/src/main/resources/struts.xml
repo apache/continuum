@@ -593,7 +593,7 @@
 
     <action name="releasePrepareInput" class="releasePrepare" method="input">
       <result name="success">/WEB-INF/jsp/releasePrepare.jsp</result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releasePrepare" class="releasePrepare">
@@ -604,12 +604,12 @@
         <param name="projectId">${projectId}</param>
         <param name="releaseGoal">prepare</param>
       </result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releasePerformInput" class="releasePerform" method="input">
       <result name="success">/WEB-INF/jsp/releasePerform.jsp</result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releasePerform" class="releasePerform">
@@ -620,12 +620,12 @@
         <param name="projectId">${projectId}</param>
         <param name="releaseGoal">perform</param>
       </result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releasePerformFromScmInput" class="releasePerform" method="inputFromScm">
       <result name="success">/WEB-INF/jsp/releasePerformFromScm.jsp</result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releasePerformFromScm" class="releasePerform" method="executeFromScm">
@@ -636,14 +636,14 @@
         <param name="releaseId">${releaseId}</param>
         <param name="releaseGoal">perform</param>
       </result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releaseInProgress" class="releaseInProgress">
       <result name="initialized">/WEB-INF/jsp/releaseInitialized.jsp</result>
       <result name="inProgress">/WEB-INF/jsp/releaseInProgress.jsp</result>
       <result name="success">/WEB-INF/jsp/releaseFinished.jsp</result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releaseRollbackWarning" class="releaseRollback" method="warn">
@@ -656,7 +656,7 @@
         <param name="projectId">${projectId}</param>
         <param name="releaseId">${releaseId}</param>
       </result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releaseCleanup" class="releaseCleanup">
@@ -665,12 +665,12 @@
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="releaseViewResult" class="releaseInProgress" method="viewResult">
       <result name="success">/WEB-INF/jsp/releaseViewResult.jsp</result>
-      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+      <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
 
     <action name="viewReleaseResult" class="releaseResult" method="viewResult">

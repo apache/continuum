@@ -173,7 +173,7 @@ public class ReleasePrepareAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePrepare.input.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
         }
         else
@@ -192,7 +192,7 @@ public class ReleasePrepareAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "releasePrepare.input.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
         }
 
@@ -289,7 +289,7 @@ public class ReleasePrepareAction
                 if ( releaseId == null )
                 {
                     addActionError( "Failed to release project" );
-                    return ERROR;
+                    return RELEASE_ERROR;
                 }
             }
             catch ( BuildAgentConfigurationException e )
@@ -298,7 +298,7 @@ public class ReleasePrepareAction
                 args.add( e.getMessage() );
 
                 addActionError( getText( "distributedBuild.releasePrepare.release.error", args ) );
-                return ERROR;
+                return RELEASE_ERROR;
             }
         }
         else
