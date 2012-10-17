@@ -25,10 +25,11 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.DefaultHandler;
-import org.mortbay.jetty.handler.ResourceHandler;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import java.util.Collections;
 
@@ -75,7 +76,9 @@ public class AddProjectTest
         Server server = new Server( 0 );
         ResourceHandler handler = new ResourceHandler();
         handler.setResourceBase( getTestFile( "src/test/resources" ).getAbsolutePath() );
-        server.setHandlers( new Handler[]{handler, new DefaultHandler()} );
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers( new Handler[]{ handler, new DefaultHandler() } );
+        server.setHandler( handlers );
         server.start();
         return server;
     }

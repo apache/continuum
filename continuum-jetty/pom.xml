@@ -31,12 +31,8 @@
   <name>Apache Continuum</name>
   <dependencies>
     <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jetty</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>start</artifactId>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -45,17 +41,27 @@
     </dependency>
     <!-- Runtime dependencies that need to be included in the generated binaries -->
     <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jetty-naming</artifactId>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-start</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jsp-2.1-jetty</artifactId>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-deploy</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.mortbay.jetty</groupId>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-jndi</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-jsp</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-plus</artifactId>
       <scope>runtime</scope>
     </dependency>
@@ -69,6 +75,11 @@
       <artifactId>mail</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -79,9 +90,13 @@
           <daemons>
             <daemon>
               <id>continuum</id>
-              <mainClass>org.mortbay.start.Main</mainClass>
+              <mainClass>org.eclipse.jetty.start.Main</mainClass>
               <commandLineArguments>
                 <commandLineArgument>conf/jetty.xml</commandLineArgument>
+                <commandLineArgument>conf/jetty-plus.xml</commandLineArgument>
+                <commandLineArgument>conf/jetty-deploy.xml</commandLineArgument>
+                <commandLineArgument>conf/jetty-contexts.xml</commandLineArgument>
+                <commandLineArgument>conf/jetty-requestlog.xml</commandLineArgument>
               </commandLineArguments>
               <platforms>
                 <platform>jsw</platform>
@@ -109,10 +124,6 @@
                     <property>
                       <name>wrapper.logfile.rollmode</name>
                       <value>DATE</value>
-                    </property>
-                    <property>
-                      <name>wrapper.app.parameter.2</name>
-                      <value>%CONTINUUM_BASE%/conf/jetty.xml</value>
                     </property>
                     <property>
                       <name>app.base.envvar</name>

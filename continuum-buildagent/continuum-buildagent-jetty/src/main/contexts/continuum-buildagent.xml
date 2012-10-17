@@ -1,0 +1,11 @@
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+
+<Configure id='wac' class="org.eclipse.jetty.webapp.WebAppContext">
+
+  <Set name="contextPath">/continuum-buildagent</Set>
+  <Set name="war"><Property name="jetty.home" default="."/>/apps/continuum-buildagent</Set>
+
+  <Set name="extractWAR">false</Set>
+  <Set name="copyWebDir">false</Set>
+
+</Configure>

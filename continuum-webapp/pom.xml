@@ -206,18 +206,15 @@
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
-        <artifactId>maven-jetty-plugin</artifactId>
+        <artifactId>jetty-maven-plugin</artifactId>
         <configuration>
           <webAppConfig>
             <contextPath>/</contextPath>
-            <baseResource implementation="org.mortbay.resource.ResourceCollection">
-              <resourcesAsCSV>src/main/webapp,target/continuum,target/redback</resourcesAsCSV>
-            </baseResource>
+            <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>
           </webAppConfig>
           <scanIntervalSeconds>10</scanIntervalSeconds>
-          <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>
           <connectors>
-            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
               <port>9090</port>
               <maxIdleTime>60000</maxIdleTime>
             </connector>
@@ -236,6 +233,8 @@
               <value>${project.build.directory}/appserver-base/logs</value>
             </systemProperty>
           </systemProperties>
+          <stopKey>stopkey</stopKey>
+          <stopPort>9099</stopPort>
         </configuration>
         <dependencies>
           <dependency>

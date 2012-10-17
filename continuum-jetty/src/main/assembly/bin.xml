@@ -102,6 +102,10 @@
       <directory>src/main/tmp/</directory>
       <outputDirectory>/tmp</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>src/main/contexts/</directory>
+      <outputDirectory>/contexts</outputDirectory>
+    </fileSet>
   </fileSets>
   <dependencySets>
     <dependencySet>

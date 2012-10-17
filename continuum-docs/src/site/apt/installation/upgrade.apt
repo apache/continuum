@@ -18,16 +18,23 @@ Upgrading Continuum
     If you had used the <<<APP_BASE>>> environment variable in Continuum 1.2 to differentiate your configuration from the
     installation, you should rename it to <<<CONTINUUM_BASE>>> in Continuum 1.3.
     
-* Changes to Take Note of in Continuum 1.3.x
+* Changes to Take Note of in Continuum 1.4.x
     
-    The Jetty version in Continuum 1.3.4 and above has been upgraded to 6.1.19. When upgrading to Continuum 1.3.4 or higher, there is a need to update 
+    The Jetty version in Continuum 1.4.1 and above has been upgraded to 8.1.7. When upgrading to Continuum 1.4.1 or higher, there is a need to update
+    the contents of <<<$CONTINUUM_BASE/conf/wrapper.conf>>> to match the one included in the new distribution if any copies or modifications have been made.
+    The <<<jetty.xml>>> format has also changed, and should be re-added from the distribution with any modifications previously made.
+    It is no longer read from <<<$CONTINUUM_BASE>>>, and JNDI connections can now be managed via the files in the <<<contexts>>> directory.
+
+* Changes to Take Note of in Continuum 1.3.x
+
+    The Jetty version in Continuum 1.3.4 and above has been upgraded to 6.1.19. When upgrading to Continuum 1.3.4 or higher, there is a need to update
     the library contents listed in <<<$CONTINUUM_BASE/conf/wrapper.conf>>> with the ones included in the new distribution especially if the
     <<<$CONTINUUM_BASE>>> directory is separate from the installation.
-    
+
     In Continuum 1.3.6, configuration for local repositories in build agents were added. This is used to match the local repository in the build
-    agent to that of the local repository (used by the project to be built) set in the master. So if you are upgrading from a lower version, 
-    you might need to add the <<<localRepositories>>> configuration in your build agent's configuration file. For more details, 
-    read {{{./build-agent.html}Installing and Configuring a Build Agent}}. 
+    agent to that of the local repository (used by the project to be built) set in the master. So if you are upgrading from a lower version,
+    you might need to add the <<<localRepositories>>> configuration in your build agent's configuration file. For more details,
+    read {{{./build-agent.html}Installing and Configuring a Build Agent}}.
 
 * Using Backup and Restore to upgrade
 

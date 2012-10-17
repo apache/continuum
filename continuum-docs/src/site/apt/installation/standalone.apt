@@ -22,16 +22,16 @@ Installing Continuum Standalone
 
 *** {Mail server configuration}
 
-    Before you start Continuum, you must configure your SMTP configuration for mail notification. The configuration is in <<<$CONTINUUM_HOME/conf/jetty.xml>>>:
+    Before you start Continuum, you must configure your SMTP configuration for mail notification. The configuration is in <<<$CONTINUUM_HOME/contexts/continuum.xml>>>:
 
-%{snippet|id=mail|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/conf/jetty.xml}
+%{snippet|id=mail|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/contexts/continuum.xml}
 
 *** {Databases configuration}
 
     By default, Continuum use an embedded {{{http://db.apache.org/derby}Derby}} database. If you want to use an other database, you can modify the JNDI
-    configuration in <<<$CONTINUUM_HOME/conf/jetty.xml>>>:
+    configuration in <<<$CONTINUUM_HOME/contexts/continuum.xml>>>:
 
-%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/conf/jetty.xml}
+%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/contexts/continuum.xml}
 
 * {Installing as a Windows Service}
 
