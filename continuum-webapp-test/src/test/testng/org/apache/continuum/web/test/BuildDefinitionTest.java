@@ -19,10 +19,14 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import junit.framework.Assert;
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author José Morales Martínez
@@ -54,6 +58,8 @@ public class BuildDefinitionTest
     private String buildDefinitionDescription;
 
     private String projectName;
+
+    private String buildDefinitionId;
 
     @BeforeClass
     public void createProject()
@@ -208,6 +214,11 @@ public class BuildDefinitionTest
         clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
         addEditGroupBuildDefinition( null, buildDefinitionPomName, buildDefinitionGoals, buildDefinitionArguments,
                                      buildDefinitionDescription, false, false, false );
+        String value = getSelenium().getAttribute(
+            "xpath=(//a[contains(@href,'removeProjectBuildDefinition')])[last()]/@href" );
+        Matcher m = Pattern.compile( "^.*buildDefinitionId=([0-9]+).*$" ).matcher( value );
+        Assert.assertTrue( m.matches() );
+        buildDefinitionId = m.group( 1 );
     }
 
     public void testAddNotDefaultProjectBuildDefinitionWithLongMavenGoal()
@@ -225,7 +236,7 @@ public class BuildDefinitionTest
     {
         goToProjectInformationPage( projectGroupName, projectName );
         // Click in Delete Image
-        clickLinkWithXPath( "(//a[contains(@href,'removeProjectBuildDefinition')])//img" );
+        clickLinkWithLocator( "id=remove-build-definition-" + buildDefinitionId );
         assertDeleteBuildDefinitionPage( buildDefinitionDescription, buildDefinitionGoals );
         clickButtonWithValue( "Delete" );
         assertProjectInformationPage();

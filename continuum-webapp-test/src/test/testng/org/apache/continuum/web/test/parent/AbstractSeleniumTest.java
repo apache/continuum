@@ -314,7 +314,7 @@ public abstract class AbstractSeleniumTest
         clickLinkWithLocator( "xpath=" + xpath, wait );
     }
 
-    void clickLinkWithLocator( String locator )
+    protected void clickLinkWithLocator( String locator )
     {
         clickLinkWithLocator( locator, true );
     }
