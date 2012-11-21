@@ -20,6 +20,8 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -32,37 +34,42 @@ import org.testng.annotations.Test;
 public class ProjectGroupTest
     extends AbstractAdminTest
 {
+    private String projectGroupName;
+
+    private String projectGroupId;
+
+    private String projectGroupDescription;
+
+    @BeforeMethod
+    protected void setUp()
+        throws Exception
+    {
+        projectGroupName = getProperty( "TEST_PROJ_GRP_NAME" );
+        projectGroupId = getProperty( "TEST_PROJ_GRP_ID" );
+        projectGroupDescription = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
+    }
+
+    @AfterClass
+    public void tearDown()
+    {
+        removeProjectGroup( projectGroupName, false );
+    }
 
     public void testAddProjectGroup()
         throws Exception
     {
-        String TEST_PROJ_GRP_NAME = getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-
-        addProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, true );
-        showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
-    }
-
-    public void testAddProjectGroup2()
-        throws Exception
-    {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-
-        addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, true );
-        showProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true );
+        showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
     }
 
     public void testAddProjectGroupWithInvalidValues()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = "!@#$<>?etch";
-        String TEST2_PROJ_GRP_ID = "-!@#<>etc";
-        String TEST2_PROJ_GRP_DESCRIPTION = "![]<>'^&etc";
+        String name = "!@#$<>?etch";
+        String groupId = "-!@#<>etc";
+        String description = "![]<>'^&etc";
 
-        addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, false );
+        addProjectGroup( name, groupId, description, false );
         assertTextPresent( "Name contains invalid characters." );
         assertTextPresent( "Id contains invalid characters." );
     }
@@ -83,128 +90,113 @@ public class ProjectGroupTest
         assertTextPresent( "Project Group ID is required" );
     }
 
-    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
+    @Test( dependsOnMethods = {"testAddProjectGroup"} )
     public void testEditProjectGroupWithValidValues()
         throws Exception
     {
-        final String sNewProjectName = "New Project Group Name";
-        final String sNewProjectDescription = "New Project Group Description";
+        final String newName = "New Project Group Name";
+        final String newDescription = "New Project Group Description";
 
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
+        editProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, newName, newDescription );
+        assertProjectGroupSummaryPage( newName, projectGroupId, newDescription );
 
-        editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, sNewProjectName,
-                          sNewProjectDescription );
-        assertProjectGroupSummaryPage( sNewProjectName, TEST2_PROJ_GRP_ID, sNewProjectDescription );
-
-        editProjectGroup( sNewProjectName, TEST2_PROJ_GRP_ID, sNewProjectDescription, TEST2_PROJ_GRP_NAME,
-                          TEST2_PROJ_GRP_DESCRIPTION );
-        assertProjectGroupSummaryPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
+        editProjectGroup( newName, projectGroupId, newDescription, projectGroupName, projectGroupDescription );
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
     }
 
-    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
+    @Test( dependsOnMethods = {"testAddProjectGroup"} )
     public void testEditProjectGroupWithInvalidValues()
         throws Exception
     {
-
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-        editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, " ",
-                          TEST2_PROJ_GRP_DESCRIPTION );
+        editProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, " ", projectGroupDescription );
         assertTextPresent( "Project Group Name is required" );
     }
 
-    @Test( dependsOnMethods = {"testAddProjectGroup2"} )
+    @Test( dependsOnMethods = {"testAddProjectGroup"} )
     public void testEditProjectGroupWithXSS()
         throws Exception
     {
-        String TEST2_PROJ_GRP_NAME = getProperty( "TEST2_PROJ_GRP_NAME" );
-        String TEST2_PROJ_GRP_ID = getProperty( "TEST2_PROJ_GRP_ID" );
-        String TEST2_PROJ_GRP_DESCRIPTION = getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-        String NEW_PROJ_GRP_NAME = "<script>alert('XSS')</script>";
-        String NEW_PROJ_GRP_DESCRIPTION = "<script>alert('XSS')</script>";
-        editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, NEW_PROJ_GRP_NAME,
-                          NEW_PROJ_GRP_DESCRIPTION );
+        String newName = "<script>alert('XSS')</script>";
+        String newDescription = "<script>alert('XSS')</script>";
+        editProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, newName, newDescription );
         assertTextPresent( "Name contains invalid characters." );
     }
 
     public void testDeleteProjectGroup()
         throws Exception
     {
-        String TEST_GRP_NAME = getProperty( "TEST_DELETE_GRP_NAME" );
-        String TEST_GRP_ID = getProperty( "TEST_DELETE_GRP_ID" );
-        String TEST_GRP_DESCRIPTION = getProperty( "TEST_DELETE_GRP_DESCRIPTION" );
+        String name = getProperty( "TEST_DELETE_GRP_NAME" );
+        String groupId = getProperty( "TEST_DELETE_GRP_ID" );
+        String description = getProperty( "TEST_DELETE_GRP_DESCRIPTION" );
 
         // delete group - delete icon
-        addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
-        assertLinkPresent( TEST_GRP_NAME );
+        addProjectGroup( name, groupId, description, true );
+        assertLinkPresent( name );
         clickLinkWithXPath( "//tbody/tr['0']/td['4']/a/img[@alt='Delete Group']" );
         assertTextPresent( "Project Group Removal" );
         clickButtonWithValue( "Delete" );
         assertProjectGroupsSummaryPage();
-        assertLinkNotPresent( TEST_GRP_NAME );
+        assertLinkNotPresent( name );
 
         // delete group - "Delete Group" button
-        addProjectGroup( TEST_GRP_NAME, TEST_GRP_ID, TEST_GRP_DESCRIPTION, true );
-        assertLinkPresent( TEST_GRP_NAME );
-        removeProjectGroup( TEST_GRP_NAME );
-        assertLinkNotPresent( TEST_GRP_NAME );
+        addProjectGroup( name, groupId, description, true );
+        assertLinkPresent( name );
+        removeProjectGroup( name );
+        assertLinkNotPresent( name );
         assertProjectGroupsSummaryPage();
-        assertLinkNotPresent( TEST_GRP_NAME );
+        assertLinkNotPresent( name );
     }
 
     public void testProjectGroupMembers()
         throws Exception
     {
-        String GRP_NAME_ONE = getProperty( "TEST_PROJ_GRP_NAME_ONE" );
-        String GRP_ID_ONE = getProperty( "TEST_PROJ_GRP_ID_ONE" );
-        String GRP_DESCRIPTION_ONE = getProperty( "TEST_PROJ_GRP_DESCRIPTION_ONE" );
-        String GRP_NAME_TWO = getProperty( "TEST_PROJ_GRP_NAME_TWO" );
-        String GRP_ID_TWO = getProperty( "TEST_PROJ_GRP_ID_TWO" );
-        String GRP_DESCRIPTION_TWO = getProperty( "TEST_PROJ_GRP_DESCRIPTION_TWO" );
-        String GRP_NAME_THREE = getProperty( "TEST_PROJ_GRP_NAME_THREE" );
-        String GRP_ID_THREE = getProperty( "TEST_PROJ_GRP_ID_THREE" );
-        String GRP_DESCRIPTION_THREE = getProperty( "TEST_PROJ_GRP_DESCRIPTION_THREE" );
+        String name1 = getProperty( "TEST_PROJ_GRP_NAME_ONE" );
+        String groupId1 = getProperty( "TEST_PROJ_GRP_ID_ONE" );
+        String description1 = getProperty( "TEST_PROJ_GRP_DESCRIPTION_ONE" );
+        String name2 = getProperty( "TEST_PROJ_GRP_NAME_TWO" );
+        String groupId2 = getProperty( "TEST_PROJ_GRP_ID_TWO" );
+        String description2 = getProperty( "TEST_PROJ_GRP_DESCRIPTION_TWO" );
+        String name3 = getProperty( "TEST_PROJ_GRP_NAME_THREE" );
+        String groupId3 = getProperty( "TEST_PROJ_GRP_ID_THREE" );
+        String description3 = getProperty( "TEST_PROJ_GRP_DESCRIPTION_THREE" );
 
-        addProjectGroup( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE, true );
-        assertLinkPresent( GRP_NAME_ONE );
+        addProjectGroup( name1, groupId1, description1, true, false );
+        assertLinkPresent( name1 );
 
-        addProjectGroup( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO, true );
-        assertLinkPresent( GRP_NAME_TWO );
+        addProjectGroup( name2, groupId2, description2, true, false );
+        assertLinkPresent( name2 );
 
-        addProjectGroup( GRP_NAME_THREE, GRP_ID_THREE, GRP_DESCRIPTION_THREE, true );
-        assertLinkPresent( GRP_NAME_THREE );
+        addProjectGroup( name3, groupId3, description3, true, false );
+        assertLinkPresent( name3 );
 
-        createAndAddUserAsDeveloperToGroup( "username1", "user1", "user1@something.com", GRP_NAME_ONE );
-        createAndAddUserAsDeveloperToGroup( "username2", "user2", "user2@something.com", GRP_NAME_ONE );
-        createAndAddUserAsDeveloperToGroup( "username3", "user3", "user3@something.com", GRP_NAME_TWO );
-        createAndAddUserAsDeveloperToGroup( "username4", "user4", "user4@something.com", GRP_NAME_THREE );
+        createAndAddUserAsDeveloperToGroup( "username1", "user1", "user1@something.com", name1 );
+        createAndAddUserAsDeveloperToGroup( "username2", "user2", "user2@something.com", name1 );
+        createAndAddUserAsDeveloperToGroup( "username3", "user3", "user3@something.com", name2 );
+        createAndAddUserAsDeveloperToGroup( "username4", "user4", "user4@something.com", name3 );
 
-        showMembers( GRP_NAME_ONE, GRP_ID_ONE, GRP_DESCRIPTION_ONE );
+        showMembers( name1, groupId1, description1 );
         assertUserPresent( "username1", "user1", "user1@something.com" );
         assertUserPresent( "username2", "user2", "user2@something.com" );
         assertUserNotPresent( "username3", "user3", "user3@something.com" );
         assertUserNotPresent( "username4", "user4", "user4@something.com" );
 
-        showMembers( GRP_NAME_TWO, GRP_ID_TWO, GRP_DESCRIPTION_TWO );
+        showMembers( name2, groupId2, description2 );
         assertUserNotPresent( "username1", "user1", "user1@something.com" );
         assertUserNotPresent( "username2", "user2", "user2@something.com" );
         assertUserPresent( "username3", "user3", "user3@something.com" );
         assertUserNotPresent( "username4", "user4", "user4@something.com" );
 
-        showMembers( GRP_NAME_THREE, GRP_ID_THREE, GRP_DESCRIPTION_THREE );
+        showMembers( name3, groupId3, description3 );
         assertUserNotPresent( "username1", "user1", "user1@something.com" );
         assertUserNotPresent( "username2", "user2", "user2@something.com" );
         assertUserNotPresent( "username3", "user3", "user3@something.com" );
         assertUserPresent( "username4", "user4", "user4@something.com" );
 
-        removeProjectGroup( GRP_NAME_ONE );
-        assertLinkNotPresent( GRP_NAME_ONE );
-        removeProjectGroup( GRP_NAME_TWO );
-        assertLinkNotPresent( GRP_NAME_TWO );
-        removeProjectGroup( GRP_NAME_THREE );
-        assertLinkNotPresent( GRP_NAME_THREE );
+        removeProjectGroup( name1 );
+        assertLinkNotPresent( name1 );
+        removeProjectGroup( name2 );
+        assertLinkNotPresent( name2 );
+        removeProjectGroup( name3 );
+        assertLinkNotPresent( name3 );
     }
 }

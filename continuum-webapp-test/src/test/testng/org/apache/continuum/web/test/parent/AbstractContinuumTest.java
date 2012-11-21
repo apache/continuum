@@ -794,22 +794,26 @@ public abstract class AbstractContinuumTest
     {
         clickLinkWithText( "Users" );
         assertPage( "[Admin] User List" );
-        assertTextNotPresent( username );
-        clickButtonWithValue( "Create New User" );
-        assertPage( "[Admin] User Create" );
-        setFieldValue( "user.fullName", name );
-        setFieldValue( "user.username", username );
-        setFieldValue( "user.email", email );
-        setFieldValue( "user.password", "password123" );
-        setFieldValue( "user.confirmPassword", "password123" );
-        clickButtonWithValue( "Create User" );
-        assertPage( "[Admin] User Edit" );
-        assignContinuumResourceRoleToUser( groupName );
-        clickButtonWithValue( "Submit" );
-        assertPage( "[Admin] User List" );
-        assertTextPresent( username );
-        assertTextPresent( name );
-        assertTextPresent( email );
+        selectValue( "xpath=//select[@name='ec_rd']", "100" );
+        waitPage();
+        if ( !isLinkPresent( username ) )
+        {
+            clickButtonWithValue( "Create New User" );
+            assertPage( "[Admin] User Create" );
+            setFieldValue( "user.fullName", name );
+            setFieldValue( "user.username", username );
+            setFieldValue( "user.email", email );
+            setFieldValue( "user.password", "password123" );
+            setFieldValue( "user.confirmPassword", "password123" );
+            clickButtonWithValue( "Create User" );
+            assertPage( "[Admin] User Edit" );
+            assignContinuumResourceRoleToUser( groupName );
+            clickButtonWithValue( "Submit" );
+            assertPage( "[Admin] User List" );
+            assertTextPresent( username );
+            assertTextPresent( name );
+            assertTextPresent( email );
+        }
     }
 
     protected void showMembers( String name, String groupId, String description )
