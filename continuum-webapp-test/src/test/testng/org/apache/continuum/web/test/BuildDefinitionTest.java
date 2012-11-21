@@ -288,15 +288,13 @@ public class BuildDefinitionTest
                                      false, ANT_PROJECT_TYPE );
     }
 
-    // TODO: needs to be fixed
-    @Test(enabled = false)
     public void testAddNotDefaultProjectBuildDefinitionAntWithPathBuildFile()
         throws Exception
     {
         goToProjectInformationPage( projectGroupName, antProjectName );
         clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
-        addEditGroupBuildDefinition( null, "Quartz/build.xml", "package", "", "build file with path", false, false,
-                                     false, ANT_PROJECT_TYPE );
+        addEditGroupBuildDefinition( null, "Quartz/path\\build.xml", "package", "", "build file with path", false,
+                                     false, false, ANT_PROJECT_TYPE );
     }
 
     // TODO: needs to be fixed

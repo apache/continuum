@@ -128,7 +128,7 @@ public class ContinuumServiceImpl
 
     private static final String BUILD_DEFINITION_GOALS_VALID_EXPRESSION = "[A-Za-z0-9_:\\s\\-]*";
 
-    private static final String BUILD_DEFINITION_BUILD_FILE_VALID_EXPRESSION = "[A-Za-z0-9_.\\-]*";
+    private static final String BUILD_DEFINITION_BUILD_FILE_VALID_EXPRESSION = "[A-Za-z0-9_.\\-/\\\\]*";
 
     private static final String INSTALLATION_VARNAME_VALID_EXPRESSION = "[A-Za-z][A-Za-z0-9_]*";
 
