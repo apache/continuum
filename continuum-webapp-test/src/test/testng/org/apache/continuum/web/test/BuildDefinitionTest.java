@@ -226,8 +226,9 @@ public class BuildDefinitionTest
     {
         goToProjectInformationPage( projectGroupName, projectName );
         clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
-        addEditGroupBuildDefinition( null, buildDefinitionPomName, "clean org.apache.maven.plugins:maven-compile-plugin:2.4:compile", buildDefinitionArguments,
-                                     buildDefinitionDescription, false, false, false );
+        addEditGroupBuildDefinition( null, buildDefinitionPomName,
+                                     "clean org.apache.maven.plugins:maven-compile-plugin:2.4:compile",
+                                     buildDefinitionArguments, buildDefinitionDescription, false, false, false );
     }
 
     @Test( dependsOnMethods = { "testAddNotDefaultProjectBuildDefinition" } )
@@ -236,9 +237,13 @@ public class BuildDefinitionTest
     {
         goToProjectInformationPage( projectGroupName, projectName );
         // Click in Delete Image
-        clickLinkWithLocator( "id=remove-build-definition-" + buildDefinitionId );
+        String locator = "id=remove-build-definition-" + buildDefinitionId;
+        assertElementPresent( locator );
+        clickLinkWithLocator( locator );
         assertDeleteBuildDefinitionPage( buildDefinitionDescription, buildDefinitionGoals );
         clickButtonWithValue( "Delete" );
         assertProjectInformationPage();
+
+        assertElementNotPresent( locator );
     }
 }
