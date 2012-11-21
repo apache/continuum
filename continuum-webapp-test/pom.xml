@@ -146,6 +146,7 @@
             <containerId>${container.name}</containerId>
             <log>${project.build.directory}/logs/${container.name}.log</log>
             <output>${project.build.directory}/logs/${container.name}.out</output>
+            <timeout>180000</timeout>
             <systemProperties>
               <appserver.base>${project.build.directory}</appserver.base>
               <derby.system.home>${project.build.directory}</derby.system.home>
