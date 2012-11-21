@@ -9,17 +9,15 @@
         <column jdbc-type="CHAR" default-value="N" />
       </field>
     </class>
-  </package>
-  <package name="org.apache.maven.continuum.model.system">
-    <class name="SystemConfiguration">
-      <field name="distributedBuildEnabled" null-value="default">
+    <class name="Project">
+      <field name="checkedOutInSingleDirectory" null-value="default">
         <column jdbc-type="CHAR" default-value="N" />
       </field>
     </class>
   </package>
-  <package name="org.apache.maven.continuum.model.project">
-    <class name="Project">
-      <field name="checkedOutInSingleDirectory" null-value="default">
+  <package name="org.apache.maven.continuum.model.system">
+    <class name="SystemConfiguration">
+      <field name="distributedBuildEnabled" null-value="default">
         <column jdbc-type="CHAR" default-value="N" />
       </field>
     </class>
