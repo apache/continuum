@@ -33,8 +33,10 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.xmlrpc.project.BuildAgentConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
+import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.server.ContinuumServiceImpl;
+import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -68,6 +70,8 @@ public class ContinuumServiceImplTest
 
     private Map<String, Object> params;
 
+    private RoleManager roleManager;
+
     @Override
     public void setUp()
         throws Exception
@@ -81,11 +85,13 @@ public class ContinuumServiceImplTest
         releaseManager = context.mock( ContinuumReleaseManager.class );
         configurationService = context.mock( ConfigurationService.class );
         distributedBuildManager = context.mock( DistributedBuildManager.class );
+        roleManager = context.mock( RoleManager.class );
 
         continuumService = new ContinuumServiceImplStub();
         continuum = context.mock( Continuum.class );
         continuumService.setContinuum( continuum );
         continuumService.setDistributedBuildManager( distributedBuildManager );
+        continuumService.setRoleManager( roleManager );
 
         ProjectGroup projectGroup = new ProjectGroup();
         projectGroup.setName( "test-group" );
@@ -329,12 +335,12 @@ public class ContinuumServiceImplTest
 
         try
         {
-            String buildAgentUrl = continuumService.getBuildAgentUrl( 1, 1 );
+            continuumService.getBuildAgentUrl( 1, 1 );
             fail( "ContinuumException is expected to occur here." );
         }
         catch ( ContinuumException e )
         {
-            ; //pass
+            //pass
         }
         context.assertIsSatisfied();
     }
@@ -435,6 +441,104 @@ public class ContinuumServiceImplTest
         context.assertIsSatisfied();
     }
 
+    public void testAddProjectGroupWithPunctuation()
+        throws Exception
+    {
+        final String name = "Test :: Group Name (with punctuation)";
+        final String groupId = "com.example.long-group-id";
+        final String description = "Description";
+
+        context.checking( new Expectations()
+        {
+            {
+                ProjectGroup group = createProjectGroup( name, groupId, description );
+                one( continuum ).addProjectGroup( group );
+
+                group = createProjectGroup( name, groupId, description );
+                one( continuum ).getProjectGroupByGroupId( groupId );
+                will( returnValue( group ) );
+//
+//                one( continuum ).getProjectGroup( projectGroupId );
+//                will( returnValue( group ) );
+            }
+        } );
+
+        ProjectGroupSummary group = continuumService.addProjectGroup( name, groupId, description );
+        assertEquals( name, group.getName() );
+        assertEquals( groupId, group.getGroupId() );
+        assertEquals( description, group.getDescription() );
+
+        context.assertIsSatisfied();
+    }
+
+    public void testEditProjectGroupWithPunctuation()
+        throws Exception
+    {
+        final String newName = "Test :: Group Name (with punctuation)";
+        final String newGroupId = "com.example.long-group-id";
+        final String newDescription = "Description";
+        final int projectGroupId = 1;
+
+        context.checking( new Expectations()
+        {
+            {
+                ProjectGroup group = createProjectGroup( "name", "groupId", "description" );
+
+                one( continuum ).addProjectGroup( group );
+
+                group = createProjectGroup( projectGroupId );
+                one( continuum ).getProjectGroupByGroupId( "groupId" );
+                will( returnValue( group ) );
+
+                one( continuum ).getProjectGroupWithProjects( projectGroupId );
+                will( returnValue( group ) );
+
+                for ( String role : Arrays.asList( "project-administrator", "project-developer", "project-user" ) )
+                {
+                    one( roleManager ).updateRole( role, "name", newName );
+                }
+
+                ProjectGroup newProjectGroup = createProjectGroup( projectGroupId, newName, newGroupId,
+                                                                   newDescription );
+                one( continuum ).updateProjectGroup( newProjectGroup );
+
+                exactly( 3 ).of( continuum ).getProjectGroup( projectGroupId );
+                onConsecutiveCalls( returnValue( group ), returnValue( group ), returnValue( newProjectGroup ) );
+            }
+        } );
+
+        ProjectGroupSummary group = continuumService.addProjectGroup( "name", "groupId", "description" );
+        group.setName( newName );
+        group.setGroupId( newGroupId );
+        group.setDescription( newDescription );
+
+        continuumService.updateProjectGroup( group );
+
+        context.assertIsSatisfied();
+    }
+
+    private static ProjectGroup createProjectGroup( String name, String groupId, String description )
+    {
+        ProjectGroup group = new ProjectGroup();
+        group.setName( name );
+        group.setGroupId( groupId );
+        group.setDescription( description );
+        return group;
+    }
+
+    private static ProjectGroup createProjectGroup( int projectGroupId, String name, String groupId,
+                                                    String description )
+    {
+        ProjectGroup group = createProjectGroup( name, groupId, description );
+        group.setId( projectGroupId );
+        return group;
+    }
+
+    private static ProjectGroup createProjectGroup( int projectGroupId )
+    {
+        return createProjectGroup( projectGroupId, "name", "groupId", "description" );
+    }
+
     private BuildDefinition createBuildDefinition()
     {
         BuildDefinition buildDef = new BuildDefinition();
@@ -462,8 +566,6 @@ public class ContinuumServiceImplTest
     public class ProjectGroupStub
         extends ProjectGroup
     {
-        private static final long serialVersionUID = 1L;
-
         @Override
         public List<Project> getProjects()
         {

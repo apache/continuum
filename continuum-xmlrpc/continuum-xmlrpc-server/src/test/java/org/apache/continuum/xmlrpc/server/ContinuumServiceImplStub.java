@@ -24,20 +24,16 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.server.ContinuumServiceImpl;
+import org.codehaus.plexus.redback.authorization.AuthorizationException;
 
 public class ContinuumServiceImplStub
     extends ContinuumServiceImpl
 {
-    protected void checkBuildProjectInGroupAuthorization( String resource )
-        throws ContinuumException
+    @Override
+    protected boolean isAuthorized( String role, String resource, boolean requiredResource )
+        throws AuthorizationException
     {
-        // do nothing
-    }
-
-    protected void checkViewProjectGroupAuthorization( String resource )
-        throws ContinuumException
-    {
-        // do nothing
+        return true;
     }
 
     protected void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId, BuildTrigger buildTrigger )
@@ -47,7 +43,7 @@ public class ContinuumServiceImplStub
 
     public org.apache.maven.continuum.model.project.BuildDefinition getBuildDefinition( BuildDefinition buildDef,
                                                                                         org.apache.maven.continuum.model.project.BuildDefinition buildDefinition )
-        throws ProfileException, ContinuumException
+        throws ContinuumException
     {
         return populateBuildDefinition( buildDef, buildDefinition );
     }

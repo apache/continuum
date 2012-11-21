@@ -74,6 +74,26 @@ public class ProjectGroupTest
         assertTextPresent( "Id contains invalid characters." );
     }
 
+    public void testAddProjectGroupWithDashedGroupId()
+        throws Exception
+    {
+        String name = "Test Project Group with Dashes";
+        String groupId = "com.example.this-is-a-long-group-id";
+        String description = "";
+
+        addProjectGroup( name, groupId, description, true );
+    }
+
+    public void testAddProjectGroupWithPunctuation()
+        throws Exception
+    {
+        String name = "Test :: Test Project Group (with Punctuation)";
+        String groupId = "com.example.test";
+        String description = "";
+
+        addProjectGroup( name, groupId, description, true );
+    }
+
     public void testAddProjectGroupWithEmptyString()
         throws Exception
     {
@@ -94,7 +114,7 @@ public class ProjectGroupTest
     public void testEditProjectGroupWithValidValues()
         throws Exception
     {
-        final String newName = "New Project Group Name";
+        final String newName = "Test :: New Project Group Name (with valid values)";
         final String newDescription = "New Project Group Description";
 
         editProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, newName, newDescription );

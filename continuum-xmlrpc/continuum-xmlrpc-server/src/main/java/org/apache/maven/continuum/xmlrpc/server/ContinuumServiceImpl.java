@@ -98,7 +98,7 @@ import java.util.Set;
 public class ContinuumServiceImpl
     extends AbstractContinuumSecureService
 {
-    private static final String NAME_VALID_EXPRESSION = "[a-zA-Z0-9_.\\s\\-]*";
+    private static final String NAME_VALID_EXPRESSION = "[A-Za-z0-9_.\\s\\-():]*";
 
     private static final String DIRECTORY_VALID_EXPRESSION = "[A-Za-z0-9_/\\s:.\\\\-]*";
 
@@ -116,7 +116,7 @@ public class ContinuumServiceImpl
 
     private static final String SCHEDULE_CRON_VALID_EXPRESSION = "[A-Z0-9\\s*/,-?#]*";
 
-    private static final String PROJECTGROUP_ID_VALID_EXPRESSION = "[a-zA-Z0-9_.\\s]*";
+    private static final String PROJECTGROUP_ID_VALID_EXPRESSION = "[a-zA-Z0-9_.\\s\\-]*";
 
     private static final String REPOSITORY_LAYOUT_VALID_EXPRESSION = "default|legacy";
 
@@ -3342,8 +3342,7 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return serializeObject( this.addBuildDefinitionToProjectGroup( projectGroupId,
-                                                                       (BuildDefinition) unserializeObject(
-                                                                           buildDef ) ) );
+                                                                       (BuildDefinition) unserializeObject( buildDef ) ) );
     }
 
     public Map<String, Object> addBuildDefinitionToProjectRPC( int projectId, Map<String, Object> buildDef )
@@ -4155,5 +4154,10 @@ public class ContinuumServiceImpl
     public void setDistributedBuildManager( DistributedBuildManager distributedBuildManager )
     {
         this.distributedBuildManager = distributedBuildManager;
+    }
+
+    public void setRoleManager( RoleManager roleManager )
+    {
+        this.roleManager = roleManager;
     }
 }
