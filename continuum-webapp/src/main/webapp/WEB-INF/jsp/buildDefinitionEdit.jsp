@@ -45,20 +45,20 @@
               <c:when test="${empty actionErrors}">
                 <table>
                   <tbody>
-                    <s:if test="executor == 'ant'">
+                    <s:if test="executor == 'ant' or buildDefinitionType == 'ant'">
                       <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildFile"  required="true"/>
                     </s:if>
-                    <s:elseif test="executor == 'shell'">
+                    <s:elseif test="executor == 'shell' or buildDefinitionType == 'shell'">
                       <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildFile" required="true"/>
                     </s:elseif>
                     <s:else>
                       <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildFile" required="true"/>
                     </s:else>
     
-                    <s:if test="executor == 'ant'">
+                    <s:if test="executor == 'ant' or buildDefinitionType == 'ant'">
                       <s:textfield label="%{getText('buildDefinition.goals.ant.label')}" name="goals"/>
                     </s:if>
-                    <s:elseif test="executor == 'shell'">
+                    <s:elseif test="executor == 'shell' or buildDefinitionType == 'shell'">
                     </s:elseif>
                     <s:else>
                       <s:textfield label="%{getText('buildDefinition.goals.maven.label')}" name="goals"/>
@@ -79,7 +79,7 @@
                     <s:select label="%{getText('buildDefinition.profile.label')}" name="profileId" list="profiles" listValue="name"
                                listKey="id" headerKey="-1" headerValue=""/>
                     <s:select label="%{getText('buildDefinition.type.label')}" name="buildDefinitionType" list="buildDefinitionTypes"/>
-                    <s:if test="executor != 'ant' || executor != 'shell'">
+                    <s:if test="executor != 'ant' && executor != 'shell'">
                         <s:select label="%{getText('buildDefinition.updatePolicy.label')}" name="updatePolicy" list="buildDefinitionUpdatePolicies"/>
                     </s:if>
                     <s:textfield label="%{getText('buildDefinition.description.label')}" name="description" />

@@ -453,7 +453,7 @@ public abstract class AbstractContinuumTest
 
     protected void addEditGroupBuildDefinition( String groupName, String buildFile, String goals, String arguments,
                                                 String description, boolean buildFresh, boolean alwaysBuild,
-                                                boolean isDefault, String type )
+                                                boolean isDefault, String type, boolean success )
     {
         assertAddEditBuildDefinitionPage( type );
 
@@ -509,13 +509,20 @@ public abstract class AbstractContinuumTest
 
         submit();
 
-        if ( groupName != null )
+        if ( !success )
         {
-            assertGroupBuildDefinitionPage( groupName );
+            assertAddEditBuildDefinitionPage( type );
         }
         else
         {
-            assertProjectInformationPage();
+            if ( groupName != null )
+            {
+                assertGroupBuildDefinitionPage( groupName );
+            }
+            else
+            {
+                assertProjectInformationPage();
+            }
         }
     }
 
