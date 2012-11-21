@@ -38,6 +38,10 @@ public abstract class AbstractContinuumTest
 
     protected static final String SHARED_SECRET = "continuum1234";
 
+    protected static final String ANT_PROJECT_TYPE = "ant";
+
+    protected static final String MAVEN_PROJECT_TYPE = "maven";
+
     // ////////////////////////////////////
     // Create Admin User
     // ////////////////////////////////////
@@ -410,12 +414,24 @@ public abstract class AbstractContinuumTest
         isButtonWithValuePresent( "Delete" );
     }
 
-    protected void assertAddEditBuildDefinitionPage()
+    protected void assertAddEditBuildDefinitionPage( String type )
     {
         assertTextPresent( "Add/Edit Build Definition" );
-        assertTextPresent( "POM filename*:" );
+        if ( MAVEN_PROJECT_TYPE.equals( type ) )
+        {
+            assertTextPresent( "POM filename*:" );
+            assertTextPresent( "Goals:" );
+        }
+        else if ( ANT_PROJECT_TYPE.equals( type ) )
+        {
+            assertTextPresent( "Ant build filename*:" );
+            assertTextPresent( "Targets:" );
+        }
+        else
+        {
+            throw new UnsupportedOperationException( "check not implemented for type: " + type );
+        }
         assertElementPresent( "buildFile" );
-        assertTextPresent( "Goals:" );
         assertElementPresent( "goals" );
         assertTextPresent( "Arguments:" );
         assertElementPresent( "arguments" );
@@ -437,9 +453,10 @@ public abstract class AbstractContinuumTest
 
     protected void addEditGroupBuildDefinition( String groupName, String buildFile, String goals, String arguments,
                                                 String description, boolean buildFresh, boolean alwaysBuild,
-                                                boolean isDefault )
+                                                boolean isDefault, String type )
     {
-        assertAddEditBuildDefinitionPage();
+        assertAddEditBuildDefinitionPage( type );
+
         // Enter values into Add Build Definition fields, and submit
         setFieldValue( "buildFile", buildFile );
         setFieldValue( "goals", goals );
@@ -733,6 +750,8 @@ public abstract class AbstractContinuumTest
             title = "Continuum - Add " + type + " Project";
         }
         waitAddProject( title );
+
+        assertLinkPresent( name );
     }
 
     protected void waitAddProject( String title )

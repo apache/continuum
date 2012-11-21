@@ -32,11 +32,10 @@ import java.util.regex.Pattern;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "buildDefinition" } )
+@Test( groups = {"buildDefinition"} )
 public class BuildDefinitionTest
     extends AbstractAdminTest
 {
-
     private String defaultProjectGroupName;
 
     private String defaultProjectGroupId;
@@ -59,6 +58,20 @@ public class BuildDefinitionTest
 
     private String projectName;
 
+    private String antProjectName;
+
+    private String antProjectDescription;
+
+    private String antProjectVersion;
+
+    private String antProjectTag;
+
+    private String antScmUrl;
+
+    private String antScmUsername;
+
+    private String antScmPassword;
+
     private String buildDefinitionId;
 
     @BeforeClass
@@ -73,12 +86,26 @@ public class BuildDefinitionTest
         String pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
 
+        antProjectName = getProperty( "ANT_NAME" );
+        antProjectDescription = getProperty( "ANT_DESCRIPTION" );
+        antProjectVersion = getProperty( "ANT_VERSION" );
+        antProjectTag = getProperty( "ANT_TAG" );
+        antScmUrl = getProperty( "ANT_SCM_URL" );
+        antScmUsername = getProperty( "ANT_SCM_USERNAME" );
+        antScmPassword = getProperty( "ANT_SCM_PASSWORD" );
+
         loginAsAdmin();
         addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
         clickLinkWithText( projectGroupName );
         if ( !isLinkPresent( projectName ) )
         {
             addMavenTwoProject( projectPomUrl, pomUsername, pomPassword, projectGroupName, true );
+        }
+        if ( !isLinkPresent( antProjectName ) )
+        {
+            goToAddAntProjectPage();
+            addProject( antProjectName, antProjectDescription, antProjectVersion, antScmUrl, antScmUsername,
+                        antScmPassword, antProjectTag, projectGroupName, true, "ant" );
         }
     }
 
@@ -163,7 +190,8 @@ public class BuildDefinitionTest
         goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
         clickButtonWithValue( "Add" );
         addEditGroupBuildDefinition( projectGroupName, buildDefinitionPomName, buildDefinitionGoals,
-                                     buildDefinitionArguments, buildDefinitionDescription, true, false, true );
+                                     buildDefinitionArguments, buildDefinitionDescription, true, false, true,
+                                     MAVEN_PROJECT_TYPE );
     }
 
     public void testAddNotDefaultGroupBuildDefinition()
@@ -172,10 +200,11 @@ public class BuildDefinitionTest
         goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
         clickButtonWithValue( "Add" );
         addEditGroupBuildDefinition( projectGroupName, buildDefinitionPomName, buildDefinitionGoals,
-                                     buildDefinitionArguments, buildDefinitionDescription, false, false, false );
+                                     buildDefinitionArguments, buildDefinitionDescription, false, false, false,
+                                     MAVEN_PROJECT_TYPE );
     }
 
-    @Test( dependsOnMethods = { "testAddNotDefaultGroupBuildDefinition" } )
+    @Test( dependsOnMethods = {"testAddNotDefaultGroupBuildDefinition"} )
     public void testEditGroupBuildDefinition()
         throws Exception
     {
@@ -186,16 +215,18 @@ public class BuildDefinitionTest
         goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
         clickImgWithAlt( "Edit" );
         addEditGroupBuildDefinition( projectGroupName, newPom, newGoals, newArguments, newDescription, false, false,
-                                     false );
+                                     false, MAVEN_PROJECT_TYPE );
         clickImgWithAlt( "Edit" );
         addEditGroupBuildDefinition( projectGroupName, buildDefinitionPomName, buildDefinitionGoals,
-                                     buildDefinitionArguments, buildDefinitionDescription, true, true, false );
+                                     buildDefinitionArguments, buildDefinitionDescription, true, true, false,
+                                     MAVEN_PROJECT_TYPE );
         clickImgWithAlt( "Edit" );
         addEditGroupBuildDefinition( projectGroupName, buildDefinitionPomName, buildDefinitionGoals,
-                                     buildDefinitionArguments, buildDefinitionDescription, false, true, false );
+                                     buildDefinitionArguments, buildDefinitionDescription, false, true, false,
+                                     MAVEN_PROJECT_TYPE );
     }
 
-    @Test( dependsOnMethods = { "testEditGroupBuildDefinition" } )
+    @Test( dependsOnMethods = {"testEditGroupBuildDefinition"} )
     public void testDeleteGroupBuildDefinition()
         throws Exception
     {
@@ -213,7 +244,7 @@ public class BuildDefinitionTest
         goToProjectInformationPage( projectGroupName, projectName );
         clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
         addEditGroupBuildDefinition( null, buildDefinitionPomName, buildDefinitionGoals, buildDefinitionArguments,
-                                     buildDefinitionDescription, false, false, false );
+                                     buildDefinitionDescription, false, false, false, MAVEN_PROJECT_TYPE );
         String value = getSelenium().getAttribute(
             "xpath=(//a[contains(@href,'removeProjectBuildDefinition')])[last()]/@href" );
         Matcher m = Pattern.compile( "^.*buildDefinitionId=([0-9]+).*$" ).matcher( value );
@@ -228,10 +259,11 @@ public class BuildDefinitionTest
         clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
         addEditGroupBuildDefinition( null, buildDefinitionPomName,
                                      "clean org.apache.maven.plugins:maven-compile-plugin:2.4:compile",
-                                     buildDefinitionArguments, buildDefinitionDescription, false, false, false );
+                                     buildDefinitionArguments, buildDefinitionDescription, false, false, false,
+                                     MAVEN_PROJECT_TYPE );
     }
 
-    @Test( dependsOnMethods = { "testAddNotDefaultProjectBuildDefinition" } )
+    @Test( dependsOnMethods = {"testAddNotDefaultProjectBuildDefinition"} )
     public void testDeleteProjectBuildDefinition()
         throws Exception
     {
@@ -245,5 +277,42 @@ public class BuildDefinitionTest
         assertProjectInformationPage();
 
         assertElementNotPresent( locator );
+    }
+
+    public void testAddNotDefaultProjectBuildDefinitionAnt()
+        throws Exception
+    {
+        goToProjectInformationPage( projectGroupName, antProjectName );
+        clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
+        addEditGroupBuildDefinition( null, "build-other.xml", "package", "", "other build file", false, false,
+                                     false, ANT_PROJECT_TYPE );
+    }
+
+    // TODO: needs to be fixed
+    @Test(enabled = false)
+    public void testAddNotDefaultProjectBuildDefinitionAntWithPathBuildFile()
+        throws Exception
+    {
+        goToProjectInformationPage( projectGroupName, antProjectName );
+        clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
+        addEditGroupBuildDefinition( null, "Quartz/build.xml", "package", "", "build file with path", false, false,
+                                     false, ANT_PROJECT_TYPE );
+    }
+
+    // TODO: needs to be fixed
+    @Test(enabled = false)
+    public void testAddNotDefaultProjectBuildDefinitionAntWithInvalidBuildFile()
+        throws Exception
+    {
+        goToProjectInformationPage( projectGroupName, antProjectName );
+        clickLinkWithXPath( "//input[contains(@id,'buildDefinition')]" );
+        addEditGroupBuildDefinition( null, "<script>alert('xss');</script>", "package", "", "invalid build file",
+                                     false, false, false, ANT_PROJECT_TYPE );
+
+        assertTextPresent( "Build file contains invalid characters" );
+
+        // confirm error page contains the right fields still
+        assertTextPresent( "Ant build filename*:" );
+        assertTextPresent( "Targets:" );
     }
 }
