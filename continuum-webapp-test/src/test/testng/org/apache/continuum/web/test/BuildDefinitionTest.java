@@ -86,7 +86,7 @@ public class BuildDefinitionTest
         String pomUsername = getProperty( "MAVEN2_POM_USERNAME" );
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
 
-        antProjectName = getProperty( "ANT_NAME" );
+        antProjectName = getProperty( "BUILD_DEFINITION_ANT_PROJECT_NAME" );
         antProjectDescription = getProperty( "ANT_DESCRIPTION" );
         antProjectVersion = getProperty( "ANT_VERSION" );
         antProjectTag = getProperty( "ANT_TAG" );

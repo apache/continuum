@@ -758,7 +758,10 @@ public abstract class AbstractContinuumTest
         }
         waitAddProject( title );
 
-        assertLinkPresent( name );
+        if ( success )
+        {
+            assertLinkPresent( name );
+        }
     }
 
     protected void waitAddProject( String title )

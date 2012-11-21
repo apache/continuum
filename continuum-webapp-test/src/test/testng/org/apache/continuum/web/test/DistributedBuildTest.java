@@ -195,7 +195,7 @@ public class DistributedBuildTest
 
         goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
         clickImgWithAlt( "Edit" );
-        assertAddEditBuildDefinitionPage( "maven2" );
+        assertAddEditBuildDefinitionPage( MAVEN_PROJECT_TYPE );
         selectValue( "profileId", buildEnvName );
         submit();
         assertGroupBuildDefinitionPage( projectGroupName );
