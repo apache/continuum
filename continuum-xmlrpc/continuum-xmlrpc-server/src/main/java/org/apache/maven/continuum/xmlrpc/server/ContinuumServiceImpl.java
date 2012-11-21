@@ -49,7 +49,6 @@ import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
-import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -86,7 +85,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -111,8 +109,6 @@ public class ContinuumServiceImpl
     private static final String PROJECT_SCM_URL_VALID_EXPRESSION = "[a-zA-Z0-9_.:${}#~=@\\/|\\[\\]-]*";
 
     private static final String PROJECT_SCM_TAG_VALID_EXPRESSION = "[a-zA-Z0-9_.:@\\/|#~=\\[\\]-]*";
-
-    private static final String PROJECT_GROUP_ID_VALID_EXPRESSION = "[A-Za-z0-9.]*";
 
     private static final String PROJECT_ARTIFACT_ID_VALID_EXPRESSION = "[A-Za-z0-9\\-]*";
 
@@ -835,12 +831,9 @@ public class ContinuumServiceImpl
             continuum.getProjectScmRootByProjectGroup( projectGroupId );
 
         List<ProjectScmRoot> result = new ArrayList<ProjectScmRoot>( projectScmRoots.size() );
-        if ( projectScmRoots != null )
+        for ( org.apache.continuum.model.project.ProjectScmRoot projectScmRoot : projectScmRoots )
         {
-            for ( org.apache.continuum.model.project.ProjectScmRoot projectScmRoot : projectScmRoots )
-            {
-                result.add( populateProjectScmRoot( projectScmRoot ) );
-            }
+            result.add( populateProjectScmRoot( projectScmRoot ) );
         }
 
         return result;
@@ -894,10 +887,11 @@ public class ContinuumServiceImpl
         checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
 
         List<BuildResultSummary> result = new ArrayList<BuildResultSummary>();
-        Collection buildResults = continuum.getBuildResultsForProject( projectId );
+        Collection<org.apache.maven.continuum.model.project.BuildResult> buildResults =
+            continuum.getBuildResultsForProject( projectId );
         if ( buildResults != null )
         {
-            for ( org.apache.maven.continuum.model.project.BuildResult buildResult : (List<org.apache.maven.continuum.model.project.BuildResult>) buildResults )
+            for ( org.apache.maven.continuum.model.project.BuildResult buildResult : buildResults )
             {
                 BuildResultSummary br = populateBuildResultSummary( buildResult );
                 result.add( br );
@@ -952,7 +946,7 @@ public class ContinuumServiceImpl
     {
         checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
-        ContinuumProjectBuildingResult result = null;
+        ContinuumProjectBuildingResult result;
         try
         {
             result = continuum.addMavenTwoProject( url, projectGroupId, true, // checkProtocol
@@ -974,7 +968,7 @@ public class ContinuumServiceImpl
     {
         checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
-        ContinuumProjectBuildingResult result = null;
+        ContinuumProjectBuildingResult result;
         try
         {
             result = continuum.addMavenTwoProject( url, projectGroupId, true, // checkProtocol
@@ -1002,7 +996,7 @@ public class ContinuumServiceImpl
     {
         checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
-        ContinuumProjectBuildingResult result = null;
+        ContinuumProjectBuildingResult result;
         try
         {
             result = continuum.addMavenTwoProject( url, projectGroupId, checkProtocol, useCredentialsCache,
@@ -1113,16 +1107,6 @@ public class ContinuumServiceImpl
         continuum.addSchedule( populateSchedule( schedule, s ) );
 
         return populateSchedule( continuum.getScheduleByName( schedule.getName() ) );
-    }
-
-    public int removeSchedule( int scheduleId )
-        throws ContinuumException
-    {
-        checkManageSchedulesAuthorization();
-
-        continuum.removeSchedule( scheduleId );
-
-        return 0;
     }
 
     // ----------------------------------------------------------------------
@@ -2006,8 +1990,7 @@ public class ContinuumServiceImpl
         ConfigurationService configurationService = continuum.getConfiguration();
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgent = configurationService.getBuildAgent(
             url );
-        BuildAgentConfiguration buildAgentConfiguration = buildAgent != null ? populateBuildAgent( buildAgent ) : null;
-        return buildAgentConfiguration;
+        return buildAgent != null ? populateBuildAgent( buildAgent ) : null;
     }
 
     /**
@@ -2064,7 +2047,7 @@ public class ContinuumServiceImpl
     {
         ConfigurationService configurationService = continuum.getConfiguration();
 
-        boolean SUCCESS = false;
+        boolean SUCCESS;
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgent = configurationService.getBuildAgent(
             url );
         BuildAgentConfiguration buildAgentConfiguration = buildAgent != null ? populateBuildAgent( buildAgent ) : null;
@@ -2183,9 +2166,7 @@ public class ContinuumServiceImpl
         ConfigurationService configurationService = continuum.getConfiguration();
         org.apache.continuum.configuration.BuildAgentGroupConfiguration buildAgentGroup =
             configurationService.getBuildAgentGroup( name );
-        BuildAgentGroupConfiguration buildAgentGroupConfiguration = buildAgentGroup != null ? populateBuildAgentGroup(
-            buildAgentGroup ) : null;
-        return buildAgentGroupConfiguration;
+        return buildAgentGroup != null ? populateBuildAgentGroup( buildAgentGroup ) : null;
     }
 
     public BuildAgentGroupConfiguration updateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
@@ -2296,7 +2277,7 @@ public class ContinuumServiceImpl
         }
 
         if ( StringUtils.isNotBlank( projectSummary.getGroupId() ) && !projectSummary.getGroupId().matches(
-            PROJECT_GROUP_ID_VALID_EXPRESSION ) )
+            PROJECTGROUP_ID_VALID_EXPRESSION ) )
         {
             throw new ContinuumException( "Project Group Id contains invalid characters" );
         }
@@ -2474,7 +2455,7 @@ public class ContinuumServiceImpl
 
     protected org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition(
         BuildDefinition buildDef, org.apache.maven.continuum.model.project.BuildDefinition bd )
-        throws ProfileException, ContinuumException
+        throws ContinuumException
     {
         if ( buildDef == null )
         {
@@ -2635,10 +2616,8 @@ public class ContinuumServiceImpl
             newProfile.getEnvironmentVariables().clear();
             if ( profile.getEnvironmentVariables() != null )
             {
-                for ( Iterator it = profile.getEnvironmentVariables().iterator(); it.hasNext(); )
+                for ( final Installation varEnv : profile.getEnvironmentVariables() )
                 {
-                    final Installation varEnv = (Installation) it.next();
-
                     final org.apache.maven.continuum.model.system.Installation newInst =
                         continuum.getInstallationService().getInstallation( varEnv.getInstallationId() );
                     newProfile.getEnvironmentVariables().add( populateInstallation( varEnv, newInst ) );
@@ -4151,19 +4130,17 @@ public class ContinuumServiceImpl
         return distributedBuildManager.pingBuildAgent( buildAgentUrl );
     }
 
-    private List getList( Object obj )
+    private List<String> getList( Object obj )
     {
-        List<Object> list = new ArrayList<Object>();
+        List<String> list = new ArrayList<String>();
 
-        if ( obj instanceof Object[] )
+        if ( obj instanceof String[] )
         {
-            Object[] objA = (Object[]) obj;
-
-            list.addAll( Arrays.asList( objA ) );
+            list.addAll( Arrays.asList( (String[]) obj ) );
         }
         else
         {
-            list = (List<Object>) obj;
+            list = (List<String>) obj;
         }
 
         return list;
