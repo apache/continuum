@@ -60,18 +60,6 @@ public class BuildDefinitionTest
 
     private String antProjectName;
 
-    private String antProjectDescription;
-
-    private String antProjectVersion;
-
-    private String antProjectTag;
-
-    private String antScmUrl;
-
-    private String antScmUsername;
-
-    private String antScmPassword;
-
     private String buildDefinitionId;
 
     @BeforeClass
@@ -87,12 +75,12 @@ public class BuildDefinitionTest
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
 
         antProjectName = getProperty( "BUILD_DEFINITION_ANT_PROJECT_NAME" );
-        antProjectDescription = getProperty( "ANT_DESCRIPTION" );
-        antProjectVersion = getProperty( "ANT_VERSION" );
-        antProjectTag = getProperty( "ANT_TAG" );
-        antScmUrl = getProperty( "ANT_SCM_URL" );
-        antScmUsername = getProperty( "ANT_SCM_USERNAME" );
-        antScmPassword = getProperty( "ANT_SCM_PASSWORD" );
+        String antProjectDescription = getProperty( "ANT_DESCRIPTION" );
+        String antProjectVersion = getProperty( "ANT_VERSION" );
+        String antProjectTag = getProperty( "ANT_TAG" );
+        String antScmUrl = getProperty( "ANT_SCM_URL" );
+        String antScmUsername = getProperty( "ANT_SCM_USERNAME" );
+        String antScmPassword = getProperty( "ANT_SCM_PASSWORD" );
 
         loginAsAdmin();
         addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
