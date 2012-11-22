@@ -36,6 +36,7 @@ import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.server.ContinuumServiceImpl;
+import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jmock.Expectations;
@@ -457,9 +458,6 @@ public class ContinuumServiceImplTest
                 group = createProjectGroup( name, groupId, description );
                 one( continuum ).getProjectGroupByGroupId( groupId );
                 will( returnValue( group ) );
-//
-//                one( continuum ).getProjectGroup( projectGroupId );
-//                will( returnValue( group ) );
             }
         } );
 
@@ -513,6 +511,27 @@ public class ContinuumServiceImplTest
         group.setDescription( newDescription );
 
         continuumService.updateProjectGroup( group );
+
+        context.assertIsSatisfied();
+    }
+
+    public void testInstallationEnvironmentVariableWithOtherOptions()
+        throws ContinuumException
+    {
+        context.checking( new Expectations()
+        {
+            {
+                one( continuum ).getInstallationService();
+            }
+        } );
+
+        Installation installation = new Installation();
+        installation.setName( "name" );
+        installation.setType( "envvar" );
+        installation.setVarName( "JAVA_OPTS" );
+        installation.setVarValue( "-XX:+CompressedOops" );
+
+        continuumService.addInstallation( installation );
 
         context.assertIsSatisfied();
     }

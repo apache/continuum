@@ -54,6 +54,8 @@ public class InstallationTest
 
     private String varNameNoBE;
 
+    private String varNameOptions;
+
     @BeforeMethod
     protected void setUp()
         throws Exception
@@ -66,12 +68,13 @@ public class InstallationTest
         mavenName = getProperty( "INSTALL_TOOL_MAVEN_NAME" );
         mavenPath = getProperty( "INSTALL_TOOL_MAVEN_PATH" );
         varNameNoBE = "var_without_build_environment";
+        varNameOptions = "var_with_options";
     }
 
     @AfterClass
     public void cleanup()
     {
-        for ( String installation : Arrays.asList( jdkName, varName, mavenName, varNameNoBE ) )
+        for ( String installation : Arrays.asList( jdkName, varName, mavenName, varNameNoBE, varNameOptions ) )
         {
             removeInstallation( installation, false );
             removeBuildEnvironment( installation, false );
@@ -115,6 +118,14 @@ public class InstallationTest
         String varPath = "path";
         goToAddInstallationVariable();
         addInstallation( varNameNoBE, varVariableName, varPath, false, false, true );
+    }
+
+    public void testAddInstallationVariableWithOtherOptions()
+    {
+        String varVariableName = "JAVA_OPTS";
+        String varPath = "-XX:+CompressedOops";
+        goToAddInstallationVariable();
+        addInstallation( varNameOptions, varVariableName, varPath, false, false, true );
     }
 
     public void testAddInstallationVariableWithoutBuildEnvironmentWithInvalidValues()

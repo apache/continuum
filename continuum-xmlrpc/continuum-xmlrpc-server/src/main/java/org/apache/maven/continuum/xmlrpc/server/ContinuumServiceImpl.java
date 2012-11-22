@@ -128,7 +128,7 @@ public class ContinuumServiceImpl
 
     private static final String INSTALLATION_VARNAME_VALID_EXPRESSION = "[A-Za-z][A-Za-z0-9_]*";
 
-    private static final String INSTALLATION_VARVALUE_VALID_EXPRESSION = "[A-Za-z0-9_.:=${}/\\s\\\\-]*";
+    private static final String INSTALLATION_VARVALUE_VALID_EXPRESSION = "(?:[~A-Za-z0-9_.:=${}\\\\/\\-+]|\\s|[()])*";
 
     private static final String INSTALLATION_TYPE_VALID_EXPRESSION = "jdk|maven2|maven1|ant|envvar";
 
