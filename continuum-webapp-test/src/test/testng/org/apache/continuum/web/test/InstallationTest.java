@@ -20,7 +20,11 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractInstallationTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
 
 /**
  * @author José Morales Martínez
@@ -30,62 +34,96 @@ import org.testng.annotations.Test;
 public class InstallationTest
     extends AbstractInstallationTest
 {
+    private static final String JDK_VAR_NAME = "JDK";
+
+    private static final String MAVEN_VAR_NAME = "Maven";
+
+    private String jdkName;
+
+    private String jdkPath;
+
+    private String varName;
+
+    private String varVariableName;
+
+    private String varPath;
+
+    private String mavenName;
+
+    private String mavenPath;
+
+    private String varNameNoBE;
+
+    @BeforeMethod
+    protected void setUp()
+        throws Exception
+    {
+        jdkName = getProperty( "INSTALL_TOOL_JDK_NAME" );
+        jdkPath = getProperty( "INSTALL_TOOL_JDK_PATH" );
+        varName = getProperty( "INSTALL_VAR_NAME" );
+        varVariableName = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
+        varPath = getProperty( "INSTALL_VAR_PATH" );
+        mavenName = getProperty( "INSTALL_TOOL_MAVEN_NAME" );
+        mavenPath = getProperty( "INSTALL_TOOL_MAVEN_PATH" );
+        varNameNoBE = "var_without_build_environment";
+    }
+
+    @AfterClass
+    public void cleanup()
+    {
+        for ( String installation : Arrays.asList( jdkName, varName, mavenName, varNameNoBE ) )
+        {
+            removeInstallation( installation, false );
+            removeBuildEnvironment( installation, false );
+        }
+    }
+
     public void testAddJdkToolWithoutBuildEnvironment()
     {
-        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-        String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) : getEscapeProperty(
-            "INSTALL_TOOL_JDK_PATH" );
         goToAddInstallationTool();
-        addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, true );
+        addInstallation( jdkName, JDK_VAR_NAME, jdkPath, false, true, true );
     }
 
     public void testAddJdkToolWithoutBuildEnvironmentWithInvalidValues()
     {
-        String INSTALL_TOOL_JDK_NAME = "!@#$<>?etc";
-        String INSTALL_TOOL_JDK_PATH = "!@#$<>?etc";
+        String jdkName = "!@#$<>?etc";
+        String jdkPath = "!@#$<>?etc";
         goToAddInstallationTool();
-        addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
+        addInstallation( jdkName, JDK_VAR_NAME, jdkPath, false, true, false );
         assertTextPresent( "Installation name contains invalid characters." );
         assertTextPresent( "Installation value contains invalid characters." );
     }
 
     public void testAddMavenToolWithBuildEnvironment()
     {
-        String INSTALL_TOOL_MAVEN_NAME = getProperty( "INSTALL_TOOL_MAVEN_NAME" );
-        String INSTALL_TOOL_MAVEN_PATH = isWindows() ? getProperty( "INSTALL_TOOL_MAVEN_PATH" ) : getEscapeProperty(
-            "INSTALL_TOOL_MAVEN_PATH" );
         goToAddInstallationTool();
-        addInstallation( INSTALL_TOOL_MAVEN_NAME, "Maven", INSTALL_TOOL_MAVEN_PATH, true, true, true );
+        addInstallation( mavenName, MAVEN_VAR_NAME, mavenPath, true, true, true );
         // TODO: Validate build environment
 
     }
 
     public void testAddInstallationVariableWithBuildEnvironment()
     {
-        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
-        String INSTALL_VAR_VARIABLE_NAME = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
-        String INSTALL_VAR_PATH = getProperty( "INSTALL_VAR_PATH" );
         goToAddInstallationVariable();
-        addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, true, false, true );
+        addInstallation( varName, varVariableName, varPath, true, false, true );
         // TODO: Validate build environment
     }
 
     public void testAddInstallationVariableWithoutBuildEnvironment()
     {
-        String INSTALL_VAR_NAME = "var_without_build_environment";
-        String INSTALL_VAR_VARIABLE_NAME = "var_name";
-        String INSTALL_VAR_PATH = "path";
+        String varVariableName = "var_name";
+        String varPath = "path";
         goToAddInstallationVariable();
-        addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, false, true );
+        addInstallation( varNameNoBE, varVariableName, varPath, false, false, true );
     }
 
     public void testAddInstallationVariableWithoutBuildEnvironmentWithInvalidValues()
     {
-        String INSTALL_VAR_NAME = "!@#$<>?etc";
-        String INSTALL_VAR_VARIABLE_NAME = "!@#$<>?etc";
-        String INSTALL_VAR_PATH = "!@#$<>?etc";
+        String varName = "!@#$<>?etc";
+        String varVariableName = "!@#$<>?etc";
+        String varPath = "!@#$<>?etc";
         goToAddInstallationVariable();
-        addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, false, false );
+        addInstallation( varName, varVariableName, varPath, false, false, false );
         assertTextPresent( "Installation name contains invalid characters." );
         assertTextPresent( "Environment variable name contains invalid characters." );
         assertTextPresent( "Installation value contains invalid characters." );
@@ -94,7 +132,7 @@ public class InstallationTest
     public void testAddInvalidInstallationTool()
     {
         goToAddInstallationTool();
-        addInstallation( "", "JDK", "", false, true, false );
+        addInstallation( "", JDK_VAR_NAME, "", false, true, false );
         assertTextPresent( "You must define a name" );
         assertTextPresent( "You must define a value" );
     }
@@ -102,7 +140,7 @@ public class InstallationTest
     public void testAddInvalidPathInstallationTool()
     {
         goToAddInstallationTool();
-        addInstallation( "name", "JDK", "invalid_path", false, true, false );
+        addInstallation( "name", JDK_VAR_NAME, "invalid_path", false, true, false );
         assertTextPresent( "Failed to validate installation, check server log" );
     }
 
@@ -124,11 +162,8 @@ public class InstallationTest
     @Test( dependsOnMethods = {"testAddJdkToolWithoutBuildEnvironment"} )
     public void testAddDuplicatedInstallationTool()
     {
-        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-        String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) : getEscapeProperty(
-            "INSTALL_TOOL_JDK_PATH" );
         goToAddInstallationTool();
-        addInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, false, true, false );
+        addInstallation( jdkName, JDK_VAR_NAME, jdkPath, false, true, false );
         assertTextPresent( "Installation name already exists" );
 
     }
@@ -136,53 +171,42 @@ public class InstallationTest
     @Test( dependsOnMethods = {"testAddInstallationVariableWithBuildEnvironment"} )
     public void testAddDuplicatedInstallationVariable()
     {
-        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
-        String INSTALL_VAR_VARIABLE_NAME = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
-        String INSTALL_VAR_PATH = getProperty( "INSTALL_VAR_PATH" );
         goToAddInstallationVariable();
-        addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, false, false );
+        addInstallation( varName, varVariableName, varPath, false, false, false );
         assertTextPresent( "Installation name already exists" );
     }
 
     @Test( dependsOnMethods = {"testAddJdkToolWithoutBuildEnvironment"} )
     public void testEditInstallationTool()
     {
-        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-        String INSTALL_TOOL_JDK_PATH = isWindows() ? getProperty( "INSTALL_TOOL_JDK_PATH" ) : getEscapeProperty(
-            "INSTALL_TOOL_JDK_PATH" );
         String newName = "new_name";
-        goToEditInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true );
-        editInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
-        goToEditInstallation( newName, "JDK", INSTALL_TOOL_JDK_PATH, true );
-        editInstallation( INSTALL_TOOL_JDK_NAME, "JDK", INSTALL_TOOL_JDK_PATH, true, true );
+        goToEditInstallation( jdkName, JDK_VAR_NAME, jdkPath, true );
+        editInstallation( newName, JDK_VAR_NAME, jdkPath, true, true );
+        goToEditInstallation( newName, JDK_VAR_NAME, jdkPath, true );
+        editInstallation( jdkName, JDK_VAR_NAME, jdkPath, true, true );
     }
 
     @Test( dependsOnMethods = {"testAddInstallationVariableWithBuildEnvironment"} )
     public void testEditInstallationVariable()
     {
-        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
-        String INSTALL_VAR_VARIABLE_NAME = getProperty( "INSTALL_VAR_VARIABLE_NAME" );
-        String INSTALL_VAR_PATH = getProperty( "INSTALL_VAR_PATH" );
         String newName = "new_name";
         String newVarName = "new_var_name";
         String newPath = "new_path";
-        goToEditInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false );
+        goToEditInstallation( varName, varVariableName, varPath, false );
         editInstallation( newName, newVarName, newPath, false, true );
         goToEditInstallation( newName, newVarName, newPath, false );
-        editInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, false, true );
+        editInstallation( varName, varVariableName, varPath, false, true );
     }
 
     @Test( dependsOnMethods = {"testEditInstallationTool", "testAddDuplicatedInstallationTool"} )
     public void testDeleteInstallationTool()
     {
-        String INSTALL_TOOL_JDK_NAME = getProperty( "INSTALL_TOOL_JDK_NAME" );
-        removeInstallation( INSTALL_TOOL_JDK_NAME );
+        removeInstallation( jdkName, true );
     }
 
     @Test( dependsOnMethods = {"testEditInstallationVariable", "testAddDuplicatedInstallationVariable"} )
     public void testDeleteInstallationVariable()
     {
-        String INSTALL_VAR_NAME = getProperty( "INSTALL_VAR_NAME" );
-        removeInstallation( INSTALL_VAR_NAME );
+        removeInstallation( varName, true );
     }
 }

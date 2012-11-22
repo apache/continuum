@@ -39,10 +39,10 @@ Run Selenium tests in an running Selenium server or hub
 
 If you'd like to run the tests from your IDE, you can start the container from Maven using:
 
-    mvn generate-resources selenium:start-server cargo:run
+    mvn process-test-resources selenium:start-server cargo:run
 
 The server will run until you press Ctrl-C, and you can run the tests from the IDE.
 
 To attach a debugger to the same process, run:
 
-    mvn -Ptomcat7x,debug generate-resources selenium:start-server cargo:run
+    mvn -Ptomcat7x,debug process-test-resources selenium:start-server cargo:run

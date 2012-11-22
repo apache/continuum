@@ -66,11 +66,14 @@ public abstract class AbstractSeleniumTest
         p = new Properties();
         p.load( input );
 
+        // for running in the IDE
         String svnBaseUrl = "file://localhost/" + new File( "target/example-svn" ).getAbsolutePath();
         for ( String key : p.stringPropertyNames() )
         {
-            String value = p.getProperty( key ).replace( "${svn.base.url}", svnBaseUrl );
-            p.setProperty( key, value );
+            String value = p.getProperty( key );
+            String newValue = value.replace( "${svn.base.url}", svnBaseUrl );
+            newValue = newValue.replace( "${maven.home}", System.getProperty( "maven.home", "/usr/share/maven" ) );
+            p.setProperty( key, newValue );
         }
 
         maxWaitTimeInMs = getProperty( "MAX_WAIT_TIME_IN_MS" );

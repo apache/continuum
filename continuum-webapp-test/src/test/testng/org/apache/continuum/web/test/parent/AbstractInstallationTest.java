@@ -170,17 +170,21 @@ public abstract class AbstractInstallationTest
         assertFieldValue( path, "installation.varValue" );
     }
 
-    protected void removeInstallation( String name )
+    protected void removeInstallation( String name, boolean failIfMissing )
     {
         goToInstallationPage();
-        clickLinkWithXPath( "(//a[contains(@href,'deleteInstallation') and contains(@href, '" + name + "')])//img" );
-        assertPage( "Continuum - Delete Installation" );
-        assertTextPresent( "Delete Installation" );
-        assertTextPresent( "Are you sure you want to delete \"" + name + "\" installation ?" );
-        assertButtonWithValuePresent( "Delete" );
-        assertButtonWithValuePresent( "Cancel" );
-        clickButtonWithValue( "Delete" );
-        assertInstallationPage();
+        String xpath = "(//a[contains(@href,'deleteInstallation') and contains(@href, '" + name + "')])//img";
+        if ( isElementPresent( "xpath=" + xpath ) || failIfMissing )
+        {
+            clickLinkWithXPath( xpath );
+            assertPage( "Continuum - Delete Installation" );
+            assertTextPresent( "Delete Installation" );
+            assertTextPresent( "Are you sure you want to delete \"" + name + "\" installation ?" );
+            assertButtonWithValuePresent( "Delete" );
+            assertButtonWithValuePresent( "Cancel" );
+            clickButtonWithValue( "Delete" );
+            assertInstallationPage();
+        }
     }
 
 }
