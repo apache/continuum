@@ -226,6 +226,9 @@
                     <exclude>commons-logging:commons-logging</exclude>
                     <exclude>org.slf4j:jcl104-over-slf4j</exclude>
                     <exclude>org.codehaus.plexus:plexus-spring</exclude>
+                    <exclude>xml-apis:xml-apis</exclude>
+                    <exclude>jtidy:jtidy</exclude>
+                    <exclude>jdom:jdom</exclude>
                   </excludes>
                 </bannedDependencies>
               </rules>
@@ -583,6 +586,10 @@
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-container-default</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -599,6 +606,16 @@
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-http-lightweight</artifactId>
         <version>${wagon.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>jtidy</groupId>
+            <artifactId>jtidy</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.wagon</groupId>
@@ -618,6 +635,10 @@
           <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -712,6 +733,12 @@
         <groupId>org.apache.xmlrpc</groupId>
         <artifactId>xmlrpc-common</artifactId>
         <version>${xmlrpc.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.atlassian.xmlrpc</groupId>
@@ -738,6 +765,10 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -748,6 +779,10 @@
           <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1465,6 +1500,14 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl104-over-slf4j</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -1698,6 +1741,12 @@
         <artifactId>httpunit</artifactId>
         <version>1.6.2</version>
         <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>jtidy</groupId>
+            <artifactId>jtidy</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.jsoup</groupId>
@@ -1708,6 +1757,22 @@
         <groupId>jpox</groupId>
         <artifactId>jpox-ehcache</artifactId>
         <version>1.1.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>nekohtml</groupId>
+        <artifactId>nekohtml</artifactId>
+        <version>1.9.6.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
