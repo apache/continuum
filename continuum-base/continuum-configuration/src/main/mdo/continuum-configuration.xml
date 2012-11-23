@@ -97,6 +97,11 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
+        <field>
+          <name>initialized</name>
+          <version>1.4.1+</version>
+          <type>boolean</type>
+        </field>
       </fields>
     </class>
     <class xml.tagName="proxy-configuration">
