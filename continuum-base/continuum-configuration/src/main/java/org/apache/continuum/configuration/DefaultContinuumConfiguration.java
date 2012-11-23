@@ -164,6 +164,8 @@ public class DefaultContinuumConfiguration
             // set the configuration for diistributedBuildEnabled
             this.generalConfiguration.setDistributedBuildEnabled( configuration.isDistributedBuildEnabled() );
 
+            this.generalConfiguration.setInitialized( configuration.isInitialized() );
+
             if ( configuration.getBuildAgents() != null )
             {
                 List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
@@ -272,6 +274,8 @@ public class DefaultContinuumConfiguration
 
             // set configuration for distributedBuildEnabled.
             configurationModel.setDistributedBuildEnabled( this.generalConfiguration.isDistributedBuildEnabled() );
+
+            configurationModel.setInitialized( this.generalConfiguration.isInitialized() );
 
             if ( this.generalConfiguration.getBuildAgents() != null )
             {

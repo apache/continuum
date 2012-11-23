@@ -31,6 +31,8 @@ import java.util.List;
  */
 public class GeneralConfiguration
 {
+    private boolean initialized = false;
+
     private File workingDirectory;
 
     private File buildOutputDirectory;
@@ -172,5 +174,15 @@ public class GeneralConfiguration
     public String getSharedSecretPassword()
     {
         return sharedSecretPassword;
+    }
+
+    public boolean isInitialized()
+    {
+        return initialized;
+    }
+
+    public void setInitialized( boolean initialized )
+    {
+        this.initialized = initialized;
     }
 }

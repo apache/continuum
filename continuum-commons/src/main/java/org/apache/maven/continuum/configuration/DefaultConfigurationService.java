@@ -143,12 +143,12 @@ public class DefaultConfigurationService
 
     public void setInitialized( boolean initialized )
     {
-        systemConf.setInitialized( initialized );
+        generalConfiguration.setInitialized( initialized );
     }
 
     public boolean isInitialized()
     {
-        return systemConf.isInitialized();
+        return systemConf.isInitialized() || generalConfiguration.isInitialized();
     }
 
     public String getUrl()
@@ -365,7 +365,6 @@ public class DefaultConfigurationService
 
     public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
     {
-        systemConf.setDistributedBuildEnabled( distributedBuildEnabled );
         generalConfiguration.setDistributedBuildEnabled( distributedBuildEnabled );
     }
 
@@ -750,14 +749,6 @@ public class DefaultConfigurationService
         configuration.setGeneralConfiguration( generalConfiguration );
 
         configuration.save();
-        try
-        {
-            getSystemConfigurationDao().updateSystemConfiguration( systemConf );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ConfigurationStoringException( "Error writting configuration to database.", e );
-        }
     }
 
     public Schedule getDefaultSchedule()
