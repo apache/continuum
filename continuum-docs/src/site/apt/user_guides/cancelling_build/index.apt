@@ -8,4 +8,5 @@
 
 Cancelling Builds
 
-  You can cancel builds at the <<{{{cancelGroupBuild.html}Project Group level}}>> or at the <<{{{cancelProjectBuild.html}Project level}}>>.
+  You can cancel builds at the <<{{{./cancelGroupBuild.html}Project Group level}}>> or at the
+  <<{{{./cancelProjectBuild.html}Project level}}>>.
