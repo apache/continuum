@@ -35,6 +35,8 @@ public class BuildAgentsTest
 
     private String buildAgentDescription;
 
+    private String badAgentUrl;
+
     @BeforeMethod
     public void setUp()
     {
@@ -43,6 +45,7 @@ public class BuildAgentsTest
         buildAgentGroup = getProperty( "BUILD_AGENT_GROUPNAME" );
 
         buildAgentDescription = getProperty( "BUILD_AGENT_DESCRIPTION" );
+        badAgentUrl = "http://localhost:8585/bad-continuum-buildagent/xmlrpc";
     }
 
     @AfterMethod
@@ -52,6 +55,7 @@ public class BuildAgentsTest
         removeBuildAgentGroup( buildAgentGroup, false );
 
         removeBuildAgent( buildAgentUrl, false );
+        removeBuildAgent( badAgentUrl, false );
 
         disableDistributedBuilds();
     }
@@ -110,6 +114,33 @@ public class BuildAgentsTest
         addEditBuildAgent( buildAgentUrl, new_agentDescription );
         goToEditBuildAgent( buildAgentUrl, new_agentDescription );
         addEditBuildAgent( buildAgentUrl, buildAgentDescription );
+    }
+
+    public void testAddBadBuildAgent()
+        throws Exception
+    {
+        String description = "down agent";
+        goToAddBuildAgent();
+        addBuildAgent( badAgentUrl, description, true, true, false );
+
+        goToBuildAgentPage();
+        assertLinkNotPresent( badAgentUrl );
+    }
+
+    public void testEnableBadBuildAgent()
+        throws Exception
+    {
+        // Note: relying on behaviour of being able to add a disabled agent without a test, if that changes in future we
+        // might need to force its configuration
+        String description = "down agent";
+        goToAddBuildAgent();
+        addBuildAgent( badAgentUrl, description, true, false, true );
+
+        goToEditBuildAgent( badAgentUrl, description );
+        addBuildAgent( badAgentUrl, description, true, true, false );
+
+        goToBuildAgentPage();
+        assertLinkPresent( badAgentUrl );
     }
 
     public void testDeleteBuildAgent()

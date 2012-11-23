@@ -209,7 +209,7 @@ public abstract class AbstractAdminTest
 
         if ( isChecked )
         {
-            assertIsChecked();
+            assertIsChecked( "saveBuildAgent_buildAgent_enabled" );
         }
 
         assertButtonWithValuePresent( "Save" );
@@ -300,6 +300,10 @@ public abstract class AbstractAdminTest
         {
             checkField( "saveBuildAgent_buildAgent_enabled" );
         }
+        else
+        {
+            uncheckField( "saveBuildAgent_buildAgent_enabled" );
+        }
 
         submit();
 
@@ -311,7 +315,10 @@ public abstract class AbstractAdminTest
                 assertElementPresent( "link=" + agentURL );
                 clickLinkWithText( agentURL );
 
-                assertTextPresent( "true" );
+                if ( enabled )
+                {
+                    assertTextPresent( "true" );
+                }
             }
             else
             {
@@ -321,7 +328,7 @@ public abstract class AbstractAdminTest
         }
         else
         {
-            assertAddEditBuildAgentPage( true );
+            assertAddEditBuildAgentPage( enabled );
         }
     }
 

@@ -274,7 +274,7 @@ public class DefaultDistributedBuildManager
         {
             if ( agent.isEnabled() && !overallDistributedBuildQueues.containsKey( agent.getUrl() ) )
             {
-                SlaveBuildAgentTransportService client = null;
+                SlaveBuildAgentTransportService client;
 
                 try
                 {
@@ -282,19 +282,17 @@ public class DefaultDistributedBuildManager
                 }
                 catch ( MalformedURLException e )
                 {
-                    configurationService.removeBuildAgent( agent );
                     log.error( "Invalid build agent URL {}, not creating distributed build queue", agent.getUrl() );
                     throw new ContinuumException( "Malformed build agent url " + agent.getUrl() );
                 }
                 catch ( Exception e )
                 {
-                    configurationService.removeBuildAgent( agent );
                     log.error( "Error binding build agent {} service : {} ", agent.getUrl(),
                                ContinuumUtils.throwableToString( e ) );
                     throw new ContinuumException( e.getMessage() );
                 }
 
-                boolean ping = false;
+                boolean ping;
 
                 try
                 {
@@ -302,7 +300,6 @@ public class DefaultDistributedBuildManager
                 }
                 catch ( Exception e )
                 {
-                    configurationService.removeBuildAgent( agent );
                     log.error( "Unable to ping build agent '{}': {}", agent.getUrl(), ContinuumUtils.throwableToString(
                         e ) );
                     throw new ContinuumException( "Unable to ping build agent " + agent.getUrl() );
@@ -318,14 +315,12 @@ public class DefaultDistributedBuildManager
                     }
                     catch ( Exception e )
                     {
-                        configurationService.removeBuildAgent( agent );
                         log.error( "Unable to create distributed queue for build agent {} : {}", agent.getUrl(),
                                    ContinuumUtils.throwableToString( e ) );
                     }
                 }
                 else
                 {
-                    configurationService.removeBuildAgent( agent );
                     log.error( "Unable to ping build agent '{}'", agent.getUrl() );
                     throw new ContinuumException( "Unable to ping build agent " + agent.getUrl() );
                 }

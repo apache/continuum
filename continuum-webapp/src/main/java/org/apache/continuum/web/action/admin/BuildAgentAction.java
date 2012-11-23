@@ -195,6 +195,17 @@ public class BuildAgentAction
             }
         }
 
+        // update first, so that we don't add or change it if it fails
+        try
+        {
+            getContinuum().getDistributedBuildManager().update( buildAgent );
+        }
+        catch ( ContinuumException e )
+        {
+            addActionError( e.getMessage() );
+            return INPUT;
+        }
+
         AuditLog event = new AuditLog( "Build Agent URL=" + buildAgent.getUrl(), AuditLogConstants.MODIFY_BUILD_AGENT );
         event.setCategory( AuditLogConstants.BUILD_AGENT );
         event.setCurrentUser( getPrincipal() );
@@ -206,15 +217,6 @@ public class BuildAgentAction
             event.setAction( AuditLogConstants.ADD_BUILD_AGENT );
         }
 
-        try
-        {
-            getContinuum().getDistributedBuildManager().update( buildAgent );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionError( e.getMessage() );
-            return INPUT;
-        }
         event.log();
 
         return SUCCESS;

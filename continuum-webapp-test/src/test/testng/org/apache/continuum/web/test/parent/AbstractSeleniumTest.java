@@ -351,9 +351,9 @@ public abstract class AbstractSeleniumTest
         return getSelenium().isChecked( locator );
     }
 
-    void assertIsChecked()
+    void assertIsChecked( String locator )
     {
-        Assert.assertTrue( getSelenium().isChecked( "saveBuildAgent_buildAgent_enabled" ) );
+        Assert.assertTrue( isChecked( locator ) );
     }
 
     void click( String locator )
