@@ -45,7 +45,7 @@
 
   <resource-ref>
     <res-ref-name>mail/Session</res-ref-name>
-    <jndi-name>java:jboss/mail/Default</jndi-name>
+    <jndi-name>java:/Mail</jndi-name>
   </resource-ref>
 
 </jboss-web>
