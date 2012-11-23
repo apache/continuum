@@ -25,28 +25,14 @@
 
   <class-loading java2ClassLoadingCompliance='false'>
     <loader-repository>
-      org.apache.continuum:loader=continuum
+      org.apache.continuum:loader=continuum-buildagent
       <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
     </loader-repository>
 
   </class-loading>
 
-  <context-root>continuum</context-root>
+  <context-root>continuum-buildagent</context-root>
 
-  <resource-ref>
-    <res-ref-name>jdbc/continuum</res-ref-name>
-    <jndi-name>java:/continuum</jndi-name>
-  </resource-ref>
-
-  <resource-ref>
-    <res-ref-name>jdbc/users</res-ref-name>
-    <jndi-name>java:/users</jndi-name>
-  </resource-ref>
-
-  <resource-ref>
-    <res-ref-name>mail/Session</res-ref-name>
-    <jndi-name>java:jboss/mail/Default</jndi-name>
-  </resource-ref>
 
 </jboss-web>
 
