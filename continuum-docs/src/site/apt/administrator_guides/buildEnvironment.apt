@@ -6,22 +6,39 @@
  Oct 17 2007
  ------
 
-Build Environment
-
 ~~%{toc|section=0}
 
-* Goal
+Managing Build Environments
 
-  The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined
-  envvar (MAVEN_OPTS, ANT_OPTS ...).  This is now possible at the build definition level (in 1.1).
+ In continuum, Build Environments allow you to create and manage multiple build
+ configurations. Once you have defined the Build Environments you can configure
+ project Build Definitions or {{{./builddefTemplate.html}Build Definition
+ Templates}} to use them.
+
+ <Note: Build Environments affect the versions of specific tools used to execute
+ builds and their environments. They are not intended to replace things like
+ Maven build profiles.>
+
+*Build Environments
+
+ Build Environments are named groupings of {{{./builder.html}Installations}}. By
+ grouping the collection of Tools and Environment Variables, you define a
+ configuration that can be used to build a project. To define a Build
+ Environment, you specify a human friendly name and add one or more
+ Installations. Once defined, the Build Environment is available for use. You
+ can then specify what Build Environment to use in your project's Build
+ Definitions or in your Build Definition Templates. When continuum detects that
+ a project needs to be built, it uses the Tool Installations to construct the
+ paths to the expected executables (ie. Maven build definitions construct paths
+ to the mvn executable and the java executable). Additional Installations are
+ translated into name/value pairs that are passed through to the constructed
+ command's environment.
 
   As of Continuum 1.2.1, build environments can be used in releasing projects.
   This is set upon supplying the release prepare parameters during the
   {{{../user_guides/release/prepare.html} Release preparation}} of the project.
 
-* Setup Build Environments/Installations
-
-** {Creating a Build Environment}
+**Creating a Build Environment
 
   From the menu, choose the 'Build Environments' entry
 
@@ -37,36 +54,44 @@ Build Environment
 
 [../images/profile-build-agent-group.png] Add Build Agent Group to Build Environment
 
-** {Attach JDK to a Build Environment}
+**Attaching the related Installations
 
-  The list box contains all available installations (jdk, mvn etc..). The installation's type is automatically recognized.
-  In the modification mode of a build environment, adding an already attached type will override the existing one.
+ When editing a Build Environment, the Installation list box contains all
+ defined Installations. You can only specify a single Tool Installation per type
+ (jdk, maven, maven2, ant). However, you may specify multiple Environment
+ Variable Installations.
 
-[../images/buildenv-setup-jdk.png] Add JDK to Build Environment
+[../images/buildenv-setup-jdk.png] Adding Installations to Build Environment
 
-** {Link Build Environment to Build Definition}
+**Setting a Build Definition's Build Environment
 
-  The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
-  In the modification mode of a build environment, adding an already attached type will override the existing one.
+ The way you configure builds to use your newly created Build Environments is by
+ setting it in either a project Build Definition or in the continuum Build
+ Definition Templates. The following example sets the Build Environment of a
+ specific project's Build Definition. 
 
 [../images/buildenv-in-builddef.png] Setup Build Environment
 
-** {Installations used in Notification mail}
+**Installations used in Notification mail
 
-  The notification mail contains the following informations :
+  Build notifications send along information about the environment in which the
+  project was built.
 
   * Java Home version : coming from $JAVA_HOME/bin/java -version.
 
-  * Builder version : coming from builder used version arg (mvn  used -v, ant use -version).
-
+  * Builder version : coming from builder used version arg (mvn  used -v, ant
+  use -version). 
+  
   []
 
 +-------------------------------+
-  Java Home version :
-          java version "1.4.2_06"
-          Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.2_06-b03)
-          Java HotSpot(TM) Client VM (build 1.4.2_06-b03, mixed mode)
-
+  Java Home version : 
+          java version "1.6.0_11"
+          Java(TM) SE Runtime Environment (build 1.6.0_11-b03)
+          Java HotSpot(TM) Client VM (build 11.0-b16, mixed mode, sharing)
+        
   Builder version :
-          Maven version: 2.0.5
+          Maven version: 2.0.9
+          Java version: 1.6.0_11
+          OS name: "linux" version: "2.6.16.60-0.23-default" arch: "i386" Family: "unix"
 +-------------------------------+

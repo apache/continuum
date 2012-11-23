@@ -12,9 +12,7 @@ Administrator's Guides
 
  * {{{./projectgroup.html}Managing Project Groups}}
 
- * {{{./builder.html}Managing Builders}}
-
- * {{{./jdk.html}Managing JDKs}}
+ * {{{./builder.html}Managing Installations}}
 
  * {{{./buildEnvironment.html}Managing Build Environments}}
 

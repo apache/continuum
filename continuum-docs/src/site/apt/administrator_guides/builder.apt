@@ -1,14 +1,50 @@
  ------
- Managing Building Tool
+ Managing Installations
  ------
  Olivier Lamy
  ------
  Oct 11 2007
  ------
  
-Managing Building Tool
+Managing Installations
 
-  From the menu, choose the 'Installations' entry 
+ Continuum allows you to configure the build tools it uses to build projects by
+ defining {{{./buildEnvironment.html}Build Environments}}. Installations allow defining
+ environment settings and are the basic unit of a Build Environment.
+ 
+ For example, say you need to maintain two build environments.  One using JDK 5
+ and Maven 2.0.9 and another using JDK 6 and Maven 2.1.0-M1. To achieve this,
+ you would need to do the following:
+
+ [[1]] Create Installations for the versions of Java and Maven.
+ 
+ [[2]] Create Installations for any environment variables you want to set such
+ as MAVEN_OPTS and ANT_OPTS.
+
+ [[3]] Create the desired Build Environments, specifying the combination of
+ Installations to use. 
+
+ [[4]] Assign the Build Environments to your Build Definition Templates or
+ project-specific Build Definitions.
+
+ []
+
+*Installations
+
+ Installations are essentially named environment variables. There are currently
+ two types of Installations: Tools and Environment Variables. 
+
+**Tools
+
+ Tools are meant to provide locations to pre-defined tool types. Currently,
+ continuum allows you to define locations for the JDK, Maven 2, Maven 1 and Ant.
+ When you create a tool installation, you specify a human-friendly name, the
+ tool type, and the path to tool. Continuum verifies that the specified tool
+ type resides in that location or fails to create the Installation.
+
+***Example: Defining a Maven2 Installation
+ 
+ From the menu, choose the 'Installations' entry 
   
 [../images/installations.png] Installations
 
@@ -20,9 +56,7 @@ Managing Building Tool
 
 [../images/installation-tool-edit.png] Tool Setup
 
-  You can use the checkbox if you want to add a Profile with the same name as your tool name.
-  
-  The value 'Value/Path' field must contains the path to the tool :
+  The value 'Value/Path' field must specify the path to the tool:
   
   * For maven2 : it must be similar to your M2_HOME
   
@@ -30,14 +64,46 @@ Managing Building Tool
   
   * For ant : it must be similar to your ANT_HOME
 
-  A control will be made to validate the path value :
+  []
+
+  Continuum validates the path specified depending on the type of Tool:
   
-  * For maven2 : path/bin/mvn -v will be tested
+  * For maven2 : \<path\>/bin/mvn -v will be tested
   
-  * For maven1 : path/bin/maven -v will be tested
+  * For maven1 : \<path\>/bin/maven -v will be tested
   
-  * For ant : path/bin/ant -v will be tested
+  * For ant : \<path\>/bin/ant -v will be tested
+
+  []
   
-  It the the test, the following error will be displayed 
+  If the path you specify fails the test, the following error will be displayed:
   
 [../images/installation-validation-failed.png] Installation validation failed   
+  
+ You can use the checkbox if you want to create a Build Environment with the
+ same name as your Tool name. 
+
+**Environment Variables
+ 
+ Environment Variables are simply a means to store environment settings using a
+ human-friendly name. Once defined, they can be used to affect the build tools
+ used to build your projects. They consist of a human-friendly name, the name of
+ the environment variable to set and the value. Unlike Tools, Environment
+ Variables are not constrained by continuum. No validation is performed to
+ validate the values. 
+
+***Example: Defining a Java Heap size Environment Variable for Maven2 Tools
+
+ From the menu, choose the 'Installations' entry
+
+[../images/installations.png] Installations
+
+ Select the Environment Variable Installation type
+
+[../images/installation-type-choice-envvar.png] Select env var as tool type
+
+ And finally, specify the human-friendly name, the environment variable name and
+ the corresponding value. Here we define MAVEN_OPTS that will set the Java heap
+ size to 256 Megabytes.
+ 
+[../images/installation-envvar-edit.png] Define the env var name and value

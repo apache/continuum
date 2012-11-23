@@ -78,8 +78,7 @@
           <item name="LDAP Configuration" href="administrator_guides/security/ldap.html"/>
         </item>
         <item name="Managing Project Groups" href="administrator_guides/projectgroup.html"/>
-        <item name="Managing Builders" href="administrator_guides/builder.html"/>
-        <item name="Managing JDKs" href="administrator_guides/jdk.html"/>
+        <item name="Managing Installations" href="administrator_guides/builder.html"/>
         <item name="Managing Build Environments" href="administrator_guides/buildEnvironment.html"/>
         <item name="Managing Schedules" href="administrator_guides/schedules.html"/>
         <item name="Managing General Configuration" href="administrator_guides/configuration.html"/>
