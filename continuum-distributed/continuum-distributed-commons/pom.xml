@@ -28,4 +28,26 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-distributed-commons</artifactId>
   <name>Continuum :: Distributed Build :: Commons</name>
+  <dependencies>
+    <dependency>
+      <groupId>com.atlassian.xmlrpc</groupId>
+      <artifactId>atlassian-xmlrpc-binder</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.atlassian.xmlrpc</groupId>
+      <artifactId>atlassian-xmlrpc-binder-support</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+  </dependencies>
 </project>

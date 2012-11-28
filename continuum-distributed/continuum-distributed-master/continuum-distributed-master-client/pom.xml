@@ -36,15 +36,10 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-distributed-commons</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.atlassian.xmlrpc</groupId>
       <artifactId>atlassian-xmlrpc-binder</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.atlassian.xmlrpc</groupId>
-      <artifactId>atlassian-xmlrpc-binder-client-apache</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

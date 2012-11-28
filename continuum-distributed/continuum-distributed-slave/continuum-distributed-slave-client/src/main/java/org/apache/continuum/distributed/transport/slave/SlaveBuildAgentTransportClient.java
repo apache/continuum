@@ -19,10 +19,10 @@ package org.apache.continuum.distributed.transport.slave;
  * under the License.
  */
 
-import com.atlassian.xmlrpc.ApacheBinder;
 import com.atlassian.xmlrpc.Binder;
 import com.atlassian.xmlrpc.BindingException;
 import com.atlassian.xmlrpc.ConnectionInfo;
+import org.apache.continuum.distributed.commons.utils.ContinuumXmlRpcBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,7 @@ public class SlaveBuildAgentTransportClient
     public SlaveBuildAgentTransportClient( URL serviceUrl, String login, String password )
         throws Exception
     {
-        Binder binder = new ApacheBinder();
+        Binder binder = ContinuumXmlRpcBinder.getInstance();
 
         ConnectionInfo connectionInfo = new ConnectionInfo();
         connectionInfo.setUsername( login );

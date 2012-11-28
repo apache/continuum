@@ -19,11 +19,11 @@ package org.apache.continuum.distributed.transport.master;
  * under the License.
  */
 
-import com.atlassian.xmlrpc.ApacheBinder;
 import com.atlassian.xmlrpc.Binder;
 import com.atlassian.xmlrpc.BindingException;
 import com.atlassian.xmlrpc.ConnectionInfo;
 import org.apache.continuum.distributed.commons.utils.ContinuumDistributedUtil;
+import org.apache.continuum.distributed.commons.utils.ContinuumXmlRpcBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,7 @@ public class MasterBuildAgentTransportClient
     public MasterBuildAgentTransportClient( URL serviceUrl, String login, String password )
         throws Exception
     {
-        Binder binder = new ApacheBinder();
+        Binder binder = ContinuumXmlRpcBinder.getInstance();
 
         ConnectionInfo connectionInfo = new ConnectionInfo();
         connectionInfo.setUsername( login );

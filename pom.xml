@@ -747,6 +747,17 @@
       </dependency>
       <dependency>
         <groupId>com.atlassian.xmlrpc</groupId>
+        <artifactId>atlassian-xmlrpc-binder-support</artifactId>
+        <version>${atlassian.xmlrpc.binder.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.atlassian.xmlrpc</groupId>
         <artifactId>atlassian-xmlrpc-binder</artifactId>
         <version>${atlassian.xmlrpc.binder.version}</version>
         <exclusions>
@@ -759,21 +770,6 @@
       <dependency>
         <groupId>com.atlassian.xmlrpc</groupId>
         <artifactId>atlassian-xmlrpc-binder-server-spring</artifactId>
-        <version>${atlassian.xmlrpc.binder.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.atlassian.xmlrpc</groupId>
-        <artifactId>atlassian-xmlrpc-binder-client-apache</artifactId>
         <version>${atlassian.xmlrpc.binder.version}</version>
         <exclusions>
           <exclusion>
@@ -882,6 +878,11 @@
         <artifactId>continuum-buildagent-webapp</artifactId>
         <version>${project.version}</version>
         <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-distributed-commons</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
@@ -1350,6 +1351,12 @@
         <groupId>commons-httpclient</groupId>
         <artifactId>commons-httpclient</artifactId>
         <version>3.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.codehaus.redback</groupId>

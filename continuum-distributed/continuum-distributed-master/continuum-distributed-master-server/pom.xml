@@ -40,7 +40,6 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-distributed-commons</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
