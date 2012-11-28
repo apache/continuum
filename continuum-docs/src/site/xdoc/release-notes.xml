@@ -23,9 +23,9 @@
   </properties>
   <body>
 
-    <h2>Apache Continuum 1.4.0 Release Notes</h2>
+    <h1>Apache Continuum 1.4.1 Release Notes</h1>
 
-    <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.0.</p>
+    <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.1.</p>
 
     <p>This release includes the following new features:</p>
 
@@ -39,8 +39,273 @@
       <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.
     </p>
 
-    <h2>Bug
+    <h2>        Bug
     </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1569'>CONTINUUM-1569</a>] -         Release of a flat structure multi-module project doesn&#39;t work
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1689'>CONTINUUM-1689</a>] -         Bad string replacement of entities in build result
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2003'>CONTINUUM-2003</a>] -         Edit roles deletes all existing roles when sharing a user database
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2346'>CONTINUUM-2346</a>] -         NPE in log on forced build and project never builds
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2384'>CONTINUUM-2384</a>] -         Cannot download from distributed build working directory
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2420'>CONTINUUM-2420</a>] -         missing default values of scm tag, preparation goals and release perform goals when distributed build is enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2436'>CONTINUUM-2436</a>] -         Scheduled Build occurs even when Always Build = false and no changes have occurred
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2443'>CONTINUUM-2443</a>] -         adding duplicate build agent  with trailing whitespace should not be allowed
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2454'>CONTINUUM-2454</a>] -         Failed to build a shell project when &#39;distributed builds&#39; is enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2500'>CONTINUUM-2500</a>] -         Problems with quotation marks in projectgroup names
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2503'>CONTINUUM-2503</a>] -         &#39;Triggered by&#39; should not be blank when it&#39;s a scheduled build
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2507'>CONTINUUM-2507</a>] -         Error releasing project with POM encoded in UTF-8 with BOM
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2508'>CONTINUUM-2508</a>] -         Invalid web.xml in continuum-distrubuted-tests module
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2510'>CONTINUUM-2510</a>] -         Experiencing slow performance when there are many roles
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2519'>CONTINUUM-2519</a>] -         Database upgrade script fails
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2520'>CONTINUUM-2520</a>] -         NullPointerException in org.apache.maven.continuum.notification.mail.MailContinuumNotifier
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2531'>CONTINUUM-2531</a>] -         Cannot change DEFAULT local repository via settings.xml in Windows 7
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2532'>CONTINUUM-2532</a>] -         Editing Build Definition doesn&#39;t reflect changes when saved
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2533'>CONTINUUM-2533</a>] -         UpdateWorkingCopyPhaseTest fails in continuum-release, file url is incorrect
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2538'>CONTINUUM-2538</a>] -         [Regression] Unable to release using provide parameters
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2543'>CONTINUUM-2543</a>] -         LDAP integration and empty passwords
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2547'>CONTINUUM-2547</a>] -         French I18n : typos
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2552'>CONTINUUM-2552</a>] -         JDOException when deleting a project
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2554'>CONTINUUM-2554</a>] -         Forced directory purges should show up in the audit log
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2563'>CONTINUUM-2563</a>] -         &#39;--non-recursive&#39; argument is not stripped in project&#39;s build definition if project was added to an existing project group with &#39;For multi-module project, load only root as recursive build&#39; selected
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2568'>CONTINUUM-2568</a>] -         Exception when calling  &#39;continuumXmlRpcClient.getReleaseResultsForProjectGroup(projectGroupId)&#39;
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2569'>CONTINUUM-2569</a>] -         No continuum release result was created when releasing from continuumxmlrpc
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2571'>CONTINUUM-2571</a>] -         Error in changelog when preparing build with distributed build enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2581'>CONTINUUM-2581</a>] -         Unable to release with distributed builds enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2584'>CONTINUUM-2584</a>] -         Unable to save the Description of Build Definition when creating build defintion using xmlrpc
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2587'>CONTINUUM-2587</a>] -         Able to set distributed builds in the configuration file of continuum.
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2591'>CONTINUUM-2591</a>] -         Git based maven2 builds can&#39;t properly release or checkout on branch
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2595'>CONTINUUM-2595</a>] -         Unable to retrieve projects in continuum through xmlrpc when distributed builds is enabled.
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2603'>CONTINUUM-2603</a>] -         CSRF vulnerability - Continuum doesn&#39;t check which form sends credentials
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2604'>CONTINUUM-2604</a>] -         extremecomponents table should use autoIncludeParameters=&quot;false&quot;
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2607'>CONTINUUM-2607</a>] -         Continuum Build Agent fails to update the project from checkout when a &quot;Null values aren&#39;t supported&quot; is encountered during a build.
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2608'>CONTINUUM-2608</a>] -         username and password are missing when doing a checkout from svn even if useCredentialsCache is set to false.
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2609'>CONTINUUM-2609</a>] -         Unable to delete a project, getting an invalid group id
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2610'>CONTINUUM-2610</a>] -         Profiles are not activated during release
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2616'>CONTINUUM-2616</a>] -         Project state is still building after cancelling a build with distributed builds enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2619'>CONTINUUM-2619</a>] -         Continuum Release scm comment prefix needs to insert whitespace on all commit messages
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2626'>CONTINUUM-2626</a>] -         Email Notification not sent when Distributed Build enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2627'>CONTINUUM-2627</a>] -         Unable to add a project that are in private Github repositories
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2628'>CONTINUUM-2628</a>] -         Continuum uses SCM credentials provided on project add when checking out and updating working copy during project build and during release:prepare when using GIT and SSH in SCM urls
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2631'>CONTINUUM-2631</a>] -         Continuum doesn&#39;t work with MySQL
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2641'>CONTINUUM-2641</a>] -         Exceptions thrown by ContinuumXmlRpcClient when used by multiple threads
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2643'>CONTINUUM-2643</a>] -         Intermittent problem encountered when building projects with distributed builds
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2645'>CONTINUUM-2645</a>] -         Project group was not removed from queue via XMLRPC cancelBuild
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2646'>CONTINUUM-2646</a>] -         Project group was not removed from queue via XMLRPC cancelBuild
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2648'>CONTINUUM-2648</a>] -         Project build is sometimes distributed to the wrong agent
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2650'>CONTINUUM-2650</a>] -         Unable to get the correct build agent url via XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2656'>CONTINUUM-2656</a>] -         Distributed build may never return
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2657'>CONTINUUM-2657</a>] -         Build agent installations should overwrite the installations from the Master when doing a release
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2660'>CONTINUUM-2660</a>] -         A message was logged saying I &#39;Added a build definition&#39; even when I tried to edit one.
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2663'>CONTINUUM-2663</a>] -         Release trying to use the wrong agent
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2666'>CONTINUUM-2666</a>] -         NPE when removing build agent group via XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2670'>CONTINUUM-2670</a>] -         Modifying a project level build definition from the Build Definitions Summary tab results in errors
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2672'>CONTINUUM-2672</a>] -         when a user has the &quot;manage scheduling&quot; role, they are listed as a project administrator/developer on the members tab, even if they are not a developer/administrator of that project.
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2673'>CONTINUUM-2673</a>] -         Failure to do a release rollback should display the error message in the page
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2675'>CONTINUUM-2675</a>] -         ContinuumObjectNotFoundException when deleting build results
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2683'>CONTINUUM-2683</a>] -         Project in group already in queued can cause other group projects not to be queued
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2684'>CONTINUUM-2684</a>] -         defaultStack requires a stronger blacklist of parameter names in the param interceptor
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2687'>CONTINUUM-2687</a>] -         preparing subsequent releases appends timestamp to ID, but never lists them for performing
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2688'>CONTINUUM-2688</a>] -         Build definition goals won&#39;t accept Maven goals with a group ID
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2689'>CONTINUUM-2689</a>] -         release error page incorrectly displayed for unexpected exceptions
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2691'>CONTINUUM-2691</a>] -         validation of build file for Ant build definitions is too strict
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2692'>CONTINUUM-2692</a>] -         if validation fails on an Ant build definition, you are sent to the Maven page
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2693'>CONTINUUM-2693</a>] -         File handle leak with TCP connections in CLOSE_WAIT when using distributed builds
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2694'>CONTINUUM-2694</a>] -         no need to persist configuration changes to database
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2696'>CONTINUUM-2696</a>] -         Attempting to enable a build agent that is down will remove it from the list
+      </li>
+    </ul>
+
+    <h2>        Improvement
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1586'>CONTINUUM-1586</a>] -         Oracle DB use in Continuum
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2025'>CONTINUUM-2025</a>] -         Improve description of Build Environments and Installations
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2044'>CONTINUUM-2044</a>] -         Build agent should only accept requests from its master
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2131'>CONTINUUM-2131</a>] -         An unconfigured build agent should not be enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2193'>CONTINUUM-2193</a>] -         Add option to check out a multi-module project into a single working directory
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2202'>CONTINUUM-2202</a>] -         Do not show subversion password in plain text
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2286'>CONTINUUM-2286</a>] -         Run prepare builds/scm update in parallel
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2483'>CONTINUUM-2483</a>] -         Build agents should be enabled by default
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2499'>CONTINUUM-2499</a>] -         Updated and corrected jboss-web.xml files
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2549'>CONTINUUM-2549</a>] -         Overload ContinuumService.addMavenTwoProject() just like that of Continuum interface
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2551'>CONTINUUM-2551</a>] -         Ability to build project as a forced build in XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2553'>CONTINUUM-2553</a>] -         Log more information when purging directories
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2561'>CONTINUUM-2561</a>] -         Ability to check if project is in prepare build queue from Continuum&#39;s XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2562'>CONTINUUM-2562</a>] -         Add support for adding M2 projects non-recursively (instead of one Continuum project per module) from web services
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2565'>CONTINUUM-2565</a>] -         Ability to release a project in XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2572'>CONTINUUM-2572</a>] -         add new methods in continuum build agent for easier checking if projectgroup is in prepare build queue or currently preparing build
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2582'>CONTINUUM-2582</a>] -         Ability to check if project is in queue or currently preparing build/building with distributed builds enabled
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2586'>CONTINUUM-2586</a>] -         &quot;Maven 2.0.x&quot; label is misleading with the advent of Maven 3
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2592'>CONTINUUM-2592</a>] -         Ability for build agent to use installations in its config file
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2599'>CONTINUUM-2599</a>] -         Ability for Continuum XMLRPC to be able to retrieve Individual Build Agent&#39;s Installations
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2602'>CONTINUUM-2602</a>] -         Ability to retrieve projects release and development versions through XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2617'>CONTINUUM-2617</a>] -         Provide method to cancel a project build using the xmlrpc client
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2625'>CONTINUUM-2625</a>] -         Expose ProjectScmRoot methods in the xml-rpc interface
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2633'>CONTINUUM-2633</a>] -         Enable DB caching
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2637'>CONTINUUM-2637</a>] -         Ability to ping build agent through continuum master xmlrpc
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2638'>CONTINUUM-2638</a>] -         Add more logging in Continuum distributed builds
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2639'>CONTINUUM-2639</a>] -         Ability to do user management through xmlrpc
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2640'>CONTINUUM-2640</a>] -         Add &lt;sharedSecretPassword&gt; in build agent configuration
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2644'>CONTINUUM-2644</a>] -         Ability to retrieve url of build agent executing a project via XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2651'>CONTINUUM-2651</a>] -         Include the build agent url in the build result that is returned using XMLRPC
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2654'>CONTINUUM-2654</a>] -         Ability to create a build environment, with build agent groups and installations via xmlrpc
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2658'>CONTINUUM-2658</a>] -         Support purging of working and release directories of build agents on a schedule
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2659'>CONTINUUM-2659</a>] -         Improve error message returned when failed to add a project via xmlrpc
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2662'>CONTINUUM-2662</a>] -         Display the build agent url in the build result
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2667'>CONTINUUM-2667</a>] -         Allow underscore ( _ ) in project group id
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2668'>CONTINUUM-2668</a>] -         Ability to retrieve build agents with their installations in a single call
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2674'>CONTINUUM-2674</a>] -         Add a role for managing distributed builds
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2679'>CONTINUUM-2679</a>] -         Apache project branding requirements: DOAP file [PATCH]
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2685'>CONTINUUM-2685</a>] -         Use the default build agent for a project if no build environment is given on release
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2686'>CONTINUUM-2686</a>] -         list of previously prepared releases should not depend on build agent state
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2690'>CONTINUUM-2690</a>] -         Update to Jetty 8
+      </li>
+    </ul>
+
+    <h2>        New Feature
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2188'>CONTINUUM-2188</a>] -         Update Policy for BuilDefinition
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2521'>CONTINUUM-2521</a>] -         builds report page
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2545'>CONTINUUM-2545</a>] -         Add WebDAV interface to continuum build agent for displaying the working copies
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2593'>CONTINUUM-2593</a>] -         Webservice for adding/registering, updating, removing, retrieving build agents in continuum
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2597'>CONTINUUM-2597</a>] -         Webservice for getting platform of build agent
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2600'>CONTINUUM-2600</a>] -         Include in webservice to also return platform of buildagent when retrieving a buildagent or list of buildagents
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2611'>CONTINUUM-2611</a>] -         Ability to specify the value of useCredentialCached when adding a maven two project using the ContinuumXmlRpcClient
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2632'>CONTINUUM-2632</a>] -         Secure working copies of Continuum build agents
+      </li>
+    </ul>
+
+    <h2>        Task
+    </h2>
+    <ul>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2613'>CONTINUUM-2613</a>] -         Add xmlrpc service method overload for buildProject that accepts projectId, buildDefinitionId, and buildTrigger as the parameters
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2620'>CONTINUUM-2620</a>] -         Fix XSS vulnerability in Continuum
+      </li>
+      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2642'>CONTINUUM-2642</a>] -         Features page needs some love
+      </li>
+    </ul>
+
+    <h1>Changes in Apache Continuum 1.4.0 (Beta)</h1>
+
+    <h2>Bug</h2>
     <ul>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1578'>CONTINUUM-1578</a>] - No output after a successful
         perform release
