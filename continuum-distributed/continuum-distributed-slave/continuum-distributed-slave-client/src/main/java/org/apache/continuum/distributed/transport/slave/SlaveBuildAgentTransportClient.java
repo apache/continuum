@@ -140,7 +140,7 @@ public class SlaveBuildAgentTransportClient
     public Map<String, Object> getProjectCurrentlyBuilding()
         throws Exception
     {
-        Map map;
+        Map<String, Object> map;
 
         try
         {
@@ -220,7 +220,7 @@ public class SlaveBuildAgentTransportClient
     public Map<String, Object> getProjectFile( int projectId, String directory, String filename )
         throws Exception
     {
-        Map result;
+        Map<String, Object> result;
 
         try
         {
@@ -304,7 +304,7 @@ public class SlaveBuildAgentTransportClient
     public Map<String, Object> getReleaseResult( String releaseId )
         throws Exception
     {
-        Map result;
+        Map<String, Object> result;
 
         try
         {
@@ -322,10 +322,10 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public Map getListener( String releaseId )
+    public Map<String, Object>  getListener( String releaseId )
         throws Exception
     {
-        Map result;
+        Map<String, Object> result;
 
         try
         {

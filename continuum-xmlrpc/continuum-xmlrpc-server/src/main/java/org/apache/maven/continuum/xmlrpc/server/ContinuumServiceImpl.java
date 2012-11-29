@@ -3897,7 +3897,7 @@ public class ContinuumServiceImpl
 
             if ( continuum.getConfiguration().isDistributedBuildEnabled() )
             {
-                Map map = continuum.getDistributedReleaseManager().getListener( releaseId );
+                Map<String, Object> map = continuum.getDistributedReleaseManager().getListener( releaseId );
                 return processListenerMap( map );
             }
             else
@@ -4075,7 +4075,7 @@ public class ContinuumServiceImpl
         }
     }
 
-    private ReleaseListenerSummary processListenerMap( Map context )
+    private ReleaseListenerSummary processListenerMap( Map<String, Object> context )
     {
         ReleaseListenerSummary listenerSummary = new ReleaseListenerSummary();
         Object value = context.get( "release-in-progress" );

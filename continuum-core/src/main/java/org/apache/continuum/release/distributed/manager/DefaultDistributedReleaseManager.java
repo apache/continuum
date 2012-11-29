@@ -262,7 +262,7 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    public Map getListener( String releaseId )
+    public Map<String, Object> getListener( String releaseId )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );

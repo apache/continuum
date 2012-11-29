@@ -68,7 +68,7 @@ public interface SlaveBuildAgentTransportService
     public Map<String, Object> getReleaseResult( String releaseId )
         throws Exception;
 
-    public Map getListener( String releaseId )
+    public Map<String, Object> getListener( String releaseId )
         throws Exception;
 
     public Boolean removeListener( String releaseId )

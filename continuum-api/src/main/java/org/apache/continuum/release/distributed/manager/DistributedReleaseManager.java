@@ -46,7 +46,7 @@ public interface DistributedReleaseManager
     ReleaseResult getReleaseResult( String releaseId )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
-    Map getListener( String releaseId )
+    Map<String, Object> getListener( String releaseId )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     void removeListener( String releaseId )
