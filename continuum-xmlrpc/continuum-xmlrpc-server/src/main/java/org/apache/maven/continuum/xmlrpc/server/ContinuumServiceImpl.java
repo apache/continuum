@@ -4137,6 +4137,14 @@ public class ContinuumServiceImpl
         {
             list.addAll( Arrays.asList( (String[]) obj ) );
         }
+        else if ( obj instanceof Object[] )
+        {
+            // fallback needed since XMLRPC to the build agent will return a List<String> as Object[]
+            for ( Object o : (Object[]) obj )
+            {
+                list.add( (String) o );
+            }
+        }
         else
         {
             list = (List<String>) obj;
