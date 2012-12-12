@@ -98,7 +98,7 @@ import java.util.Set;
 public class ContinuumServiceImpl
     extends AbstractContinuumSecureService
 {
-    private static final String NAME_VALID_EXPRESSION = "[A-Za-z0-9_.\\s\\-():]*";
+    private static final String NAME_VALID_EXPRESSION = "[A-Za-z0-9_.\\s\\-():\\/,]*";
 
     private static final String DIRECTORY_VALID_EXPRESSION = "[A-Za-z0-9_/\\s:.\\\\-]*";
 

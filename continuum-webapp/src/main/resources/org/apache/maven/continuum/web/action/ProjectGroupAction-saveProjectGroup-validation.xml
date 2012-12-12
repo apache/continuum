@@ -27,7 +27,7 @@
       <message key="projectGroup.name.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-():]*]]></param>
+      <param name="expression"><![CDATA[[A-Za-z0-9_.\s\-():\/,]*]]></param>
       <message key="projectGroup.name.invalid"/>
     </field-validator>
   </field>
