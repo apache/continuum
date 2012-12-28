@@ -41,6 +41,7 @@
     <item name="Add a Project" ref="user_guides/managing_project/addProject.html"/>
     <item name="Edit a Project" ref="user_guides/managing_project/editProject.html"/>
     <item name="Remove a Project" ref="user_guides/managing_project/removeProject.html"/>
+    <item name="Working Copy" ref="user_guides/managing_project/workingCopy.html"/>
     <item name="Managing Build Definitions" ref="user_guides/managing_builddef/index.html"/>
     <item name="Project Build Definition" ref="user_guides/managing_builddef/builddefProject.html"/>
     <item name="Project Group Build Definition" ref="user_guides/managing_builddef/builddefGroup.html"/>
@@ -58,14 +59,14 @@
     <item name="Prepare Project Release" ref="user_guides/release/prepare.html"/>
     <item name="Perform Project Release" ref="user_guides/release/perform.html"/>
     <item name="Release Results Management" ref="user_guides/release/release_results.html"/>
+    <item name="Project Builds Report" ref="user_guides/report/index.html"/>
 
     <item name="Administrator's Guides" ref="administrator_guides/index.html"/>
     <item name="Managing Users and Security" ref="administrator_guides/security/index.html"/>
     <item name="Security Configuration" ref="administrator_guides/security/customising-security.html"/>
     <item name="LDAP Configuration" ref="administrator_guides/security/ldap.html"/>
     <item name="Managing Project Groups" ref="administrator_guides/projectgroup.html"/>
-    <item name="Managing Builders" ref="administrator_guides/builder.html"/>
-    <item name="Managing JDKs" ref="administrator_guides/jdk.html"/>
+    <item name="Managing Installations" ref="administrator_guides/builder.html"/>
     <item name="Managing Build Environments" ref="administrator_guides/profiles.html"/>
     <item name="Managing Schedules" ref="administrator_guides/schedules.html"/>
     <item name="Managing General Configuration" ref="administrator_guides/configuration.html"/>
