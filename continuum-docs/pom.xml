@@ -28,23 +28,27 @@
   <artifactId>continuum-docs</artifactId>
   <name>Continuum :: Documentation</name>
   <packaging>pom</packaging>
-  <url>http://continuum.apache.org/docs/${project.version}</url>
+  <url>http://continuum.apache.org/docs/latest</url>
   <distributionManagement>
     <site>
       <id>apache</id>
-      <url>scp://people.apache.org/www/continuum.apache.org/docs/${project.version}</url>
+      <url>scm:svn:${svnUrl}</url>
     </site>
   </distributionManagement>
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <configuration>
+            <templateDirectory>${basedir}/src/site</templateDirectory>
+            <template>continuum-site.vm</template>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <templateDirectory>${basedir}/src/site</templateDirectory>
-          <template>continuum-site.vm</template>
-        </configuration>
-      </plugin>
       <plugin>
         <artifactId>maven-pdf-plugin</artifactId>
         <executions>
@@ -89,4 +93,7 @@
       </plugin>
     </plugins>
   </reporting>
+  <properties>
+    <svnUrl>https://svn.apache.org/repos/asf/continuum/site-publish/docs/latest</svnUrl>
+  </properties>
 </project>

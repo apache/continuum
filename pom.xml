@@ -52,7 +52,7 @@
     <slf4jVersion>1.5.8</slf4jVersion>
     <xmlrpc.version>3.1.2</xmlrpc.version>
     <atlassian.xmlrpc.binder.version>0.11</atlassian.xmlrpc.binder.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <svnUrl>https://svn.apache.org/repos/asf/continuum/site-publish/ref/latest</svnUrl>
   </properties>
 
   <scm>
@@ -60,12 +60,14 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk</developerConnection>
     <url>http://svn.apache.org/viewvc/continuum/trunk/</url>
   </scm>
+<!-- TODO: need to configure differently as it mucks up the links in continuum-docs
   <distributionManagement>
     <site>
-      <id>apache.website</id>
-      <url>scp://people.apache.org/www/continuum.apache.org/ref/${project.version}</url>
+      <id>apache</id>
+      <url>scm:svn:${svnUrl}</url>
     </site>
   </distributionManagement>
+-->
   <reporting>
     <plugins>
       <plugin>
