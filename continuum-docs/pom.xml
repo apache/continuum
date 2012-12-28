@@ -46,6 +46,13 @@
             <template>continuum-site.vm</template>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <configuration>
+            <pubScmUrl>scm:svn:${svnUrl}</pubScmUrl>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>

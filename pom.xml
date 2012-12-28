@@ -60,14 +60,6 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk</developerConnection>
     <url>http://svn.apache.org/viewvc/continuum/trunk/</url>
   </scm>
-<!-- TODO: need to configure differently as it mucks up the links in continuum-docs
-  <distributionManagement>
-    <site>
-      <id>apache</id>
-      <url>scm:svn:${svnUrl}</url>
-    </site>
-  </distributionManagement>
--->
   <reporting>
     <plugins>
       <plugin>
@@ -201,6 +193,15 @@
           <groupId>org.mortbay.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <version>${jetty.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <configuration>
+            <!-- Note: we use this instead of distributionManagement as that currently impacts the URLs that are
+                 inherited in continuum-docs -->
+            <pubScmUrl>scm:svn:${svnUrl}</pubScmUrl>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
