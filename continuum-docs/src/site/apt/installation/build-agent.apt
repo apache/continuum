@@ -109,7 +109,7 @@ continuum-buildagent.bat console
 
     [[1]] a <<<appserver.base>>> system property
 
-    [[2]] a <<<continuum-buildagent.xml>>> configuration file in <<<${appserver.base}/conf>>>
+    [[2]] a <<<continuum-buildagent.xml>>> configuration file in <<<$\{appserver.base\}/conf>>>
 
     [[3]] a working area with <<<logs>>> and <<<temp>>> directories
 
@@ -117,8 +117,8 @@ continuum-buildagent.bat console
   the {{{./tomcat.html#Configure_the_appserver.base_Java_system_property} same instructions as those shown for Continuum}}.
 
   Next, create the <<<continuum-buildagent.xml>>> file as shown in the Standalone section above, and save it in
-  <<<${appserver.base}/conf>>>. You will need to create these directories, as well as <<<${appserver.base}/logs>>> and
-  <<<${appserver.base}/temp>>>.
+  <<<$\{appserver.base\}/conf>>>. You will need to create these directories, as well as <<<$\{appserver.base\}/logs>>>
+  and <<<$\{appserver.base\}/temp>>>.
 
   Finally, drop the web application into your container, and start it.
 
