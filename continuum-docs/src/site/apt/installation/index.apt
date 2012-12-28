@@ -10,12 +10,22 @@ Installation/Upgrade Guides
 
     In this section, you'll find information about Continuum installations:
 
-    * {{{./requirements.html}System Requirements}}
+    * {{{./standalone.html}Installing as a standalone service (Linux, Mac OSX, Solaris, Windows, others)}}
 
-    * {{{./installation/standalone.html}Installing as a standalone service (Linux, Mac OSX, Solaris, Windows, others)}}
-
-    * {{{./installation/tomcat.html}Installing the Web Application under a Tomcat server}}
+    * {{{./tomcat.html}Installing the Web Application under a Tomcat server}}
 
     * {{{./upgrade.html}How to upgrade from a previous version?}}
 
     * {{{./build-agent.html}Installation of Build Agent for Distributed Builds}}
+
+System Requirements
+
+*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
+|  <<JDK>>             | 1.5 or above                                                                                                                   |
+*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
+| <<Memory>>           | No minimum requirement                                                                                                         |
+*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
+| <<Disk>>             | The Continuum application package is less than 30MB but will use more disk space when it's checking out and building sources   |
+*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
+| <<Operating System>> | No minimum requirement. Tested on Windows XP, Debian, Fedora Core, Solaris and Mac OS X                                        |
+*----------------------+--------------------------------------------------------------------------------------------------------------------------------+

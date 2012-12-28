@@ -30,7 +30,6 @@
     <item name="Getting Started" ref="getting-started.html"/>
 
     <item name="Installation/Upgrade Guides" ref="installation/index.html"/>
-    <item name="System Requirements" ref="installation/requirements.html"/>
     <item name="Installing Standalone" ref="installation/standalone.html"/>
     <item name="Installing in Tomcat" ref="installation/tomcat.html"/>
     <item name="Upgrade" ref="installation/upgrade.html"/>
