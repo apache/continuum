@@ -13,9 +13,9 @@ Getting Started
 
     After unpacking the binary distribution, run the following command from the <<<bin>>> directory:
 
-====
+----
 continuum console
-====
+----
 
     Continuum will be started from the command line and run until quit with Ctrl-C. For more instructions on installing
     Continuum as a service or under an existing application server, refer to the {{{./installation/index.apt}
