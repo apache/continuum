@@ -10,7 +10,7 @@ Installing Continuum Standalone
 
 ~~%{toc|section=0}
 
-* {Basics & Fundamentals}
+* {Download and Configuration}
 
     * Download the standalone version from the {{{http://continuum.apache.org/download.html} Download page}}
 
@@ -22,16 +22,36 @@ Installing Continuum Standalone
 
 *** {Mail server configuration}
 
-    Before you start Continuum, you must configure your SMTP configuration for mail notification. The configuration is in <<<$CONTINUUM_HOME/contexts/continuum.xml>>>:
+    Before you start Continuum, you must configure your SMTP configuration for mail notification. In many servers, the
+    default of delivering to localhost with no authentication will be properly relayed. However, if you need to
+    configure a different SMTP server, the configuration is in <<<$CONTINUUM_HOME/contexts/continuum.xml>>>:
 
 %{snippet|id=mail|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/contexts/continuum.xml}
 
-*** {Databases configuration}
+*** {Database configuration}
 
-    By default, Continuum use an embedded {{{http://db.apache.org/derby}Derby}} database. If you want to use an other database, you can modify the JNDI
-    configuration in <<<$CONTINUUM_HOME/contexts/continuum.xml>>>:
+    By default, Continuum use an embedded {{{http://db.apache.org/derby}Derby}} database. If you want to use a different
+    database, you can modify the JNDI configuration in <<<$CONTINUUM_HOME/contexts/continuum.xml>>>:
 
 %{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/contexts/continuum.xml}
+
+    Please refer to the documentation for your JDBC driver for the correct settings to use. You may need to alter the
+    <<<validationQuery>>> to one that can successfully execute on your database (or remove the setting if you do not
+    want to validate connections before using them).
+
+    Refer to the {{{http://commons.apache.org/dbcp/} Commons DBCP}} documentation for more advanced configuration of the
+    connection pool.
+
+** Testing the Configuration
+
+  Start Continuum from the console in the <<<$CONTINUUM_HOME/bin/>>> directory:
+
+----
+continuum console
+----
+
+  If it appears to be working correctly, it is a good idea to set it up as a service so that it will run in the
+  background under a suitable role account, and can be set to start whenever the server has started.
 
 * {Installing as a Windows Service}
 
@@ -43,7 +63,7 @@ continuum.bat install
 
     * Edit the <<Apache Continuum>> service
 
-        * To see the services that are on your computer go to Start|Run and enter <<<services.msc>>>.
+        * To see the services that are on your computer go to <Start>|<Run> and enter <<<services.msc>>>.
 
     * Select the <<Startup Type>>
 
@@ -56,28 +76,21 @@ continuum.bat install
     Since the Continuum Linux script <<<bin/continuum>>> understands the same arguments as Linux boot scripts, there is no need to write a particular
     startup script to add Continuum to the Linux boot process. All you need to do, as root, is:
 
-** {Basic script in /etc/init.d}
-
-    * Create a <<<continuum>>> file under <<</etc/init.d/>>> with the following content. Replace <<<continuum_user>>> with the name of an account you have already created.
-
-------------------
-#!/bin/sh
-
-CONTINUUM_HOME=/opt/continuum-1.3
-su - continuum_user -c "$CONTINUUM_HOME/bin/continuum console $@ &"
-------------------
-
-** {On a Debian-based system}
-
 ------------------
 ln -s /usr/local/continuum-[VERSION]/bin/continuum /etc/init.d/continuum
 ------------------
 
-    At this point you have Continuum ready to be symlinked from different runlevels. This might sound a bit esoteric, but it is not. You will find these words
-    very fast as soon as you start reading about the init process. Fortunately, Debian GNU/Linux comes with a very handy utility to create these links, just run as root:
+   This will allow you to run <<<service continuum start>>> and other commands.
+
+   To have the service start on boot, follow the instructions below for your particular family of operating system.
+
+** {On a Debian-based system}
+
+    At this point you have Continuum ready to be symlinked from different runlevels. Debian GNU/Linux comes with a very
+    handy utility to create these links, just run as root:
 
 ------------------
-update-rc.d -n continuum defaults 80
+update-rc.d continuum defaults 80
 ------------------
 
     If you run this command, you will see something like this:
@@ -93,66 +106,21 @@ update-rc.d -n continuum defaults 80
    /etc/rc5.d/S80continuum -> ../init.d/continuum
 ------------------
 
-    What you see is the symlinks that would be created. The above command didn't actually create anything because of the -n  switch. Remove that switch and run the command again to have the real links created.
+    What you see is the symlinks that would be created.
 
 ** {On a RedHat-based system}
 
-    Configuring Continuum on a RedHat-based system (like Fedora Core) is slightly different. Instead of running <<<update-rc.d>>>, you need to add a new
-    service using the <<<chkconfig>>> command. In order to add Continuum using <<<chkconfig>>>, it is necessary to add some comments to the <<</etc/rc.d/init.d/continuum>>> script
-    and run a couple of commands. These tasks are executed by running the <<<chkconfig_install.sh>>> script below. Note that <<<_continuum_user_>>> needs to be
-    replaced by the name of an account you have already created.
+    Configuring Continuum on a RedHat-based system (like Fedora Core) is slightly different. Instead of running
+    <<<update-rc.d>>>, you need to add a new service using the <<<chkconfig>>> command.
 
 ------------------
-#! /bin/sh
-#
-# chkconfig_install.sh - install Continuum on a chkconfig-based system
-#
-# Author: Felipe Leme <felipeal at apache.org>
-#
-
-# figure out what's Continuum's directory
-CONTINUUM_HOME=`dirname $0`
-cd ${CONTINUUM_HOME}
-CONTINUUM_HOME=`pwd`
-
-INITD_SCRIPT=/etc/rc.d/init.d/continuum
-
-if [ -f ${INITD_SCRIPT} ]
-then
-  echo "File ${INITD_SCRIPT} already exists. Please remove it and try again."
-  exit 1
-fi
-
-echo "Creating file ${INITD_SCRIPT}"
-cat >> ${INITD_SCRIPT} <<EOF
-#! /bin/sh
-# chkconfig: 345 90 10
-# description: Apache Continuum server
-
-# uncoment to set JAVA_HOME as the value present when Continuum installed
-#export JAVA_HOME=${JAVA_HOME}
-
-if [ -z "\${JAVA_HOME}" ]
-then
-  echo "Cannot manage Continuum without variable JAVA_HOME set"
-  echo "  (try to set it on file ${INITD_SCRIPT})"
-  exit 1
-fi
-# run Continuum as root
-cd ${CONTINUUM_HOME}
-./bin/continuum \$*
-# run Continuum as user _continuum_user_
-#su - _continuum_user_ -c "cd ${CONTINUUM_HOME}; ./bin/continuum \$*"
-EOF
-chmod +x ${INITD_SCRIPT}
-
-echo "Adding Continuum to chkconfig"
 chkconfig --add continuum
-
-echo "Enabling Continuum on chkconfig"
 chkconfig continuum on
-echo "Continuum set to start on run levels 3, 4 and 5."
-echo "To start Continuum now, run 'service continuum start'"
-
 ------------------
 
+* {Installing with Puppet}
+
+  If you use Puppet to manage your infrastructure, you can use a third-party Puppet module to install Continuum. This
+  will take care of adding the required users, databases and configuration based on official release tarballs.
+
+  * {{{https://github.com/maestrodev/puppet-continuum} Puppet module for Apache Continuum and Continuum build agents}}

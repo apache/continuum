@@ -1,0 +1,142 @@
+ ------
+ Upgrade
+ ------
+ Olivier Lamy
+ Emmanuel Venisse
+ ------
+ Sep 10 2008
+ ------
+
+Upgrading Continuum
+
+    This document will help you upgrade Continuum from 1.2.x to 1.3.3 and above.
+
+    When upgrading Continuum, it could have some database model changes. Usually these changes will be migrated for you,
+    but in some cases you may need to use a backup from the previous version and restore that data into the new version.
+    The Data Management tool exports data from the old database model and imports the data into the new database model.
+
+    If you had used the <<<APP_BASE>>> environment variable in Continuum 1.2 to differentiate your configuration from
+    the installation, you should rename it to <<<CONTINUUM_BASE>>> in Continuum 1.3.
+    
+* Changes to Take Note of in Continuum 1.4.x
+    
+    The Jetty version in Continuum 1.4.1 and above has been upgraded to 8.1.7. When upgrading to Continuum 1.4.1 or
+    higher, there is a need to update the contents of <<<$CONTINUUM_BASE/conf/wrapper.conf>>> to match the one included
+    in the new distribution if any copies or modifications have been made. The <<<jetty.xml>>> format has also changed,
+    and should be re-added from the distribution with any modifications previously made. It is no longer read from
+    <<<$CONTINUUM_BASE>>>, and JNDI connections can now be managed via the files in the <<<contexts>>> directory.
+
+* Changes to Take Note of in Continuum 1.3.x
+
+    The Jetty version in Continuum 1.3.4 and above has been upgraded to 6.1.19. When upgrading to Continuum 1.3.4 or
+    higher, there is a need to update the library contents listed in <<<$CONTINUUM_BASE/conf/wrapper.conf>>> with the
+    ones included in the new distribution especially if the <<<$CONTINUUM_BASE>>> directory is separate from the
+    installation.
+
+    In Continuum 1.3.6, configuration for local repositories in build agents were added. This is used to match the local
+    repository in the build agent to that of the local repository (used by the project to be built) set in the master.
+    So if you are upgrading from a lower version, you might need to add the <<<localRepositories>>> configuration in
+    your build agent's configuration file. For more details, read {{{./build-agent.html}Installing and Configuring a
+    Build Agent}}.
+
+* Using Backup and Restore to upgrade
+
+    There are 2 databases that need to be considered: one for the builds and one for the users.
+
+    While the databases typically auto-upgrade across releases, you may wish to perform an export and import to have
+    full control of the upgrade, make modifications to the data, or retain a backup in case a downgrade is needed.
+
+    First, download the Data Management tools you will need.  The tool is a standalone JAR that you can download from
+    the central repo.
+
+    You will need to download two versions of the tool, one for the export out of the old version and one for the import
+    into the new version:
+
+    <<Note:>> The 1.2, 1.2.2 and 1.2.3 released versions of this tool have a bug.
+     To export databases from 1.2.2 or 1.2.3, you will need to use version 1.2.3.1 of the tool.
+     To export databases from 1.2, you may use the 1.1 version of the tool.
+
+        * {{{http://repo1.maven.org/maven2/org/apache/continuum/data-management-cli/${project.version}/data-management-cli-${project.version}-app.jar} Data Management CLI for Continuum ${project.version}}}
+
+        * {{{http://repo1.maven.org/maven2/org/apache/continuum/data-management-cli/1.3.8/data-management-cli-1.3.8-app.jar} Data Management CLI for Continuum 1.3.8}}
+
+        * {{{http://repo1.maven.org/maven2/org/apache/continuum/data-management-cli/1.2.3.1/data-management-cli-1.2.3.1-app.jar} Data Management CLI for Continuum 1.2.x}}
+
+        * {{{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1/data-management-cli-1.1-app.jar} Data Management CLI for Continuum 1.1}}
+
+
+    Next, follow these steps to export data from the old version
+
+        * Stop the old version of Continuum
+
+        * Execute this command to create the <<<builds.xml>>> export file
+
++------------------------------------------+
+java -Xmx512m -jar data-management-cli-1.2.3.1-app.jar \
+  -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/databases/continuum \
+  -mode EXPORT \
+  -directory backups
++------------------------------------------+
+
+    Then, follow these steps to import the data to the new version
+
+        * Start the new version of Continuum to create the new data model, but do not configure it.
+
+        * Stop Continuum
+
+        * Execute this command to import the builds data from the XML file you created earlier:
+
++------------------------------------------+
+java -Xmx512m -jar data-management-cli-${project.version}-app.jar \
+  -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/continuum \
+  -mode IMPORT \
+  -directory backups -strict
++------------------------------------------+
+
+    <<Note:>> Remove <<<-strict>>> when importing data from 1.3.1 to 1.3.x to ignore unrecognized tags due to model
+    changes.
+
+    Finally, be aware that sometimes the <<<NEXT_VAL>>> values in the <<<SEQUENCE_TABLE>>> need to be adjusted. Before
+    starting Continuum for the first time after the import, connect to the database with a client like
+    {{{http://squirrel-sql.sourceforge.net/}Squirrel SQL}} and check the values in the <<<NEXT_VAL>>> column of the
+    <<<SEQUENCE_TABLE>>>.
+
+    Values must be greater than the max ID value in each table. For example, the next value of
+    <<<org.apache.maven.continuum.model.Project>>> must be greater than the greatest ID in <<<Project>>> table.
+
+    Here are some example SQL statements.  You may need to add or remove lines depending on the contents of your database.
+
++-----------------------------------------+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(systemconfiguration_id)+1 from SYSTEMCONFIGURATION)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.system.SystemConfiguration';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from BUILDQUEUE)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.BuildQueue';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from SCHEDULE)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.Schedule';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from BUILDDEFINITION)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.BuildDefinition';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from LOCALREPOSITORY)
+  WHERE SEQUENCE_NAME='org.apache.continuum.model.repository.LocalRepository';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from PROJECTGROUP)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.ProjectGroup';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(scmresult_id)+1 from SCMRESULT)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.scm.ScmResult';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(projectdependency_id)+1 from PROJECTDEPENDENCY)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.ProjectDependency';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from BUILDDEFINITIONTEMPLATE)
+  WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.BuildDefinitionTemplate';
+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from ABSTRACTPURGECONFIGURATION)
+  WHERE SEQUENCE_NAME='org.apache.continuum.model.repository.AbstractPurgeConfiguration';
++-----------------------------------------+
+
+    Now you can start your new version of Continuum.
+

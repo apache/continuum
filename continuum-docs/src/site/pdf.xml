@@ -33,6 +33,7 @@
     <item name="Installing Standalone" ref="installation/standalone.html"/>
     <item name="Installing in Tomcat" ref="installation/tomcat.html"/>
     <item name="Upgrade" ref="installation/upgrade.html"/>
+    <item name="Installing a Build Agent" ref="installation/build-agent.html"/>
 
     <item name="User's Guides" ref="user_guides/index.html"/>
     <item name="Managing Projects" ref="user_guides/managing_project/index.html"/>

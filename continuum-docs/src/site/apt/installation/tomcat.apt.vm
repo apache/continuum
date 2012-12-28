@@ -1,0 +1,143 @@
+ ------
+ Guide to Install Continuum on Tomcat
+ ------
+ Joakim Erdfelt
+ Emmanuel Venisse
+ ------
+ 2010-02-18
+ ------
+
+Guide to Install Continuum on Tomcat
+
+    Instructions for installing, deploying, configuring Continuum for the Apache Tomcat web container.
+
+~~%{toc|section=0}
+
+* {Server Configuration}
+
+    With every Tomcat version you will need a few things before you can deploy Continuum.
+
+    [[1]] Use at least Java JDK 1.5.0_11 to run Tomcat with Continuum.
+
+    [[2]] A defined <<<\<Context\>>>> xml section to define the JNDI resources.
+
+    [[3]] The JavaMail / Activation JAR files.
+
+    [[4]] The Apache Derby JAR files.
+
+    [[5]] Configure <<<$\{appserver.base\}>>> Java system property.
+
+** {Defining JNDI Resources}
+
+    Continuum will, on startup, ask the web container for a few JNDI configured resources, two JDBC DataSources, and one
+    JavaMail session.
+
+    To configure these JNDI resources in the Tomcat Web Container, you will need to specify a <<<\<Context\>>>> section
+    that Tomcat can utilize for those requests coming from Continuum.
+
+    Tomcat has several ways to accomplish this, with the most practical being to create a
+    <<<$CATALINA_HOME/conf/Catalina/localhost/continuum.xml>>> file containing a <<<\<Context\>>>> element.
+
+    The following are the JNDI names you will need to provide:
+
+      * <<<mail/Session>>>
+
+      * <<<jdbc/continuum>>>
+
+      * <<<jdbc/users>>>
+
+    The individual techniques for describing these resources, and the parameters associated with them are specific to
+    the Tomcat version, resource type, and even JDBC implementation type.
+
+    For the purposes of this document, the following assumptions are made.
+
+      [[1]] You are an Apache Tomcat administrator.
+
+      [[2]] You have an SMTP Server on localhost, port 25, with no login / password.
+
+      [[3]] You will be using the embedded Apache Derby database, rather than an external database.
+
+      [[4]] Details specific to Apache Tomcat, JavaMail, or Apache Derby are left for the reader to research on those
+            projects websites.
+
+** {The JavaMail / Activation JAR files}
+
+    <<Note:>> Continuum requires JavaMail 1.4 (or later)
+
+    Apache Tomcat does not typically ship with a copy of the JavaMail or Activation JAR files.
+    In your role as the Apache Tomcat administrator of your installation, you will need to obtain these JAR files and
+    place it into your preferred <<<lib>>> directory.
+
+    The appropriate <<<lib>>> directory to choose is a personal preference, and we do not encourage or enforce a
+    specific location for it, as all installations of Apache Tomcat are different.
+
+    For the record, we personally put them in the <<<$CATALINA_HOME/common/lib/>>> directory.
+
+    Direct download links for these JAR files.
+
+    * JavaMail 1.4 - {{{http://repo1.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar}mail-1.4.jar}}
+
+    * Java Activation Framework 1.1 - {{{http://repo1.maven.org/maven2/javax/activation/activation/1.1/activation-1.1.jar}activation-1.1.jar}}
+
+** {The Apache Derby JAR files}
+
+    <<Note:>>Continuum has been tested with Apache Derby 10.1.3.1
+
+    The default installation of Continuum uses the Apache Derby 100% Java database to maintain Continuum-specific
+    information, and also the Users / Security Database.
+
+    You will need to obtain <<<derby.jar>>> and place it into your preferred <<<lib>>> directory.
+
+    We put them into the <<<$CATALINA_HOME/common/lib/>>> directory.
+
+    Direct download links for this JAR file:
+
+    * Derby 10.1.3.1 - {{{http://repo1.maven.org/maven2/org/apache/derby/derby/10.1.3.1/derby-10.1.3.1.jar}derby-10.1.3.1.jar}}
+
+** {Configure the appserver.base Java system property}
+
+    The <<<$\{appserver.base\}>>> system property is used by the Continuum internal logging configuration to determine
+    where to output its logs to. It is important to define this property either in the <<<$CATALINA_OPTS>>> system
+    environment variable (if Tomcat is being launched via the command line) or the service properties (if being launched
+    as a service or daemon).
+
+    The format typically expected is <<<\-Dappserver.base=/path/to/continuum-base>>>
+
+    You can utilize the <<<$CATALINA_HOME/bin/setenv.sh>>> script to set this value in a Tomcat specific way.
+
+------------------------------------------
+#!/bin/bash
+# Keep the appserver.home and appserver.base values the same when running under Tomcat
+
+export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA_HOME"
+------------------------------------------
+
+** {Context XML Example}
+
+    The following context.xml has been tested on Tomcat v5.5.25 and Tomcat v6.0.14.
+
+------------------------------------------
+<Context path="/continuum" docBase="/path/to/continuum-webapp-${project.version}.war">
+
+  <Resource name="jdbc/users"
+            auth="Container"
+            type="javax.sql.DataSource"
+            username="sa"
+            password=""
+            driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
+            url="jdbc:derby:database/users;create=true" />
+
+  <Resource name="jdbc/continuum"
+            auth="Container"
+            type="javax.sql.DataSource"
+            username="sa"
+            password=""
+            driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
+            url="jdbc:derby:database/continuum;create=true" />
+
+  <Resource name="mail/Session"
+            auth="Container"
+            type="javax.mail.Session"
+            mail.smtp.host="localhost"/>
+</Context>
+------------------------------------------

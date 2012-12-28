@@ -33,6 +33,7 @@
         <item name="Installing in Tomcat" href="installation/tomcat.html"/>
         <item name="Release Notes" href="release-notes.html"/>
         <item name="Upgrade" href="installation/upgrade.html"/>
+        <item name="Installing a Build Agent" href="installation/build-agent.html"/>
       </item>
 
       <item name="User's Guides" collapse="true" href="user_guides/index.html">
