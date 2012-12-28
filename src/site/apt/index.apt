@@ -24,13 +24,11 @@ Apache Continuum Developer Documentation
  Welcome!  This site contains the developer documentation for Apache Continuum.  Here you will find Javadocs,
  FindBugs reports, information about our unit and functional tests, and some requirements docs.
 
-  {{{apidocs/index.html}Javadocs}}.
+  {{{./apidocs/index.html}Javadocs}}.
 
-  {{{findbugs.html}Findbugs Reports}}.
+  {{{,.architecture.html}Architecture}}.
 
-  {{{architecture.html}Architecture}}.
+  {{{,.requirements.html}Requirements}}.
 
-  {{{requirements.html}Requirements}}.
-
-  {{{continuum-webapp-test/index.html}Functional Tests}}.
+  {{{./continuum-webapp-test/index.html}Functional Tests}}.
   
