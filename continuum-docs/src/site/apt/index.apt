@@ -17,23 +17,17 @@ Welcome to Apache Continuum
 
   * {{{./release-notes.html} Release Notes}}
 
-  * Installation/Upgrade Guides
+  * {{{./getting-started.html} Getting Started}}
 
-    * {{{./installation/index.html}Installation}}
+  * {{{./installation/index.html}Installation and Upgrade Guide}}
 
-      * Standalone version:
+      * {{{./installation/standalone.html}Installing as a standalone service (Linux, Mac OSX, Solaris, Windows, others)}}
 
-        {{{./installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
+      * {{{./installation/tomcat.html}Installing the Web Application under a Tomcat server}}
 
-      * Webapp:
-
-        {{{./installation/tomcat.html}Tomcat}}
+      * {{{./installation/upgrade.html} How to upgrade from a previous version}}
 
       []
-
-    * {{{./installation/upgrade.html} How to upgrade from a previous version}}
-
-    []
 
   * {{{./user_guides/index.html} User's Guide}}
 
@@ -41,14 +35,12 @@ Welcome to Apache Continuum
 
   * {{{./developer_guides/building.html} Developer's Guide to building Continuum}}
 
-  * Knowledge Base
-
-      {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
-
-      {{{http://cwiki.apache.org/confluence/display/CONTINUUM}Wiki}}
-
-   []
-
    This documentation is also available in {{{./apache-continuum.pdf}PDF}} format.
+
+* Knowledge Base
+
+  * {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
+
+  * {{{http://cwiki.apache.org/confluence/display/CONTINUUM}Wiki}}
 
 
