@@ -12,9 +12,9 @@ Installation/Upgrade Guides
 
     * {{{./requirements.html}System Requirements}}
 
-    * {{{./installation.html}Installation in different environments (standalone, webapp, service)}}
+    * {{{./installation/standalone.html}Installing as a standalone service (Linux, Mac OSX, Solaris, Windows, others)}}
 
-    * {{{../release-notes.html}Release Notes}}
+    * {{{./installation/tomcat.html}Installing the Web Application under a Tomcat server}}
 
     * {{{./upgrade.html}How to upgrade from a previous version?}}
 

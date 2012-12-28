@@ -31,9 +31,8 @@
 
     <item name="Installation/Upgrade Guides" ref="installation/index.html"/>
     <item name="System Requirements" ref="installation/requirements.html"/>
-    <item name="Installation" ref="installation/installation.html"/>
-    <item name="Standalone" ref="installation/standalone.html"/>
-    <item name="Tomcat" ref="installation/tomcat.html"/>
+    <item name="Installing Standalone" ref="installation/standalone.html"/>
+    <item name="Installing in Tomcat" ref="installation/tomcat.html"/>
     <item name="Upgrade" ref="installation/upgrade.html"/>
 
     <item name="User's Guides" ref="user_guides/index.html"/>
