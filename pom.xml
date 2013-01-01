@@ -52,8 +52,9 @@
     <slf4jVersion>1.5.8</slf4jVersion>
     <xmlrpc.version>3.1.2</xmlrpc.version>
     <atlassian.xmlrpc.binder.version>0.11</atlassian.xmlrpc.binder.version>
-    <svnUrl>https://svn.apache.org/repos/asf/continuum/site-publish/ref/latest</svnUrl>
     <surefire.version>2.12</surefire.version>
+    <svnUrl>https://svn.apache.org/repos/asf/continuum/site-publish/ref/latest</svnUrl>
+    <checkoutDirectory>site-publish</checkoutDirectory>
   </properties>
 
   <scm>
@@ -1854,5 +1855,12 @@
     </profile>
   </profiles>
 
+  <!-- Still required despite config above for site:stage to work -->
+  <distributionManagement>
+    <site>
+      <id>apache</id>
+      <url>scm:svn:${svnUrl}</url>
+    </site>
+  </distributionManagement>
 
 </project>
