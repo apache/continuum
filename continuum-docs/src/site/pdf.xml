@@ -86,7 +86,8 @@
     <item name="Build Definition Template" ref="administrator_guides/builddefTemplate.html"/>
     <item name="Shutdown Continuum" ref="administrator_guides/shutdown.html"/>
     <item name="Understanding Distributed Builds" ref="administrator_guides/distributed-builds.html"/>
-    <item name="WebDAV for Agent Working Copies" href="administrator_guides/webdav.html"/>
+    <item name="WebDAV for Agent Working Copies" ref="administrator_guides/webdav.html"/>
+    <!-- <item name="Running builds in a chroot jail" ref="administrator_guides/chroot.html"/> -->
 
     <item name="Developer's Guides" ref="developer_guides/index.html"/>
     <item name="Building Continuum" ref="developer_guides/building.html"/>

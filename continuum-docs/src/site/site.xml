@@ -99,6 +99,7 @@
         <item name="Shutdown Continuum" href="administrator_guides/shutdown.html"/>
         <item name="Understanding Distributed Builds" href="administrator_guides/distributed-builds.html"/>
         <item name="WebDAV for Agent Working Copies" href="administrator_guides/webdav.html"/>
+        <!-- <item name="Running builds in a chroot jail" href="administrator_guides/chroot.html"/> -->
       </item>
 
       <item name="Developer's Guides" href="developer_guides/index.html" collapse="true">
