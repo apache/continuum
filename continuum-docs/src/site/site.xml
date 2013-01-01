@@ -47,9 +47,7 @@
         <item name="Managing Notification" href="user_guides/notification/index.html" collapse="true">
           <item name="Mail Notification" href="user_guides/notification/mail.html"/>
           <item name="IRC Notification" href="user_guides/notification/irc.html"/>
-          <item name="Jabber Notification" href="user_guides/notification/jabber.html">
-            <item name="Google Talk Notification" href="user_guides/notification/jabber.html#GTalk"/>
-          </item>
+          <item name="Jabber Notification" href="user_guides/notification/jabber.html"/>
           <item name="MSN Notification" href="user_guides/notification/msn.html"/>
           <item name="Wagon Notification" href="user_guides/notification/wagon.html"/>
         </item>
