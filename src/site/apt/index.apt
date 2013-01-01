@@ -21,14 +21,119 @@
 
 Apache Continuum Developer Documentation
 
- Welcome!  This site contains the developer documentation for Apache Continuum.  Here you will find Javadocs,
- FindBugs reports, information about our unit and functional tests, and some requirements docs.
+  Welcome!  This site contains the developer documentation for Apache Continuum.  Here you will find Javadocs,
+  information about our unit and functional tests, and some requirements docs.
 
-  {{{./apidocs/index.html}Javadocs}}.
+   * {{{./architecture.html}Architecture}}
 
-  {{{./architecture.html}Architecture}}.
+   * {{{./requirements.html}Requirements}}
 
-  {{{./requirements.html}Requirements}}.
+   * {{{./apidocs/index.html}Javadocs}}
 
-  {{{./continuum-webapp-test/index.html}Functional Tests}}.
-  
+   * {{{./xref/index.html}Source cross-reference}}
+
+* Modules
+
+  The following modules contain some reference documentation for their design and code.
+
+   * {{{./continuum-api/index.html}Continuum API}}
+
+   * {{{./continuum-base/continuum-configuration/index.html}Continuum Configuration Library}}
+
+   * {{{./continuum-base/continuum-scm/index.html}Continuum SCM Layer}}
+
+   * {{{./continuum-buildagent/index.html}Continuum Build Agent Modules}}
+
+     * {{{./continuum-buildagent/continuum-buildagent-api/index.html}Continuum Build Agent API}}
+
+     * {{{./continuum-buildagent/continuum-buildagent-core/index.html}Continuum Build Agent Core}}
+
+     * {{{./continuum-buildagent/continuum-buildagent-webdav/index.html}Continuum Build Agent WebDAV interface}}
+
+     * {{{./continuum-buildagent/continuum-buildagent-webdav/index.html}Continuum Build Agent WebDAV client}}
+
+     * {{{./continuum-buildagent/continuum-buildagent-webapp/index.html}Continuum Build Agent Web Application}}
+
+     * {{{./continuum-buildagent/continuum-buildagent-jetty/index.html}Continuum Build Agent Standalone distribution}}
+
+   * {{{./continuum-builder/index.html}Continuum Builder Abstraction}}
+
+   * {{{./continuum-commons/index.html}Continuum Common Library}}
+
+   * {{{./continuum-core/index.html}Continuum Core Library}}
+
+   * {{{./continuum-data-management/index.html}Continuum Data Management Modules}}
+
+     * {{{./continuum-data-management/data-management-api/index.html}Continuum Data Management API}}
+
+     * {{{./continuum-data-management/data-management-jdo/index.html}Continuum Data Management JDO Provider}}
+
+     * {{{./continuum-data-management/data-management-redback-jdo/index.html}Continuum Data Management JDO Provider for Redback}}
+
+     * {{{./continuum-data-management/continuum-legacy/index.html}Continuum Models for Legacy Upgrades}}
+
+     * {{{./continuum-data-management/redback-legacy/index.html}Continuum Models for Legacy Upgrades of Redback}}
+
+     * {{{./continuum-data-management/data-management-cli/index.html}Continuum Data Management CLI}}
+
+   * {{{./continuum-distributed/index.html}Continuum Distributed Build Modules}}
+
+     * {{{./continuum-distributed/continuum-distributed-commons/index.html}Continuum Distributed Builds Commons Library}}
+
+     * {{{./continuum-distributed/continuum-distributed-master/index.html}Continuum Distributed Builds Master Modules}}
+
+       * {{{./continuum-distributed/continuum-distributed-master/continuum-distributed-master-api/index.html}Continuum Distributed Builds Master API}}
+
+       * {{{./continuum-distributed/continuum-distributed-master/continuum-distributed-master-client/index.html}Continuum Distributed Builds Master Client Library}}
+
+       * {{{./continuum-distributed/continuum-distributed-master/continuum-distributed-master-server/index.html}Continuum Distributed Builds Master Server Library}}
+
+     * {{{./continuum-distributed/continuum-distributed-slave/index.html}Continuum Distributed Builds Slave Modules}}
+
+       * {{{./continuum-distributed/continuum-distributed-slave/continuum-distributed-slave-api/index.html}Continuum Distributed Builds Slave API}}
+
+       * {{{./continuum-distributed/continuum-distributed-slave/continuum-distributed-slave-client/index.html}Continuum Distributed Builds Slave Client Library}}
+
+       * {{{./continuum-distributed/continuum-distributed-slave/continuum-distributed-slave-server/index.html}Continuum Distributed Builds Slave Server Library}}
+
+   * {{{./continuum-model/index.html}Continuum Data Model}}
+
+   * {{{./continuum-notifiers/index.html}Continuum Notifier Modules}}
+
+     * {{{./continuum-notifiers/continuum-notifier-api/index.html}Continuum Notifier API}}
+
+     * {{{./continuum-notifiers/continuum-notifier-irc/index.html}Continuum Notifier for IRC}}
+
+     * {{{./continuum-notifiers/continuum-notifier-jabber/index.html}Continuum Notifier for Jabber}}
+
+     * {{{./continuum-notifiers/continuum-notifier-msn/index.html}Continuum Notifier for MSN}}
+
+     * {{{./continuum-notifiers/continuum-notifier-wagon/index.html}Continuum Notifier for Wagon}}
+
+   * {{{./continuum-purge/index.html}Continuum Purge library}}
+
+   * {{{./continuum-release/index.html}Continuum Release library}}
+
+   * {{{./continuum-reports/index.html}Continuum Reports library}}
+
+   * {{{./continuum-security/index.html}Continuum Security integration library}}
+
+   * {{{./continuum-store/index.html}Continuum Data Store library}}
+
+   * {{{./continuum-test/index.html}Continuum Testing Utility library}}
+
+   * {{{./continuum-xmlrpc/index.html}Continuum XMLRPC Modules}}
+
+     * {{{./continuum-xmlrpc/continuum-xmlrpc-api/index.html}Continuum XMLRPC API}}
+
+     * {{{./continuum-xmlrpc/continuum-xmlrpc-backup/index.html}Continuum XMLRPC-based Backup library}}
+
+     * {{{./continuum-xmlrpc/continuum-xmlrpc-server/index.html}Continuum XMLRPC Server library}}
+
+     * {{{./continuum-xmlrpc/continuum-xmlrpc-client/index.html}Continuum XMLRPC Client library}}
+
+   * {{{./continuum-webapp/index.html}Continuum Web Application}}
+
+   * {{{./continuum-jetty/index.html}Continuum Standalone Distribution}}
+
+   * {{{./continuum-webapp-test/index.html}Functional Tests}}
