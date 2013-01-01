@@ -18,7 +18,7 @@ continuum console
 ----
 
     Continuum will be started from the command line and run until quit with Ctrl-C. For more instructions on installing
-    Continuum as a service or under an existing application server, refer to the {{{./installation/index.apt}
+    Continuum as a service or under an existing application server, refer to the {{{./installation/index.html}
     Installation Guides}}.
 
     When you start Continuum for the first time (without an existing database), the first thing you will
