@@ -39,8 +39,14 @@ Installing Continuum Standalone
     <<<validationQuery>>> to one that can successfully execute on your database (or remove the setting if you do not
     want to validate connections before using them).
 
+    You must ensure the JDBC driver is available in the classpath, by copying it to the <<<$CONTINUUM_HOME/lib>>>
+    directory and updating <<<$CONTINUUM_HOME/conf/wrapper.conf>>> to ensure it is listed instead of the Derby JAR.
+
     Refer to the {{{http://commons.apache.org/dbcp/} Commons DBCP}} documentation for more advanced configuration of the
     connection pool.
+
+    More information on supported databases is available in the Administrator's Guide on
+    {{{../administrator_guides/external-db.html} External Databases}}.
 
 ** Testing the Configuration
 

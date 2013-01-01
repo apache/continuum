@@ -14,25 +14,52 @@ How to use an external database?
 
     * MySQL
 
-    * MS SQL Server
+    * Postgres
 
-    * Oracle (not yet, but coming soon)
+    * MS SQL Server (with modifications)
+
+    * Oracle (with modifications)
 
 * Configure Continuum
 
+  There is some information in the installation guides for the {{{../installation/standalone.html} standalone Continuum
+  installation}} and the {{{../installation/tomcat.html} Continuum web application deployed to Tomcat}}.
+
 ** Standalone version
 
-    To use an external database with Continuum standalone, you must configure DataSources in <<<$CONTINUUM_HOME/conf/jetty.xml>>>
+    To use an external database with Continuum standalone, you must configure DataSources in <<<$CONTINUUM_HOME/contexts/continuum.xml>>>
 
-%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/conf/jetty.xml}
+%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/contexts/continuum.xml}
 
-** Webapp
+    In addition, you must add the JDBC driver to the <<<$CONTINUUM_HOME/lib>>> directory, and update
+    <<<$CONTINUUM_HOME/conf/wrapper.conf>>> to list the driver instead of Derby. For example:
 
-    To use an external database with the Continuum webapp, you should configure the DataSource in your container.
+----
+wrapper.java.classpath.15=%REPO_DIR%/postgresql-8.4-702.jdbc3.jar
+----
+
+    If you use MS SQL Server or Oracle, you will need to adjust the
+    <<<$CONTINUUM_HOME/apps/continuum/WEB-INF/classes/META-INF/plexus/application.xml>>> file to change the
+    <<<javax.jdo.option.Mapping>>> value from <<<default>>> to <<<mssql>>> or <<<oracle>>> respectively. Bear in mind that
+    this change will need to be made again across release upgrades.
+
+%{snippet|id=mapping|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/main/resources/META-INF/plexus/application.xml}
+
+** Web Application
+
+    To use an external database with the Continuum web application, you should configure the DataSource in your container.
+
+    Make sure the JDBC driver is available in the expected location for your container.
+
+    If you use MS SQL Server or Oracle, you will need to adjust the
+    <<<WEB-INF/classes/META-INF/plexus/application.xml>>> file in the unpacked web application to change the
+    <<<javax.jdo.option.Mapping>>> value from <<<default>>> to <<<mssql>>> or <<<oracle>>> respectively. Bear in mind that
+    this change will need to be made again across release upgrades.
+
+%{snippet|id=mapping|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/main/resources/META-INF/plexus/application.xml}
 
 * Shutdown Procedure
 
    When using an external database, it is very important to stop Continuum prior to stopping or restarting the database.
    Continuum may exhibit unpredictable behavior if the database disappears while it is running, and may not recover
-   once the database comes back up.  If this happens, you must re-start Continuum.  If you experience errors after
-   re-starting, the data may be corrupted and may need to be fixed by editing records directly in the database.
+   once the database comes back up.  If this happens, you must re-start Continuum.

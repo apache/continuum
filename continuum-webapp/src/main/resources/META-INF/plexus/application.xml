@@ -252,13 +252,16 @@
 
         <persistenceManagerFactoryClass>org.jpox.PersistenceManagerFactoryImpl</persistenceManagerFactoryClass>
 
+        <!-- START SNIPPET: mapping -->
         <otherProperties>
           <property>
             <name>javax.jdo.option.Mapping</name>
             <value>default</value>
-            <!-- change this property for mssql support - CONTINUUM-697 -->
+            <!-- change this property for SQL Server or Oracle support - CONTINUUM-697 -->
             <!-- value>mssql</value -->
+            <!-- value>oracle</value -->
           </property>
+          <!-- END SNIPPET: mapping -->
           <property>
             <name>org.jpox.autoCreateSchema</name>
             <value>true</value>
