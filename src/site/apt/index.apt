@@ -26,9 +26,9 @@ Apache Continuum Developer Documentation
 
   {{{./apidocs/index.html}Javadocs}}.
 
-  {{{,.architecture.html}Architecture}}.
+  {{{./architecture.html}Architecture}}.
 
-  {{{,.requirements.html}Requirements}}.
+  {{{./requirements.html}Requirements}}.
 
   {{{./continuum-webapp-test/index.html}Functional Tests}}.
   
