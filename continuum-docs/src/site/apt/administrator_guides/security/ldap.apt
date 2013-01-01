@@ -12,7 +12,8 @@ LDAP Configuration
 
     * Shutdown Continuum
 
-    * Add a security.properties files under $CONTINUUM_HOME/conf/ with the following content:
+    * Add a <<<security.properties>>> files under <<<$CONTINUUM_HOME/conf/>>> or <<<$CONTINUUM_BASE/conf>>> with the
+    following content:
 
 --------------------------------------------
 security.policy.password.expiration.enabled=false
@@ -30,10 +31,13 @@ ldap.config.mapper.attribute.fullname=givenName
 ldap.config.mapper.attribute.password=userPassword
 
 redback.default.admin=[adminuser]
-redback.default.guest=[guestuser]
+# Optional
+# redback.default.guest=[guestuser]
 --------------------------------------------
 
-    <<adminuser>> is a LDAP user and will be the default Continuum admin. <<guestuser>> is a LDAP user and will be used for the <<<guest>>> role, generally, it is an utility LDAP account.
+    <<adminuser>> is a LDAP user and will be the default Continuum admin.
+    <<guestuser>> is a LDAP user and will be used for the <<<guest>>> role, generally, it is an utility LDAP account.
+    If not specified, then a built-in guest account will be used.
 
     * Restart Continuum
     

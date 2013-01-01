@@ -10,6 +10,8 @@ Continuum Security Configuration
 
    * <<<~/.m2/security.properties>>>
   
+   * <<<$CONTINUUM_BASE/conf/security.properties>>>
+
    * <<<$CONTINUUM_HOME/conf/security.properties>>>
 
    []
