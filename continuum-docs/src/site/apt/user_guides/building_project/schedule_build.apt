@@ -12,26 +12,26 @@ Scheduling Project Build
     When scheduled builds are triggered, there is no dependency ordering between project groups
     and the following happens:
 
-    * Projects are updated from the SCM.
-      These are queued under the <<Prepare Build Queues>> section in <<Queues>> page.
+      * Projects are updated from the SCM.
+        These are queued under the <<Prepare Build Queues>> section in <<Queues>> page.
 
-    * Builds of the projects are executed.
-      These are queued under the <<Build Queues>> in <<Queues>> page.
+      * Builds of the projects are executed.
+        These are queued under the <<Build Queues>> in <<Queues>> page.
 
-    []
+      []
 
     To configure a scheduled build:
 
-    [[1]] Create a schedule. You can refer to {{{../../administrator_guides/schedules.html} Managing Schedules}} section.
+      [[1]] Create a schedule. You can refer to {{{../../administrator_guides/schedules.html} Managing Schedules}} section.
 
-    [[2]] Add a build definition to a project using the schedule created in step 1 for the <<Schedule>> field.
-       You can refer to the section {{{../managing_builddef/index.html} Managing Build Definitions}}.
+      [[2]] Add a build definition to a project using the schedule created in step 1 for the <<Schedule>> field.
+            You can refer to the section {{{../managing_builddef/index.html} Managing Build Definitions}}.
 
 [../../images/schedule_build.png] Scheduling build
 
-    []
+      []
     
-    *Note* In a distributed build setup, the project builds are not executed if no build agent is
+    <<Note:>> In a distributed build setup, the project builds are not executed if no build agent is
     configured or if a build agent group with no build agent, is configured in the build environment 
     that is attached to the project's build definition.
 

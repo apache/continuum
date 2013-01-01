@@ -21,11 +21,12 @@ Prepare for Release
 
  Click <<Submit>>.
  
- <<Note:>> When releasing in a {{{../../administrator_guides/distributed-builds.html} distributed builds}} setup, a <<Build environment>>
- should be selected containing at least one enabled build agent. Furthermore, the release will not happen in the following cases:
+ When releasing in a {{{../../administrator_guides/distributed-builds.html} distributed builds}} setup, a <<Build environment>>
+ should be selected containing at least one enabled build agent. If none is selected, then Continuum will attempt to use
+ a default agent, starting with the one last used to build the project.
+
+ Furthermore, the release will not happen in the following cases:
  
-   * no build environment selected
-   
    * no build agent found in the build agent group attached to the build environment
    
    * all build agents configured in the selected build environment are disabled
