@@ -80,21 +80,19 @@
         <item name="Managing Build Environments" href="administrator_guides/buildEnvironment.html"/>
         <item name="Managing Schedules" href="administrator_guides/schedules.html"/>
         <item name="Managing General Configuration" href="administrator_guides/configuration.html"/>
-        <!-- (configuration and appearance) -->
         <item name="Managing Local Repositories" href="administrator_guides/localRepository.html"/>
         <item name="Managing Purge Configuration" href="administrator_guides/purgeConfiguration.html"/>
-        <item name="Managing Parallel Builds" href="administrator_guides/parallelBuilds.html">
-        </item>
+        <item name="Managing Parallel Builds" href="administrator_guides/parallelBuilds.html"/>
         <item name="Managing Build Queues" href="administrator_guides/buildQueue.html"/>
         <item name="Managing Build Agents" href="administrator_guides/build-agents.html"/>
         <item name="Managing Build Agent Groups" href="administrator_guides/build-agent-groups.html"/>
         <item name="Managing Project Queues" href="administrator_guides/queues.html"/>
         <item name="External databases" href="administrator_guides/external-db.html"/>
         <item name="Monitoring Continuum" href="administrator_guides/monitoring.html"/>
-        <item name="Log Files" href="administrator_guides/logging.html" collapse="true">
-          <item name="Audit Logs" href="administrator_guides/audit-logs.html"/>
-          <item name="Continuum Logs" href="administrator_guides/continuum-logs.html"/>
-          <item name="Security Logs" href="administrator_guides/security-logs.html"/>
+        <item name="Log Files" href="administrator_guides/logging/index.html" collapse="true">
+          <item name="Audit Logs" href="administrator_guides/logging/audit-logs.html"/>
+          <item name="Continuum Logs" href="administrator_guides/logging/continuum-logs.html"/>
+          <item name="Security Logs" href="administrator_guides/logging/security-logs.html"/>
         </item>
         <item name="Appearance Configuration" href="administrator_guides/appearance.html"/>
         <item name="Build Definition Template" href="administrator_guides/builddefTemplate.html"/>

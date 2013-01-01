@@ -78,10 +78,10 @@
     <item name="Managing Project Queues" ref="administrator_guides/queues.html"/>
     <item name="External databases" ref="administrator_guides/external-db.html"/>
     <item name="Monitoring Continuum" ref="administrator_guides/monitoring.html"/>
-    <item name="Log Files" ref="administrator_guides/logging.html"/>
-    <item name="Audit Logs" ref="administrator_guides/audit-logs.html"/>
-    <item name="Continuum Logs" ref="administrator_guides/continuum-logs.html"/>
-    <item name="Security Logs" ref="administrator_guides/security-logs.html"/>
+    <item name="Log Files" ref="administrator_guides/logging/index.html"/>
+    <item name="Audit Logs" ref="administrator_guides/logging/audit-logs.html"/>
+    <item name="Continuum Logs" ref="administrator_guides/logging/continuum-logs.html"/>
+    <item name="Security Logs" ref="administrator_guides/logging/security-logs.html"/>
     <item name="Appearance Configuration" ref="administrator_guides/appearance.html"/>
     <item name="Build Definition Template" ref="administrator_guides/builddefTemplate.html"/>
     <item name="Shutdown Continuum" ref="administrator_guides/shutdown.html"/>

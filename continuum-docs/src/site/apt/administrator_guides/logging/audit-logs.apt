@@ -29,7 +29,7 @@ Audit Logs
 
     * the project or configurations affected
 
-    * the event that occured
+    * the event that occurred
 
   Currently, the following events are logged:
 
