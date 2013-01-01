@@ -1,0 +1,29 @@
+ --------------------
+ WebDAV support for working copies
+ --------------------
+ --------------------
+ --------------------
+
+WebDAV support for working copies
+
+  The WebDAV support is added in the continuum build agent only for retrieving the working copies of projects.
+
+* Example using Sardine
+
+  You can use {{{http://code.google.com/p/sardine/} Sardine}} for the WebDAV client.
+
+  The first sample will retrieve the directory listing for the project with id of 1.
+
+----
+Sardine sardine = SardineFactory.begin();
+List<DavResource> resources = sardine.getResources( "http://buildagenturl/workingcopy/1/" );
+----
+
+  The next sample will get an <<<InputStream>>> reference to a remote file.
+
+----
+Sardine sardine = SardineFactory.begin();
+InputStream is = sardine.getInputStream( "http://buildagenturl/workingcopy/1/pom.xml" );
+----
+
+

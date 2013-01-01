@@ -47,3 +47,5 @@ Administrator's Guides
  * {{{./shutdown.html}Shutting Down Continuum}}
 
  * {{{./distributed-builds.html}Understanding Distributed Builds}}
+
+ * {{{./webdav.html} Accessing remote working copies using WebDAV}}

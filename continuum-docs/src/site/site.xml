@@ -100,12 +100,11 @@
         <item name="Build Definition Template" href="administrator_guides/builddefTemplate.html"/>
         <item name="Shutdown Continuum" href="administrator_guides/shutdown.html"/>
         <item name="Understanding Distributed Builds" href="administrator_guides/distributed-builds.html"/>
+        <item name="WebDAV for Agent Working Copies" href="administrator_guides/webdav.html"/>
       </item>
 
       <item name="Developer's Guides" href="developer_guides/index.html" collapse="true">
-        <!-- item name="SVN repository structure" href="developer_guides/svn.html"/ -->
         <item name="Building Continuum" href="developer_guides/building.html"/>
-        <!-- item name="Design" href="developer_guides/design.html"/ -->
         <item name="XML-RPC" href="developer_guides/xmlrpc.html"/>
       </item>
 
