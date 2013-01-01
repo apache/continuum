@@ -10,7 +10,7 @@ Monitoring a Continuum instance
 
 * JConsole
 
-    * Edit $CONTINUUM_HOME/bin/\[platform\]/wrapper.conf to add:
+    * Edit <<<$CONTINUUM_HOME/bin/\[platform\]/wrapper.conf>>> to add:
 
 ------------------------
 wrapper.java.additional.9=-Dcom.sun.management.jmxremote
@@ -63,4 +63,4 @@ wrapper.java.additional.10=-Xloggc:gc.txt
 
 * References
 
-    * [http://java.sun.com/developer/technicalArticles/J2SE/jconsole.html]
+    * {{http://java.sun.com/developer/technicalArticles/J2SE/jconsole.html}}

@@ -11,7 +11,7 @@ Add a Project
 
 ~~%{toc|section=0}
 
-* {Maven (2.0+) project}
+* {Maven project (Maven 2 or Maven 3)}
 
   From the menu, choose the <<Maven Project>> entry
 

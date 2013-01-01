@@ -10,12 +10,15 @@ Purge Configuration
 
     You will see all repository purge configurations and all directory purge configurations.
 
+    *Note:* If you have distributed builds enabled, then repository purging is not currently available on build agents.
+    See {{{http://jira.codehaus.org/browse/CONTINUUM-2697} CONTINUUM-2697}} for information.
+
 [../images/purgeconfigurations-view.png]
 
     Here you can add/edit/delete the purge configuration.
     
     You can also purge the repository or directory by clicking the corresponding purge icon of the purge configuration.
-    
+
 [../images/purgenow.gif] purge now icon
 
 
