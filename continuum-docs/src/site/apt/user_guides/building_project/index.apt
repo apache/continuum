@@ -10,21 +10,21 @@ Building Projects
 
     For Ant and Maven builds the following system properties will be added via -D command line:
 
-    * <<<continuum.project.group.name>>>
+      * <<<continuum.project.group.name>>>
 
-    * <<<continuum.project.lastBuild.state>>> : last build state int flag
+      * <<<continuum.project.lastBuild.state>>> : last build state int flag
 
-    * <<<continuum.project.lastBuild.number>>>
+      * <<<continuum.project.lastBuild.number>>>
 
-    * <<<continuum.project.nextBuild.number>>>
+      * <<<continuum.project.nextBuild.number>>>
 
-    * <<<continuum.project.id>>>
+      * <<<continuum.project.id>>>
 
-    * <<<continuum.project.name>>>
+      * <<<continuum.project.name>>>
 
-    * <<<continuum.project.version>>>
+      * <<<continuum.project.version>>>
 
-    []
+      []
 
     When building projects, the build order is determined by the inter-dependency of the projects.
     This would mean that the dependencies of a project are built first.
@@ -34,18 +34,21 @@ Building Projects
 
     Projects can be built in two ways:
 
-    [[1]] {{{./schedule_build.html} Scheduled Builds}}
+      [[1]] {{{./schedule_build.html} Scheduled Builds}}
 
-    [[2]] {{{./forced_build.html} Forced Builds}}
+      [[2]] {{{./forced_build.html} Forced Builds}}
 
-    []
+      []
 
     Projects will have the <<in queue>> icon once the forced build or a scheduled build is triggered. This means that the project is either in the <<prepare build
     queue>> or in the <<build queue>>.
 
 [../../images/inqueue.gif]
 
-    []
-
     Checkout or update of projects takes longer with distributed builds enabled because after an SCM checkout or SCM update, an SCM changelog follows to get the "latest
     update date" needed to determine whether projects should build or not.
+
+* Cancelling builds
+
+    If a build has been started, you can cancel it before it completes. See
+    {{{./cancelling_build.html} Cancelling Builds}} for more information.

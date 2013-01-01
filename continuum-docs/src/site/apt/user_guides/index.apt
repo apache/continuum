@@ -9,8 +9,6 @@ User's Guides
 
  * {{{./building_project/index.html}Building Projects}}
 
- * {{{./cancelling_build/index.html}Cancelling Builds}}
-
  * {{{./managing_builddef/index.html}Managing Build Definitions}}
 
  * {{{./managing_project/index.html}Managing Projects}}
