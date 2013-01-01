@@ -43,10 +43,7 @@
           <item name="Remove a Project" href="user_guides/managing_project/removeProject.html"/>
           <item name="Working Copy" href="user_guides/managing_project/workingCopy.html"/>
         </item>
-        <item name="Managing Build Definitions" href="user_guides/managing_builddef/index.html" collapse="true">
-          <item name="Project Build Definition" href="user_guides/managing_builddef/builddefProject.html"/>
-          <item name="Project Group Build Definition" href="user_guides/managing_builddef/builddefGroup.html"/>
-        </item>
+        <item name="Managing Build Definitions" href="user_guides/managing_builddef/index.html"/>
         <item name="Managing Notification" href="user_guides/notification/index.html" collapse="true">
           <item name="Mail Notification" href="user_guides/notification/mail.html"/>
           <item name="IRC Notification" href="user_guides/notification/irc.html"/>

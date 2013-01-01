@@ -42,8 +42,6 @@
     <item name="Remove a Project" ref="user_guides/managing_project/removeProject.html"/>
     <item name="Working Copy" ref="user_guides/managing_project/workingCopy.html"/>
     <item name="Managing Build Definitions" ref="user_guides/managing_builddef/index.html"/>
-    <item name="Project Build Definition" ref="user_guides/managing_builddef/builddefProject.html"/>
-    <item name="Project Group Build Definition" ref="user_guides/managing_builddef/builddefGroup.html"/>
     <item name="Managing Notification" ref="user_guides/notification/index.html"/>
     <item name="Mail Notification" ref="user_guides/notification/mail.html"/>
     <item name="IRC Notification" ref="user_guides/notification/irc.html"/>

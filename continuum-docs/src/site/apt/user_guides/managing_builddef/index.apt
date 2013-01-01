@@ -15,5 +15,58 @@ Managing Build Definitions
 
     Continuum includes some default build definitions which can be changed in the <<{{{../../administrator_guides/builddefTemplate.html}Build Definition Templates}}>> screen.
 
-    You can add or edit build definitions at the <<{{{./builddefGroup.html}Project Group level}}>> or at the <<{{{./builddefProject.html}Project level}}>>.
+    You can add or edit build definitions at the <<Project Group level>> or at the <<Project level>>.
 
+Project Group Build Definition
+
+    The project group level build definition is executed on all of the projects in the group. The following description
+    covers the fields for a Maven project, though the fields for other types are similar.
+
+[../../images/buildDefGroup.png] Project Group Build Definitions
+
+    To add a build definition to your project group, under the <<Build Definitions>> tab in the <<Project Information>>
+    screen, click <<Add>>.
+
+    Supply the values for the necessary fields:
+
+      * Enter your <<POM filename>>, which is very likely the same as previous builds, <<<pom.xml>>>.
+
+      * In the <<Goals>> text box, enter your new goals. For example, <<<clean site deploy>>> or <<<release:branch>>>.
+
+      * You may have arguments for Maven, such as <<<--batch-mode --non-recursive>>>.
+          Add your arguments in the <<Arguments>> text box or leave it empty.
+
+      * Check <<Build Fresh>> to do a fresh checkout from SCM before the build process.
+      Check <<Always Build>> if you want to execute the goal every time you build the project.
+      If you want this build definition to be your default for building your project,
+      check the <<Is it default?>> check box.
+
+      * Select your build schedule from the pull-down menu. There will only be the <<<DEFAULT_SCHEDULE>>>
+      if you have not defined any others.
+
+      * Select from the pull-down menu the <<Build Environment>> for the build definition.
+
+      * Select the <<Type>> from the pull-down menu.
+
+      * Select the <<Update Policy>> from the pull-down menu. This describes when a Continuum project definition should
+        be updated if changes are detected in the Maven POM.
+
+      * You can supply a short description of the build definition (<<Description>>).
+
+      []
+
+[../../images/add-build-definition.png]
+
+    Click <<Save>> to complete the changes.
+
+Project Build Definition
+
+    The project level build definition is executed for a specific project where the build definition is defined. The
+    following description covers the fields for a Maven project, though the fields for other types are similar.
+
+[../../images/buildDefProject.png] Project Build Definitions
+
+    To add a build definition to your project, select a project within the group and under the <<Build Definitions>>
+    section in the <<Project Information>> screen, click <<Add>>.
+
+    The fields are the same as for a project group build definition.
