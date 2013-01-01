@@ -1,5 +1,5 @@
  ------
- Guide to build Continuum
+ Guide to building Continuum
  ------
  Emmanuel Venisse
  ------
@@ -12,17 +12,18 @@ Guide to building Continuum
 
   You might want to build Continuum yourself for one of two reasons:
 
+    * To build the source release of Continuum
+
     * to try out a bleeding edge feature or bugfix (issues can be found in
       {{{http://jira.codehaus.org/browse/CONTINUUM} JIRA}}), but you can try our SNAPSHOTs: {{http://vmbuild.apache.org/}}
 
     * to fix a problem you are having and submit a patch to the development team.
 
-  Note that you don't need to build Continuum for day to day use. While we encourage getting
-  involved and fixing bugs that you find, for day to day use we recommend using the latest GA release.
+  Note that for releases, you may also make use of pre-built binaries.
 
 * Checking out the sources
 
-  All of the source code for Continuum and its related libraries is in a {{{http://subversion.tigris.org/} Subversion}} repository.
+  All of the source code for Continuum and its related libraries is in a Subversion repository.
   You can also {{{http://svn.apache.org/viewvc/continuum/} browse the repository}}, or checkout specific modules directly.
 
   All SVN instructions are available on the {{{http://continuum.apache.org/source-repository.html}Source Repository page}}.
