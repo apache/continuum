@@ -42,7 +42,6 @@
           <item name="Edit a Project" href="user_guides/managing_project/editProject.html"/>
           <item name="Remove a Project" href="user_guides/managing_project/removeProject.html"/>
           <item name="Working Copy" href="user_guides/managing_project/workingCopy.html"/>
-          <!-- item name="SCM security hints"/ -->
         </item>
         <item name="Managing Build Definitions" href="user_guides/managing_builddef/index.html" collapse="true">
           <item name="Project Build Definition" href="user_guides/managing_builddef/builddefProject.html"/>
@@ -61,6 +60,7 @@
           <item name="Scheduled Build" href="user_guides/building_project/schedule_build.html"/>
           <item name="Forced Build" href="user_guides/building_project/forced_build.html"/>
           <item name="Build Results Management" href="user_guides/building_project/build_results.html"/>
+          <item name="Cancelling builds" href="user_guides/building_project/cancelling_build.html"/>
         </item>
         <item name="Release Management" href="user_guides/release/index.html" collapse="true">
           <item name="Prepare Project Release" href="user_guides/release/prepare.html"/>

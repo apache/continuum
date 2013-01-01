@@ -54,6 +54,7 @@
     <item name="Scheduled Build" ref="user_guides/building_project/schedule_build.html"/>
     <item name="Forced Build" ref="user_guides/building_project/forced_build.html"/>
     <item name="Build Results Management" ref="user_guides/building_project/build_results.html"/>
+    <item name="Cancelling builds" href="user_guides/building_project/cancelling_build.html"/>
     <item name="Release Management" ref="user_guides/release/index.html"/>
     <item name="Prepare Project Release" ref="user_guides/release/prepare.html"/>
     <item name="Perform Project Release" ref="user_guides/release/perform.html"/>
