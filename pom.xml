@@ -106,6 +106,7 @@
         <inherited>false</inherited>
         <configuration>
           <source>1.5</source>
+<!-- Disabled - currently generating empty PDFs in my environment (brett, 2013-01-02)
           <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
           <docletArtifact>
             <groupId>gr.spinellis</groupId>
@@ -118,6 +119,7 @@
             -postfixpackage -nodefontsize 9
             -nodefontpackagesize 7
           </additionalparam>
+-->
         </configuration>
         <reportSets>
           <reportSet>
