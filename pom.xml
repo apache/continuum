@@ -32,7 +32,7 @@
   <artifactId>continuum</artifactId>
   <packaging>pom</packaging>
   <name>Continuum :: Project</name>
-  <url>http://continuum.apache.org</url>
+  <url>http://continuum.apache.org/ref/latest</url>
   <version>1.4.1-SNAPSHOT</version>
 
   <prerequisites>
@@ -326,7 +326,6 @@
     <module>continuum-xmlrpc</module>
     <module>continuum-release</module>
     <module>continuum-data-management</module>
-    <module>continuum-docs</module>
     <module>continuum-jetty</module>
     <module>continuum-purge</module>
     <module>continuum-buildagent</module>
@@ -1854,13 +1853,11 @@
       </build>
     </profile>
   </profiles>
-
-  <!-- Still required despite config above for site:stage to work -->
   <distributionManagement>
+    <!-- Site base required here for site:stage to calculate correct URLs -->
     <site>
       <id>apache</id>
-      <url>scm:svn:${svnUrl}</url>
+      <url>scm:svn:${rootSitePublishUrl}</url>
     </site>
   </distributionManagement>
-
 </project>

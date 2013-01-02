@@ -19,8 +19,14 @@
   -->
 
 <project name="Apache Continuum">
+  <skin>
+    <groupId>org.apache.continuum</groupId>
+    <artifactId>continuum-skin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </skin>
   <body>
     <breadcrumbs>
+      <item name="Continuum" href="http://continuum.apache.org/" />
       <item name="Reference Library" href="/"/>
     </breadcrumbs>
 
