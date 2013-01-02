@@ -85,6 +85,39 @@
       </plugin>
     </plugins>
   </reporting>
+  <profiles>
+    <profile>
+      <id>tag</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>tag-publish-site</id>
+                <configuration>
+                  <executable>svn</executable>
+                  <arguments>
+                    <argument>--non-interactive</argument>
+                    <argument>cp</argument>
+                    <argument>-m"Copy versioned documentation"</argument>
+                    <argument>${svnUrl}</argument>
+                    <argument>https://svn.apache.org/repos/asf/continuum/site-publish/docs/${project.version}</argument>
+                  </arguments>
+                </configuration>
+                <phase>site-deploy</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <properties>
     <svnUrl>https://svn.apache.org/repos/asf/continuum/site-publish/docs/latest</svnUrl>
   </properties>
