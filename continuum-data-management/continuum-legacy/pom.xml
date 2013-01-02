@@ -18,12 +18,11 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>continuum-data-management</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-legacy</artifactId>
@@ -71,11 +70,10 @@
             <phase>process-classes</phase>
             <configuration>
               <tasks>
-                <move file="target/classes/META-INF/package.jdorepl"
-                      tofile="target/classes/META-INF/package.jdorepl109"/>
-                <move file="target/classes/META-INF/package.jdo" tofile="target/classes/META-INF/package.jdo109"/>
-                <delete file="target/classes/package.jdo"/>
-                <delete file="target/classes/package.jdorepl"/>
+                <move file="target/classes/META-INF/package.jdorepl" tofile="target/classes/META-INF/package.jdorepl109" />
+                <move file="target/classes/META-INF/package.jdo" tofile="target/classes/META-INF/package.jdo109" />
+                <delete file="target/classes/package.jdo" />
+                <delete file="target/classes/package.jdorepl" />
               </tasks>
             </configuration>
             <goals>
@@ -88,8 +86,8 @@
             <phase>process-classes</phase>
             <configuration>
               <tasks>
-                <copy file="target/classes/META-INF/package.jdorepl109" todir="target/classes"/>
-                <copy file="target/classes/META-INF/package.jdo109" todir="target/classes"/>
+                <copy file="target/classes/META-INF/package.jdorepl109" todir="target/classes" />
+                <copy file="target/classes/META-INF/package.jdo109" todir="target/classes" />
               </tasks>
             </configuration>
             <goals>

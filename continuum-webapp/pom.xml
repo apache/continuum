@@ -18,12 +18,11 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-webapp</artifactId>
@@ -170,9 +169,9 @@
             <phase>compile</phase>
             <configuration>
               <tasks>
-                <mkdir dir="${basedir}/target/continuum/WEB-INF/"/>
+                <mkdir dir="${basedir}/target/continuum/WEB-INF/" />
                 <copy todir="${basedir}/target/continuum/WEB-INF/">
-                  <fileset dir="${basedir}/target" includes="classes/" excludes="**/struts.xml"/>
+                  <fileset dir="${basedir}/target" includes="classes/" excludes="**/struts.xml" />
                 </copy>
               </tasks>
             </configuration>
@@ -293,10 +292,10 @@
             <configuration>
               <tasks>
                 <copy todir="${project.build.directory}/appserver-base">
-                  <fileset dir="src/appserver-base"/>
+                  <fileset dir="src/appserver-base" />
                 </copy>
                 <copy todir="src/main/webapp/template">
-                  <fileset file="src/main/resources/template/default/validation.js"/>
+                  <fileset file="src/main/resources/template/default/validation.js" />
                 </copy>
               </tasks>
             </configuration>
@@ -750,10 +749,8 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml"
-                          todir="${basedir}/src/main/webapp/WEB-INF/classes"/>
-                    <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml"
-                          todir="${project.build.directory}/classes"/>
+                    <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${basedir}/src/main/webapp/WEB-INF/classes" />
+                    <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${project.build.directory}/classes" />
                   </tasks>
                 </configuration>
               </execution>
