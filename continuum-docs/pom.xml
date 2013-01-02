@@ -29,23 +29,9 @@
   <name>Continuum :: Documentation</name>
   <packaging>pom</packaging>
   <url>http://continuum.apache.org/docs/latest</url>
-  <distributionManagement>
-    <site>
-      <id>apache</id>
-      <url>scm:svn:${svnUrl}</url>
-    </site>
-  </distributionManagement>
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <configuration>
-            <templateDirectory>${basedir}/src/site</templateDirectory>
-            <template>continuum-site.vm</template>
-          </configuration>
-        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-publish-plugin</artifactId>
@@ -102,4 +88,11 @@
   <properties>
     <svnUrl>https://svn.apache.org/repos/asf/continuum/site-publish/docs/latest</svnUrl>
   </properties>
+  <distributionManagement>
+    <!-- Site base required here for site:stage to calculate correct URLs -->
+    <site>
+      <id>apache</id>
+      <url>scm:svn:${rootSitePublishUrl}</url>
+    </site>
+  </distributionManagement>
 </project>

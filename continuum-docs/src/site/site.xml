@@ -21,6 +21,7 @@
 <project name="Apache Continuum">
   <body>
     <breadcrumbs>
+      <item name="Continuum" href="http://continuum.apache.org/" />
       <item name="${project.version}" href="/"/>
     </breadcrumbs>
 
