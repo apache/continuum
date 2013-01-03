@@ -214,6 +214,11 @@
             <pubScmUrl>scm:svn:${svnUrl}</pubScmUrl>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>com.google.code.maven-replacer-plugin</groupId>
+          <artifactId>replacer</artifactId>
+          <version>1.5.2</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
