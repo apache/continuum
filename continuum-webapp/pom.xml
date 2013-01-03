@@ -137,11 +137,12 @@
         <artifactId>replacer</artifactId>
         <executions>
           <execution>
-            <phase>process-sources</phase>
+            <phase>generate-sources</phase>
             <goals>
               <goal>replace</goal>
             </goals>
             <configuration>
+              <basedir>${basedir}</basedir>
               <includes>
                 <include>target/generated-sources/**</include>
               </includes>

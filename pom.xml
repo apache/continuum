@@ -105,6 +105,7 @@
         <inherited>false</inherited>
         <configuration>
           <source>1.5</source>
+          <notimestamp>true</notimestamp>
 <!-- Disabled - currently generating empty PDFs in my environment (brett, 2013-01-02)
           <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
           <docletArtifact>
