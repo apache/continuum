@@ -86,8 +86,6 @@
       </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2547'>CONTINUUM-2547</a>] -         French I18n : typos
       </li>
-      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2552'>CONTINUUM-2552</a>] -         JDOException when deleting a project
-      </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2554'>CONTINUUM-2554</a>] -         Forced directory purges should show up in the audit log
       </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2563'>CONTINUUM-2563</a>] -         &#39;--non-recursive&#39; argument is not stripped in project&#39;s build definition if project was added to an existing project group with &#39;For multi-module project, load only root as recursive build&#39; selected
@@ -116,8 +114,6 @@
       </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2608'>CONTINUUM-2608</a>] -         username and password are missing when doing a checkout from svn even if useCredentialsCache is set to false.
       </li>
-      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2609'>CONTINUUM-2609</a>] -         Unable to delete a project, getting an invalid group id
-      </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2610'>CONTINUUM-2610</a>] -         Profiles are not activated during release
       </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2616'>CONTINUUM-2616</a>] -         Project state is still building after cancelling a build with distributed builds enabled
@@ -135,8 +131,6 @@
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2641'>CONTINUUM-2641</a>] -         Exceptions thrown by ContinuumXmlRpcClient when used by multiple threads
       </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2643'>CONTINUUM-2643</a>] -         Intermittent problem encountered when building projects with distributed builds
-      </li>
-      <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2645'>CONTINUUM-2645</a>] -         Project group was not removed from queue via XMLRPC cancelBuild
       </li>
       <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2646'>CONTINUUM-2646</a>] -         Project group was not removed from queue via XMLRPC cancelBuild
       </li>
