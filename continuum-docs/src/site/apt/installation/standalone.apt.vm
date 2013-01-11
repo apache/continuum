@@ -124,6 +124,70 @@ chkconfig --add continuum
 chkconfig continuum on
 ------------------
 
+* {Installing as a Mac OS X Service}
+
+  On OS X, you can use <<<launchd>>> to run a service. Create the following
+  as root in <<</Library/LaunchDaemons/org.apache.continuum.plist>>>:
+
++----+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.apache.continuum</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Applications/Continuum/apache-continuum-${project.version}/bin/continuum</string>
+        <string>console</string>
+    </array>
+    <key>Disabled</key>
+    <false/>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>UserName</key>
+    <string>continuum</string>
+    <key>StandardOutPath</key>
+    <string>/Applications/Continuum/apache-continuum-${project.version}/logs/launchd.log</string>
+    <!-- Optional - store data separate from installation -->
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>CONTINUUM_BASE</key>
+      <string>/Users/continuum/Library/Continuum</string>
+    </dict>
+    <!-- Optional: force it to keep running
+    <key>KeepAlive</key>
+    <true/>
+    -->
+</dict>
+</plist>
++----+
+
+  To install the service, run the following:
+
++----+
+$ sudo chown root:wheel /Library/LaunchDaemons/org.apache.continuum.plist
+$ sudo launchctl load -w /Library/LaunchDaemons/org.apache.continuum.plist
++----+
+
+  Start and stop the service with:
+
++----+
+$ sudo launchctl start org.apache.continuum.plist
+$ sudo launchctl stop org.apache.continuum.plist
++----+
+
+  To uninstall the service:
+
++----+
+$ sudo launchctl unload -w /Library/LaunchDaemons/org.apache.continuum.plist
++----+
+
+  You can follow the same steps to install build agents as a service by
+  replacing the appropriate paths, and changing <<<org.apache.continuum>>> to
+  <<<org.apache.continuum.buildagent>>> in the label and <<<plist>>> filename.
+
 * {Installing with Puppet}
 
   If you use Puppet to manage your infrastructure, you can use a third-party Puppet module to install Continuum. This
