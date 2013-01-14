@@ -734,7 +734,7 @@ public class ContinuumServiceImpl
         return 0;
     }
 
-    // TODO: delete this since it does exactly the same as buildProject( int projectId, int buildDefinitionId );
+    // Alternative to buildProject since that forces TRIGGER_FORCED
     public int addProjectToBuildQueue( int projectId, int buildDefinitionId )
         throws ContinuumException, NoBuildAgentException, NoBuildAgentInGroupException
     {
