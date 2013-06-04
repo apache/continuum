@@ -84,8 +84,8 @@
                 <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
                   <s:param name="purgeConfigId"><c:out value="${pageScope.repoPurge.id}"/></s:param>
                   <s:param name="description"><c:out value="${pageScope.repoPurge.description}"/></s:param>
-                  <s:param name="struts.token.name">struts.token</s:param>
-                  <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+                  <s:param name="struts.token.name">token</s:param>
+                  <s:param name="token"><s:property value="token"/></s:param>
                 </s:url>
                 <s:a href="%{removePurgeConfigUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </ec:column>
@@ -136,8 +136,8 @@
                 <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
                   <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
                   <s:param name="description"><c:out value="${pageScope.dirPurge.description}"/></s:param>
-                  <s:param name="struts.token.name">struts.token</s:param>
-                  <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+                  <s:param name="struts.token.name">token</s:param>
+                  <s:param name="token"><s:property value="token"/></s:param>
                 </s:url>
                 <s:a href="%{removePurgeConfigUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </ec:column>

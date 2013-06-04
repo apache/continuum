@@ -214,8 +214,8 @@
             <s:token/>
             <s:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
               <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-              <s:param name="struts.token.name">struts.token</s:param>
-              <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+              <s:param name="struts.token.name">token</s:param>
+              <s:param name="token"><s:property value="token"/></s:param>
             </s:url>
             <s:a href="%{deleteProjectUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">

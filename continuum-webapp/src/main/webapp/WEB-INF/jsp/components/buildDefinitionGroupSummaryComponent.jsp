@@ -104,8 +104,8 @@
               <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
               <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
               <s:param name="confirmed" value="false"/>
-              <s:param name="struts.token.name">struts.token</s:param>
-              <s:param name="struts.token"><s:property value="struts.token"/></s:param> 
+              <s:param name="struts.token.name">token</s:param>
+              <s:param name="token"><s:property value="token"/></s:param> 
             </s:url>
             <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
@@ -211,8 +211,8 @@
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             <s:param name="confirmed" value="false"/>
-            <s:param name="struts.token.name">struts.token</s:param>
-            <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+            <s:param name="struts.token.name">token</s:param>
+            <s:param name="token"><s:property value="token"/></s:param>
           </s:url>
           <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">

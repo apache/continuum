@@ -61,8 +61,8 @@
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
                 <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
                 <s:param name="buildDefinitionTemplate.name"><c:out value="${pageScope.template.name}"/></s:param>
-                <s:param name="struts.token.name">struts.token</s:param>
-                <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+                <s:param name="struts.token.name">token</s:param>
+                <s:param name="token"><s:property value="token"/></s:param>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </c:otherwise>

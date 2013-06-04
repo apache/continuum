@@ -92,8 +92,8 @@
                 <s:url id="removeProjectUrl" action="deleteProject!default.action">
                   <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
                   <s:param name="projectName"><c:out value="${pageScope.project.name}"/></s:param>
-                  <s:param name="struts.token.name">struts.token</s:param>
-                  <s:param name="struts.token"><s:property value="struts.token"/></s:param>
+                  <s:param name="struts.token.name">token</s:param>
+                  <s:param name="token"><s:property value="token"/></s:param>
                 </s:url>
                 <s:a href="%{removeProjectUrl}">
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
