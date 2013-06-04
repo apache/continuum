@@ -28,7 +28,7 @@
     </field-validator>
     <field-validator type="regex">
       <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.\s:-]*]]></param>
+      <param name="regex"><![CDATA[[a-zA-Z0-9_.\s:-]*]]></param>
       <message key="addProject.name.invalid"/>
     </field-validator>
   </field>
@@ -38,7 +38,7 @@
     </field-validator>
     <field-validator type="regex">
       <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9.-]*]]></param>
+      <param name="regex"><![CDATA[[a-zA-Z0-9.-]*]]></param>
       <message key="addProject.version.invalid"/>
     </field-validator>
   </field>
@@ -47,14 +47,14 @@
       <message key="addProject.scmUrl.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.:${}#~=@\\/|\[\]-]*]]></param>
+      <param name="regex"><![CDATA[[a-zA-Z0-9_.:${}#~=@\\/|\[\]-]*]]></param>
       <message key="addProject.scmUrl.invalid"/>
     </field-validator>
   </field>
   <field name="projectScmTag">
     <field-validator type="regex">
       <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.:@\\/|#~=\[\]-]*]]></param>
+      <param name="regex"><![CDATA[[a-zA-Z0-9_.:@\\/|#~=\[\]-]*]]></param>
       <message key="addProject.scmTag.invalid"/>
     </field-validator>
   </field>

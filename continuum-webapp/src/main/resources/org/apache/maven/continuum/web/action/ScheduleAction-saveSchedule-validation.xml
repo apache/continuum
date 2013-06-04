@@ -28,7 +28,7 @@
     </field-validator>
     <field-validator type="regex">
       <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.\s-]*]]></param>
+      <param name="regex"><![CDATA[[a-zA-Z0-9_.\s-]*]]></param>
       <message key="schedule.name.invalid"/>
     </field-validator>
   </field>
@@ -42,13 +42,13 @@
       <message key="schedule.maxJobExecutionTime.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[([0-9])]]></param>
+      <param name="regex"><![CDATA[([0-9])]]></param>
       <message key="schedule.maxJobExecutionTime.invalid"/>
     </field-validator>
   </field>
   <field name="delay">
     <field-validator type="regex">
-      <param name="expression"><![CDATA[([0-9])]]></param>
+      <param name="regex"><![CDATA[([0-9])]]></param>
       <message key="schedule.delay.invalid"/>
     </field-validator>
   </field>

@@ -28,7 +28,7 @@
     </field-validator>
     <field-validator type="regex">
       <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.:\\/-]*]]></param>
+      <param name="regex"><![CDATA[[a-zA-Z0-9_.:\\/-]*]]></param>
       <message key="ircNotifier.host.invalid"/>
     </field-validator>
   </field>
@@ -45,7 +45,7 @@
     </field-validator>
     <field-validator type="regex">
       <param name="trim">true</param>
-      <param name="expression"><![CDATA[[a-zA-Z0-9_.#-]*]]></param>
+      <param name="regex"><![CDATA[[a-zA-Z0-9_.#-]*]]></param>
       <message key="ircNotifier.channel.invalid"/>
     </field-validator>
   </field>

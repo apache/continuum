@@ -27,7 +27,7 @@
       <message key="buildDefinition.buildFile.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.\-]*]]></param>
+      <param name="regex"><![CDATA[[A-Za-z0-9_.\-]*]]></param>
       <message key="buildDefinition.buildFile.invalid"/>
     </field-validator>
   </field>
@@ -38,13 +38,13 @@
   </field>
   <field name="buildDefinition.goals">
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_:\s\-]*]]></param>
+      <param name="regex"><![CDATA[[A-Za-z0-9_:\s\-]*]]></param>
       <message key="buildDefinition.goals.invalid"/>
     </field-validator>
   </field>
   <field name="buildDefinition.arguments">
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_${}.\\/=,":\s\-]*]]></param>
+      <param name="regex"><![CDATA[[A-Za-z0-9_${}.\\/=,":\s\-]*]]></param>
       <message key="buildDefinition.arguments.invalid"/>
     </field-validator>
   </field>

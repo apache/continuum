@@ -27,7 +27,7 @@
       <message key="configuration.workingDirectory.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
+      <param name="regex"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
       <message key="configuration.workingDirectory.invalid"/>
     </field-validator>
   </field>
@@ -36,7 +36,7 @@
       <message key="configuration.buildOutputDirectory.required"/>
     </field-validator>
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
+      <param name="regex"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
       <message key="configuration.buildOutputDirectory.invalid"/>
     </field-validator>
   </field>
@@ -50,13 +50,13 @@
   </field>
   <field name="releaseOutputDirectory">
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
+      <param name="regex"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
       <message key="configuration.releaseOutputDirectory.invalid"/>
     </field-validator>
   </field>
   <field name="deploymentRepositoryDirectory">
     <field-validator type="regex">
-      <param name="expression"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
+      <param name="regex"><![CDATA[[A-Za-z0-9_.:\\/\s\-]*]]></param>
       <message key="configuration.deploymentRepositoryDirectory.invalid"/>
     </field-validator>
   </field>
