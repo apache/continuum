@@ -327,7 +327,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Description" );
         assertTextPresent( "Homepage Url" );
         assertTextPresent( "Local Repository" );
-        assertElementPresent( "saveProjectGroup_" );
+        assertElementPresent( "saveProjectGroup_null" );
         assertElementPresent( "Cancel" );
     }
 
