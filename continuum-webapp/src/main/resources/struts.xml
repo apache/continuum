@@ -22,6 +22,10 @@
 
 <struts>
   <constant name="struts.action.extension" value="action"/>
+  
+  <constant name="struts.xwork.chaining.copyErrors" value="true"/>
+  <constant name="struts.xwork.chaining.copyFieldErrors" value="true"/>
+  <constant name="struts.xwork.chaining.copyMessages" value="true"/>
 
   <include file="struts-default.xml"/>
 
