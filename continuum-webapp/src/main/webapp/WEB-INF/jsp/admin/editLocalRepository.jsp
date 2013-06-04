@@ -41,8 +41,8 @@
         </c:if>
 
           <table>
-            <s:textfield label="%{getText('repository.name.label')}" name="repository.name" required="true" disabled="%{defaultRepo}"/>
-            <s:textfield label="%{getText('repository.location.label')}" name="repository.location" required="true" disabled="%{defaultRepo}"/>
+            <s:textfield label="%{getText('repository.name.label')}" name="repository.name" requiredLabel="true" disabled="%{defaultRepo}"/>
+            <s:textfield label="%{getText('repository.location.label')}" name="repository.location" requiredLabel="true" disabled="%{defaultRepo}"/>
             <s:select label="%{getText('repository.layout.label')}" name="repository.layout" list="layouts" disabled="%{defaultRepo}"/>
           </table>
           <s:hidden name="repository.id"/>

@@ -52,22 +52,22 @@
             <s:hidden name="varNameUpdatable" />
             <s:hidden name="varNameDisplayable" />
             <s:textfield label="%{getText('installation.name.label')}" name="installation.name"
-                            required="true"/>
+                            requiredLabel="true"/>
             <s:if test="displayTypes">
               <s:select label="%{getText('installation.type.label')}" name="installation.type" list="typesLabels" />
             </s:if>
             <s:if test="varNameUpdatable">
               <s:if test="varNameDisplayable">
-                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" />
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" requiredLabel="true" />
               </s:if>
             </s:if>
             <s:else>
               <s:if test="varNameDisplayable">
-                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" readonly="true"/>
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" requiredLabel="true" readonly="true"/>
               </s:if>
             </s:else>
             <s:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
-                          required="true"/>
+                          requiredLabel="true"/>
             <s:if test="%{(automaticProfileDisplayable && installation == null) || (installation.installationId == 0)}">
               <s:checkbox label="%{getText('installation.automaticProfile.label')}" name="automaticProfile" />
             </s:if>

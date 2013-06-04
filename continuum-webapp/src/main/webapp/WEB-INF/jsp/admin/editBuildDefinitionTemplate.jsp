@@ -45,7 +45,7 @@
               <c:when test="${empty actionErrors}">
                 <table>
                   <tbody>
-                    <s:textfield label="%{getText('buildDefinitionTemplate.name')}" name="buildDefinitionTemplate.name" required="true"/>
+                    <s:textfield label="%{getText('buildDefinitionTemplate.name')}" name="buildDefinitionTemplate.name" requiredLabel="true"/>
                     <s:optiontransferselect
                         label="%{getText('buildDefinitionTemplate.builddefinitions.define')}"    
                         name="buildDefinitionIds"

@@ -51,9 +51,9 @@
             <s:hidden name="fromGroupPage"/>
             <table>
               <tbody>
-                <s:textfield label="%{getText('notifier.irc.host.label')}" name="host" required="true"/>
+                <s:textfield label="%{getText('notifier.irc.host.label')}" name="host" requiredLabel="true"/>
                 <s:textfield label="%{getText('notifier.irc.port.label')}" name="port"/>
-                <s:textfield label="%{getText('notifier.irc.channel.label')}" name="channel" required="true"/>
+                <s:textfield label="%{getText('notifier.irc.channel.label')}" name="channel" requiredLabel="true"/>
                 <s:textfield label="%{getText('notifier.irc.nick.label')}" name="nick"/>
                 <s:textfield label="%{getText('notifier.irc.alternateNick.label')}" name="alternateNick"/>
                 <s:textfield label="%{getText('notifier.irc.username.label')}" name="username"/>

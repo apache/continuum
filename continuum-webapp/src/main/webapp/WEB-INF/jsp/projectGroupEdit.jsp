@@ -47,7 +47,7 @@
             <table>
               <tbody>
                 <s:hidden name="projectGroupId"/>
-                <s:textfield label="%{getText('projectGroup.name.label')}" name="name" required="true" disabled="%{projectInCOQueue}"/>
+                <s:textfield label="%{getText('projectGroup.name.label')}" name="name" requiredLabel="true" disabled="%{projectInCOQueue}"/>
                 <c1:data label="%{getText('projectGroup.groupId.label')}" name="projectGroup.groupId"/>
                 <s:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
                 <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"

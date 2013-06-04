@@ -46,13 +46,13 @@
                 <table>
                   <tbody>
                     <s:if test="buildDefinition.type == 'ant'">
-                      <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildDefinition.buildFile"  required="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildDefinition.buildFile"  requiredLabel="true"/>
                     </s:if>
                     <s:elseif test="buildDefinition.type == 'shell'">
-                      <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildDefinition.buildFile" required="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildDefinition.buildFile" requiredLabel="true"/>
                     </s:elseif>
                     <s:else>
-                      <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildDefinition.buildFile" required="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildDefinition.buildFile" requiredLabel="true"/>
                     </s:else>
     
                     <s:if test="buildDefinition.type == 'ant'">
@@ -82,7 +82,7 @@
                     <s:if test="buildDefinition.type != 'ant' || buildDefinition.type != 'shell'">
                         <s:select label="%{getText('buildDefinition.updatePolicy.label')}" name="buildDefinition.updatePolicy" list="buildDefinitionUpdatePolicies"/>
                     </s:if>
-                    <s:textfield label="%{getText('buildDefinition.description.label')}" name="buildDefinition.description" required="true"/>
+                    <s:textfield label="%{getText('buildDefinition.description.label')}" name="buildDefinition.description" requiredLabel="true"/>
                   </tbody>
                 </table>
                 <div class="functnbar3">

@@ -56,9 +56,9 @@
           <s:form name="editProject" action="projectSave" method="post" validate="true">
             <table>
               <tbody>
-                <s:textfield label="%{getText('projectEdit.project.name.label')}" name="name" required="true"/>
-                <s:textfield label="%{getText('projectEdit.project.version.label')}" name="version" required="true"/>
-                <s:textfield label="%{getText('projectEdit.project.scmUrl.label')}" name="scmUrl" required="true"
+                <s:textfield label="%{getText('projectEdit.project.name.label')}" name="name" requiredLabel="true"/>
+                <s:textfield label="%{getText('projectEdit.project.version.label')}" name="version" requiredLabel="true"/>
+                <s:textfield label="%{getText('projectEdit.project.scmUrl.label')}" name="scmUrl" requiredLabel="true"
                              onchange="checkUseCache()"/>
                 <s:checkbox label="%{getText('projectEdit.project.scmUseCache.label')}" name="scmUseCache"
                              onclick="checkUseCache()"/>

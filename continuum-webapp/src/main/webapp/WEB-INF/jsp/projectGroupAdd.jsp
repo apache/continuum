@@ -40,8 +40,8 @@
             </c:if>
             <table>
               <tbody>
-                <s:textfield label="%{getText('projectGroup.name.label')}" name="name"  required="true"/>
-                <s:textfield label="%{getText('projectGroup.groupId.label')}" name="groupId" required="true"/>
+                <s:textfield label="%{getText('projectGroup.name.label')}" name="name"  requiredLabel="true"/>
+                <s:textfield label="%{getText('projectGroup.groupId.label')}" name="groupId" requiredLabel="true"/>
                 <s:textfield label="%{getText('projectGroup.description.label')}" name="description"/>
                 <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
                 		   listKey="id" listValue="name"/>

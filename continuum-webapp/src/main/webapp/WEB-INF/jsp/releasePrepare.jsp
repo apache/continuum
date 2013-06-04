@@ -34,12 +34,12 @@
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <s:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername"/>
             <s:password label="%{getText('releasePrepare.scmPassword.label')}" name="scmPassword"/>
-            <s:textfield label="%{getText('releasePrepare.scmTag.label')}" name="scmTag" required="true"/>
+            <s:textfield label="%{getText('releasePrepare.scmTag.label')}" name="scmTag" requiredLabel="true"/>
             <c:if test="${!empty (scmTagBase)}">
               <s:textfield label="%{getText('releasePrepare.scmTagBase.label')}" name="scmTagBase"/>
             </c:if>
             <s:textfield label="%{getText('releasePrepare.scmCommentPrefix.label')}" name="scmCommentPrefix"/>
-            <s:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" required="true"/>
+            <s:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" requiredLabel="true"/>
             <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments"/>
             <s:select label="%{getText('releasePrepare.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name"
                        listKey="id" headerKey="-1" headerValue=""/>

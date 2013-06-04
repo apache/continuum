@@ -44,11 +44,11 @@
               <s:hidden name="type"/>
               <c:choose>
                 <c:when test="${type=='new'}">
-                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true"/>
+                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" requiredLabel="true"/>
                 </c:when>
                 <c:otherwise>
                   <s:hidden name="buildAgent.url"/>
-                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true" disabled="true"/>
+                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" requiredLabel="true" disabled="true"/>
                 </c:otherwise>
               </c:choose>
               <s:textfield label="%{getText('buildAgent.description.label')}" name="buildAgent.description"/>

@@ -65,21 +65,21 @@
           <tbody>
 
             <s:textfield label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory"
-                          required="true">
+                          requiredLabel="true">
               <s:param name="desc"><p>
                 <s:text name="configuration.workingDirectory.message"/>
               </p></s:param>
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.buildOutputDirectory.label')}" name="buildOutputDirectory"
-                          required="true">
+                          requiredLabel="true">
               <s:param name="desc"><p>
                 <s:text name="configuration.buildOutputDirectory.message"/>
               </p></s:param>
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
-            			  required="%{requireReleaseOutput}">
+            			  requiredLabel="%{requireReleaseOutput}">
               <s:param name="desc"><p>
                 <s:text name="configuration.releaseOutputDirectory.message"/>
               </s:param>
@@ -92,7 +92,7 @@
               </p></s:param>
             </s:textfield>
 
-            <s:textfield label="%{getText('configuration.baseUrl.label')}" name="baseUrl" required="true">
+            <s:textfield label="%{getText('configuration.baseUrl.label')}" name="baseUrl" requiredLabel="true">
               <s:param name="desc"><p>
                 <s:text name="configuration.baseUrl.message"/>
               </p></s:param>
@@ -105,7 +105,7 @@
             </s:textfield>
 
             <%--
-            <s:checkbox label="%{getText('configuration.disable.parallel.builds')}" name="requireParallelBuilds" required="true"/>
+            <s:checkbox label="%{getText('configuration.disable.parallel.builds')}" name="requireParallelBuilds" requiredLabel="true"/>
             --%>
 
             <s:checkbox label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled" onclick="setSecretPassword();"/>

@@ -54,16 +54,16 @@
                         </c:if>
                         <table>
                           <tbody>
-                            <s:textfield label="%{getText('projectName.label')}" name="projectName" required="true">
+                            <s:textfield label="%{getText('projectName.label')}" name="projectName" requiredLabel="true">
                                 <s:param name="desc"><p><s:text name="projectName.message"/></p></s:param>
                             </s:textfield>
                             <s:textfield label="%{getText('projectDescription.label')}" name="projectDescription">
                                 <s:param name="desc"><p><s:text name="projectDescription.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" required="true">
+                            <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" requiredLabel="true">
                                 <s:param name="desc"><p><s:text name="projectVersion.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectScmUrl.label')}" name="projectScmUrl" required="true">
+                            <s:textfield label="%{getText('projectScmUrl.label')}" name="projectScmUrl" requiredLabel="true">
                                 <s:param name="desc"><p><s:text name="projectScmUrl.message"/></p></s:param>
                             </s:textfield>
                             <s:textfield label="%{getText('projectScmUsername.label')}" name="projectScmUsername">

@@ -44,7 +44,7 @@
           <table>
             <c:choose>
               <c:when test="${purgeType == 'repository'}">
-                <s:select label="%{getText('purgeConfig.repository.label')}" name="repositoryId" list="repositories" required="true"/>
+                <s:select label="%{getText('purgeConfig.repository.label')}" name="repositoryId" list="repositories" requiredLabel="true"/>
               </c:when>
               <c:otherwise>
                 <s:select label="%{getText('purgeConfig.directoryType.label')}" name="directoryType" list="directoryTypes"/>

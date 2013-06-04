@@ -43,7 +43,7 @@
     <div class="axial">
       <s:form action="saveBuildQueue" method="post" validate="true">
           <table>
-            <s:textfield label="%{getText('parallel.build.queue.name')}" name="name" required="true" />
+            <s:textfield label="%{getText('parallel.build.queue.name')}" name="name" requiredLabel="true" />
           </table>
           <div class="functnbar3">
             <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>

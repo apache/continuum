@@ -46,13 +46,13 @@
                 <table>
                   <tbody>
                     <s:if test="executor == 'ant' or buildDefinitionType == 'ant'">
-                      <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildFile"  required="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildFile"  requiredLabel="true"/>
                     </s:if>
                     <s:elseif test="executor == 'shell' or buildDefinitionType == 'shell'">
-                      <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildFile" required="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildFile" requiredLabel="true"/>
                     </s:elseif>
                     <s:else>
-                      <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildFile" required="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildFile" requiredLabel="true"/>
                     </s:else>
     
                     <s:if test="executor == 'ant' or buildDefinitionType == 'ant'">
