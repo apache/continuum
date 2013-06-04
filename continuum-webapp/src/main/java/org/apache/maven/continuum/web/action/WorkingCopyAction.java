@@ -23,6 +23,7 @@ import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.util.UrlHelperFactory;
 import org.apache.maven.continuum.web.util.WorkingCopyContentGenerator;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.util.UrlHelper;
@@ -111,10 +112,12 @@ public class WorkingCopyAction
 
         params.put( "projectName", projectName );
 
-        String baseUrl = UrlHelper.buildUrl( "/workingCopy.action", ServletActionContext.getRequest(),
+        UrlHelper urlHelper = UrlHelperFactory.getInstance();
+        
+        String baseUrl = urlHelper.buildUrl( "/workingCopy.action", ServletActionContext.getRequest(),
                                              ServletActionContext.getResponse(), params );
 
-        String imagesBaseUrl = UrlHelper.buildUrl( "/images/", ServletActionContext.getRequest(),
+        String imagesBaseUrl = urlHelper.buildUrl( "/images/", ServletActionContext.getRequest(),
                                                    ServletActionContext.getResponse(), params );
 
         imagesBaseUrl = imagesBaseUrl.substring( 0, imagesBaseUrl.indexOf( "/images/" ) + "/images/".length() );

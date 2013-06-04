@@ -19,14 +19,15 @@ package org.apache.maven.continuum.web.view;
  * under the License.
  */
 
-import com.opensymphony.xwork2.ActionContext;
+import java.util.HashMap;
+
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.maven.continuum.web.util.StateGenerator;
+import org.apache.maven.continuum.web.util.UrlHelperFactory;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.util.UrlHelper;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -38,7 +39,7 @@ import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
 
-import java.util.HashMap;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Used in Summary view
@@ -145,7 +146,7 @@ public class StateCell
 
         params.put( "projectGroupId", project.getProjectGroupId() );
 
-        String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
+        String url = UrlHelperFactory.getInstance().buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
                                          ServletActionContext.getResponse(), params );
 
         return "<a href=\"" + url + "\">" + state + "</a>";
@@ -159,7 +160,7 @@ public class StateCell
 
         params.put( "projectScmRootId", scmRoot.getId() );
 
-        String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
+        String url = UrlHelperFactory.getInstance().buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
                                          ServletActionContext.getResponse(), params );
 
         return "<a href=\"" + url + "\">" + state + "</a>";

@@ -19,10 +19,15 @@ package org.apache.maven.continuum.web.view;
  * under the License.
  */
 
-import com.opensymphony.xwork2.ActionContext;
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.model.ProjectSummary;
-import org.apache.struts2.views.util.UrlHelper;
+import org.apache.maven.continuum.web.util.UrlHelperFactory;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -34,10 +39,7 @@ import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
 
-import java.util.HashMap;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Used in Summary view
@@ -92,7 +94,7 @@ public class BuildCell
 
                     HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
-                    String url = UrlHelper.buildUrl( "/buildResult.action", request, response, params );
+                    String url = UrlHelperFactory.getInstance().buildUrl( "/buildResult.action", request, response, params );
 
                     if ( isAuthorized( project ) )
                     {
