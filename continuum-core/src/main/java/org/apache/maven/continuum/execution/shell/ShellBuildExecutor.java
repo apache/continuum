@@ -67,7 +67,7 @@ public class ShellBuildExecutor
     // ContinuumBuilder implementation
     // ----------------------------------------------------------------------
 
-    public synchronized ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition,
+    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition,
                                                              File buildOutput, List<Project> projectsWithCommonScmRoot,
                                                              String projectScmRootUrl )
         throws ContinuumBuildExecutorException
