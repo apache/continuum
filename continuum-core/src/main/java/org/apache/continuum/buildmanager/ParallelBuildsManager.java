@@ -19,6 +19,16 @@ package org.apache.continuum.buildmanager;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -49,15 +59,6 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.annotation.Resource;
 
 /**
  * Parallel builds manager.
@@ -164,7 +165,7 @@ public class ParallelBuildsManager
                                BuildTrigger buildTrigger, Map<Integer, ScmResult> scmResultMap, int projectGroupId )
         throws BuildManagerException
     {
-        int firstProjectId = 0;
+        Project firstBuildableProject = null;
         // get id of the first project in the list that is not yet in the build queue
         for ( Project project : projects )
         {
@@ -172,7 +173,7 @@ public class ParallelBuildsManager
             {
                 if ( !isInQueue( project.getId(), BUILD_QUEUE, -1 ) && !isProjectInAnyCurrentBuild( project.getId() ) )
                 {
-                    firstProjectId = project.getId();
+                    firstBuildableProject = project;
                     break;
                 }
             }
@@ -182,17 +183,18 @@ public class ParallelBuildsManager
             }
         }
 
-        if ( firstProjectId != 0 )
-        {
-            BuildDefinition buildDef = projectsBuildDefinitionsMap.get( firstProjectId );
+        boolean projectsToBuild = firstBuildableProject != null;
 
-            if ( buildDef.getArguments() == null || buildDef.getBuildFile() == null || buildDef.getGoals() == null ||
-                buildDef.getSchedule() == null )
+        if ( projectsToBuild )
+        {
+            BuildDefinition buildDef = projectsBuildDefinitionsMap.get( firstBuildableProject.getId() );
+
+            if ( buildDef.getSchedule() == null )
             {
-                log.error( "Null values set on build definition (id=" + buildDef.getId() + ")" );
-                throw new BuildManagerException( "Unable to build project due to null values set on " +
-                                                     "( GOALS , ARGUMENTS , BUILD_FILE, SCHEDULE_ID_OID ) of BUILDDEFINITION ID : " +
-                                                     buildDef.getId() + " Please notify your system adminitrator" );
+                String msg = String.format( "Invalid data, null schedule for builddef id=%s/project id=%s",
+                                            buildDef.getId(), firstBuildableProject.getId() );
+                log.error( msg );
+                throw new BuildManagerException( msg + ", please notify your system adminitrator" );
             }
             OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectsInGroupAreQueued( projectGroupId );
 
@@ -239,7 +241,16 @@ public class ParallelBuildsManager
                                                                        buildTrigger, project.getName(),
                                                                        buildDefinitionLabel, scmResult,
                                                                        projectGroupId );
-                    buildTask.setMaxExecutionTime( buildDefinition.getSchedule().getMaxJobExecutionTime() * 1000 );
+
+                    if ( buildDefinition.getSchedule() == null )
+                    {
+                        log.warn( String.format( "Invalid data, null schedule for builddef id=%s/project id=%s",
+                                                 buildDef.getId(), project.getId() ) );
+                    }
+                    else
+                    {
+                        buildTask.setMaxExecutionTime( buildDefinition.getSchedule().getMaxJobExecutionTime() * 1000 );
+                    }
 
                     try
                     {
