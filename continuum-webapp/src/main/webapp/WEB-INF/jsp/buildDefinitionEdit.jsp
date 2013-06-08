@@ -61,7 +61,7 @@
                     <s:elseif test="executor == 'shell' or buildDefinitionType == 'shell'">
                     </s:elseif>
                     <s:else>
-                      <s:textfield label="%{getText('buildDefinition.goals.maven.label')}" name="goals"/>
+                      <s:textfield label="%{getText('buildDefinition.goals.maven.label')}" name="goals" requiredLabel="true"/>
                     </s:else>
     
                     <s:textfield label="%{getText('buildDefinition.arguments.label')}" name="arguments"/>

@@ -34,5 +34,16 @@ public class ContinuumBuildExecutorConstants
     public static final String ANT_BUILD_EXECUTOR = "ant";
 
     public static final String SHELL_BUILD_EXECUTOR = "shell";
+    
+    /**
+     * Determines whether the executor type is an m1 or m2 build.
+     * 
+     * @param type
+     * @return true if the excutor type will result in a maven 1 or 2+ build.
+     */
+    public static boolean isMaven( String type )
+    {
+        return MAVEN_ONE_BUILD_EXECUTOR.equals( type ) || MAVEN_TWO_BUILD_EXECUTOR.equals( type );
+    }
 
 }

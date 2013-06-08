@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -576,5 +577,17 @@ public class ContinuumActionSupport
         throws UserNotFoundException
     {
         return getSecuritySystem().getUserManager().findUser( principal );
+    }
+    
+    /**
+     * Convenience method to determine whether a build is a maven build. We could call the static method directly, 
+     * but for struts2 validator access, we would need to enable static method invocation.
+     * 
+     * @param buildType
+     * @return true if the build type is will result in a maven 1 or 2+ build.
+     */
+    public boolean isMavenBuildType( String buildType )
+    {
+        return ContinuumBuildExecutorConstants.isMaven( buildType );
     }
 }

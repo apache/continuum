@@ -144,7 +144,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertTextPresent( "Build Definition Template" );
         assertTextPresent( "POM filename*:" );
         assertElementPresent( "buildDefinition.buildFile" );
-        assertTextPresent( "Goals:" );
+        assertTextPresent( "Goals*:" );
         assertElementPresent( "buildDefinition.goals" );
         assertTextPresent( "Arguments:" );
         assertElementPresent( "buildDefinition.arguments" );

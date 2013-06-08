@@ -33,6 +33,10 @@
     </field-validator>
   </field>
   <field name="goals">
+    <field-validator type="fieldexpression">
+      <param name="expression">not isMavenBuildType(buildDefinitionType) or goals.trim().length() > 0</param>
+      <message key="buildDefinition.goals.required"/>
+    </field-validator>
     <field-validator type="regex">
       <param name="trim">true</param>
       <param name="regex"><![CDATA[[A-Za-z0-9_:\s.\-]*]]></param>

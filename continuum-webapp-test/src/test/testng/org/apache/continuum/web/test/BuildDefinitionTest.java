@@ -149,8 +149,10 @@ public class BuildDefinitionTest
         goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
         clickButtonWithValue( "Add" );
         setFieldValue( "buildFile", "" );
+        setFieldValue( "goals", "" );
         clickButtonWithValue( "Save" );
         assertTextPresent( "Build file is required and cannot contain spaces only" );
+        assertTextPresent( "Goals are required" );
     }
 
     public void testAddGroupBuildDefinitionWithXSS()

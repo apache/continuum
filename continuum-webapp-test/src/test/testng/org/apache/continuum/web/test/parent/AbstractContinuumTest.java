@@ -420,7 +420,7 @@ public abstract class AbstractContinuumTest
         if ( MAVEN_PROJECT_TYPE.equals( type ) )
         {
             assertTextPresent( "POM filename*:" );
-            assertTextPresent( "Goals:" );
+            assertTextPresent( "Goals*:" );
         }
         else if ( ANT_PROJECT_TYPE.equals( type ) )
         {

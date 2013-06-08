@@ -96,6 +96,7 @@ public class BuildDefinitionTemplateTest
         goToAddBuildDefinitionTemplate();
         addEditBuildDefinitionTemplate( "", "", "", "", true, true, true, false );
         assertTextPresent( "BuildFile is required" );
+        assertTextPresent( "Goals are required" );
         assertTextPresent( "Description is required" );
     }
 
