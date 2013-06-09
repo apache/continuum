@@ -561,7 +561,7 @@ public class ContinuumServiceImplTest
     private BuildDefinition createBuildDefinition()
     {
         BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setArguments( "--batch-mode" );
+        buildDef.setArguments( "--batch-mode -P!dev" );
         buildDef.setBuildFile( "pom.xml" );
         buildDef.setType( "maven2" );
         buildDef.setBuildFresh( false );
