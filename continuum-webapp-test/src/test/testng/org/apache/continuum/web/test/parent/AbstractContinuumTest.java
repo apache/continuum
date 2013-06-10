@@ -1308,4 +1308,23 @@ public abstract class AbstractContinuumTest
         //windows
         return os.contains( "win" );
     }
+
+    // ////////////////////////////////////
+    // Appearance
+    // ////////////////////////////////////
+
+    protected void goToAppearancePage()
+    {
+        clickLinkWithText( "Appearance" );
+        assertAppearancePage();
+    }
+
+    protected void assertAppearancePage()
+    {
+        assertPage("Configure Appearance");
+        assertTextPresent("Appearance");
+        assertTextPresent("Company Details");
+        assertTextPresent("Footer Content");
+        assertButtonWithValuePresent( "Save" );
+    }
 }

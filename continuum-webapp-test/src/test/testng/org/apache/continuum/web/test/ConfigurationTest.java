@@ -231,17 +231,4 @@ public class ConfigurationTest
             assertEditConfigurationPage();
         }
     }
-
-    protected void goToAppearancePage()
-    {
-        clickLinkWithText( "Appearance" );
-        assertAppearancePage();
-    }
-
-    void assertAppearancePage()
-    {
-        assertPage( "Configure Appearance" );
-        assertTextPresent( "Company Details" );
-        assertTextPresent( "Footer Content" );
-    }
 }

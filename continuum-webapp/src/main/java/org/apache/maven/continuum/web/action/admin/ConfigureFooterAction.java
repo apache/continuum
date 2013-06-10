@@ -43,6 +43,7 @@ public class ConfigureFooterAction
         throws IOException
     {
         appareanceConfiguration.saveFooter( getFooter() );
+        addActionMessage( getResourceBundle().getString( "appearance.footerContent.success" ) );
         return SUCCESS;
     }
 
