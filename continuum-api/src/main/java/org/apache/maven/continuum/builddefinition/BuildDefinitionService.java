@@ -70,6 +70,9 @@ public interface BuildDefinitionService
      */
     BuildDefinition cloneBuildDefinition( BuildDefinition buildDefinition );
 
+    boolean isBuildDefinitionInUse( BuildDefinition buildDefinition )
+        throws BuildDefinitionServiceException;
+
     // ------------------------------------------------------
     //  BuildDefinitionTemplate
     // ------------------------------------------------------

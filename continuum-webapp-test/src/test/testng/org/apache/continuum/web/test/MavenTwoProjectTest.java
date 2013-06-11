@@ -65,19 +65,12 @@ public class MavenTwoProjectTest
         projectGroupId = getProperty( "MAVEN2_POM_PROJECT_GROUP_ID" );
         projectGroupDescription = getProperty( "MAVEN2_POM_PROJECT_GROUP_DESCRIPTION" );
         projectGroupScmRootUrl = getProperty( "MAVEN2_POM_PROJECT_GROUP_SCM_ROOT_URL" );
-
-        readdDefaultBuildDefinitionToTemplate = false;
     }
 
     @AfterMethod
     public void tearDown()
     {
         removeProjectGroup( projectGroupName, false );
-
-        if ( readdDefaultBuildDefinitionToTemplate )
-        {
-            addDefaultBuildDefinitionFromTemplate( "maven2" );
-        }
     }
 
     public void testAddMavenTwoProject()
@@ -87,19 +80,6 @@ public class MavenTwoProjectTest
         addMavenTwoProject( pomUrl, pomUsername, pomPassword, null, true );
 
         // Wait Struts Listener
-        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
-
-        assertTextPresent( projectGroupScmRootUrl );
-    }
-
-    public void testAddMavenTwoProjectWithNoDefaultBuildDefinitionInTemplate()
-        throws Exception
-    {
-        removeDefaultBuildDefinitionFromTemplate( "maven2" );
-        readdDefaultBuildDefinitionToTemplate = true;
-
-        addMavenTwoProject( pomUrl, pomUsername, pomPassword, null, true );
-
         assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
 
         assertTextPresent( projectGroupScmRootUrl );

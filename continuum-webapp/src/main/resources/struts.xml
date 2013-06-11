@@ -909,6 +909,7 @@
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionAsTemplate.jsp</result>
+      <result name="error">/WEB-INF/jsp/error/buildDefinitionError.jsp</result>
     </action>
 
     <action name="displayQueues" class="queues" method="display">

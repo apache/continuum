@@ -254,6 +254,31 @@ public class DefaultBuildDefinitionService
         return cloned;
     }
 
+    public boolean isBuildDefinitionInUse( BuildDefinition buildDefinition )
+        throws BuildDefinitionServiceException
+    {
+        boolean inUse = false;
+        List<BuildDefinitionTemplate> buildDefinitionTemplates = getAllBuildDefinitionTemplate();
+
+        for ( BuildDefinitionTemplate template : buildDefinitionTemplates )
+        {
+            for ( BuildDefinition definition : (List<BuildDefinition>) template.getBuildDefinitions() )
+            {
+                if ( buildDefinition.getId() == definition.getId() )
+                {
+                    inUse = true;
+                    break;
+                }
+            }
+
+            if ( inUse )
+            {
+                break;
+            }
+        }
+
+        return inUse;
+    }
 
     public BuildDefinitionTemplate getContinuumDefaultWithType( String type )
         throws BuildDefinitionServiceException
@@ -676,4 +701,5 @@ public class DefaultBuildDefinitionService
         }
         return isDuplicate;
     }
+
 }

@@ -72,6 +72,8 @@ public abstract class AbstractBuildDefinitionTemplateTest
     protected void addEditTemplate( String name, String[] addBuildDefinitions, String[] removeBuildDefinitions,
                                     boolean success )
     {
+        boolean empty = false;
+
         setFieldValue( "buildDefinitionTemplate.name", name );
         if ( addBuildDefinitions != null && addBuildDefinitions.length > 0 )
         {
@@ -81,6 +83,11 @@ public abstract class AbstractBuildDefinitionTemplateTest
                 clickButtonWithValue( "->", false );
             }
         }
+        else
+        {
+            empty = true;
+        }
+
         if ( removeBuildDefinitions != null && removeBuildDefinitions.length > 0 )
         {
             for ( String bd : removeBuildDefinitions )
@@ -96,7 +103,14 @@ public abstract class AbstractBuildDefinitionTemplateTest
         }
         else
         {
-            assertAddEditTemplatePage( null, null );
+            if ( empty )
+            {
+                assertTextPresent( "Template requires at least one build definition" );
+            }
+            else
+            {
+                assertAddEditTemplatePage( null, null );
+            }
         }
     }
 

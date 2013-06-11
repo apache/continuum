@@ -44,7 +44,7 @@ public class BuildDefinitionTemplateTest
         throws Exception
     {
         goToAddTemplate();
-        addEditTemplate( "", new String[]{}, new String[]{}, false );
+        addEditTemplate( "", new String[] { "Default Maven Build Definition" }, new String[] {}, false );
         assertTextPresent( "Name is required" );
     }
 
@@ -52,7 +52,7 @@ public class BuildDefinitionTemplateTest
         throws Exception
     {
         goToAddTemplate();
-        addEditTemplate( "Name <script>alert('gotcha')</script>", new String[]{}, new String[]{}, false );
+        addEditTemplate( "Name <script>alert('gotcha')</script>", new String[]{ "Default Maven Build Definition" }, new String[]{}, false );
         assertTextPresent( "Name contains invalid characters" );
     }
 
@@ -131,4 +131,13 @@ public class BuildDefinitionTemplateTest
         String TEMPLATE_BUILD_DESCRIPTION = getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
         removeBuildDefinitionTemplate( TEMPLATE_BUILD_DESCRIPTION );
     }
+
+    public void testAddTemplateWithEmptyBuildDefinitions()
+        throws Exception
+    {
+        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
+        goToAddTemplate();
+        addEditTemplate( TEMPLATE_NAME, new String[] {}, new String[] {}, false );
+    }
+
 }

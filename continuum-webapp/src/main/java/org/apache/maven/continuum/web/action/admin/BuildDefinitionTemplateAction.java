@@ -206,7 +206,7 @@ public class BuildDefinitionTemplateAction
         return SUCCESS;
     }
 
-    private List<BuildDefinition> getBuildDefinitionsFromSelectedBuildDefinitions()
+    public List<BuildDefinition> getBuildDefinitionsFromSelectedBuildDefinitions()
         throws ContinuumException
     {
         if ( this.selectedBuildDefinitionIds == null )
@@ -293,9 +293,17 @@ public class BuildDefinitionTemplateAction
     {
         if ( confirmed )
         {
-            buildDefinition = getContinuum().getBuildDefinitionService().getBuildDefinition(
-                this.buildDefinition.getId() );
-            this.getContinuum().getBuildDefinitionService().removeBuildDefinition( buildDefinition );
+            if ( getContinuum().getBuildDefinitionService().isBuildDefinitionInUse( buildDefinition ) )
+            {
+                addActionError( getText( "buildDefinition.used" ) );
+                return ERROR;
+            }
+            else
+            {
+                buildDefinition =
+                    getContinuum().getBuildDefinitionService().getBuildDefinition( this.buildDefinition.getId() );
+                this.getContinuum().getBuildDefinitionService().removeBuildDefinition( buildDefinition );
+            }
         }
         else
         {

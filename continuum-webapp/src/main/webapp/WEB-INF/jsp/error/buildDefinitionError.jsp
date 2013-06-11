@@ -1,4 +1,4 @@
-<!--
+<%--
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
   ~ distributed with this work for additional information
@@ -15,24 +15,30 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
-  -->
+  --%>
 
-<!DOCTYPE validators PUBLIC
-    "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
-    "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<validators>
-  <field name="buildDefinitionTemplate.name">
-    <field-validator type="requiredstring">
-      <message key="buildDefinitionTemplate.name.required"/>
-    </field-validator>
-    <field-validator type="regex">
-      <param name="regex"><![CDATA[[A-Za-z0-9_.\s\-]*]]></param>
-      <message key="buildDefinitionTemplate.name.invalid"/>
-    </field-validator>
-  </field>
-  <validator type="expression">
-    <param name="expression">#selectedDefs = buildDefinitionsFromSelectedBuildDefinitions, #selectedDefs != null and #selectedDefs.size() > 0</param>
-    <message key="buildDefinitionTemplate.definition.empty" />
-  </validator>
-</validators>
+<html>
+<s:i18n name="localization.Continuum">
+<head>
+  <title><s:text name="buildDefinitionError.page.title"/></title>
+</head>
+
+<body>
+  <div id="h3">
+    <h3><s:text name="buildDefinitionError.section.title"/></h3>
+    <div class="errors">
+      <c:if test="${!empty actionErrors}">
+        <div class="errormessage">
+          <s:iterator value="actionErrors">
+            <p><s:property/></p>
+          </s:iterator>
+        </div>
+      </c:if>
+    </div>
+  </div>
+</body>
+</s:i18n>
+</html>

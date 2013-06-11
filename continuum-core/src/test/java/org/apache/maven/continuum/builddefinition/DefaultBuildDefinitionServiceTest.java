@@ -157,6 +157,9 @@ public class DefaultBuildDefinitionServiceTest
             (BuildDefinition) getBuildDefinitionService().getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions().get(
                 0 );
         template = getBuildDefinitionService().addBuildDefinitionInTemplate( template, bd, false );
+
+        assertEquals( true, getBuildDefinitionService().isBuildDefinitionInUse( bd ) );
+
         assertEquals( 1, template.getBuildDefinitions().size() );
         all = getBuildDefinitionService().getAllBuildDefinitions();
         assertEquals( 5, all.size() );
@@ -178,5 +181,19 @@ public class DefaultBuildDefinitionServiceTest
 
         template = getBuildDefinitionService().addBuildDefinitionTemplate( template );
         assertNull( template );
+    }
+
+    public void testUnusedBuildDefinition()
+        throws Exception
+    {
+        BuildDefinition unused = new BuildDefinition();
+
+        unused.setTemplate( true );
+        unused.setArguments( "-N" );
+        unused.setGoals( "clean test-compile" );
+        unused.setBuildFile( "pom.xml" );
+        unused.setDescription( "desc template" );
+
+        assertFalse( getBuildDefinitionService().isBuildDefinitionInUse( unused ) );
     }
 }
