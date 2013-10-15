@@ -16,7 +16,7 @@ Installing Continuum Standalone
 
     * Extract the file
 
-    * Set a <<<JAVA_HOME>>> environment variable which use a jdk >= 1.5
+  <Note>: The standalone version ships with Jetty 8, which requires Java 6.
 
 ** {Defining JNDI Resources}
 
