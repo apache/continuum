@@ -124,8 +124,9 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-util</artifactId>
-      <!-- TODO: change this to jetty.version when using Jetty 7 throughout -->
-      <version>8.1.5.v20120716</version>
+      <!-- TODO: change this to jetty.version when we're happy to use Java 6
+           as a minimum -->
+      <version>7.6.9.v20130131</version>
     </dependency>
     <!-- === Testing Dependencies === -->
     <dependency>
