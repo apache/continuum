@@ -46,3 +46,7 @@ The server will run until you press Ctrl-C, and you can run the tests from the I
 To attach a debugger to the same process, run:
 
     mvn -Ptomcat7x,debug process-test-resources selenium:start-server cargo:run
+
+Note, the tests currently fail with "Illegal value" errors under newer
+versions of Selenium and Firefox. The tests run successfully with Selenium
+2.21.0 and Firefox 17.
