@@ -232,7 +232,7 @@ public abstract class AbstractAdminTest
             click( "configuration_distributedBuildEnabled" );
         }
         setFieldValue( "configuration_sharedSecretPassword", SHARED_SECRET );
-        clickAndWait( "css=input[value='Save']" );
+        clickAndWait( "configuration_null" );
         assertTextPresent( "true" );
         assertTextPresent( "Distributed Builds" );
         assertElementPresent( "link=Build Agents" );
