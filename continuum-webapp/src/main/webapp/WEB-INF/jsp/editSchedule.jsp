@@ -43,10 +43,10 @@
 
           <table>
             <s:textfield label="%{getText('schedule.name.label')}" name="name" requiredLabel="true" size="100">
-                <s:param name="desc"><p><s:text name="schedule.name.message"/></p></s:param>
+                <s:param name="after"><p><s:text name="schedule.name.message"/></p></s:param>
             </s:textfield>
             <s:textfield label="%{getText('schedule.description.label')}" name="description" requiredLabel="true" size="100">
-                <s:param name="desc"><p><s:text name="schedule.description.message"/></p></s:param>
+                <s:param name="after"><p><s:text name="schedule.description.message"/></p></s:param>
             </s:textfield>
 
             <tr>
@@ -60,19 +60,19 @@
                   <s:textfield label="%{getText('schedule.month.label')}" name="month" size="10"/>
                   <s:textfield label="%{getText('schedule.dayOfWeek.label')}" name="dayOfWeek" size="10"/>
                   <s:textfield label="%{getText('schedule.year.label')}" name="year"  size="4">
-                    <s:param name="desc"><p><s:text name="schedule.cronExpression.message"/></p></s:param>
+                    <s:param name="after"><p><s:text name="schedule.cronExpression.message"/></p></s:param>
                   </s:textfield>
                 </table>
               </td>
             </tr>
 
             <s:textfield label="%{getText('schedule.maxJobExecutionTime.label')}" name="maxJobExecutionTime" requiredLabel="true" size="100">
-                <s:param name="desc"><p><s:text name="schedule.maxJobExecutionTime.message"/></p></s:param>
+                <s:param name="after"><p><s:text name="schedule.maxJobExecutionTime.message"/></p></s:param>
             </s:textfield>
             <s:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay" size="100">
-                <s:param name="desc"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
+                <s:param name="after"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
             </s:textfield>
-    	      
+
             <c1:ifBuildTypeEnabled buildType="parallel">          
               <s:optiontransferselect 
                 label="%{getText('schedule.buildqueues.label')}"
@@ -103,7 +103,7 @@
              </c1:ifBuildTypeEnabled>   
                                        
             <s:checkbox label="%{getText('schedule.enabled.label')}" name="active" value="active" fieldValue="true">
-                <s:param name="desc"><p><s:text name="schedule.enabled.message"/></p></s:param>
+                <s:param name="after"><p><s:text name="schedule.enabled.message"/></p></s:param>
             </s:checkbox>
 
           </table>

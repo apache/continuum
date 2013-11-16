@@ -65,40 +65,40 @@
 
             <s:textfield label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory"
                           requiredLabel="true" size="100">
-              <s:param name="desc"><p>
+              <s:param name="after"><p>
                 <s:text name="configuration.workingDirectory.message"/>
               </p></s:param>
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.buildOutputDirectory.label')}" name="buildOutputDirectory"
                           requiredLabel="true" size="100">
-              <s:param name="desc"><p>
+              <s:param name="after"><p>
                 <s:text name="configuration.buildOutputDirectory.message"/>
               </p></s:param>
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
             			  requiredLabel="%{requireReleaseOutput}" size="100">
-              <s:param name="desc"><p>
+              <s:param name="after"><p>
                 <s:text name="configuration.releaseOutputDirectory.message"/>
               </s:param>
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
                           name="deploymentRepositoryDirectory" size="100">
-              <s:param name="desc"><p>
+              <s:param name="after"><p>
                 <s:text name="configuration.deploymentRepositoryDirectory.message"/>
               </p></s:param>
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.baseUrl.label')}" name="baseUrl" requiredLabel="true" size="100">
-              <s:param name="desc"><p>
+              <s:param name="after"><p>
                 <s:text name="configuration.baseUrl.message"/>
               </p></s:param>
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.allowed.build.parallel')}" name="numberOfAllowedBuildsinParallel" size="10">
-              <s:param name="desc"><p>
+              <s:param name="after"><p>
                 <s:text name="configuration.allowed.build.paralle.message"/>
               </p></s:param>
             </s:textfield>
@@ -110,7 +110,7 @@
             <s:checkbox label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled" onclick="setSecretPassword();"/>
 
             <s:password label="%{getText('configuration.sharedSecretPassword.label')}" name="sharedSecretPassword" disabled="%{!distributedBuildEnabled}" showPassword="true" size="100">
-              <s:param name="desc">
+              <s:param name="after">
                 <p>
                   <s:text name="configuration.sharedSecretPassword.message"/>
                 </p>

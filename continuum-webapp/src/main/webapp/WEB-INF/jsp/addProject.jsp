@@ -54,25 +54,25 @@
                         <table>
                           <tbody>
                             <s:textfield label="%{getText('projectName.label')}" name="projectName" requiredLabel="true" size="100">
-                                <s:param name="desc"><p><s:text name="projectName.message"/></p></s:param>
+                                <s:param name="after"><p><s:text name="projectName.message"/></p></s:param>
                             </s:textfield>
                             <s:textfield label="%{getText('projectDescription.label')}" name="projectDescription" size="100">
-                                <s:param name="desc"><p><s:text name="projectDescription.message"/></p></s:param>
+                                <s:param name="after"><p><s:text name="projectDescription.message"/></p></s:param>
                             </s:textfield>
                             <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" requiredLabel="true" size="100">
-                                <s:param name="desc"><p><s:text name="projectVersion.message"/></p></s:param>
+                                <s:param name="after"><p><s:text name="projectVersion.message"/></p></s:param>
                             </s:textfield>
                             <s:textfield label="%{getText('projectScmUrl.label')}" name="projectScmUrl" requiredLabel="true" size="100">
-                                <s:param name="desc"><p><s:text name="projectScmUrl.message"/></p></s:param>
+                                <s:param name="after"><p><s:text name="projectScmUrl.message"/></p></s:param>
                             </s:textfield>
                             <s:textfield label="%{getText('projectScmUsername.label')}" name="projectScmUsername" size="100">
-                                <s:param name="desc"><p><s:text name="projectScmUsername.message"/></p></s:param>
+                                <s:param name="after"><p><s:text name="projectScmUsername.message"/></p></s:param>
                             </s:textfield>
                             <s:password label="%{getText('projectScmPassword.label')}" name="projectScmPassword" size="100">
-                                <s:param name="desc"><p><s:text name="projectScmPassword.message"/></p></s:param>
+                                <s:param name="after"><p><s:text name="projectScmPassword.message"/></p></s:param>
                             </s:password>
                             <s:textfield label="%{getText('projectScmTag.label')}" name="projectScmTag" size="100">
-                                <s:param name="desc"><p><s:text name="projectScmTag.message"/></p></s:param>
+                                <s:param name="after"><p><s:text name="projectScmTag.message"/></p></s:param>
                             </s:textfield>
                             <s:checkbox label="%{getText('projectScmUseCache.label')}" name="projectScmUseCache"/>
                             <c:choose>
