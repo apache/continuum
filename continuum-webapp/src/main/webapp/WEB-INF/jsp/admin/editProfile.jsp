@@ -128,7 +128,7 @@
                     <s:hidden name="profile.id" />
                     <div class="functnbar3">
                       <!-- can't use default profile to display this select -->
-                      <s:select theme="profile" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
+                      <s:select theme="simple" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
                       <s:submit value="%{getText('add')}"/>
                     </div>
                   </s:form>
