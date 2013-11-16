@@ -19,7 +19,6 @@
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <html>
   <s:i18n name="localization.Continuum">
@@ -35,7 +34,7 @@
             <s:if test="projectInCOQueue">
               <div class="label">
                 <p><s:text name="%{getText('project.in.checkout.queue.error')}"/></p>
-              </div >
+              </div>
             </s:if>
             <c:if test="${!empty actionErrors}">
               <div class="errormessage">
@@ -45,36 +44,33 @@
               </div>
             </c:if>
             <table>
-              <tbody>
-                <s:hidden name="projectGroupId"/>
-                <s:textfield label="%{getText('projectGroup.name.label')}" name="name" requiredLabel="true" disabled="%{projectInCOQueue}"/>
-                <c1:data label="%{getText('projectGroup.groupId.label')}" name="projectGroup.groupId"/>
-                <s:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
-                <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
-                           listKey="id" listValue="name" disabled="%{disabledRepositories}"/> 
-                <s:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}"/>
-              </tbody>
+              <s:hidden name="projectGroupId"/>
+              <s:textfield label="%{getText('projectGroup.name.label')}" name="name" requiredLabel="true" disabled="%{projectInCOQueue}"/>
+              <s:textfield label="%{getText('projectGroup.groupId.label')}" disabled="true" name="projectGroup.groupId" />
+              <s:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
+              <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
+                         listKey="id" listValue="name" disabled="%{disabledRepositories}"/>
+              <s:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}"/>
             </table>
-            
             <c:if test="${!empty projectList}">
-            <h3><s:text name="projectGroup.edit.section.projects.title"/></h3>
-            <div class="eXtremeTable">
-              <table id="projects_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
-                <thead>
-                  <tr>
-                    <td class="tableHeader"><s:text name="projectGroup.edit.project.name"/></td>
-                    <td class="tableHeader"><s:text name="projectGroup.edit.move.to.group"/></td>
-                  </tr>
-                </thead>
-                <tbody class="tableBody">
-                  <s:iterator value="projectList" status="rowCounter">
-                    <tr class="<s:if test="#rowCounter.odd == true">odd</s:if><s:else>even</s:else>">
-                      <td><s:select cssStyle="width:200px" label="%{name}" name="projects[%{id}]" list="projectGroups" value="%{projectGroup.id}" disabled="%{projectInCOQueue}"/></td>
+              <h3><s:text name="projectGroup.edit.section.projects.title"/></h3>
+              <div class="eXtremeTable">
+                <table id="projects_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
+                  <thead>
+                    <tr>
+                      <td class="tableHeader"><s:text name="projectGroup.edit.project.name"/></td>
+                      <td class="tableHeader"><s:text name="projectGroup.edit.move.to.group"/></td>
                     </tr>
-                  </s:iterator>
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody class="tableBody">
+                    <s:iterator value="projectList" status="rowCounter">
+                      <tr class="<s:if test="#rowCounter.odd == true">odd</s:if><s:else>even</s:else>">
+                        <td><s:select cssStyle="width:200px" label="%{name}" name="projects[%{id}]" list="projectGroups" value="%{projectGroup.id}" disabled="%{projectInCOQueue}"/></td>
+                      </tr>
+                    </s:iterator>
+                  </tbody>
+                </table>
+              </div>
             </c:if>
             <div class="functnbar3">
               <c:choose>

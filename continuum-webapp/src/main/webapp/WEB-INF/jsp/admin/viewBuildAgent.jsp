@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="continuum" prefix="c1" %>
 
 <html>
   <s:i18n name="localization.Continuum">
@@ -32,9 +31,18 @@
         <h3><s:text name="viewBuildAgent.section.title"/></h3>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <c1:data label="%{getText('buildAgent.url.label')}" name="buildAgent.url"/>
-            <c1:data label="%{getText('buildAgent.description.label')}" name="buildAgent.description"/>
-            <c1:data label="%{getText('buildAgent.enabled.label')}" name="buildAgent.enabled"/>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildAgent.url.label'/>:</label></th>
+              <td><s:property value="buildAgent.url"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildAgent.description.label'/>:</label></th>
+              <td><s:property value="buildAgent.description"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildAgent.enabled.label'/>:</label></th>
+              <td><s:property value="buildAgent.enabled"/></td>
+            </tr>
           </table>
         </div>
         

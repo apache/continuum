@@ -30,31 +30,37 @@
       <h4><s:text name="releaseViewResult.summary"/></h4>
       <div class="axial">
         <table border="1" cellspacing="2" cellpadding="3" width="100%">
-          <c1:data label="%{getText('releaseViewResult.projectName')}">
-            <s:param name="after"><s:property value="projectName"/></s:param>
-          </c1:data>
-          <c1:data label="%{getText('releaseViewResult.releaseGoal')}">
-            <s:param name="after"><s:property value="releaseGoal"/></s:param>
-          </c1:data>
-          <c1:data label="%{getText('releaseViewResult.startTime')}">
-              <s:param name="after"><c1:date name="result.startTime"/></s:param>
-          </c1:data>
-          <c1:data label="%{getText('releaseViewResult.endTime')}">
-              <s:param name="after"><c1:date name="result.endTime"/></s:param>
-          </c1:data>
-          <c1:data label="%{getText('releaseViewResult.state')}">
-            <s:param name="after">
+          <tr class="b">
+            <th><label class="label"><s:text name='releaseViewResult.projectName'/>:</label></th>
+            <td><s:property value="projectName"/></td>
+          </tr>
+          <tr class="b">
+            <th><label class="label"><s:text name='releaseViewResult.releaseGoal'/>:</label></th>
+            <td><s:property value="releaseGoal"/></td>
+          </tr>
+          <tr class="b">
+            <th><label class="label"><s:text name='releaseViewResult.startTime'/>:</label></th>
+            <td><c1:date name="result.startTime"/></td>
+          </tr>
+          <tr class="b">
+            <th><label class="label"><s:text name='releaseViewResult.endTime'/>:</label></th>
+            <td><c1:date name="result.endTime"/></td>
+          </tr>
+          <tr class="b">
+            <th><label class="label"><s:text name='releaseViewResult.state'/>:</label></th>
+            <td>
               <s:if test="result.resultCode == 0">
                 <s:text name="releaseViewResult.success"/>
               </s:if>
               <s:else>
                 <s:text name="releaseViewResult.error"/>
               </s:else>
-            </s:param>
-          </c1:data>
-          <c1:data label="%{getText('releaseViewResult.username')}">
-              <s:param name="after"><s:property value="username"/></s:param>
-          </c1:data>
+            </td>
+          </tr>
+          <tr class="b">
+            <th><label class="label"><s:text name='releaseViewResult.username'/>:</label></th>
+            <td><s:property value="username"/></td>
+          </tr>
         </table>
       </div>
 

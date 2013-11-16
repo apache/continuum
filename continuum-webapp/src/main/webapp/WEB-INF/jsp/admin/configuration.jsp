@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
 <s:i18n name="localization.Continuum">
   <head>
@@ -34,14 +33,34 @@
 
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
-        <c1:data label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory"/>
-        <c1:data label="%{getText('configuration.buildOutputDirectory.label')}" name="buildOutputDirectory"/>
-        <c1:data label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"/>
-        <c1:data label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
-                 name="deploymentRepositoryDirectory"/>
-        <c1:data label="%{getText('configuration.baseUrl.label')}" name="baseUrl"/>
-        <c1:data label="%{getText('configuration.allowed.build.parallel')}" name="numberOfAllowedBuildsinParallel"/>
-        <c1:data label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled"/>
+        <tr class="b">
+          <th><label class="label"><s:text name='configuration.workingDirectory.label'/>:</label></th>
+          <td><s:property value="workingDirectory"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='configuration.buildOutputDirectory.label'/>:</label></th>
+          <td><s:property value="buildOutputDirectory"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='configuration.releaseOutputDirectory.label'/>:</label></th>
+          <td><s:property value="releaseOutputDirectory"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='configuration.deploymentRepositoryDirectory.label'/>:</label></th>
+          <td><s:property value="deploymentRepositoryDirectory"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='configuration.baseUrl.label'/>:</label></th>
+          <td><s:property value="baseUrl"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='configuration.allowed.build.parallel'/>:</label></th>
+          <td><s:property value="numberOfAllowedBuildsinParallel"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='configuration.distributedBuildEnabled.label'/>:</label></th>
+          <td><s:property value="distributedBuildEnabled"/></td>
+        </tr>
       </table>
       <div class="functnbar3">
         <s:form action="configuration!input.action" method="post">

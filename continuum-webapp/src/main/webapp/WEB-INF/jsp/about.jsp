@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -29,12 +28,14 @@
         <h3><s:text name="about.section.title"/></h3>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <c1:data label="%{getText('about.version.label')}">
-                <s:param name="after"><s:text name="about.version.number"/></s:param>
-            </c1:data>
-            <c1:data label="%{getText('about.buildnumber.label')}">
-                <s:param name="after"><s:text name="about.buildnumber"/></s:param>
-            </c1:data>
+            <tr class="b">
+              <th><label class="label"><s:text name='about.version.label'/>:</label></th>
+              <td><s:text name="about.version.number"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='about.buildnumber.label'/>:</label></th>
+              <td><s:text name="about.buildnumber"/></td>
+            </tr>
           </table>
         </div>
       </div>

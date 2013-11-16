@@ -41,39 +41,46 @@
 
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <c1:data label="%{getText('buildResult.startTime')}">
-                <s:param name="after"><c1:date name="buildResult.startTime"/></s:param>
-            </c1:data>
-            <c1:data label="%{getText('buildResult.endTime')}">
-                <s:param name="after"><c1:date name="buildResult.endTime"/></s:param>
-            </c1:data>
-            <c1:data label="%{getText('buildResult.duration')}">
-                <s:param name="after">
-                    <s:if test="buildResult.endTime == 0"><s:text name="buildResult.startedSince"/></s:if> <s:property value="buildResult.durationTime"/></s:param>
-            </c1:data>
-            <c1:data label="%{getText('buildResult.trigger')}">
-                <s:param name="after"><s:text name="buildResult.trigger.%{buildResult.trigger}"/></s:param>
-            </c1:data>
-            <c1:data label="%{getText('buildResult.state')}">
-                <s:param name="after" value="state"/>
-            </c1:data>
-            <c1:data label="%{getText('buildResult.buildNumber')}">
-                <s:param name="after">
-                    <s:if test="buildResult.buildNumber != 0">
-                        <s:property value="buildResult.buildNumber"/>
-                    </s:if>
-                    <s:else>
-                        &nbsp;
-                    </s:else>
-                </s:param>
-            </c1:data>
-            <c1:data label="%{getText('buildResult.username')}">
-                <s:param name="after"><s:property value="buildResult.username"/></s:param>
-            </c1:data>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResult.startTime'/>:</label></th>
+              <td><c1:date name="buildResult.startTime"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResult.endTime'/>:</label></th>
+              <td><c1:date name="buildResult.endTime"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResult.duration'/>:</label></th>
+              <td><s:if test="buildResult.endTime == 0"><s:text name="buildResult.startedSince"/></s:if> <s:property value="buildResult.durationTime"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResult.trigger'/>:</label></th>
+              <td><s:text name="buildResult.trigger.%{buildResult.trigger}"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResult.state'/>:</label></th>
+              <td>${state}</td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResult.buildNumber'/>:</label></th>
+              <td>
+                <s:if test="buildResult.buildNumber != 0">
+                  <s:property value="buildResult.buildNumber"/>
+                </s:if>
+                <s:else>
+                  &nbsp;
+                </s:else>
+              </td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResult.username'/>:</label></th>
+              <td><s:property value="buildResult.username"/></td>
+            </tr>
             <c:if test="${!empty buildResult.buildUrl}">
-              <c1:data label="%{getText('buildResult.buildUrl')}">
-                <s:param name="after"><s:property value="buildResult.buildUrl"/></s:param>
-              </c1:data>
+              <tr class="b">
+                <th><label class="label"><s:text name='buildResult.buildUrl'/>:</label></th>
+                <td><s:property value="buildResult.buildUrl"/></td>
+              </tr>
             </c:if>
           </table>
         </div>
