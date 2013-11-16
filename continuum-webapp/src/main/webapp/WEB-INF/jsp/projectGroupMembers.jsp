@@ -132,9 +132,7 @@
         </table>
       </td>  
       <td colspan="2" align="right">
-        <table cellpadding="0" cellspacing="0">
-          <s:submit value="%{getText('projectGroup.members.users.search.button')}"/>
-        </table>
+        <s:submit value="%{getText('projectGroup.members.users.search.button')}" theme="simple"/>
       </td>
     </tr>             
   </s:form>

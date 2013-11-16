@@ -314,9 +314,6 @@
                 <copy todir="${project.build.directory}/appserver-base">
                   <fileset dir="src/appserver-base" />
                 </copy>
-                <copy todir="src/main/webapp/template">
-                  <fileset file="src/main/resources/template/default/validation.js" />
-                </copy>
               </tasks>
             </configuration>
           </execution>

@@ -90,7 +90,9 @@
     <!-- TODO: some Spring technique for this? -->
     <listener-class>org.apache.continuum.web.startup.ContinuumStartup</listener-class>
   </listener>
-
+  <listener>
+    <listener-class>org.apache.struts2.dispatcher.ng.listener.StrutsListener</listener-class>
+  </listener>
   <context-param>
     <param-name>contextClass</param-name>
     <param-value>org.codehaus.plexus.spring.PlexusWebApplicationContext</param-value>
