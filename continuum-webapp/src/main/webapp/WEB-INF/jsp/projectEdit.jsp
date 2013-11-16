@@ -55,15 +55,15 @@
           <s:form name="editProject" action="projectSave" method="post" validate="true">
             <table>
               <tbody>
-                <s:textfield label="%{getText('projectEdit.project.name.label')}" name="name" requiredLabel="true"/>
-                <s:textfield label="%{getText('projectEdit.project.version.label')}" name="version" requiredLabel="true"/>
+                <s:textfield label="%{getText('projectEdit.project.name.label')}" name="name" requiredLabel="true" size="100"/>
+                <s:textfield label="%{getText('projectEdit.project.version.label')}" name="version" requiredLabel="true" size="100"/>
                 <s:textfield label="%{getText('projectEdit.project.scmUrl.label')}" name="scmUrl" requiredLabel="true"
-                             onchange="checkUseCache()"/>
+                             onchange="checkUseCache()" size="100"/>
                 <s:checkbox label="%{getText('projectEdit.project.scmUseCache.label')}" name="scmUseCache"
-                             onclick="checkUseCache()"/>
-                <s:textfield label="%{getText('projectEdit.project.scmUsername.label')}" name="scmUsername"/>
-                <s:password label="%{getText('projectEdit.project.scmPassword.label')}" name="scmPassword"/>
-                <s:textfield label="%{getText('projectEdit.project.scmTag.label')}" name="scmTag"/>
+                             onclick="checkUseCache()" size="100"/>
+                <s:textfield label="%{getText('projectEdit.project.scmUsername.label')}" name="scmUsername" size="100"/>
+                <s:password label="%{getText('projectEdit.project.scmPassword.label')}" name="scmPassword" size="100"/>
+                <s:textfield label="%{getText('projectEdit.project.scmTag.label')}" name="scmTag" size="100"/>
               </tbody>
             </table>
             <div class="functnbar3">

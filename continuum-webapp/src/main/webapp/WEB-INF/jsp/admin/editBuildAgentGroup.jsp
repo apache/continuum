@@ -43,11 +43,11 @@
               <s:hidden name="typeGroup"/>
               <c:choose>
                 <c:when test="${typeGroup=='new'}">
-                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true"/>
+                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" size="100"/>
                 </c:when>
                 <c:otherwise>
                   <s:hidden name="buildAgentGroup.name"/>
-                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" disabled="true"/>
+                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" disabled="true" size="100"/>
                 </c:otherwise>
               </c:choose>
             </table>

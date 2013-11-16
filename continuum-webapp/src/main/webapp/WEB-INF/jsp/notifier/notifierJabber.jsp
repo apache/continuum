@@ -50,12 +50,12 @@
             <s:hidden name="fromGroupPage"/>
             <table>
               <tbody>
-                <s:textfield label="%{getText('notifier.jabber.host.label')}" name="host" requiredLabel="true"/>
-                <s:textfield label="%{getText('notifier.jabber.port.label')}" name="port"/>
-                <s:textfield label="%{getText('notifier.jabber.login.label')}" name="login" requiredLabel="true"/>
-                <s:password label="%{getText('notifier.jabber.password.label')}" name="password" requiredLabel="true"/>
-                <s:textfield label="%{getText('notifier.jabber.domainName.label')}" name="domainName"/>
-                <s:textfield label="%{getText('notifier.jabber.address.label')}" name="address" requiredLabel="true"/>
+                <s:textfield label="%{getText('notifier.jabber.host.label')}" name="host" requiredLabel="true" size="100"/>
+                <s:textfield label="%{getText('notifier.jabber.port.label')}" name="port" size="100"/>
+                <s:textfield label="%{getText('notifier.jabber.login.label')}" name="login" requiredLabel="true" size="100"/>
+                <s:password label="%{getText('notifier.jabber.password.label')}" name="password" requiredLabel="true" size="100"/>
+                <s:textfield label="%{getText('notifier.jabber.domainName.label')}" name="domainName" size="100"/>
+                <s:textfield label="%{getText('notifier.jabber.address.label')}" name="address" requiredLabel="true" size="100"/>
                 <s:checkbox label="%{getText('notifier.jabber.isSslConnection.label')}" name="sslConnection" value="sslConnection" fieldValue="true"/>
                 <s:checkbox label="%{getText('notifier.jabber.isGroup.label')}" name="group" value="group" fieldValue="true"/>
                 <s:checkbox label="%{getText('notifier.event.sendOnSuccess')}" name="sendOnSuccess" value="sendOnSuccess" fieldValue="true"/>

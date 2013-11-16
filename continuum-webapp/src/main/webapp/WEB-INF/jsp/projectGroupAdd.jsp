@@ -39,9 +39,9 @@
             </c:if>
             <table>
               <tbody>
-                <s:textfield label="%{getText('projectGroup.name.label')}" name="name"  requiredLabel="true"/>
-                <s:textfield label="%{getText('projectGroup.groupId.label')}" name="groupId" requiredLabel="true"/>
-                <s:textfield label="%{getText('projectGroup.description.label')}" name="description"/>
+                <s:textfield label="%{getText('projectGroup.name.label')}" name="name"  requiredLabel="true" size="100"/>
+                <s:textfield label="%{getText('projectGroup.groupId.label')}" name="groupId" requiredLabel="true" size="100"/>
+                <s:textfield label="%{getText('projectGroup.description.label')}" name="description" size="100"/>
                 <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
                 		   listKey="id" listValue="name"/>
               </tbody>

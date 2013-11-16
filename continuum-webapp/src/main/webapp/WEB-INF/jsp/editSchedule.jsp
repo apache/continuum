@@ -42,10 +42,10 @@
         </c:if>
 
           <table>
-            <s:textfield label="%{getText('schedule.name.label')}" name="name" requiredLabel="true">
+            <s:textfield label="%{getText('schedule.name.label')}" name="name" requiredLabel="true" size="100">
                 <s:param name="desc"><p><s:text name="schedule.name.message"/></p></s:param>
             </s:textfield>
-            <s:textfield label="%{getText('schedule.description.label')}" name="description" requiredLabel="true">
+            <s:textfield label="%{getText('schedule.description.label')}" name="description" requiredLabel="true" size="100">
                 <s:param name="desc"><p><s:text name="schedule.description.message"/></p></s:param>
             </s:textfield>
 
@@ -66,10 +66,10 @@
               </td>
             </tr>
 
-            <s:textfield label="%{getText('schedule.maxJobExecutionTime.label')}" name="maxJobExecutionTime" requiredLabel="true">
+            <s:textfield label="%{getText('schedule.maxJobExecutionTime.label')}" name="maxJobExecutionTime" requiredLabel="true" size="100">
                 <s:param name="desc"><p><s:text name="schedule.maxJobExecutionTime.message"/></p></s:param>
             </s:textfield>
-            <s:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay">
+            <s:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay" size="100">
                 <s:param name="desc"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
             </s:textfield>
     	      

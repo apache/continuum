@@ -56,7 +56,7 @@
                     <td>
                       <s:hidden name="profile.id" />
                       <s:textfield label="%{getText('profile.name.label')}" name="profile.name"
-                                   requiredLabel="true" />
+                                   requiredLabel="true" size="100" />
                     </td>
                   </tr>
                   

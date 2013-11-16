@@ -42,7 +42,7 @@
                         </c:if>
                         <table>
                           <tbody>
-                            <s:textfield label="%{getText('add.m2.project.m2PomUrl.label')}" requiredLabel="true" name="m2PomUrl">
+                            <s:textfield label="%{getText('add.m2.project.m2PomUrl.label')}" requiredLabel="true" name="m2PomUrl" size="100">
 	                            <s:param name="desc">
 		                            <table cellspacing="0" cellpadding="0">
 		                              <tbody>
@@ -66,14 +66,14 @@
                             <s:label>
                               <s:param name="after"><strong><s:text name="or"/></strong></s:param>
                             </s:label>
-                            <s:file label="%{getText('add.m2.project.m2PomFile.label')}" name="m2PomFile">
+                            <s:file label="%{getText('add.m2.project.m2PomFile.label')}" name="m2PomFile" size="100">
                                 <s:param name="desc"><p><s:text name="add.m2.project.m2PomFile.message"/></p></s:param>
                             </s:file>
                             <c:choose>
                             <c:when test="${disableGroupSelection == true}">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
-                              <s:textfield label="%{getText('add.m2.project.projectGroup')}" name="projectGroupName" disabled="true"/>
+                              <s:textfield label="%{getText('add.m2.project.projectGroup')}" name="projectGroupName" disabled="true" size="100"/>
                             </c:when>
                             <c:otherwise>
                               <s:select label="%{getText('add.m2.project.projectGroup')}" name="selectedProjectGroup"

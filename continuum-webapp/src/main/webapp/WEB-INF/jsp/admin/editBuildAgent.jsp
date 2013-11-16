@@ -43,14 +43,14 @@
               <s:hidden name="type"/>
               <c:choose>
                 <c:when test="${type=='new'}">
-                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" requiredLabel="true"/>
+                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" requiredLabel="true" size="100"/>
                 </c:when>
                 <c:otherwise>
                   <s:hidden name="buildAgent.url"/>
-                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" requiredLabel="true" disabled="true"/>
+                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" requiredLabel="true" disabled="true" size="100"/>
                 </c:otherwise>
               </c:choose>
-              <s:textfield label="%{getText('buildAgent.description.label')}" name="buildAgent.description"/>
+              <s:textfield label="%{getText('buildAgent.description.label')}" name="buildAgent.description" size="100"/>
               <s:checkbox label="%{getText('buildAgent.enabled.label')}" name="buildAgent.enabled" value="buildAgent.enabled" fieldValue="true"/>
             </table>
             <div class="functnbar3">

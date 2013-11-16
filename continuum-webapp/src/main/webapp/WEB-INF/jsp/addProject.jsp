@@ -53,25 +53,25 @@
                         </c:if>
                         <table>
                           <tbody>
-                            <s:textfield label="%{getText('projectName.label')}" name="projectName" requiredLabel="true">
+                            <s:textfield label="%{getText('projectName.label')}" name="projectName" requiredLabel="true" size="100">
                                 <s:param name="desc"><p><s:text name="projectName.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectDescription.label')}" name="projectDescription">
+                            <s:textfield label="%{getText('projectDescription.label')}" name="projectDescription" size="100">
                                 <s:param name="desc"><p><s:text name="projectDescription.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" requiredLabel="true">
+                            <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" requiredLabel="true" size="100">
                                 <s:param name="desc"><p><s:text name="projectVersion.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectScmUrl.label')}" name="projectScmUrl" requiredLabel="true">
+                            <s:textfield label="%{getText('projectScmUrl.label')}" name="projectScmUrl" requiredLabel="true" size="100">
                                 <s:param name="desc"><p><s:text name="projectScmUrl.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectScmUsername.label')}" name="projectScmUsername">
+                            <s:textfield label="%{getText('projectScmUsername.label')}" name="projectScmUsername" size="100">
                                 <s:param name="desc"><p><s:text name="projectScmUsername.message"/></p></s:param>
                             </s:textfield>
-                            <s:password label="%{getText('projectScmPassword.label')}" name="projectScmPassword">
+                            <s:password label="%{getText('projectScmPassword.label')}" name="projectScmPassword" size="100">
                                 <s:param name="desc"><p><s:text name="projectScmPassword.message"/></p></s:param>
                             </s:password>
-                            <s:textfield label="%{getText('projectScmTag.label')}" name="projectScmTag">
+                            <s:textfield label="%{getText('projectScmTag.label')}" name="projectScmTag" size="100">
                                 <s:param name="desc"><p><s:text name="projectScmTag.message"/></p></s:param>
                             </s:textfield>
                             <s:checkbox label="%{getText('projectScmUseCache.label')}" name="projectScmUseCache"/>
@@ -79,7 +79,7 @@
                             <c:when test="${disableGroupSelection == true}">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
-                              <s:textfield label="%{getText('projectGroup.name.label')}" name="projectGroupName" disabled="true"/>
+                              <s:textfield label="%{getText('projectGroup.name.label')}" name="projectGroupName" disabled="true" size="100"/>
                             </c:when>
                             <c:otherwise>
                               <s:select label="%{getText('projectGroup.name.label')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>

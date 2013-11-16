@@ -42,7 +42,7 @@
     <div class="axial">
       <s:form action="saveBuildQueue" method="post" validate="true">
           <table>
-            <s:textfield label="%{getText('parallel.build.queue.name')}" name="name" requiredLabel="true" />
+            <s:textfield label="%{getText('parallel.build.queue.name')}" name="name" requiredLabel="true" size="100" />
           </table>
           <div class="functnbar3">
             <s:submit value="%{getText('save')}" theme="simple"/>

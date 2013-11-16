@@ -45,25 +45,25 @@
                 <table>
                   <tbody>
                     <s:if test="buildDefinition.type == 'ant'">
-                      <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildDefinition.buildFile"  requiredLabel="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildDefinition.buildFile"  requiredLabel="true" size="100"/>
                     </s:if>
                     <s:elseif test="buildDefinition.type == 'shell'">
-                      <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildDefinition.buildFile" requiredLabel="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildDefinition.buildFile" requiredLabel="true" size="100"/>
                     </s:elseif>
                     <s:else>
-                      <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildDefinition.buildFile" requiredLabel="true"/>
+                      <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildDefinition.buildFile" requiredLabel="true" size="100"/>
                     </s:else>
     
                     <s:if test="buildDefinition.type == 'ant'">
-                      <s:textfield label="%{getText('buildDefinition.goals.ant.label')}" name="buildDefinition.goals"/>
+                      <s:textfield label="%{getText('buildDefinition.goals.ant.label')}" name="buildDefinition.goals" size="100"/>
                     </s:if>
                     <s:elseif test="buildDefinition.type == 'shell'">
                     </s:elseif>
                     <s:else>
-                      <s:textfield label="%{getText('buildDefinition.goals.maven.label')}" name="buildDefinition.goals" requiredLabel="true"/>
+                      <s:textfield label="%{getText('buildDefinition.goals.maven.label')}" name="buildDefinition.goals" requiredLabel="true" size="100"/>
                     </s:else>
     
-                    <s:textfield label="%{getText('buildDefinition.arguments.label')}" name="buildDefinition.arguments"/>
+                    <s:textfield label="%{getText('buildDefinition.arguments.label')}" name="buildDefinition.arguments" size="100"/>
                     <s:checkbox label="%{getText('buildDefinition.buildFresh.label')}" name="buildDefinition.buildFresh"/>
                     <s:checkbox label="%{getText('buildDefinition.alwaysBuild.label')}" name="buildDefinition.alwaysBuild" />
                     <s:checkbox label="%{getText('buildDefinition.defaultForProject.label')}" name="buildDefinition.defaultForProject" />
@@ -81,7 +81,7 @@
                     <s:if test="buildDefinition.type != 'ant' || buildDefinition.type != 'shell'">
                         <s:select label="%{getText('buildDefinition.updatePolicy.label')}" name="buildDefinition.updatePolicy" list="buildDefinitionUpdatePolicies"/>
                     </s:if>
-                    <s:textfield label="%{getText('buildDefinition.description.label')}" name="buildDefinition.description" requiredLabel="true"/>
+                    <s:textfield label="%{getText('buildDefinition.description.label')}" name="buildDefinition.description" requiredLabel="true" size="100"/>
                   </tbody>
                 </table>
                 <div class="functnbar3">

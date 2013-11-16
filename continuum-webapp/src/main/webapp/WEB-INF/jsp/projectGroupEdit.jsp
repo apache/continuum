@@ -45,12 +45,12 @@
             </c:if>
             <table>
               <s:hidden name="projectGroupId"/>
-              <s:textfield label="%{getText('projectGroup.name.label')}" name="name" requiredLabel="true" disabled="%{projectInCOQueue}"/>
-              <s:textfield label="%{getText('projectGroup.groupId.label')}" disabled="true" name="projectGroup.groupId" />
-              <s:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
+              <s:textfield label="%{getText('projectGroup.name.label')}" name="name" requiredLabel="true" disabled="%{projectInCOQueue}" size="100"/>
+              <s:textfield label="%{getText('projectGroup.groupId.label')}" disabled="true" name="projectGroup.groupId" size="100"/>
+              <s:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}" size="100"/>
               <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
                          listKey="id" listValue="name" disabled="%{disabledRepositories}"/>
-              <s:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}"/>
+              <s:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}" size="100"/>
             </table>
             <c:if test="${!empty projectList}">
               <h3><s:text name="projectGroup.edit.section.projects.title"/></h3>

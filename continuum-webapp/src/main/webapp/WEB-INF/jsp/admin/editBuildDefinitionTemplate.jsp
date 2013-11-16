@@ -44,7 +44,7 @@
               <c:when test="${empty actionErrors}">
                 <table>
                   <tbody>
-                    <s:textfield label="%{getText('buildDefinitionTemplate.name')}" name="buildDefinitionTemplate.name" requiredLabel="true"/>
+                    <s:textfield label="%{getText('buildDefinitionTemplate.name')}" name="buildDefinitionTemplate.name" requiredLabel="true" size="100"/>
                     <s:optiontransferselect
                         label="%{getText('buildDefinitionTemplate.builddefinitions.define')}"    
                         name="buildDefinitionIds"
@@ -85,10 +85,5 @@
       </div>
     </body>
   </s:i18n>
-  <script type="text/javascript">
-  customOnsubmit = function(){
-	  // no op
-  }
-  </script>
 </html>
 

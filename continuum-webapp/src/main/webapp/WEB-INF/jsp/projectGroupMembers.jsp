@@ -128,7 +128,7 @@
       </td>               
       <td>
         <table cellpadding="0" cellspacing="0">
-          <s:textfield name="filterKey" />
+          <s:textfield name="filterKey" size="100" />
         </table>
       </td>  
       <td colspan="2" align="right">
