@@ -79,7 +79,8 @@
             <div class="functnbar3">
               <c:choose>
                 <c:when test="${!projectInCOQueue}">
-                  <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+                  <s:submit value="%{getText('save')}" theme="simple"/>
+                  <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
                 </c:when>
                 <c:otherwise>
                   <input type="button" value="<s:text name="back"/>" onClick="history.go(-1)">

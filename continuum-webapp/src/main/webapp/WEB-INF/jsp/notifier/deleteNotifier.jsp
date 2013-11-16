@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -44,7 +43,8 @@
               <s:token/>
               <s:hidden name="notifierId"/>
               <s:hidden name="projectGroupId" />
-              <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
+              <s:submit value="%{getText('delete')}" theme="simple"/>
+              <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
             </s:form>
           </s:if>
           <s:else>
@@ -54,7 +54,8 @@
               <s:hidden name="projectId"/>
               <s:hidden name="projectGroupId" />
               <s:hidden name="fromGroupPage" />
-              <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
+              <s:submit value="%{getText('delete')}" theme="simple"/>
+              <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
             </s:form>
           </s:else>
         </div>

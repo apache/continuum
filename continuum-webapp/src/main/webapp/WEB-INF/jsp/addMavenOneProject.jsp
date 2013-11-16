@@ -19,7 +19,6 @@
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <s:i18n name="localization.Continuum">
 <html>
     <head>
@@ -86,7 +85,8 @@
                           </tbody>
                         </table>
                         <div class="functnbar3">
-                          <c1:submitcancel value="%{getText('add')}" cancel="%{getText('cancel')}"/>
+                          <s:submit value="%{getText('add')}" theme="simple"/>
+                          <s:submit name="Cancel" value="%{getText('cancel')}" onclick="history.back()"/>
                         </div>
                   </s:form>
                 </div>

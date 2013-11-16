@@ -28,7 +28,7 @@
 <h1><s:text name="companyPom.section.title"/></h1>
 
 <s:actionmessage/>
-<s:form method="post" action="saveCompanyPom" namespace="/admin" validate="true" theme="xhtml">
+<s:form method="post" action="saveCompanyPom" namespace="/admin" validate="true">
   <s:token/>
   <s:label name="companyModel.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
   <s:label name="companyModel.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>

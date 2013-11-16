@@ -108,9 +108,10 @@
 
           </table>
           <s:hidden name="id"/>
-        <div class="functnbar3">
-          <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
-        </div>
+          <div class="functnbar3">
+            <s:submit value="%{getText('save')}" theme="simple"/>
+            <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
+          </div>
       </s:form>
       
     </div>

@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -115,7 +114,7 @@
   <redback:ifAuthorized permission="continuum-manage-users">
   <h3><s:text name="projectGroup.members.users.title"/></h3>
     
-  <s:form action="projectGroupMembers" theme="xhtml" method="post">
+  <s:form action="projectGroupMembers" method="post">
     <s:hidden name="ascending" />
     <s:hidden name="projectGroupId" />
     <tr>
@@ -146,7 +145,7 @@
     <thead>
       <tr>
         <th nowrap="true">
-          <s:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
+          <s:form id="sortlist" name="sortlist" action="projectGroupMembers" method="post">
             <s:if test="ascending">
               <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<s:text name='sort.descending'/>" border="0"></s:a> <s:text name="user.username.label"/>
             </s:if>
