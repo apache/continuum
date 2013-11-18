@@ -20,6 +20,7 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -39,6 +40,13 @@ public class QueueTest
         throws Exception
     {
         buildQueueName = getProperty( "BUILD_QUEUE_NAME" );
+    }
+
+    @AfterClass
+    protected void tearDown()
+    {
+        goToBuildQueuePage();
+        removeBuildQueue( buildQueueName );
     }
 
     public void testAddBuildQueue()
@@ -79,12 +87,16 @@ public class QueueTest
         goToAddSchedule();
         addEditSchedule( scheduleName, scheduleDescription, second, minute, hour, dayOfMonth, month, dayOfWeek, year,
                          maxTime, period, true, true );
-        goToEditSchedule( scheduleName, scheduleDescription, second, minute, hour, dayOfMonth, month, dayOfWeek, year,
-                          maxTime, period );
+        try {
+            goToEditSchedule( scheduleName, scheduleDescription, second, minute, hour, dayOfMonth, month, dayOfWeek, year,
+                              maxTime, period );
 
-        getSelenium().addSelection( "saveSchedule_availableBuildQueuesIds", "label=" + buildQueueName );
-        getSelenium().click( "//input[@value='->']" );
-        submit();
+            getSelenium().addSelection( "saveSchedule_availableBuildQueuesIds", "label=" + buildQueueName );
+            getSelenium().click( "//input[@value='->']" );
+            submit();
+        } finally {
+            removeSchedule( scheduleName );
+        }
     }
 
     @Test( dependsOnMethods = { "testAddBuildQueue" } )
@@ -134,9 +146,13 @@ public class QueueTest
         String projectGroupId = getProperty( "MAVEN2_QUEUE_TEST_POM_PROJECT_GROUP_ID" );
         String projectGroupDescription = getProperty( "MAVEN2_QUEUE_TEST_POM_PROJECT_GROUP_DESCRIPTION" );
 
-        //build a project
-        goToAddMavenTwoProjectPage();
-        addMavenTwoProject( pomUrl, pomUsername, pomPassword, null, true );
+        goToProjectGroupsSummaryPage();
+        if ( !isLinkPresent( projectGroupName ) )
+        {
+            //build a project
+            goToAddMavenTwoProjectPage();
+            addMavenTwoProject( pomUrl, pomUsername, pomPassword, null, true );
+        }
 
         buildProjectForQueuePageTest( projectGroupName, projectGroupId, projectGroupDescription );
         String location = getSelenium().getLocation();
