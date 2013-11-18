@@ -135,15 +135,19 @@ public class MavenTwoProjectTest
         String targetGroupDescription = getProperty( "MAVEN2_MOVE_PROJECT_TARGET_PROJECT_GROUP_DESCRIPTION" );
         addProjectGroup( targetGroupName, targetGroupId, targetGroupDescription, true );
 
-        // Move the project
-        moveProjectToProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName,
-                                   targetGroupName );
-        showProjectGroup( targetGroupName, targetGroupId, targetGroupDescription );
-        assertTextPresent( "Member Projects" );
-        assertTextPresent( projectName );
+        try {
+            // Move the project
+            moveProjectToProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName,
+                                       targetGroupName );
+            showProjectGroup( targetGroupName, targetGroupId, targetGroupDescription );
+            assertTextPresent( "Member Projects" );
+            assertTextPresent( projectName );
 
-        showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
-        assertTextNotPresent( "Member Projects" );
+            showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
+            assertTextNotPresent( "Member Projects" );
+        } finally {
+            removeProjectGroup( targetGroupName, false );
+        }
     }
 
     /**
