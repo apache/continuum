@@ -323,7 +323,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Update Project Group" );
         assertTextPresent( "Project Group Name" );
         assertTextPresent( "Project Group Id" );
-        assertTextPresent( groupId );
+        assertFieldValue( groupId, "projectGroup.groupId" );
         assertTextPresent( "Description" );
         assertTextPresent( "Homepage Url" );
         assertTextPresent( "Local Repository" );
