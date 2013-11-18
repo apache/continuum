@@ -86,7 +86,7 @@
                         </table>
                         <div class="functnbar3">
                           <s:submit value="%{getText('add')}" theme="simple"/>
-                          <s:submit name="Cancel" value="%{getText('cancel')}" onclick="history.back()"/>
+                          <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
                         </div>
                   </s:form>
                 </div>
