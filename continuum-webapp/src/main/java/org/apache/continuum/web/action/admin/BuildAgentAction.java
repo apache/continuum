@@ -134,19 +134,16 @@ public class BuildAgentAction
 
         if ( buildAgent != null )
         {
-            String escapedBuildAgentUrl = StringEscapeUtils.escapeXml( buildAgent.getUrl() );
-            buildAgent.setUrl( escapedBuildAgentUrl );
-
             for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
             {
-                if ( agent.getUrl().equals( escapedBuildAgentUrl ) )
+                if ( agent.getUrl().equals( buildAgent.getUrl() ) )
                 {
                     buildAgent = agent;
 
                     try
                     {
                         installations = getContinuum().getDistributedBuildManager().getAvailableInstallations(
-                            escapedBuildAgentUrl );
+                            buildAgent.getUrl() );
                     }
                     catch ( ContinuumException e )
                     {
