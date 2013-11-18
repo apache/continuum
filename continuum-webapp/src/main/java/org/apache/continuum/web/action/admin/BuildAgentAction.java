@@ -439,6 +439,7 @@ public class BuildAgentAction
         }
         else
         {
+            buildAgentGroup = new BuildAgentGroupConfiguration();
             typeGroup = "new";
         }
         return INPUT;
