@@ -44,7 +44,7 @@ public class QueueTest
     public void testAddBuildQueue()
     {
         setMaxBuildQueue( 2 );
-        addBuildQueue( buildQueueName, true );
+        addBuildQueue( buildQueueName );
     }
 
     public void testQueuePageWithoutBuild()
@@ -107,7 +107,7 @@ public class QueueTest
     public void testAddEmptyBuildQueue()
     {
         setMaxBuildQueue( 3 );
-        addBuildQueue( "", false );
+        addBuildQueue( "", false, false );
         assertTextPresent( "You must define a name" );
     }
 
@@ -116,7 +116,7 @@ public class QueueTest
         setMaxBuildQueue( 3 );
         goToBuildQueuePage();
         String testBuildQueue = "test_build_queue";
-        addBuildQueue( testBuildQueue, true );
+        addBuildQueue( testBuildQueue );
 
         removeBuildQueue( testBuildQueue );
         assertTextNotPresent( testBuildQueue );
@@ -195,21 +195,32 @@ public class QueueTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
+    protected void addBuildQueue( String name )
+    {
+        addBuildQueue( name, true );
+    }
+
     protected void addBuildQueue( String name, boolean success )
+    {
+        addBuildQueue( name, success, true );
+    }
+
+    protected void addBuildQueue( String name, boolean success, boolean waitForError )
     {
         goToBuildQueuePage();
         assertBuildQueuePage();
         submit();
         assertAddBuildQueuePage();
         setFieldValue( "name", name );
-        submit();
         if ( success )
         {
+            submit();
             assertBuildQueuePage();
             assertTextPresent( name );
         }
         else
         {
+            submit( waitForError );
             assertAddBuildQueuePage();
         }
     }

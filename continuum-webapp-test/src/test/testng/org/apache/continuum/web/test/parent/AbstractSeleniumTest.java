@@ -249,7 +249,12 @@ public abstract class AbstractSeleniumTest
 
     protected void submit()
     {
-        clickLinkWithXPath( "//input[@type='submit']" );
+        submit( true );
+    }
+
+    protected void submit( boolean wait )
+    {
+        clickLinkWithXPath( "//input[@type='submit']", wait );
     }
 
     protected void assertButtonWithValuePresent( String text )
