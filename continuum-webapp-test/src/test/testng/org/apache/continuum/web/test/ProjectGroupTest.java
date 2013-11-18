@@ -81,7 +81,11 @@ public class ProjectGroupTest
         String groupId = "com.example.this-is-a-long-group-id";
         String description = "";
 
-        addProjectGroup( name, groupId, description, true );
+        try {
+            addProjectGroup( name, groupId, description, true );
+        } finally {
+            removeProjectGroup( name, false );
+        }
     }
 
     public void testAddProjectGroupWithPunctuation()
@@ -91,7 +95,11 @@ public class ProjectGroupTest
         String groupId = "com.example.test";
         String description = "";
 
-        addProjectGroup( name, groupId, description, true );
+        try {
+            addProjectGroup( name, groupId, description, true );
+        } finally {
+            removeProjectGroup( name, false );
+        }
     }
 
     public void testAddProjectGroupWithEmptyString()
