@@ -111,8 +111,7 @@ public abstract class AbstractPurgeTest
     {
         goToGeneralPurgePage();
         assertGeneralPurgePage();
-        clickLinkWithXPath(
-            "//preceding::input[@value='repository' and @type='hidden']//following::input[@type='submit']" );
+        clickLinkWithXPath( "//form[@name='addRepoPurgeConfig']/input[@type='submit']" );
         assertAddRepositoryPurgePage();
     }
 
@@ -160,9 +159,7 @@ public abstract class AbstractPurgeTest
     protected void goToAddDirectoryPurge()
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
-        clickLinkWithXPath(
-            "//preceding::input[@value='directory' and @type='hidden']//following::input[@type='submit']" );
+        clickLinkWithXPath( "//form[@name='addDirPurgeConfig']/input[@type='submit']" );
         assertAddEditDirectoryPurgePage();
     }
 
