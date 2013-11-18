@@ -561,7 +561,7 @@ public abstract class AbstractContinuumTest
         waitPage();
 
         assertTextPresent( "Move to Group" );
-        String xPath = "//preceding::th/label[contains(text(),'" + projectName + "')]//following::select";
+        String xPath = "//preceding::td/label[contains(text(),'" + projectName + "')]//following::select";
         selectValue( xPath, newProjectGroup );
         clickButtonWithValue( "Save" );
         assertProjectGroupSummaryPage( groupName, groupId, groupDescription );
