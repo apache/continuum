@@ -1059,7 +1059,7 @@ public abstract class AbstractContinuumTest
         goToLoginPage();
         getSelenium().type( "loginForm_username", username );
         getSelenium().type( "loginForm_password", password );
-        getSelenium().click( "loginForm__login" );
+        getSelenium().click( "//input[@value='Login']" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
     }
 
