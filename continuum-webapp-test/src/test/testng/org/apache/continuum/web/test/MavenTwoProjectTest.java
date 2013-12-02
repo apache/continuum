@@ -266,6 +266,7 @@ public class MavenTwoProjectTest
 
         // wait for project to finish checkout
         waitForProjectCheckout();
+        waitPage();
 
         clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
         assertTextPresent( "Delete Continuum Project" );
@@ -290,6 +291,7 @@ public class MavenTwoProjectTest
 
         //wait for project to finish checkout
         waitForProjectCheckout();
+        waitPage();
 
         checkField( "//tbody/tr['0']/td['0']/input[@name='selectedProjects']" );
         clickButtonWithValue( "Delete Project(s)" );
