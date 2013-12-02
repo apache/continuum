@@ -1029,9 +1029,9 @@ public abstract class AbstractContinuumTest
     {
         if ( getTitle().endsWith( "Continuum - Configuration" ) )
         {
-            String workingDir = getFieldValue( "configuration_workingDirectory" );
-            String buildOutputDir = getFieldValue( "configuration_buildOutputDirectory" );
-            String releaseOutputDir = getFieldValue( "configuration_releaseOutputDirectory" );
+            String workingDir = getFieldValue( "workingDirectory" );
+            String buildOutputDir = getFieldValue( "buildOutputDirectory" );
+            String releaseOutputDir = getFieldValue( "releaseOutputDirectory" );
             String locationDir = "target/data";
             String data = "data";
             setFieldValue( "workingDirectory", workingDir.replaceFirst( data, locationDir ) );

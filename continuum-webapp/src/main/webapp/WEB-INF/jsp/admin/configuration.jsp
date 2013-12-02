@@ -63,7 +63,7 @@
         </tr>
       </table>
       <div class="functnbar3">
-        <s:form action="configuration!input.action" method="post">
+        <s:form action="configuration.action" method="post">
           <s:submit value="%{getText('edit')}"/>
         </s:form>
       </div>

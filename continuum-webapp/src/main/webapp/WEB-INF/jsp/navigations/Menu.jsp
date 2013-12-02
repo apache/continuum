@@ -146,7 +146,7 @@
           </div> 
         </redback:ifAuthorized>        
         <redback:ifAuthorized permission="continuum-manage-configuration">               
-          <s:url id="configurationUrl" action="configuration" namespace="/admin" method="input" includeParams="none"/>
+          <s:url id="configurationUrl" action="configuration" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{configurationUrl}">
               <s:text name="menu.administration.configuration"/>

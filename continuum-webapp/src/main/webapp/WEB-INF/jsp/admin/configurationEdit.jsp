@@ -48,7 +48,7 @@
       <s:text name="configuration.section.title"/>
     </h3>
 
-    <s:form name="editConfiguration" action="configuration!save" method="post">
+    <s:form name="editConfiguration" action="configuration_save" method="post">
 
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">

@@ -230,7 +230,7 @@ public class UserRolesManagementTest
 
         // enable distributed build
         clickLinkWithText( "Configuration" );
-        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+        checkField( "distributedBuildEnabled" );
         clickButtonWithValue( "Save" );
 
         clickLinkWithText( "Logout" );
@@ -246,7 +246,7 @@ public class UserRolesManagementTest
         loginAsAdmin();
         // disable distributed build
         clickLinkWithText( "Configuration" );
-        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+        uncheckField( "distributedBuildEnabled" );
         clickButtonWithValue( "Save" );
 
         clickLinkWithText( "Logout" );

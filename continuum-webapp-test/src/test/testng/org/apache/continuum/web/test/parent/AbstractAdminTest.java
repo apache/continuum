@@ -226,12 +226,12 @@ public abstract class AbstractAdminTest
     {
         goToConfigurationPage();
         setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( !isChecked( "configuration_distributedBuildEnabled" ) )
+        if ( !isChecked( "distributedBuildEnabled" ) )
         {
             // must use click here so the JavaScript enabling the shared secret gets triggered
-            click( "configuration_distributedBuildEnabled" );
+            click( "distributedBuildEnabled" );
         }
-        setFieldValue( "configuration_sharedSecretPassword", SHARED_SECRET );
+        setFieldValue( "sharedSecretPassword", SHARED_SECRET );
         clickAndWait( "css=input[value='Save']" );
         assertTextPresent( "true" );
         assertTextPresent( "Distributed Builds" );
@@ -242,9 +242,9 @@ public abstract class AbstractAdminTest
     {
         goToConfigurationPage();
         setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( isChecked( "configuration_distributedBuildEnabled" ) )
+        if ( isChecked( "distributedBuildEnabled" ) )
         {
-            uncheckField( "configuration_distributedBuildEnabled" );
+            uncheckField( "distributedBuildEnabled" );
         }
         submit();
         assertTextPresent( "false" );
