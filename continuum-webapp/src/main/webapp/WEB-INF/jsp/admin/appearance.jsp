@@ -99,7 +99,7 @@
 </c:if>
 
 <s:actionmessage/>
-<s:form action="saveFooter!saveFooter.action" method="post" namespace="/admin">
+<s:form action="saveFooter.action" method="post" namespace="/admin">
   <s:token/>
   <div id="axial" class="h3">
     <h3><s:text name="appearance.footerContent"/></h3>
