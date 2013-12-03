@@ -72,7 +72,7 @@ public class MavenOneProjectTest
         pomUrlUnparseableContent = getProperty( "MAVEN1_UNPARSEABLE_POM_URL" );
 
         malformedPomUrl = "aaa";
-        inaccessiblePomUrl = "http://localhost:9595/";
+        inaccessiblePomUrl = baseUrl + "/inaccessible-pom/";
     }
 
     @AfterMethod

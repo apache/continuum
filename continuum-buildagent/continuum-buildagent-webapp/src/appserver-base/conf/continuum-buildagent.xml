@@ -22,5 +22,5 @@
   <continuumServerUrl>http://localhost:9090/master-xmlrpc</continuumServerUrl>
   <buildOutputDirectory>target/data/build-agent/build-output-directory</buildOutputDirectory>
   <workingDirectory>target/data/build-agent/working-directory</workingDirectory>
-  <sharedSecretPassword>abc123</sharedSecretPassword>
+  <sharedSecretPassword>continuum1234</sharedSecretPassword>
 </continuum-buildagent-configuration>

@@ -21,6 +21,8 @@ package org.apache.continuum.web.test.parent;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -219,9 +221,11 @@ public abstract class AbstractAdminTest
     }
 
     @BeforeClass( alwaysRun = true )
-    public void initializeBuildAgent()
+    @Parameters( { "buildAgentUrl" } )
+    public void initializeBuildAgent(
+        @Optional( "http://localhost:9595/continuum-buildagent/xmlrpc" ) String buildAgentUrl )
     {
-        buildAgentUrl = baseUrl.substring( 0, baseUrl.indexOf( "/continuum" ) ) + "/continuum-buildagent/xmlrpc";
+        this.buildAgentUrl = buildAgentUrl;
     }
 
     protected void enableDistributedBuilds()

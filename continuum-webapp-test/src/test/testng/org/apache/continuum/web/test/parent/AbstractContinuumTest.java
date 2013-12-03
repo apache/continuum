@@ -35,7 +35,6 @@ import static org.testng.Assert.assertEquals;
 public abstract class AbstractContinuumTest
     extends AbstractSeleniumTest
 {
-
     protected static final String SHARED_SECRET = "continuum1234";
 
     protected static final String ANT_PROJECT_TYPE = "ant";
