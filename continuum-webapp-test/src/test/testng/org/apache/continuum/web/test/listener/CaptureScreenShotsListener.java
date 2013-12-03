@@ -103,6 +103,9 @@ public class CaptureScreenShotsListener
             return;
         }
         String fileBaseName = methodName + "_" + className + ".java_" + lineNumber + "-" + time;
+
+        System.out.println( "Capturing screenshot at " + fileBaseName + ".png" );
+
         try
         {
             selenium.windowMaximize();
