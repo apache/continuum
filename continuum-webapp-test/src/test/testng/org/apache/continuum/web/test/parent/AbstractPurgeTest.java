@@ -110,7 +110,6 @@ public abstract class AbstractPurgeTest
     protected void goToAddRepositoryPurge()
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
         clickLinkWithXPath( "//form[@name='addRepoPurgeConfig']/input[@type='submit']" );
         assertAddRepositoryPurgePage();
     }
@@ -118,7 +117,6 @@ public abstract class AbstractPurgeTest
     protected void goToEditRepositoryPurge( String daysOlder, String retentionCount, String description )
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
         String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
         clickLinkWithXPath( xPath );
         assertAddRepositoryPurgePage();
@@ -130,7 +128,6 @@ public abstract class AbstractPurgeTest
     protected void goToEditDirectoryPurge( String daysOlder, String retentionCount, String description )
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
         String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
         clickLinkWithXPath( xPath );
         assertAddEditDirectoryPurgePage();
