@@ -319,13 +319,20 @@ public abstract class AbstractUserRolesManagementTest
         clickButtonWithValue( "Submit" );
     }
 
-
     protected void deleteUser( String userName )
     {
-        //clickLinkWithText( "userlist" );
-        clickLinkWithXPath( "//table[@id='ec_table']/tbody[2]/tr[3]/td[7]/a/img" );
-        assertDeleteUserPage( userName );
-        submit();
-        assertElementNotPresent( userName );
+        deleteUser( userName, true );
+    }
+
+    protected void deleteUser( String userName, boolean failIfMissing )
+    {
+        String xpath = "//tr[.//a[text()='" + userName + "']]/td/a[@title='delete user']";
+        if ( failIfMissing || isElementPresent( "xpath=" + xpath ) )
+        {
+            clickLinkWithXPath( xpath );
+            assertDeleteUserPage( userName );
+            submit();
+            assertElementNotPresent( userName );
+        }
     }
 }

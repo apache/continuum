@@ -80,7 +80,9 @@ public class DistributedReleaseTest
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
         String projectName = getProperty( "MAVEN2_POM_PROJECT_NAME" );
 
-        addProjectGroup( projectGroupName, projectGroupId, description, true, false );
+        removeProjectGroup( projectGroupName, false );
+
+        addProjectGroup( projectGroupName, projectGroupId, description, true );
         clickLinkWithText( projectGroupName );
 
         if ( !isLinkPresent( projectName ) )

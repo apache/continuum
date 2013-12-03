@@ -41,6 +41,8 @@ public abstract class AbstractAdminTest
         if ( !getSelenium().isElementPresent( "//span[@class='username' and text()='" + username + "']" ) )
         {
             login( username, password );
+
+            assertElementPresent( "//span[@class='username' and text()='" + username + "']" );
         }
     }
 
