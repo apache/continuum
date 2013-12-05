@@ -184,7 +184,7 @@
       </div>
       <div>
         <div class="body">
-          <s:url id="viewProjectBuildsReportUrl" action="viewProjectBuildsReport" method="init" namespace="/" includeParams="none"/>
+          <s:url id="viewProjectBuildsReportUrl" action="viewProjectBuildsReport" namespace="/" includeParams="none"/>
           <s:a href="%{viewProjectBuildsReportUrl}">
             <s:text name="menu.reports.projectBuilds"/>
           </s:a> 
