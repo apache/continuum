@@ -95,7 +95,7 @@ public class BuildEnvironmentTest
         removeBuildEnvironment( buildEnvName );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditDuplicatedBuildEnvironmentParallelBuilds()
     {
         String newName = "NEW_BUILD_ENV";
