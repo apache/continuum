@@ -1287,8 +1287,11 @@
     <!--
     * notifier actions :: Project
     -->
-    <action name="deleteProjectNotifier" class="deleteProjectNotifier">
+    <action name="deleteProjectNotifier_default" class="deleteProjectNotifier" method="default">
       <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
+    </action>
+
+    <action name="deleteProjectNotifier" class="deleteProjectNotifier">
       <result name="success" type="chain">projectView</result>
       <result name="to_group_page" type="chain">projectGroupNotifier</result>
       <interceptor-ref name="configuredContinuumStack">
@@ -1297,6 +1300,10 @@
     </action>
 
     <action name="addProjectNotifier" class="addProjectNotifier" method="doDefault">
+      <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
+    </action>
+
+    <action name="addProjectNotifier_submit" class="addProjectNotifier" method="execute">
       <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
       <result name="mail_input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
       <result name="irc_input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
@@ -1367,8 +1374,11 @@
     * notifier actions :: Project Group
     -->
 
-    <action name="deleteProjectGroupNotifier" class="deleteGroupNotifier">
+    <action name="deleteProjectGroupNotifier_default" class="deleteGroupNotifier" method="default">
       <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
+    </action>
+
+    <action name="deleteProjectGroupNotifier" class="deleteGroupNotifier">
       <result name="success" type="chain">projectGroupNotifier</result>
       <interceptor-ref name="configuredContinuumStack">
         <param name="tokenSession.includeMethods">execute</param>
@@ -1376,6 +1386,10 @@
     </action>
 
     <action name="addProjectGroupNotifier" class="addGroupNotifier" method="doDefault">
+      <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
+    </action>
+
+    <action name="addProjectGroupNotifier_submit" class="addGroupNotifier" method="execute">
       <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
       <result name="mail_input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
       <result name="irc_input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>

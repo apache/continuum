@@ -156,7 +156,7 @@
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
-                      <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
+                      <s:url id="removeUrl" action="deleteProjectNotifier_default.action" namespace="/">
                         <s:param name="projectId"><c:out value="${project.id}"/></s:param>
                         <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
                         <s:param name="notifierType"><c:out value="${notifier.type}"/></s:param>
@@ -180,7 +180,7 @@
         </c:if>
         <div class="functnbar3">
            <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
-          <s:form action="addProjectNotifier!default.action" method="post">
+          <s:form action="addProjectNotifier.action" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
             <s:submit value="%{getText('add')}" theme="simple"/>

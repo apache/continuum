@@ -55,7 +55,7 @@
       </ec:column>    
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
-          <s:url id="removeUrl" action="deleteProjectGroupNotifier!default.action" namespace="/">
+          <s:url id="removeUrl" action="deleteProjectGroupNotifier_default.action" namespace="/">
             <s:param name="projectGroupId"><c:out value="${pageScope.projectGroupNotifierSummary.projectGroupId}"/></s:param>
             <s:param name="notifierId"><c:out value="${pageScope.projectGroupNotifierSummary.id}"/></s:param>
             <s:param name="notifierType"><c:out value="${pageScope.projectGroupNotifierSummary.type}"/></s:param>

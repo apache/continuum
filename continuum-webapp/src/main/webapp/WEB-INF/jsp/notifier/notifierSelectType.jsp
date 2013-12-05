@@ -27,10 +27,10 @@
       <div id="axial" class="h3">
       
         <s:if test="projectId > 0">
-            <s:url id="actionUrl" value="addProjectNotifier!execute" includeParams="none" />
+            <s:url id="actionUrl" value="addProjectNotifier_submit" includeParams="none" />
         </s:if>
         <s:else>
-            <s:url id="actionUrl" value="addProjectGroupNotifier!execute" includeParams="none" />
+            <s:url id="actionUrl" value="addProjectGroupNotifier_submit" includeParams="none" />
         </s:else>
        
         <h3><s:text name="notifier.section.add.title"/></h3>
