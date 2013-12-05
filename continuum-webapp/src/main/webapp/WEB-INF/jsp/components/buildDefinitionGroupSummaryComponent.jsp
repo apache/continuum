@@ -77,7 +77,7 @@
       <ec:column property="editActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <s:url id="editUrl" action="buildDefinition" method="input" namespace="/" includeParams="none">
+          <s:url id="editUrl" action="buildDefinition" namespace="/" includeParams="none">
             <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
           </s:url>
@@ -189,7 +189,7 @@
       </ec:column>
       <ec:column property="editAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+          <s:url id="editUrl" action="buildDefinition" namespace="/">
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             <s:param name="groupBuildView" value="true"/>
