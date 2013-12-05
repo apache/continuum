@@ -903,6 +903,10 @@
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
     </action>
 
+    <action name="buildDefinitionAsTemplate_input" class="buildDefinitionTemplates" method="input">
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+    </action>
+
     <action name="buildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
       <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>

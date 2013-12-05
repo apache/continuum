@@ -38,7 +38,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertTextPresent( "Available Templates" );
         assertTextPresent( "Available Build Definitions" );
         assertButtonWithIdPresent( "buildDefinitionTemplate_0" );
-        assertButtonWithIdPresent( "buildDefinitionAsTemplate_0" );
+        assertButtonWithIdPresent( "buildDefinitionAsTemplate_input_0" );
     }
 
     protected void goToAddTemplate()
@@ -148,7 +148,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
     protected void goToAddBuildDefinitionTemplate()
     {
         goToBuildDefinitionTemplatePage();
-        clickSubmitWithLocator( "buildDefinitionAsTemplate_0" );
+        clickSubmitWithLocator( "buildDefinitionAsTemplate_input_0" );
         assertAddEditBuildDefinitionTemplatePage();
     }
 

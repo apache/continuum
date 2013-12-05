@@ -227,11 +227,6 @@ public class BuildDefinitionTemplateAction
     //  BuildDefinition
     // -----------------------------------------------------
 
-    public String inputBuildDefinition()
-    {
-        return INPUT;
-    }
-
     public String editBuildDefinition()
         throws Exception
     {

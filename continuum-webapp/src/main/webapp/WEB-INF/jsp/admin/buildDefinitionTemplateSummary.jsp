@@ -44,7 +44,7 @@
         <ec:row>
           <ec:column property="name" title="buildDefinition.template.name"/>
           <ec:column property="editAction" title="&nbsp;" width="1%">
-            <s:url id="editUrl" action="editBuildDefinitionTemplate" method="edit" namespace="/">
+            <s:url id="editUrl" action="editBuildDefinitionTemplate" namespace="/">
               <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
             </s:url>
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
@@ -57,7 +57,7 @@
             </c:when>
             <c:otherwise>
               <s:token/>
-              <s:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
+              <s:url id="deleteUrl" action="deleteDefinitionTemplate" namespace="/">
                 <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
                 <s:param name="buildDefinitionTemplate.name"><c:out value="${pageScope.template.name}"/></s:param>
                 <s:param name="struts.token.name">token</s:param>
@@ -70,7 +70,7 @@
         </ec:row>  
       </ec:table> 
       <div class="functnbar3">
-        <s:form action="buildDefinitionTemplate!input.action" method="post">
+        <s:form action="buildDefinitionTemplate.action" method="post">
           <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>      
@@ -97,7 +97,7 @@
           <ec:column property="description" title="buildDefinition.template.buildDefinition.description"/>
           <ec:column property="type" title="buildDefinition.template.buildDefinition.type"/>
           <ec:column property="editAction" title="&nbsp;" width="1%">
-            <s:url id="editUrl" action="editBuildDefinitionAsTemplate" method="editBuildDefinition" namespace="/">
+            <s:url id="editUrl" action="editBuildDefinitionAsTemplate" namespace="/">
               <s:param name="buildDefinition.id"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             </s:url>
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
@@ -108,7 +108,7 @@
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
             </c:when>
             <c:otherwise>
-              <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" method="deleteBuildDefinition" namespace="/">
+              <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" namespace="/">
                 <s:param name="buildDefinition.id"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                 <s:param name="buildDefinition.description"><c:out value="${pageScope.buildDefinitionSummary.description}"/></s:param>
               </s:url>
@@ -120,7 +120,7 @@
       </ec:table>      
       
       <div class="functnbar3">
-        <s:form action="buildDefinitionAsTemplate!inputBuildDefinition.action" method="post">
+        <s:form action="buildDefinitionAsTemplate_input.action" method="post">
           <s:submit value="%{getText('add')}" theme="simple"/>
         </s:form>
       </div>           
