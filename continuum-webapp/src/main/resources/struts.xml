@@ -435,6 +435,10 @@
       </result>
     </action>
 
+    <action name="addProjectGroup_input" class="addProjectGroup" method="input">
+      <result name="input">/WEB-INF/jsp/projectGroupAdd.jsp</result>
+    </action>
+
     <action name="addProjectGroup" class="addProjectGroup">
       <result name="input">/WEB-INF/jsp/projectGroupAdd.jsp</result>
       <result name="success" type="redirectAction">groupSummary</result>

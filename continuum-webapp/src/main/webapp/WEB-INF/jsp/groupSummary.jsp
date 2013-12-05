@@ -125,7 +125,7 @@
         <table>
           <tr>
             <td>
-              <form action="<s:url  action='addProjectGroup' method='input' namespace='/' />" method="post">
+              <form action="<s:url  action='addProjectGroup_input' namespace='/' />" method="post">
                 <input type="submit" name="addProjectGroup" value="<s:text name="projectGroup.add.section.title"/>"/>
               </form>
             </td>
