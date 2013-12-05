@@ -292,6 +292,17 @@
       </result>
     </action>
 
+    <action name="deleteProject_default" class="deleteProject" method="default">
+      <interceptor-ref name="storeStack">
+        <param name="tokenSession.includeMethods">*</param>
+      </interceptor-ref>
+      <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
+      <result name="success" type="redirectAction">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
     <action name="deleteProject" class="deleteProject">
       <interceptor-ref name="storeStack">
         <param name="tokenSession.includeMethods">*</param>

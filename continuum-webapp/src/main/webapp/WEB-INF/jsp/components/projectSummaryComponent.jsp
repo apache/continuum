@@ -211,7 +211,7 @@
           <c:when
               test="${projectIdle}">
             <s:token/>
-            <s:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
+            <s:url id="deleteProjectUrl" value="deleteProject_default.action" namespace="/">
               <s:param name="projectId"><c:out value="${project.id}"/></s:param>
               <s:param name="struts.token.name">token</s:param>
               <s:param name="token"><s:property value="token"/></s:param>
