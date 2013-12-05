@@ -166,7 +166,7 @@ public abstract class AbstractContinuumTest
     // ////////////////////////////////////
     protected void goToProjectGroupsSummaryPage()
     {
-        getSelenium().open( "/continuum/groupSummary.action" );
+        getSelenium().open( baseUrl + "/groupSummary.action" );
         waitPage();
 
         assertProjectGroupsSummaryPage();
