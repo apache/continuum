@@ -130,7 +130,7 @@
           </div> 
         </redback:ifAuthorized> 
         <redback:ifAuthorized permission="continuum-view-queues">
-          <s:url id="queueUrls" action="displayQueues" namespace="/admin" method="display" includeParams="none"/>
+          <s:url id="queueUrls" action="displayQueues" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{queueUrls}">
               <s:text name="menu.administration.queues"/>
