@@ -122,7 +122,7 @@
           </div>
         </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-profiles">
-          <s:url id="configurationUrl" action="buildEnvList" namespace="/admin" method="list" includeParams="none"/>
+          <s:url id="configurationUrl" action="buildEnvList" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{configurationUrl}">
               <s:text name="menu.administration.profile"/>

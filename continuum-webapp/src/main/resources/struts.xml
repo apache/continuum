@@ -790,11 +790,11 @@
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
     </action>
 
-    <action name="addBuildEnv" class="profileAdministration">
+    <action name="addBuildEnv" class="profileAdministration" method="input">
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
 
-    <action name="editBuildEnv" class="profileAdministration">
+    <action name="editBuildEnv" class="profileAdministration" method="edit">
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
@@ -806,7 +806,6 @@
       <result name="success" type="redirectAction">
         <param name="actionName">buildEnvList</param>
         <param name="namespace">/admin</param>
-        <param name="method">list</param>
       </result>
     </action>
 

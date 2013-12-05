@@ -50,7 +50,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
-        <s:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
+        <s:url id="profileUrl" action="editBuildEnv.action" namespace="/" includeParams="none">
           <s:param name="profile.id"><c:out value="${pageScope.buildDefinitionSummary.profileId}"/></s:param>
         </s:url>
         <s:a href="%{profileUrl}"><c:out value="${pageScope.buildDefinitionSummary.profileName}"/></s:a>
@@ -162,7 +162,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
-        <s:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
+        <s:url id="profileUrl" action="editBuildEnv.action" namespace="/" includeParams="none">
           <s:param name="profile.id"><c:out value="${pageScope.buildDefinitionSummary.profileId}"/></s:param>
         </s:url>
         <s:a href="%{profileUrl}"><c:out value="${pageScope.buildDefinitionSummary.profileName}"/></s:a>
