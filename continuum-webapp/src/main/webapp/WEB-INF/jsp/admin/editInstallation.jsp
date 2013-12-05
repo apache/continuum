@@ -32,7 +32,7 @@
       <s:text name="installation.section.title"/>
     </h3>
 
-    <s:form action="saveInstallation!save" method="post">
+    <s:form action="saveInstallation" method="post">
 
       <s:if test="hasActionErrors()">
         <h3>Action Error</h3>

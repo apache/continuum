@@ -856,6 +856,10 @@
       <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
     </action>
 
+    <action name="editInstallation_input" class="installation" method="input">
+      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+    </action>
+
     <action name="saveInstallation" class="installation" method="save">
       <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
       <result name="success" type="redirectAction">installationsList</result>

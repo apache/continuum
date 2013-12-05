@@ -31,7 +31,7 @@
     <h3>
       <s:text name="installationTypeChoice.section.title"/>
     </h3>  
-    <form action="editInstallation!input.action">
+    <form action="editInstallation_input.action">
       <div class="axial">
 
         <table>

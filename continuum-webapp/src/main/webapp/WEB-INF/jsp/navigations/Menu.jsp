@@ -114,7 +114,7 @@
           </div>
         </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-installations">
-          <s:url id="configurationUrl" action="installationsList" namespace="/admin" method="list" includeParams="none"/>
+          <s:url id="configurationUrl" action="installationsList" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{configurationUrl}">
               <s:text name="menu.administration.installations"/>

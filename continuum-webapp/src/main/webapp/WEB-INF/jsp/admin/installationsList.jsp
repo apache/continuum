@@ -48,12 +48,12 @@
         <ec:column property="varValue" title="installation.value.label" style="white-space: nowrap" />
         
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="editInstallation!edit.action?installation.installationId=<c:out value="${installation.installationId}"/>">
+          <a href="editInstallation.action?installation.installationId=<c:out value="${installation.installationId}"/>">
             <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
           </a>  
         </ec:column>   
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="deleteInstallation!delete.action?installation.installationId=<c:out value="${installation.installationId}"/>&installation.name=<c:out value="${installation.name}"/>">
+          <a href="deleteInstallation.action?installation.installationId=<c:out value="${installation.installationId}"/>&installation.name=<c:out value="${installation.name}"/>">
             <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
           </a>  
         </ec:column>             
@@ -61,7 +61,7 @@
     </ec:table>
     </c:if>
     <div class="functnbar3">
-      <s:form action="installationsTypeChoice!listTypes.action" method="post">
+      <s:form action="installationsTypeChoice.action" method="post">
         <s:submit value="%{getText('add')}"/>
       </s:form>
     </div>  
