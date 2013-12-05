@@ -49,7 +49,7 @@
       </div>
       <div>
         <div class="body">
-          <s:url id="addMavenTwoProjectUrl" action="addMavenTwoProjectInput" method="input" namespace="/"
+          <s:url id="addMavenTwoProjectUrl" action="addMavenTwoProjectInput" namespace="/"
                   includeParams="none"/>
           <s:a href="%{addMavenTwoProjectUrl}">
             <s:text name="menu.add.m2Project"/>

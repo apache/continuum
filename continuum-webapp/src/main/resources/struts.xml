@@ -242,7 +242,7 @@
       <result name="success">/WEB-INF/jsp/groupSummary.jsp</result>
     </action>
 
-    <action name="addMavenTwoProjectInput" class="addMavenTwoProject">
+    <action name="addMavenTwoProjectInput" class="addMavenTwoProject" method="input">
       <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
     </action>
 

@@ -32,7 +32,7 @@
     <meta http-equiv="refresh" content="30"/>
     <script type="text/javascript">
 
-      <c:url var="addM2ProjectUrl" value="/addMavenTwoProjectInput!input.action" />
+      <c:url var="addM2ProjectUrl" value="/addMavenTwoProjectInput.action" />
       <c:url var="addM1ProjectUrl" value="/addMavenOneProjectInput!input.action" />
       <c:url var="addProjectUrl" value="/addProjectInput.action" />
 
