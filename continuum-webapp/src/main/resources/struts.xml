@@ -262,7 +262,7 @@
       </result>
     </action>
 
-    <action name="addMavenOneProjectInput" class="addMavenOneProject">
+    <action name="addMavenOneProjectInput" class="addMavenOneProject" method="input">
       <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
     </action>
 

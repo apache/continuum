@@ -56,7 +56,7 @@
           </s:a>
         </div>
         <div class="body">
-          <s:url id="addMavenOneProjectUrl" action="addMavenOneProjectInput" method="input" namespace="/"
+          <s:url id="addMavenOneProjectUrl" action="addMavenOneProjectInput" namespace="/"
                   includeParams="none"/>
           <s:a href="%{addMavenOneProjectUrl}">
             <s:text name="menu.add.m1Project"/>
