@@ -77,12 +77,13 @@ public class NotifierTest
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
 
         loginAsAdmin();
-        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
+
+        removeProjectGroup( projectGroupName, false );
+
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, true );
         clickLinkWithText( projectGroupName );
-        if ( !isLinkPresent( projectName ) )
-        {
-            addMavenTwoProject( projectPomUrl, pomUsername, pomPassword, projectGroupName, true );
-        }
+
+        addMavenTwoProject( projectPomUrl, pomUsername, pomPassword, projectGroupName, true );
     }
 
     @BeforeMethod
