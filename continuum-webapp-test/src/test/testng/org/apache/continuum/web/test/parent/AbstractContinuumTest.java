@@ -631,7 +631,12 @@ public abstract class AbstractContinuumTest
         assertAddMavenOneProjectPage();
     }
 
-    void assertAddMavenOneProjectPage()
+    protected void assertAddMavenOneProjectPage()
+    {
+        assertAddMavenOneProjectPage( null );
+    }
+
+    protected void assertAddMavenOneProjectPage( String existingProjectGroup )
     {
         assertPage( "Continuum - Add Maven 1 Project" );
         assertTextPresent( "Add Maven 1.x Project" );
@@ -646,7 +651,14 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "m1PomFile" );
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertOptionPresent( "selectedProjectGroup", new String[]{"Defined by POM", "Default Project Group"} );
+        if ( existingProjectGroup == null )
+        {
+            assertOptionPresent( "selectedProjectGroup", new String[]{"Defined by POM", "Default Project Group"} );
+        }
+        else
+        {
+            assert existingProjectGroup.equals( getFieldValue( "projectGroupName" ) );
+        }
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId",

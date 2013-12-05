@@ -33,7 +33,7 @@
     <script type="text/javascript">
 
       <c:url var="addM2ProjectUrl" value="/addMavenTwoProjectInput.action" />
-      <c:url var="addM1ProjectUrl" value="/addMavenOneProjectInput!input.action" />
+      <c:url var="addM1ProjectUrl" value="/addMavenOneProjectInput.action" />
       <c:url var="addProjectUrl" value="/addProjectInput.action" />
 
       function goToAddProject()

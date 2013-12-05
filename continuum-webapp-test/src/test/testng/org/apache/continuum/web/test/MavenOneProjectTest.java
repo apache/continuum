@@ -81,6 +81,18 @@ public class MavenOneProjectTest
         removeProjectGroup( projectGroupName, false );
     }
 
+    public void testAddMavenOneProjectToProjectGroup()
+        throws Exception
+    {
+        goToProjectGroupsSummaryPage();
+        String defaultProjectGroupName = getProperty( "DEFAULT_PROJECT_GROUP_NAME" );
+        clickLinkWithText( defaultProjectGroupName );
+        selectValue( "preferredExecutor", "Add M1 Project" );
+        clickButtonWithValue( "Add" );
+        assertAddMavenOneProjectPage( defaultProjectGroupName );
+        // rest is tested by other methods
+    }
+
     public void testAddMavenOneProjectWithNoDefaultBuildDefinitionFromTemplate()
         throws Exception
     {
