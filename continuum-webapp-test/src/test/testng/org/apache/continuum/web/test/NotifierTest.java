@@ -206,10 +206,8 @@ public class NotifierTest
         String newHost = "new.test.com";
         String newChannel = "new_test_channel";
         goToProjectInformationPage( projectGroupName, projectName );
-        editIrcNotifier( projectGroupName, projectName, ircNotifierHost, ircNotifierChannel, newHost, newChannel,
-                         true );
-        editIrcNotifier( projectGroupName, projectName, newHost, newChannel, ircNotifierHost, ircNotifierChannel,
-                         true );
+        editIrcNotifier( projectGroupName, projectName, ircNotifierHost, ircNotifierChannel, newHost, newChannel, true );
+        editIrcNotifier( projectGroupName, projectName, newHost, newChannel, ircNotifierHost, ircNotifierChannel, true );
     }
 
     @Test( dependsOnMethods = { "testAddValidIrcProjectNotifier" } )
@@ -374,8 +372,7 @@ public class NotifierTest
         throws Exception
     {
         goToProjectNotifier( projectGroupName, projectName );
-        addMsnNotifier( projectGroupName, projectName, msnNotifierLogin, msnNotifierPassword, msnNotifierAddress,
-                        true );
+        addMsnNotifier( projectGroupName, projectName, msnNotifierLogin, msnNotifierPassword, msnNotifierAddress, true );
     }
 
     public void testAddMsnProjectNotifierWithInvalidValues()
@@ -571,6 +568,27 @@ public class NotifierTest
         assertButtonWithValuePresent( "Cancel" );
         clickButtonWithValue( "Delete" );
         assertProjectInformationPage();
+    }
+
+    public void testDeleteProjectNotifierFromGroupNotifierPage()
+        throws Exception
+    {
+        goToProjectGroupsSummaryPage();
+        goToProjectNotifier( projectGroupName, projectName );
+        addMailNotifier( projectGroupName, projectName, mailNotifierAddress, true );
+
+        showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
+        clickLinkWithText( "Notifiers" );
+        assertGroupNotifierPage( projectGroupName );
+
+        // Delete
+        clickLinkWithXPath( "(//a[contains(@href,'deleteProjectNotifier')])/img" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertGroupNotifierPage( projectGroupName );
+
+        assertTextNotPresent( mailNotifierAddress );
     }
 
     protected void assertGroupNotifierPage( String projectGroupName )
