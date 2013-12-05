@@ -220,8 +220,8 @@ public class MavenOneProjectTest
 
     private void addMaven1Project( String groupName, String pomUrl, String pomUsername, String pomPassword )
     {
-        goToAddMavenOneProjectPage();
         assertLinkNotPresent( groupName );
+        goToAddMavenOneProjectPage();
         addMavenOneProject( pomUrl, pomUsername, pomPassword, null, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( groupName );
