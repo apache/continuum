@@ -34,6 +34,9 @@ import org.testng.annotations.Test;
 public class ProjectGroupTest
     extends AbstractAdminTest
 {
+
+    public static final String TEST_PROJECT_NAME = "ContinuumBuildQueueTestData";
+
     private String projectGroupName;
 
     private String projectGroupId;
@@ -226,5 +229,29 @@ public class ProjectGroupTest
         assertLinkNotPresent( name2 );
         removeProjectGroup( name3 );
         assertLinkNotPresent( name3 );
+    }
+
+    public void testRemoveProjectFromMembers()
+    {
+        goToProjectGroupsSummaryPage();
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true );
+        showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
+
+        clickButtonWithValue( "Add" );
+        assertAddMavenTwoProjectPage();
+        setFieldValue( "m2PomUrl", getProperty( "M2_POM_URL" ) );
+        clickButtonWithValue( "Add" );
+        waitAddProject( "Continuum - Project Group" );
+        assertTextPresent( TEST_PROJECT_NAME );
+
+        clickLinkWithText( "Members" );
+        assertTextPresent( TEST_PROJECT_NAME );
+        clickImgWithAlt( "Delete" );
+
+        assertTextPresent( "Delete Continuum Project" );
+        clickButtonWithValue( "Delete" );
+
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
+        assertTextNotPresent( TEST_PROJECT_NAME );
     }
 }

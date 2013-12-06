@@ -88,7 +88,7 @@
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                 <s:token/>  
-                <s:url id="removeProjectUrl" action="deleteProject!default.action">
+                <s:url id="removeProjectUrl" action="deleteProject_default.action">
                   <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
                   <s:param name="projectName"><c:out value="${pageScope.project.name}"/></s:param>
                   <s:param name="struts.token.name">token</s:param>
