@@ -70,7 +70,7 @@
         <c:choose>
           <c:when test="${pageScope.buildDefinitionSummary.from=='PROJECT'}">
             <redback:ifAuthorized permission="continuum-modify-project-build-definition" resource="${projectGroupName}">
-              <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+              <s:url id="editUrl" action="buildDefinition" namespace="/">
                 <s:param name="projectId"><c:out value="${projectId}"/></s:param>
                 <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
               </s:url>
@@ -82,7 +82,7 @@
           </c:when>
           <c:otherwise>
             <redback:ifAuthorized permission="continuum-modify-group-build-definition" resource="${projectGroupName}">
-              <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+              <s:url id="editUrl" action="buildDefinition" namespace="/">
                 <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
                 <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                 <s:param name="groupBuildDefinition">true</s:param>
