@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.apache.continuum.web.test.parent.AbstractInstallationTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -30,12 +30,14 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "buildEnvironment" } )
 public class BuildEnvironmentTest
-    extends AbstractAdminTest
+    extends AbstractInstallationTest
 {
+
+    public static final String INSTALLATION_NAME = "varForBuildEnv";
 
     private String buildEnvName;
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setUp()
     {
         buildEnvName = getProperty( "BUILD_ENV_NAME" );
@@ -83,9 +85,41 @@ public class BuildEnvironmentTest
         String newName = "new_name";
         goToEditBuildEnvironment( buildEnvName );
         editBuildEnvironment( newName, new String[]{ }, true );
-        // TODO: ADD INSTALLATIONS TO ENVIROTMENT
         goToEditBuildEnvironment( newName );
         editBuildEnvironment( buildEnvName, new String[]{ }, true );
+    }
+
+    @Test( dependsOnMethods = { "testAddBuildEnvironment" })
+    public void testAddInstallationToBuildEnvironment()
+    {
+        goToInstallationPage();
+        if ( !isTextPresent( INSTALLATION_NAME ) )
+        {
+            goToAddInstallationVariable();
+            addInstallation( INSTALLATION_NAME, "VAR_BUILD_ENV", "var_value", false, false, true );
+        }
+
+        goToEditBuildEnvironment( buildEnvName );
+        editBuildEnvironment( buildEnvName, new String[] { INSTALLATION_NAME }, true );
+    }
+
+    @Test( dependsOnMethods = { "testAddInstallationToBuildEnvironment" })
+    public void testEditInstallationOnBuildEnvironment()
+    {
+        goToEditBuildEnvironment( buildEnvName );
+        clickLinkWithText( INSTALLATION_NAME );
+        assertEditInstallationVariablePage();
+        assert INSTALLATION_NAME.equals( getFieldValue( "installation.name" ) );
+    }
+
+    @Test( dependsOnMethods = { "testEditInstallationOnBuildEnvironment" })
+    public void testRemoveInstallationOnBuildEnvironment()
+    {
+        goToEditBuildEnvironment( buildEnvName );
+        assertLinkPresent( INSTALLATION_NAME );
+        clickImgWithAlt( "Delete" );
+        assertEditBuildEnvironmentPage( buildEnvName );
+        assertLinkNotPresent( INSTALLATION_NAME );
     }
 
     @Test( dependsOnMethods = { "testEditInvalidBuildEnvironment", "testEditBuildEnvironment",
@@ -132,7 +166,7 @@ public class BuildEnvironmentTest
         }
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown()
     {
         removeBuildEnvironment( buildEnvName, false );

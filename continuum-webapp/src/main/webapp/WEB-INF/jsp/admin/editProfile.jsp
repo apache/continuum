@@ -84,21 +84,21 @@
                     autoIncludeParameters="false">
             <ec:row highlightRow="true">
               <ec:column property="nameEdit" title="profile.installation.name.label" style="white-space: nowrap" width="50%">
-                <a href="editInstallation!edit.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
+                <a href="editInstallation.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
                   <c:out value="${profileInstallation.name}"/>
                 </a>
                 (<c:out value="${profileInstallation.varValue}"/>)
               </ec:column>
               <ec:column property="type" title="installation.type.label" style="white-space: nowrap" width="49%"/>
               <ec:column property="id" title="&nbsp;" width="1%">
-                <a href="removeBuildEnvInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
+                <a href="removeBuildEnvInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
                 </a>
               </ec:column>
             </ec:row>
           </ec:table>
           <s:if test="allInstallations.size > 0">
-            <s:form action="addInstallationBuildEnv!addInstallation.action" method="get">
+            <s:form action="addInstallationBuildEnv.action" method="get">
               <s:hidden name="profile.id" />
               <div class="functnbar3">
                 <!-- can't use default profile to display this select -->

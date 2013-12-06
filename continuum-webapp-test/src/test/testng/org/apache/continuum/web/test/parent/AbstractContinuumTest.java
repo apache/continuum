@@ -1274,7 +1274,7 @@ public abstract class AbstractContinuumTest
         }
     }
 
-    void assertEditBuildEnvironmentPage( String name )
+    protected void assertEditBuildEnvironmentPage( String name )
     {
         assertAddBuildEnvironmentPage();
         assertTextPresent( "Installation Name" );
