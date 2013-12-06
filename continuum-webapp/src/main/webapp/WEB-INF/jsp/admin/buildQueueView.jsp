@@ -55,7 +55,7 @@
                 <ec:column property="task.buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" width="19%"/>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="cancelCurrentBuildTask" method="cancelCurrent" namespace="/">
+                    <s:url id="cancelUrl" action="cancelCurrentBuildTask" namespace="/">
                       <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
@@ -73,7 +73,7 @@
         </div>
       
       
-      <s:form id="removeBuildForm" action="removeBuildQueueEntries!removeBuildEntries.action" method="post">
+      <s:form id="removeBuildForm" action="removeBuildQueueEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="buildQueue.section.title"/>
@@ -104,7 +104,7 @@
                 <ec:column property="task.buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" width="19%"/>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="removeBuildQueueEntry" method="remove" namespace="/">
+                    <s:url id="cancelUrl" action="removeBuildQueueEntry" namespace="/">
                       <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
                       <s:param name="buildDefinitionId"><c:out value="${queue.task.buildDefinitionId}"/></s:param>
                       <s:param name="trigger"><c:out value="${queue.task.buildTrigger.trigger}"/></s:param>
@@ -165,7 +165,7 @@
                 </ec:column>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="cancelCurrentQueueTask" method="cancelCurrentCheckout" namespace="/">
+                    <s:url id="cancelUrl" action="cancelCurrentQueueTask" namespace="/">
                       <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
@@ -183,7 +183,7 @@
         </div>
       
         
-      <s:form id="removeCheckoutForm" action="removeCheckoutQueueEntries!removeCheckoutEntries.action" method="post">
+      <s:form id="removeCheckoutForm" action="removeCheckoutQueueEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="checkoutQueue.section.title"/>
@@ -213,7 +213,7 @@
                 </ec:column>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="removeCheckoutQueueEntry" method="removeCheckout" namespace="/">
+                    <s:url id="cancelUrl" action="removeCheckoutQueueEntry" namespace="/">
                       <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
@@ -308,7 +308,7 @@
                 <ec:column property="scmRootAddress" title="prepareBuildQueue.table.scmRootAddress"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="removePrepareBuildEntry" method="removePrepareBuildEntry" namespace="/">
+                    <s:url id="cancelUrl" action="removePrepareBuildEntry" namespace="/">
                       <s:param name="projectGroupId"><c:out value="${pageScope.prepareBuildQueue.projectGroupId}"/></s:param>
                       <s:param name="scmRootId"><c:out value="${pageScope.prepareBuildQueue.scmRootId}"/></s:param>
                     </s:url>
