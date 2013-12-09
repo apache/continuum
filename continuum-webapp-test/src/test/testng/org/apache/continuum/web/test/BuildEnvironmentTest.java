@@ -35,6 +35,10 @@ public class BuildEnvironmentTest
 
     public static final String INSTALLATION_NAME = "varForBuildEnv";
 
+    private static final String INSTALLATION_BUILD_ENV = "installationBuildEnv";
+
+    private static final String NEW_BUILD_ENV = "NEW_BUILD_ENV";
+
     private String buildEnvName;
 
     @BeforeClass(alwaysRun = true)
@@ -92,6 +96,8 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" })
     public void testAddInstallationToBuildEnvironment()
     {
+        addBuildEnvironment( INSTALLATION_BUILD_ENV, new String[]{ }, true );
+
         goToInstallationPage();
         if ( !isTextPresent( INSTALLATION_NAME ) )
         {
@@ -99,14 +105,14 @@ public class BuildEnvironmentTest
             addInstallation( INSTALLATION_NAME, "VAR_BUILD_ENV", "var_value", false, false, true );
         }
 
-        goToEditBuildEnvironment( buildEnvName );
-        editBuildEnvironment( buildEnvName, new String[] { INSTALLATION_NAME }, true );
+        goToEditBuildEnvironment( INSTALLATION_BUILD_ENV );
+        editBuildEnvironment( INSTALLATION_BUILD_ENV, new String[] { INSTALLATION_NAME }, true );
     }
 
     @Test( dependsOnMethods = { "testAddInstallationToBuildEnvironment" })
     public void testEditInstallationOnBuildEnvironment()
     {
-        goToEditBuildEnvironment( buildEnvName );
+        goToEditBuildEnvironment( INSTALLATION_BUILD_ENV );
         clickLinkWithText( INSTALLATION_NAME );
         assertEditInstallationVariablePage();
         assert INSTALLATION_NAME.equals( getFieldValue( "installation.name" ) );
@@ -115,10 +121,10 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testEditInstallationOnBuildEnvironment" })
     public void testRemoveInstallationOnBuildEnvironment()
     {
-        goToEditBuildEnvironment( buildEnvName );
+        goToEditBuildEnvironment( INSTALLATION_BUILD_ENV );
         assertLinkPresent( INSTALLATION_NAME );
         clickImgWithAlt( "Delete" );
-        assertEditBuildEnvironmentPage( buildEnvName );
+        assertEditBuildEnvironmentPage( INSTALLATION_BUILD_ENV );
         assertLinkNotPresent( INSTALLATION_NAME );
     }
 
@@ -132,10 +138,9 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditDuplicatedBuildEnvironmentParallelBuilds()
     {
-        String newName = "NEW_BUILD_ENV";
         goToAddBuildEnvironment();
-        addBuildEnvironment( newName, new String[]{ }, true );
-        goToEditBuildEnvironment( newName );
+        addBuildEnvironment( NEW_BUILD_ENV, new String[]{ }, true );
+        goToEditBuildEnvironment( NEW_BUILD_ENV );
         editBuildEnvironment( buildEnvName, new String[]{ }, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
@@ -170,5 +175,7 @@ public class BuildEnvironmentTest
     public void tearDown()
     {
         removeBuildEnvironment( buildEnvName, false );
+        removeBuildEnvironment( INSTALLATION_BUILD_ENV, false );
+        removeBuildEnvironment( NEW_BUILD_ENV, false );
     }
 }

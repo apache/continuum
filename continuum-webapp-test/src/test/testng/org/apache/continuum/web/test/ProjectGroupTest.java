@@ -234,15 +234,18 @@ public class ProjectGroupTest
     public void testRemoveProjectFromMembers()
     {
         goToProjectGroupsSummaryPage();
-        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true );
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
         showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
 
-        clickButtonWithValue( "Add" );
-        assertAddMavenTwoProjectPage();
-        setFieldValue( "m2PomUrl", getProperty( "M2_POM_URL" ) );
-        clickButtonWithValue( "Add" );
-        waitAddProject( "Continuum - Project Group" );
-        assertTextPresent( TEST_PROJECT_NAME );
+        if ( !isLinkPresent( TEST_PROJECT_NAME ) )
+        {
+            clickButtonWithValue( "Add" );
+            assertAddMavenTwoProjectPage();
+            setFieldValue( "m2PomUrl", getProperty( "M2_POM_URL" ) );
+            clickButtonWithValue( "Add" );
+            waitAddProject( "Continuum - Project Group" );
+            assertTextPresent( TEST_PROJECT_NAME );
+        }
 
         clickLinkWithText( "Members" );
         assertTextPresent( TEST_PROJECT_NAME );

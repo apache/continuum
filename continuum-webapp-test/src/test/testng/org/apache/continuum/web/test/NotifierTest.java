@@ -573,6 +573,8 @@ public class NotifierTest
     public void testDeleteProjectNotifierFromGroupNotifierPage()
         throws Exception
     {
+        String mailNotifierAddress = "testDeleteProjectNotifierFromGroupNotifierPage@test.com";
+
         goToProjectGroupsSummaryPage();
         goToProjectNotifier( projectGroupName, projectName );
         addMailNotifier( projectGroupName, projectName, mailNotifierAddress, true );
@@ -582,7 +584,7 @@ public class NotifierTest
         assertGroupNotifierPage( projectGroupName );
 
         // Delete
-        clickLinkWithXPath( "(//a[contains(@href,'deleteProjectNotifier')])/img" );
+        clickLinkWithXPath( "//preceding::td[text()='" + mailNotifierAddress + "']//following::img[@alt='Delete']" );
         assertButtonWithValuePresent( "Delete" );
         assertButtonWithValuePresent( "Cancel" );
         clickButtonWithValue( "Delete" );
