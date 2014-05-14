@@ -568,7 +568,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-webdav</artifactId>
+      <artifactId>wagon-webdav-jackrabbit</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>

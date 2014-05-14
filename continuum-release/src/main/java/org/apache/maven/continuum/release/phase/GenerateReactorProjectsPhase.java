@@ -34,6 +34,7 @@ import org.apache.maven.profiles.ProfileManager;
 import org.apache.maven.project.DuplicateProjectException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.MissingProjectException;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.ProjectSorter;
 import org.apache.maven.settings.MavenSettingsBuilder;
@@ -161,6 +162,10 @@ public class GenerateReactorProjectsPhase
             throw new ContinuumReleaseException( "Failed to sort projects.", e );
         }
         catch ( DuplicateProjectException e )
+        {
+            throw new ContinuumReleaseException( "Failed to sort projects.", e );
+        }
+        catch ( MissingProjectException e )
         {
             throw new ContinuumReleaseException( "Failed to sort projects.", e );
         }

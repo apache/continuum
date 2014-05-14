@@ -720,4 +720,9 @@ public class DefaultBuildAgentMavenBuilderHelper
             container.release( wagonManager );
         }
     }
+
+    void setMavenSettingsBuilder( MavenSettingsBuilder mavenSettingsBuilder )
+    {
+        this.mavenSettingsBuilder = mavenSettingsBuilder;
+    }
 }
