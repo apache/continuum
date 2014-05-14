@@ -86,6 +86,7 @@
           <center>
             <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
+              <%-- NEW, OK, FAILED, ERROR, CHECKEDOUT --%>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                 <s:token/>  
@@ -99,6 +100,7 @@
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
                 </s:a>
               </c:when>
+              <%-- BUILDING, CHECKING_OUT, UPDATING, WARNING, UPDATED, CANCELLED --%>
               <c:otherwise>
                 <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
               </c:otherwise>
