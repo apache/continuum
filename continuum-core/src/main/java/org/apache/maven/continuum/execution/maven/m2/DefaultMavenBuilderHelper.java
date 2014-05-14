@@ -441,8 +441,6 @@ public class DefaultMavenBuilderHelper
 
             String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").\n" + messages;
 
-            file.delete();
-
             log.error( msg );
 
             return null;
@@ -453,8 +451,6 @@ public class DefaultMavenBuilderHelper
             result.addError( ContinuumProjectBuildingResult.ERROR_PROJECT_BUILDING, e.getMessage() );
 
             String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").";
-
-            file.delete();
 
             log.error( msg );
 
