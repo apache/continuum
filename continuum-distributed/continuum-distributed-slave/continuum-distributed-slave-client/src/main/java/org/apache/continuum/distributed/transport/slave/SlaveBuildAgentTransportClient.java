@@ -91,6 +91,7 @@ public class SlaveBuildAgentTransportClient
         catch ( Exception e )
         {
             log.error( "Failed to build projects in build agent " + buildAgentUrl, e );
+            log.error( "Context: " + projectsBuildContext );
             throw new Exception( "Failed to build projects in build agent " + buildAgentUrl, e );
         }
 
