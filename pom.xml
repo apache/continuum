@@ -41,7 +41,7 @@
   <properties>
     <jetty.version>8.1.7.v20120910</jetty.version>
     <continuumWebappVersion>${project.version}</continuumWebappVersion>
-    <!-- Note, when later moving beyond 2.2.1, the copy of DefaultWagonManager should be removed -->
+    <!-- Note, when later moving beyond 2.2.1, the continuum-artifact-manager module should be removed -->
     <maven.version>2.2.1</maven.version>
     <spring.version>2.5.6</spring.version>
     <struts.version>2.3.14.2</struts.version>
@@ -251,6 +251,7 @@
                     <exclude>xml-apis:xml-apis</exclude>
                     <exclude>jtidy:jtidy</exclude>
                     <exclude>jdom:jdom</exclude>
+                    <exclude>org.apache.maven:maven-artifact-manager</exclude>
                   </excludes>
                 </bannedDependencies>
               </rules>
@@ -335,6 +336,7 @@
     <module>continuum-buildagent</module>
     <module>continuum-distributed</module>
     <module>continuum-builder</module>
+    <module>continuum-artifact-manager</module>
   </modules>
   <repositories>
     <!-- only needed for these two artifacts that can't be redistributed
@@ -485,12 +487,32 @@
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
+        <artifactId>maven-repository-metadata</artifactId>
+        <version>${maven.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-artifact-manager</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact-manager</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
         <artifactId>maven-project</artifactId>
         <version>${maven.version}</version>
         <exclusions>
           <exclusion>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-container-default</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact-manager</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -602,6 +624,10 @@
           <exclusion>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact-manager</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -945,6 +971,10 @@
           <exclusion>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-container-default</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact-manager</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

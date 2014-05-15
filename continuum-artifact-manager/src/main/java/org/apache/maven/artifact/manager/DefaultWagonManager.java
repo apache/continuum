@@ -41,13 +41,10 @@ import org.apache.maven.wagon.repository.Repository;
 import org.apache.maven.wagon.repository.RepositoryPermissions;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
-import org.codehaus.plexus.component.configurator.ComponentConfigurator;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
-import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -100,9 +97,6 @@ public class DefaultWagonManager
     //used LinkedMap to preserve the order.
     private Map mirrors = new LinkedHashMap();
 
-    /** Map( String, XmlPlexusConfiguration ) with the repository id and the wagon configuration */
-    private Map<String, XmlPlexusConfiguration> serverConfigurationMap = new HashMap<String, XmlPlexusConfiguration>();
-
     private Map<String, String> serverWagonProviderMap = new HashMap<String, String>();
 
     private TransferListener downloadMonitor;
@@ -133,8 +127,6 @@ public class DefaultWagonManager
         }
 
         Wagon wagon = getWagon( protocol, repository.getId() );
-
-        configureWagon( wagon, repository.getId(), protocol );
 
         return wagon;
     }
@@ -250,8 +242,6 @@ public class DefaultWagonManager
         try
         {
             wagon = getWagon( protocol, repository.getId() );
-
-            configureWagon( wagon, repository );
         }
         catch ( UnsupportedProtocolException e )
         {
@@ -469,8 +459,6 @@ public class DefaultWagonManager
         try
         {
             wagon = getWagon( protocol, repository.getId() );
-
-            configureWagon( wagon, repository );
         }
         catch ( UnsupportedProtocolException e )
         {
@@ -1082,93 +1070,6 @@ public class DefaultWagonManager
         }
     }
 
-    /**
-     * Applies the server configuration to the wagon
-     *
-     * @param wagon      the wagon to configure
-     * @param repository the repository that has the configuration
-     * @throws WagonConfigurationException wraps any error given during configuration of the wagon instance
-     */
-    private void configureWagon( Wagon wagon,
-                                 ArtifactRepository repository )
-        throws WagonConfigurationException
-    {
-        configureWagon( wagon, repository.getId(), repository.getProtocol() );
-    }
-
-    private void configureWagon( Wagon wagon, String repositoryId, String protocol )
-        throws WagonConfigurationException
-    {
-        PlexusConfiguration config = serverConfigurationMap.get( repositoryId );
-        if ( config != null )
-        {
-            getLogger().warn( "Unsupported configuration: " + config + " for wagon " + protocol );
-        }
-    }
-
-    // TODO: Remove this, once the maven-shade-plugin 1.2 release is out, allowing configuration of httpHeaders in the components.xml
-    private PlexusConfiguration updateUserAgentForHttp( Wagon wagon, PlexusConfiguration config )
-    {
-        if ( config == null )
-        {
-            config = new XmlPlexusConfiguration( "configuration" );
-        }
-
-        if ( httpUserAgent != null )
-        {
-            try
-            {
-                wagon.getClass().getMethod( "setHttpHeaders", new Class[]{ Properties.class } );
-
-                PlexusConfiguration headerConfig = config.getChild( "httpHeaders", true );
-                PlexusConfiguration[] children = headerConfig.getChildren( "property" );
-                boolean found = false;
-
-                getLogger().debug( "Checking for pre-existing User-Agent configuration." );
-                for ( int i = 0; i < children.length; i++ )
-                {
-                    PlexusConfiguration c = children[i].getChild( "name", false );
-                    if ( c != null && "User-Agent".equals( c.getValue( null ) ) )
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if ( !found )
-                {
-                    getLogger().debug( "Adding User-Agent configuration." );
-                    XmlPlexusConfiguration propertyConfig = new XmlPlexusConfiguration( "property" );
-                    headerConfig.addChild( propertyConfig );
-
-                    XmlPlexusConfiguration nameConfig = new XmlPlexusConfiguration( "name" );
-                    nameConfig.setValue( "User-Agent" );
-                    propertyConfig.addChild( nameConfig );
-
-                    XmlPlexusConfiguration versionConfig = new XmlPlexusConfiguration( "value" );
-                    versionConfig.setValue( httpUserAgent );
-                    propertyConfig.addChild( versionConfig );
-                }
-                else
-                {
-                    getLogger().debug( "User-Agent configuration found." );
-                }
-            }
-            catch ( SecurityException e )
-            {
-                getLogger().debug( "setHttpHeaders method not accessible on wagon: " + wagon + "; skipping User-Agent configuration." );
-                // forget it. this method is public, if it exists.
-            }
-            catch ( NoSuchMethodException e )
-            {
-                getLogger().debug( "setHttpHeaders method not found on wagon: " + wagon + "; skipping User-Agent configuration." );
-                // forget it.
-            }
-        }
-
-        return config;
-    }
-
     public void addConfiguration( String repositoryId,
                                   Xpp3Dom configuration )
     {
@@ -1177,22 +1078,7 @@ public class DefaultWagonManager
             throw new IllegalArgumentException( "arguments can't be null" );
         }
 
-        final XmlPlexusConfiguration xmlConf = new XmlPlexusConfiguration( configuration );
-
-        for ( int i = 0; i < configuration.getChildCount(); i++ )
-        {
-            Xpp3Dom domChild = configuration.getChild( i );
-            if ( WAGON_PROVIDER_CONFIGURATION.equals( domChild.getName() ) )
-            {
-                serverWagonProviderMap.put( repositoryId, domChild.getValue() );
-                configuration.removeChild( i );
-                break;
-            }
-
-            i++;
-        }
-
-        serverConfigurationMap.put( repositoryId, xmlConf );
+        getLogger().warn( "Unsupported configuration: " + configuration + " for repository " + repositoryId );
     }
 
     public void setDefaultRepositoryPermissions( RepositoryPermissions defaultRepositoryPermissions )
