@@ -34,6 +34,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -59,6 +62,24 @@ public class DataManagementToolTest
         dataManagementTool = (DataManagementTool) lookup( DataManagementTool.class.getName(), "continuum-jdo" );
 
         targetDirectory = createBackupDirectory();
+    }
+
+    public void tearDown()
+        throws Exception
+    {
+        Connection connection = DriverManager.getConnection( "jdbc:hsqldb:mem:." );
+        Statement stmt = connection.createStatement();
+        try
+        {
+            stmt.execute("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK");
+            connection.commit();
+        }
+        finally
+        {
+            stmt.close();
+            connection.close();
+        }
+        super.tearDown();
     }
 
 /*

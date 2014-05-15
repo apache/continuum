@@ -26,7 +26,7 @@
       <configuration>
         <!-- Database Configuration -->
         <driverName>org.hsqldb.jdbcDriver</driverName>
-        <url>jdbc:hsqldb:mem:database</url>
+        <url>jdbc:hsqldb:mem:.</url>
         <userName>sa</userName>
         <password></password>
         <persistenceManagerFactoryClass>org.jpox.PersistenceManagerFactoryImpl</persistenceManagerFactoryClass>
