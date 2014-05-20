@@ -616,9 +616,6 @@
     <browserPath/>
     <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
     <plexus.system.path/>
-<!--
-    <selenium.version>2.35.0</selenium.version>
--->
-    <selenium.version>2.21.0</selenium.version>
+    <selenium.version>2.41.0</selenium.version>
   </properties>
 </project>
