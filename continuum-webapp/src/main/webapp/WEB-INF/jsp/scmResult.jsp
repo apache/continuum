@@ -17,7 +17,6 @@
   ~ under the License.
   --%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib prefix="c1" uri="continuum" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -31,9 +30,18 @@
         </h3>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <c1:data label="%{getText('scmResult.projectGroupName')}" name="projectGroupName"/>
-            <c1:data label="%{getText('scmResult.scmRootAddress')}" name="projectScmRoot.scmRootAddress"/>
-            <c1:data label="%{getText('scmResult.state')}" name="state"/>
+            <tr class="b">
+              <th><label class="label"><s:text name='scmResult.projectGroupName'/>:</label></th>
+              <td><s:property value="projectGroupName"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='scmResult.scmRootAddress'/>:</label></th>
+              <td><s:property value="projectScmRoot.scmRootAddress"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='scmResult.state'/>:</label></th>
+              <td>${state}</td>
+            </tr>
           </table>
         </div>
         

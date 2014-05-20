@@ -43,7 +43,7 @@ public class LoginTest
         goToLoginPage();
         getSelenium().type( "loginForm_username", "badUsername" );
         getSelenium().type( "loginForm_username", getProperty( "ADMIN_PASSWORD" ) );
-        getSelenium().click( "loginForm__login" );
+        getSelenium().click( "//input[@value='Login']" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
@@ -58,7 +58,7 @@ public class LoginTest
     {
         goToLoginPage();
         getSelenium().type( "loginForm_password", "password" );
-        getSelenium().click( "loginForm__login" );
+        getSelenium().click( "//input[@value='Login']" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "User Name is required" );
     }
@@ -67,7 +67,7 @@ public class LoginTest
     {
         goToLoginPage();
         getSelenium().type( "loginForm_username", getProperty( "ADMIN_USERNAME" ) );
-        getSelenium().click( "loginForm__login" );
+        getSelenium().click( "//input[@value='Login']" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }

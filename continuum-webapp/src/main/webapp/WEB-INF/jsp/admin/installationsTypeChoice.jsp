@@ -19,7 +19,6 @@
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 
 <html>
@@ -32,7 +31,7 @@
     <h3>
       <s:text name="installationTypeChoice.section.title"/>
     </h3>  
-    <form action="editInstallation!input.action">
+    <form action="editInstallation_input.action">
       <div class="axial">
 
         <table>
@@ -42,7 +41,8 @@
           </tbody>
         </table>
         <div class="functnbar3">
-          <c1:submitcancel value="%{getText('add')}" cancel="%{getText('cancel')}"/>
+          <s:submit value="%{getText('add')}" theme="simple"/>
+          <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
         </div>        
       </div>
   

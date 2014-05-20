@@ -231,7 +231,6 @@
             <contextPath>/</contextPath>
             <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>
           </webAppConfig>
-          <scanIntervalSeconds>10</scanIntervalSeconds>
           <connectors>
             <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
               <port>9090</port>
@@ -313,9 +312,6 @@
               <tasks>
                 <copy todir="${project.build.directory}/appserver-base">
                   <fileset dir="src/appserver-base" />
-                </copy>
-                <copy todir="src/main/webapp/template">
-                  <fileset file="src/main/resources/template/default/validation.js" />
                 </copy>
               </tasks>
             </configuration>

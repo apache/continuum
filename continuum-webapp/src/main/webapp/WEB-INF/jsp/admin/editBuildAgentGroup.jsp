@@ -19,7 +19,6 @@
   
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -44,11 +43,11 @@
               <s:hidden name="typeGroup"/>
               <c:choose>
                 <c:when test="${typeGroup=='new'}">
-                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true"/>
+                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" size="100"/>
                 </c:when>
                 <c:otherwise>
                   <s:hidden name="buildAgentGroup.name"/>
-                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" disabled="true"/>
+                  <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" disabled="true" size="100"/>
                 </c:otherwise>
               </c:choose>
             </table>
@@ -90,7 +89,8 @@
             </c:choose>                           
 
             <div class="functnbar3">
-              <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+              <s:submit value="%{getText('save')}" theme="simple"/>
+              <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
             </div>
           </s:form>
         </div>

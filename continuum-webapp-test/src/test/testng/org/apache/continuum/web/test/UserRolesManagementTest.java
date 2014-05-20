@@ -20,12 +20,22 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractUserRolesManagementTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Test( groups = {"userroles"}, sequential = true )
 public class UserRolesManagementTest
     extends AbstractUserRolesManagementTest
 {
+
+    public static final String TEST_GROUP = "UserRoles Test Group";
+
+    private List<String> usernames = new ArrayList<String>();
+
     public void testBasicAddDeleteUser()
     {
         username = getProperty( "GUEST_USERNAME" );
@@ -230,7 +240,7 @@ public class UserRolesManagementTest
 
         // enable distributed build
         clickLinkWithText( "Configuration" );
-        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+        checkField( "distributedBuildEnabled" );
         clickButtonWithValue( "Save" );
 
         clickLinkWithText( "Logout" );
@@ -246,7 +256,7 @@ public class UserRolesManagementTest
         loginAsAdmin();
         // disable distributed build
         clickLinkWithText( "Configuration" );
-        clickLinkWithLocator( "configuration_distributedBuildEnabled", false );
+        uncheckField( "distributedBuildEnabled" );
         clickButtonWithValue( "Save" );
 
         clickLinkWithText( "Logout" );
@@ -269,8 +279,8 @@ public class UserRolesManagementTest
         assertTextNotPresent( "Project Groups list is empty." );
         // test add project group
         clickButtonWithValue( "Add Project Group" );
-        setFieldValue( "name", "Test Group" );
-        setFieldValue( "groupId", "Test Group" );
+        setFieldValue( "name", TEST_GROUP );
+        setFieldValue( "groupId", TEST_GROUP );
         setFieldValue( "description", "testing project group" );
         submit();
     }
@@ -279,7 +289,7 @@ public class UserRolesManagementTest
     public void testContinuumGroupProjectAdmin_AddProjectToProjectGroup()
         throws Exception
     {
-        clickLinkWithText( "Test Group" );
+        clickLinkWithText( TEST_GROUP );
         clickButtonWithValue( "Add" );
         assertAddMavenTwoProjectPage();
         setFieldValue( "m2PomUrl", getProperty( "M2_POM_URL" ) );
@@ -293,7 +303,7 @@ public class UserRolesManagementTest
     public void testContinuumGroupProjectAdmin_BuildProject()
         throws Exception
     {
-        buildProjectGroup( "Test Group", "Test Group", "testing project group", "ContinuumBuildQueueTestData", true );
+        buildProjectGroup( TEST_GROUP, TEST_GROUP, "testing project group", "ContinuumBuildQueueTestData", true );
     }
 
     @Test( dependsOnMethods = {"testContinuumGroupProjectAdmin_BuildProject"} )
@@ -303,7 +313,7 @@ public class UserRolesManagementTest
         clickLinkWithText( "guest1" );
         clickLinkWithText( "Edit Roles" );
         checkUserRoleWithValue( "Guest" );
-        checkResourceRoleWithValue( "Project Developer - Test Group" );
+        checkResourceRoleWithValue( "Project Developer - " + TEST_GROUP );
         submit();
         clickLinkWithText( "Logout" );
     }
@@ -619,4 +629,28 @@ public class UserRolesManagementTest
         clickLinkWithText( "Logout" );
     }
 
+    @AfterMethod
+    public void trackUserToDelete()
+    {
+        // record to delete at end, as some are used across dependent tests
+        // TODO: refactor!
+        usernames.add( username );
+    }
+
+    @AfterClass
+    public void cleanup()
+    {
+        loginAsAdmin();
+        if ( !isTextPresent( "List of Users" ) )
+        {
+            clickLinkWithText( "Users" );
+        }
+
+        for ( String username : usernames )
+        {
+            deleteUser( username, false );
+        }
+
+        removeProjectGroup( TEST_GROUP, false );
+    }
 }

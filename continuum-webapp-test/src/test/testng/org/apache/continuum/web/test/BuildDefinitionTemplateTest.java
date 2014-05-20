@@ -20,6 +20,8 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractBuildDefinitionTemplateTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -30,12 +32,19 @@ import org.testng.annotations.Test;
 public class BuildDefinitionTemplateTest
     extends AbstractBuildDefinitionTemplateTest
 {
+    private String templateName;
+
+    @BeforeClass
+    public void setUp()
+    {
+        templateName = getProperty( "TEMPLATE_NAME" );
+    }
+
     public void testAddTemplate()
         throws Exception
     {
-        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         goToAddTemplate();
-        addEditTemplate( TEMPLATE_NAME,
+        addEditTemplate( templateName,
                          new String[]{"Default Maven Build Definition", "Default Maven 1 Build Definition"},
                          new String[]{}, true );
     }
@@ -60,22 +69,20 @@ public class BuildDefinitionTemplateTest
     public void testEditTemplate()
         throws Exception
     {
-        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         String newName = "new_name";
-        goToEditTemplate( TEMPLATE_NAME,
+        goToEditTemplate( templateName,
                           new String[]{"Default Maven Build Definition", "Default Maven 1 Build Definition"} );
         addEditTemplate( newName, new String[]{"Default Shell Build Definition"},
                          new String[]{"Default Maven Build Definition"}, true );
         goToEditTemplate( newName, new String[]{"Default Maven 1 Build Definition", "Default Shell Build Definition"} );
-        addEditTemplate( TEMPLATE_NAME, new String[]{"Default Maven Build Definition"},
+        addEditTemplate( templateName, new String[]{"Default Maven Build Definition"},
                          new String[]{"Default Shell Build Definition"}, true );
     }
 
     @Test( dependsOnMethods = {"testEditTemplate"} )
     public void testDeleteTemplate()
     {
-        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
-        removeTemplate( TEMPLATE_NAME );
+        removeTemplate( templateName );
     }
 
     public void testAddBuildDefinitionTemplate()
@@ -135,9 +142,13 @@ public class BuildDefinitionTemplateTest
     public void testAddTemplateWithEmptyBuildDefinitions()
         throws Exception
     {
-        String TEMPLATE_NAME = getProperty( "TEMPLATE_NAME" );
         goToAddTemplate();
-        addEditTemplate( TEMPLATE_NAME, new String[] {}, new String[] {}, false );
+        addEditTemplate( templateName, new String[] {}, new String[] {}, false );
     }
 
+    @AfterClass
+    public void tearDown()
+    {
+        removeTemplate( templateName, false );
+    }
 }

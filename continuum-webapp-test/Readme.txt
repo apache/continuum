@@ -19,9 +19,14 @@ The tests require Ant and Maven to be on your PATH. If they are not, pass the pl
  * mvn clean install -Dplexus.system.path=/path/to/apache-maven-3.0.4/bin:/path/to/apache-ant-1.8.1/bin
 
 Run Selenium tests against an existing Continuum instance
-  * mvn clean install -DbaseUrl=http://localhost:9090/continuum
+  * mvn clean install -DbaseUrl=http://localhost:9090 -DbuildAgentUrl=http://localhost:9191/xmlrpc \
+        -DappserverBase=$PWD/../continuum-webapp/target/appserver-base
 
-  (This skips the Cargo plugin configuration that starts a container with the Continuum webapp deployed)
+  This skips the Cargo plugin configuration that starts a container with the
+  Continuum webapp deployed. Note that you will need to have set this on the
+  existing Continuum instance:
+  
+    -Dsvn.base.url=file://localhost${PWD}/../continuum-webapp-test/target/example-svn
 
 Run Selenium tests in an alternate browser
   * mvn clean install -Ptomcat7x -Dbrowser=iexplore  (or -Dbrowser=safari or -Dbrowser=other -DbrowserPath=/path/to/browser)
@@ -46,6 +51,14 @@ The server will run until you press Ctrl-C, and you can run the tests from the I
 To attach a debugger to the same process, run:
 
     mvn -Ptomcat7x,debug test-compile selenium:start-server cargo:run
+
+You can also run the Selenium server against your development instance, so
+that you can run the tests in your IDE:
+
+    mvn -Ptomcat7x,debug test-compile selenium:start-server cargo:run -DbaseUrl=http://localhost:9090
+
+The remaining properties appserverBase and buildAgentUrl need to be supplied to the running tests, along with the same
+baseUrl value.
 
 Note, the tests currently fail with "Illegal value" errors under newer
 versions of Selenium and Firefox. The tests run successfully with Selenium

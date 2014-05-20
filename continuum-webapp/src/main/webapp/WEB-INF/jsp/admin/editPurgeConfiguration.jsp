@@ -19,7 +19,6 @@
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
   <s:i18n name="localization.Continuum">
   <head>
@@ -50,8 +49,8 @@
                 <s:select label="%{getText('purgeConfig.directoryType.label')}" name="directoryType" list="directoryTypes"/>
               </c:otherwise>
             </c:choose>
-            <s:textfield label="%{getText('purgeConfig.daysOlder.label')}" name="daysOlder"/>
-            <s:textfield label="%{getText('purgeConfig.retentionCount.label')}" name="retentionCount"/>
+            <s:textfield label="%{getText('purgeConfig.daysOlder.label')}" name="daysOlder" size="100"/>
+            <s:textfield label="%{getText('purgeConfig.retentionCount.label')}" name="retentionCount" size="100"/>
             <s:checkbox label="%{getText('purgeConfig.deleteAll.label')}" name="deleteAll"/>
             <s:if test="purgeType == 'repository'">
               <s:checkbox label="%{getText('purgeConfig.deleteReleasedSnapshots.label')}" name="deleteReleasedSnapshots"/>
@@ -67,13 +66,14 @@
             </c:choose>
             <s:select label="%{getText('purgeConfig.schedule.label')}" name="scheduleId" list="schedules"
                        headerKey="-1" headerValue=""/>
-            <s:textfield label="%{getText('purgeConfig.description.label')}" name="description"/>
+            <s:textfield label="%{getText('purgeConfig.description.label')}" name="description" size="100"/>
             <s:checkbox label="%{getText('purgeConfig.enabled.label')}" name="enabled"/>
           </table>
           <s:hidden name="purgeConfigId"/>
           <s:hidden name="purgeType"/>
           <div class="functnbar3">
-            <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+            <s:submit value="%{getText('save')}" theme="simple"/>
+            <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
           </div>
         </c:when>
         <c:otherwise>

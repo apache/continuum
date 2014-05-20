@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -40,15 +39,16 @@
             </c:if>
             <table>
               <tbody>
-                <s:textfield label="%{getText('projectGroup.name.label')}" name="name"  requiredLabel="true"/>
-                <s:textfield label="%{getText('projectGroup.groupId.label')}" name="groupId" requiredLabel="true"/>
-                <s:textfield label="%{getText('projectGroup.description.label')}" name="description"/>
+                <s:textfield label="%{getText('projectGroup.name.label')}" name="name"  requiredLabel="true" size="100"/>
+                <s:textfield label="%{getText('projectGroup.groupId.label')}" name="groupId" requiredLabel="true" size="100"/>
+                <s:textfield label="%{getText('projectGroup.description.label')}" name="description" size="100"/>
                 <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
                 		   listKey="id" listValue="name"/>
               </tbody>
             </table>
             <div class="functnbar3">
-              <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+              <s:submit value="%{getText('save')}" theme="simple"/>
+              <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
             </div>
           </s:form>
         </div>

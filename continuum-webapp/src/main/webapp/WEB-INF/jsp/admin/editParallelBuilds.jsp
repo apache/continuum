@@ -19,7 +19,6 @@
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
@@ -43,10 +42,11 @@
     <div class="axial">
       <s:form action="saveBuildQueue" method="post" validate="true">
           <table>
-            <s:textfield label="%{getText('parallel.build.queue.name')}" name="name" requiredLabel="true" />
+            <s:textfield label="%{getText('parallel.build.queue.name')}" name="name" requiredLabel="true" size="100" />
           </table>
           <div class="functnbar3">
-            <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+            <s:submit value="%{getText('save')}" theme="simple"/>
+            <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
           </div>
       </s:form>
     </div>

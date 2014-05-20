@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -28,10 +27,10 @@
       <div id="axial" class="h3">
       
         <s:if test="projectId > 0">
-            <s:url id="actionUrl" value="addProjectNotifier!execute" includeParams="none" />
+            <s:url id="actionUrl" value="addProjectNotifier_submit" includeParams="none" />
         </s:if>
         <s:else>
-            <s:url id="actionUrl" value="addProjectGroupNotifier!execute" includeParams="none" />
+            <s:url id="actionUrl" value="addProjectGroupNotifier_submit" includeParams="none" />
         </s:else>
        
         <h3><s:text name="notifier.section.add.title"/></h3>
@@ -48,7 +47,8 @@
               </tbody>
             </table>
             <div class="functnbar3">
-              <c1:submitcancel value="%{getText('submit')}" cancel="%{getText('cancel')}"/>
+              <s:submit value="%{getText('submit')}" theme="simple"/>
+              <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
             </div>
           </s:form>
         </div>

@@ -19,7 +19,9 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.apache.continuum.web.test.parent.AbstractInstallationTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -28,13 +30,27 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "buildEnvironment" } )
 public class BuildEnvironmentTest
-    extends AbstractAdminTest
+    extends AbstractInstallationTest
 {
+
+    public static final String INSTALLATION_NAME = "varForBuildEnv";
+
+    private static final String INSTALLATION_BUILD_ENV = "installationBuildEnv";
+
+    private static final String NEW_BUILD_ENV = "NEW_BUILD_ENV";
+
+    private String buildEnvName;
+
+    @BeforeClass(alwaysRun = true)
+    public void setUp()
+    {
+        buildEnvName = getProperty( "BUILD_ENV_NAME" );
+    }
+
     public void testAddBuildEnvironment()
     {
-        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         goToAddBuildEnvironment();
-        addBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, true );
+        addBuildEnvironment( buildEnvName, new String[]{ }, true );
     }
 
     public void testAddInvalidBuildEnvironment()
@@ -54,8 +70,7 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditInvalidBuildEnvironment()
     {
-        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
-        goToEditBuildEnvironment( BUILD_ENV_NAME );
+        goToEditBuildEnvironment( buildEnvName );
         editBuildEnvironment( "", new String[]{ }, false );
         assertTextPresent( "You must define a name" );
     }
@@ -63,41 +78,70 @@ public class BuildEnvironmentTest
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testAddDuplicatedBuildEnvironment()
     {
-        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         goToAddBuildEnvironment();
-        addBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, false );
+        addBuildEnvironment( buildEnvName, new String[]{ }, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
     @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditBuildEnvironment()
     {
-        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
         String newName = "new_name";
-        goToEditBuildEnvironment( BUILD_ENV_NAME );
+        goToEditBuildEnvironment( buildEnvName );
         editBuildEnvironment( newName, new String[]{ }, true );
-        // TODO: ADD INSTALLATIONS TO ENVIROTMENT
         goToEditBuildEnvironment( newName );
-        editBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, true );
+        editBuildEnvironment( buildEnvName, new String[]{ }, true );
+    }
+
+    @Test( dependsOnMethods = { "testAddBuildEnvironment" })
+    public void testAddInstallationToBuildEnvironment()
+    {
+        addBuildEnvironment( INSTALLATION_BUILD_ENV, new String[]{ }, true );
+
+        goToInstallationPage();
+        if ( !isTextPresent( INSTALLATION_NAME ) )
+        {
+            goToAddInstallationVariable();
+            addInstallation( INSTALLATION_NAME, "VAR_BUILD_ENV", "var_value", false, false, true );
+        }
+
+        goToEditBuildEnvironment( INSTALLATION_BUILD_ENV );
+        editBuildEnvironment( INSTALLATION_BUILD_ENV, new String[] { INSTALLATION_NAME }, true );
+    }
+
+    @Test( dependsOnMethods = { "testAddInstallationToBuildEnvironment" })
+    public void testEditInstallationOnBuildEnvironment()
+    {
+        goToEditBuildEnvironment( INSTALLATION_BUILD_ENV );
+        clickLinkWithText( INSTALLATION_NAME );
+        assertEditInstallationVariablePage();
+        assert INSTALLATION_NAME.equals( getFieldValue( "installation.name" ) );
+    }
+
+    @Test( dependsOnMethods = { "testEditInstallationOnBuildEnvironment" })
+    public void testRemoveInstallationOnBuildEnvironment()
+    {
+        goToEditBuildEnvironment( INSTALLATION_BUILD_ENV );
+        assertLinkPresent( INSTALLATION_NAME );
+        clickImgWithAlt( "Delete" );
+        assertEditBuildEnvironmentPage( INSTALLATION_BUILD_ENV );
+        assertLinkNotPresent( INSTALLATION_NAME );
     }
 
     @Test( dependsOnMethods = { "testEditInvalidBuildEnvironment", "testEditBuildEnvironment",
         "testAddDuplicatedBuildEnvironment", "testEditInvalidBuildEnvironment" } )
     public void testDeleteBuildEnvironment()
     {
-        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
-        removeBuildEnvironment( BUILD_ENV_NAME );
+        removeBuildEnvironment( buildEnvName );
     }
 
-    @Test( dependsOnMethods = { "testAddBuildEnvironmentWithBuildAgentGroup" } )
+    @Test( dependsOnMethods = { "testAddBuildEnvironment" } )
     public void testEditDuplicatedBuildEnvironmentParallelBuilds()
     {
-        String BUILD_ENV_NAME = getProperty( "BUILD_ENV_NAME" );
-        String newName = "NEW_BUILD_ENV";
         goToAddBuildEnvironment();
-        addBuildEnvironment( newName, new String[]{ }, true );
-        goToEditBuildEnvironment( newName );
-        editBuildEnvironment( BUILD_ENV_NAME, new String[]{ }, false );
+        addBuildEnvironment( NEW_BUILD_ENV, new String[]{ }, true );
+        goToEditBuildEnvironment( NEW_BUILD_ENV );
+        editBuildEnvironment( buildEnvName, new String[]{ }, false );
         assertTextPresent( "A Build Environment with the same name already exists" );
     }
 
@@ -125,5 +169,13 @@ public class BuildEnvironmentTest
         {
             assertAddBuildEnvironmentPage();
         }
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDown()
+    {
+        removeBuildEnvironment( buildEnvName, false );
+        removeBuildEnvironment( INSTALLATION_BUILD_ENV, false );
+        removeBuildEnvironment( NEW_BUILD_ENV, false );
     }
 }

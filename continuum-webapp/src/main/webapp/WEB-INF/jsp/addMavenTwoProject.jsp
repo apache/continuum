@@ -19,7 +19,6 @@
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <s:i18n name="localization.Continuum">
 <html>
     <head>
@@ -43,8 +42,8 @@
                         </c:if>
                         <table>
                           <tbody>
-                            <s:textfield label="%{getText('add.m2.project.m2PomUrl.label')}" requiredLabel="true" name="m2PomUrl">
-	                            <s:param name="desc">
+                            <s:textfield label="%{getText('add.m2.project.m2PomUrl.label')}" requiredLabel="true" name="m2PomUrl" size="100">
+	                            <s:param name="after">
 		                            <table cellspacing="0" cellpadding="0">
 		                              <tbody>
 		                                <tr>
@@ -67,14 +66,14 @@
                             <s:label>
                               <s:param name="after"><strong><s:text name="or"/></strong></s:param>
                             </s:label>
-                            <s:file label="%{getText('add.m2.project.m2PomFile.label')}" name="m2PomFile">
-                                <s:param name="desc"><p><s:text name="add.m2.project.m2PomFile.message"/></p></s:param>
+                            <s:file label="%{getText('add.m2.project.m2PomFile.label')}" name="m2PomFile" size="100">
+                                <s:param name="after"><p><s:text name="add.m2.project.m2PomFile.message"/></p></s:param>
                             </s:file>
                             <c:choose>
                             <c:when test="${disableGroupSelection == true}">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
-                              <s:textfield label="%{getText('add.m2.project.projectGroup')}" name="projectGroupName" disabled="true"/>
+                              <s:textfield label="%{getText('add.m2.project.projectGroup')}" name="projectGroupName" disabled="true" size="100"/>
                             </c:when>
                             <c:otherwise>
                               <s:select label="%{getText('add.m2.project.projectGroup')}" name="selectedProjectGroup"
@@ -83,7 +82,7 @@
                             </c:choose>
                             
                             <s:label>
-                              <s:param name="desc">
+                              <s:param name="after">
                                 <table cellspacing="0" cellpadding="0">
 	                              <tbody>
 	                                <tr>
@@ -109,7 +108,8 @@
                           </tbody>
                         </table>
                         <div class="functnbar3">
-                          <c1:submitcancel value="%{getText('add')}" cancel="%{getText('cancel')}"/>
+                          <s:submit value="%{getText('add')}" theme="simple"/>
+                          <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
                         </div>
                     </s:form>
                 </div>

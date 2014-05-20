@@ -49,14 +49,14 @@
       </div>
       <div>
         <div class="body">
-          <s:url id="addMavenTwoProjectUrl" action="addMavenTwoProjectInput" method="input" namespace="/"
+          <s:url id="addMavenTwoProjectUrl" action="addMavenTwoProjectInput" namespace="/"
                   includeParams="none"/>
           <s:a href="%{addMavenTwoProjectUrl}">
             <s:text name="menu.add.m2Project"/>
           </s:a>
         </div>
         <div class="body">
-          <s:url id="addMavenOneProjectUrl" action="addMavenOneProjectInput" method="input" namespace="/"
+          <s:url id="addMavenOneProjectUrl" action="addMavenOneProjectInput" namespace="/"
                   includeParams="none"/>
           <s:a href="%{addMavenOneProjectUrl}">
             <s:text name="menu.add.m1Project"/>
@@ -114,7 +114,7 @@
           </div>
         </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-installations">
-          <s:url id="configurationUrl" action="installationsList" namespace="/admin" method="list" includeParams="none"/>
+          <s:url id="configurationUrl" action="installationsList" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{configurationUrl}">
               <s:text name="menu.administration.installations"/>
@@ -122,7 +122,7 @@
           </div>
         </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-profiles">
-          <s:url id="configurationUrl" action="buildEnvList" namespace="/admin" method="list" includeParams="none"/>
+          <s:url id="configurationUrl" action="buildEnvList" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{configurationUrl}">
               <s:text name="menu.administration.profile"/>
@@ -130,7 +130,7 @@
           </div> 
         </redback:ifAuthorized> 
         <redback:ifAuthorized permission="continuum-view-queues">
-          <s:url id="queueUrls" action="displayQueues" namespace="/admin" method="display" includeParams="none"/>
+          <s:url id="queueUrls" action="displayQueues" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{queueUrls}">
               <s:text name="menu.administration.queues"/>
@@ -146,7 +146,7 @@
           </div> 
         </redback:ifAuthorized>        
         <redback:ifAuthorized permission="continuum-manage-configuration">               
-          <s:url id="configurationUrl" action="configuration" namespace="/admin" method="input" includeParams="none"/>
+          <s:url id="configurationUrl" action="configuration" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{configurationUrl}">
               <s:text name="menu.administration.configuration"/>
@@ -184,7 +184,7 @@
       </div>
       <div>
         <div class="body">
-          <s:url id="viewProjectBuildsReportUrl" action="viewProjectBuildsReport" method="init" namespace="/" includeParams="none"/>
+          <s:url id="viewProjectBuildsReportUrl" action="viewProjectBuildsReport" namespace="/" includeParams="none"/>
           <s:a href="%{viewProjectBuildsReportUrl}">
             <s:text name="menu.reports.projectBuilds"/>
           </s:a> 

@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -39,16 +38,37 @@
 
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <c1:data label="%{getText('projectView.project.name')}" name="project.name"/>
-            <c1:data label="%{getText('projectView.project.description')}" name="project.description"/>
-            <c1:data label="%{getText('projectView.project.version')}" name="project.version"/>
-            <c1:data label="%{getText('projectView.project.scmUrl')}" name="project.scmUrl"/>
-            <c1:data label="%{getText('projectView.project.scmTag')}" name="project.scmTag"/>
+            <tr class="b">
+              <th><label class="label"><s:text name='projectView.project.name'/>:</label></th>
+              <td><s:property value="project.name"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='projectView.project.description'/>:</label></th>
+              <td><s:property value="project.description"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='projectView.project.version'/>:</label></th>
+              <td><s:property value="project.version"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='projectView.project.scmUrl'/>:</label></th>
+              <td><s:property value="project.scmUrl"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='projectView.project.scmTag'/>:</label></th>
+              <td><s:property value="project.scmTag"/></td>
+            </tr>
             <s:url id="projectGroupSummaryUrl" value="/projectGroupSummary.action">
                 <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
             </s:url>
-            <c1:data label="%{getText('projectView.project.group')}" name="project.projectGroup.name" valueLink="%{'${projectGroupSummaryUrl}'}"/>
-            <c1:data label="%{getText('projectView.project.lastBuildDateTime')}" name="lastBuildDateTime" />
+            <tr class="b">
+              <th><label class="label"><s:text name='projectView.project.group'/>:</label></th>
+              <td><a href="${projectGroupSummaryUrl}"><s:property value="project.projectGroup.name"/></a></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='projectView.project.lastBuildDateTime'/>:</label></th>
+              <td><s:property value="lastBuildDateTime"/></td>
+            </tr>
           </table>
 
           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
@@ -136,7 +156,7 @@
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
-                      <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
+                      <s:url id="removeUrl" action="deleteProjectNotifier_default.action" namespace="/">
                         <s:param name="projectId"><c:out value="${project.id}"/></s:param>
                         <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
                         <s:param name="notifierType"><c:out value="${notifier.type}"/></s:param>
@@ -160,7 +180,7 @@
         </c:if>
         <div class="functnbar3">
            <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
-          <s:form action="addProjectNotifier!default.action" method="post">
+          <s:form action="addProjectNotifier.action" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
             <s:submit value="%{getText('add')}" theme="simple"/>

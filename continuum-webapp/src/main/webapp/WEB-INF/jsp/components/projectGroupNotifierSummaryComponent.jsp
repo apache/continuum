@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <s:i18n name="localization.Continuum">
 
@@ -56,7 +55,7 @@
       </ec:column>    
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
-          <s:url id="removeUrl" action="deleteProjectGroupNotifier!default.action" namespace="/">
+          <s:url id="removeUrl" action="deleteProjectGroupNotifier_default.action" namespace="/">
             <s:param name="projectGroupId"><c:out value="${pageScope.projectGroupNotifierSummary.projectGroupId}"/></s:param>
             <s:param name="notifierId"><c:out value="${pageScope.projectGroupNotifierSummary.id}"/></s:param>
             <s:param name="notifierType"><c:out value="${pageScope.projectGroupNotifierSummary.type}"/></s:param>
@@ -132,7 +131,7 @@
           <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
-                <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
+                <s:url id="removeUrl" action="deleteProjectNotifier_default.action" namespace="/">
                   <s:param name="projectGroupId"><c:out value="${pageScope.projectNotifierSummary.projectGroupId}"/></s:param>
                   <s:param name="projectId"><c:out value="${pageScope.projectNotifierSummary.projectId}"/></s:param>
                   <s:param name="notifierId"><c:out value="${pageScope.projectNotifierSummary.id}"/></s:param>

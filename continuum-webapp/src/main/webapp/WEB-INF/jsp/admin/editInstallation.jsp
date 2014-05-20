@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
 <s:i18n name="localization.Continuum">
   <head>
@@ -33,7 +32,7 @@
       <s:text name="installation.section.title"/>
     </h3>
 
-    <s:form action="saveInstallation!save" method="post">
+    <s:form action="saveInstallation" method="post">
 
       <s:if test="hasActionErrors()">
         <h3>Action Error</h3>
@@ -52,29 +51,30 @@
             <s:hidden name="varNameUpdatable" />
             <s:hidden name="varNameDisplayable" />
             <s:textfield label="%{getText('installation.name.label')}" name="installation.name"
-                            requiredLabel="true"/>
+                            requiredLabel="true" size="100"/>
             <s:if test="displayTypes">
               <s:select label="%{getText('installation.type.label')}" name="installation.type" list="typesLabels" />
             </s:if>
             <s:if test="varNameUpdatable">
               <s:if test="varNameDisplayable">
-                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" requiredLabel="true" />
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" requiredLabel="true" size="100" />
               </s:if>
             </s:if>
             <s:else>
               <s:if test="varNameDisplayable">
-                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" requiredLabel="true" readonly="true"/>
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" requiredLabel="true" readonly="true" size="100"/>
               </s:if>
             </s:else>
             <s:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
-                          requiredLabel="true"/>
+                          requiredLabel="true" size="100"/>
             <s:if test="%{(automaticProfileDisplayable && installation == null) || (installation.installationId == 0)}">
               <s:checkbox label="%{getText('installation.automaticProfile.label')}" name="automaticProfile" />
             </s:if>
           </tbody>
         </table>
         <div class="functnbar3">
-          <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+          <s:submit value="%{getText('save')}" theme="simple"/>
+          <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
         </div>
 
       </div>

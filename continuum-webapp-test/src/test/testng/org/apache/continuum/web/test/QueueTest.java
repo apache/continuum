@@ -20,6 +20,7 @@ package org.apache.continuum.web.test;
  */
 
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,10 +42,17 @@ public class QueueTest
         buildQueueName = getProperty( "BUILD_QUEUE_NAME" );
     }
 
+    @AfterClass
+    protected void tearDown()
+    {
+        goToBuildQueuePage();
+        removeBuildQueue( buildQueueName );
+    }
+
     public void testAddBuildQueue()
     {
         setMaxBuildQueue( 2 );
-        addBuildQueue( buildQueueName, true );
+        addBuildQueue( buildQueueName );
     }
 
     public void testQueuePageWithoutBuild()
@@ -79,12 +87,16 @@ public class QueueTest
         goToAddSchedule();
         addEditSchedule( scheduleName, scheduleDescription, second, minute, hour, dayOfMonth, month, dayOfWeek, year,
                          maxTime, period, true, true );
-        goToEditSchedule( scheduleName, scheduleDescription, second, minute, hour, dayOfMonth, month, dayOfWeek, year,
-                          maxTime, period );
+        try {
+            goToEditSchedule( scheduleName, scheduleDescription, second, minute, hour, dayOfMonth, month, dayOfWeek, year,
+                              maxTime, period );
 
-        getSelenium().addSelection( "saveSchedule_availableBuildQueuesIds", "label=" + buildQueueName );
-        getSelenium().click( "//input[@value='->']" );
-        submit();
+            getSelenium().addSelection( "saveSchedule_availableBuildQueuesIds", "label=" + buildQueueName );
+            getSelenium().click( "//input[@value='->']" );
+            submit();
+        } finally {
+            removeSchedule( scheduleName );
+        }
     }
 
     @Test( dependsOnMethods = { "testAddBuildQueue" } )
@@ -107,7 +119,7 @@ public class QueueTest
     public void testAddEmptyBuildQueue()
     {
         setMaxBuildQueue( 3 );
-        addBuildQueue( "", false );
+        addBuildQueue( "", false, false );
         assertTextPresent( "You must define a name" );
     }
 
@@ -116,7 +128,7 @@ public class QueueTest
         setMaxBuildQueue( 3 );
         goToBuildQueuePage();
         String testBuildQueue = "test_build_queue";
-        addBuildQueue( testBuildQueue, true );
+        addBuildQueue( testBuildQueue );
 
         removeBuildQueue( testBuildQueue );
         assertTextNotPresent( testBuildQueue );
@@ -134,15 +146,19 @@ public class QueueTest
         String projectGroupId = getProperty( "MAVEN2_QUEUE_TEST_POM_PROJECT_GROUP_ID" );
         String projectGroupDescription = getProperty( "MAVEN2_QUEUE_TEST_POM_PROJECT_GROUP_DESCRIPTION" );
 
-        //build a project
-        goToAddMavenTwoProjectPage();
-        addMavenTwoProject( pomUrl, pomUsername, pomPassword, null, true );
+        goToProjectGroupsSummaryPage();
+        if ( !isLinkPresent( projectGroupName ) )
+        {
+            //build a project
+            goToAddMavenTwoProjectPage();
+            addMavenTwoProject( pomUrl, pomUsername, pomPassword, null, true );
+        }
 
         buildProjectForQueuePageTest( projectGroupName, projectGroupId, projectGroupDescription );
         String location = getSelenium().getLocation();
 
         //check queue page while building
-        getSelenium().open( "/continuum/admin/displayQueues!display.action" );
+        getSelenium().open( baseUrl + "/admin/displayQueues.action" );
         assertPage( "Continuum - Build Queue" );
         assertTextPresent( "Current Build" );
         assertTextPresent( "Build Queue" );
@@ -195,21 +211,32 @@ public class QueueTest
         assertButtonWithValuePresent( "Cancel" );
     }
 
+    protected void addBuildQueue( String name )
+    {
+        addBuildQueue( name, true );
+    }
+
     protected void addBuildQueue( String name, boolean success )
+    {
+        addBuildQueue( name, success, true );
+    }
+
+    protected void addBuildQueue( String name, boolean success, boolean waitForError )
     {
         goToBuildQueuePage();
         assertBuildQueuePage();
         submit();
         assertAddBuildQueuePage();
         setFieldValue( "name", name );
-        submit();
         if ( success )
         {
+            submit();
             assertBuildQueuePage();
             assertTextPresent( name );
         }
         else
         {
+            submit( waitForError );
             assertAddBuildQueuePage();
         }
     }

@@ -76,7 +76,10 @@
             </goals>
             <configuration>
               <tasks>
-                <copy todir="${project.build.directory}">
+                <copy todir="${project.build.directory}" overwrite="true">
+                  <filterchain>
+                    <expandproperties />
+                  </filterchain>
                   <fileset dir="src/appserver-base"/>
                 </copy>
                 <delete dir="${project.build.directory}/example-svn"/>
@@ -91,7 +94,9 @@
                 </path>
                 <pathconvert refid="svn.repo.dir" targetos="unix" property="svn.base.url"/>
                 <echo file="${project.build.directory}/filter.properties">
-                  svn.base.url=file://localhost/${svn.base.url}
+                  svn.base.url=file://localhost${svn.base.url}
+                  continuum.port=${continuum.port}
+                  baseUrl=${baseUrl}
                 </echo>
               </tasks>
             </configuration>
@@ -168,6 +173,8 @@
               <appserver.base>${project.build.directory}</appserver.base>
               <derby.system.home>${project.build.directory}</derby.system.home>
               <svn.base.url>${svn.base.url}</svn.base.url>
+              <continuum.port>${contiuum.port}</continuum.port>
+              <baseUrl>${baseUrl}</baseUrl>
               <plexus.system.path>${plexus.system.path}</plexus.system.path>
             </systemProperties>
             <dependencies>
@@ -187,7 +194,7 @@
           </container>
           <configuration>
             <properties>
-              <cargo.servlet.port>9595</cargo.servlet.port>
+              <cargo.servlet.port>${continuum.port}</cargo.servlet.port>
               <cargo.jvmargs>${cargo.jvmargs}</cargo.jvmargs>
               <cargo.datasource.datasource.users>
                 cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
@@ -273,6 +280,14 @@
                 <property>
                   <name>baseUrl</name>
                   <value>${baseUrl}</value>
+                </property>
+                <property>
+                  <name>buildAgentUrl</name>
+                  <value>${buildAgentUrl}</value>
+                </property>
+                <property>
+                  <name>appserverBase</name>
+                  <value>${appserverBase}</value>
                 </property>
                 <property>
                   <name>browser</name>
@@ -397,7 +412,16 @@
               <groupId>org.codehaus.cargo</groupId>
               <artifactId>cargo-maven2-plugin</artifactId>
               <configuration>
-                <skip>true</skip>
+                <deployables>
+                  <!-- Skip all but test resources -->
+                  <deployable>
+                    <location>${basedir}/src/test/example-projects</location>
+                    <type>war</type>
+                    <properties>
+                      <context>example-projects</context>
+                    </properties>
+                  </deployable>
+                </deployables>
               </configuration>
             </plugin>
           </plugins>
@@ -584,14 +608,14 @@
   <properties>
     <seleniumHost>localhost</seleniumHost>
     <seleniumPort>4444</seleniumPort>
-    <baseUrl>http://localhost:9595/continuum/</baseUrl>
+    <continuum.port>9595</continuum.port>
+    <baseUrl>http://localhost:${continuum.port}/continuum</baseUrl>
+    <buildAgentUrl>http://localhost:${continuum.port}/continuum-buildagent/xmlrpc</buildAgentUrl>
+    <appserverBase>${project.build.directory}</appserverBase>
     <browser>*firefox</browser>
     <browserPath/>
     <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
     <plexus.system.path/>
-<!--
-    <selenium.version>2.35.0</selenium.version>
--->
-    <selenium.version>2.21.0</selenium.version>
+    <selenium.version>2.41.0</selenium.version>
   </properties>
 </project>

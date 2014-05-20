@@ -34,6 +34,9 @@ import org.testng.annotations.Test;
 public class ProjectGroupTest
     extends AbstractAdminTest
 {
+
+    public static final String TEST_PROJECT_NAME = "ContinuumBuildQueueTestData";
+
     private String projectGroupName;
 
     private String projectGroupId;
@@ -81,7 +84,11 @@ public class ProjectGroupTest
         String groupId = "com.example.this-is-a-long-group-id";
         String description = "";
 
-        addProjectGroup( name, groupId, description, true );
+        try {
+            addProjectGroup( name, groupId, description, true );
+        } finally {
+            removeProjectGroup( name, false );
+        }
     }
 
     public void testAddProjectGroupWithPunctuation()
@@ -91,7 +98,11 @@ public class ProjectGroupTest
         String groupId = "com.example.test";
         String description = "";
 
-        addProjectGroup( name, groupId, description, true );
+        try {
+            addProjectGroup( name, groupId, description, true );
+        } finally {
+            removeProjectGroup( name, false );
+        }
     }
 
     public void testAddProjectGroupWithEmptyString()
@@ -218,5 +229,32 @@ public class ProjectGroupTest
         assertLinkNotPresent( name2 );
         removeProjectGroup( name3 );
         assertLinkNotPresent( name3 );
+    }
+
+    public void testRemoveProjectFromMembers()
+    {
+        goToProjectGroupsSummaryPage();
+        addProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, true, false );
+        showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
+
+        if ( !isLinkPresent( TEST_PROJECT_NAME ) )
+        {
+            clickButtonWithValue( "Add" );
+            assertAddMavenTwoProjectPage();
+            setFieldValue( "m2PomUrl", getProperty( "M2_POM_URL" ) );
+            clickButtonWithValue( "Add" );
+            waitAddProject( "Continuum - Project Group" );
+            assertTextPresent( TEST_PROJECT_NAME );
+        }
+
+        clickLinkWithText( "Members" );
+        assertTextPresent( TEST_PROJECT_NAME );
+        clickImgWithAlt( "Delete" );
+
+        assertTextPresent( "Delete Continuum Project" );
+        clickButtonWithValue( "Delete" );
+
+        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
+        assertTextNotPresent( TEST_PROJECT_NAME );
     }
 }

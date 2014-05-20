@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <s:i18n name="localization.Continuum">
@@ -51,7 +50,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
-        <s:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
+        <s:url id="profileUrl" action="editBuildEnv.action" namespace="/" includeParams="none">
           <s:param name="profile.id"><c:out value="${pageScope.buildDefinitionSummary.profileId}"/></s:param>
         </s:url>
         <s:a href="%{profileUrl}"><c:out value="${pageScope.buildDefinitionSummary.profileName}"/></s:a>
@@ -78,7 +77,7 @@
       <ec:column property="editActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <s:url id="editUrl" action="buildDefinition" method="input" namespace="/" includeParams="none">
+          <s:url id="editUrl" action="buildDefinition" namespace="/" includeParams="none">
             <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
           </s:url>
@@ -163,7 +162,7 @@
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
-        <s:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
+        <s:url id="profileUrl" action="editBuildEnv.action" namespace="/" includeParams="none">
           <s:param name="profile.id"><c:out value="${pageScope.buildDefinitionSummary.profileId}"/></s:param>
         </s:url>
         <s:a href="%{profileUrl}"><c:out value="${pageScope.buildDefinitionSummary.profileName}"/></s:a>
@@ -190,7 +189,7 @@
       </ec:column>
       <ec:column property="editAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+          <s:url id="editUrl" action="buildDefinition" namespace="/">
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             <s:param name="groupBuildView" value="true"/>

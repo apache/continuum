@@ -24,6 +24,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
@@ -37,10 +39,11 @@ import java.util.Arrays;
 public class DistributedReleaseTest
     extends AbstractReleaseTest
 {
-
     private static final String RELEASE_BUTTON_TEXT = "Release";
 
     private static final String PROVIDE_RELEASE_PARAMETERS_TEXT = "Provide Release Parameters";
+
+    private String appserverBase;
 
     private String projectGroupName;
 
@@ -63,8 +66,11 @@ public class DistributedReleaseTest
     private String releaseProjectScmUrl;
 
     @BeforeClass
-    public void createAndBuildProject()
+    @Parameters( { "appserverBase" } )
+    public void createAndBuildProject( @Optional( "target" ) String appserverBase )
     {
+        this.appserverBase = appserverBase;
+
         projectGroupName = getProperty( "DIST_RELEASE_PROJECT_GROUP_NAME" );
         projectGroupId = getProperty( "DIST_RELEASE_PROJECT_GROUP_ID" );
         String description = "Distributed Release test projects";
@@ -80,7 +86,9 @@ public class DistributedReleaseTest
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
         String projectName = getProperty( "MAVEN2_POM_PROJECT_NAME" );
 
-        addProjectGroup( projectGroupName, projectGroupId, description, true, false );
+        removeProjectGroup( projectGroupName, false );
+
+        addProjectGroup( projectGroupName, projectGroupId, description, true );
         clickLinkWithText( projectGroupName );
 
         if ( !isLinkPresent( projectName ) )
@@ -105,7 +113,7 @@ public class DistributedReleaseTest
         developmentVersion = getProperty( "DIST_RELEASE_PROJECT_DEVELOPMENT_VERSION" );
         releaseProjectScmUrl = getProperty( "DIST_RELEASE_PROJECT_SCM_URL" );
 
-        File file = new File( "target/conf/prepared-releases.xml" );
+        File file = getPreparedReleasesFile();
 
         if ( file.exists() && !file.delete() )
         {
@@ -420,7 +428,7 @@ public class DistributedReleaseTest
     private String getPreparedReleasesContent()
         throws IOException
     {
-        File file = new File( "target/conf/prepared-releases.xml" );
+        File file = getPreparedReleasesFile();
         Assert.assertTrue( file.exists(), "prepared-releases.xml was not created" );
 
         FileInputStream fis = null;
@@ -444,5 +452,10 @@ public class DistributedReleaseTest
             IOUtils.closeQuietly( reader );
             IOUtils.closeQuietly( fis );
         }
+    }
+
+    private File getPreparedReleasesFile()
+    {
+        return new File( appserverBase, "conf/prepared-releases.xml" );
     }
 }

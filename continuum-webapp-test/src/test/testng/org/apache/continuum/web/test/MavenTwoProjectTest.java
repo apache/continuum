@@ -135,15 +135,19 @@ public class MavenTwoProjectTest
         String targetGroupDescription = getProperty( "MAVEN2_MOVE_PROJECT_TARGET_PROJECT_GROUP_DESCRIPTION" );
         addProjectGroup( targetGroupName, targetGroupId, targetGroupDescription, true );
 
-        // Move the project
-        moveProjectToProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName,
-                                   targetGroupName );
-        showProjectGroup( targetGroupName, targetGroupId, targetGroupDescription );
-        assertTextPresent( "Member Projects" );
-        assertTextPresent( projectName );
+        try {
+            // Move the project
+            moveProjectToProjectGroup( projectGroupName, projectGroupId, projectGroupDescription, projectName,
+                                       targetGroupName );
+            showProjectGroup( targetGroupName, targetGroupId, targetGroupDescription );
+            assertTextPresent( "Member Projects" );
+            assertTextPresent( projectName );
 
-        showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
-        assertTextNotPresent( "Member Projects" );
+            showProjectGroup( projectGroupName, projectGroupId, projectGroupDescription );
+            assertTextNotPresent( "Member Projects" );
+        } finally {
+            removeProjectGroup( targetGroupName, false );
+        }
     }
 
     /**
@@ -230,7 +234,7 @@ public class MavenTwoProjectTest
     public void testInaccessiblePomUrl()
         throws Exception
     {
-        String pomUrl = "http://localhost:9595/";
+        String pomUrl = baseUrl + "/inaccessible-pom/";
         submitAddMavenTwoProjectPage( pomUrl );
         assertTextPresent(
             "POM file does not exist. Either the POM you specified or one of its modules does not exist." );
@@ -262,6 +266,7 @@ public class MavenTwoProjectTest
 
         // wait for project to finish checkout
         waitForProjectCheckout();
+        waitPage();
 
         clickLinkWithXPath( "//tbody/tr['0']/td['10']/a/img[@alt='Delete']" );
         assertTextPresent( "Delete Continuum Project" );
@@ -286,6 +291,7 @@ public class MavenTwoProjectTest
 
         //wait for project to finish checkout
         waitForProjectCheckout();
+        waitPage();
 
         checkField( "//tbody/tr['0']/td['0']/input[@name='selectedProjects']" );
         clickButtonWithValue( "Delete Project(s)" );

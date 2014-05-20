@@ -35,9 +35,16 @@ public class CaptureScreenShotsListener
     extends TestListenerAdapter
 {
     @Override
+    public void onTestStart( ITestResult tr )
+    {
+        System.out.print( "Test " + tr.getName() + "... " );
+        super.onTestStart( tr );
+    }
+
+    @Override
     public void onTestSkipped( ITestResult tr )
     {
-        System.out.println( "Test " + tr.getName() + " -> Skipped" );
+        System.out.println( "Skipped" );
         super.onTestSkipped( tr );
     }
 
@@ -45,14 +52,14 @@ public class CaptureScreenShotsListener
     public void onTestFailure( ITestResult tr )
     {
         captureError( tr );
-        System.out.println( "Test " + tr.getName() + " -> Failed" );
+        System.out.println( "Failed" );
         super.onTestFailure( tr );
     }
 
     @Override
     public void onTestSuccess( ITestResult tr )
     {
-        System.out.println( "Test " + tr.getName() + " -> Success" );
+        System.out.println( "Success" );
         super.onTestFailure( tr );
     }
 
@@ -103,6 +110,9 @@ public class CaptureScreenShotsListener
             return;
         }
         String fileBaseName = methodName + "_" + className + ".java_" + lineNumber + "-" + time;
+
+        System.out.println( "Capturing screenshot at " + fileBaseName + ".png" );
+
         try
         {
             selenium.windowMaximize();

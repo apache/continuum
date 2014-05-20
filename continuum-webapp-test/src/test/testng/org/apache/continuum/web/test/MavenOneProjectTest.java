@@ -72,13 +72,25 @@ public class MavenOneProjectTest
         pomUrlUnparseableContent = getProperty( "MAVEN1_UNPARSEABLE_POM_URL" );
 
         malformedPomUrl = "aaa";
-        inaccessiblePomUrl = "http://localhost:9595/";
+        inaccessiblePomUrl = baseUrl + "/inaccessible-pom/";
     }
 
     @AfterMethod
     protected void tearDown()
     {
         removeProjectGroup( projectGroupName, false );
+    }
+
+    public void testAddMavenOneProjectToProjectGroup()
+        throws Exception
+    {
+        goToProjectGroupsSummaryPage();
+        String defaultProjectGroupName = getProperty( "DEFAULT_PROJECT_GROUP_NAME" );
+        clickLinkWithText( defaultProjectGroupName );
+        selectValue( "preferredExecutor", "Add M1 Project" );
+        clickButtonWithValue( "Add" );
+        assertAddMavenOneProjectPage( defaultProjectGroupName );
+        // rest is tested by other methods
     }
 
     public void testAddMavenOneProjectWithNoDefaultBuildDefinitionFromTemplate()
@@ -220,8 +232,8 @@ public class MavenOneProjectTest
 
     private void addMaven1Project( String groupName, String pomUrl, String pomUsername, String pomPassword )
     {
-        goToAddMavenOneProjectPage();
         assertLinkNotPresent( groupName );
+        goToAddMavenOneProjectPage();
         addMavenOneProject( pomUrl, pomUsername, pomPassword, null, true );
         goToProjectGroupsSummaryPage();
         assertLinkPresent( groupName );

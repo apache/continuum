@@ -35,7 +35,6 @@ import static org.testng.Assert.assertEquals;
 public abstract class AbstractContinuumTest
     extends AbstractSeleniumTest
 {
-
     protected static final String SHARED_SECRET = "continuum1234";
 
     protected static final String ANT_PROJECT_TYPE = "ant";
@@ -167,7 +166,7 @@ public abstract class AbstractContinuumTest
     // ////////////////////////////////////
     protected void goToProjectGroupsSummaryPage()
     {
-        getSelenium().open( "/continuum/groupSummary.action" );
+        getSelenium().open( baseUrl + "/groupSummary.action" );
         waitPage();
 
         assertProjectGroupsSummaryPage();
@@ -323,11 +322,11 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Update Project Group" );
         assertTextPresent( "Project Group Name" );
         assertTextPresent( "Project Group Id" );
-        assertTextPresent( groupId );
+        assertFieldValue( groupId, "projectGroup.groupId" );
         assertTextPresent( "Description" );
         assertTextPresent( "Homepage Url" );
         assertTextPresent( "Local Repository" );
-        assertElementPresent( "saveProjectGroup_null" );
+        assertElementPresent( "css=input[value='Save']" );
         assertElementPresent( "Cancel" );
     }
 
@@ -561,7 +560,7 @@ public abstract class AbstractContinuumTest
         waitPage();
 
         assertTextPresent( "Move to Group" );
-        String xPath = "//preceding::th/label[contains(text(),'" + projectName + "')]//following::select";
+        String xPath = "//preceding::td/label[contains(text(),'" + projectName + "')]//following::select";
         selectValue( xPath, newProjectGroup );
         clickButtonWithValue( "Save" );
         assertProjectGroupSummaryPage( groupName, groupId, groupDescription );
@@ -632,7 +631,12 @@ public abstract class AbstractContinuumTest
         assertAddMavenOneProjectPage();
     }
 
-    void assertAddMavenOneProjectPage()
+    protected void assertAddMavenOneProjectPage()
+    {
+        assertAddMavenOneProjectPage( null );
+    }
+
+    protected void assertAddMavenOneProjectPage( String existingProjectGroup )
     {
         assertPage( "Continuum - Add Maven 1 Project" );
         assertTextPresent( "Add Maven 1.x Project" );
@@ -647,7 +651,14 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "m1PomFile" );
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertOptionPresent( "selectedProjectGroup", new String[]{"Defined by POM", "Default Project Group"} );
+        if ( existingProjectGroup == null )
+        {
+            assertOptionPresent( "selectedProjectGroup", new String[]{"Defined by POM", "Default Project Group"} );
+        }
+        else
+        {
+            assert existingProjectGroup.equals( getFieldValue( "projectGroupName" ) );
+        }
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId",
@@ -1029,9 +1040,9 @@ public abstract class AbstractContinuumTest
     {
         if ( getTitle().endsWith( "Continuum - Configuration" ) )
         {
-            String workingDir = getFieldValue( "configuration_workingDirectory" );
-            String buildOutputDir = getFieldValue( "configuration_buildOutputDirectory" );
-            String releaseOutputDir = getFieldValue( "configuration_releaseOutputDirectory" );
+            String workingDir = getFieldValue( "workingDirectory" );
+            String buildOutputDir = getFieldValue( "buildOutputDirectory" );
+            String releaseOutputDir = getFieldValue( "releaseOutputDirectory" );
             String locationDir = "target/data";
             String data = "data";
             setFieldValue( "workingDirectory", workingDir.replaceFirst( data, locationDir ) );
@@ -1059,7 +1070,7 @@ public abstract class AbstractContinuumTest
         goToLoginPage();
         getSelenium().type( "loginForm_username", username );
         getSelenium().type( "loginForm_password", password );
-        getSelenium().click( "loginForm__login" );
+        getSelenium().click( "//input[@value='Login']" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
     }
 
@@ -1263,7 +1274,7 @@ public abstract class AbstractContinuumTest
         }
     }
 
-    void assertEditBuildEnvironmentPage( String name )
+    protected void assertEditBuildEnvironmentPage( String name )
     {
         assertAddBuildEnvironmentPage();
         assertTextPresent( "Installation Name" );

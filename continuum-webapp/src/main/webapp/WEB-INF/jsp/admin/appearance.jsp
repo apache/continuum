@@ -19,7 +19,6 @@
 
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <html>
 <s:i18n name="localization.Continuum">
 <head>
@@ -100,7 +99,7 @@
 </c:if>
 
 <s:actionmessage/>
-<s:form action="saveFooter!saveFooter.action" method="post" namespace="/admin">
+<s:form action="saveFooter.action" method="post" namespace="/admin">
   <s:token/>
   <div id="axial" class="h3">
     <h3><s:text name="appearance.footerContent"/></h3>
@@ -111,7 +110,8 @@
         </tbody>
       </table>
       <div class="functnbar3">
-        <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+        <s:submit value="%{getText('save')}" theme="simple"/>
+        <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
       </div>      
     </div>
   </div>

@@ -148,7 +148,6 @@
       <result name="continuum-configuration-required" type="redirectAction">
         <param name="actionName">configuration</param>
         <param name="namespace">/admin</param>
-        <param name="method">input</param>
       </result>
 
       <!-- The following security-* result names arrive from the plexus-security package -->
@@ -243,7 +242,7 @@
       <result name="success">/WEB-INF/jsp/groupSummary.jsp</result>
     </action>
 
-    <action name="addMavenTwoProjectInput" class="addMavenTwoProject">
+    <action name="addMavenTwoProjectInput" class="addMavenTwoProject" method="input">
       <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
     </action>
 
@@ -263,7 +262,7 @@
       </result>
     </action>
 
-    <action name="addMavenOneProjectInput" class="addMavenOneProject">
+    <action name="addMavenOneProjectInput" class="addMavenOneProject" method="input">
       <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
     </action>
 
@@ -288,6 +287,17 @@
       <result name="input" type="chain">addProjectInput</result>
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirectAction">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="deleteProject_default" class="deleteProject" method="default">
+      <interceptor-ref name="storeStack">
+        <param name="tokenSession.includeMethods">*</param>
+      </interceptor-ref>
+      <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
@@ -436,6 +446,10 @@
       </result>
     </action>
 
+    <action name="addProjectGroup_input" class="addProjectGroup" method="input">
+      <result name="input">/WEB-INF/jsp/projectGroupAdd.jsp</result>
+    </action>
+
     <action name="addProjectGroup" class="addProjectGroup">
       <result name="input">/WEB-INF/jsp/projectGroupAdd.jsp</result>
       <result name="success" type="redirectAction">groupSummary</result>
@@ -574,7 +588,6 @@
       <result name="releaseOutputDir-required" type="redirectAction">
         <param name="actionName">configuration</param>
         <param name="namespace">/admin</param>
-        <param name="method">input</param>
         <param name="requireReleaseOutput">true</param>
       </result>
     </action>
@@ -729,7 +742,12 @@
   -->
   <package name="admin" extends="default">
 
-    <action name="configuration" class="configuration">
+    <action name="configuration" class="configuration" method="input">
+      <interceptor-ref name="unconfiguredContinuumStack"/>
+      <result name="input">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
+    </action>
+
+    <action name="configuration_save" class="configuration" method="save">
       <interceptor-ref name="unconfiguredContinuumStack"/>
       <result name="input">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/configuration.jsp</result>
@@ -784,11 +802,11 @@
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
     </action>
 
-    <action name="addBuildEnv" class="profileAdministration">
+    <action name="addBuildEnv" class="profileAdministration" method="input">
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
 
-    <action name="editBuildEnv" class="profileAdministration">
+    <action name="editBuildEnv" class="profileAdministration" method="edit">
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
@@ -800,7 +818,6 @@
       <result name="success" type="redirectAction">
         <param name="actionName">buildEnvList</param>
         <param name="namespace">/admin</param>
-        <param name="method">list</param>
       </result>
     </action>
 
@@ -837,6 +854,10 @@
 
     <action name="editInstallation" class="installation" method="edit">
       <result name="success">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+    </action>
+
+    <action name="editInstallation_input" class="installation" method="input">
       <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
     </action>
 
@@ -894,6 +915,10 @@
       <result name="success" type="redirectAction">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+    </action>
+
+    <action name="buildDefinitionAsTemplate_input" class="buildDefinitionTemplates" method="input">
       <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
     </action>
 
@@ -1003,7 +1028,7 @@
       <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
     </action>
 
-    <action name="addBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction">
+    <action name="addBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="input">
       <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
     </action>
 
@@ -1263,8 +1288,11 @@
     <!--
     * notifier actions :: Project
     -->
-    <action name="deleteProjectNotifier" class="deleteProjectNotifier">
+    <action name="deleteProjectNotifier_default" class="deleteProjectNotifier" method="default">
       <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
+    </action>
+
+    <action name="deleteProjectNotifier" class="deleteProjectNotifier">
       <result name="success" type="chain">projectView</result>
       <result name="to_group_page" type="chain">projectGroupNotifier</result>
       <interceptor-ref name="configuredContinuumStack">
@@ -1273,6 +1301,10 @@
     </action>
 
     <action name="addProjectNotifier" class="addProjectNotifier" method="doDefault">
+      <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
+    </action>
+
+    <action name="addProjectNotifier_submit" class="addProjectNotifier" method="execute">
       <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
       <result name="mail_input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
       <result name="irc_input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
@@ -1343,8 +1375,11 @@
     * notifier actions :: Project Group
     -->
 
-    <action name="deleteProjectGroupNotifier" class="deleteGroupNotifier">
+    <action name="deleteProjectGroupNotifier_default" class="deleteGroupNotifier" method="default">
       <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
+    </action>
+
+    <action name="deleteProjectGroupNotifier" class="deleteGroupNotifier">
       <result name="success" type="chain">projectGroupNotifier</result>
       <interceptor-ref name="configuredContinuumStack">
         <param name="tokenSession.includeMethods">execute</param>
@@ -1352,6 +1387,10 @@
     </action>
 
     <action name="addProjectGroupNotifier" class="addGroupNotifier" method="doDefault">
+      <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
+    </action>
+
+    <action name="addProjectGroupNotifier_submit" class="addGroupNotifier" method="execute">
       <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
       <result name="mail_input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
       <result name="irc_input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>

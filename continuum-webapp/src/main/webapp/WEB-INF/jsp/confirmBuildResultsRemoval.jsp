@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
   <s:i18n name="localization.Continuum">
@@ -72,14 +71,12 @@
 
           <div class="functnbar3">
             <s:if test="buildId > 0">
-              <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
+              <s:submit value="%{getText('delete')}" theme="simple"/>
             </s:if>
             <s:elseif test="selectedBuildResults.size > 0">
-              <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
+              <s:submit value="%{getText('delete')}" theme="simple"/>
             </s:elseif>
-            <s:else>
-              <input type="submit" value="<s:text name="cancel"/>" onClick="history.back()"/>
-            </s:else>
+            <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
           </div>
         </form>
         </div>

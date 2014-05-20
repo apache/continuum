@@ -40,6 +40,7 @@
         <exclude>maven-metadata-appassembler.xml</exclude>
       </excludes>
       <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
     </fileSet>
     <fileSet>
       <directory>target/generated-resources/appassembler/jsw/continuum/logs</directory>

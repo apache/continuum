@@ -61,7 +61,7 @@
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
-                  <s:url id="cancelUrl" action="cancelDistributedBuild" method="cancelDistributedBuild" namespace="/">
+                  <s:url id="cancelUrl" action="cancelDistributedBuild" namespace="/">
                     <s:param name="buildAgentUrl"><c:out value="${pageScope.currentBuild.buildAgentUrl}"/></s:param>
                   </s:url>
                   <redback:ifAuthorized permission="continuum-manage-queues">
@@ -79,7 +79,7 @@
           </c:if>
         </div>
       
-      <s:form id="removeBuildForm" action="removeDistributedBuildEntries!removeDistributedBuildEntries.action" method="post">
+      <s:form id="removeBuildForm" action="removeDistributedBuildEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.buildQueue.section.title"/>
@@ -111,7 +111,7 @@
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="removeDistributedBuildEntry" method="removeDistributedBuildEntry" namespace="/">
+                    <s:url id="cancelUrl" action="removeDistributedBuildEntry" namespace="/">
                       <s:param name="projectId"><c:out value="${pageScope.buildQueue.projectId}"/></s:param>
                       <s:param name="buildDefinitionId"><c:out value="${pageScope.buildQueue.buildDefinitionId}"/></s:param>
                       <s:param name="buildAgentUrl"><c:out value="${pageScope.buildQueue.buildAgentUrl}"/></s:param>
@@ -174,7 +174,7 @@
         </div>
       
       
-      <s:form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries!removeDistributedPrepareBuildEntries.action" method="post">
+      <s:form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries.action" method="post">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.prepareBuildQueue.section.title"/>
@@ -205,7 +205,7 @@
                 <ec:column property="buildAgentUrl" title="distributedPrepareBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
-                    <s:url id="cancelUrl" action="removeDistributedPrepareBuildEntry" method="removeDistributedPrepareBuildEntry" namespace="/">
+                    <s:url id="cancelUrl" action="removeDistributedPrepareBuildEntry" namespace="/">
                       <s:param name="projectGroupId"><c:out value="${pageScope.prepareBuildQueue.projectGroupId}"/></s:param>
                       <s:param name="scmRootId"><c:out value="${pageScope.prepareBuildQueue.scmRootId}"/></s:param>
                       <s:param name="buildAgentUrl"><c:out value="${pageScope.prepareBuildQueue.buildAgentUrl}"/></s:param>

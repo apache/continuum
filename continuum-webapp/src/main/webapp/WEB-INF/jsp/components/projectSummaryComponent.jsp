@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <s:i18n name="localization.Continuum">
@@ -212,7 +211,7 @@
           <c:when
               test="${projectIdle}">
             <s:token/>
-            <s:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
+            <s:url id="deleteProjectUrl" value="deleteProject_default.action" namespace="/">
               <s:param name="projectId"><c:out value="${project.id}"/></s:param>
               <s:param name="struts.token.name">token</s:param>
               <s:param name="token"><s:property value="token"/></s:param>

@@ -110,16 +110,13 @@ public abstract class AbstractPurgeTest
     protected void goToAddRepositoryPurge()
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
-        clickLinkWithXPath(
-            "//preceding::input[@value='repository' and @type='hidden']//following::input[@type='submit']" );
+        clickLinkWithXPath( "//form[@name='addRepoPurgeConfig']/input[@type='submit']" );
         assertAddRepositoryPurgePage();
     }
 
     protected void goToEditRepositoryPurge( String daysOlder, String retentionCount, String description )
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
         String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
         clickLinkWithXPath( xPath );
         assertAddRepositoryPurgePage();
@@ -131,7 +128,6 @@ public abstract class AbstractPurgeTest
     protected void goToEditDirectoryPurge( String daysOlder, String retentionCount, String description )
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
         String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
         clickLinkWithXPath( xPath );
         assertAddEditDirectoryPurgePage();
@@ -160,9 +156,7 @@ public abstract class AbstractPurgeTest
     protected void goToAddDirectoryPurge()
     {
         goToGeneralPurgePage();
-        assertGeneralPurgePage();
-        clickLinkWithXPath(
-            "//preceding::input[@value='directory' and @type='hidden']//following::input[@type='submit']" );
+        clickLinkWithXPath( "//form[@name='addDirPurgeConfig']/input[@type='submit']" );
         assertAddEditDirectoryPurgePage();
     }
 

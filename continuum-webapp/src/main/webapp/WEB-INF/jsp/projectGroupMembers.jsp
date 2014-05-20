@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -90,7 +89,7 @@
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                 <s:token/>  
-                <s:url id="removeProjectUrl" action="deleteProject!default.action">
+                <s:url id="removeProjectUrl" action="deleteProject_default.action">
                   <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
                   <s:param name="projectName"><c:out value="${pageScope.project.name}"/></s:param>
                   <s:param name="struts.token.name">token</s:param>
@@ -117,7 +116,7 @@
   <redback:ifAuthorized permission="continuum-manage-users">
   <h3><s:text name="projectGroup.members.users.title"/></h3>
     
-  <s:form action="projectGroupMembers" theme="xhtml" method="post">
+  <s:form action="projectGroupMembers" method="post">
     <s:hidden name="ascending" />
     <s:hidden name="projectGroupId" />
     <tr>
@@ -131,13 +130,11 @@
       </td>               
       <td>
         <table cellpadding="0" cellspacing="0">
-          <s:textfield name="filterKey" />
+          <s:textfield name="filterKey" size="100" />
         </table>
       </td>  
       <td colspan="2" align="right">
-        <table cellpadding="0" cellspacing="0">
-          <s:submit value="%{getText('projectGroup.members.users.search.button')}"/>
-        </table>
+        <s:submit value="%{getText('projectGroup.members.users.search.button')}" theme="simple"/>
       </td>
     </tr>             
   </s:form>
@@ -148,7 +145,7 @@
     <thead>
       <tr>
         <th nowrap="true">
-          <s:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
+          <s:form id="sortlist" name="sortlist" action="projectGroupMembers" method="post">
             <s:if test="ascending">
               <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<s:text name='sort.descending'/>" border="0"></s:a> <s:text name="user.username.label"/>
             </s:if>

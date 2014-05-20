@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <s:i18n name="localization.Continuum">
 <html>
@@ -54,33 +53,33 @@
                         </c:if>
                         <table>
                           <tbody>
-                            <s:textfield label="%{getText('projectName.label')}" name="projectName" requiredLabel="true">
-                                <s:param name="desc"><p><s:text name="projectName.message"/></p></s:param>
+                            <s:textfield label="%{getText('projectName.label')}" name="projectName" requiredLabel="true" size="100">
+                                <s:param name="after"><p><s:text name="projectName.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectDescription.label')}" name="projectDescription">
-                                <s:param name="desc"><p><s:text name="projectDescription.message"/></p></s:param>
+                            <s:textfield label="%{getText('projectDescription.label')}" name="projectDescription" size="100">
+                                <s:param name="after"><p><s:text name="projectDescription.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" requiredLabel="true">
-                                <s:param name="desc"><p><s:text name="projectVersion.message"/></p></s:param>
+                            <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" requiredLabel="true" size="100">
+                                <s:param name="after"><p><s:text name="projectVersion.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectScmUrl.label')}" name="projectScmUrl" requiredLabel="true">
-                                <s:param name="desc"><p><s:text name="projectScmUrl.message"/></p></s:param>
+                            <s:textfield label="%{getText('projectScmUrl.label')}" name="projectScmUrl" requiredLabel="true" size="100">
+                                <s:param name="after"><p><s:text name="projectScmUrl.message"/></p></s:param>
                             </s:textfield>
-                            <s:textfield label="%{getText('projectScmUsername.label')}" name="projectScmUsername">
-                                <s:param name="desc"><p><s:text name="projectScmUsername.message"/></p></s:param>
+                            <s:textfield label="%{getText('projectScmUsername.label')}" name="projectScmUsername" size="100">
+                                <s:param name="after"><p><s:text name="projectScmUsername.message"/></p></s:param>
                             </s:textfield>
-                            <s:password label="%{getText('projectScmPassword.label')}" name="projectScmPassword">
-                                <s:param name="desc"><p><s:text name="projectScmPassword.message"/></p></s:param>
+                            <s:password label="%{getText('projectScmPassword.label')}" name="projectScmPassword" size="100">
+                                <s:param name="after"><p><s:text name="projectScmPassword.message"/></p></s:param>
                             </s:password>
-                            <s:textfield label="%{getText('projectScmTag.label')}" name="projectScmTag">
-                                <s:param name="desc"><p><s:text name="projectScmTag.message"/></p></s:param>
+                            <s:textfield label="%{getText('projectScmTag.label')}" name="projectScmTag" size="100">
+                                <s:param name="after"><p><s:text name="projectScmTag.message"/></p></s:param>
                             </s:textfield>
                             <s:checkbox label="%{getText('projectScmUseCache.label')}" name="projectScmUseCache"/>
                             <c:choose>
                             <c:when test="${disableGroupSelection == true}">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
-                              <s:textfield label="%{getText('projectGroup.name.label')}" name="projectGroupName" disabled="true"/>
+                              <s:textfield label="%{getText('projectGroup.name.label')}" name="projectGroupName" disabled="true" size="100"/>
                             </c:when>
                             <c:otherwise>
                               <s:select label="%{getText('projectGroup.name.label')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
@@ -101,7 +100,8 @@
                         </table>
                         <input type="hidden" name="projectType" value="<s:property value="projectType"/>">
                         <div class="functnbar3">
-                          <c1:submitcancel value="%{getText('add')}" cancel="%{getText('cancel')}"/>
+                          <s:submit value="%{getText('add')}" theme="simple"/>
+                          <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
                         </div>
                     </s:form>
                 </div>

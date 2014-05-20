@@ -171,7 +171,7 @@ public class DistributedBuildTest
         buildProjectForQueuePageTest( projectGroupName, projectGroupId, projectGroupDescription );
 
         //check queue page while building
-        getSelenium().open( "/continuum/admin/displayQueues!display.action" );
+        getSelenium().open( baseUrl + "/admin/displayQueues.action" );
         assertPage( "Continuum - View Distributed Builds" );
         assertTextPresent( "Current Build" );
         assertTextPresent( "Build Queue" );

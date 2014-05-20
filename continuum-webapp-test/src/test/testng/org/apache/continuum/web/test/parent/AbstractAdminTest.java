@@ -21,6 +21,8 @@ package org.apache.continuum.web.test.parent;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,6 +43,8 @@ public abstract class AbstractAdminTest
         if ( !getSelenium().isElementPresent( "//span[@class='username' and text()='" + username + "']" ) )
         {
             login( username, password );
+
+            assertElementPresent( "//span[@class='username' and text()='" + username + "']" );
         }
     }
 
@@ -217,22 +221,24 @@ public abstract class AbstractAdminTest
     }
 
     @BeforeClass( alwaysRun = true )
-    public void initializeBuildAgent()
+    @Parameters( { "buildAgentUrl" } )
+    public void initializeBuildAgent(
+        @Optional( "http://localhost:9595/continuum-buildagent/xmlrpc" ) String buildAgentUrl )
     {
-        buildAgentUrl = baseUrl.substring( 0, baseUrl.indexOf( "/continuum" ) ) + "/continuum-buildagent/xmlrpc";
+        this.buildAgentUrl = buildAgentUrl;
     }
 
     protected void enableDistributedBuilds()
     {
         goToConfigurationPage();
         setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( !isChecked( "configuration_distributedBuildEnabled" ) )
+        if ( !isChecked( "distributedBuildEnabled" ) )
         {
             // must use click here so the JavaScript enabling the shared secret gets triggered
-            click( "configuration_distributedBuildEnabled" );
+            click( "distributedBuildEnabled" );
         }
-        setFieldValue( "configuration_sharedSecretPassword", SHARED_SECRET );
-        clickAndWait( "configuration_null" );
+        setFieldValue( "sharedSecretPassword", SHARED_SECRET );
+        clickAndWait( "css=input[value='Save']" );
         assertTextPresent( "true" );
         assertTextPresent( "Distributed Builds" );
         assertElementPresent( "link=Build Agents" );
@@ -242,9 +248,9 @@ public abstract class AbstractAdminTest
     {
         goToConfigurationPage();
         setFieldValue( "numberOfAllowedBuildsinParallel", "2" );
-        if ( isChecked( "configuration_distributedBuildEnabled" ) )
+        if ( isChecked( "distributedBuildEnabled" ) )
         {
-            uncheckField( "configuration_distributedBuildEnabled" );
+            uncheckField( "distributedBuildEnabled" );
         }
         submit();
         assertTextPresent( "false" );
@@ -348,5 +354,18 @@ public abstract class AbstractAdminTest
         submit();
         assertBuildAgentPage();
         assertTextPresent( newDesc );
+    }
+
+    protected void removeSchedule( String name )
+    {
+        goToSchedulePage();
+        clickLinkWithXPath( "(//a[contains(@href,'removeSchedule.action') and contains(@href, '" + name + "')])//img" );
+        assertPage( "Continuum - Delete Schedule" );
+        assertTextPresent( "Delete Schedule" );
+        assertTextPresent( "Are you sure you want to delete the schedule \"" + name + "\"?" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertSchedulePage();
     }
 }

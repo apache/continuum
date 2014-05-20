@@ -32,7 +32,7 @@ public class CSRFSecurityTest
     public void testCSRFDeleteProject()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/deleteProject!default.action?projectGroupId=2&projectId=2" );
+        getSelenium().open( baseUrl + "/deleteProject_default.action?projectGroupId=2&projectId=2" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }
@@ -91,7 +91,7 @@ public class CSRFSecurityTest
     public void testCSRFSaveFooter()
     {
         getSelenium().open( baseUrl );
-        getSelenium().open( baseUrl + "/admin/saveFooter!saveFooter.action?footer=testValue" );
+        getSelenium().open( baseUrl + "/admin/saveFooter.action?footer=testValue" );
         assertTextPresent( "Security Alert - Invalid Token Found" );
         assertTextPresent( "Possible CSRF attack detected! Invalid token found in the request." );
     }

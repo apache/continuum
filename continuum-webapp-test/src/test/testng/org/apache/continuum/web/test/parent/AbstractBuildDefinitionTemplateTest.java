@@ -38,7 +38,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         assertTextPresent( "Available Templates" );
         assertTextPresent( "Available Build Definitions" );
         assertButtonWithIdPresent( "buildDefinitionTemplate_0" );
-        assertButtonWithIdPresent( "buildDefinitionAsTemplate_0" );
+        assertButtonWithIdPresent( "buildDefinitionAsTemplate_input_0" );
     }
 
     protected void goToAddTemplate()
@@ -125,22 +125,30 @@ public abstract class AbstractBuildDefinitionTemplateTest
 
     protected void removeTemplate( String name )
     {
+        removeTemplate( name, true );
+    }
+
+    protected void removeTemplate( String name, boolean failIfMissing )
+    {
         goToBuildDefinitionTemplatePage();
-        clickLinkWithXPath(
-            "(//a[contains(@href,'deleteDefinitionTemplate') and contains(@href, '" + name + "')])//img" );
-        assertPage( "Continuum - Delete Build Definition Template" );
-        assertTextPresent( "Delete Build Definition Template" );
-        assertTextPresent( "Are you sure you want to delete build definition template \"" + name + "\"?" );
-        assertButtonWithValuePresent( "Delete" );
-        assertButtonWithValuePresent( "Cancel" );
-        clickButtonWithValue( "Delete" );
-        assertBuildDefinitionTemplatePage();
+        String xpath = "(//a[contains(@href,'deleteDefinitionTemplate') and contains(@href, '" + name + "')])//img";
+        if ( failIfMissing || isElementPresent( "xpath=" + xpath ) )
+        {
+            clickLinkWithXPath( xpath );
+            assertPage( "Continuum - Delete Build Definition Template" );
+            assertTextPresent( "Delete Build Definition Template" );
+            assertTextPresent( "Are you sure you want to delete build definition template \"" + name + "\"?" );
+            assertButtonWithValuePresent( "Delete" );
+            assertButtonWithValuePresent( "Cancel" );
+            clickButtonWithValue( "Delete" );
+            assertBuildDefinitionTemplatePage();
+        }
     }
 
     protected void goToAddBuildDefinitionTemplate()
     {
         goToBuildDefinitionTemplatePage();
-        clickSubmitWithLocator( "buildDefinitionAsTemplate_0" );
+        clickSubmitWithLocator( "buildDefinitionAsTemplate_input_0" );
         assertAddEditBuildDefinitionTemplatePage();
     }
 

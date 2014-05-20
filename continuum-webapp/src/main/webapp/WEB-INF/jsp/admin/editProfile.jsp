@@ -38,118 +38,85 @@
       <div class="axial">
         <s:if test="hasActionErrors()">
           <h3><s:text name="profile.actionError"/></h3>
-         <p>
-           <s:actionerror/>
-         </p>
+          <p>
+            <s:actionerror/>
+          </p>
         </s:if>
       </div>
-      <table>
-        <tr>
-          <td>
-          <s:form action="saveBuildEnv!save" method="post">
-
-            <div class="axial">
-              <!--  if other fields are added ProfileAction#save must be changed  -->
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <s:hidden name="profile.id" />
-                      <s:textfield label="%{getText('profile.name.label')}" name="profile.name"
-                                   requiredLabel="true" />
-                    </td>
-                  </tr>
-                  
-                  <c1:ifBuildTypeEnabled buildType="distributed">
-                    <tr>
-                      <td>
-                        <s:if test ="profile != null">
-                          <s:if test="profile.buildAgentGroup == null">
-                            <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
-                                     value="-1" listKey="name" headerKey="" headerValue=""/>
-                          </s:if>
-                          <s:else>
-                            <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
-                                     listKey="name" headerKey="" headerValue=""/>
-                          </s:else>
-                        </s:if>
-                      </td>
-                    </tr>
-                  </c1:ifBuildTypeEnabled>
-                  
-                </tbody>
-              </table>
-              <div class="functnbar3">
-                <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
-              </div>
-
-            </div>
-          </s:form>
-          </td>
-        </tr>
-        <s:if test="profile.id != 0">
+      <div class="axial">
+        <s:form action="saveBuildEnv" method="post">
+        <!--  if other fields are added ProfileAction#save must be changed  -->
+        <s:hidden name="profile.id" />
+        <s:textfield label="%{getText('profile.name.label')}" name="profile.name"
+                     requiredLabel="true" size="100" />
+          <c1:ifBuildTypeEnabled buildType="distributed">
+            <s:if test ="profile != null">
+              <s:if test="profile.buildAgentGroup == null">
+                <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
+                          value="-1" listKey="name" headerKey="" headerValue=""/>
+              </s:if>
+              <s:else>
+                <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
+                          listKey="name" headerKey="" headerValue=""/>
+              </s:else>
+            </s:if>
+          </c1:ifBuildTypeEnabled>
           <tr>
-            <td>
-              <div class="axial">
-                <table width="100%">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <ec:table items="profileInstallations"
-                                  var="profileInstallation"
-                                  showExports="false"
-                                  showPagination="false"
-                                  showStatusBar="false"
-                                  sortable="false"
-                                  filterable="false"
-                                  width="100%"
-                                  autoIncludeParameters="false">
-                          <ec:row highlightRow="true">
-                            <ec:column property="nameEdit" title="profile.installation.name.label" style="white-space: nowrap" width="50%">
-                              <a href="editInstallation!edit.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
-                                <c:out value="${profileInstallation.name}"/>
-                              </a>
-                               (<c:out value="${profileInstallation.varValue}"/>)
-                            </ec:column>
-                            <ec:column property="type" title="installation.type.label" style="white-space: nowrap" width="49%"/>
-                            <ec:column property="id" title="&nbsp;" width="1%">
-                              <a href="removeBuildEnvInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
-                                <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
-                              </a>                    
-                            </ec:column>        
-                          </ec:row>
-                        </ec:table>                
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <s:if test="allInstallations.size > 0">
-                  <s:form action="addInstallationBuildEnv!addInstallation.action" method="get">
-                    <s:hidden name="profile.id" />
-                    <div class="functnbar3">
-                      <!-- can't use default profile to display this select -->
-                      <s:select theme="profile" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
-                      <s:submit value="%{getText('add')}"/>
-                    </div>
-                  </s:form>
-                </s:if>
-                <s:else>
-                  <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
-                </s:else>
-              </div>              
+            <td colspan="2">
+              <div class="functnbar3">
+                <s:submit value="%{getText('save')}" theme="simple"/>
+                <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
+              </div>
             </td>
           </tr>
-        </s:if>
-        <s:else>
-          <tr>
-            <td>
-              <c:if test="allInstallations.size < 1">
-                <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
-              </c:if>
-            </td>
-          </tr> 
-        </s:else>
-      </table>
+        </s:form>
+      </div>
+      <s:if test="profile.id != 0">
+        <div class="axial">
+          <ec:table items="profileInstallations"
+                    var="profileInstallation"
+                    showExports="false"
+                    showPagination="false"
+                    showStatusBar="false"
+                    sortable="false"
+                    filterable="false"
+                    width="100%"
+                    autoIncludeParameters="false">
+            <ec:row highlightRow="true">
+              <ec:column property="nameEdit" title="profile.installation.name.label" style="white-space: nowrap" width="50%">
+                <a href="editInstallation.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
+                  <c:out value="${profileInstallation.name}"/>
+                </a>
+                (<c:out value="${profileInstallation.varValue}"/>)
+              </ec:column>
+              <ec:column property="type" title="installation.type.label" style="white-space: nowrap" width="49%"/>
+              <ec:column property="id" title="&nbsp;" width="1%">
+                <a href="removeBuildEnvInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
+                  <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
+                </a>
+              </ec:column>
+            </ec:row>
+          </ec:table>
+          <s:if test="allInstallations.size > 0">
+            <s:form action="addInstallationBuildEnv.action" method="get">
+              <s:hidden name="profile.id" />
+              <div class="functnbar3">
+                <!-- can't use default profile to display this select -->
+                <s:select theme="simple" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
+                <s:submit value="%{getText('add')}" theme="simple"/>
+              </div>
+            </s:form>
+          </s:if>
+          <s:else>
+            <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
+          </s:else>
+        </div>
+      </s:if>
+      <s:else>
+        <c:if test="allInstallations.size < 1">
+          <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
+        </c:if>
+      </s:else>
     </div>
   </body>
 </s:i18n>

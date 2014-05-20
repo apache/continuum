@@ -26,7 +26,7 @@ package org.apache.continuum.web.test.parent;
 public abstract class AbstractInstallationTest
     extends AbstractAdminTest
 {
-    void goToInstallationPage()
+    protected void goToInstallationPage()
     {
         clickLinkWithText( "Installations" );
         assertInstallationPage();
@@ -97,7 +97,7 @@ public abstract class AbstractInstallationTest
         assertTextPresent( "Create a Build Environment with the Installation name" );
     }
 
-    void assertEditInstallationVariablePage()
+    protected void assertEditInstallationVariablePage()
     {
         assertPage( "Continuum - Installation" );
         assertTextPresent( "Continuum - Installation" );

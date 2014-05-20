@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <s:i18n name="localization.Continuum">
@@ -71,7 +70,7 @@
         <c:choose>
           <c:when test="${pageScope.buildDefinitionSummary.from=='PROJECT'}">
             <redback:ifAuthorized permission="continuum-modify-project-build-definition" resource="${projectGroupName}">
-              <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+              <s:url id="editUrl" action="buildDefinition" namespace="/">
                 <s:param name="projectId"><c:out value="${projectId}"/></s:param>
                 <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
               </s:url>
@@ -83,7 +82,7 @@
           </c:when>
           <c:otherwise>
             <redback:ifAuthorized permission="continuum-modify-group-build-definition" resource="${projectGroupName}">
-              <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+              <s:url id="editUrl" action="buildDefinition" namespace="/">
                 <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
                 <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                 <s:param name="groupBuildDefinition">true</s:param>

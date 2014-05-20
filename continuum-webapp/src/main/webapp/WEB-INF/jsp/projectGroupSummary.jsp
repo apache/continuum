@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -33,8 +32,8 @@
     <meta http-equiv="refresh" content="30"/>
     <script type="text/javascript">
 
-      <c:url var="addM2ProjectUrl" value="/addMavenTwoProjectInput!input.action" />
-      <c:url var="addM1ProjectUrl" value="/addMavenOneProjectInput!input.action" />
+      <c:url var="addM2ProjectUrl" value="/addMavenTwoProjectInput.action" />
+      <c:url var="addM1ProjectUrl" value="/addMavenOneProjectInput.action" />
       <c:url var="addProjectUrl" value="/addProjectInput.action" />
 
       function goToAddProject()
@@ -85,13 +84,28 @@
     <h3><s:text name="projectGroup.information.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
-        <c1:data label="%{getText('projectGroup.name.label')}" name="projectGroup.name"/>
-        <c1:data label="%{getText('projectGroup.groupId.label')}" name="projectGroup.groupId"/>
-        <c1:data label="%{getText('projectGroup.description.label')}" name="projectGroup.description"/>
-        <c1:data label="%{getText('projectGroup.repository.label')}" name="projectGroup.localRepository.name"/>
+        <tr class="b">
+          <th><label class="label"><s:text name='projectGroup.name.label'/>:</label></th>
+          <td><s:property value="projectGroup.name"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='projectGroup.groupId.label'/>:</label></th>
+          <td><s:property value="projectGroup.groupId"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='projectGroup.description.label'/>:</label></th>
+          <td><s:property value="projectGroup.description"/></td>
+        </tr>
+        <tr class="b">
+          <th><label class="label"><s:text name='projectGroup.repository.label'/>:</label></th>
+          <td><s:property value="projectGroup.localRepository.name"/></td>
+        </tr>
         <s:if test="url != null">
             <s:url id="projectHomepageUrl" value="%{url}" includeContext="false" includeParams="none"/>
-        	<c1:data label="%{getText('projectGroup.url.label')}" name="url" valueLink="%{'${projectHomepageUrl}'}"/>  
+            <tr class="b">
+              <th><label class="label"><s:text name='projectGroup.url.label'/>:</label></th>
+              <td><a href="${projectHomepageUrl}"><s:property value="url"/></a></td>
+            </tr>
         </s:if>
       </table>
     </div>

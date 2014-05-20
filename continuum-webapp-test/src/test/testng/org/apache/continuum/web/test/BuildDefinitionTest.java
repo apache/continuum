@@ -301,4 +301,45 @@ public class BuildDefinitionTest
         assertTextPresent( "Ant build filename*:" );
         assertTextPresent( "Targets:" );
     }
+
+    public void testEditBuildDefinitionFromSummary()
+        throws Exception
+    {
+        goToProjectInformationPage( projectGroupName, projectName );
+        clickLinkWithLocator( "buildDefinition_0" ); // Add button for project build definition
+        String description = "testEditBuildDefinitionFromSummary";
+        addEditGroupBuildDefinition( null, buildDefinitionPomName, buildDefinitionGoals,
+                                     buildDefinitionArguments, description, false, false,
+                                     false, MAVEN_PROJECT_TYPE, true );
+
+        assertProjectInformationPage();
+        String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+
+        addEditGroupBuildDefinition( null, buildDefinitionPomName, "new goals", buildDefinitionArguments,
+                                     description, false, false, false, MAVEN_PROJECT_TYPE, true );
+
+        assertProjectInformationPage();
+        assertTextPresent( "new goals" );
+    }
+
+    public void testEditGroupBuildDefinitionFromSummary()
+        throws Exception
+    {
+        goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
+        clickButtonWithValue( "Add" );
+        String description = "testEditGroupBuildDefinitionFromSummary";
+        addEditGroupBuildDefinition( projectGroupName, buildDefinitionPomName, buildDefinitionGoals,
+                                     buildDefinitionArguments, description, false, false,
+                                     false, MAVEN_PROJECT_TYPE, true );
+
+        goToProjectInformationPage( projectGroupName, projectName );
+        String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+
+        addEditGroupBuildDefinition( projectGroupName, buildDefinitionPomName, "new goals", buildDefinitionArguments,
+                                     description, false, false, false, MAVEN_PROJECT_TYPE, true );
+
+        assertTextPresent( "new goals" );
+    }
 }

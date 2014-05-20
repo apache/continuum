@@ -163,17 +163,4 @@ public class ScheduleTest
         String SCHEDULE_NAME = getProperty( "SCHEDULE_NAME" );
         removeSchedule( SCHEDULE_NAME );
     }
-
-    protected void removeSchedule( String name )
-    {
-        goToSchedulePage();
-        clickLinkWithXPath( "(//a[contains(@href,'removeSchedule.action') and contains(@href, '" + name + "')])//img" );
-        assertPage( "Continuum - Delete Schedule" );
-        assertTextPresent( "Delete Schedule" );
-        assertTextPresent( "Are you sure you want to delete the schedule \"" + name + "\"?" );
-        assertButtonWithValuePresent( "Delete" );
-        assertButtonWithValuePresent( "Cancel" );
-        clickButtonWithValue( "Delete" );
-        assertSchedulePage();
-    }
 }

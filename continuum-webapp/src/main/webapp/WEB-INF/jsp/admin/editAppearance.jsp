@@ -34,9 +34,9 @@
   </p>
 
   <s:actionmessage/>
-  <s:form method="post" action="saveAppearance" namespace="/admin" validate="true" theme="xhtml">
-    <s:textfield name="companyPom.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
-    <s:textfield name="companyPom.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>
+  <s:form method="post" action="saveAppearance" namespace="/admin" validate="true">
+    <s:textfield name="companyPom.groupId" label="%{getText('appearance.companyPom.groupId')}" size="100"/>
+    <s:textfield name="companyPom.artifactId" label="%{getText('appearance.companyPom.artifactId')}" size="100"/>
     <s:submit value="%{getText('save')}"/>
   </s:form>
 </body>
