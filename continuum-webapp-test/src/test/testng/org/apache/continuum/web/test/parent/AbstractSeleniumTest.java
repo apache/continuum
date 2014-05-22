@@ -388,45 +388,23 @@ public abstract class AbstractSeleniumTest
 
     protected void waitForOneOfElementsPresent( List<String> locators, boolean shouldBePresent )
     {
-        if ( browser.equals( "*iexplore" ) )
-        {
-            int currentIt = 0;
-            int maxIt = Integer.valueOf( getProperty( "WAIT_TRIES" ) );
-            String pageLoadTimeInMs = maxWaitTimeInMs;
+        int currentIt = 0;
+        int maxIt = Integer.valueOf( getProperty( "WAIT_TRIES" ) );
+        String pageLoadTimeInMs = maxWaitTimeInMs;
 
-            while ( currentIt < maxIt )
-            {
-                for ( String locator : locators )
-                {
-                    if ( isElementPresent( locator ) == shouldBePresent )
-                    {
-                        return;
-                    }
-                }
-
-                getSelenium().waitForPageToLoad( pageLoadTimeInMs );
-                currentIt++;
-            }
-        }
-        else
+        while ( currentIt < maxIt )
         {
-            StringBuilder condition = new StringBuilder();
-            String operator = "";
             for ( String locator : locators )
             {
-                condition.append( operator );
-                condition.append( "(selenium.isElementPresent(\"" ).append( locator ).append( "\")" );
-                condition.append( " == " );
-                condition.append( shouldBePresent ).append( ")" );
-                operator = "||";
+                if ( isElementPresent( locator ) == shouldBePresent )
+                {
+                    return;
+                }
             }
-            waitForCondition( "(" + condition + ")" );
-        }
-    }
 
-    void waitForCondition( String condition )
-    {
-        getSelenium().waitForCondition( condition, maxProjectWaitTimeInMs );
+            getSelenium().waitForPageToLoad( pageLoadTimeInMs );
+            currentIt++;
+        }
     }
 
     void assertEnabled()
