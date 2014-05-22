@@ -245,6 +245,7 @@ public class ProjectGroupTest
             clickButtonWithValue( "Add" );
             waitAddProject( "Continuum - Project Group" );
             assertTextPresent( TEST_PROJECT_NAME );
+            waitForProjectCheckout();
         }
 
         clickLinkWithText( "Members" );
