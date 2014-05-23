@@ -780,11 +780,11 @@ public abstract class AbstractContinuumTest
         // the "adding project" interstitial page has an empty title, so we wait for a real title to appear
 
         int currentIt = 1;
-        int maxIt = 20;
+        int maxIt = 12;
 
         while ( getTitle().equals( "" ) && currentIt <= maxIt )
         {
-            waitPage();
+            getSelenium().waitForPageToLoad( "10000" ); // 10s
             currentIt++;
         }
 
