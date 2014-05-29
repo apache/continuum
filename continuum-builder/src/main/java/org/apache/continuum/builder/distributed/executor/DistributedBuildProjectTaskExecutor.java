@@ -248,7 +248,14 @@ public class DistributedBuildProjectTaskExecutor
 
                 if ( buildTrigger.getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
                 {
-                    context.put( ContinuumBuildConstant.KEY_USERNAME, buildTrigger.getTriggeredBy() );
+                    if ( buildTrigger.getTriggeredBy() == null )
+                    {
+                        context.put( ContinuumBuildConstant.KEY_USERNAME, "" );
+                    }
+                    else
+                    {
+                        context.put( ContinuumBuildConstant.KEY_USERNAME, buildTrigger.getTriggeredBy() );
+                    }
                 }
                 else
                 {
