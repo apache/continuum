@@ -135,6 +135,7 @@
     </plugins>
   </reporting>
   <build>
+    <finalName>apache-continuum-${project.version}</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
