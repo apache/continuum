@@ -60,6 +60,8 @@ public class EditPomAction
 
     private Model companyModel;
 
+    private String organizationLogo;
+
     /**
      * @plexus.requirement
      */
@@ -68,11 +70,9 @@ public class EditPomAction
     public String execute()
         throws IOException, ArtifactInstallationException, SettingsConfigurationException
     {
-        // TODO: hack for passed in String[]
-        String[] logo = (String[]) companyModel.getProperties().get( "organization.logo" );
-        if ( logo != null )
+        if ( organizationLogo != null )
         {
-            companyModel.getProperties().put( "organization.logo", logo[0] );
+            companyModel.getProperties().setProperty( "organization.logo", organizationLogo );
         }
 
         companyPomHandler.save( companyModel, helper.getLocalRepository() );
@@ -110,6 +110,18 @@ public class EditPomAction
                 companyModel.setArtifactId( companyPom.getArtifactId() );
             }
         }
+
+        organizationLogo = companyModel.getProperties().getProperty( "organization.logo" );
+    }
+
+    public String getOrganizationLogo()
+    {
+        return organizationLogo;
+    }
+
+    public void setOrganizationLogo( String organizationLogo )
+    {
+        this.organizationLogo = organizationLogo;
     }
 
     public Model getCompanyModel()

@@ -45,8 +45,7 @@
   </tr>
   <s:textfield name="companyModel.organization.name" size="40" label="%{getText('appearance.companyPom.organizationName.label')}"/>
   <s:textfield name="companyModel.organization.url" size="70" label="%{getText('appearance.companyPom.organizationUrl.label')}"/>
-  <%-- TODO: how to get it to be a string, not a String[]? --%>
-  <s:textfield name="companyModel.properties['organization.logo']" size="70" label="%{getText('appearance.companyPom.organizationLogoUrl.label')}"/>
+  <s:textfield name="organizationLogo" size="70" label="%{getText('appearance.companyPom.organizationLogoUrl.label')}"/>
   <s:submit value="%{getText('save')}"/>
 </s:form>
 
