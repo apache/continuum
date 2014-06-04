@@ -138,6 +138,24 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <version>0.10</version>
+          <configuration>
+            <excludes>
+              <exclude>continuum-webapp-test/src/test/example-projects/**</exclude>
+              <exclude>continuum-webapp-test/src/test/example-svn/**</exclude>
+              <exclude>continuum-webapp-test/src/test/selenium-ide/**</exclude>
+              <exclude>**/*.iml</exclude>
+              <exclude>**/*.fbp</exclude>
+              <exclude>Continuum.sonarj</exclude>
+              <!-- modules that are not in the default build, need to be checked manually -->
+              <exclude>continuum-webapp-test/target/**</exclude>
+              <exclude>continuum-docs/target/**</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
             <tagBase>https://svn.apache.org/repos/asf/continuum/tags</tagBase>
@@ -1790,6 +1808,25 @@
   </dependencyManagement>
 
   <profiles>
+    <profile>
+      <id>apache-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>integration</id>
       <modules>
