@@ -260,10 +260,16 @@ public class Backup
                 List<BuildDefinition> bds = bdt.getBuildDefinitions();
                 if ( bds != null && !bds.isEmpty() )
                 {
+
+                    startTag( "buildDefinitions", true );
+
                     for ( BuildDefinition bd : bds )
                     {
                         backupBuildDefinition( bd );
                     }
+
+                    endTag( "buildDefinitions", true );
+
                 }
                 endTag( "buildDefinitionTemplate", true );
             }
