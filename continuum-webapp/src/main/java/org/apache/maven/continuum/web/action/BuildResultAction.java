@@ -207,8 +207,7 @@ public class BuildResultAction
     public InputStream getBuildOutputInputStream()
         throws ConfigurationException, IOException
     {
-        String outputText = getBuildOutputText();
-        return outputText == null ? null : IOUtils.toInputStream( outputText );
+        return IOUtils.toInputStream( buildOutput );
     }
 
     private String getBuildOutputText()
