@@ -23,9 +23,53 @@
   </properties>
   <body>
 
-    <h1>Apache Continuum 1.4.1 Release Notes</h1>
+    <h1>Apache Continuum 1.4.2 Release Notes</h1>
 
-    <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.1.</p>
+    <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.2.</p>
+
+    <p>To learn more about how the Continuum dev team versions releases, see our
+      <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.
+    </p>
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1777'>CONTINUUM-1777</a>] -         Able to create a build template without build definition
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2222'>CONTINUUM-2222</a>] -         pom.xml is deleted if validation fails
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2486'>CONTINUUM-2486</a>] -         Error in backup output of builddefinition templates 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2495'>CONTINUUM-2495</a>] -         appearance.jsp should use POST instead of GET
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2669'>CONTINUUM-2669</a>] -         org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2699'>CONTINUUM-2699</a>] -         Document installing Continuum as a Mac OS X service with launchd
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2702'>CONTINUUM-2702</a>] -         Cannot add an argument to remove a profile ( -P!profile) 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2703'>CONTINUUM-2703</a>] -         reduce logging from RbacAuthorizer
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2704'>CONTINUUM-2704</a>] -         Shell builds are not executing concurrently
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2705'>CONTINUUM-2705</a>] -         Can&#39;t build projects with null builddef fields 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2709'>CONTINUUM-2709</a>] -         Goals/phases aren&#39;t required when editing maven build types 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2712'>CONTINUUM-2712</a>] -         Release issue :: Unable to release components
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2724'>CONTINUUM-2724</a>] -         Can&#39;t add a project over XMLRPC without a project group
+</li>
+</ul>
+                        
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2149'>CONTINUUM-2149</a>] -         Upgrade to Maven project libraries
+</li>
+</ul>
+        
+    <h1>Changes in Apache Continuum 1.4.1</h1>
 
     <p>This release includes the following new features:</p>
 
@@ -33,10 +77,6 @@
       <b>Improved user recognition</b>
       - information on who executed releases and forced builds, and better handling of sending notifications to
       developers who made a change
-    </p>
-
-    <p>To learn more about how the Continuum dev team versions releases, see our
-      <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.
     </p>
 
     <h2>        Bug
