@@ -6,4 +6,3 @@ target
 continuum-webapp/src/main/webapp/template/
 *.iml
 .idea
-continuum-core/${plexus.home}/

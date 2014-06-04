@@ -27,11 +27,6 @@
 
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-  <!--
-    <bean id="jdoProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-      <property name="location" value="classpath:jdo.properties"/>
-    </bean>
-  -->
   <util:properties id="jdoProperties" location="classpath:jdo.properties"/>
 
   <bean name="jdoFactory#continuum" depends-on="jdoProperties"
@@ -42,13 +37,7 @@
         p:password=""
         p:url="jdbc:hsqldb:mem:test">
 
-    <!--
-            <property name="persistenceManagerFactoryClass" value="org.jpox.PersistenceManagerFactoryImpl"/>
-    -->
     <property name="otherProperties" ref="jdoProperties"/>
   </bean>
-  <!--
-          p:url="jdbc:hsqldb:${plexus.home}/database"
-  -->
 
 </beans>
