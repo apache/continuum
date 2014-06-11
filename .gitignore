@@ -7,3 +7,4 @@ continuum-webapp/src/main/webapp/template/
 *.iml
 .idea
 ${plexus.home}/
+continuum-webapp/overlays/
