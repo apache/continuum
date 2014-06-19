@@ -164,7 +164,7 @@
         </executions>
         <configuration>
           <descriptor>src/main/assembly/bin.xml</descriptor>
-          <finalName>apache-continuum-buildagent-${version}</finalName>
+          <finalName>apache-continuum-buildagent-${project.version}</finalName>
         </configuration>
       </plugin>
       <plugin>

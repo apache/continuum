@@ -196,7 +196,7 @@
         </executions>
         <configuration>
           <descriptor>src/main/assembly/bin.xml</descriptor>
-          <finalName>apache-continuum-${version}</finalName>
+          <finalName>apache-continuum-${project.version}</finalName>
         </configuration>
       </plugin>
       <plugin>
