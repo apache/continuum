@@ -861,7 +861,7 @@
                     for ( java.util.Iterator i = files.iterator(); i.hasNext(); )
                     {
                         ChangeFile file = (ChangeFile) i.next();
-                        
+
                         if (file != null)
                         {
                             result.append( file ).append( "\n" );

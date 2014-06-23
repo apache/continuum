@@ -178,7 +178,7 @@ public class BuildProjectTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS, getEnvironments(
             buildContext.getBuildDefinitionId(), getInstallationType( buildContext ) ) );
 
-        // CONTINUUM-2391        
+        // CONTINUUM-2391
         if ( buildContext.getLocalRepository() != null )
         {
             List<LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();

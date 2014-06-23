@@ -578,11 +578,11 @@ public class ContinuumActionSupport
     {
         return getSecuritySystem().getUserManager().findUser( principal );
     }
-    
+
     /**
-     * Convenience method to determine whether a build is a maven build. We could call the static method directly, 
+     * Convenience method to determine whether a build is a maven build. We could call the static method directly,
      * but for struts2 validator access, we would need to enable static method invocation.
-     * 
+     *
      * @param buildType
      * @return true if the build type is will result in a maven 1 or 2+ build.
      */

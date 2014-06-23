@@ -45,7 +45,7 @@
   </bean>
 
   <!-- to run builds in a chroot jail environment
-       note this is not secure yet, see http://jira.codehaus.org/browse/CONTINUUM-1731 
+       note this is not secure yet, see http://jira.codehaus.org/browse/CONTINUUM-1731
   <bean name="chrootJailDirectory" class="java.io.File">
     <constructor-arg value="/home/jail"/>
   </bean>

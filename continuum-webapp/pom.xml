@@ -69,8 +69,7 @@
           <!-- Some versions of maven-war-plugin (snapshots) have this incorrectly defaulted to true.
                Specifically setting this to false to avoid accidental jar file creation. -->
           <archiveClasses>false</archiveClasses>
-          <dependentWarExcludes>META-INF/**,WEB-INF/web.xml,WEB-INF/classes/xwork.xml,WEB-INF/lib/**
-          </dependentWarExcludes>
+          <dependentWarExcludes>META-INF/**,WEB-INF/web.xml,WEB-INF/classes/xwork.xml,WEB-INF/lib/**</dependentWarExcludes>
         </configuration>
       </plugin>
       <plugin>
@@ -167,12 +166,12 @@
           <source>1.5</source>
           <warSourceDirectory>${project.build.directory}/${project.build.finalName}/</warSourceDirectory>
           <injectString><![CDATA[<!-- [jspc-maven-plugin:post-compiled-jsps-as-servlets] -->]]></injectString>
-          <!-- 
+          <!--
             Uncomment outputWebXml if you want the generated web.xml to
             be placed in the working directory that the war:war mojo uses.
             -->
-          <!-- 
-          <outputWebXml>${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml</outputWebXml> 
+          <!--
+          <outputWebXml>${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml</outputWebXml>
           -->
         </configuration>
       </plugin>
