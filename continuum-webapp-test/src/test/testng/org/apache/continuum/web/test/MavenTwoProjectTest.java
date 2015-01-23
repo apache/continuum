@@ -85,6 +85,28 @@ public class MavenTwoProjectTest
         assertTextPresent( projectGroupScmRootUrl );
     }
 
+    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
+    public void testEditProjectName()
+         throws Exception
+    {
+        // Create a project to use
+        testAddMavenTwoProject();
+
+        // Navigate to project's edit page
+        clickLinkWithText(projectName);
+        clickButtonWithValue("Edit");
+        assertPage("Continuum - Update Continuum Project");
+
+        // Edit the name of the project and save it
+        String newName = "New Name";
+        setFieldValue("projectSave_name", newName);
+        clickButtonWithValue("Save");
+
+        // Verify that the save succeeded
+        assertPage("Continuum - Continuum Project");
+        assertTextPresent(String.format("Continuum Project \"%s\"", newName));
+    }
+
     /**
      * Test flat multi module project with names that start with the same letter
      */
