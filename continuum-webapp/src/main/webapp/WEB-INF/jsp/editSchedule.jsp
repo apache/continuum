@@ -51,7 +51,7 @@
             </s:textfield>
 
             <tr>
-              <th><s:label theme="simple" value="%{getText('schedule.cronExpression.label')}:"/></th>
+              <td class="tdLabel"><s:label theme="simple" class="label" value="%{getText('schedule.cronExpression.label')}:"/></td>
               <td>
                 <table>
                   <s:textfield label="%{getText('schedule.second.label')}" name="second" size="10"/>
