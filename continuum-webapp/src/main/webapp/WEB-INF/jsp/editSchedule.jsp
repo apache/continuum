@@ -33,6 +33,7 @@
 
     <div class="axial">
       <s:form action="saveSchedule" method="post" validate="false" name="scheduleForm">
+        <s:hidden name="id"/>
         <c:if test="${!empty actionErrors}">
           <div class="errormessage">
             <s:iterator value="actionErrors">
@@ -107,7 +108,6 @@
             </s:checkbox>
 
           </table>
-          <s:hidden name="id"/>
           <div class="functnbar3">
             <s:submit value="%{getText('save')}" theme="simple"/>
             <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
