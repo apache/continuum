@@ -48,8 +48,6 @@ public class MavenTwoProjectTest
 
     private String projectGroupScmRootUrl;
 
-    private boolean readdDefaultBuildDefinitionToTemplate;
-
     private String projectName;
 
     @BeforeMethod
