@@ -31,6 +31,8 @@ public class UpdateWorkingCopyPhaseTest
     extends PlexusInSpringTestCase
 {
     private UpdateWorkingCopyPhase phase;
+    private ContinuumReleaseDescriptor releaseDescriptor;
+    private File workingDirectory;
 
     protected void setUp()
         throws Exception
@@ -38,6 +40,15 @@ public class UpdateWorkingCopyPhaseTest
         super.setUp();
 
         phase = (UpdateWorkingCopyPhase) lookup( ReleasePhase.ROLE, "update-working-copy" );
+        assertNotNull( phase );
+
+        releaseDescriptor = createReleaseDescriptor();
+
+        workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
+
+        // Ensure every test method starts with no working dir
+        FileUtils.deleteDirectory( workingDirectory );
+        assertFalse( workingDirectory.exists() );
 
         // set up project scm
         File scmPathFile = new File( getBasedir(), "target/scm-src" ).getAbsoluteFile();
@@ -48,63 +59,42 @@ public class UpdateWorkingCopyPhaseTest
     public void testWorkingDirDoesNotExist()
         throws Exception
     {
-        assertNotNull( phase );
-
-        ContinuumReleaseDescriptor releaseDescriptor = createReleaseDescriptor();
-
-        File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
-
-        FileUtils.deleteDirectory( workingDirectory );
-        assertFalse( workingDirectory.exists() );
-
         phase.execute( releaseDescriptor, new Settings(), null );
-
-        assertTrue( workingDirectory.exists() );
+        assertPopulatedWorkingDirectory();
     }
 
     public void testWorkingDirAlreadyExistsWithProjectCheckout()
         throws Exception
     {
-        assertNotNull( phase );
-
-        ContinuumReleaseDescriptor releaseDescriptor = createReleaseDescriptor();
-
-        File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
-
-        // Remove any existing working directory for a clean test
-        FileUtils.deleteDirectory( workingDirectory );
-        assertFalse( workingDirectory.exists() );
-
-        // Checkout the project
+        // Run the update once, should checkout out the project into working dir
         phase.execute( releaseDescriptor, new Settings(), null );
+        assertPopulatedWorkingDirectory();
 
-        // assert working directory already exists with project checkout
-        assertTrue( workingDirectory.exists() );
-        assertTrue( workingDirectory.listFiles().length > 0 );
-
+        // Run again, to ensure nothing funny happened
         phase.execute( releaseDescriptor, new Settings(), null );
-
-        assertTrue( workingDirectory.exists() );
+        assertPopulatedWorkingDirectory();
     }
 
     public void testWorkingDirAlreadyExistsNoProjectCheckout()
         throws Exception
     {
-        assertNotNull( phase );
-
-        ContinuumReleaseDescriptor releaseDescriptor = createReleaseDescriptor();
-
-        File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
-        FileUtils.deleteDirectory( workingDirectory );
         workingDirectory.mkdirs();
-
-        // assert empty working directory
-        assertTrue( workingDirectory.exists() );
-        assertTrue( workingDirectory.listFiles().length == 0 );
+        assertEmptyWorkingDirectory();
 
         phase.execute( releaseDescriptor, new Settings(), null );
+        assertPopulatedWorkingDirectory();
+    }
 
+    private void assertEmptyWorkingDirectory()
+    {
         assertTrue( workingDirectory.exists() );
+        assertTrue( workingDirectory.listFiles().length == 0 );
+    }
+
+    private void assertPopulatedWorkingDirectory()
+    {
+        assertTrue( workingDirectory.exists() );
+        assertTrue( workingDirectory.listFiles().length > 0 );
     }
 
     private ContinuumReleaseDescriptor createReleaseDescriptor()
