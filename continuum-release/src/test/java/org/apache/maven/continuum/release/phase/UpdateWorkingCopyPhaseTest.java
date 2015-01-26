@@ -71,6 +71,13 @@ public class UpdateWorkingCopyPhaseTest
 
         File workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
 
+        // Remove any existing working directory for a clean test
+        FileUtils.deleteDirectory( workingDirectory );
+        assertFalse( workingDirectory.exists() );
+
+        // Checkout the project
+        phase.execute( releaseDescriptor, new Settings(), null );
+
         // assert working directory already exists with project checkout
         assertTrue( workingDirectory.exists() );
         assertTrue( workingDirectory.listFiles().length > 0 );
