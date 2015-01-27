@@ -1,0 +1,28 @@
+------------------------------------------------------------------------
+r15 | Immanuel Scheerer | 2002-08-26 14:33:26 -0400 (Mon, 26 Aug 2002) | 3 lines
+Changed paths:
+   M /poolserver/trunk/build.xml
+   M /poolserver/trunk/project.properties
+
+Minor formatting changes.
+
+------------------------------------------------------------------------
+r328167 | Immanuel Scheerer | 2005-10-25 00:14:48 +0200 (mar., 25 oct. 2005) | 1 line
+Changed paths:
+   M /maven/scm/trunk/maven-scm-api/pom.xml
+   M /maven/scm/trunk/maven-scm-client/pom.xml
+   M /maven/scm/trunk/maven-scm-managers/maven-scm-manager-plexus/pom.xml
+   M /maven/scm/trunk/maven-scm-managers/pom.xml
+   M /maven/scm/trunk/maven-scm-plugin/pom.xml
+   M /maven/scm/trunk/maven-scm-providers/maven-scm-provider-clearcase/pom.xml
+   M /maven/scm/trunk/maven-scm-providers/maven-scm-provider-cvs/pom.xml
+   M /maven/scm/trunk/maven-scm-providers/maven-scm-provider-local/pom.xml
+   M /maven/scm/trunk/maven-scm-providers/maven-scm-provider-perforce/pom.xml
+   M /maven/scm/trunk/maven-scm-providers/maven-scm-provider-starteam/pom.xml
+   M /maven/scm/trunk/maven-scm-providers/maven-scm-provider-svn/pom.xml
+   M /maven/scm/trunk/maven-scm-providers/pom.xml
+   M /maven/scm/trunk/maven-scm-test/pom.xml
+   M /maven/scm/trunk/pom.xml
+
+Fix new version
+------------------------------------------------------------------------
