@@ -28,6 +28,7 @@
     <decorator:title/>
   </title>
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/tigris.css" includeParams="none"/>" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="<s:url value="/css/continuum.css" includeParams="none"/>" media="screen"/>
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/print.css" includeParams="none"/>" media="print"/>
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
   <link rel="shortcut icon" href="<s:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>

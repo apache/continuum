@@ -1,0 +1,4 @@
+/* Cleanup oddball redback labels (compare to .axial th in tigris.css) */
+td.tdLabel {
+  width: 12em;
+}
