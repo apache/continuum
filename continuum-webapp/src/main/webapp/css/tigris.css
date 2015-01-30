@@ -422,7 +422,7 @@ body,.app h3,.app h4,#rightcol h3,pre,code,#apphead h2 small {
   font-size: small;
 }
 
-small,div#footer,div#login,div.tabs th,div.tabs td,input,select,.paginate,.functnbar,.functnbar2,.functnbar3,#breadcrumbs,.courtesylinks,#rightcol div.help,.colbar,.tasknav,body.docs div#toc,#leftcol,.legend,.bars
+small,div#footer,div#login,div.tabs th,div.tabs td,input,select,button,.paginate,.functnbar,.functnbar2,.functnbar3,#breadcrumbs,.courtesylinks,#rightcol div.help,.colbar,.tasknav,body.docs div#toc,#leftcol,.legend,.bars
   {
   font-size: xx-small;
   voice-family: "\"}\"";
