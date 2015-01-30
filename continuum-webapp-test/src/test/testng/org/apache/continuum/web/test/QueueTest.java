@@ -183,7 +183,7 @@ public class QueueTest
     void assertBuildQueuePage()
     {
         assertPage( "Continumm - Parallel Build Queue" );
-        assertTextPresent( "Continuum - Parallel Build Queue" );
+        assertTextPresent( "Parallel Build Queue" );
         assertTextPresent( "Name" );
         assertTextPresent( "DEFAULT_BUILD_QUEUE" );
         assertButtonWithValuePresent( "Add" );
@@ -204,7 +204,7 @@ public class QueueTest
     void assertAddBuildQueuePage()
     {
         assertPage( "Continuum - Add/Edit Parallel Build Queue" );
-        assertTextPresent( "Continuum - Add/Edit Parallel Build Queue" );
+        assertTextPresent( "Add/Edit Parallel Build Queue" );
         assertTextPresent( "Name*" );
         assertElementPresent( "name" );
         assertButtonWithValuePresent( "Save" );

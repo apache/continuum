@@ -79,7 +79,7 @@ public abstract class AbstractInstallationTest
     void assertEditInstallationToolPage()
     {
         assertPage( "Continuum - Installation" );
-        assertTextPresent( "Continuum - Installation" );
+        assertTextPresent( "Installation" );
         assertTextPresent( "Name" );
         assertElementPresent( "installation.name" );
         assertTextPresent( "Type" );
@@ -100,7 +100,7 @@ public abstract class AbstractInstallationTest
     protected void assertEditInstallationVariablePage()
     {
         assertPage( "Continuum - Installation" );
-        assertTextPresent( "Continuum - Installation" );
+        assertTextPresent( "Installation" );
         assertTextPresent( "Name" );
         assertElementPresent( "installation.name" );
         assertTextPresent( "Environment Variable Name" );
