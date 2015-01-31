@@ -37,7 +37,6 @@ import org.codehaus.plexus.commandline.ExecutableResolver;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -289,7 +288,7 @@ public abstract class AbstractBuildExecutor
 
             return new ContinuumBuildExecutionResult( output, result.getExitCode() );
         }
-        catch ( CommandLineException e )
+        catch ( Exception e )
         {
             if ( e.getCause() instanceof InterruptedException )
             {
@@ -301,12 +300,6 @@ public abstract class AbstractBuildExecutor
                     "Error while executing shell command. The most common error is that '" + executable + "' " +
                         "is not in your path.", e );
             }
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumBuildExecutorException(
-                "Error while executing shell command. " + "The most common error is that '" + executable + "' " +
-                    "is not in your path.", e );
         }
     }
 
