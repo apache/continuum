@@ -19,47 +19,25 @@ package org.apache.continuum.utils.shell;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.slf4j.Logger;
 
 /**
- * Collects output to a file using a buffered writer. Unlike the list-based consumer, this should be safe to use when
- * the output size is expected to be large.
+ * Collects output to a logger. Unlike the list-based consumer, this should be safe to use when the output size is
+ * expected to be large. It logs the output at level INFO.
  */
-public class FileOutputConsumer
+public class LogOutputConsumer
     implements OutputConsumer
 {
-    private PrintWriter writer;
+    private Logger log;
 
-    /**
-     * Creates a output consumer for the given file.
-     *
-     * @param outputFile the file to write the results to
-     * @throws IOException if there is a problem creating a file
-     */
-    public FileOutputConsumer( File outputFile )
-        throws IOException
+    public LogOutputConsumer( Logger log )
     {
-        this.writer = new PrintWriter( new FileWriter( outputFile ) );
+        this.log = log;
     }
 
     public void consume( String line )
     {
-        if ( writer != null )
-            writer.println( line );
-    }
-
-    public void flush()
-    {
-        if ( writer != null )
-            writer.flush();
-    }
-
-    public void close()
-    {
-        if ( writer != null )
-            writer.close();
+        if ( log != null )
+            log.info( line );
     }
 }
