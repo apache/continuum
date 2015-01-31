@@ -70,58 +70,6 @@ public class DefaultShellCommandHelper
         return new Properties();
     }
 
-    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
-                                                long idCommand, Map<String, String> environments )
-        throws Exception
-    {
-        Commandline cl = new Commandline();
-
-        Arg argument = cl.createArg();
-
-        argument.setLine( arguments );
-
-        return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand,
-                                    environments );
-    }
-
-    private static class IOConsumerWrapper
-        implements StreamConsumer
-    {
-        private OutputConsumer userConsumer;
-
-        public IOConsumerWrapper( OutputConsumer userConsumer )
-        {
-            this.userConsumer = userConsumer;
-        }
-
-        public void consumeLine( String line )
-        {
-            if ( userConsumer != null )
-            {
-                userConsumer.consume( line );
-            }
-        }
-    }
-
-    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
-                                                OutputConsumer io, long idCommand,
-                                                Map<String, String> environments )
-        throws Exception
-    {
-        Commandline cl = createCommandline( workingDirectory, executable, arguments, idCommand, environments );
-
-        log.info( "Executing: " + cl );
-        File clWorkDir = cl.getWorkingDirectory();
-        log.info( "Working directory: " + ( clWorkDir != null ? clWorkDir.getAbsolutePath() : "default" ) );
-        log.debug( "EnvironmentVariables " + Arrays.asList( cl.getEnvironmentVariables() ) );
-
-        StreamConsumer consumer = new IOConsumerWrapper( io );
-
-        int exitCode = runCommand( cl, consumer, consumer );
-
-        return new ExecutionResult( exitCode );
-    }
-
     /**
      * Make the command line
      *
@@ -172,6 +120,20 @@ public class DefaultShellCommandHelper
         return cl;
     }
 
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
+                                                long idCommand, Map<String, String> environments )
+        throws Exception
+    {
+        Commandline cl = new Commandline();
+
+        Arg argument = cl.createArg();
+
+        argument.setLine( arguments );
+
+        return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand,
+                                    environments );
+    }
+
     public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
                                                 File output, long idCommand, Map<String, String> environments )
         throws Exception
@@ -189,16 +151,42 @@ public class DefaultShellCommandHelper
         }
     }
 
-    public boolean isRunning( long idCommand )
+    private static class IOConsumerWrapper
+        implements StreamConsumer
     {
-        boolean isIdRunning = running.contains( idCommand );
-        log.debug( "process running for id {}? {}", idCommand, isIdRunning );
-        return isIdRunning;
+        private OutputConsumer userConsumer;
+
+        public IOConsumerWrapper( OutputConsumer userConsumer )
+        {
+            this.userConsumer = userConsumer;
+        }
+
+        public void consumeLine( String line )
+        {
+            if ( userConsumer != null )
+            {
+                userConsumer.consume( line );
+            }
+        }
     }
 
-    public void killProcess( long idCommand )
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
+                                                OutputConsumer io, long idCommand,
+                                                Map<String, String> environments )
+        throws Exception
     {
-        log.warn( "unsupported attempt to kill process for id {}", idCommand );
+        Commandline cl = createCommandline( workingDirectory, executable, arguments, idCommand, environments );
+
+        log.info( "Executing: " + cl );
+        File clWorkDir = cl.getWorkingDirectory();
+        log.info( "Working directory: " + ( clWorkDir != null ? clWorkDir.getAbsolutePath() : "default" ) );
+        log.debug( "EnvironmentVariables " + Arrays.asList( cl.getEnvironmentVariables() ) );
+
+        StreamConsumer consumer = new IOConsumerWrapper( io );
+
+        int exitCode = runCommand( cl, consumer, consumer );
+
+        return new ExecutionResult( exitCode );
     }
 
     public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive,
@@ -268,6 +256,18 @@ public class DefaultShellCommandHelper
         {
             relResult.appendOutput( stdOut.toString() );
         }
+    }
+
+    public boolean isRunning( long idCommand )
+    {
+        boolean isIdRunning = running.contains( idCommand );
+        log.debug( "process running for id {}? {}", idCommand, isIdRunning );
+        return isIdRunning;
+    }
+
+    public void killProcess( long idCommand )
+    {
+        log.warn( "unsupported attempt to kill process for id {}", idCommand );
     }
 
     /**
