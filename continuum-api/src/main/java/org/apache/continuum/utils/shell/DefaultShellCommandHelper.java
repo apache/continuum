@@ -149,12 +149,12 @@ public class DefaultShellCommandHelper
 
     public boolean isRunning( long idCommand )
     {
-        return CommandLineUtils.isAlive( idCommand );
+        return true; //CommandLineUtils.isAlive( idCommand );
     }
 
     public void killProcess( long idCommand )
     {
-        CommandLineUtils.killProcess( idCommand );
+        // CommandLineUtils.killProcess( idCommand );
     }
 
     public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive,
