@@ -23,6 +23,7 @@ import org.apache.maven.shared.release.ReleaseResult;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -32,7 +33,18 @@ public interface ShellCommandHelper
 {
     String ROLE = ShellCommandHelper.class.getName();
 
+    public static interface IOConsumer
+    {
+        void consume( String line );
+    }
+
+    Properties getSystemEnvVars();
+
     ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
+                                         long idCommand, Map<String, String> environments )
+        throws Exception;
+
+    ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments, IOConsumer io,
                                          long idCommand, Map<String, String> environments )
         throws Exception;
 

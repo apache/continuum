@@ -27,16 +27,17 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
-import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.Writer;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -52,6 +53,19 @@ public class DefaultShellCommandHelper
     // ShellCommandHelper Implementation
     // ----------------------------------------------------------------------
 
+    public Properties getSystemEnvVars()
+    {
+        try
+        {
+            return CommandLineUtils.getSystemEnvVars( false );
+        }
+        catch ( IOException e )
+        {
+            log.warn( "failed to get system environment", e );
+        }
+        return new Properties();
+    }
+
     public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
                                                 long idCommand, Map<String, String> environments )
         throws Exception
@@ -64,6 +78,82 @@ public class DefaultShellCommandHelper
 
         return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand,
                                     environments );
+    }
+
+    private static class IOConsumerWrapper
+        implements StreamConsumer
+    {
+        private IOConsumer userConsumer;
+
+        public IOConsumerWrapper( IOConsumer userConsumer )
+        {
+            this.userConsumer = userConsumer;
+        }
+
+        public void consumeLine( String line )
+        {
+            if ( userConsumer != null )
+            {
+                userConsumer.consume( line );
+            }
+        }
+    }
+
+    private static class FileIOConsumer
+        implements IOConsumer
+    {
+        private PrintWriter writer;
+
+        public FileIOConsumer( File outputFile )
+        {
+            try
+            {
+                this.writer = new PrintWriter( new FileWriter( outputFile ) );
+            }
+            catch ( IOException e )
+            {
+                log.warn( "failed to create file-based io consumer", e );
+            }
+        }
+
+        public void consume( String line )
+        {
+            if ( writer != null )
+            {
+                writer.println( line );
+            }
+        }
+
+        public void flush()
+        {
+            if ( writer != null )
+                writer.flush();
+        }
+
+        public void close()
+        {
+            if ( writer != null )
+                writer.close();
+        }
+    }
+
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
+                                                IOConsumer io, long idCommand,
+                                                Map<String, String> environments )
+        throws Exception
+    {
+        Commandline cl = createCommandline( workingDirectory, executable, arguments, idCommand, environments );
+
+        log.info( "Executing: " + cl );
+        File clWorkDir = cl.getWorkingDirectory();
+        log.info( "Working directory: " + ( clWorkDir != null ? clWorkDir.getAbsolutePath() : "default" ) );
+        log.debug( "EnvironmentVariables " + Arrays.asList( cl.getEnvironmentVariables() ) );
+
+        StreamConsumer consumer = new IOConsumerWrapper( io );
+
+        int exitCode = CommandLineUtils.executeCommandLine( cl, consumer, consumer );
+
+        return new ExecutionResult( exitCode );
     }
 
     /**
@@ -117,34 +207,17 @@ public class DefaultShellCommandHelper
                                                 File output, long idCommand, Map<String, String> environments )
         throws Exception
     {
-
-        Commandline cl = createCommandline( workingDirectory, executable, arguments, idCommand, environments );
-
-        log.info( "Executing: " + cl );
-        log.info( "Working directory: " + cl.getWorkingDirectory().getAbsolutePath() );
-        log.debug( "EnvironmentVariables " + Arrays.asList( cl.getEnvironmentVariables() ) );
-
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
-
-        //CommandLineUtils.StringStreamConsumer consumer = new CommandLineUtils.StringStreamConsumer();
-
-        Writer writer = new FileWriter( output );
-
-        StreamConsumer consumer = new WriterStreamConsumer( writer );
-
-        int exitCode = CommandLineUtils.executeCommandLine( cl, consumer, consumer );
-
-        writer.flush();
-
-        writer.close();
-
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
-
-        return new ExecutionResult( exitCode );
+        FileIOConsumer fileConsumer = new FileIOConsumer( output );
+        try
+        {
+            return executeShellCommand( workingDirectory, executable, arguments, fileConsumer, idCommand,
+                                        environments );
+        }
+        finally
+        {
+            fileConsumer.flush();
+            fileConsumer.close();
+        }
     }
 
     public boolean isRunning( long idCommand )
