@@ -33,18 +33,13 @@ public interface ShellCommandHelper
 {
     String ROLE = ShellCommandHelper.class.getName();
 
-    public static interface IOConsumer
-    {
-        void consume( String line );
-    }
-
     Properties getSystemEnvVars();
 
     ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
                                          long idCommand, Map<String, String> environments )
         throws Exception;
 
-    ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments, IOConsumer io,
+    ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments, OutputConsumer io,
                                          long idCommand, Map<String, String> environments )
         throws Exception;
 

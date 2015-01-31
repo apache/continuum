@@ -21,6 +21,8 @@ package org.apache.continuum.installation;
 
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.continuum.utils.shell.ExecutionResult;
+import org.apache.continuum.utils.shell.ListOutputConsumer;
+import org.apache.continuum.utils.shell.OutputConsumer;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
@@ -340,15 +342,9 @@ public class DefaultInstallationService
     {
 
         String executable = homePath + File.separator + "bin" + File.separator + "java";
-        final List<String> cliOutput = new ArrayList<String>();
+        ListOutputConsumer outputConsumer = new ListOutputConsumer();
         ExecutionResult result = shellCommandHelper.executeShellCommand( null, executable, new String[] { "-version" },
-                                                                         new ShellCommandHelper.IOConsumer()
-                                                                         {
-                                                                             public void consume( String line )
-                                                                             {
-                                                                                 cliOutput.add( line );
-                                                                             }
-                                                                         }, -1, null );
+                                                                         outputConsumer, -1, null );
         int exitCode = result.getExitCode();
         if ( exitCode != 0 )
         {
@@ -356,7 +352,7 @@ public class DefaultInstallationService
                 String.format( "failed to get java version information, %s returned exit code %s", executable,
                                exitCode ) );
         }
-        return cliOutput;
+        return outputConsumer.getList();
     }
 
     private Map<String, String> getEnvVars( Profile profile )
@@ -410,19 +406,13 @@ public class DefaultInstallationService
 
         env.putAll( getEnvVars( profile ) );
 
-        final List<String> cliOutput = new ArrayList<String>();
+        ListOutputConsumer outputConsumer = new ListOutputConsumer();
         ExecutionResult result;
         try
         {
-            result = shellCommandHelper.executeShellCommand( null, executable.toString(), new String[] {
-                                                                 executorConfigurator.getVersionArgument() },
-                                                             new ShellCommandHelper.IOConsumer()
-                                                             {
-                                                                 public void consume( String line )
-                                                                 {
-                                                                     cliOutput.add( line );
-                                                                 }
-                                                             }, -1, null );
+            result = shellCommandHelper.executeShellCommand( null, executable.toString(),
+                                                             new String[] { executorConfigurator.getVersionArgument() },
+                                                             outputConsumer, -1, null );
         }
         catch ( Exception e )
         {
@@ -437,7 +427,7 @@ public class DefaultInstallationService
                 String.format( "failed to get executor version info, %s returned exit code %s", executable,
                                exitCode ) );
         }
-        return cliOutput;
+        return outputConsumer.getList();
     }
 
     private boolean alreadyExistInstallationName( Installation installation )

@@ -83,9 +83,9 @@ public class DefaultShellCommandHelper
     private static class IOConsumerWrapper
         implements StreamConsumer
     {
-        private IOConsumer userConsumer;
+        private OutputConsumer userConsumer;
 
-        public IOConsumerWrapper( IOConsumer userConsumer )
+        public IOConsumerWrapper( OutputConsumer userConsumer )
         {
             this.userConsumer = userConsumer;
         }
@@ -99,46 +99,8 @@ public class DefaultShellCommandHelper
         }
     }
 
-    private static class FileIOConsumer
-        implements IOConsumer
-    {
-        private PrintWriter writer;
-
-        public FileIOConsumer( File outputFile )
-        {
-            try
-            {
-                this.writer = new PrintWriter( new FileWriter( outputFile ) );
-            }
-            catch ( IOException e )
-            {
-                log.warn( "failed to create file-based io consumer", e );
-            }
-        }
-
-        public void consume( String line )
-        {
-            if ( writer != null )
-            {
-                writer.println( line );
-            }
-        }
-
-        public void flush()
-        {
-            if ( writer != null )
-                writer.flush();
-        }
-
-        public void close()
-        {
-            if ( writer != null )
-                writer.close();
-        }
-    }
-
     public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
-                                                IOConsumer io, long idCommand,
+                                                OutputConsumer io, long idCommand,
                                                 Map<String, String> environments )
         throws Exception
     {
@@ -210,7 +172,7 @@ public class DefaultShellCommandHelper
                                                 File output, long idCommand, Map<String, String> environments )
         throws Exception
     {
-        FileIOConsumer fileConsumer = new FileIOConsumer( output );
+        FileOutputConsumer fileConsumer = new FileOutputConsumer( output );
         try
         {
             return executeShellCommand( workingDirectory, executable, arguments, fileConsumer, idCommand,
