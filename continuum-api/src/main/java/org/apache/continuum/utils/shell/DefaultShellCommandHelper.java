@@ -23,6 +23,7 @@ import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.exec.MavenExecutorException;
 import org.apache.maven.shared.release.exec.TeeConsumer;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.cli.Arg;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -72,7 +73,7 @@ public class DefaultShellCommandHelper
     {
         Commandline cl = new Commandline();
 
-        Commandline.Argument argument = cl.createArgument();
+        Arg argument = cl.createArg();
 
         argument.setLine( arguments );
 
@@ -161,7 +162,7 @@ public class DefaultShellCommandHelper
         {
             for ( String argument : arguments )
             {
-                cl.createArgument().setValue( argument );
+                cl.createArg().setValue( argument );
             }
         }
 
@@ -201,7 +202,7 @@ public class DefaultShellCommandHelper
     {
         Commandline cl = new Commandline();
 
-        Commandline.Argument argument = cl.createArgument();
+        Arg argument = cl.createArg();
 
         argument.setLine( arguments );
 
@@ -226,15 +227,15 @@ public class DefaultShellCommandHelper
 
             for ( String token : tokens )
             {
-                cl.createArgument().setValue( token );
+                cl.createArg().setValue( token );
             }
         }
 
-        cl.createArgument().setValue( "--no-plugin-updates" );
+        cl.createArg().setValue( "--no-plugin-updates" );
 
         if ( !interactive )
         {
-            cl.createArgument().setValue( "--batch-mode" );
+            cl.createArg().setValue( "--batch-mode" );
         }
 
         StreamConsumer stdOut = new TeeConsumer( System.out );
