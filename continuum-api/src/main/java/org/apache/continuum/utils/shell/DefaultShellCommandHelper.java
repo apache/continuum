@@ -33,12 +33,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -49,6 +50,8 @@ public class DefaultShellCommandHelper
     implements ShellCommandHelper
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultShellCommandHelper.class );
+
+    private Set<Long> running = Collections.synchronizedSet( new HashSet<Long>() );
 
     // ----------------------------------------------------------------------
     // ShellCommandHelper Implementation
@@ -114,7 +117,7 @@ public class DefaultShellCommandHelper
 
         StreamConsumer consumer = new IOConsumerWrapper( io );
 
-        int exitCode = CommandLineUtils.executeCommandLine( cl, consumer, consumer );
+        int exitCode = runCommand( cl, consumer, consumer );
 
         return new ExecutionResult( exitCode );
     }
@@ -188,12 +191,14 @@ public class DefaultShellCommandHelper
 
     public boolean isRunning( long idCommand )
     {
-        return true; //CommandLineUtils.isAlive( idCommand );
+        boolean isIdRunning = running.contains( idCommand );
+        log.debug( "process running for id {}? {}", idCommand, isIdRunning );
+        return isIdRunning;
     }
 
     public void killProcess( long idCommand )
     {
-        // CommandLineUtils.killProcess( idCommand );
+        log.warn( "unsupported attempt to kill process for id {}", idCommand );
     }
 
     public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive,
@@ -247,7 +252,7 @@ public class DefaultShellCommandHelper
             relResult.appendInfo( "Executing: " + cl.toString() );
             log.info( "Executing: " + cl.toString() );
 
-            int result = CommandLineUtils.executeCommandLine( cl, stdOut, stdErr );
+            int result = runCommand( cl, stdOut, stdErr );
 
             if ( result != 0 )
             {
@@ -262,6 +267,33 @@ public class DefaultShellCommandHelper
         finally
         {
             relResult.appendOutput( stdOut.toString() );
+        }
+    }
+
+    /**
+     * Handles all command executions for the helper, allowing it to track which commands are running.
+     * The process tracking functionality done here attempts to mimick functionality lost with the move to
+     * plexus-utils 3.0.15. The utility of this method depends on two assumptions:
+     * * Command execution is synchronous (the thread is blocked while the command executes)
+     * * The scope of this object is appropriate (singleton or otherwise)
+     *
+     * @param cli       the command to run, will be tracked by abstract pid set
+     * @param systemOut the stream handler for stdout from command
+     * @param systemErr the stream handler for stderr from command
+     * @return the exit code from the process
+     */
+    private int runCommand( Commandline cli, StreamConsumer systemOut, StreamConsumer systemErr )
+        throws CommandLineException
+    {
+        Long pid = cli.getPid();
+        try
+        {
+            running.add( pid );
+            return CommandLineUtils.executeCommandLine( cli, systemOut, systemErr );
+        }
+        finally
+        {
+            running.remove( pid );
         }
     }
 }
