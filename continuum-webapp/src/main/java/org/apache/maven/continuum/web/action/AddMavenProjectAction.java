@@ -142,6 +142,7 @@ public abstract class AddMavenProjectAction
                         encoding = System.getProperty( "file.encoding" );
                     }
 
+                    // URL encode username and password so things like @ or : or / don't corrupt URL
                     String encodedUsername = URLEncoder.encode( scmUsername, encoding );
                     String encodedPassword = URLEncoder.encode( scmPassword, encoding );
 
@@ -154,6 +155,10 @@ public abstract class AddMavenProjectAction
                         urlBuffer.append( ":" ).append( url.getPort() );
                     }
                     urlBuffer.append( url.getPath() );
+                    if ( url.getQuery() != null )
+                    {
+                        urlBuffer.append( "?" + url.getQuery() );
+                    }
 
                     pom = urlBuffer.toString();
                 }
@@ -213,7 +218,7 @@ public abstract class AddMavenProjectAction
             for ( String key : result.getErrors() )
             {
                 String cause = result.getErrorsWithCause().get( key );
-                String msg = getText( key, new String[]{cause} );
+                String msg = getText( key, new String[] { cause } );
 
                 // olamy : weird getText(key, String[]) must do that something like bla bla {0}
                 // here an ugly hack for CONTINUUM-1675
