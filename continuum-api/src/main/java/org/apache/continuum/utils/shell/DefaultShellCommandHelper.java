@@ -190,7 +190,10 @@ public class DefaultShellCommandHelper
 
         cl.setExecutable( executable );
 
-        cl.setWorkingDirectory( workingDirectory.getAbsolutePath() );
+        if ( workingDirectory != null )
+        {
+            cl.setWorkingDirectory( workingDirectory.getAbsolutePath() );
+        }
 
         if ( arguments != null )
         {
