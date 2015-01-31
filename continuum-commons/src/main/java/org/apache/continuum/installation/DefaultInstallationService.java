@@ -279,11 +279,11 @@ public class DefaultInstallationService
     // -------------------------------------------------------------
 
     /**
-     * TODO replace with calling getExecutorConfiguratorVersion
+     * TODO replace with calling getExecutorVersionInfo
      *
-     * @see org.apache.maven.continuum.installation.InstallationService#getDefaultJdkInformations()
+     * @see org.apache.maven.continuum.installation.InstallationService#getDefaultJavaVersionInfo()
      */
-    public List<String> getDefaultJdkInformations()
+    public List<String> getDefaultJavaVersionInfo()
         throws InstallationException
     {
         try
@@ -294,9 +294,9 @@ public class DefaultInstallationService
             // olamy : JAVA_HOME can not exists with a mac user
             if ( StringUtils.isEmpty( javaHome ) )
             {
-                return getJavaHomeInformations( System.getProperty( "java.home" ) );
+                return getJavaVersionInfo( System.getProperty( "java.home" ) );
             }
-            return getJavaHomeInformations( javaHome );
+            return getJavaVersionInfo( javaHome );
 
         }
         catch ( IOException e )
@@ -310,24 +310,24 @@ public class DefaultInstallationService
     }
 
     /**
-     * TODO replace with calling getExecutorConfiguratorVersion
+     * TODO replace with calling getExecutorVersionInfo
      *
-     * @see org.apache.maven.continuum.installation.InstallationService#getJdkInformations(org.apache.maven.continuum.model.system.Installation)
+     * @see org.apache.maven.continuum.installation.InstallationService#getJavaVersionInfo(org.apache.maven.continuum.model.system.Installation)
      */
-    public List<String> getJdkInformations( Installation installation )
+    public List<String> getJavaVersionInfo( Installation installation )
         throws InstallationException
     {
         if ( installation == null )
         {
-            return getDefaultJdkInformations();
+            return getDefaultJavaVersionInfo();
         }
         if ( StringUtils.isEmpty( installation.getVarValue() ) )
         {
-            return getDefaultJdkInformations();
+            return getDefaultJavaVersionInfo();
         }
         try
         {
-            return getJavaHomeInformations( installation.getVarValue() );
+            return getJavaVersionInfo( installation.getVarValue() );
         }
         catch ( CommandLineException e )
         {
@@ -336,11 +336,11 @@ public class DefaultInstallationService
     }
 
     /**
-     * @param javaHome
+     * @param homePath
      * @return
-     * @throws CommandLineException
+     * @throws Exception
      */
-    private List<String> getJavaHomeInformations( String javaHome )
+    private List<String> getJavaVersionInfo( String homePath )
         throws CommandLineException
     {
         Commandline commandline = new Commandline();
@@ -398,11 +398,11 @@ public class DefaultInstallationService
     }
 
     /**
-     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfiguratorVersion(java.lang.String, org.apache.maven.continuum.execution.ExecutorConfigurator, Profile)
+     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorVersionInfo(java.lang.String, org.apache.maven.continuum.execution.ExecutorConfigurator, Profile)
      */
     @SuppressWarnings( "unchecked" )
-    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator,
-                                                        Profile profile )
+    public List<String> getExecutorVersionInfo( String path, ExecutorConfigurator executorConfigurator,
+                                                Profile profile )
         throws InstallationException
     {
 

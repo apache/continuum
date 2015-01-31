@@ -132,15 +132,15 @@ public class DefaultInstallationServiceTest
         assertEquals( "updatedbar", getted.getVarValue() );
     }
 
-    public void testgetDefaultJdkInformations()
+    public void testGetDefaultJavaVersionInfo()
         throws Exception
     {
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
-        List<String> infos = installationService.getDefaultJdkInformations();
+        List<String> infos = installationService.getDefaultJavaVersionInfo();
         assertNotNull( infos );
     }
 
-    public void testgetJdkInformations()
+    public void testGetJavaVersionInfo()
         throws Exception
     {
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
@@ -154,11 +154,11 @@ public class DefaultInstallationServiceTest
         installation.setType( InstallationService.JDK_TYPE );
         installation.setVarValue( javaHome );
 
-        List<String> infos = installationService.getJdkInformations( installation );
+        List<String> infos = installationService.getJavaVersionInfo( installation );
         assertNotNull( infos );
     }
 
-    public void testgetJdkInformationsWithCommonMethod()
+    public void testGetJavaVersionInfoWithCommonMethod()
         throws Exception
     {
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
@@ -168,7 +168,7 @@ public class DefaultInstallationServiceTest
         {
             javaHome = System.getProperty( "java.home" );
         }
-        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java, null );
+        List<String> infos = installationService.getExecutorVersionInfo( javaHome, java, null );
         System.out.println( infos );
         assertNotNull( infos );
     }
@@ -179,7 +179,7 @@ public class DefaultInstallationServiceTest
     {
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
         ExecutorConfigurator java = installationService.getExecutorConfigurator( InstallationService.MAVEN2_TYPE );
-        List<String> infos = installationService.getExecutorConfiguratorVersion( null, java, null );
+        List<String> infos = installationService.getExecutorVersionInfo( null, java, null );
         assertNotNull( infos );
     }
 */

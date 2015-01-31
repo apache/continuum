@@ -80,14 +80,14 @@ public interface InstallationService
      * @return output of JAVA_HOME/bin/java -version (JAVA_HOME = installation.getVarValue()
      * @throws InstallationException
      */
-    public List<String> getJdkInformations( Installation installation )
+    public List<String> getJavaVersionInfo( Installation installation )
         throws InstallationException;
 
     /**
      * @return output of JAVA_HOME/bin/java -version
      * @throws InstallationException
      */
-    public List<String> getDefaultJdkInformations()
+    public List<String> getDefaultJavaVersionInfo()
         throws InstallationException;
 
     /**
@@ -96,8 +96,8 @@ public interface InstallationService
      * @return the cli output of $path/ec.relativePath.ec.executable ec.versionArgument
      * @throws InstallationException
      */
-    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator,
-                                                        Profile profile )
+    public List<String> getExecutorVersionInfo( String path, ExecutorConfigurator executorConfigurator,
+                                                Profile profile )
         throws InstallationException;
 
 }

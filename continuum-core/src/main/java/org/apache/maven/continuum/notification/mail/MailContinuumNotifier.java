@@ -514,14 +514,14 @@ public class MailContinuumNotifier
     {
         if ( buildDefinition == null )
         {
-            return continuum.getInstallationService().getDefaultJdkInformations();
+            return continuum.getInstallationService().getDefaultJavaVersionInfo();
         }
         Profile profile = buildDefinition.getProfile();
         if ( profile == null )
         {
-            return continuum.getInstallationService().getDefaultJdkInformations();
+            return continuum.getInstallationService().getDefaultJavaVersionInfo();
         }
-        return continuum.getInstallationService().getJdkInformations( profile.getJdk() );
+        return continuum.getInstallationService().getJavaVersionInfo( profile.getJdk() );
     }
 
     private List<String> getBuilderVersion( BuildDefinition buildDefinition, Project project )
@@ -566,7 +566,7 @@ public class MailContinuumNotifier
             }
         }
 
-        return continuum.getInstallationService().getExecutorConfiguratorVersion(
+        return continuum.getInstallationService().getExecutorVersionInfo(
             builder == null ? null : builder.getVarValue(), executorConfigurator, profile );
     }
 

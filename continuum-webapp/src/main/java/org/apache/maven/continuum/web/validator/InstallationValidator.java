@@ -76,7 +76,7 @@ public class InstallationValidator
                 if ( executorConfigurator.getVersionArgument() != null )
                 {
                     // just try to get version infos to validate path is valid
-                    installationService.getExecutorConfiguratorVersion( varValue, executorConfigurator, null );
+                    installationService.getExecutorVersionInfo( varValue, executorConfigurator, null );
                 }
             }
         }
