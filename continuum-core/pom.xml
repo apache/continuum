@@ -325,6 +325,7 @@
             <exclude>**/BuildProjectTaskExecutorTest.*</exclude>
             <!-- CONTINUUM-2559 -->
             <exclude>**/MailContinuumNotifierTest.*</exclude>
+            <exclude>**/CleanWorkingDirectoryActionTest.*</exclude>
           </excludes>
         </configuration>
       </plugin>
