@@ -20,8 +20,13 @@ package org.apache.continuum.utils.shell;
  */
 
 import junit.framework.TestCase;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @see org.apache.continuum.utils.shell.DefaultShellCommandHelper
@@ -31,11 +36,20 @@ public class DefaultShellCommandHelperTest
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultShellCommandHelper.class );
 
-    DefaultShellCommandHelper helper;
+    private DefaultShellCommandHelper helper;
+
+    private String javaPath;
+
+    private String sleepClasspath;
 
     public void setUp()
     {
         helper = new DefaultShellCommandHelper();
+
+        List<String> javaPathComponents =
+            Arrays.asList( new String[] { System.getProperty( "java.home" ), "bin", "java" } );
+        javaPath = StringUtils.join( javaPathComponents, File.separator );
+        sleepClasspath = System.getProperty( "sleepClasspath" );
     }
 
     public void tearDown()
@@ -83,7 +97,7 @@ public class DefaultShellCommandHelperTest
     {
         long virtualPid = 1, sleepMillis = 100;
         RunChecker checker = new RunChecker( helper, virtualPid, sleepMillis );
-        String[] cmdArgs = { "-cp", System.getProperty( "sleepClasspath" ), Sleep.class.getCanonicalName(), "1" };
+        String[] cmdArgs = { "-cp", sleepClasspath, Sleep.class.getCanonicalName(), "1" };
 
         // Verify process isn't running initially
         checker.run();
@@ -93,7 +107,7 @@ public class DefaultShellCommandHelperTest
         Thread checkerThread = new Thread( checker );
         checkerThread.start();
 
-        helper.executeShellCommand( null, "java", cmdArgs, new LogOutputConsumer( log ), virtualPid, null );
+        helper.executeShellCommand( null, javaPath, cmdArgs, new LogOutputConsumer( log ), virtualPid, null );
         checkerThread.join();
         assertTrue( "Expected that command was running", checker.wasRunning );
 
