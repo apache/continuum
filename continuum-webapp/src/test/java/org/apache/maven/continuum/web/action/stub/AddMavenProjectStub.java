@@ -37,7 +37,7 @@ public class AddMavenProjectStub
     {
         // skip authorization check
     }
-    
+
     @Override
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
                                                         boolean scmUseCache )

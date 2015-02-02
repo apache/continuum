@@ -20,9 +20,7 @@ package org.apache.maven.continuum.web.action;
  */
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
 import org.apache.continuum.web.action.AbstractActionTest;
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.web.action.stub.AddMavenProjectStub;
