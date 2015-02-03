@@ -23,13 +23,39 @@
   </properties>
   <body>
 
-    <h1>Apache Continuum 1.4.2 Release Notes</h1>
+    <h1>Apache Continuum 1.4.3 Release Notes</h1>
 
-    <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.2.</p>
+    <p>The Apache Continuum team is pleased to announce Apache Continuum 1.4.3.</p>
 
     <p>To learn more about how the Continuum dev team versions releases, see our
       <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.
     </p>
+
+    <p>
+      This is a maintenance release addressing the struts CSRF vulnerability CVE-2014-7809 and other minor fixes.
+    </p>
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1156'>CONTINUUM-1156</a>] -         Continuum will not successfully delete build directories containing symbolic links
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2119'>CONTINUUM-2119</a>] -         Cleaning up large working directories fails with OutOfMemoryError
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2585'>CONTINUUM-2585</a>] -         Adding a maven pom via url with username drops query parameters
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2723'>CONTINUUM-2723</a>] -         Attempting edit a project results in an internal error
+</li>
+</ul>
+
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2727'>CONTINUUM-2727</a>] -         Upgrade to struts 2.3.20
+</li>
+</ul>
+
+    <h1>Changes in Apache Continuum 1.4.2</h1>
 
 <h2>        Bug
 </h2>
