@@ -23,7 +23,7 @@
   <parent>
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.3</version>
   </parent>
   <artifactId>continuum-jetty</artifactId>
   <packaging>pom</packaging>
