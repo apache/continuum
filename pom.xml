@@ -32,7 +32,7 @@
   <packaging>pom</packaging>
   <name>Continuum :: Project</name>
   <url>http://continuum.apache.org/ref/latest</url>
-  <version>1.4.3</version>
+  <version>1.5-SNAPSHOT</version>
 
   <prerequisites>
     <maven>2.0.9</maven>
@@ -58,9 +58,9 @@
   </properties>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/tags/continuum-1.4.3</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/tags/continuum-1.4.3</developerConnection>
-    <url>http://svn.apache.org/viewvc/continuum/tags/continuum-1.4.3</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/continuum/trunk/</url>
   </scm>
   <reporting>
     <excludeDefaults>true</excludeDefaults>
