@@ -23,39 +23,46 @@ import org.apache.continuum.scm.manager.ScmManager;
 import org.apache.maven.scm.ScmBranch;
 import org.apache.maven.scm.ScmFileSet;
 import org.apache.maven.scm.ScmVersion;
+import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.apache.maven.scm.provider.ScmProviderRepository;
 import org.apache.maven.scm.repository.ScmRepository;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
+import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
 
+import static org.mockito.Mockito.*;
+
 public class DefaultContinuumScmTest
 {
     private ScmManager scmManager;
 
-    private DefaultContinuumScm continuumScm;
+    private ScmRepository scmRepository;
 
-    private Mockery context;
+    private ScmProviderRepository scmProviderRepository;
+
+    private DefaultContinuumScm continuumScm;
 
     private ContinuumScmConfiguration config;
 
     @Before
     public void setUp()
+        throws ScmRepositoryException, NoSuchScmProviderException
     {
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
+        config = new ContinuumScmConfiguration();
+        config.setWorkingDirectory( new File( "1" ) );
+        config.setUrl( "scm:svn:http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-clean-plugin" );
 
-        scmManager = context.mock( ScmManager.class );
+        scmManager = mock( ScmManager.class );
+        scmRepository = mock( ScmRepository.class );
+        scmProviderRepository = mock( ScmProviderRepository.class );
+        when( scmManager.makeScmRepository( config.getUrl() ) ).thenReturn( scmRepository );
+        when( scmRepository.getProviderRepository() ).thenReturn( scmProviderRepository );
 
         continuumScm = new DefaultContinuumScm();
         continuumScm.setScmManager( scmManager );
-
-        config = getScmConfiguration();
     }
 
     @Test
@@ -64,18 +71,10 @@ public class DefaultContinuumScmTest
     {
         config.setTag( "1.0-SNAPSHOT" );
 
-        context.checking( new Expectations()
-        {
-            {
-                one( scmManager ).makeScmRepository( config.getUrl() );
-                one( scmManager ).changeLog( with( any( ScmRepository.class ) ), with( any( ScmFileSet.class ) ), with(
-                    any( ScmVersion.class ) ), with( any( ScmVersion.class ) ) );
-            }
-        } );
-
         continuumScm.changeLog( config );
 
-        context.assertIsSatisfied();
+        verify( scmManager ).changeLog( any( ScmRepository.class ), any( ScmFileSet.class ), any( ScmVersion.class ),
+                                        any( ScmVersion.class ) );
     }
 
     @Test
@@ -84,26 +83,10 @@ public class DefaultContinuumScmTest
     {
         config.setTag( "" );
 
-        context.checking( new Expectations()
-        {
-            {
-                one( scmManager ).makeScmRepository( config.getUrl() );
-                one( scmManager ).changeLog( with( any( ScmRepository.class ) ), with( any( ScmFileSet.class ) ), with(
-                    any( Date.class ) ), with( aNull( Date.class ) ), with( equal( 0 ) ), with( aNull(
-                    ScmBranch.class ) ), with( aNull( String.class ) ) );
-            }
-        } );
-
         continuumScm.changeLog( config );
-        context.assertIsSatisfied();
-    }
 
-    private ContinuumScmConfiguration getScmConfiguration()
-    {
-        ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        config.setWorkingDirectory( new File( "1" ) );
-        config.setUrl( "scm:svn:http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-clean-plugin" );
-
-        return config;
+        verify( scmManager ).changeLog( any( ScmRepository.class ), any( ScmFileSet.class ), any( Date.class ),
+                                        isNull( Date.class ), eq( 0 ), isNull( ScmBranch.class ),
+                                        isNull( String.class ) );
     }
 }
