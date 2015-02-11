@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import com.opensymphony.xwork2.Action;
 import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -29,31 +30,32 @@ import org.codehaus.plexus.redback.rbac.Role;
 import org.codehaus.plexus.redback.rbac.UserAssignment;
 import org.codehaus.plexus.redback.rbac.jdo.JdoRole;
 import org.codehaus.plexus.redback.rbac.jdo.JdoUserAssignment;
-import org.jmock.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 public class ProjectGroupActionTest
     extends AbstractActionTest
 {
     private ProjectGroupActionStub action;
 
-    private Mock continuum;
+    private Continuum continuum;
 
-    private Mock rbac;
+    private RBACManager rbac;
 
     protected void setUp()
         throws Exception
     {
         super.setUp();
 
-        action = new ProjectGroupActionStub();
         continuum = mock( Continuum.class );
         rbac = mock( RBACManager.class );
 
-        action.setContinuum( (Continuum) continuum.proxy() );
-        action.setRbacManager( (RBACManager) rbac.proxy() );
+        action = new ProjectGroupActionStub();
+        action.setContinuum( continuum );
+        action.setRbacManager( rbac );
     }
 
     public void testViewMembersWithProjectAdminRole()
@@ -86,15 +88,12 @@ public class ProjectGroupActionTest
 
         List<Role> eRoles = roles;
 
-        continuum.expects( once() ).method( "getProjectGroupWithProjects" ).will( returnValue( group ) );
-        rbac.expects( once() ).method( "getAllRoles" ).will( returnValue( roles ) );
-        rbac.expects( once() ).method( "getUserAssignmentsForRoles" ).will( returnValue( userAssignments ) );
-        rbac.expects( once() ).method( "getEffectivelyAssignedRoles" ).will( returnValue( eRoles ) );
+        when( continuum.getProjectGroupWithProjects( anyInt() ) ).thenReturn( group );
+        when( rbac.getAllRoles() ).thenReturn( roles );
+        when( rbac.getUserAssignmentsForRoles( anyCollection() ) ).thenReturn( userAssignments );
+        when( rbac.getEffectivelyAssignedRoles( anyString() ) ).thenReturn( eRoles );
 
-        action.members();
-
-        continuum.verify();
-        rbac.verify();
+        assertEquals( Action.SUCCESS, action.members() );
 
         List<ProjectGroupUserBean> users = action.getProjectGroupUsers();
         assertEquals( 1, users.size() );
@@ -140,15 +139,12 @@ public class ProjectGroupActionTest
         eRoles.add( role2 );
         eRoles.add( role5 );
 
-        continuum.expects( once() ).method( "getProjectGroupWithProjects" ).will( returnValue( group ) );
-        rbac.expects( once() ).method( "getAllRoles" ).will( returnValue( roles ) );
-        rbac.expects( once() ).method( "getUserAssignmentsForRoles" ).will( returnValue( userAssignments ) );
-        rbac.expects( once() ).method( "getEffectivelyAssignedRoles" ).will( returnValue( eRoles ) );
+        when( continuum.getProjectGroupWithProjects( anyInt() ) ).thenReturn( group );
+        when( rbac.getAllRoles() ).thenReturn( roles );
+        when( rbac.getUserAssignmentsForRoles( anyCollection() ) ).thenReturn( userAssignments );
+        when( rbac.getEffectivelyAssignedRoles( anyString() ) ).thenReturn( eRoles );
 
-        action.members();
-
-        continuum.verify();
-        rbac.verify();
+        assertEquals( Action.SUCCESS, action.members() );
 
         List<ProjectGroupUserBean> users = action.getProjectGroupUsers();
         assertEquals( 1, users.size() );

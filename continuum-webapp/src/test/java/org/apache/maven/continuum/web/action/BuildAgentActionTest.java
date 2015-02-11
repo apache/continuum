@@ -26,21 +26,22 @@ import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.continuum.web.action.admin.BuildAgentAction;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
-import org.jmock.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 public class BuildAgentActionTest
     extends AbstractActionTest
 {
     private BuildAgentAction action;
 
-    private Mock continuumMock;
+    private Continuum continuum;
 
-    private Mock configurationServiceMock;
+    private ConfigurationService configurationService;
 
-    private Mock distributedBuildManagerMock;
+    private DistributedBuildManager distributedBuildManager;
 
     private List<BuildAgentConfiguration> buildAgents;
 
@@ -49,12 +50,12 @@ public class BuildAgentActionTest
     {
         super.setUp();
 
-        action = new BuildAgentAction();
-        continuumMock = mock( Continuum.class );
-        configurationServiceMock = mock( ConfigurationService.class );
-        distributedBuildManagerMock = mock( DistributedBuildManager.class );
+        continuum = mock( Continuum.class );
+        configurationService = mock( ConfigurationService.class );
+        distributedBuildManager = mock( DistributedBuildManager.class );
 
-        action.setContinuum( (Continuum) continuumMock.proxy() );
+        action = new BuildAgentAction();
+        action.setContinuum( continuum );
 
         buildAgents = new ArrayList<BuildAgentConfiguration>();
     }
@@ -62,20 +63,18 @@ public class BuildAgentActionTest
     public void testAddBuildAgent()
         throws Exception
     {
-        continuumMock.expects( once() ).method( "getConfiguration" ).will( returnValue(
-            configurationServiceMock.proxy() ) );
-        configurationServiceMock.expects( atLeastOnce() ).method( "getBuildAgents" ).will( returnValue( buildAgents ) );
-        configurationServiceMock.expects( once() ).method( "addBuildAgent" ).isVoid();
-        configurationServiceMock.expects( once() ).method( "store" ).isVoid();
-        continuumMock.expects( once() ).method( "getDistributedBuildManager" ).will( returnValue(
-            distributedBuildManagerMock.proxy() ) );
-        distributedBuildManagerMock.expects( once() ).method( "update" ).isVoid();
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        when( continuum.getDistributedBuildManager() ).thenReturn( distributedBuildManager );
 
         BuildAgentConfiguration buildAgent = new BuildAgentConfiguration();
         buildAgent.setUrl( "http://sample/agent" );
-
         action.setBuildAgent( buildAgent );
         action.save();
+
+        verify( configurationService ).addBuildAgent( any( BuildAgentConfiguration.class ) );
+        verify( configurationService ).store();
+        verify( distributedBuildManager ).update( any( BuildAgentConfiguration.class ) );
     }
 
     public void testDeleteBuildAgent()
@@ -83,19 +82,11 @@ public class BuildAgentActionTest
     {
         List<BuildAgentGroupConfiguration> buildAgentGroups = new ArrayList<BuildAgentGroupConfiguration>();
 
-        continuumMock.expects( atLeastOnce() ).method( "getDistributedBuildManager" ).will( returnValue(
-            distributedBuildManagerMock.proxy() ) );
-        distributedBuildManagerMock.expects( once() ).method( "isBuildAgentBusy" ).will( returnValue( false ) );
-        continuumMock.expects( once() ).method( "getConfiguration" ).will( returnValue(
-            configurationServiceMock.proxy() ) );
-        configurationServiceMock.expects( atLeastOnce() ).method( "getBuildAgentGroups" ).will( returnValue(
-            buildAgentGroups ) );
-        configurationServiceMock.expects( atLeastOnce() ).method( "getBuildAgents" ).will( returnValue( buildAgents ) );
-
-        distributedBuildManagerMock.expects( never() ).method( "removeDistributedBuildQueueOfAgent" ).isVoid();
-        distributedBuildManagerMock.expects( never() ).method( "reload" ).isVoid();
-        configurationServiceMock.expects( never() ).method( "removeBuildAgent" ).isVoid();
-        configurationServiceMock.expects( never() ).method( "store" ).isVoid();
+        when( continuum.getDistributedBuildManager() ).thenReturn( distributedBuildManager );
+        when( distributedBuildManager.isBuildAgentBusy( anyString() ) ).thenReturn( false );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgentGroups() ).thenReturn( buildAgentGroups );
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
 
         BuildAgentConfiguration buildAgent = new BuildAgentConfiguration();
         buildAgent.setUrl( "http://sample/agent" );
@@ -103,5 +94,10 @@ public class BuildAgentActionTest
         action.setConfirmed( true );
         action.setBuildAgent( buildAgent );
         action.delete();
+
+        verify( distributedBuildManager, never() ).removeDistributedBuildQueueOfAgent( anyString() );
+        verify( distributedBuildManager, never() ).reload();
+        verify( configurationService, never() ).removeBuildAgent( any( BuildAgentConfiguration.class ) );
+        verify( configurationService, never() ).store();
     }
 }

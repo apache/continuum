@@ -25,10 +25,10 @@ import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.jmock.MockObjectTestCase;
+import junit.framework.TestCase;
 
 public abstract class AbstractActionTest
-    extends MockObjectTestCase
+    extends TestCase
 {
     protected void setUp()
         throws Exception

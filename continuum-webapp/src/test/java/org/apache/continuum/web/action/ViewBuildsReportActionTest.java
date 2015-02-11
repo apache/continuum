@@ -26,18 +26,20 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.jmock.Mock;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 public class ViewBuildsReportActionTest
     extends AbstractActionTest
 {
     private ViewBuildsReportActionStub action;
 
-    private Mock continuum;
+    private Continuum continuum;
 
     private List<BuildResult> buildResults = new ArrayList<BuildResult>();
 
@@ -47,9 +49,10 @@ public class ViewBuildsReportActionTest
     {
         super.setUp();
 
-        action = new ViewBuildsReportActionStub();
         continuum = mock( Continuum.class );
-        action.setContinuum( (Continuum) continuum.proxy() );
+
+        action = new ViewBuildsReportActionStub();
+        action.setContinuum( continuum );
     }
 
     public void testInvalidRowCount()
@@ -60,7 +63,6 @@ public class ViewBuildsReportActionTest
         assertEquals( Action.INPUT, result );
         assertTrue( action.hasFieldErrors() );
         assertFalse( action.hasActionErrors() );
-        continuum.verify();
     }
 
     public void testEndDateBeforeStartDate()
@@ -72,7 +74,6 @@ public class ViewBuildsReportActionTest
         assertEquals( Action.INPUT, result );
         assertTrue( action.hasFieldErrors() );
         assertFalse( action.hasActionErrors() );
-        continuum.verify();
     }
 
     public void testMalformedStartDate()
@@ -83,7 +84,6 @@ public class ViewBuildsReportActionTest
         assertEquals( Action.ERROR, result );
         assertTrue( action.hasActionErrors() );
         assertFalse( action.hasFieldErrors() );
-        continuum.verify();
     }
 
     public void testMalformedEndDate()
@@ -94,29 +94,28 @@ public class ViewBuildsReportActionTest
         assertEquals( Action.ERROR, result );
         assertTrue( action.hasActionErrors() );
         assertFalse( action.hasFieldErrors() );
-        continuum.verify();
     }
 
     public void testStartDateSameWithEndDate()
     {
-        continuum.expects( once() ).method( "getBuildResultsInRange" ).will( returnValue( buildResults ) );
+        when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
+                                                anyString() ) ).thenReturn( buildResults );
 
         action.setStartDate( "04/25/2010" );
         action.setEndDate( "04/25/2010" );
         String result = action.execute();
 
         assertSuccessResult( result );
-        continuum.verify();
     }
 
     public void testEndDateWithNoStartDate()
     {
-        continuum.expects( once() ).method( "getBuildResultsInRange" ).will( returnValue( buildResults ) );
+        when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
+                                                anyString() ) ).thenReturn( buildResults );
         action.setEndDate( "04/25/2010" );
         String result = action.execute();
 
         assertSuccessResult( result );
-        continuum.verify();
     }
 
     public void testExportToCsv()
@@ -127,7 +126,8 @@ public class ViewBuildsReportActionTest
 
         List<BuildResult> results = createBuildResult( cal.getTimeInMillis() );
 
-        continuum.expects( once() ).method( "getBuildResultsInRange" ).will( returnValue( results ) );
+        when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
+                                                anyString() ) ).thenReturn( results );
         action.setProjectGroupId( 0 );
         action.setBuildStatus( 0 );
         action.setStartDate( "" );
@@ -138,7 +138,6 @@ public class ViewBuildsReportActionTest
 
         assertEquals( "send-file", result );
         assertFileContentsEqual( IOUtils.toString( action.getInputStream() ), cal.getTime().toString() );
-        continuum.verify();
     }
 
     private void assertSuccessResult( String result )

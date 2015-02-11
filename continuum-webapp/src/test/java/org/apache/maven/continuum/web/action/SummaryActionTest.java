@@ -29,7 +29,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.stub.SummaryActionStub;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
-import org.jmock.Mock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,32 +36,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.Mockito.*;
+
 public class SummaryActionTest
     extends AbstractActionTest
 {
     private SummaryActionStub action;
 
-    private Mock continuum;
+    private Continuum continuum;
 
-    private Mock configurationService;
+    private ConfigurationService configurationService;
 
-    private Mock buildsManager;
+    private BuildsManager buildsManager;
 
     protected void setUp()
         throws Exception
     {
         super.setUp();
 
-        action = new SummaryActionStub();
-
         continuum = mock( Continuum.class );
-
         configurationService = mock( ConfigurationService.class );
-
         buildsManager = mock( BuildsManager.class );
 
-        action.setContinuum( (Continuum) continuum.proxy() );
-        action.setParallelBuildsManager( (BuildsManager) buildsManager.proxy() );
+        action = new SummaryActionStub();
+        action.setContinuum( continuum );
+        action.setParallelBuildsManager( buildsManager );
     }
 
     public void testLatestBuildIdWhenCurrentlyBuildingInDistributedBuild()
@@ -72,20 +70,16 @@ public class SummaryActionTest
         Map<Integer, BuildResult> buildResults = createBuildResults( 0, ContinuumProjectState.OK );
         Map<Integer, BuildResult> buildResultsInSuccess = new HashMap<Integer, BuildResult>();
 
-        continuum.expects( once() ).method( "getProjectsInGroup" ).will( returnValue( projectsInGroup ) );
-        continuum.expects( once() ).method( "getLatestBuildResults" ).will( returnValue( buildResults ) );
-        continuum.expects( once() ).method( "getBuildResultsInSuccess" ).will( returnValue( buildResultsInSuccess ) );
+        when( continuum.getProjectsInGroup( anyInt() ) ).thenReturn( projectsInGroup );
+        when( continuum.getLatestBuildResults( anyInt() ) ).thenReturn( buildResults );
+        when( continuum.getBuildResultsInSuccess( anyInt() ) ).thenReturn( buildResultsInSuccess );
+        when( buildsManager.isInAnyBuildQueue( anyInt() ) ).thenReturn( false );
+        when( buildsManager.isInPrepareBuildQueue( anyInt() ) ).thenReturn( false );
+        when( buildsManager.isInAnyCheckoutQueue( anyInt() ) ).thenReturn( false );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
 
-        buildsManager.expects( once() ).method( "isInAnyBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInPrepareBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInAnyCheckoutQueue" ).will( returnValue( false ) );
-
-        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue(
-            (ConfigurationService) configurationService.proxy() ) );
-        configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( true ) );
-
-        action.execute();
-        continuum.verify();
+        action.execute(); // expected result?
 
         List<ProjectSummary> projects = action.getProjects();
 
@@ -103,20 +97,16 @@ public class SummaryActionTest
         Map<Integer, BuildResult> buildResults = createBuildResults( 1, ContinuumProjectState.OK );
         Map<Integer, BuildResult> buildResultsInSuccess = new HashMap<Integer, BuildResult>();
 
-        continuum.expects( once() ).method( "getProjectsInGroup" ).will( returnValue( projectsInGroup ) );
-        continuum.expects( once() ).method( "getLatestBuildResults" ).will( returnValue( buildResults ) );
-        continuum.expects( once() ).method( "getBuildResultsInSuccess" ).will( returnValue( buildResultsInSuccess ) );
+        when( continuum.getProjectsInGroup( anyInt() ) ).thenReturn( projectsInGroup );
+        when( continuum.getLatestBuildResults( anyInt() ) ).thenReturn( buildResults );
+        when( continuum.getBuildResultsInSuccess( anyInt() ) ).thenReturn( buildResultsInSuccess );
+        when( buildsManager.isInAnyBuildQueue( anyInt() ) ).thenReturn( false );
+        when( buildsManager.isInPrepareBuildQueue( anyInt() ) ).thenReturn( false );
+        when( buildsManager.isInAnyCheckoutQueue( anyInt() ) ).thenReturn( false );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
 
-        buildsManager.expects( once() ).method( "isInAnyBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInPrepareBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInAnyCheckoutQueue" ).will( returnValue( false ) );
-
-        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue(
-            (ConfigurationService) configurationService.proxy() ) );
-        configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( true ) );
-
-        action.execute();
-        continuum.verify();
+        action.execute();  // expected result?
 
         List<ProjectSummary> projects = action.getProjects();
 
@@ -134,20 +124,16 @@ public class SummaryActionTest
         Map<Integer, BuildResult> buildResults = createBuildResults( 1, ContinuumProjectState.BUILDING );
         Map<Integer, BuildResult> buildResultsInSuccess = new HashMap<Integer, BuildResult>();
 
-        continuum.expects( once() ).method( "getProjectsInGroup" ).will( returnValue( projectsInGroup ) );
-        continuum.expects( once() ).method( "getLatestBuildResults" ).will( returnValue( buildResults ) );
-        continuum.expects( once() ).method( "getBuildResultsInSuccess" ).will( returnValue( buildResultsInSuccess ) );
+        when( continuum.getProjectsInGroup( anyInt() ) ).thenReturn( projectsInGroup );
+        when( continuum.getLatestBuildResults( anyInt() ) ).thenReturn( buildResults );
+        when( continuum.getBuildResultsInSuccess( anyInt() ) ).thenReturn( buildResultsInSuccess );
+        when( buildsManager.isInAnyBuildQueue( anyInt() ) ).thenReturn( false );
+        when( buildsManager.isInPrepareBuildQueue( anyInt() ) ).thenReturn( false );
+        when( buildsManager.isInAnyCheckoutQueue( anyInt() ) ).thenReturn( false );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( false );
 
-        buildsManager.expects( once() ).method( "isInAnyBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInPrepareBuildQueue" ).will( returnValue( false ) );
-        buildsManager.expects( once() ).method( "isInAnyCheckoutQueue" ).will( returnValue( false ) );
-
-        continuum.expects( once() ).method( "getConfiguration" ).will( returnValue(
-            (ConfigurationService) configurationService.proxy() ) );
-        configurationService.expects( once() ).method( "isDistributedBuildEnabled" ).will( returnValue( false ) );
-
-        action.execute();
-        continuum.verify();
+        action.execute();  // expected result?
 
         List<ProjectSummary> projects = action.getProjects();
 

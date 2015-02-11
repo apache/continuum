@@ -24,13 +24,14 @@ import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.web.action.stub.AddMavenProjectStub;
-import org.jmock.Mock;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Verifies {@link org.apache.maven.continuum.web.action.AddMavenProjectAction}.
@@ -40,18 +41,17 @@ public class AddMavenProjectActionTest
 {
     private AddMavenProjectStub action;
 
-    private Mock requestMock;
+    private HttpServletRequest request;
 
     public void setUp()
         throws Exception
     {
         super.setUp();
 
-        action = new AddMavenProjectStub();
+        request = mock( HttpServletRequest.class );
 
-        // TODO: upgrade to generics-based mocking
-        requestMock = new Mock( HttpServletRequest.class );
-        action.setServletRequest( (HttpServletRequest) requestMock.proxy() );
+        action = new AddMavenProjectStub();
+        action.setServletRequest( request );
 
     }
 
@@ -71,11 +71,11 @@ public class AddMavenProjectActionTest
         action.setPomUrl( urlToFetch );
         action.setScmUsername( username );
         action.setScmPassword( password );
-        requestMock.expects( once() ).method( "getCharacterEncoding" ).will( returnValue( encoding ) );
+
+        when( request.getCharacterEncoding() ).thenReturn( encoding );
 
         String result = action.execute();
-
-        requestMock.verify();
+        
         assertEquals( "action should have succeeded", Action.SUCCESS, result );
 
         URL builtUrl = new URL( action.getPom() );

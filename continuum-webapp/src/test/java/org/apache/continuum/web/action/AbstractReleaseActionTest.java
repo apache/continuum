@@ -26,20 +26,21 @@ import org.apache.continuum.web.action.stub.ReleaseActionStub;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Profile;
-import org.jmock.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.mockito.Mockito.*;
 
 public class AbstractReleaseActionTest
     extends AbstractActionTest
 {
     private ReleaseActionStub action;
 
-    private Mock continuumMock;
+    private Continuum continuum;
 
-    private Mock configurationServiceMock;
+    private ConfigurationService configurationService;
 
     private String defaultBuildagentUrl = "http://localhost:8181/continuum-buildagent/xmlrpc";
 
@@ -48,8 +49,8 @@ public class AbstractReleaseActionTest
     {
         super.setUp();
 
-        continuumMock = mock( Continuum.class );
-        configurationServiceMock = mock( ConfigurationService.class );
+        continuum = mock( Continuum.class );
+        configurationService = mock( ConfigurationService.class );
 
         Profile profile = new Profile();
         profile.setBuildAgentGroup( "BUILDAGENT_GROUP" );
@@ -57,7 +58,7 @@ public class AbstractReleaseActionTest
         action = new ReleaseActionStub();
         action.setProfile( profile );
         action.setDefaultBuildagent( defaultBuildagentUrl );
-        action.setContinuum( (Continuum) continuumMock.proxy() );
+        action.setContinuum( continuum );
     }
 
     public void testGetEnvironmentsDefaultAgentInGroup()
@@ -67,10 +68,8 @@ public class AbstractReleaseActionTest
         buildAgentGroup.addBuildAgent( new BuildAgentConfiguration( defaultBuildagentUrl, "Default Build Agent",
                                                                     true ) );
 
-        continuumMock.expects( atLeastOnce() ).method( "getConfiguration" ).will( returnValue(
-            configurationServiceMock.proxy() ) );
-        configurationServiceMock.expects( atLeastOnce() ).method( "getBuildAgentGroup" ).will( returnValue(
-            buildAgentGroup ) );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgentGroup( anyString() ) ).thenReturn( buildAgentGroup );
 
         action.getEnvironments();
         Map<String, String> envVars = action.getEnvironmentVariables();
@@ -85,10 +84,8 @@ public class AbstractReleaseActionTest
     {
         BuildAgentGroupConfiguration buildAgentGroup = createBuildAgentGroupConfiguration( true );
 
-        continuumMock.expects( atLeastOnce() ).method( "getConfiguration" ).will( returnValue(
-            configurationServiceMock.proxy() ) );
-        configurationServiceMock.expects( atLeastOnce() ).method( "getBuildAgentGroup" ).will( returnValue(
-            buildAgentGroup ) );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgentGroup( anyString() ) ).thenReturn( buildAgentGroup );
 
         action.getEnvironments();
         Map<String, String> envVars = action.getEnvironmentVariables();
@@ -105,10 +102,8 @@ public class AbstractReleaseActionTest
         buildAgentGroup.addBuildAgent( new BuildAgentConfiguration( defaultBuildagentUrl, "Default Build Agent",
                                                                     false ) );
 
-        continuumMock.expects( atLeastOnce() ).method( "getConfiguration" ).will( returnValue(
-            configurationServiceMock.proxy() ) );
-        configurationServiceMock.expects( atLeastOnce() ).method( "getBuildAgentGroup" ).will( returnValue(
-            buildAgentGroup ) );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgentGroup( anyString() ) ).thenReturn( buildAgentGroup );
 
         action.getEnvironments();
         Map<String, String> envVars = action.getEnvironmentVariables();
@@ -124,10 +119,8 @@ public class AbstractReleaseActionTest
     {
         BuildAgentGroupConfiguration buildAgentGroup = new BuildAgentGroupConfiguration();
 
-        continuumMock.expects( atLeastOnce() ).method( "getConfiguration" ).will( returnValue(
-            configurationServiceMock.proxy() ) );
-        configurationServiceMock.expects( atLeastOnce() ).method( "getBuildAgentGroup" ).will( returnValue(
-            buildAgentGroup ) );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgentGroup( anyString() ) ).thenReturn( buildAgentGroup );
 
         action.getEnvironments();
         Map<String, String> envVars = action.getEnvironmentVariables();

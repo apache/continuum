@@ -24,11 +24,12 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.stub.AddProjectActionStub;
-import org.jmock.Mock;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Test for {@link AddProjectAction}
@@ -40,7 +41,7 @@ public class AddProjectActionTest
 {
     private AddProjectActionStub action;
 
-    private Mock continuumMock;
+    private Continuum continuum;
 
     private static final String VALID_NAME_CHARACTER = "abcABC123whitespaces_.:-";
 
@@ -57,15 +58,20 @@ public class AddProjectActionTest
     {
         super.setUp();
 
+        continuum = mock( Continuum.class );
+
         action = new AddProjectActionStub();
-        continuumMock = new Mock( Continuum.class );
-        action.setContinuum( (Continuum) continuumMock.proxy() );
+        action.setContinuum( continuum );
 
         Collection<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
         ProjectGroup projectGroup = new ProjectGroup();
         projectGroups.add( projectGroup );
 
         action.setProjectGroups( projectGroups );
+
+        List<Project> projects = createProjectList();
+        when( continuum.getProjects() ).thenReturn( projects );
+        when( continuum.addProject( any( Project.class ), anyString(), anyInt(), anyInt() ) ).thenReturn( 3 );
     }
 
     public void testAddProjectNullValues()
@@ -88,10 +94,6 @@ public class AddProjectActionTest
     {
         String scmUrl = "scm:svn:http://project/scm/url/test/build.xml";
 
-        List<Project> projects = createProjectList();
-        continuumMock.expects( once() ).method( "getProjects" ).will( returnValue( projects ) );
-        continuumMock.expects( once() ).method( "addProject" ).will( returnValue( 3 ) );
-
         action.setProjectName( "Ant Test Project" );
         action.setProjectVersion( "1.0-SNAPSHOT" );
         action.setProjectScmUrl( scmUrl );
@@ -101,17 +103,11 @@ public class AddProjectActionTest
 
         action.validate();
         action.add();
-        continuumMock.verify();
-
     }
 
     public void testAddAntProjectWithValidValues()
         throws Exception
     {
-        List<Project> projects = createProjectList();
-        continuumMock.expects( once() ).method( "getProjects" ).will( returnValue( projects ) );
-        continuumMock.expects( once() ).method( "addProject" ).will( returnValue( 3 ) );
-
         action.setProjectName( VALID_NAME_CHARACTER );
         action.setProjectDescription( VALID_DESCRIPTION_CHARACTER );
         action.setProjectVersion( VALID_VERSION_CHARACTER );
@@ -130,8 +126,6 @@ public class AddProjectActionTest
 
         // add
         action.add();
-
-        continuumMock.verify();
     }
 
     /**
@@ -144,10 +138,6 @@ public class AddProjectActionTest
     {
         String scmUrl = "scm:svn:http://project/scm/url/test/run.sh";
 
-        List<Project> projects = createProjectList();
-        continuumMock.expects( once() ).method( "getProjects" ).will( returnValue( projects ) );
-        continuumMock.expects( once() ).method( "addProject" ).will( returnValue( 3 ) );
-
         action.setProjectName( "Shell Test Project" );
         action.setProjectVersion( "1.0-SNAPSHOT" );
         action.setProjectScmUrl( scmUrl );
@@ -157,16 +147,11 @@ public class AddProjectActionTest
 
         action.validate();
         action.add();
-        continuumMock.verify();
     }
 
     public void testAddShellProjectWithValidValues()
         throws Exception
     {
-        List<Project> projects = createProjectList();
-        continuumMock.expects( once() ).method( "getProjects" ).will( returnValue( projects ) );
-        continuumMock.expects( once() ).method( "addProject" ).will( returnValue( 3 ) );
-
         action.setProjectName( VALID_NAME_CHARACTER );
         action.setProjectDescription( VALID_DESCRIPTION_CHARACTER );
         action.setProjectVersion( VALID_VERSION_CHARACTER );
@@ -185,8 +170,6 @@ public class AddProjectActionTest
 
         // add
         action.add();
-
-        continuumMock.verify();
     }
 
     private List<Project> createProjectList()
