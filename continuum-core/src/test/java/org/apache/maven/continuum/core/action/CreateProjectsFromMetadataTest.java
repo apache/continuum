@@ -19,7 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -34,22 +33,25 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.junit.Before;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
 public class CreateProjectsFromMetadataTest
-    extends TestCase
 {
     private CreateProjectsFromMetadataAction action;
 
     private ContinuumProjectBuildingResult result;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
         result = new ContinuumProjectBuildingResult();
