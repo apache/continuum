@@ -27,6 +27,8 @@ import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.installation.InstallationException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
@@ -39,10 +41,8 @@ import org.apache.maven.continuum.xmlrpc.server.ContinuumServiceImpl;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
+import org.mockito.ArgumentCaptor;
+import org.mockito.internal.matchers.CapturesArguments;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,12 +50,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.Mockito.*;
+
 public class ContinuumServiceImplTest
     extends PlexusInSpringTestCase
 {
     private ContinuumServiceImpl continuumService;
-
-    private Mockery context;
 
     private Continuum continuum;
 
@@ -79,17 +79,14 @@ public class ContinuumServiceImplTest
     {
         super.setUp();
 
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
-
-        distributedReleaseManager = context.mock( DistributedReleaseManager.class );
-        releaseManager = context.mock( ContinuumReleaseManager.class );
-        configurationService = context.mock( ConfigurationService.class );
-        distributedBuildManager = context.mock( DistributedBuildManager.class );
-        roleManager = context.mock( RoleManager.class );
+        distributedReleaseManager = mock( DistributedReleaseManager.class );
+        releaseManager = mock( ContinuumReleaseManager.class );
+        configurationService = mock( ConfigurationService.class );
+        distributedBuildManager = mock( DistributedBuildManager.class );
+        roleManager = mock( RoleManager.class );
 
         continuumService = new ContinuumServiceImplStub();
-        continuum = context.mock( Continuum.class );
+        continuum = mock( Continuum.class );
         continuumService.setContinuum( continuum );
         continuumService.setDistributedBuildManager( distributedBuildManager );
         continuumService.setRoleManager( roleManager );
@@ -112,65 +109,34 @@ public class ContinuumServiceImplTest
         params.put( "scm-tag", "" );
         params.put( "scm-tagbase", "" );
 
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getProject( 1 );
-                will( returnValue( project ) );
-
-                one( continuum ).getConfiguration();
-                will( returnValue( configurationService ) );
-
-                one( configurationService ).isDistributedBuildEnabled();
-                will( returnValue( true ) );
-
-                one( continuum ).getDistributedReleaseManager();
-                will( returnValue( distributedReleaseManager ) );
-
-                one( distributedReleaseManager ).getReleasePluginParameters( 1, "pom.xml" );
-                will( returnValue( params ) );
-
-                one( continuum ).getReleaseManager();
-                will( returnValue( releaseManager ) );
-
-                one( releaseManager ).sanitizeTagName( "scm:svn:http://svn.test.org/repository/project",
-                                                       "continuum-test-1.0" );
-            }
-        } );
+        when( continuum.getProject( 1 ) ).thenReturn( project );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
+        when( continuum.getDistributedReleaseManager() ).thenReturn( distributedReleaseManager );
+        when( distributedReleaseManager.getReleasePluginParameters( 1, "pom.xml" ) ).thenReturn( params );
+        when( continuum.getReleaseManager() ).thenReturn( releaseManager );
 
         Map<String, Object> releaseParams = continuumService.getReleasePluginParameters( 1 );
         assertEquals( "continuum-test-1.0", releaseParams.get( "scm-tag" ) );
         assertEquals( "http://svn.test.org/repository/project/tags", releaseParams.get( "scm-tagbase" ) );
 
-        context.assertIsSatisfied();
+        verify( releaseManager ).sanitizeTagName( "scm:svn:http://svn.test.org/repository/project",
+                                                  "continuum-test-1.0" );
     }
 
     public void testGetListenerWithDistributedBuilds()
         throws Exception
     {
-        final Map map = getListenerMap();
+        Map map = getListenerMap();
 
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getProject( 1 );
-                will( returnValue( project ) );
-
-                one( continuum ).getConfiguration();
-                will( returnValue( configurationService ) );
-
-                one( configurationService ).isDistributedBuildEnabled();
-                will( returnValue( true ) );
-
-                one( continuum ).getDistributedReleaseManager();
-                will( returnValue( distributedReleaseManager ) );
-
-                one( distributedReleaseManager ).getListener( "releaseId-1" );
-                will( returnValue( map ) );
-            }
-        } );
+        when( continuum.getProject( 1 ) ).thenReturn( project );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
+        when( continuum.getDistributedReleaseManager() ).thenReturn( distributedReleaseManager );
+        when( distributedReleaseManager.getListener( "releaseId-1" ) ).thenReturn( map );
 
         ReleaseListenerSummary summary = continuumService.getListener( 1, "releaseId-1" );
+
         assertNotNull( summary );
         assertEquals( "incomplete-phase", summary.getPhases().get( 0 ) );
         assertEquals( "completed-phase", summary.getCompletedPhases().get( 0 ) );
@@ -210,20 +176,12 @@ public class ContinuumServiceImplTest
         BuildDefinition buildDef = createBuildDefinition();
         buildDef.setId( 1 );
 
-        context.checking( new Expectations()
-        {
-            {
-                atLeast( 1 ).of( continuum ).getProject( project.getId() );
-                will( returnValue( project ) );
-
-                atLeast( 1 ).of( continuum ).getProjectGroupByProjectId( project.getId() );
-                will( returnValue( projectGroup ) );
-            }
-        } );
+        when( continuum.getProject( project.getId() ) ).thenReturn( project );
+        when( continuum.getProjectGroupByProjectId( project.getId() ) ).thenReturn( projectGroup );
 
         int result = continuumService.buildProject( project.getId(), buildDef.getId(), buildTrigger );
-        assertEquals( 0, result );
 
+        assertEquals( 0, result );
     }
 
     public void testGetProjectScmRootByProjectGroup()
@@ -249,19 +207,12 @@ public class ContinuumServiceImplTest
         scmRoot.setProjectGroup( projectGroup );
         scmRoots.add( scmRoot );
 
-        context.checking( new Expectations()
-        {
-            {
-                atLeast( 1 ).of( continuum ).getProjectScmRootByProjectGroup( projectGroup.getId() );
-                will( returnValue( scmRoots ) );
-
-                atLeast( 1 ).of( continuum ).getProjectGroup( projectGroup.getId() );
-                will( returnValue( projectGroup ) );
-            }
-        } );
+        when( continuum.getProjectScmRootByProjectGroup( projectGroup.getId() ) ).thenReturn( scmRoots );
+        when( continuum.getProjectGroup( projectGroup.getId() ) ).thenReturn( projectGroup );
 
         List<org.apache.maven.continuum.xmlrpc.project.ProjectScmRoot> projectScmRoots =
             continuumService.getProjectScmRootByProjectGroup( projectGroup.getId() );
+
         assertEquals( 2, projectScmRoots.size() );
         assertEquals( 1, projectScmRoots.get( 0 ).getState() );
         assertEquals( 2, projectScmRoots.get( 1 ).getState() );
@@ -282,16 +233,11 @@ public class ContinuumServiceImplTest
         scmRoot.setScmRootAddress( "address1" );
         scmRoot.setProjectGroup( projectGroup );
 
-        context.checking( new Expectations()
-        {
-            {
-                atLeast( 1 ).of( continuum ).getProjectScmRootByProject( projectId );
-                will( returnValue( scmRoot ) );
-            }
-        } );
+        when( continuum.getProjectScmRootByProject( projectId ) ).thenReturn( scmRoot );
 
         org.apache.maven.continuum.xmlrpc.project.ProjectScmRoot projectScmRoot =
             continuumService.getProjectScmRootByProject( projectId );
+
         assertNotNull( projectScmRoot );
         assertEquals( 1, projectScmRoot.getState() );
         assertEquals( 3, projectScmRoot.getOldState() );
@@ -301,38 +247,22 @@ public class ContinuumServiceImplTest
     public void testGetBuildAgentUrl()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getConfiguration();
-                will( returnValue( configurationService ) );
+        String expectedUrl = "http://localhost:8181/continuum-buildagent/xmlrpc";
 
-                one( configurationService ).isDistributedBuildEnabled();
-                will( returnValue( true ) );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
+        when( distributedBuildManager.getBuildAgentUrl( 1, 1 ) ).thenReturn( expectedUrl );
 
-                one( distributedBuildManager ).getBuildAgentUrl( 1, 1 );
-                will( returnValue( "http://localhost:8181/continuum-buildagent/xmlrpc" ) );
-            }
-        } );
         String buildAgentUrl = continuumService.getBuildAgentUrl( 1, 1 );
-        assertEquals( "http://localhost:8181/continuum-buildagent/xmlrpc", buildAgentUrl );
 
-        context.assertIsSatisfied();
+        assertEquals( expectedUrl, buildAgentUrl );
     }
 
     public void testGetBuildAgentUrlNotSupported()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getConfiguration();
-                will( returnValue( configurationService ) );
-
-                one( configurationService ).isDistributedBuildEnabled();
-                will( returnValue( false ) );
-            }
-        } );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( false );
 
         try
         {
@@ -343,47 +273,30 @@ public class ContinuumServiceImplTest
         {
             //pass
         }
-        context.assertIsSatisfied();
     }
 
     public void testGetNonExistingBuildAgentGroup()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getConfiguration();
-                will( returnValue( configurationService ) );
+        String groupName = "Agent Group Name";
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgentGroup( groupName ) ).thenReturn( null );
 
-                one( configurationService ).getBuildAgentGroup( "Agent Group Name" );
-                will( returnValue( null ) );
-            }
-        } );
-        int result = continuumService.removeBuildAgentGroup( "Agent Group Name" );
+        int result = continuumService.removeBuildAgentGroup( groupName );
+
         assertEquals( 0, result );
-
-        context.assertIsSatisfied();
     }
 
     public void testRemoveNonExistingBuildAgentGroup()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getConfiguration();
-                will( returnValue( configurationService ) );
+        String groupName = "Agent Group Name";
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgentGroup( groupName ) ).thenReturn( null );
 
-                one( configurationService ).getBuildAgentGroup( "Agent Group Name" );
-                will( returnValue( null ) );
+        continuumService.removeBuildAgentGroup( groupName );
 
-                never( configurationService ).removeBuildAgentGroup( with( any(
-                    BuildAgentGroupConfiguration.class ) ) );
-            }
-        } );
-
-        continuumService.removeBuildAgentGroup( "Agent Group Name" );
-        context.assertIsSatisfied();
+        verify( configurationService, never() ).removeBuildAgentGroup( any( BuildAgentGroupConfiguration.class ) );
     }
 
     public void testGetBuildAgentsWithInstallations()
@@ -394,7 +307,10 @@ public class ContinuumServiceImplTest
 
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgent =
             new org.apache.continuum.configuration.BuildAgentConfiguration();
-        buildAgent.setUrl( "http://localhost:8080/xmlrpc" );
+
+        String buildAgentUrl = "http://localhost:8080/xmlrpc";
+
+        buildAgent.setUrl( buildAgentUrl );
         buildAgent.setEnabled( true );
         buildAgents.add( buildAgent );
 
@@ -416,124 +332,117 @@ public class ContinuumServiceImplTest
         buildAgentInstallation.setVarValue( "/opt/java" );
         buildAgentInstallations.add( buildAgentInstallation );
 
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getConfiguration();
-                will( returnValue( configurationService ) );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        when( distributedBuildManager.getBuildAgentPlatform( buildAgentUrl ) ).thenReturn( "Linux" );
+        when( distributedBuildManager.getAvailableInstallations( buildAgentUrl ) ).thenReturn(
+            buildAgentInstallations );
 
-                one( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                one( distributedBuildManager ).getBuildAgentPlatform( "http://localhost:8080/xmlrpc" );
-                will( returnValue( "Linux" ) );
-
-                one( distributedBuildManager ).getAvailableInstallations( "http://localhost:8080/xmlrpc" );
-                will( returnValue( buildAgentInstallations ) );
-            }
-        } );
         List<BuildAgentConfiguration> agents = continuumService.getBuildAgentsWithInstallations();
+
         assertEquals( 1, agents.size() );
         BuildAgentConfiguration agent = agents.get( 0 );
-        assertEquals( "http://localhost:8080/xmlrpc", agent.getUrl() );
+        assertEquals( buildAgentUrl, agent.getUrl() );
         assertEquals( "Linux", agent.getPlatform() );
         assertEquals( 1, agent.getInstallations().size() );
-
-        context.assertIsSatisfied();
     }
 
     public void testAddProjectGroupWithPunctuation()
         throws Exception
     {
-        final String name = "Test :: Group Name (with punctuation)";
-        final String groupId = "com.example.long-group-id";
-        final String description = "Description";
+        String name = "Test :: Group Name (with punctuation)";
+        String groupId = "com.example.long-group-id";
+        String description = "Description";
+        ProjectGroup group = createProjectGroup( name, groupId, description );
 
-        context.checking( new Expectations()
-        {
-            {
-                ProjectGroup group = createProjectGroup( name, groupId, description );
-                one( continuum ).addProjectGroup( group );
+        when( continuum.getProjectGroupByGroupId( groupId ) ).thenReturn( group );
 
-                group = createProjectGroup( name, groupId, description );
-                one( continuum ).getProjectGroupByGroupId( groupId );
-                will( returnValue( group ) );
-            }
-        } );
+        ProjectGroupSummary groupSummary = continuumService.addProjectGroup( name, groupId, description );
 
-        ProjectGroupSummary group = continuumService.addProjectGroup( name, groupId, description );
-        assertEquals( name, group.getName() );
-        assertEquals( groupId, group.getGroupId() );
-        assertEquals( description, group.getDescription() );
-
-        context.assertIsSatisfied();
+        assertEquals( name, groupSummary.getName() );
+        assertEquals( groupId, groupSummary.getGroupId() );
+        assertEquals( description, groupSummary.getDescription() );
+        verify( continuum ).addProjectGroup( group );
     }
 
     public void testEditProjectGroupWithPunctuation()
         throws Exception
     {
+        int projectGroupId = 1;
+        String origName = "name", origGroupId = "groupId", origDescription = "description";
         final String newName = "Test :: Group Name (with punctuation)";
         final String newGroupId = "com.example.long-group-id";
         final String newDescription = "Description";
-        final int projectGroupId = 1;
 
-        context.checking( new Expectations()
+        List<String> roles = Arrays.asList( "project-administrator", "project-developer", "project-user" );
+
+        ProjectGroup unsavedGroup = createProjectGroup( origName, origGroupId, origDescription );
+        ProjectGroup savedGroup = createProjectGroup( projectGroupId, origName, origGroupId, origDescription );
+        ProjectGroup editedGroup = createProjectGroup( projectGroupId, newName, newGroupId, newDescription );
+
+        when( continuum.getProjectGroupByGroupId( origGroupId ) ).thenReturn( savedGroup );
+
+        ProjectGroupSummary groupSummary = continuumService.addProjectGroup( origName, origGroupId, origDescription );
+
+        verify( continuum ).addProjectGroup( unsavedGroup );
+
+        groupSummary.setName( newName );
+        groupSummary.setGroupId( newGroupId );
+        groupSummary.setDescription( newDescription );
+
+        when( continuum.getProjectGroupWithProjects( projectGroupId ) ).thenReturn( savedGroup );
+        when( continuum.getProjectGroup( projectGroupId ) ).thenReturn( savedGroup, savedGroup, editedGroup );
+
+        continuumService.updateProjectGroup( groupSummary );
+
+        verify( continuum ).updateProjectGroup( editedGroup );
+        for ( String role : roles )
         {
-            {
-                ProjectGroup group = createProjectGroup( "name", "groupId", "description" );
-
-                one( continuum ).addProjectGroup( group );
-
-                group = createProjectGroup( projectGroupId );
-                one( continuum ).getProjectGroupByGroupId( "groupId" );
-                will( returnValue( group ) );
-
-                one( continuum ).getProjectGroupWithProjects( projectGroupId );
-                will( returnValue( group ) );
-
-                for ( String role : Arrays.asList( "project-administrator", "project-developer", "project-user" ) )
-                {
-                    one( roleManager ).updateRole( role, "name", newName );
-                }
-
-                ProjectGroup newProjectGroup = createProjectGroup( projectGroupId, newName, newGroupId,
-                                                                   newDescription );
-                one( continuum ).updateProjectGroup( newProjectGroup );
-
-                exactly( 3 ).of( continuum ).getProjectGroup( projectGroupId );
-                onConsecutiveCalls( returnValue( group ), returnValue( group ), returnValue( newProjectGroup ) );
-            }
-        } );
-
-        ProjectGroupSummary group = continuumService.addProjectGroup( "name", "groupId", "description" );
-        group.setName( newName );
-        group.setGroupId( newGroupId );
-        group.setDescription( newDescription );
-
-        continuumService.updateProjectGroup( group );
-
-        context.assertIsSatisfied();
+            verify( roleManager ).updateRole( role, origName, newName );
+        }
     }
 
     public void testInstallationEnvironmentVariableWithOtherOptions()
-        throws ContinuumException
+        throws ContinuumException, InstallationException
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( continuum ).getInstallationService();
-            }
-        } );
+        Installation target = new Installation();
+        target.setName( "name" );
+        target.setType( "envvar" );
+        target.setVarName( "JAVA_OPTS" );
+        target.setVarValue( "-XX:+CompressedOops" );
 
-        Installation installation = new Installation();
-        installation.setName( "name" );
-        installation.setType( "envvar" );
-        installation.setVarName( "JAVA_OPTS" );
-        installation.setVarValue( "-XX:+CompressedOops" );
+        org.apache.maven.continuum.model.system.Installation returned =
+            new org.apache.maven.continuum.model.system.Installation();
+        returned.setName( "name" );
+        returned.setType( "envvar" );
+        returned.setVarName( "JAVA_OPTS" );
+        returned.setVarValue( "-XX:+CompressedOops" );
 
-        continuumService.addInstallation( installation );
+        InstallationService installationService = mock( InstallationService.class );
+        when( continuum.getInstallationService() ).thenReturn( installationService );
+        // Need to return a value for the xml mapper
+        when( installationService.add( any( org.apache.maven.continuum.model.system.Installation.class ) ) ).thenReturn(
+            returned
+        );
 
-        context.assertIsSatisfied();
+        Installation marshaledResult = continuumService.addInstallation( target );
+
+        ArgumentCaptor<org.apache.maven.continuum.model.system.Installation> arg =
+            ArgumentCaptor.forClass( org.apache.maven.continuum.model.system.Installation.class );
+        verify( installationService ).add( arg.capture() );
+
+        // verify properties are correct for added installation
+        org.apache.maven.continuum.model.system.Installation added = arg.getValue();
+        assertEquals( target.getName(), added.getName() );
+        assertEquals( target.getType(), added.getType() );
+        assertEquals( target.getVarName(), added.getVarName() );
+        assertEquals( target.getVarValue(), added.getVarValue() );
+
+        // verify properties for serialized result
+        assertEquals( target.getName(), marshaledResult.getName() );
+        assertEquals( target.getType(), marshaledResult.getType() );
+        assertEquals( target.getVarName(), marshaledResult.getVarName() );
+        assertEquals( target.getVarValue(), marshaledResult.getVarValue() );
     }
 
     private static ProjectGroup createProjectGroup( String name, String groupId, String description )
@@ -551,11 +460,6 @@ public class ContinuumServiceImplTest
         ProjectGroup group = createProjectGroup( name, groupId, description );
         group.setId( projectGroupId );
         return group;
-    }
-
-    private static ProjectGroup createProjectGroup( int projectGroupId )
-    {
-        return createProjectGroup( projectGroupId, "name", "groupId", "description" );
     }
 
     private BuildDefinition createBuildDefinition()
