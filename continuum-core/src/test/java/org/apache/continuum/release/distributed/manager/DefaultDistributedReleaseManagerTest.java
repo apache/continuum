@@ -22,10 +22,8 @@ package org.apache.continuum.release.distributed.manager;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
+
+import static org.mockito.Mockito.*;
 
 /**
  * DefaultDistributedReleaseManagerTest
@@ -37,22 +35,15 @@ public class DefaultDistributedReleaseManagerTest
 
     private BuildResultDao buildResultDao;
 
-    private BuildResult buildResult;
-
-    private Mockery context;
-
     @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
 
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
-
         distributedReleaseManager = new DefaultDistributedReleaseManager();
 
-        buildResultDao = context.mock( BuildResultDao.class );
+        buildResultDao = mock( BuildResultDao.class );
         distributedReleaseManager.setBuildResultDao( buildResultDao );
     }
 
@@ -61,42 +52,26 @@ public class DefaultDistributedReleaseManagerTest
     {
         String defaultBuildagentUrl = "http://localhost:8181/continuum-buildagent/xmlrpc";
 
-        buildResult = new BuildResult();
+        BuildResult buildResult = new BuildResult();
         buildResult.setBuildUrl( defaultBuildagentUrl );
 
-        contextBuildResultDaoExpectations();
+        when( buildResultDao.getLatestBuildResultForProject( 0 ) ).thenReturn( buildResult );
 
         String returnedBuildagent = distributedReleaseManager.getDefaultBuildagent( 0 );
 
         assertNotNull( returnedBuildagent );
         assertEquals( returnedBuildagent, defaultBuildagentUrl );
-
-        context.assertIsSatisfied();
     }
 
     public void testGetDefaultBuildagentNullBuildResult()
         throws Exception
     {
-        buildResult = null;
+        BuildResult buildResult = null;
 
-        contextBuildResultDaoExpectations();
+        when( buildResultDao.getLatestBuildResultForProject( 0 ) ).thenReturn( buildResult );
 
         String returnedBuildagent = distributedReleaseManager.getDefaultBuildagent( 0 );
 
         assertNull( returnedBuildagent );
-
-        context.assertIsSatisfied();
-    }
-
-    private void contextBuildResultDaoExpectations()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                one( buildResultDao ).getLatestBuildResultForProject( 0 );
-                will( returnValue( buildResult ) );
-            }
-        } );
     }
 }
