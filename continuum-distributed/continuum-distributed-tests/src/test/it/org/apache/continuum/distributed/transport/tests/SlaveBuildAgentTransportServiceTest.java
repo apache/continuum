@@ -25,28 +25,31 @@ import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransport
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.net.URL;
 import java.util.Collections;
+
+import static org.junit.Assert.*;
 
 /**
  * SlaveBuildAgentTransportServiceTest
  */
 public class SlaveBuildAgentTransportServiceTest
-    extends TestCase
 {
     private SlaveBuildAgentTransportService slaveProxy;
 
     private BeanFactory beanFactory = new XmlBeanFactory( new ClassPathResource( "applicationContext.xml" ) );
 
+    @Before
     protected void setUp()
         throws Exception
     {
-        super.setUp();
-
         slaveProxy = new SlaveBuildAgentTransportClient( new URL( "http://localhost:9191/slave-xmlrpc" ), null, null );
     }
 
+    @Test
     public void testBuildProjects()
     {
         try
@@ -59,6 +62,7 @@ public class SlaveBuildAgentTransportServiceTest
         }
     }
 
+    @Test
     public void testGetAvailableInstallations()
     {
         try
@@ -71,6 +75,7 @@ public class SlaveBuildAgentTransportServiceTest
         }
     }
 
+    @Test
     public void testGetBuildResult()
     {
         try
@@ -83,6 +88,7 @@ public class SlaveBuildAgentTransportServiceTest
         }
     }
 
+    @Test
     public void testGetProjectCurrentlyBuilding()
     {
         try
@@ -95,6 +101,7 @@ public class SlaveBuildAgentTransportServiceTest
         }
     }
 
+    @Test
     public void testPing()
     {
         try
@@ -107,6 +114,7 @@ public class SlaveBuildAgentTransportServiceTest
         }
     }
 
+    @Test
     public void testExecuteDirectoryPurge()
     {
         try

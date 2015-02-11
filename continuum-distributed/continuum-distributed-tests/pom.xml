@@ -24,7 +24,7 @@
   <parent>
     <artifactId>continuum-distributed</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-distributed-tests</artifactId>
