@@ -24,10 +24,6 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.util.FileUtils;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +35,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests that the cleanup action works properly. This is a non-portable test, and needs a special setup to run.
@@ -58,8 +55,6 @@ public class CleanWorkingDirectoryActionTest
     private WorkingDirectoryService mockWorkingDirectoryService;
 
     private ProjectDao mockProjectDao;
-
-    private Mockery context;
 
     /**
      * Builds and returns a directory levels deep with the specified number of directories and files at each level.
@@ -107,13 +102,9 @@ public class CleanWorkingDirectoryActionTest
     public void setUp()
         throws NoSuchFieldException, IllegalAccessException
     {
-
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
-
         // Create mocks
-        mockWorkingDirectoryService = context.mock( WorkingDirectoryService.class );
-        mockProjectDao = context.mock( ProjectDao.class );
+        mockWorkingDirectoryService = mock( WorkingDirectoryService.class );
+        mockProjectDao = mock( ProjectDao.class );
 
         action = new CleanWorkingDirectoryAction();
 
@@ -140,19 +131,14 @@ public class CleanWorkingDirectoryActionTest
     public void testOutOfMemory()
         throws Exception
     {
-        final File deepTree = createFileTree( null, 10, 10, 2 );
-        context.checking( new Expectations()
-        {
-            {
-                Project p = new Project();
-                one( mockProjectDao ).getProject( 0 );
-                will( returnValue( p ) );
+        File deepTree = createFileTree( null, 10, 10, 2 );
+        Project p = new Project();
+        when( mockProjectDao.getProject( 0 ) ).thenReturn( p );
+        when( mockWorkingDirectoryService.getWorkingDirectory( p, null, new ArrayList<Project>() ) ).thenReturn(
+            deepTree );
 
-                one( mockWorkingDirectoryService ).getWorkingDirectory( p, null, new ArrayList<Project>() );
-                will( returnValue( deepTree ) );
-            }
-        } );
         action.execute( new HashMap() );
+
         assertFalse( String.format( "%s should not exist after deletion", deepTree.getPath() ), deepTree.exists() );
     }
 
@@ -170,13 +156,13 @@ public class CleanWorkingDirectoryActionTest
     {
         int size = 10;
 
-        final File tree1 = createFileTree( null, 1, 10, 0 );
+        File tree1 = createFileTree( null, 1, 10, 0 );
         assertEquals( String.format( "%s should contain %s files", tree1, size ), size, numFiles( tree1 ) );
 
-        final File tree2 = createFileTree( null, 1, 10, 0 );
+        File tree2 = createFileTree( null, 1, 10, 0 );
         assertEquals( String.format( "%s should contain %s files", tree2, size ), size, numFiles( tree2 ) );
 
-        final File symlink = new File( tree1, "tree2soft" );
+        File symlink = new File( tree1, "tree2soft" );
 
         // Create a symbolic link to second tree in first tree
         String[] symlinkCommand = { "/bin/ln", "-s", tree2.getPath(), symlink.getPath() };
@@ -190,18 +176,13 @@ public class CleanWorkingDirectoryActionTest
         assertTrue( String.format( "Symbolic link %s should have been created", symlink ), symlink.exists() );
         assertEquals( size + 1, numFiles( tree1 ) );
 
-        context.checking( new Expectations()
-        {
-            {
-                Project p = new Project();
-                one( mockProjectDao ).getProject( 0 );
-                will( returnValue( p ) );
+        Project p = new Project();
+        when( mockProjectDao.getProject( 0 ) ).thenReturn( p );
+        when( mockWorkingDirectoryService.getWorkingDirectory( p, null, new ArrayList<Project>() ) ).thenReturn(
+            tree1 );
 
-                one( mockWorkingDirectoryService ).getWorkingDirectory( p, null, new ArrayList<Project>() );
-                will( returnValue( tree1 ) );
-            }
-        } );
         action.execute( new HashMap() );
+
         assertFalse( String.format( "%s should not exist after deletion", tree1.getPath() ), tree1.exists() );
         assertTrue( String.format( "%s should exist after deletion", tree2 ), tree2.exists() );
         assertEquals( String.format( "%s should have %s files", tree2, size ), size, numFiles( tree2 ) );
@@ -236,18 +217,13 @@ public class CleanWorkingDirectoryActionTest
         assertTrue( String.format( "Hard link %s should have been created", hardlink ), hardlink.exists() );
         assertEquals( size + 1, numFiles( tree1 ) );
 
-        context.checking( new Expectations()
-        {
-            {
-                Project p = new Project();
-                one( mockProjectDao ).getProject( 0 );
-                will( returnValue( p ) );
+        Project p = new Project();
+        when( mockProjectDao.getProject( 0 ) ).thenReturn( p );
+        when( mockWorkingDirectoryService.getWorkingDirectory( p, null, new ArrayList<Project>() ) ).thenReturn(
+            tree1 );
 
-                one( mockWorkingDirectoryService ).getWorkingDirectory( p, null, new ArrayList<Project>() );
-                will( returnValue( tree1 ) );
-            }
-        } );
         action.execute( new HashMap() );
+
         assertFalse( String.format( "%s should not exist after deletion", tree1.getPath() ), tree1.exists() );
         assertTrue( String.format( "%s should exist after deletion", tree2 ), tree2.exists() );
         assertEquals( String.format( "%s should have %s files", tree2, size ), size, numFiles( tree2 ) );
