@@ -32,18 +32,15 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.*;
+
 public class DefaultContinuumWorkerTest
     extends PlexusInSpringTestCase
 {
-    private Mockery context;
 
     private ProjectDao projectDao;
 
@@ -64,15 +61,13 @@ public class DefaultContinuumWorkerTest
         throws Exception
     {
         super.setUp();
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
 
-        projectDao = context.mock( ProjectDao.class );
-        projectScmRootDao = context.mock( ProjectScmRootDao.class );
-        buildDefinitionDao = context.mock( BuildDefinitionDao.class );
-        buildResultDao = context.mock( BuildResultDao.class );
-        configurationService = context.mock( ConfigurationService.class );
-        distributedBuildManager = context.mock( DistributedBuildManager.class );
+        projectDao = mock( ProjectDao.class );
+        projectScmRootDao = mock( ProjectScmRootDao.class );
+        buildDefinitionDao = mock( BuildDefinitionDao.class );
+        buildResultDao = mock( BuildResultDao.class );
+        configurationService = mock( ConfigurationService.class );
+        distributedBuildManager = mock( DistributedBuildManager.class );
 
         worker = (DefaultContinuumWorker) lookup( ContinuumWorker.class );
         worker.setBuildDefinitionDao( buildDefinitionDao );
@@ -81,87 +76,38 @@ public class DefaultContinuumWorkerTest
         worker.setProjectScmRootDao( projectScmRootDao );
         worker.setConfigurationService( configurationService );
         worker.setDistributedBuildManager( distributedBuildManager );
+
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
+        when( distributedBuildManager.getCurrentRuns() ).thenReturn( getCurrentRuns() );
     }
 
     public void testWorkerWithStuckBuild()
         throws Exception
     {
-        recordOfStuckBuild();
+        Project project1 = getProject( 1, ContinuumProjectState.BUILDING );
+        when( projectScmRootDao.getProjectScmRoot( 1 ) ).thenReturn( getScmRoot( ContinuumProjectState.OK ) );
+        when( projectDao.getProject( 1 ) ).thenReturn( project1 );
+        when( distributedBuildManager.isProjectCurrentlyBuilding( 1, 1 ) ).thenReturn( false );
+        when( buildDefinitionDao.getBuildDefinition( 1 ) ).thenReturn( new BuildDefinition() );
+        when( projectDao.getProject( 2 ) ).thenReturn( getProject( 2, ContinuumProjectState.OK ) );
 
         worker.work();
 
-        context.assertIsSatisfied();
+        verify( buildResultDao ).addBuildResult( any( Project.class ), any( BuildResult.class ) );
+        verify( projectDao ).updateProject( project1 );
     }
 
     public void testWorkerWithStuckScm()
         throws Exception
     {
-        recordOfStuckScm();
+        ProjectScmRoot scmRootUpdating = getScmRoot( ContinuumProjectState.UPDATING );
+        when( projectScmRootDao.getProjectScmRoot( 1 ) ).thenReturn( scmRootUpdating,
+                                                                     getScmRoot( ContinuumProjectState.ERROR ) );
+        when( distributedBuildManager.isProjectCurrentlyPreparingBuild( 1, 1 ) ).thenReturn( false );
 
         worker.work();
 
-        context.assertIsSatisfied();
-    }
-
-    private void recordOfStuckBuild()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                one( configurationService ).isDistributedBuildEnabled();
-                will( returnValue( true ) );
-
-                exactly( 2 ).of( distributedBuildManager ).getCurrentRuns();
-                will( returnValue( getCurrentRuns() ) );
-
-                exactly( 2 ).of( projectScmRootDao ).getProjectScmRoot( 1 );
-                will( returnValue( getScmRoot( ContinuumProjectState.OK ) ) );
-
-                Project proj1 = getProject( 1, ContinuumProjectState.BUILDING );
-                one( projectDao ).getProject( 1 );
-                will( returnValue( proj1 ) );
-
-                one( distributedBuildManager ).isProjectCurrentlyBuilding( 1, 1 );
-                will( returnValue( false ) );
-
-                one( buildDefinitionDao ).getBuildDefinition( 1 );
-                will( returnValue( new BuildDefinition() ) );
-
-                one( buildResultDao ).addBuildResult( with( any( Project.class ) ), with( any( BuildResult.class ) ) );
-                one( projectDao ).updateProject( proj1 );
-
-                one( projectDao ).getProject( 2 );
-                will( returnValue( getProject( 2, ContinuumProjectState.OK ) ) );
-            }
-        } );
-    }
-
-    private void recordOfStuckScm()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                one( configurationService ).isDistributedBuildEnabled();
-                will( returnValue( true ) );
-
-                exactly( 2 ).of( distributedBuildManager ).getCurrentRuns();
-                will( returnValue( getCurrentRuns() ) );
-
-                ProjectScmRoot scmRootUpdating = getScmRoot( ContinuumProjectState.UPDATING );
-                one( projectScmRootDao ).getProjectScmRoot( 1 );
-                will( returnValue( scmRootUpdating ) );
-
-                one( distributedBuildManager ).isProjectCurrentlyPreparingBuild( 1, 1 );
-                will( returnValue( false ) );
-
-                one( projectScmRootDao ).updateProjectScmRoot( scmRootUpdating );
-
-                one( projectScmRootDao ).getProjectScmRoot( 1 );
-                will( returnValue( getScmRoot( ContinuumProjectState.ERROR ) ) );
-            }
-        } );
+        verify( projectScmRootDao ).updateProjectScmRoot( scmRootUpdating );
     }
 
     private List<ProjectRunSummary> getCurrentRuns()
