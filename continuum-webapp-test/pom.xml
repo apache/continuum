@@ -173,7 +173,7 @@
               <appserver.base>${project.build.directory}</appserver.base>
               <derby.system.home>${project.build.directory}</derby.system.home>
               <svn.base.url>${svn.base.url}</svn.base.url>
-              <continuum.port>${contiuum.port}</continuum.port>
+              <continuum.port>${continuum.port}</continuum.port>
               <baseUrl>${baseUrl}</baseUrl>
               <plexus.system.path>${plexus.system.path}</plexus.system.path>
             </systemProperties>
