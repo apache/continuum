@@ -39,9 +39,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.shared.release.ReleaseResult;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,16 +49,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.Mockito.*;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class DefaultContinuumTest
     extends AbstractContinuumTest
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultContinuumTest.class );
-
-    private Mockery context;
 
     private TaskQueueManager taskQueueManager;
 
@@ -74,12 +70,8 @@ public class DefaultContinuumTest
         throws Exception
     {
         super.setUp();
-
-        context = new JUnit3Mockery();
-
-        taskQueueManager = context.mock( TaskQueueManager.class );
-
-        projectDao = context.mock( ProjectDao.class );
+        taskQueueManager = mock( TaskQueueManager.class );
+        projectDao = mock( ProjectDao.class );
     }
 
     public void testContinuumConfiguration()
@@ -678,27 +670,17 @@ public class DefaultContinuumTest
         throws Exception
     {
         DefaultContinuum continuum = (DefaultContinuum) getContinuum();
-
         continuum.setTaskQueueManager( taskQueueManager );
-
         continuum.setProjectDao( projectDao );
 
-        final Project project = new Project();
+        Project project = new Project();
         project.setId( 1 );
         project.setName( "Continuum Core" );
         project.setGroupId( "org.apache.continuum" );
         project.setArtifactId( "continuum-core" );
 
-        context.checking( new Expectations()
-        {
-            {
-                one( projectDao ).getProject( 1 );
-                will( returnValue( project ) );
-
-                one( taskQueueManager ).isProjectInReleaseStage( "org.apache.continuum:continuum-core" );
-                will( returnValue( true ) );
-            }
-        } );
+        when( projectDao.getProject( 1 ) ).thenReturn( project );
+        when( taskQueueManager.isProjectInReleaseStage( "org.apache.continuum:continuum-core" ) ).thenReturn( true );
 
         try
         {
@@ -715,20 +697,16 @@ public class DefaultContinuumTest
         throws Exception
     {
         DefaultContinuum continuum = (DefaultContinuum) getContinuum();
-
         continuum.setTaskQueueManager( taskQueueManager );
-
         continuum.setProjectDao( projectDao );
 
-        final List<Project> projects = new ArrayList<Project>();
-
+        List<Project> projects = new ArrayList<Project>();
         Project project = new Project();
         project.setId( 1 );
         project.setName( "Continuum Core" );
         project.setGroupId( "org.apache.continuum" );
         project.setArtifactId( "continuum-core" );
         projects.add( project );
-
         project = new Project();
         project.setId( 2 );
         project.setName( "Continuum API" );
@@ -736,16 +714,8 @@ public class DefaultContinuumTest
         project.setArtifactId( "continuum-api" );
         projects.add( project );
 
-        context.checking( new Expectations()
-        {
-            {
-                one( projectDao ).getProjectsInGroup( 1 );
-                will( returnValue( projects ) );
-
-                one( taskQueueManager ).isProjectInReleaseStage( "org.apache.continuum:continuum-core" );
-                will( returnValue( true ) );
-            }
-        } );
+        when( projectDao.getProjectsInGroup( 1 ) ).thenReturn( projects );
+        when( taskQueueManager.isProjectInReleaseStage( "org.apache.continuum:continuum-core" ) ).thenReturn( true );
 
         try
         {
