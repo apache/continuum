@@ -43,10 +43,6 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +50,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.mockito.Mockito.*;
 
 public class DefaultDistributedBuildManagerTest
     extends PlexusInSpringTestCase
@@ -67,8 +65,6 @@ public class DefaultDistributedBuildManagerTest
     private DefaultDistributedBuildManager distributedBuildManager;
 
     private DefaultDistributedBuildManager distributedBuildManagerStub = new DefaultDistributedBuildManagerStub();
-
-    private Mockery context;
 
     private OverallDistributedBuildQueue overallDistributedBuildQueue1;
 
@@ -110,41 +106,38 @@ public class DefaultDistributedBuildManagerTest
     {
         super.setUp();
 
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
-
         distributedBuildManager = (DefaultDistributedBuildManager) lookup( DistributedBuildManager.class );
 
-        buildDefinitionDao = context.mock( BuildDefinitionDao.class );
+        buildDefinitionDao = mock( BuildDefinitionDao.class );
         distributedBuildManager.setBuildDefinitionDao( buildDefinitionDao );
         distributedBuildManagerStub.setBuildDefinitionDao( buildDefinitionDao );
 
-        buildResultDao = context.mock( BuildResultDao.class );
+        buildResultDao = mock( BuildResultDao.class );
         distributedBuildManager.setBuildResultDao( buildResultDao );
         distributedBuildManagerStub.setBuildResultDao( buildResultDao );
 
-        projectDao = context.mock( ProjectDao.class );
+        projectDao = mock( ProjectDao.class );
         distributedBuildManager.setProjectDao( projectDao );
         distributedBuildManagerStub.setProjectDao( projectDao );
 
-        projectScmRootDao = context.mock( ProjectScmRootDao.class );
+        projectScmRootDao = mock( ProjectScmRootDao.class );
         distributedBuildManager.setProjectScmRootDao( projectScmRootDao );
         distributedBuildManagerStub.setProjectScmRootDao( projectScmRootDao );
 
         distributedBuildManagerStub.setContainer( getContainer() );
 
-        configurationService = context.mock( ConfigurationService.class );
+        configurationService = mock( ConfigurationService.class );
 
         distributedBuildManager.setConfigurationService( configurationService );
         distributedBuildManagerStub.setConfigurationService( configurationService );
 
-        distributedBuildTaskQueueExecutor = (ThreadedDistributedBuildTaskQueueExecutor) context.mock(
-            ThreadedDistributedBuildTaskQueueExecutor.class, "distributed-build-project" );
+        distributedBuildTaskQueueExecutor =
+            mock( ThreadedDistributedBuildTaskQueueExecutor.class, "distributed-build-project" );
 
-        distributedBuildQueue = context.mock( TaskQueue.class, "distributed-build-queue" );
+        distributedBuildQueue = mock( TaskQueue.class, "distributed-build-queue" );
 
-        overallDistributedBuildQueue1 = context.mock( OverallDistributedBuildQueue.class, TEST_BUILD_AGENT1 );
-        overallDistributedBuildQueue2 = context.mock( OverallDistributedBuildQueue.class, TEST_BUILD_AGENT2 );
+        overallDistributedBuildQueue1 = mock( OverallDistributedBuildQueue.class, TEST_BUILD_AGENT1 );
+        overallDistributedBuildQueue2 = mock( OverallDistributedBuildQueue.class, TEST_BUILD_AGENT2 );
 
         init();
     }
@@ -190,7 +183,14 @@ public class DefaultDistributedBuildManagerTest
     {
         distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 1 ) );
 
-        recordViewQueuesAfterBuildAgentIsLost();
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        when( configurationService.getSharedSecretPassword() ).thenReturn( null );
+        when( overallDistributedBuildQueue1.getDistributedBuildTaskQueueExecutor() ).thenReturn(
+            distributedBuildTaskQueueExecutor );
+        when( distributedBuildTaskQueueExecutor.getCurrentTask() ).thenReturn( null );
+        when( overallDistributedBuildQueue1.getProjectsInQueue() ).thenReturn(
+            new ArrayList<PrepareBuildProjectsTask>() );
+        when( overallDistributedBuildQueue1.getDistributedBuildQueue() ).thenReturn( distributedBuildQueue );
 
         Map<String, List<PrepareBuildProjectsTask>> prepareBuildQueues =
             distributedBuildManager.getProjectsInPrepareBuildQueue();
@@ -204,7 +204,10 @@ public class DefaultDistributedBuildManagerTest
         assertEquals( currentPrepareBuild.size(), 0 );
         assertEquals( currentBuild.size(), 0 );
 
-        context.assertIsSatisfied();
+        verify( configurationService ).updateBuildAgent( buildAgent1 );
+        verify( configurationService ).store();
+        verify( distributedBuildQueue ).removeAll( anyList() );
+        verify( distributedBuildTaskQueueExecutor ).stop();
     }
 
     public void testDisableBuildAgentWhenUnavailableToPing()
@@ -212,11 +215,15 @@ public class DefaultDistributedBuildManagerTest
     {
         distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 1 ) );
 
-        recordDisableOfBuildAgent();
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        when( configurationService.getSharedSecretPassword() ).thenReturn( null );
 
         distributedBuildManager.isAgentAvailable( TEST_BUILD_AGENT1 );
 
-        context.assertIsSatisfied();
+        verify( configurationService ).updateBuildAgent( buildAgent1 );
+        verify( configurationService ).store();
+
+        assertFalse( "build agent should have been disabled", buildAgent1.isEnabled() );
     }
 
     public void testViewQueuesWhen2BuildAgentsAreLost()
@@ -224,7 +231,19 @@ public class DefaultDistributedBuildManagerTest
     {
         distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 2 ) );
 
-        recordViewQueuesAfter2BuildAgentsAreLost();
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        when( configurationService.getSharedSecretPassword() ).thenReturn( null );
+        when( overallDistributedBuildQueue1.getDistributedBuildTaskQueueExecutor() ).thenReturn(
+            distributedBuildTaskQueueExecutor );
+        when( overallDistributedBuildQueue2.getDistributedBuildTaskQueueExecutor() ).thenReturn(
+            distributedBuildTaskQueueExecutor );
+        when( distributedBuildTaskQueueExecutor.getCurrentTask() ).thenReturn( null );
+        when( overallDistributedBuildQueue1.getProjectsInQueue() ).thenReturn(
+            new ArrayList<PrepareBuildProjectsTask>() );
+        when( overallDistributedBuildQueue2.getProjectsInQueue() ).thenReturn(
+            new ArrayList<PrepareBuildProjectsTask>() );
+        when( overallDistributedBuildQueue1.getDistributedBuildQueue() ).thenReturn( distributedBuildQueue );
+        when( overallDistributedBuildQueue2.getDistributedBuildQueue() ).thenReturn( distributedBuildQueue );
 
         Map<String, List<PrepareBuildProjectsTask>> prepareBuildQueues =
             distributedBuildManager.getProjectsInPrepareBuildQueue();
@@ -238,7 +257,11 @@ public class DefaultDistributedBuildManagerTest
         assertEquals( currentPrepareBuild.size(), 0 );
         assertEquals( currentBuild.size(), 0 );
 
-        context.assertIsSatisfied();
+        verify( configurationService ).updateBuildAgent( buildAgent1 );
+        verify( configurationService ).updateBuildAgent( buildAgent2 );
+        verify( configurationService, times( 2 ) ).store();
+        verify( distributedBuildQueue, times( 2 ) ).removeAll( anyList() );
+        verify( distributedBuildTaskQueueExecutor, times( 2 ) ).stop();
     }
 
     public void testBuildProjectWithBuildAgentGroupWithNoCurrentBuilds()
@@ -252,7 +275,11 @@ public class DefaultDistributedBuildManagerTest
 
         BuildTrigger buildTrigger = new BuildTrigger( 1 );
 
-        recordBuildOfProjectWithBuildAgentGroupWithNoCurrentBuilds();
+        when( projectDao.getProjectWithDependencies( 1 ) ).thenReturn( project );
+        when( projectDao.getProjectWithDependencies( 2 ) ).thenReturn( project2 );
+        when( buildDefinitionDao.getBuildDefinition( 1 ) ).thenReturn( buildDefinition );
+        when( configurationService.getBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 ) ).thenReturn( buildAgentGroup );
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
 
         List<ProjectScmRoot> scmRoots = new ArrayList<ProjectScmRoot>();
         ProjectScmRoot scmRoot = new ProjectScmRoot();
@@ -270,7 +297,8 @@ public class DefaultDistributedBuildManagerTest
         distributedBuildManagerStub.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, 1, "sample",
                                                           "scmRootAddress1", 1, scmRoots );
 
-        context.assertIsSatisfied();
+        verify( overallDistributedBuildQueue1 ).getBuildAgentUrl();
+        verify( overallDistributedBuildQueue1 ).addToDistributedBuildQueue( any( Task.class ) );
     }
 
     public void testBuildProjectWithBuildAgentGroupWithCurrentBuild()
@@ -283,7 +311,11 @@ public class DefaultDistributedBuildManagerTest
 
         BuildTrigger buildTrigger = new BuildTrigger( 1 );
 
-        recordBuildOfProjectWithBuildAgentGroupWithCurrentBuild();
+        when( overallDistributedBuildQueue1.getDistributedBuildTaskQueueExecutor() ).thenReturn(
+            distributedBuildTaskQueueExecutor );
+        when( distributedBuildTaskQueueExecutor.getCurrentTask() ).thenReturn( null );
+        when( projectDao.getProjectsInGroup( 1 ) ).thenReturn( new ArrayList<Project>() );
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
 
         List<ProjectScmRoot> scmRoots = new ArrayList<ProjectScmRoot>();
         ProjectScmRoot scmRoot = new ProjectScmRoot();
@@ -301,7 +333,9 @@ public class DefaultDistributedBuildManagerTest
         distributedBuildManagerStub.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, 1, "sample",
                                                           "scmRootAddress1", 1, scmRoots );
 
-        context.assertIsSatisfied();
+        verify( overallDistributedBuildQueue1 ).getProjectsInQueue();
+        verify( overallDistributedBuildQueue1 ).getBuildAgentUrl();
+        verify( overallDistributedBuildQueue1 ).addToDistributedBuildQueue( any( Task.class ) );
     }
 
     // CONTINUUM-2494
@@ -310,7 +344,7 @@ public class DefaultDistributedBuildManagerTest
     {
         distributedBuildManagerStub.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 2 ) );
 
-        List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
+        final List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
         buildAgents.add( buildAgent2 );
 
         setUpBuildAgentGroup( buildAgents );
@@ -321,7 +355,10 @@ public class DefaultDistributedBuildManagerTest
 
         BuildTrigger buildTrigger = new BuildTrigger( 1 );
 
-        recordBuildProjectWithTheSecondBuildAgentAttachedToTheBuildAgentGroup();
+        when( projectDao.getProjectWithDependencies( 1 ) ).thenReturn( project );
+        when( buildDefinitionDao.getBuildDefinition( 1 ) ).thenReturn( buildDefinition );
+        when( configurationService.getBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 ) ).thenReturn( buildAgentGroup );
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
 
         List<ProjectScmRoot> scmRoots = new ArrayList<ProjectScmRoot>();
         ProjectScmRoot scmRoot = new ProjectScmRoot();
@@ -332,58 +369,41 @@ public class DefaultDistributedBuildManagerTest
 
         distributedBuildManagerStub.prepareBuildProjects( projectsBuildDefinitionsMap, buildTrigger, 1, "sample",
                                                           "scmRootAddress", 1, scmRoots );
+
+        verify( overallDistributedBuildQueue2 ).getBuildAgentUrl();
+        verify( overallDistributedBuildQueue2 ).addToDistributedBuildQueue( any( Task.class ) );
     }
 
     public void testGetBuildAgentPlatform()
         throws Exception
     {
         distributedBuildManager.setOverallDistributedBuildQueues( getMockOverallDistributedBuildQueues( 1 ) );
-        context.checking( new Expectations()
-        {
-            {
-                exactly( 2 ).of( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
 
-                one( configurationService ).getSharedSecretPassword();
-                will( returnValue( null ) );
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        when( configurationService.getSharedSecretPassword() ).thenReturn( null );
+        when( overallDistributedBuildQueue1.getDistributedBuildTaskQueueExecutor() ).thenReturn(
+            distributedBuildTaskQueueExecutor );
+        when( distributedBuildTaskQueueExecutor.getCurrentTask() ).thenReturn( null );
+        when( overallDistributedBuildQueue1.getProjectsInQueue() ).thenReturn(
+            new ArrayList<PrepareBuildProjectsTask>() );
+        when( overallDistributedBuildQueue1.getDistributedBuildQueue() ).thenReturn( distributedBuildQueue );
 
-                one( configurationService ).updateBuildAgent( buildAgent1 );
-                one( configurationService ).store();
-
-                exactly( 2 ).of( overallDistributedBuildQueue1 ).getDistributedBuildTaskQueueExecutor();
-                will( returnValue( distributedBuildTaskQueueExecutor ) );
-
-                one( distributedBuildTaskQueueExecutor ).getCurrentTask();
-                will( returnValue( null ) );
-
-                one( overallDistributedBuildQueue1 ).getProjectsInQueue();
-                will( returnValue( new ArrayList<PrepareBuildProjectsTask>() ) );
-
-                one( overallDistributedBuildQueue1 ).getDistributedBuildQueue();
-                will( returnValue( distributedBuildQueue ) );
-
-                one( distributedBuildQueue ).removeAll( new ArrayList<PrepareBuildProjectsTask>() );
-
-                one( distributedBuildTaskQueueExecutor ).stop();
-            }
-        } );
         assertEquals( distributedBuildManager.getBuildAgentPlatform( TEST_BUILD_AGENT1 ), "" );
-        context.assertIsSatisfied();
+
+        verify( configurationService ).updateBuildAgent( buildAgent1 );
+        verify( configurationService ).store();
+        verify( distributedBuildQueue ).removeAll( anyList() );
+        verify( distributedBuildTaskQueueExecutor ).stop();
     }
 
     public void testBuildAgentIsAvailable()
         throws Exception
     {
         assertTrue( distributedBuildManagerStub.isAgentAvailable( TEST_BUILD_AGENT1 ) );
-        context.checking( new Expectations()
-        {
-            {
-                never( configurationService ).getBuildAgents();
-                never( configurationService ).updateBuildAgent( buildAgent1 );
-                never( configurationService ).store();
-            }
-        } );
-        context.assertIsSatisfied();
+
+        verify( configurationService, never() ).getBuildAgents();
+        verify( configurationService, never() ).updateBuildAgent( buildAgent1 );
+        verify( configurationService, never() ).store();
     }
 
     public void testCancelBuildStuckUpdate()
@@ -391,9 +411,14 @@ public class DefaultDistributedBuildManagerTest
     {
         distributedBuildManagerStub.setCurrentRuns( getCurrentRuns() );
 
-        recordOfStuckScm();
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        ProjectScmRoot scmRootUpdating = getScmRoot( ContinuumProjectState.UPDATING );
+        when( projectScmRootDao.getProjectScmRoot( 1 ) ).thenReturn( scmRootUpdating,
+                                                                     getScmRoot( ContinuumProjectState.ERROR ) );
 
         distributedBuildManagerStub.cancelBuild( 1 );
+
+        verify( projectScmRootDao ).updateProjectScmRoot( scmRootUpdating );
     }
 
     public void testCancelBuildStuckBuild()
@@ -401,58 +426,17 @@ public class DefaultDistributedBuildManagerTest
     {
         distributedBuildManagerStub.setCurrentRuns( getCurrentRuns() );
 
-        recordOfStuckBuild();
+        when( configurationService.getBuildAgents() ).thenReturn( buildAgents );
+        when( projectScmRootDao.getProjectScmRoot( 1 ) ).thenReturn( getScmRoot( ContinuumProjectState.OK ) );
+        Project proj1 = getProject( 1, ContinuumProjectState.BUILDING );
+        when( projectDao.getProject( 1 ) ).thenReturn( proj1 );
+        when( buildDefinitionDao.getBuildDefinition( 1 ) ).thenReturn( new BuildDefinition() );
+        when( projectDao.getProject( 2 ) ).thenReturn( getProject( 2, ContinuumProjectState.OK ) );
 
         distributedBuildManagerStub.cancelBuild( 1 );
-    }
 
-    private void recordOfStuckBuild()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                exactly( 4 ).of( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                exactly( 2 ).of( projectScmRootDao ).getProjectScmRoot( 1 );
-                will( returnValue( getScmRoot( ContinuumProjectState.OK ) ) );
-
-                Project proj1 = getProject( 1, ContinuumProjectState.BUILDING );
-                one( projectDao ).getProject( 1 );
-                will( returnValue( proj1 ) );
-
-                one( buildDefinitionDao ).getBuildDefinition( 1 );
-                will( returnValue( new BuildDefinition() ) );
-
-                one( buildResultDao ).addBuildResult( with( any( Project.class ) ), with( any( BuildResult.class ) ) );
-                one( projectDao ).updateProject( proj1 );
-
-                one( projectDao ).getProject( 2 );
-                will( returnValue( getProject( 2, ContinuumProjectState.OK ) ) );
-            }
-        } );
-    }
-
-    private void recordOfStuckScm()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                exactly( 4 ).of( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                ProjectScmRoot scmRootUpdating = getScmRoot( ContinuumProjectState.UPDATING );
-                one( projectScmRootDao ).getProjectScmRoot( 1 );
-                will( returnValue( scmRootUpdating ) );
-
-                one( projectScmRootDao ).updateProjectScmRoot( scmRootUpdating );
-
-                one( projectScmRootDao ).getProjectScmRoot( 1 );
-                will( returnValue( getScmRoot( ContinuumProjectState.ERROR ) ) );
-            }
-        } );
+        verify( buildResultDao ).addBuildResult( any( Project.class ), any( BuildResult.class ) );
+        verify( projectDao ).updateProject( proj1 );
     }
 
     private List<ProjectRunSummary> getCurrentRuns()
@@ -531,181 +515,5 @@ public class DefaultDistributedBuildManagerTest
         buildDefinition = new BuildDefinition();
         buildDefinition.setId( 1 );
         buildDefinition.setProfile( buildEnv1 );
-    }
-
-    private void recordDisableOfBuildAgent()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                one( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                one( configurationService ).getSharedSecretPassword();
-                will( returnValue( null ) );
-
-                one( configurationService ).updateBuildAgent( buildAgent1 );
-                one( configurationService ).store();
-            }
-        } );
-    }
-
-    private void recordViewQueuesAfterBuildAgentIsLost()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                exactly( 5 ).of( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                one( configurationService ).getSharedSecretPassword();
-                will( returnValue( null ) );
-
-                one( configurationService ).updateBuildAgent( buildAgent1 );
-                one( configurationService ).store();
-
-                exactly( 2 ).of( overallDistributedBuildQueue1 ).getDistributedBuildTaskQueueExecutor();
-                will( returnValue( distributedBuildTaskQueueExecutor ) );
-
-                one( distributedBuildTaskQueueExecutor ).getCurrentTask();
-                will( returnValue( null ) );
-
-                one( overallDistributedBuildQueue1 ).getProjectsInQueue();
-                will( returnValue( new ArrayList<PrepareBuildProjectsTask>() ) );
-
-                one( overallDistributedBuildQueue1 ).getDistributedBuildQueue();
-                will( returnValue( distributedBuildQueue ) );
-
-                one( distributedBuildQueue ).removeAll( new ArrayList<PrepareBuildProjectsTask>() );
-
-                one( distributedBuildTaskQueueExecutor ).stop();
-            }
-        } );
-    }
-
-    private void recordViewQueuesAfter2BuildAgentsAreLost()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                exactly( 6 ).of( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                exactly( 2 ).of( configurationService ).getSharedSecretPassword();
-                will( returnValue( null ) );
-
-                one( configurationService ).updateBuildAgent( buildAgent1 );
-                one( configurationService ).updateBuildAgent( buildAgent2 );
-                exactly( 2 ).of( configurationService ).store();
-
-                exactly( 2 ).of( overallDistributedBuildQueue1 ).getDistributedBuildTaskQueueExecutor();
-                will( returnValue( distributedBuildTaskQueueExecutor ) );
-
-                exactly( 2 ).of( overallDistributedBuildQueue2 ).getDistributedBuildTaskQueueExecutor();
-                will( returnValue( distributedBuildTaskQueueExecutor ) );
-
-                exactly( 2 ).of( distributedBuildTaskQueueExecutor ).getCurrentTask();
-                will( returnValue( null ) );
-
-                one( overallDistributedBuildQueue1 ).getProjectsInQueue();
-                will( returnValue( new ArrayList<PrepareBuildProjectsTask>() ) );
-
-                one( overallDistributedBuildQueue2 ).getProjectsInQueue();
-                will( returnValue( new ArrayList<PrepareBuildProjectsTask>() ) );
-
-                one( overallDistributedBuildQueue1 ).getDistributedBuildQueue();
-                will( returnValue( distributedBuildQueue ) );
-
-                one( overallDistributedBuildQueue2 ).getDistributedBuildQueue();
-                will( returnValue( distributedBuildQueue ) );
-
-                exactly( 2 ).of( distributedBuildQueue ).removeAll( new ArrayList<PrepareBuildProjectsTask>() );
-
-                exactly( 2 ).of( distributedBuildTaskQueueExecutor ).stop();
-            }
-        } );
-    }
-
-    private void recordBuildOfProjectWithBuildAgentGroupWithNoCurrentBuilds()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                exactly( 3 ).of( projectDao ).getProjectWithDependencies( 1 );
-                will( returnValue( project ) );
-
-                exactly( 3 ).of( projectDao ).getProjectWithDependencies( 2 );
-                will( returnValue( project2 ) );
-
-                exactly( 3 ).of( buildDefinitionDao ).getBuildDefinition( 1 );
-                will( returnValue( buildDefinition ) );
-
-                exactly( 3 ).of( configurationService ).getBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 );
-                will( returnValue( buildAgentGroup ) );
-
-                one( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                one( overallDistributedBuildQueue1 ).getBuildAgentUrl();
-
-                one( overallDistributedBuildQueue1 ).addToDistributedBuildQueue( with( any( Task.class ) ) );
-            }
-        } );
-    }
-
-    private void recordBuildOfProjectWithBuildAgentGroupWithCurrentBuild()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                one( overallDistributedBuildQueue1 ).getProjectsInQueue();
-
-                one( overallDistributedBuildQueue1 ).getDistributedBuildTaskQueueExecutor();
-                will( returnValue( distributedBuildTaskQueueExecutor ) );
-
-                one( distributedBuildTaskQueueExecutor ).getCurrentTask();
-                will( returnValue( null ) );
-
-                one( projectDao ).getProjectsInGroup( 1 );
-                will( returnValue( new ArrayList<Project>() ) );
-
-                one( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                one( overallDistributedBuildQueue1 ).getBuildAgentUrl();
-
-                one( overallDistributedBuildQueue1 ).addToDistributedBuildQueue( with( any( Task.class ) ) );
-            }
-        } );
-    }
-
-    private void recordBuildProjectWithTheSecondBuildAgentAttachedToTheBuildAgentGroup()
-        throws Exception
-    {
-        context.checking( new Expectations()
-        {
-            {
-                exactly( 3 ).of( projectDao ).getProjectWithDependencies( 1 );
-                will( returnValue( project ) );
-
-                exactly( 3 ).of( buildDefinitionDao ).getBuildDefinition( 1 );
-                will( returnValue( buildDefinition ) );
-
-                exactly( 3 ).of( configurationService ).getBuildAgentGroup( TEST_BUILD_AGENT_GROUP1 );
-                will( returnValue( buildAgentGroup ) );
-
-                one( configurationService ).getBuildAgents();
-                will( returnValue( buildAgents ) );
-
-                one( overallDistributedBuildQueue2 ).getBuildAgentUrl();
-
-                one( overallDistributedBuildQueue2 ).addToDistributedBuildQueue( with( any( Task.class ) ) );
-            }
-        } );
     }
 }
