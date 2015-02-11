@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import junit.framework.TestCase;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -32,16 +33,18 @@ import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateProjectsFromMetadataTest
-    extends MockObjectTestCase
-{
+import static org.mockito.Mockito.*;
 
+public class CreateProjectsFromMetadataTest
+    extends TestCase
+{
     private CreateProjectsFromMetadataAction action;
 
     private ContinuumProjectBuildingResult result;
@@ -53,32 +56,25 @@ public class CreateProjectsFromMetadataTest
         action = new CreateProjectsFromMetadataAction();
         action.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
 
-        recordBuildProjectFromHttp();
-    }
-
-    private void recordBuildProjectFromHttp()
-        throws Exception
-    {
         result = new ContinuumProjectBuildingResult();
-        Mock projectBuilderManagerMock = mock( ContinuumProjectBuilderManager.class );
-
-        action.setProjectBuilderManager( (ContinuumProjectBuilderManager) projectBuilderManagerMock.proxy() );
+        ContinuumProjectBuilderManager projectBuilderManagerMock = mock( ContinuumProjectBuilderManager.class );
+        action.setProjectBuilderManager( projectBuilderManagerMock );
         action.setUrlValidator( new ContinuumUrlValidator() );
 
-        Mock projectBuilder = mock( ContinuumProjectBuilder.class );
-
-        projectBuilderManagerMock.expects( once() ).method( "getProjectBuilder" ).will( returnValue(
-            projectBuilder.proxy() ) );
-        projectBuilder.expects( once() ).method( "buildProjectsFromMetadata" ).will( returnValue( result ) );
-        projectBuilder.expects( once() ).method( "getDefaultBuildDefinitionTemplate" ).will( returnValue(
-            getDefaultBuildDefinitionTemplate() ) );
+        ContinuumProjectBuilder projectBuilder = mock( ContinuumProjectBuilder.class );
+        when( projectBuilderManagerMock.getProjectBuilder( anyString() ) ).thenReturn( projectBuilder );
+        when( projectBuilder.buildProjectsFromMetadata( any( URL.class ), anyString(), anyString(), anyBoolean(),
+                                                        any( BuildDefinitionTemplate.class ), anyBoolean(),
+                                                        anyInt() ) ).thenReturn( result );
+        when( projectBuilder.getDefaultBuildDefinitionTemplate() ).thenReturn( getDefaultBuildDefinitionTemplate() );
     }
 
     private void invokeBuildSettings()
+        throws IOException, XmlPullParserException
     {
-        Mock mavenSettingsBuilderMock = mock( MavenSettingsBuilder.class );
-        action.setMavenSettingsBuilder( (MavenSettingsBuilder) mavenSettingsBuilderMock.proxy() );
-        mavenSettingsBuilderMock.expects( once() ).method( "buildSettings" ).will( returnValue( new Settings() ) );
+        MavenSettingsBuilder mavenSettingsBuilderMock = mock( MavenSettingsBuilder.class );
+        action.setMavenSettingsBuilder( mavenSettingsBuilderMock );
+        when( mavenSettingsBuilderMock.buildSettings() ).thenReturn( new Settings() );
     }
 
     private BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
@@ -144,7 +140,6 @@ public class CreateProjectsFromMetadataTest
             result.hasErrors() );
     }
 
-
     public void testExecuteWithCheckoutProjectsInSingleDirectory()
         throws Exception
     {
@@ -195,7 +190,7 @@ public class CreateProjectsFromMetadataTest
             result.hasErrors() );
         assertEquals( "Incorrect SCM Root Url for flat multi-module project.",
                       "scm:local:src/test-projects:flat-multi-module/", AbstractContinuumAction.getProjectScmRootUrl(
-            context, "" ) );
+                context, "" ) );
     }
 
     public void testExecuteFlatMultiModuleProjectThatStartsWithTheSameLetter()
