@@ -24,10 +24,6 @@ import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.mockito.Mockito.*;
+
 /**
  * For the CONTINUUM-2391 tests, checking of the local repository details is in ContinuumReleaseManagerStub. An
  * exception is thrown if the set local repository in the repository map is incorrect.
@@ -43,8 +41,6 @@ import java.util.Properties;
 public class BuildAgentReleaseManagerTest
     extends PlexusInSpringTestCase
 {
-    private Mockery context;
-
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     private DefaultBuildAgentReleaseManager releaseManager;
@@ -54,14 +50,17 @@ public class BuildAgentReleaseManagerTest
     {
         super.setUp();
 
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
-
         releaseManager = (DefaultBuildAgentReleaseManager) lookup( BuildAgentReleaseManager.class );
 
-        buildAgentConfigurationService = context.mock( BuildAgentConfigurationService.class );
+        buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
 
         releaseManager.setBuildAgentConfigurationService( buildAgentConfigurationService );
+
+        final List<LocalRepository> localRepos = createLocalRepositories();
+        final File workingDir = new File( getBasedir(), "target/test-classes/working-dir" );
+
+        when( buildAgentConfigurationService.getLocalRepositories() ).thenReturn( localRepos );
+        when( buildAgentConfigurationService.getWorkingDirectory( 1 ) ).thenReturn( workingDir );
     }
 
     protected void tearDown()
@@ -76,23 +75,7 @@ public class BuildAgentReleaseManagerTest
     public void testLocalRepositoryInReleasePrepare()
         throws Exception
     {
-        final List<LocalRepository> localRepos = createLocalRepositories();
-        final File workingDir = new File( getBasedir(), "target/test-classes/working-dir" );
-
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getLocalRepositories();
-                will( returnValue( localRepos ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
-                will( returnValue( workingDir ) );
-
-                one( buildAgentConfigurationService ).getAvailableInstallations();
-                will( returnValue( null ) );
-            }
-        } );
-
+        when( buildAgentConfigurationService.getAvailableInstallations() ).thenReturn( null );
         try
         {
             releaseManager.releasePrepare( createProjectMap(), createProperties(), createReleaseVersionMap(),
@@ -108,25 +91,8 @@ public class BuildAgentReleaseManagerTest
     public void testLocalRepositoryNameMismatchedCaseInReleasePrepare()
         throws Exception
     {
-        final List<LocalRepository> localRepos = createLocalRepositories();
-        final File workingDir = new File( getBasedir(), "target/test-classes/working-dir" );
-
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getLocalRepositories();
-                will( returnValue( localRepos ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory( 1 );
-                will( returnValue( workingDir ) );
-
-                one( buildAgentConfigurationService ).getAvailableInstallations();
-                will( returnValue( null ) );
-            }
-        } );
-
+        when( buildAgentConfigurationService.getAvailableInstallations() ).thenReturn( null );
         Map<String, Object> map = createProjectMap();
-
         try
         {
             releaseManager.releasePrepare( map, createProperties(), createReleaseVersionMap(), createDevVersionMap(),
@@ -143,23 +109,8 @@ public class BuildAgentReleaseManagerTest
     public void testLocalRepositoryInReleasePerform()
         throws Exception
     {
-        final List<LocalRepository> localRepos = createLocalRepositories();
-        final File workingDir = new File( getBasedir(), "target/test-classes/working-dir" );
-
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getLocalRepositories();
-                will( returnValue( localRepos ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( workingDir ) );
-            }
-        } );
-
         Map repository = createRepositoryMap();
         repository.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, "DEFAULT" );
-
         try
         {
             releaseManager.releasePerform( "1", "clean deploy", "", true, repository, "user" );
@@ -174,20 +125,6 @@ public class BuildAgentReleaseManagerTest
     public void testLocalRepositoryNameMismatchedCaseInReleasePerform()
         throws Exception
     {
-        final List<LocalRepository> localRepos = createLocalRepositories();
-        final File workingDir = new File( getBasedir(), "target/test-classes/working-dir" );
-
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getLocalRepositories();
-                will( returnValue( localRepos ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( workingDir ) );
-            }
-        } );
-
         try
         {
             releaseManager.releasePerform( "1", "clean deploy", "", true, createRepositoryMap(), "user" );
@@ -203,24 +140,9 @@ public class BuildAgentReleaseManagerTest
     public void testLocalRepositoryInReleasePerformFromScm()
         throws Exception
     {
-        final List<LocalRepository> localRepos = createLocalRepositories();
-        final File workingDir = new File( getBasedir(), "target/test-classes/working-dir" );
-
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getLocalRepositories();
-                will( returnValue( localRepos ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( workingDir ) );
-            }
-        } );
-
         Map repository = new HashMap();
         repository.put( ContinuumBuildAgentUtil.KEY_USERNAME, "user" );
         repository.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, "default" );
-
         try
         {
             releaseManager.releasePerformFromScm( "clean deploy", "", true, repository,

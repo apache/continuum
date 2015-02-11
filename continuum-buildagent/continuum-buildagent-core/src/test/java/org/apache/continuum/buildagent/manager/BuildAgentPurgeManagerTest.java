@@ -22,10 +22,6 @@ package org.apache.continuum.buildagent.manager;
 import org.apache.commons.io.FileUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 /**
  * For CONTINUUM-2658 tests, Support purging of working and release directories of build agents on a schedule
@@ -54,8 +52,6 @@ public class BuildAgentPurgeManagerTest
 
     private static final String DIRECTORY_TYPE_WORKING = "working";
 
-    private Mockery context;
-
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     private DefaultBuildAgentPurgeManager purgeManager;
@@ -67,16 +63,15 @@ public class BuildAgentPurgeManagerTest
     {
         super.setUp();
 
-        context = new JUnit3Mockery();
-        context.setImposteriser( ClassImposteriser.INSTANCE );
-
         purgeManager = (DefaultBuildAgentPurgeManager) lookup( BuildAgentPurgeManager.class );
 
-        buildAgentConfigurationService = context.mock( BuildAgentConfigurationService.class );
+        buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
 
         purgeManager.setBuildAgentConfigurationService( buildAgentConfigurationService );
 
         createTestDirectoriesAndFiles();
+
+        when( buildAgentConfigurationService.getWorkingDirectory() ).thenReturn( tempDir );
     }
 
     protected void tearDown()
@@ -91,17 +86,6 @@ public class BuildAgentPurgeManagerTest
     public void testCleanAllPurge()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-            }
-        } );
-
         //confirm current content of directory
         //2 random files
         assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
@@ -122,17 +106,6 @@ public class BuildAgentPurgeManagerTest
     public void testRetentionOnlyPurge()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-            }
-        } );
-
         //confirm current content of directory
         //2 random files
         assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
@@ -140,8 +113,6 @@ public class BuildAgentPurgeManagerTest
         purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_WORKING, 0, 2, false );
 
         List<String> fileNames = Arrays.asList( tempDir.list() );
-
-        File[] files = tempDir.listFiles();
 
         //confirm current content of directory
         //2 working directories left
@@ -159,17 +130,6 @@ public class BuildAgentPurgeManagerTest
     public void testDaysOldOnlyPurge()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-            }
-        } );
-
         //confirm current content of directory
         //2 random files
         assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
@@ -195,17 +155,6 @@ public class BuildAgentPurgeManagerTest
     public void testRetentionAndDaysOldOnlyPurge()
         throws Exception
     {
-        context.checking( new Expectations()
-        {
-            {
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-
-                one( buildAgentConfigurationService ).getWorkingDirectory();
-                will( returnValue( tempDir ) );
-            }
-        } );
-
         //confirm current content of directory
         //2 random files
         assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
