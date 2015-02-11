@@ -19,15 +19,16 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class FormatterToolTest
-    extends TestCase
 {
+    @Test
     public void testIntervalFormatting()
         throws Exception
     {

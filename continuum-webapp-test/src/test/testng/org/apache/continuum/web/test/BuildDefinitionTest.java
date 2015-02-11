@@ -19,7 +19,6 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import junit.framework.Assert;
 import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -28,11 +27,13 @@ import org.testng.annotations.Test;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.testng.Assert.assertTrue;
+
 /**
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = {"buildDefinition"} )
+@Test( groups = { "buildDefinition" } )
 public class BuildDefinitionTest
     extends AbstractAdminTest
 {
@@ -194,7 +195,7 @@ public class BuildDefinitionTest
                                      MAVEN_PROJECT_TYPE, true );
     }
 
-    @Test( dependsOnMethods = {"testAddNotDefaultGroupBuildDefinition"} )
+    @Test( dependsOnMethods = { "testAddNotDefaultGroupBuildDefinition" } )
     public void testEditGroupBuildDefinition()
         throws Exception
     {
@@ -216,7 +217,7 @@ public class BuildDefinitionTest
                                      MAVEN_PROJECT_TYPE, true );
     }
 
-    @Test( dependsOnMethods = {"testEditGroupBuildDefinition"} )
+    @Test( dependsOnMethods = { "testEditGroupBuildDefinition" } )
     public void testDeleteGroupBuildDefinition()
         throws Exception
     {
@@ -238,7 +239,7 @@ public class BuildDefinitionTest
         String value = getSelenium().getAttribute(
             "xpath=(//a[contains(@href,'removeProjectBuildDefinition')])[last()]/@href" );
         Matcher m = Pattern.compile( "^.*buildDefinitionId=([0-9]+).*$" ).matcher( value );
-        Assert.assertTrue( m.matches() );
+        assertTrue( m.matches() );
         buildDefinitionId = m.group( 1 );
     }
 
@@ -253,7 +254,7 @@ public class BuildDefinitionTest
                                      MAVEN_PROJECT_TYPE, true );
     }
 
-    @Test( dependsOnMethods = {"testAddNotDefaultProjectBuildDefinition"} )
+    @Test( dependsOnMethods = { "testAddNotDefaultProjectBuildDefinition" } )
     public void testDeleteProjectBuildDefinition()
         throws Exception
     {

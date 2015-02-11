@@ -19,11 +19,14 @@ package org.apache.continuum.webdav.util;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class WorkingCopyPathUtilTest
-    extends TestCase
 {
+
+    @Test
     public void testGetProjectId()
     {
         String href = "/path/1/src/main/java";
@@ -33,6 +36,7 @@ public class WorkingCopyPathUtilTest
         assertEquals( 2, WorkingCopyPathUtil.getProjectId( href ) );
     }
 
+    @Test
     public void testGetLogicalPath()
     {
         String href = "/workingcopy/1/src/main/java/org/apache/maven/someartifact.jar";

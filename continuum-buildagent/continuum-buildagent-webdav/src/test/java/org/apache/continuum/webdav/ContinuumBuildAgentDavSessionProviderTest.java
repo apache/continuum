@@ -19,7 +19,6 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.jackrabbit.webdav.DavSessionProvider;
@@ -27,7 +26,14 @@ import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.apache.jackrabbit.webdav.WebdavRequestImpl;
 import org.codehaus.plexus.util.Base64;
 import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -36,14 +42,11 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class ContinuumBuildAgentDavSessionProviderTest
-    extends TestCase
 {
     private DavSessionProvider sessionProvider;
 
@@ -53,14 +56,11 @@ public class ContinuumBuildAgentDavSessionProviderTest
 
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        buildAgentConfigurationServiceControl = MockControl.
-            createControl( BuildAgentConfigurationService.class );
+        buildAgentConfigurationServiceControl = MockControl.createControl( BuildAgentConfigurationService.class );
         buildAgentConfigurationService =
             (BuildAgentConfigurationService) buildAgentConfigurationServiceControl.getMock();
 
@@ -74,6 +74,7 @@ public class ContinuumBuildAgentDavSessionProviderTest
 
     }
 
+    @Test
     public void testAttachSession()
         throws Exception
     {
@@ -86,6 +87,7 @@ public class ContinuumBuildAgentDavSessionProviderTest
         assertNotNull( request.getDavSession() );
     }
 
+    @Test
     public void testReleaseSession()
         throws Exception
     {
@@ -252,7 +254,6 @@ public class ContinuumBuildAgentDavSessionProviderTest
         {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
-
 
         public String getAuthType()
         {

@@ -19,7 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
@@ -29,6 +28,8 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests that the cleanup action works properly. This is a non-portable test, and needs a special setup to run.
@@ -46,7 +49,6 @@ import java.util.HashMap;
  * @see org.apache.maven.continuum.core.action.CleanWorkingDirectoryAction
  */
 public class CleanWorkingDirectoryActionTest
-    extends TestCase
 {
 
     public static final String FILE_PREFIX = "cwdat";
@@ -101,6 +103,7 @@ public class CleanWorkingDirectoryActionTest
         return root;
     }
 
+    @Before
     public void setUp()
         throws NoSuchFieldException, IllegalAccessException
     {
@@ -133,6 +136,7 @@ public class CleanWorkingDirectoryActionTest
      *
      * @throws Exception
      */
+    @Test
     public void testOutOfMemory()
         throws Exception
     {
@@ -160,6 +164,7 @@ public class CleanWorkingDirectoryActionTest
     /**
      * Tests that cleanup doesn't traverse across symlinks.
      */
+    @Test
     public void testSymlinkTraversal()
         throws Exception
     {
@@ -205,6 +210,7 @@ public class CleanWorkingDirectoryActionTest
     /**
      * Tests that cleanup doesn't traverse across hard links.
      */
+    @Test
     public void testHardlinkTraversal()
         throws Exception
     {

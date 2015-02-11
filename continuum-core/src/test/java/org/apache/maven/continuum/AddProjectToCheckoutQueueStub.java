@@ -19,11 +19,12 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import junit.framework.Assert;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.CheckoutProjectContinuumAction;
 
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
@@ -38,9 +39,7 @@ public class AddProjectToCheckoutQueueStub
         getLogger().info( "Executing add-project-to-checkout-queue (stub for testing) action." );
 
         // check if scm credentials were set in context (CONTINUUM-2466)
-        Assert.assertEquals( AddProjectTest.SCM_USERNAME, CheckoutProjectContinuumAction.getScmUsername( context,
-                                                                                                         null ) );
-        Assert.assertEquals( AddProjectTest.SCM_PASSWORD, CheckoutProjectContinuumAction.getScmPassword( context,
-                                                                                                         null ) );
+        assertEquals( AddProjectTest.SCM_USERNAME, CheckoutProjectContinuumAction.getScmUsername( context, null ) );
+        assertEquals( AddProjectTest.SCM_PASSWORD, CheckoutProjectContinuumAction.getScmPassword( context, null ) );
     }
 }

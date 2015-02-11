@@ -19,11 +19,14 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ContinuumBuildAgentDavSessionTest
-    extends TestCase
 {
+
+    @Test
     public void testTokens()
     {
         ContinuumBuildAgentDavSession session = new ContinuumBuildAgentDavSession();
@@ -37,6 +40,7 @@ public class ContinuumBuildAgentDavSessionTest
         assertEquals( 0, session.getLockTokens().length );
     }
 
+    @Test
     public void testAddReferencesThrowsUnsupportedOperationException()
     {
         ContinuumBuildAgentDavSession session = new ContinuumBuildAgentDavSession();
@@ -51,6 +55,7 @@ public class ContinuumBuildAgentDavSessionTest
         }
     }
 
+    @Test
     public void testRemoveReferencesThrowsUnsupportedOperationException()
     {
         ContinuumBuildAgentDavSession session = new ContinuumBuildAgentDavSession();

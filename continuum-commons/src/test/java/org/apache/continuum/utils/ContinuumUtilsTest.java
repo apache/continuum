@@ -19,15 +19,16 @@ package org.apache.continuum.utils;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class ContinuumUtilsTest
-    extends TestCase
 {
+    @Test
     public void testThrowableMessagesToString()
     {
         Throwable a = new Exception( "bar" );

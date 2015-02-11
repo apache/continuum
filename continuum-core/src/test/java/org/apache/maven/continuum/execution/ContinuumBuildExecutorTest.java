@@ -19,7 +19,6 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.continuum.utils.shell.ExecutionResult;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -31,14 +30,16 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 public class ContinuumBuildExecutorTest
-    extends TestCase
 {
     protected final AbstractBuildExecutor executor = new BuildExecutorStub();
 
@@ -54,6 +55,7 @@ public class ContinuumBuildExecutorTest
         return path;
     }
 
+    @Test
     public void testExecuteShellCommand()
         throws Exception
     {

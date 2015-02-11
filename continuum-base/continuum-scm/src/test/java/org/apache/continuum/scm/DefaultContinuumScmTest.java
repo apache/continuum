@@ -19,7 +19,6 @@ package org.apache.continuum.scm;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.continuum.scm.manager.ScmManager;
 import org.apache.maven.scm.ScmBranch;
 import org.apache.maven.scm.ScmFileSet;
@@ -29,12 +28,13 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
 
 public class DefaultContinuumScmTest
-    extends TestCase
 {
     private ScmManager scmManager;
 
@@ -44,7 +44,7 @@ public class DefaultContinuumScmTest
 
     private ContinuumScmConfiguration config;
 
-    @Override
+    @Before
     public void setUp()
     {
         context = new JUnit3Mockery();
@@ -58,6 +58,7 @@ public class DefaultContinuumScmTest
         config = getScmConfiguration();
     }
 
+    @Test
     public void testChangeLogWithScmVersion()
         throws Exception
     {
@@ -77,6 +78,7 @@ public class DefaultContinuumScmTest
         context.assertIsSatisfied();
     }
 
+    @Test
     public void testChangeLogWithNoScmVersion()
         throws Exception
     {

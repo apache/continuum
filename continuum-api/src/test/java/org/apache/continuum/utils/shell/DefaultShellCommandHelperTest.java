@@ -19,8 +19,10 @@ package org.apache.continuum.utils.shell;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +30,13 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /**
  * @see org.apache.continuum.utils.shell.DefaultShellCommandHelper
  */
 public class DefaultShellCommandHelperTest
-    extends TestCase
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultShellCommandHelper.class );
 
@@ -42,6 +46,7 @@ public class DefaultShellCommandHelperTest
 
     private String sleepClasspath;
 
+    @Before
     public void setUp()
     {
         helper = new DefaultShellCommandHelper();
@@ -52,6 +57,7 @@ public class DefaultShellCommandHelperTest
         sleepClasspath = System.getProperty( "sleepClasspath" );
     }
 
+    @After
     public void tearDown()
     {
         helper = null;
@@ -92,6 +98,7 @@ public class DefaultShellCommandHelperTest
         }
     }
 
+    @Test
     public void testIsRunning()
         throws Exception
     {

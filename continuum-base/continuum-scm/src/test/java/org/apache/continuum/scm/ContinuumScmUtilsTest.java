@@ -19,15 +19,19 @@ package org.apache.continuum.scm;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public class ContinuumScmUtilsTest
-    extends TestCase
 {
+
+    @Test
     public void testGitProviderWithSSHProtocolUsernameInUrl()
         throws Exception
     {
@@ -41,6 +45,7 @@ public class ContinuumScmUtilsTest
         assertTrue( StringUtils.isBlank( scmConfiguration.getPassword() ) );
     }
 
+    @Test
     public void testGitProviderWithSSHProtocolUsernameAndPasswordInUrl()
         throws Exception
     {
@@ -54,6 +59,7 @@ public class ContinuumScmUtilsTest
         assertEquals( "sshPassword", scmConfiguration.getPassword() );
     }
 
+    @Test
     public void testGitProviderWithSSHProtocolNoCredentialsInUrl()
         throws Exception
     {
@@ -67,6 +73,7 @@ public class ContinuumScmUtilsTest
         assertEquals( "dummypassword", scmConfiguration.getPassword() );
     }
 
+    @Test
     public void testNotGitProvider()
         throws Exception
     {
@@ -80,6 +87,7 @@ public class ContinuumScmUtilsTest
         assertEquals( "dummypassword", scmConfiguration.getPassword() );
     }
 
+    @Test
     public void testNotSSHProtocol()
         throws Exception
     {

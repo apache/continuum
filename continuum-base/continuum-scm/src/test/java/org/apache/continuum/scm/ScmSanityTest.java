@@ -19,21 +19,22 @@ package org.apache.continuum.scm;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.scm.ChangeSet;
 import org.apache.maven.scm.log.DefaultLog;
 import org.apache.maven.scm.provider.svn.svnexe.command.changelog.SvnChangeLogConsumer;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Tests to verify assumptions and avoid regressions in SCM dependencies.
  */
 public class ScmSanityTest
-    extends TestCase
 {
 
     private InputStream getTestInput( String path )
@@ -44,6 +45,7 @@ public class ScmSanityTest
     /**
      * Tests that CONTINUUM-1640 is fixed by updated maven-scm
      */
+    @Test
     public void testSvnLogWithSpaceInAuthorWorks()
         throws Exception
     {

@@ -19,23 +19,25 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class ContinuumBuildAgentDavResourceLocatorTest
-    extends TestCase
 {
     private ContinuumBuildAgentDavLocatorFactory factory;
 
     private ContinuumBuildAgentDavResourceLocator locator;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
         factory = new ContinuumBuildAgentDavLocatorFactory();
     }
 
+    @Test
     public void testAvoidDoubleSlashInHref()
         throws Exception
     {
@@ -53,6 +55,7 @@ public class ContinuumBuildAgentDavResourceLocatorTest
         assertEquals( "/workingcopy/1", locator.getRepositoryPath() );
     }
 
+    @Test
     public void testLocatorWithPrefixHref()
         throws Exception
     {
@@ -70,6 +73,7 @@ public class ContinuumBuildAgentDavResourceLocatorTest
         assertEquals( "/workingcopy/1", locator.getRepositoryPath() );
     }
 
+    @Test
     public void testLocatorWithHrefThatContainsPrefix()
         throws Exception
     {
@@ -87,6 +91,7 @@ public class ContinuumBuildAgentDavResourceLocatorTest
         assertEquals( "/workingcopy/1", locator.getRepositoryPath() );
     }
 
+    @Test
     public void testLocatorWithRootHref()
         throws Exception
     {

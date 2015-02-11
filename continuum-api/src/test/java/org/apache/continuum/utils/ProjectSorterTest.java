@@ -19,26 +19,28 @@ package org.apache.continuum.utils;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * @author <a href="mailto:jmcconnell@apache.org">Jesse McConnell</a>
- * @version $Id:$
  */
 public class ProjectSorterTest
-    extends TestCase
 {
 
     /**
      * test basic three project tree (really a line in this case)
      */
+    @Test
     public void testBasicNestedProjectStructure()
         throws Exception
     {

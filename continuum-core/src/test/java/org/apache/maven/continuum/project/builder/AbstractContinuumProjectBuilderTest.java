@@ -19,8 +19,10 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.net.URL;
 
@@ -28,27 +30,22 @@ import java.net.URL;
  * Test for {@link AbstractContinuumProjectBuilder}
  *
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
- * @version $Id$
  */
 public abstract class AbstractContinuumProjectBuilderTest
-    extends TestCase
 {
 
     private ContinuumProjectBuilder builder;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
         builder = new ContinuumProjectBuilder();
     }
 
-    /**
-     * Test for CONTINUUM-747. Disable as it requires a password protected resource under https.
-     *
-     * @throws Exception
-     */
-    public void disabledTestCreateMetadataFileURLStringString()
+    @Test
+    @Ignore( "requires a password protected resource under https" )
+    public void testCreateMetadataFileURLStringString()
         throws Exception
     {
         URL url = new URL( "https://someurl/pom.xml" );
