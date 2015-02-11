@@ -25,7 +25,6 @@ import org.apache.jackrabbit.webdav.DavSessionProvider;
 import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.apache.jackrabbit.webdav.WebdavRequestImpl;
 import org.codehaus.plexus.util.Base64;
-import org.easymock.MockControl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,6 +44,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.*;
 
 public class ContinuumBuildAgentDavSessionProviderTest
 {
@@ -52,26 +52,18 @@ public class ContinuumBuildAgentDavSessionProviderTest
 
     private WebdavRequest request;
 
-    private MockControl buildAgentConfigurationServiceControl;
-
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     @Before
     public void setUp()
         throws Exception
     {
-        buildAgentConfigurationServiceControl = MockControl.createControl( BuildAgentConfigurationService.class );
-        buildAgentConfigurationService =
-            (BuildAgentConfigurationService) buildAgentConfigurationServiceControl.getMock();
+        buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
 
         sessionProvider = new ContinuumBuildAgentDavSessionProvider( buildAgentConfigurationService );
         request = new WebdavRequestImpl( new HttpServletRequestMock(), null );
 
-        buildAgentConfigurationServiceControl.expectAndReturn( buildAgentConfigurationService.getSharedSecretPassword(),
-                                                               "secret", 2 );
-
-        buildAgentConfigurationServiceControl.replay();
-
+        when( buildAgentConfigurationService.getSharedSecretPassword() ).thenReturn( "secret" );
     }
 
     @Test
@@ -81,8 +73,6 @@ public class ContinuumBuildAgentDavSessionProviderTest
         assertNull( request.getDavSession() );
 
         sessionProvider.attachSession( request );
-
-        buildAgentConfigurationServiceControl.verify();
 
         assertNotNull( request.getDavSession() );
     }
@@ -94,8 +84,6 @@ public class ContinuumBuildAgentDavSessionProviderTest
         assertNull( request.getDavSession() );
 
         sessionProvider.attachSession( request );
-
-        buildAgentConfigurationServiceControl.verify();
 
         assertNotNull( request.getDavSession() );
 

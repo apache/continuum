@@ -1573,18 +1573,6 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>easymock</groupId>
-        <artifactId>easymock</artifactId>
-        <version>1.2_Java1.3</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>easymock</groupId>
-        <artifactId>easymockclassextension</artifactId>
-        <version>1.2</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-action</artifactId>
         <version>1.0-alpha-6</version>

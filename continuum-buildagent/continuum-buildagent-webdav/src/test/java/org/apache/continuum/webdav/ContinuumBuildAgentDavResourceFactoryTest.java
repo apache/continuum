@@ -22,26 +22,22 @@ package org.apache.continuum.webdav;
 import org.apache.commons.io.FileUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.jackrabbit.webdav.DavException;
+import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.easymock.MockControl;
 
 import java.io.File;
+
+import static org.mockito.Mockito.*;
 
 public class ContinuumBuildAgentDavResourceFactoryTest
     extends PlexusInSpringTestCase
 {
-    private MockControl requestControl;
-
     private DavServletRequest request;
 
-    private MockControl responseControl;
-
     private DavServletResponse response;
-
-    private MockControl buildAgentConfigurationServiceControl;
 
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
@@ -55,17 +51,9 @@ public class ContinuumBuildAgentDavResourceFactoryTest
     {
         super.setUp();
 
-        requestControl = MockControl.createControl( DavServletRequest.class );
-        request = (DavServletRequest) requestControl.getMock();
-
-        responseControl = MockControl.createControl( DavServletResponse.class );
-        response = (DavServletResponse) responseControl.getMock();
-        responseControl.setDefaultMatcher( MockControl.ALWAYS_MATCHER );
-
-        buildAgentConfigurationServiceControl = MockControl.
-            createControl( BuildAgentConfigurationService.class );
-        buildAgentConfigurationService =
-            (BuildAgentConfigurationService) buildAgentConfigurationServiceControl.getMock();
+        request = mock( DavServletRequest.class );
+        response = mock( DavServletResponse.class );
+        buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
 
         resourceFactory = new ContinuumBuildAgentDavResourceFactory();
         resourceFactory.setBuildAgentConfigurationService( buildAgentConfigurationService );
@@ -101,18 +89,14 @@ public class ContinuumBuildAgentDavResourceFactoryTest
 
         try
         {
-            requestControl.expectAndReturn( request.getMethod(), "GET" );
-            buildAgentConfigurationServiceControl.
-                expectAndReturn( buildAgentConfigurationService.getWorkingDirectory( 1 ), getWorkingDirectory( 1 ) );
-            requestControl.expectAndReturn( request.getDavSession(), new ContinuumBuildAgentDavSession() );
+            when( request.getMethod() ).thenReturn( "GET" );
+            when( buildAgentConfigurationService.getWorkingDirectory( 1 ) ).thenReturn( getWorkingDirectory( 1 ) );
+            when( request.getDavSession() ).thenReturn( new ContinuumBuildAgentDavSession() );
 
-            requestControl.replay();
-            buildAgentConfigurationServiceControl.replay();
+            DavResource resource = resourceFactory.createResource( locator, request, response );
 
-            resourceFactory.createResource( locator, request, response );
-
-            requestControl.verify();
-            buildAgentConfigurationServiceControl.verify();
+            assertNotNull( resource );
+            assertEquals( locator.getRepositoryPath(), locator.getRepositoryPath() );
         }
         catch ( DavException e )
         {
@@ -130,17 +114,10 @@ public class ContinuumBuildAgentDavResourceFactoryTest
 
         try
         {
-            requestControl.expectAndReturn( request.getMethod(), "GET", 1 );
-            buildAgentConfigurationServiceControl.
-                expectAndReturn( buildAgentConfigurationService.getWorkingDirectory( 1 ), getWorkingDirectory( 1 ) );
-
-            requestControl.replay();
-            buildAgentConfigurationServiceControl.replay();
+            when( request.getMethod() ).thenReturn( "GET" );
+            when( buildAgentConfigurationService.getWorkingDirectory( 1 ) ).thenReturn( getWorkingDirectory( 1 ) );
 
             resourceFactory.createResource( locator, request, response );
-
-            requestControl.verify();
-            buildAgentConfigurationServiceControl.verify();
 
             fail( "A DavException with 404 error code should have been thrown." );
         }
