@@ -22,7 +22,10 @@ package org.apache.maven.continuum.web.action;
 import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -37,11 +40,10 @@ public class ReleasePrepareActionTest
 
     private Continuum continuum;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         action = new ReleasePrepareAction();
         continuum = mock( Continuum.class );
         //securitySessionMock = mock( SecuritySession.class );
@@ -56,6 +58,7 @@ public class ReleasePrepareActionTest
      *
      * @throws Exception
      */
+    @Test
     public void testScmTagBaseSvn()
         throws Exception
     {
@@ -78,6 +81,7 @@ public class ReleasePrepareActionTest
      *
      * @throws Exception
      */
+    @Test
     public void testScmTagBaseNonSvn()
         throws Exception
     {

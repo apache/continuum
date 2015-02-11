@@ -26,12 +26,15 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ViewBuildsReportActionTest
@@ -43,18 +46,17 @@ public class ViewBuildsReportActionTest
 
     private List<BuildResult> buildResults = new ArrayList<BuildResult>();
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         continuum = mock( Continuum.class );
 
         action = new ViewBuildsReportActionStub();
         action.setContinuum( continuum );
     }
 
+    @Test
     public void testInvalidRowCount()
     {
         action.setRowCount( -1 );
@@ -65,6 +67,7 @@ public class ViewBuildsReportActionTest
         assertFalse( action.hasActionErrors() );
     }
 
+    @Test
     public void testEndDateBeforeStartDate()
     {
         action.setStartDate( "04/25/2010" );
@@ -76,6 +79,7 @@ public class ViewBuildsReportActionTest
         assertFalse( action.hasActionErrors() );
     }
 
+    @Test
     public void testMalformedStartDate()
     {
         action.setStartDate( "not a date" );
@@ -86,6 +90,7 @@ public class ViewBuildsReportActionTest
         assertFalse( action.hasFieldErrors() );
     }
 
+    @Test
     public void testMalformedEndDate()
     {
         action.setEndDate( "not a date" );
@@ -96,6 +101,7 @@ public class ViewBuildsReportActionTest
         assertFalse( action.hasFieldErrors() );
     }
 
+    @Test
     public void testStartDateSameWithEndDate()
     {
         when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
@@ -108,6 +114,7 @@ public class ViewBuildsReportActionTest
         assertSuccessResult( result );
     }
 
+    @Test
     public void testEndDateWithNoStartDate()
     {
         when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
@@ -118,6 +125,7 @@ public class ViewBuildsReportActionTest
         assertSuccessResult( result );
     }
 
+    @Test
     public void testExportToCsv()
         throws Exception
     {

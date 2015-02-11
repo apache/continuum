@@ -26,11 +26,14 @@ import org.apache.continuum.web.action.stub.ReleaseActionStub;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Profile;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class AbstractReleaseActionTest
@@ -44,11 +47,10 @@ public class AbstractReleaseActionTest
 
     private String defaultBuildagentUrl = "http://localhost:8181/continuum-buildagent/xmlrpc";
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         continuum = mock( Continuum.class );
         configurationService = mock( ConfigurationService.class );
 
@@ -61,6 +63,7 @@ public class AbstractReleaseActionTest
         action.setContinuum( continuum );
     }
 
+    @Test
     public void testGetEnvironmentsDefaultAgentInGroup()
         throws Exception
     {
@@ -79,6 +82,7 @@ public class AbstractReleaseActionTest
         assertTrue( "Default build agent is expected to be used.", defaultBuildagentUrl.equals( buildagent ) );
     }
 
+    @Test
     public void testGetEnvironmentsDefaultAgentNotInGroup()
         throws Exception
     {
@@ -95,6 +99,7 @@ public class AbstractReleaseActionTest
         assertFalse( "Default build agent is not expected to be used.", defaultBuildagentUrl.equals( buildagent ) );
     }
 
+    @Test
     public void testGetEnvironmentsNoEnabledAgentInGroup()
         throws Exception
     {
@@ -114,6 +119,7 @@ public class AbstractReleaseActionTest
         assertNull( "Build agent should be empty.", buildagent );
     }
 
+    @Test
     public void testGetEnvironmentsNoAgentInGroup()
         throws Exception
     {

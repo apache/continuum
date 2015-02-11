@@ -29,6 +29,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.stub.SummaryActionStub;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class SummaryActionTest
@@ -49,11 +53,10 @@ public class SummaryActionTest
 
     private BuildsManager buildsManager;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         continuum = mock( Continuum.class );
         configurationService = mock( ConfigurationService.class );
         buildsManager = mock( BuildsManager.class );
@@ -63,6 +66,7 @@ public class SummaryActionTest
         action.setParallelBuildsManager( buildsManager );
     }
 
+    @Test
     public void testLatestBuildIdWhenCurrentlyBuildingInDistributedBuild()
         throws Exception
     {
@@ -90,6 +94,7 @@ public class SummaryActionTest
         assertEquals( 0, summary.getLatestBuildId() );
     }
 
+    @Test
     public void testLatestBuildIdInDistributedBuild()
         throws Exception
     {
@@ -117,6 +122,7 @@ public class SummaryActionTest
         assertEquals( 1, summary.getLatestBuildId() );
     }
 
+    @Test
     public void testLatestBuildIdWhenCurrentlyBuilding()
         throws Exception
     {

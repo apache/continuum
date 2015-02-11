@@ -25,12 +25,14 @@ import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import junit.framework.TestCase;
+import org.junit.Before;
+
+import static org.junit.Assert.assertNotNull;
 
 public abstract class AbstractActionTest
-    extends TestCase
 {
-    protected void setUp()
+    @Before
+    public void setUpActionContext()
         throws Exception
     {
         if ( ActionContext.getContext() == null )

@@ -30,10 +30,13 @@ import org.codehaus.plexus.redback.rbac.Role;
 import org.codehaus.plexus.redback.rbac.UserAssignment;
 import org.codehaus.plexus.redback.rbac.jdo.JdoRole;
 import org.codehaus.plexus.redback.rbac.jdo.JdoUserAssignment;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ProjectGroupActionTest
@@ -45,11 +48,10 @@ public class ProjectGroupActionTest
 
     private RBACManager rbac;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         continuum = mock( Continuum.class );
         rbac = mock( RBACManager.class );
 
@@ -58,6 +60,7 @@ public class ProjectGroupActionTest
         action.setRbacManager( rbac );
     }
 
+    @Test
     public void testViewMembersWithProjectAdminRole()
         throws Exception
     {
@@ -102,6 +105,7 @@ public class ProjectGroupActionTest
         assertTrue( users.get( 0 ).isUser() );
     }
 
+    @Test
     public void testViewMembersWithProjectUserRole()
         throws Exception
     {

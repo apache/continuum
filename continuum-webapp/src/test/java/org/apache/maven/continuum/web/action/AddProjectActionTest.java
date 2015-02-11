@@ -24,11 +24,15 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.stub.AddProjectActionStub;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
 /**
@@ -53,11 +57,10 @@ public class AddProjectActionTest
 
     private static final String VALID_DESCRIPTION_CHARACTER = "abcABC123whitespaces_.-";
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         continuum = mock( Continuum.class );
 
         action = new AddProjectActionStub();
@@ -74,6 +77,7 @@ public class AddProjectActionTest
         when( continuum.addProject( any( Project.class ), anyString(), anyInt(), anyInt() ) ).thenReturn( 3 );
     }
 
+    @Test
     public void testAddProjectNullValues()
         throws Exception
     {
@@ -89,6 +93,7 @@ public class AddProjectActionTest
      *
      * @throws Exception
      */
+    @Test
     public void testAddAntProject()
         throws Exception
     {
@@ -105,6 +110,7 @@ public class AddProjectActionTest
         action.add();
     }
 
+    @Test
     public void testAddAntProjectWithValidValues()
         throws Exception
     {
@@ -133,6 +139,7 @@ public class AddProjectActionTest
      *
      * @throws Exception
      */
+    @Test
     public void testAddShellProject()
         throws Exception
     {
@@ -149,6 +156,7 @@ public class AddProjectActionTest
         action.add();
     }
 
+    @Test
     public void testAddShellProjectWithValidValues()
         throws Exception
     {

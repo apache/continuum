@@ -30,10 +30,13 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.action.stub.BuildResultActionStub;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class BuildResultActionTest
@@ -49,11 +52,10 @@ public class BuildResultActionTest
 
     private BuildsManager buildsManager;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         continuum = mock( Continuum.class );
         configurationService = mock( ConfigurationService.class );
         distributedBuildManager = mock( DistributedBuildManager.class );
@@ -64,6 +66,7 @@ public class BuildResultActionTest
         action.setDistributedBuildManager( distributedBuildManager );
     }
 
+    @Test
     public void testViewPreviousBuild()
         throws Exception
     {
@@ -85,6 +88,7 @@ public class BuildResultActionTest
         assertEquals( Action.SUCCESS, action.execute() );
     }
 
+    @Test
     public void testViewCurrentBuildInDistributedBuildAgent()
         throws Exception
     {

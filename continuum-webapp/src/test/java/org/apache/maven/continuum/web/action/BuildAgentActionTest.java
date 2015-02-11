@@ -26,6 +26,8 @@ import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.continuum.web.action.admin.BuildAgentAction;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +47,10 @@ public class BuildAgentActionTest
 
     private List<BuildAgentConfiguration> buildAgents;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         continuum = mock( Continuum.class );
         configurationService = mock( ConfigurationService.class );
         distributedBuildManager = mock( DistributedBuildManager.class );
@@ -60,6 +61,7 @@ public class BuildAgentActionTest
         buildAgents = new ArrayList<BuildAgentConfiguration>();
     }
 
+    @Test
     public void testAddBuildAgent()
         throws Exception
     {
@@ -77,6 +79,7 @@ public class BuildAgentActionTest
         verify( distributedBuildManager ).update( any( BuildAgentConfiguration.class ) );
     }
 
+    @Test
     public void testDeleteBuildAgent()
         throws Exception
     {

@@ -24,6 +24,8 @@ import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.web.action.stub.AddMavenProjectStub;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -31,7 +33,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Verifies {@link org.apache.maven.continuum.web.action.AddMavenProjectAction}.
@@ -43,11 +47,10 @@ public class AddMavenProjectActionTest
 
     private HttpServletRequest request;
 
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         request = mock( HttpServletRequest.class );
 
         action = new AddMavenProjectStub();
@@ -55,6 +58,7 @@ public class AddMavenProjectActionTest
 
     }
 
+    @Test
     public void testHttpUrlConstructionWithCreds()
         throws BuildDefinitionServiceException, ContinuumException, MalformedURLException, UnsupportedEncodingException
     {
@@ -75,7 +79,7 @@ public class AddMavenProjectActionTest
         when( request.getCharacterEncoding() ).thenReturn( encoding );
 
         String result = action.execute();
-        
+
         assertEquals( "action should have succeeded", Action.SUCCESS, result );
 
         URL builtUrl = new URL( action.getPom() );
