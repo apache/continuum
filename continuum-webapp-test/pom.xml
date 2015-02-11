@@ -610,6 +610,7 @@
     <seleniumPort>4444</seleniumPort>
     <continuum.port>9595</continuum.port>
     <baseUrl>http://localhost:${continuum.port}/continuum</baseUrl>
+    <sampleProjectsUrl>http://localhost:${continuum.port}</sampleProjectsUrl>
     <buildAgentUrl>http://localhost:${continuum.port}/continuum-buildagent/xmlrpc</buildAgentUrl>
     <appserverBase>${project.build.directory}</appserverBase>
     <browser>*firefox</browser>
