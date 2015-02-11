@@ -29,6 +29,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,25 +38,18 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="create-build-project-task"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "create-build-project-task" )
 public class CreateBuildProjectTaskAction
     extends AbstractContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildExecutorManager executorManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement role-hint="parallel"
-     */
+    @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
     public synchronized void execute( Map context )

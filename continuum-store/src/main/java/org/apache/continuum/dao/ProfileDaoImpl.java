@@ -21,6 +21,7 @@ package org.apache.continuum.dao;
 
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -32,10 +33,9 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.ProfileDao"
  */
 @Repository( "profileDao" )
+@Component( role = org.apache.continuum.dao.ProfileDao.class )
 public class ProfileDaoImpl
     extends AbstractDao
     implements ProfileDao

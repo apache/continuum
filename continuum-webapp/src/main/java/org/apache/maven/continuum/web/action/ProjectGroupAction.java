@@ -40,6 +40,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.bean.ProjectGroupUserBean;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
 import org.codehaus.plexus.redback.rbac.RbacObjectNotFoundException;
@@ -65,9 +67,8 @@ import java.util.Map;
  * ProjectGroupAction:
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projectGroup"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectGroup", instantiationStrategy = "per-lookup"  )
 public class ProjectGroupAction
     extends ContinuumConfirmAction
 {
@@ -82,19 +83,13 @@ public class ProjectGroupAction
         FILTER_CRITERIA.put( "email", "Email contains" );
     }
 
-    /**
-     * @plexus.requirement role-hint="cached"
-     */
+    @Requirement( hint = "cached" )
     private RBACManager rbac;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private RoleManager roleManager;
 
-    /**
-     * @plexus.requirement role-hint="parallel"
-     */
+    @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
     private int projectGroupId;

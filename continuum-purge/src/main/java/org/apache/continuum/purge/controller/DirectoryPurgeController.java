@@ -26,6 +26,7 @@ import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.executor.DaysOldDirectoryPurgeExecutor;
 import org.apache.continuum.purge.executor.RetentionCountDirectoryPurgeExecutor;
+import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +34,8 @@ import org.slf4j.LoggerFactory;
  * DirectoryPurgeController
  *
  * @author Maria Catherine Tan
- * @plexus.component role="org.apache.continuum.purge.controller.PurgeController" role-hint="purge-directory"
  */
+@Component( role = org.apache.continuum.purge.controller.PurgeController.class, hint = "purge-directory" )
 public class DirectoryPurgeController
     implements PurgeController
 {

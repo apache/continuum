@@ -35,6 +35,9 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Configuration;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.slf4j.Logger;
@@ -45,69 +48,46 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.builddefinition.BuildDefinitionService"
  * @TODO some cache mechanism ?
  * @since 15 sept. 07
  */
+@Component( role = org.apache.maven.continuum.builddefinition.BuildDefinitionService.class )
 public class DefaultBuildDefinitionService
     implements BuildDefinitionService, Initializable
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultBuildDefinitionService.class );
 
-    /**
-     * @plexus.configuration default-value=""
-     */
+    @Configuration( "" )
     private String defaultAntGoals;
 
-    /**
-     * @plexus.configuration default-value=""
-     */
+    @Configuration( "" )
     private String defaultAntArguments;
 
-    /**
-     * @plexus.configuration default-value="clean:clean jar:install"
-     */
+    @Configuration( "clean:clean jar:install" )
     private String defaultM1Goals;
 
-    /**
-     * @plexus.configuration default-value=""
-     */
+    @Configuration( "" )
     private String defaultM1Arguments;
 
-    /**
-     * @plexus.configuration default-value="clean install"
-     */
+    @Configuration( "clean install" )
     private String defaultM2Goals;
 
-    /**
-     * @plexus.configuration default-value="--batch-mode --non-recursive"
-     */
+    @Configuration( "--batch-mode --non-recursive" )
     private String defaultM2Arguments;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionTemplateDao buildDefinitionTemplateDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private ConfigurationService configurationService;
 
     // -----------------------------------------------
@@ -166,7 +146,6 @@ public class DefaultBuildDefinitionService
         }
     }
 
-
     public void removeBuildDefinition( BuildDefinition buildDefinition )
         throws BuildDefinitionServiceException
     {
@@ -218,7 +197,6 @@ public class DefaultBuildDefinitionService
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
     }
-
 
     public List<BuildDefinition> getAllTemplates()
         throws BuildDefinitionServiceException

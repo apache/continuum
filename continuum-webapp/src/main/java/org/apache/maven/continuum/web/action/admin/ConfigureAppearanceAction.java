@@ -38,6 +38,8 @@ import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.app.company.CompanyPomHandler;
 import org.apache.maven.shared.app.configuration.Configuration;
 import org.apache.maven.shared.app.configuration.MavenAppConfiguration;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.registry.RegistryException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -52,16 +54,14 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configureAppearance"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "configureAppearance", instantiationStrategy = "per-lookup" )
 public class ConfigureAppearanceAction
     extends AbstractFooterAction
     implements ModelDriven, SecureAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private MavenAppConfiguration appConfiguration;
 
     /**
@@ -71,34 +71,22 @@ public class ConfigureAppearanceAction
 
     private Model companyModel;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private CompanyPomHandler companyPomHandler;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenBuilderHelper helper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenSettingsBuilder mavenSettingsBuilder;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ArtifactRepositoryFactory artifactRepositoryFactory;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private ArtifactRepositoryLayout layout;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private AppareanceConfiguration appareanceConfiguration;
 
     public String execute()

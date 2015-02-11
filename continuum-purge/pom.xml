@@ -90,6 +90,10 @@
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-component-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-api</artifactId>
     </dependency>
     <dependency>
@@ -139,18 +143,16 @@
     <plugins>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
+        <artifactId>plexus-component-metadata</artifactId>
         <executions>
           <execution>
             <id>generate</id>
-            <phase>generate-resources</phase>
             <goals>
-              <goal>descriptor</goal>
+              <goal>generate-metadata</goal>
             </goals>
           </execution>
           <execution>
             <id>merge</id>
-            <phase>process-resources</phase>
             <configuration>
               <descriptors>
                 <descriptor>${basedir}/src/main/resources/META-INF/plexus/components-fragment.xml</descriptor>
@@ -159,7 +161,7 @@
               <output>${project.build.outputDirectory}/META-INF/plexus/components.xml</output>
             </configuration>
             <goals>
-              <goal>merge-descriptors</goal>
+              <goal>merge-metadata</goal>
             </goals>
           </execution>
         </executions>

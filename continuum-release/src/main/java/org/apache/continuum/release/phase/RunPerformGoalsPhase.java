@@ -25,6 +25,7 @@ import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.env.ReleaseEnvironment;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -32,9 +33,8 @@ import java.util.List;
 
 /**
  * Run Release Perform Goals
- *
- * @plexus.component role="org.apache.maven.shared.release.phase.ReleasePhase" role-hint="run-release-perform-goals"
  */
+@Component( role = org.apache.maven.shared.release.phase.ReleasePhase.class, hint = "run-release-perform-goals" )
 public class RunPerformGoalsPhase
     extends AbstractContinuumRunGoalsPhase
 {

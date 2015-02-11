@@ -29,6 +29,7 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.ProjectBuildsSummary;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,9 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projectBuildsReport"
- */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectBuildsReport", instantiationStrategy = "per-lookup" )
 public class ViewBuildsReportAction
     extends ContinuumActionSupport
 {
@@ -75,8 +74,8 @@ public class ViewBuildsReportAction
     public static final String SEND_FILE = "send-file";
 
     private static final String[] datePatterns =
-        new String[]{"MM/dd/yy", "MM/dd/yyyy", "MMMMM/dd/yyyy", "MMMMM/dd/yy", "dd MMMMM yyyy", "dd/MM/yy",
-            "dd/MM/yyyy", "yyyy/MM/dd", "yyyy-MM-dd", "yyyy-dd-MM", "MM-dd-yyyy", "MM-dd-yy"};
+        new String[] { "MM/dd/yy", "MM/dd/yyyy", "MMMMM/dd/yyyy", "MMMMM/dd/yy", "dd MMMMM yyyy", "dd/MM/yy",
+            "dd/MM/yyyy", "yyyy/MM/dd", "yyyy-MM-dd", "yyyy-dd-MM", "MM-dd-yyyy", "MM-dd-yy" };
 
     public void prepare()
         throws Exception

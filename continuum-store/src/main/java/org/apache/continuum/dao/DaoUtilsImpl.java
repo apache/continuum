@@ -41,6 +41,8 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.springframework.stereotype.Repository;
 
@@ -59,18 +61,16 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.DaoUtils"
  */
 @Repository( "daoUtils" )
+@Component( role = org.apache.continuum.dao.DaoUtils.class )
 public class DaoUtilsImpl
     extends AbstractDao
     implements DaoUtils
 {
-    /**
-     * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
-     */
+
     @Resource
+    @Requirement( role = org.apache.continuum.dao.ProjectDao.class )
     private ProjectDao projectDao;
 
     public void closeStore()
@@ -149,7 +149,6 @@ public class DaoUtilsImpl
      * @param scheduleId
      * @return
      * @throws org.apache.maven.continuum.store.ContinuumStoreException
-     *
      * @todo Move to a better place
      */
     public Map<Integer, Object> getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )

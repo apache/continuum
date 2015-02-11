@@ -21,6 +21,7 @@ package org.apache.continuum.dao;
 
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -35,9 +36,9 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @plexus.component role="org.apache.continuum.dao.BuildQueueDao"
  */
 @Repository( "buildQueueDao" )
+@Component( role = org.apache.continuum.dao.BuildQueueDao.class )
 public class BuildQueueDaoImpl
     extends AbstractDao
     implements BuildQueueDao

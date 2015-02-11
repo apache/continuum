@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.appareance;
 import org.apache.continuum.web.appearance.ContinuumAppearance;
 import org.apache.continuum.web.appearance.io.xpp3.ContinuumAppearanceModelsXpp3Reader;
 import org.apache.continuum.web.appearance.io.xpp3.ContinuumAppearanceModelsXpp3Writer;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.ReaderFactory;
@@ -39,10 +40,9 @@ import java.util.Calendar;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.web.appareance.AppareanceConfiguration" role-hint="default"
  * @since 10 nov. 07
  */
+@Component( role = org.apache.maven.continuum.web.appareance.AppareanceConfiguration.class, hint = "default" )
 public class DefaultAppareanceConfiguration
     implements AppareanceConfiguration, Initializable
 {
@@ -122,7 +122,6 @@ public class DefaultAppareanceConfiguration
         this.footer = safeFooterHtmlContent;
     }
 
-
     private String getDefaultFooter()
     {
         int inceptionYear = 2005;
@@ -135,7 +134,6 @@ public class DefaultAppareanceConfiguration
         stringBuilder.append( "</div> <div class=\"clear\"><hr/></div>" );
         return stringBuilder.toString();
     }
-
 
     private File getAppearanceConfigurationFile()
     {

@@ -20,6 +20,7 @@ package org.apache.maven.continuum.utils;
  */
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
@@ -33,12 +34,10 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.utils.ContinuumUrlValidator"
- * role-hint="continuumUrl"
  * @since 27 mars 2008
  */
 @Service( "continuumUrlValidator#continuumUrl" )
+@Component( role = org.apache.maven.continuum.utils.ContinuumUrlValidator.class, hint = "continuumUrl" )
 public class ContinuumUrlValidator
     implements Configurable
 {
@@ -50,7 +49,7 @@ public class ContinuumUrlValidator
     /**
      * If no schemes are provided, default to this set.
      */
-    protected String[] defaultSchemes = {"http", "https", "ftp"};
+    protected String[] defaultSchemes = { "http", "https", "ftp" };
 
     /**
      * Create a UrlValidator with default properties.

@@ -31,6 +31,8 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,42 +40,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @plexus.component role="org.apache.continuum.builder.distributed.work.ContinuumWorker"
- */
+@Component( role = org.apache.continuum.builder.distributed.work.ContinuumWorker.class )
 public class DefaultContinuumWorker
     implements ContinuumWorker
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultContinuumWorker.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedBuildManager distributedBuildManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
     public synchronized void work()
@@ -114,8 +102,8 @@ public class DefaultContinuumWorker
 
                             log.debug(
                                 "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
-                                new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
-                                    currentRun.getBuildAgentUrl()} );
+                                new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
+                                    currentRun.getBuildAgentUrl() } );
                             runsToDelete.add( currentRun );
                         }
                     }
@@ -123,8 +111,8 @@ public class DefaultContinuumWorker
                     {
                         log.debug(
                             "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
-                            new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
-                                currentRun.getBuildAgentUrl()} );
+                            new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
+                                currentRun.getBuildAgentUrl() } );
                         runsToDelete.add( currentRun );
                     }
                     else
@@ -163,8 +151,8 @@ public class DefaultContinuumWorker
 
                                 log.debug(
                                     "projectId={}, buildDefinitionId={} is not building anymore. Problem encountered while return build result by build agent {}. Stopping the build.",
-                                    new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
-                                        currentRun.getBuildAgentUrl()} );
+                                    new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
+                                        currentRun.getBuildAgentUrl() } );
 
                                 // create a build result
                                 runsToDelete.add( currentRun );
@@ -176,7 +164,7 @@ public class DefaultContinuumWorker
                 {
                     log.error(
                         "Unable to check if projectId={}, buildDefinitionId={} is still updating or building: {}",
-                        new Object[]{currentRun.getProjectId(), currentRun.getBuildDefinitionId(), e.getMessage()} );
+                        new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(), e.getMessage() } );
                 }
             }
 

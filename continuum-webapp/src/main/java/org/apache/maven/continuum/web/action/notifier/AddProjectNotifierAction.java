@@ -25,16 +25,16 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Action to add a {@link ProjectNotifier} for a specified {@link Project}.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProjectNotifier"
  * @since 1.1
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "addProjectNotifier", instantiationStrategy = "per-lookup" )
 public class AddProjectNotifierAction
     extends ContinuumActionSupport
 {

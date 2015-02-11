@@ -27,6 +27,8 @@ import org.apache.maven.continuum.web.util.UrlHelperFactory;
 import org.apache.maven.continuum.web.util.WorkingCopyContentGenerator;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.util.UrlHelper;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -41,20 +43,16 @@ import javax.activation.MimetypesFileTypeMap;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="workingCopy"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "workingCopy", instantiationStrategy = "per-lookup" )
 public class WorkingCopyAction
     extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private WorkingCopyContentGenerator generator;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedBuildManager distributedBuildManager;
 
     private Project project;
@@ -113,7 +111,7 @@ public class WorkingCopyAction
         params.put( "projectName", projectName );
 
         UrlHelper urlHelper = UrlHelperFactory.getInstance();
-        
+
         String baseUrl = urlHelper.buildUrl( "/workingCopy.action", ServletActionContext.getRequest(),
                                              ServletActionContext.getResponse(), params );
 
@@ -247,7 +245,6 @@ public class WorkingCopyAction
     {
         return currentFileContent;
     }
-
 
     public InputStream getInputStream()
         throws ContinuumException

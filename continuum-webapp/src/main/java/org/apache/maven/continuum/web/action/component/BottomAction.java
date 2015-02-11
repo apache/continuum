@@ -19,12 +19,13 @@ package org.apache.maven.continuum.web.action.component;
  * under the License.
  */
 
+import org.codehaus.plexus.component.annotations.Component;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="bottom"
  * @since 8 nov. 07
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "bottom", instantiationStrategy = "per-lookup" )
 public class BottomAction
     extends AbstractFooterAction
 {

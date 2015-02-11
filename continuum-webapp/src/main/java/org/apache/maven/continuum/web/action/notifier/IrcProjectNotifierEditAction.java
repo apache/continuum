@@ -20,15 +20,15 @@ package org.apache.maven.continuum.web.action.notifier;
  */
 
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="ircProjectNotifierEdit"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "ircProjectNotifierEdit", instantiationStrategy = "per-lookup" )
 public class IrcProjectNotifierEditAction
     extends AbstractProjectNotifierEditAction
 {

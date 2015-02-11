@@ -22,6 +22,7 @@ package org.apache.maven.continuum.utils;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.codehaus.plexus.component.annotations.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -39,9 +40,7 @@ public class ChrootJailWorkingDirectoryService
     @Resource
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private File chrootJailDirectory;
 
     public void setConfigurationService( ConfigurationService configurationService )

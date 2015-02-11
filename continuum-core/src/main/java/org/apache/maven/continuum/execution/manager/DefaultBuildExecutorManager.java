@@ -21,6 +21,8 @@ package org.apache.maven.continuum.execution.manager;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,18 +32,14 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.execution.manager.BuildExecutorManager"
- * role-hint"default"
  */
+@Component( role = org.apache.maven.continuum.execution.manager.BuildExecutorManager.class, hint = "default" )
 public class DefaultBuildExecutorManager
     implements BuildExecutorManager, Initializable
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultBuildExecutorManager.class );
 
-    /**
-     * @plexus.requirement role="org.apache.maven.continuum.execution.ContinuumBuildExecutor"
-     */
+    @Requirement( role = org.apache.maven.continuum.execution.ContinuumBuildExecutor.class )
     private Map<String, ContinuumBuildExecutor> executors;
 
     // ----------------------------------------------------------------------

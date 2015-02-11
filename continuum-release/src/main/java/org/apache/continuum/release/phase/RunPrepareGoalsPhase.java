@@ -24,15 +24,15 @@ import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.env.ReleaseEnvironment;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.io.File;
 import java.util.List;
 
 /**
  * Run Release Preparation Goals
- *
- * @plexus.component role="org.apache.maven.shared.release.phase.ReleasePhase" role-hint="run-release-prepare-goals"
  */
+@Component( role = org.apache.maven.shared.release.phase.ReleasePhase.class, hint = "run-release-prepare-goals" )
 public class RunPrepareGoalsPhase
     extends AbstractContinuumRunGoalsPhase
 {

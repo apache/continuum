@@ -34,6 +34,8 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
@@ -46,28 +48,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
- * role-hint="prepare-build-agent"
- */
+@Component( role = org.codehaus.plexus.taskqueue.execution.TaskExecutor.class, hint = "prepare-build-agent" )
 public class PrepareBuildProjectsTaskExecutor
     implements TaskExecutor
 {
     private static final Logger log = LoggerFactory.getLogger( PrepareBuildProjectsTaskExecutor.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ActionManager actionManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentManager buildAgentManager;
 
     public void executeTask( Task task )

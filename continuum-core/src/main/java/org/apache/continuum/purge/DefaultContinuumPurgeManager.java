@@ -30,6 +30,8 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,33 +42,24 @@ import java.util.List;
  * DefaultContinuumPurgeManager
  *
  * @author Maria Catherine Tan
- * @version $Id$
- * @plexus.component role="org.apache.continuum.purge.ContinuumPurgeManager" role-hint="default"
  * @since 25 jul 07
  */
+@Component( role = org.apache.continuum.purge.ContinuumPurgeManager.class, hint = "default" )
 public class DefaultContinuumPurgeManager
     implements ContinuumPurgeManager
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultContinuumPurgeManager.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private SchedulesActivator schedulesActivator;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private PurgeConfigurationService purgeConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private TaskQueueManager taskQueueManager;
 
-    /**
-     * @plexus.requirement role-hint="parallel"
-     */
+    @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
     public void purge( Schedule schedule )

@@ -28,6 +28,7 @@ import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.env.ReleaseEnvironment;
 import org.apache.maven.shared.release.phase.AbstractRunGoalsPhase;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -40,14 +41,11 @@ import java.util.Map;
 public abstract class AbstractContinuumRunGoalsPhase
     extends AbstractRunGoalsPhase
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private ShellCommandHelper shellCommandHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private InstallationService installationService;
 
     /**

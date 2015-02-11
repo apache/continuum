@@ -25,6 +25,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,26 +45,21 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.BuildDefinitionDao"
  */
 @Repository( "buildDefinitionDao" )
+@Component( role = org.apache.continuum.dao.BuildDefinitionDao.class )
 public class BuildDefinitionDaoImpl
     extends AbstractDao
     implements BuildDefinitionDao
 {
     private static final Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
 
-    /**
-     * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
-     */
     @Resource
+    @Requirement( role = org.apache.continuum.dao.ProjectDao.class )
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement role="org.apache.continuum.dao.ProjectGroupDao"
-     */
     @Resource
+    @Requirement( role = org.apache.continuum.dao.ProjectGroupDao.class )
     private ProjectGroupDao projectGroupDao;
 
     public BuildDefinition getBuildDefinition( int buildDefinitionId )
@@ -84,7 +81,6 @@ public class BuildDefinitionDaoImpl
 
         return buildDefinition;
     }
-
 
     public BuildDefinition addBuildDefinition( BuildDefinition buildDefinition )
         throws ContinuumStoreException

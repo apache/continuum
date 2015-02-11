@@ -31,6 +31,8 @@ import org.apache.continuum.purge.executor.DaysOldRepositoryPurgeExecutor;
 import org.apache.continuum.purge.executor.ReleasedSnapshotsRepositoryPurgeExecutor;
 import org.apache.continuum.purge.executor.RetentionCountRepositoryPurgeExecutor;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +40,8 @@ import org.slf4j.LoggerFactory;
  * DefaultPurgeController
  *
  * @author Maria Catherine Tan
- * @plexus.component role="org.apache.continuum.purge.controller.PurgeController" role-hint="purge-repository"
  */
+@Component( role = org.apache.continuum.purge.controller.PurgeController.class, hint = "purge-repository" )
 public class RepositoryPurgeController
     implements PurgeController
 {
@@ -49,9 +51,7 @@ public class RepositoryPurgeController
 
     private ContinuumPurgeExecutor purgeReleasedSnapshotsExecutor;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private PurgeConfigurationService purgeConfigurationService;
 
     private boolean deleteReleasedSnapshots = false;

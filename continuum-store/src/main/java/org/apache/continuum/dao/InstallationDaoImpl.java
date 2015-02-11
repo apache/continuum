@@ -22,6 +22,7 @@ package org.apache.continuum.dao;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -35,10 +36,9 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.InstallationDao"
  */
 @Repository( "installationDao" )
+@Component( role = org.apache.continuum.dao.InstallationDao.class )
 public class InstallationDaoImpl
     extends AbstractDao
     implements InstallationDao

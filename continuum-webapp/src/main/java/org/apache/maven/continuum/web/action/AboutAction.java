@@ -19,14 +19,14 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.codehaus.plexus.component.annotations.Component;
+
 /**
  * AboutAction:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action"
- * role-hint="about"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "about", instantiationStrategy = "per-lookup" )
 public class AboutAction
     extends ContinuumActionSupport
 {

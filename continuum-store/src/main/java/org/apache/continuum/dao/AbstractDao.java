@@ -21,6 +21,7 @@ package org.apache.continuum.dao;
 
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
@@ -34,7 +35,6 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public class AbstractDao
 {
@@ -58,10 +58,8 @@ public class AbstractDao
 
     protected static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
 
-    /**
-     * @plexus.requirement
-     */
     @Resource
+    @Requirement
     private StoreUtilities storeUtilities;
 
     protected Object addObject( Object object )

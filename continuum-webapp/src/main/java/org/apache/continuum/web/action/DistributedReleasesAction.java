@@ -24,6 +24,7 @@ import org.apache.continuum.release.distributed.manager.DistributedReleaseManage
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.model.DistributedReleaseSummary;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -33,9 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="distributedRelease"
- */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "distributedRelease", instantiationStrategy = "per-lookup" )
 public class DistributedReleasesAction
     extends ContinuumActionSupport
     implements SecureAction

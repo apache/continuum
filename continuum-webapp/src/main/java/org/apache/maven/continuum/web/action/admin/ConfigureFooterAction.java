@@ -21,22 +21,21 @@ package org.apache.maven.continuum.web.action.admin;
 
 import org.apache.maven.continuum.web.action.component.AbstractFooterAction;
 import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.IOException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configureFooter"
  * @since 9 nov. 07
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "configureFooter", instantiationStrategy = "per-lookup" )
 public class ConfigureFooterAction
     extends AbstractFooterAction
 {
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private AppareanceConfiguration appareanceConfiguration;
 
     public String saveFooter()

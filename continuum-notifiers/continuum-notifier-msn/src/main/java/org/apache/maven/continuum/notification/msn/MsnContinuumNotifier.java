@@ -29,6 +29,7 @@ import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.NotificationException;
+import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.msn.MsnClient;
 import org.codehaus.plexus.msn.MsnException;
 import org.codehaus.plexus.util.StringUtils;
@@ -43,7 +44,6 @@ import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 @Service( "notifier#msn" )
 public class MsnContinuumNotifier
@@ -65,14 +65,10 @@ public class MsnContinuumNotifier
     // Configuration
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String fromAddress;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String fromPassword;
 
     // ----------------------------------------------------------------------

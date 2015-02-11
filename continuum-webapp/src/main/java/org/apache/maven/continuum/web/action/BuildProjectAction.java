@@ -28,13 +28,13 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildProject"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildProject", instantiationStrategy = "per-lookup"  )
 public class BuildProjectAction
     extends ContinuumActionSupport
 {

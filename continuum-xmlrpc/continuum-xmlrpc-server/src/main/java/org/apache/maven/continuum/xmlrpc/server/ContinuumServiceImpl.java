@@ -73,6 +73,8 @@ import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
@@ -92,9 +94,8 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent" role-hint="org.apache.maven.continuum.xmlrpc.ContinuumService"
  */
+@Component( role = org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent.class, hint = "org.apache.maven.continuum.xmlrpc.ContinuumService" )
 public class ContinuumServiceImpl
     extends AbstractContinuumSecureService
 {
@@ -142,29 +143,19 @@ public class ContinuumServiceImpl
 
     private final Logger logger = LoggerFactory.getLogger( ContinuumServiceImpl.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private Continuum continuum;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private SystemConfigurationDao systemConfigurationDao;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private RoleManager roleManager;
 
-    /**
-     * @plexus.requirement role-hint="parallel"
-     */
+    @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedBuildManager distributedBuildManager;
 
     public boolean ping()

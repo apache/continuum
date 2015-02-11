@@ -29,6 +29,8 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.GroupSummary;
 import org.apache.maven.continuum.web.model.ProjectSummary;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +45,8 @@ import java.util.Map;
  * Used to render the list of projects in the project group page.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="summary"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "summary", instantiationStrategy = "per-lookup"  )
 public class SummaryAction
     extends ContinuumActionSupport
 {
@@ -59,9 +60,7 @@ public class SummaryAction
 
     private GroupSummary groupSummary = new GroupSummary();
 
-    /**
-     * @plexus.requirement role-hint="parallel"
-     */
+    @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
     public String execute()

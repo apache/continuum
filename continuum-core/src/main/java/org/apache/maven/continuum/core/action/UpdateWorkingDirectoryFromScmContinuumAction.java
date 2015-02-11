@@ -41,6 +41,8 @@ import org.apache.maven.scm.ScmFile;
 import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.Date;
@@ -50,37 +52,26 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="update-working-directory-from-scm"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "update-working-directory-from-scm" )
 public class UpdateWorkingDirectoryFromScmContinuumAction
     extends AbstractContinuumAction
 {
     private static final String KEY_UPDATE_SCM_RESULT = "update-result";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumNotificationDispatcher notifier;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumScm scm;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
     public void execute( Map context )

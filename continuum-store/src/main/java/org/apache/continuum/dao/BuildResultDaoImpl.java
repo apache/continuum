@@ -23,6 +23,7 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.Calendar;
@@ -38,10 +39,9 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.BuildResultDao"
  */
 @Repository( "buildResultDao" )
+@Component( role = org.apache.continuum.dao.BuildResultDao.class )
 public class BuildResultDaoImpl
     extends AbstractDao
     implements BuildResultDao

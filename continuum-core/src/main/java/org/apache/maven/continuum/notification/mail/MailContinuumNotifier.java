@@ -47,6 +47,8 @@ import org.apache.maven.continuum.reports.surefire.ReportTestResult;
 import org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.codehaus.plexus.component.annotations.Configuration;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.velocity.VelocityComponent;
@@ -86,68 +88,44 @@ public class MailContinuumNotifier
     // Requirements
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private VelocityComponent velocity;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private Continuum continuum;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private JavaMailSender javaMailSender;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ReportTestSuiteGenerator reportTestSuiteGenerator;
 
     // ----------------------------------------------------------------------
     // Configuration
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String fromMailbox;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String fromName;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String toOverride;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String timestampFormat;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private boolean includeBuildSummary = true;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private boolean includeTestSummary = true;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private boolean includeBuildOutput = false;
 
     /**
@@ -157,16 +135,14 @@ public class MailContinuumNotifier
      * "[continuum] BUILD ${state}: ${project.name} ${project.scmTag}" results in "[continuum] BUILD SUCCESSFUL: Hello World Branch001"
      * "[continuum] BUILD ${state}: ${project.name} ${build.durationTime}" results in "[continuum] BUILD SUCCESSFUL: Hello World 2 sec"
      * "[continuum] BUILD ${state}: ${project.name}, Build Def - ${build.buildDefinition.description}" results in "[continuum] BUILD SUCCESSFUL: Hello World, Build Def - Nightly Test Build"
-     *
-     * @plexus.configuration
      */
+    @Configuration( "" )
     private String buildSubjectFormat = "[continuum] BUILD ${state}: ${project.groupId} ${project.name}";
 
     /**
      * Customizable mail subject
-     *
-     * @plexus.configuration
      */
+    @Configuration( "" )
     private String prepareBuildSubjectFormat =
         "[continuum] PREPARE BUILD ${state]: ${projectScmRoot.projectGroup.name}";
 

@@ -20,15 +20,14 @@ package org.apache.continuum.buildagent.installation;
  */
 
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.installation.BuildAgentInstallationService" role-hint="default"
- */
+@Component( role = org.apache.continuum.buildagent.installation.BuildAgentInstallationService.class, hint = "default" )
 public class DefaultBuildAgentInstallationService
     implements BuildAgentInstallationService, Initializable
 {

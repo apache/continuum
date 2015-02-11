@@ -34,6 +34,8 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -42,29 +44,21 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.project.builder.ContinuumProjectBuilder"
- * role-hint="maven-one-builder"
  */
+@Component( role = org.apache.maven.continuum.project.builder.ContinuumProjectBuilder.class, hint = "maven-one-builder" )
 public class MavenOneContinuumProjectBuilder
     extends AbstractContinuumProjectBuilder
     implements ContinuumProjectBuilder
 {
     public static final String ID = "maven-one-builder";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionService buildDefinitionService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenOneMetadataHelper metadataHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
     // ----------------------------------------------------------------------

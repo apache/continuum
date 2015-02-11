@@ -35,6 +35,8 @@ import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -47,9 +49,8 @@ import java.util.Map;
  * BuildDefinitionAction:
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildDefinition"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildDefinition", instantiationStrategy = "per-lookup" )
 public class BuildDefinitionAction
     extends ContinuumConfirmAction
 {
@@ -99,9 +100,7 @@ public class BuildDefinitionAction
 
     private Map<Integer, String> buildDefinitionUpdatePolicies;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionService buildDefinitionService;
 
     @Override

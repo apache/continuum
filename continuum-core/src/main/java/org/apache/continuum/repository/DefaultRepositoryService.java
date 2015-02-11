@@ -29,6 +29,8 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,33 +40,24 @@ import java.util.List;
  * DefaultRepositoryService
  *
  * @author Maria Catherine Tan
- * @version $Id$
- * @plexus.component role="org.apache.continuum.repository.RepositoryService" role-hint="default"
  * @since 25 jul 07
  */
+@Component( role = org.apache.continuum.repository.RepositoryService.class, hint = "default" )
 public class DefaultRepositoryService
     implements RepositoryService
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultRepositoryService.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private LocalRepositoryDao localRepositoryDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private TaskQueueManager taskQueueManager;
 
     public LocalRepository addLocalRepository( LocalRepository localRepository )

@@ -30,6 +30,8 @@ import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -44,11 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="distributedPurgeConfiguration"
- */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "distributedPurgeConfiguration", instantiationStrategy = "per-lookup"  )
 public class DistributedPurgeConfigurationAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
@@ -101,9 +99,7 @@ public class DistributedPurgeConfigurationAction
 
     private List<String> buildAgentUrls;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private PurgeConfigurationService purgeConfigService;
 
     @Override

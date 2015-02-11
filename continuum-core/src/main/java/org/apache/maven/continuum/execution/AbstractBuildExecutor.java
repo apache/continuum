@@ -34,6 +34,7 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.commandline.ExecutableResolver;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
@@ -65,34 +66,22 @@ public abstract class AbstractBuildExecutor
     //
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ShellCommandHelper shellCommandHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ExecutableResolver executableResolver;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private InstallationService installationService;
 
-    /**
-     * @plexus.configuration
-     */
+    @Requirement
     private File chrootJailDirectory;
 
-    /**
-     * @plexus.configuration
-     */
+    @Requirement
     private String defaultExecutable;
 
     // ----------------------------------------------------------------------

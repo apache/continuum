@@ -33,6 +33,8 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
@@ -45,31 +47,23 @@ import java.util.List;
  * DefaultPurgeConfigurationService
  *
  * @author Maria Catherine Tan
- * @version $Id$
- * @plexus.component role="org.apache.continuum.purge.PurgeConfigurationService" role-hint="default"
  * @since 25 jul 07
  */
+@Component( role = org.apache.continuum.purge.PurgeConfigurationService.class, hint = "default" )
 public class DefaultPurgeConfigurationService
     implements PurgeConfigurationService, Contextualizable
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private LocalRepositoryDao localRepositoryDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
 
     private PlexusContainer container;

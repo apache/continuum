@@ -41,6 +41,7 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.util.StringUtils;
@@ -66,29 +67,19 @@ public class DistributedBuildProjectTaskExecutor
 
     private long endTime;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
     public void setBuildAgentUrl( String buildAgentUrl )
@@ -303,8 +294,8 @@ public class DistributedBuildProjectTaskExecutor
                     int buildDefinitionId = map.get( projectId );
                     Project project = projectDao.getProject( projectId );
                     BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-                    BuildResult latestBuildResult = buildResultDao.
-                        getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+                    BuildResult latestBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId,
+                                                                                                           buildDefinitionId );
                     if ( latestBuildResult == null ||
                         ( latestBuildResult.getStartTime() >= startTime && latestBuildResult.getEndTime() > 0 &&
                             latestBuildResult.getEndTime() < endTime ) || latestBuildResult.getStartTime() < startTime )

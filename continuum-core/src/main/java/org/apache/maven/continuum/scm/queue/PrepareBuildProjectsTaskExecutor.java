@@ -45,6 +45,8 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
@@ -61,53 +63,35 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
- * role-hint="prepare-build-project"
  */
+@Component( role = org.codehaus.plexus.taskqueue.execution.TaskExecutor.class, hint = "prepare-build-project" )
 public class PrepareBuildProjectsTaskExecutor
     implements TaskExecutor
 {
     private static final Logger log = LoggerFactory.getLogger( PrepareBuildProjectsTaskExecutor.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ActionManager actionManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumNotificationDispatcher notifierDispatcher;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
     public void executeTask( Task task )

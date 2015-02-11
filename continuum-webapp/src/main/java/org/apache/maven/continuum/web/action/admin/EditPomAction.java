@@ -32,6 +32,8 @@ import org.apache.maven.shared.app.company.CompanyPomHandler;
 import org.apache.maven.shared.app.configuration.CompanyPom;
 import org.apache.maven.shared.app.configuration.Configuration;
 import org.apache.maven.shared.app.configuration.MavenAppConfiguration;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -41,30 +43,24 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="editPom"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "editPom", instantiationStrategy = "per-lookup" )
 public class EditPomAction
     extends ContinuumActionSupport
     implements ModelDriven, SecureAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private MavenAppConfiguration appConfiguration;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private CompanyPomHandler companyPomHandler;
 
     private Model companyModel;
 
     private String organizationLogo;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenBuilderHelper helper;
 
     public String execute()

@@ -26,15 +26,15 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Action that deletes a {@link ProjectNotifier} from a specified {@link Project}.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="deleteProjectNotifier"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "deleteProjectNotifier", instantiationStrategy = "per-lookup" )
 public class DeleteProjectNotifierAction
     extends ContinuumActionSupport
 {

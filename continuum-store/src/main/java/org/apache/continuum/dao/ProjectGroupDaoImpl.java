@@ -24,6 +24,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.springframework.stereotype.Repository;
 
@@ -41,18 +43,16 @@ import javax.jdo.Transaction;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.ProjectGroupDao"
  */
 @Repository( "projectGroupDao" )
+@Component( role = org.apache.continuum.dao.ProjectGroupDao.class )
 public class ProjectGroupDaoImpl
     extends AbstractDao
     implements ProjectGroupDao
 {
-    /**
-     * @plexus.requirement role=org.apache.continuum.dao.ProjectDao"
-     */
+
     @Resource
+    @Requirement( role = org.apache.continuum.dao.ProjectDao.class )
     private ProjectDao projectDao;
 
     public ProjectGroup addProjectGroup( ProjectGroup group )
@@ -191,9 +191,9 @@ public class ProjectGroupDaoImpl
     public List<ProjectGroup> getAllProjectGroupsWithTheLot()
     {
         List fetchGroups = Arrays.asList(
-            new String[]{PROJECT_WITH_BUILDS_FETCH_GROUP, PROJECTGROUP_PROJECTS_FETCH_GROUP,
+            new String[] { PROJECT_WITH_BUILDS_FETCH_GROUP, PROJECTGROUP_PROJECTS_FETCH_GROUP,
                 BUILD_RESULT_WITH_DETAILS_FETCH_GROUP, PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP,
-                PROJECT_ALL_DETAILS_FETCH_GROUP, PROJECT_BUILD_DETAILS_FETCH_GROUP} );
+                PROJECT_ALL_DETAILS_FETCH_GROUP, PROJECT_BUILD_DETAILS_FETCH_GROUP } );
         return PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), ProjectGroup.class, "name ascending",
                                                      fetchGroups );
     }

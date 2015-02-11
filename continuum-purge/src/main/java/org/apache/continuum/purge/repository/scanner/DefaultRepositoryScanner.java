@@ -24,6 +24,8 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.repository.utils.FileTypes;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.DirectoryWalker;
 
 import java.io.File;
@@ -32,15 +34,13 @@ import java.util.List;
 
 /**
  * Codes were taken from Archiva and made some changes.
- *
- * @plexus.component role="org.apache.continuum.purge.repository.scanner.RepositoryScanner" role-hint="repository-scanner"
  */
+@Component( role = org.apache.continuum.purge.repository.scanner.RepositoryScanner.class, hint = "repository-scanner" )
 public class DefaultRepositoryScanner
     implements RepositoryScanner
 {
-    /**
-     * @plexus.requirement role-hint="file-types"
-     */
+
+    @Requirement( hint = "file-types" )
     private FileTypes filetypes;
 
     public void scan( LocalRepository repository, PurgeController purgeController )

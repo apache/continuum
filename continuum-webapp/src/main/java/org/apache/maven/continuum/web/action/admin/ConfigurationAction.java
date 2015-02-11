@@ -27,6 +27,7 @@ import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.struts2.ServletActionContext;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
@@ -40,9 +41,8 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configuration"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "configuration", instantiationStrategy = "per-lookup" )
 public class ConfigurationAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction

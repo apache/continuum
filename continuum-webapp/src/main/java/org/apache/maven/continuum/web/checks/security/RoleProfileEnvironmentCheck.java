@@ -21,6 +21,8 @@ package org.apache.maven.continuum.web.checks.security;
 
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.system.check.EnvironmentCheck;
@@ -34,23 +36,17 @@ import java.util.List;
  * RoleProfileEnvironmentCheck:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $Id$
- * @plexus.component role="org.codehaus.plexus.redback.system.check.EnvironmentCheck"
- * role-hint="continuum-role-profile-check"
  */
+@Component( role = org.codehaus.plexus.redback.system.check.EnvironmentCheck.class, hint = "continuum-role-profile-check" )
 public class RoleProfileEnvironmentCheck
     implements EnvironmentCheck
 {
     private static final Logger log = LoggerFactory.getLogger( RoleProfileEnvironmentCheck.class );
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private RoleManager roleManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private Continuum continuum;
 
     public void validateEnvironment( List list )

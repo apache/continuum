@@ -23,23 +23,21 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 /**
  * ForceContinuumConfigurationInterceptor:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $Id$
- * @plexus.component role="com.opensymphony.xwork2.interceptor.Interceptor"
- * role-hint="forceContinuumConfigurationInterceptor"
  */
+@Component( role = com.opensymphony.xwork2.interceptor.Interceptor.class, hint = "forceContinuumConfigurationInterceptor" )
 public class ForceContinuumConfigurationInterceptor
     implements Interceptor
 {
     private static boolean checked = false;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private Continuum continuum;
 
     public void destroy()

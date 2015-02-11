@@ -35,6 +35,8 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
 import org.apache.struts2.ServletActionContext;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -44,18 +46,15 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildResult"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildResult", instantiationStrategy = "per-lookup"  )
 public class BuildResultAction
     extends AbstractBuildAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private DistributedBuildManager distributedBuildManager;
 
     private Project project;
@@ -196,7 +195,6 @@ public class BuildResultAction
         return CONFIRM;
     }
 
-
     public String buildLogAsText()
         throws ConfigurationException, IOException
     {
@@ -222,7 +220,6 @@ public class BuildResultAction
         }
         return null;
     }
-
 
     public int getBuildId()
     {

@@ -31,6 +31,7 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.struts2.ServletActionContext;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
@@ -45,8 +46,8 @@ import java.util.List;
 
 /**
  * @author Maria Catherine Tan
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildAgent"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildAgent", instantiationStrategy = "per-lookup" )
 public class BuildAgentAction
     extends ContinuumConfirmAction
     implements SecureAction
@@ -292,7 +293,7 @@ public class BuildAgentAction
         {
             if ( buildAgentGroup.getName().equals( profile.getBuildAgentGroup() ) )
             {
-                message = getText( "buildAgentGroup.error.remove.in.use", new String[]{ profile.getName() } );
+                message = getText( "buildAgentGroup.error.remove.in.use", new String[] { profile.getName() } );
                 return ERROR;
             }
         }

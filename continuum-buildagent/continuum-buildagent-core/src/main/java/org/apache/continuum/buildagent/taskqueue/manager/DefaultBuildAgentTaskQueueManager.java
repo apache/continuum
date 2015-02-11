@@ -26,6 +26,8 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
@@ -39,22 +41,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager" role-hint="default"
- */
+@Component( role = org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager.class, hint = "default" )
 public class DefaultBuildAgentTaskQueueManager
     implements BuildAgentTaskQueueManager, Contextualizable
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentTaskQueueManager.class );
 
-    /**
-     * @plexus.requirement role-hint="build-agent"
-     */
+    @Requirement( hint = "build-agent" )
     private TaskQueue buildAgentBuildQueue;
 
-    /**
-     * @plexus.requirement role-hint="prepare-build-agent"
-     */
+    @Requirement( hint = "prepare-build-agent" )
     private TaskQueue buildAgentPrepareBuildQueue;
 
     private PlexusContainer container;

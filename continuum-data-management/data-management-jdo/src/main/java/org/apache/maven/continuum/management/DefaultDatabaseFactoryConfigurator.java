@@ -19,21 +19,18 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 
 import java.util.Iterator;
 import java.util.Properties;
 
-/**
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.management.DatabaseFactoryConfigurator" role-hint="continuum"
- */
+@Component( role = org.apache.maven.continuum.management.DatabaseFactoryConfigurator.class, hint = "continuum" )
 public class DefaultDatabaseFactoryConfigurator
     implements DatabaseFactoryConfigurator
 {
-    /**
-     * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
-     */
+    @Requirement( role = org.codehaus.plexus.jdo.JdoFactory.class, hint = "continuum" )
     protected DefaultConfigurableJdoFactory factory;
 
     public void configure( DatabaseParams params )

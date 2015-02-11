@@ -34,6 +34,7 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.AbstractBuildDefinitionAction;
 import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -49,10 +50,9 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildDefinitionTemplates"
  * @since 16 sept. 07
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildDefinitionTemplates", instantiationStrategy = "per-lookup" )
 public class BuildDefinitionTemplateAction
     extends AbstractBuildDefinitionAction
     implements SecureAction, Preparable

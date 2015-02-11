@@ -28,6 +28,7 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,8 @@ import java.util.Map;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseInProgress"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "releaseInProgress", instantiationStrategy = "per-lookup" )
 public class ReleaseInProgressAction
     extends ContinuumActionSupport
 {

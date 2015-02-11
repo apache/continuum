@@ -37,6 +37,8 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +49,8 @@ import java.util.List;
 
 /**
  * @author Nick Gonzalez
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProject"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "addProject", instantiationStrategy = "per-lookup" )
 public class AddProjectAction
     extends ContinuumActionSupport
 {
@@ -83,9 +84,7 @@ public class AddProjectAction
 
     private List<Profile> profiles;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private ProfileService profileService;
 
     private int projectGroupId;

@@ -29,6 +29,7 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +39,8 @@ import java.util.List;
 
 /**
  * @author Nik Gonzalez
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="schedule"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "schedule", instantiationStrategy = "per-lookup"  )
 public class ScheduleAction
     extends ContinuumConfirmAction
     implements Preparable

@@ -38,6 +38,8 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -58,9 +60,7 @@ import java.util.Map;
 import java.util.Properties;
 import javax.xml.stream.XMLStreamException;
 
-/**
- * @plexus.component role="org.apache.continuum.release.distributed.manager.DistributedReleaseManager"
- */
+@Component( role = org.apache.continuum.release.distributed.manager.DistributedReleaseManager.class )
 public class DefaultDistributedReleaseManager
     implements DistributedReleaseManager
 {
@@ -68,24 +68,13 @@ public class DefaultDistributedReleaseManager
 
     public final String PREPARED_RELEASES_FILENAME = "prepared-releases.xml";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
-    InstallationService installationService;
-
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     DistributedBuildManager distributedBuildManager;
 
     private Map<String, Map<String, Object>> releasesInProgress;

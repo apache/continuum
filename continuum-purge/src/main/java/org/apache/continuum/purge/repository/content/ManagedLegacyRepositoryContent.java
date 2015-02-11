@@ -30,6 +30,8 @@ import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.content.ArtifactExtensionMapping;
 import org.apache.maven.archiva.repository.content.PathParser;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.HashMap;
@@ -39,11 +41,9 @@ import java.util.Set;
 
 /**
  * Taken from Archiva's ManagedLegacyRepositoryContent and made some few changes
- *
- * @plexus.component role="org.apache.continuum.purge.repository.content.RepositoryManagedContent"
- * role-hint="legacy"
- * instantiation-strategy="per-lookup"
  */
+@Component( role = org.apache.continuum.purge.repository.content.RepositoryManagedContent.class, hint = "legacy",
+    instantiationStrategy = "per-lookup" )
 public class ManagedLegacyRepositoryContent
     implements RepositoryManagedContent
 {
@@ -62,14 +62,10 @@ public class ManagedLegacyRepositoryContent
         typeToDirectoryMap.put( "javadoc", "javadoc.jar" );
     }
 
-    /**
-     * @plexus.requirement role-hint="legacy-parser"
-     */
+    @Requirement( hint = "legacy-parser" )
     private PathParser legacyPathParser;
-
-    /**
-     * @plexus.requirement role-hint="file-types"
-     */
+    
+    @Requirement( hint = "file-types" )
     private FileTypes filetypes;
 
     private LocalRepository repository;

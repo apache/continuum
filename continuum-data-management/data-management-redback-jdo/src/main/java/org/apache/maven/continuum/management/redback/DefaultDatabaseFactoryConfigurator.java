@@ -2,6 +2,8 @@ package org.apache.maven.continuum.management.redback;
 
 import org.apache.maven.continuum.management.DatabaseFactoryConfigurator;
 import org.apache.maven.continuum.management.DatabaseParams;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 
 import java.util.Iterator;
@@ -26,16 +28,12 @@ import java.util.Properties;
  * under the License.
  */
 
-/**
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.management.DatabaseFactoryConfigurator" role-hint="redback"
- */
+@Component( role = org.apache.maven.continuum.management.DatabaseFactoryConfigurator.class, hint = "redback" )
 public class DefaultDatabaseFactoryConfigurator
     implements DatabaseFactoryConfigurator
 {
-    /**
-     * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="users"
-     */
+
+    @Requirement( role = org.codehaus.plexus.jdo.JdoFactory.class, hint = "users" )
     protected DefaultConfigurableJdoFactory factory;
 
     public void configure( DatabaseParams params )

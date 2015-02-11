@@ -45,6 +45,8 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,57 +62,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.apache.continuum.builder.distributed.DistributedBuildService"
- */
+@Component( role = org.apache.continuum.builder.distributed.DistributedBuildService.class )
 public class DefaultDistributedBuildService
     implements DistributedBuildService
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultDistributedBuildService.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private InstallationService installationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumNotificationDispatcher notifierDispatcher;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedBuildUtil distributedBuildUtil;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedBuildManager distributedBuildManager;
 
     public void updateBuildResult( Map<String, Object> context )
@@ -650,7 +632,6 @@ public class DefaultDistributedBuildService
 
         return true;
     }
-
 
     private String getJavaHomeValue( BuildDefinition buildDefinition )
     {

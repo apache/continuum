@@ -25,6 +25,8 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationServ
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportClient;
 import org.apache.maven.continuum.ContinuumException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,22 +35,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.manager.BuildAgentManager" role-hint="default"
- */
+@Component( role = org.apache.continuum.buildagent.manager.BuildAgentManager.class, hint = "default" )
 public class DefaultBuildAgentManager
     implements BuildAgentManager
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentManager.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildContextManager buildContextManager;
 
     public void startProjectBuild( int projectId )

@@ -26,29 +26,24 @@ import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.action.AbstractAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="update-project-from-agent-working-directory"
- */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "update-project-from-agent-working-directory" )
 public class UpdateProjectFromWorkingDirectoryAction
     extends AbstractAction
 {
     private static final Logger logger = LoggerFactory.getLogger( UpdateProjectFromWorkingDirectoryAction.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentBuildExecutorManager buildAgentBuildExecutorManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void execute( Map context )

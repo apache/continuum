@@ -31,6 +31,8 @@ import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -43,10 +45,9 @@ import java.util.Map;
 
 /**
  * @author Maria Catherine Tan
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="localRepository"
  * @since 25 jul 07
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "localRepository", instantiationStrategy = "per-lookup"  )
 public class LocalRepositoryAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
@@ -69,14 +70,10 @@ public class LocalRepositoryAction
 
     private Map<String, Boolean> defaultPurgeMap;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryService repositoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private PurgeConfigurationService purgeConfigService;
 
     public void prepare()

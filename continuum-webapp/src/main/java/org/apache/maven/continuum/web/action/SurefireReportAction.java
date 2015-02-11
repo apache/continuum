@@ -27,6 +27,8 @@ import org.apache.maven.continuum.reports.surefire.ReportTestSuite;
 import org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator;
 import org.apache.maven.continuum.reports.surefire.ReportTestSuiteGeneratorException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,16 +38,14 @@ import java.util.Map;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="surefireReport"
  * @todo too many inner classes, maybe a continuum-reports project group ?
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "surefireReport", instantiationStrategy = "per-lookup" )
 public class SurefireReportAction
     extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private ReportTestSuiteGenerator reportTestSuiteGenerator;
 
     private int buildId;

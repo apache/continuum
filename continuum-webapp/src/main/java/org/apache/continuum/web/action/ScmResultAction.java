@@ -25,11 +25,12 @@ import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
 import org.apache.struts2.ServletActionContext;
+import org.codehaus.plexus.component.annotations.Component;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="scmResult"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "scmResult", instantiationStrategy = "per-lookup" )
 public class ScmResultAction
     extends ContinuumActionSupport
 {

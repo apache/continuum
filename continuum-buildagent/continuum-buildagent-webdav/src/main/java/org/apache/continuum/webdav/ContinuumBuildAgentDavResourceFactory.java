@@ -29,6 +29,8 @@ import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.DavSession;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +38,7 @@ import java.io.File;
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * @plexus.component role="org.apache.continuum.webdav.ContinuumBuildAgentDavResourceFactory"
- */
+@Component( role = org.apache.continuum.webdav.ContinuumBuildAgentDavResourceFactory.class )
 public class ContinuumBuildAgentDavResourceFactory
     implements DavResourceFactory
 {
@@ -46,9 +46,7 @@ public class ContinuumBuildAgentDavResourceFactory
 
     private static final MimetypesFileTypeMap mimeTypes;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     static

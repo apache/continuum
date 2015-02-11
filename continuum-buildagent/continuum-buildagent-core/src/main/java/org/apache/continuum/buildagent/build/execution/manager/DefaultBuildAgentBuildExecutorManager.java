@@ -21,24 +21,21 @@ package org.apache.continuum.buildagent.build.execution.manager;
 
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.maven.continuum.ContinuumException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager"
- * role-hint"default"
- */
+@Component( role = org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager.class, hint = "default" )
 public class DefaultBuildAgentBuildExecutorManager
     implements BuildAgentBuildExecutorManager
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentBuildExecutorManager.class );
 
-    /**
-     * @plexus.requirement role="org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor"
-     */
+    @Requirement( role = org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor.class )
     private Map<String, ContinuumAgentBuildExecutor> executors;
 
     // ----------------------------------------------------------------------

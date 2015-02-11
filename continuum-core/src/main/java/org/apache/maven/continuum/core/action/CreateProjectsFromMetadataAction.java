@@ -33,6 +33,8 @@ import org.apache.maven.continuum.utils.URLUserInfo;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
@@ -46,18 +48,14 @@ import java.util.Map;
 /**
  * Resolve the project url being passed in and gather authentication information
  * if the url is so configured, then create the projects
- * <p/>
  * Supports:
- * <p/>
  * - standard maven-scm url
  * - MungedUrl https://username:password@host
  * - maven settings based, server = host and scm info set to username and password
  *
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="create-projects-from-metadata"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "create-projects-from-metadata" )
 public class CreateProjectsFromMetadataAction
     extends AbstractContinuumAction
 {
@@ -74,19 +72,13 @@ public class CreateProjectsFromMetadataAction
 
     public static final String KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY = "checkoutProjectsInSingleDirectory";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumProjectBuilderManager projectBuilderManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenSettingsBuilder mavenSettingsBuilder;
 
-    /**
-     * @plexus.requirement role-hint="continuumUrl"
-     */
+    @Requirement( hint = "continuumUrl" )
     private ContinuumUrlValidator urlValidator;
 
     public void execute( Map context )

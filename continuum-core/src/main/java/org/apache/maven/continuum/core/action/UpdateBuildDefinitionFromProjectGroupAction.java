@@ -22,6 +22,8 @@ package org.apache.maven.continuum.core.action;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.util.Map;
 
@@ -29,16 +31,13 @@ import java.util.Map;
  * AddBuildDefinitionToProjectAction:
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="update-build-definition-from-project-group"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "update-build-definition-from-project-group" )
 public class UpdateBuildDefinitionFromProjectGroupAction
     extends AbstractBuildDefinitionContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
     public void execute( Map context )

@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.action.notifier;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,10 +32,9 @@ import java.util.Map;
  * specified {@link ProjectGroup}.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="jabberGroupNotifierEdit"
  * @since 1.1
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "jabberGroupNotifierEdit", instantiationStrategy = "per-lookup" )
 public class JabberGroupNotifierEditAction
     extends AbstractGroupNotifierEditAction
 {

@@ -34,6 +34,7 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -51,14 +52,10 @@ public class MavenTwoBuildExecutor
 
     public static final String ID = ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenProjectHelper projectHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentMavenBuilderHelper buildAgentMavenBuilderHelper;
 
     public MavenTwoBuildExecutor()

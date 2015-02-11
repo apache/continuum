@@ -25,31 +25,25 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="add-project-to-checkout-queue"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "add-project-to-checkout-queue" )
 public class AddProjectToCheckOutQueueAction
     extends AbstractContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement role-hint="parallel"
-     */
+    @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
     @SuppressWarnings( "unchecked" )

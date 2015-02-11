@@ -27,6 +27,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +37,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projects"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projects", instantiationStrategy = "per-lookup"  )
 public class ProjectsListAction
     extends ContinuumActionSupport
 {

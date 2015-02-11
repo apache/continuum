@@ -24,6 +24,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
@@ -32,21 +34,16 @@ import java.util.Map;
 
 /**
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="clean-working-directory"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "clean-working-directory" )
 public class CleanWorkingDirectoryAction
     extends AbstractContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
     public void execute( Map context )
@@ -61,7 +58,7 @@ public class CleanWorkingDirectoryAction
 
         if ( workingDirectory.exists() )
         {
-            FileUtils.deleteDirectory(workingDirectory);
+            FileUtils.deleteDirectory( workingDirectory );
         }
     }
 }

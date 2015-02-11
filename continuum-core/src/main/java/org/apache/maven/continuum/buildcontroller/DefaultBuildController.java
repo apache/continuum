@@ -49,6 +49,8 @@ import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,57 +62,38 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.buildcontroller.BuildController" role-hint="default"
  */
+@Component( role = org.apache.maven.continuum.buildcontroller.BuildController.class, hint = "default" )
 public class DefaultBuildController
     implements BuildController
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultBuildController.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumNotificationDispatcher notifierDispatcher;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ActionManager actionManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildExecutorManager buildExecutorManager;
 
     // ----------------------------------------------------------------------

@@ -24,12 +24,12 @@ import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projectEdit"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectEdit", instantiationStrategy = "per-lookup"  )
 public class ProjectEditAction
     extends ContinuumActionSupport
 {

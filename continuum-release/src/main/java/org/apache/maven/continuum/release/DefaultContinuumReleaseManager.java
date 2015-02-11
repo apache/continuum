@@ -38,6 +38,7 @@ import org.apache.maven.shared.release.config.ReleaseDescriptorStore;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
@@ -70,29 +71,19 @@ public class DefaultContinuumReleaseManager
 
     private static final String PLEXUS_KEY_ROLLBACK_RELEASE_TASKQUEUE_EXECUTOR = "rollback-release";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ReleaseDescriptorStore releaseStore;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private TaskQueue prepareReleaseQueue;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private TaskQueue performReleaseQueue;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private TaskQueue rollbackReleaseQueue;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ScmManager scmManager;
 
     private PlexusContainer container;
@@ -434,7 +425,6 @@ public class DefaultContinuumReleaseManager
             getPrepareReleaseTaskQueueExecutor().getCurrentTask() != null ||
             getRollbackReleaseTaskQueueExecutor().getCurrentTask() != null;
     }
-
 
     public TaskQueueExecutor getPerformReleaseTaskQueueExecutor()
         throws TaskQueueManagerException

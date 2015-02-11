@@ -25,6 +25,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -32,10 +33,9 @@ import org.codehaus.plexus.util.StringUtils;
  * specified {@link ProjectGroup}.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="deleteGroupNotifier"
  * @since 1.1
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "deleteGroupNotifier", instantiationStrategy = "per-lookup" )
 public class DeleteGroupNotifierAction
     extends ContinuumActionSupport
 {

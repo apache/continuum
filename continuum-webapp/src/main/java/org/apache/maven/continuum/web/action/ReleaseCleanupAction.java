@@ -25,6 +25,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -32,9 +33,8 @@ import java.util.List;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseCleanup"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "releaseCleanup", instantiationStrategy = "per-lookup"  )
 public class ReleaseCleanupAction
     extends ContinuumActionSupport
 {

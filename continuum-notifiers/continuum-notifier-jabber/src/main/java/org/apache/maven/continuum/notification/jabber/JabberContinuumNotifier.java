@@ -29,6 +29,7 @@ import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.NotificationException;
+import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.jabber.JabberClient;
 import org.codehaus.plexus.jabber.JabberClientException;
 import org.codehaus.plexus.util.StringUtils;
@@ -65,34 +66,22 @@ public class JabberContinuumNotifier
     // Configuration
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String fromAddress;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String fromPassword;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String host;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private int port;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String imDomainName;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private boolean sslConnection;
 
     // ----------------------------------------------------------------------

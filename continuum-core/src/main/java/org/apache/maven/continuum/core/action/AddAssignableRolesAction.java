@@ -23,6 +23,8 @@ import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 
@@ -32,20 +34,15 @@ import java.util.Map;
  * AddAssignableRolesAction:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="add-assignable-roles"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "add-assignable-roles" )
 public class AddAssignableRolesAction
     extends AbstractContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private RoleManager roleManager;
 
     public void execute( Map context )

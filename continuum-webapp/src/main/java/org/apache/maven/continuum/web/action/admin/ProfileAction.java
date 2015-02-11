@@ -30,6 +30,8 @@ import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -43,24 +45,19 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="profileAdministration"
  * @since 7 juin 07
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "profileAdministration", instantiationStrategy = "per-lookup" )
 public class ProfileAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction
 {
     private static final Logger logger = LoggerFactory.getLogger( ProfileAction.class );
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private ProfileService profileService;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private InstallationService installationService;
 
     private List<Profile> profiles;

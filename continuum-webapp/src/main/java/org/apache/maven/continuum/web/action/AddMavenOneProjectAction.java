@@ -23,6 +23,7 @@ import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.io.File;
 
@@ -31,9 +32,8 @@ import java.io.File;
  *
  * @author Nick Gonzalez
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addMavenOneProject"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "addMavenOneProject", instantiationStrategy = "per-lookup"  )
 public class AddMavenOneProjectAction
     extends AddMavenProjectAction
 {

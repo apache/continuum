@@ -39,6 +39,9 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderExcepti
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Configuration;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -49,9 +52,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.project.builder.ContinuumProjectBuilder" role-hint="maven-two-builder"
  */
+@Component( role = org.apache.maven.continuum.project.builder.ContinuumProjectBuilder.class, hint = "maven-two-builder" )
 public class MavenTwoContinuumProjectBuilder
     extends AbstractContinuumProjectBuilder
     implements ContinuumProjectBuilder
@@ -60,36 +62,24 @@ public class MavenTwoContinuumProjectBuilder
 
     private static final String POM_PART = "/pom.xml";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private LocalRepositoryDao localRepositoryDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenBuilderHelper builderHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ScheduleDao scheduleDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionService buildDefinitionService;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private List<String> excludedPackagingTypes = new ArrayList<String>();
 
     private Project rootProject;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
     // ----------------------------------------------------------------------
@@ -124,7 +114,8 @@ public class MavenTwoContinuumProjectBuilder
                                                                      boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException
     {
-        return buildProjectsFromMetadata( url, username, password, loadRecursiveProjects, buildDefinitionTemplate, checkoutInSingleDirectory, -1 );
+        return buildProjectsFromMetadata( url, username, password, loadRecursiveProjects, buildDefinitionTemplate,
+                                          checkoutInSingleDirectory, -1 );
     }
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
@@ -148,7 +139,8 @@ public class MavenTwoContinuumProjectBuilder
                 projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
             }
 
-            readModules( url, result, projectGroup, username, password, null, loadRecursiveProjects, buildDefinitionTemplate,
+            readModules( url, result, projectGroup, username, password, null, loadRecursiveProjects,
+                         buildDefinitionTemplate,
                          checkoutInSingleDirectory );
         }
         catch ( BuildDefinitionServiceException e )
@@ -166,7 +158,8 @@ public class MavenTwoContinuumProjectBuilder
     //
     // ----------------------------------------------------------------------
 
-    private void readModules( URL url, ContinuumProjectBuildingResult result, ProjectGroup projectGroup, String username,
+    private void readModules( URL url, ContinuumProjectBuildingResult result, ProjectGroup projectGroup,
+                              String username,
                               String password, String scmUrl, boolean loadRecursiveProjects,
                               BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException, BuildDefinitionServiceException
@@ -282,7 +275,8 @@ public class MavenTwoContinuumProjectBuilder
                     if ( buildDefinition.isDefaultForProject() )
                     {
                         // create a default build definition at the project level
-                        BuildDefinition projectBuildDef = buildDefinitionService.cloneBuildDefinition( buildDefinition );
+                        BuildDefinition projectBuildDef =
+                            buildDefinitionService.cloneBuildDefinition( buildDefinition );
                         projectBuildDef.setDefaultForProject( true );
 
                         String arguments = projectBuildDef.getArguments().replace( "--non-recursive", "" );
@@ -513,7 +507,6 @@ public class MavenTwoContinuumProjectBuilder
 
         return projectGroup;
     }
-
 
     public BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
         throws ContinuumProjectBuilderException

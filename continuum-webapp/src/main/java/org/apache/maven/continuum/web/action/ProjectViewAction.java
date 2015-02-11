@@ -24,6 +24,7 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +32,8 @@ import java.util.Date;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projectView"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectView", instantiationStrategy = "per-lookup"  )
 public class ProjectViewAction
     extends ContinuumActionSupport
 {

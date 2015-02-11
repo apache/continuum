@@ -51,6 +51,8 @@ import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxWriter;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -79,95 +81,61 @@ import javax.xml.stream.XMLStreamException;
 
 /**
  * JDO implementation the database management tool API.
- *
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="continuum-jdo"
  */
+@Component( role = org.apache.maven.continuum.management.DataManagementTool.class, hint = "continuum-jdo" )
 public class JdoDataManagementTool
     implements DataManagementTool
 {
     private Logger log = LoggerFactory.getLogger( JdoDataManagementTool.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DaoUtils daoUtils;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private LocalRepositoryDao localRepositoryDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private InstallationDao installationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProfileDao profileDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ScheduleDao scheduleDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private SystemConfigurationDao systemConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionTemplateDao buildDefinitionTemplateDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumReleaseResultDao releaseResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildQueueDao buildQueueDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
     protected static final String BUILDS_XML = "builds.xml";
 
-    /**
-     * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
-     */
+    @Requirement( role = org.codehaus.plexus.jdo.JdoFactory.class, hint = "continuum" )
     protected ConfigurableJdoFactory factory;
 
     public void backupDatabase( File backupDirectory )

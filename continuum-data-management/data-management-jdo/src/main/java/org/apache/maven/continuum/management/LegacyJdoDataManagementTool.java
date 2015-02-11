@@ -38,6 +38,8 @@ import org.apache.maven.continuum.model.scm.v1_0_9.TestCaseFailure;
 import org.apache.maven.continuum.model.scm.v1_0_9.TestResult;
 import org.apache.maven.continuum.model.system.v1_0_9.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -66,18 +68,14 @@ import javax.xml.stream.XMLStreamException;
 
 /**
  * JDO implementation the database management tool API.
- *
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-continuum-jdo"
  */
+@Component( role = org.apache.maven.continuum.management.DataManagementTool.class, hint = "legacy-continuum-jdo" )
 public class LegacyJdoDataManagementTool
     implements DataManagementTool
 {
     protected static final String BUILDS_XML = "builds.xml";
-
-    /**
-     * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
-     */
+    
+    @Requirement( role = org.codehaus.plexus.jdo.JdoFactory.class, hint = "continuum" )
     protected DefaultConfigurableJdoFactory factory;
 
     public void backupDatabase( File backupDirectory )
@@ -158,7 +156,7 @@ public class LegacyJdoDataManagementTool
         return result;
     }
 
-    @SuppressWarnings( {"OverlyCoupledMethod"} )
+    @SuppressWarnings( { "OverlyCoupledMethod" } )
     public void eraseDatabase()
     {
         PersistenceManagerFactory pmf = getPersistenceManagerFactory( "jdo109" );

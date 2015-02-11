@@ -25,6 +25,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -39,9 +40,8 @@ import java.util.List;
  *
  * @author Nick Gonzalez
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addMavenTwoProject"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "addMavenTwoProject", instantiationStrategy = "per-lookup" )
 public class AddMavenTwoProjectAction
     extends AddMavenProjectAction
 {

@@ -21,10 +21,10 @@ package org.apache.maven.continuum.web.action.component;
 
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 8 nov. 07
  */
 public abstract class AbstractFooterAction
@@ -33,9 +33,7 @@ public abstract class AbstractFooterAction
 
     private String footer;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private AppareanceConfiguration appareanceConfiguration;
 
     public String getContinuumFooter()

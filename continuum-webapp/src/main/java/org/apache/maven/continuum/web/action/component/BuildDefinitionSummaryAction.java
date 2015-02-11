@@ -26,6 +26,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.AbstractBuildDefinitionAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
+import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +37,8 @@ import java.util.List;
  * BuildDefinitionSummaryAction:
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildDefinitionSummary"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildDefinitionSummary", instantiationStrategy = "per-lookup" )
 public class BuildDefinitionSummaryAction
     extends AbstractBuildDefinitionAction
 {
@@ -193,7 +193,6 @@ public class BuildDefinitionSummaryAction
 
         return summaryList;
     }
-
 
     public int getProjectId()
     {

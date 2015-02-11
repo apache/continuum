@@ -21,6 +21,7 @@ package org.apache.continuum.dao;
 
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
@@ -30,12 +31,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
-/**
- * @author
- * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao"
- */
 @Repository( "distributedDirectoryPurgeConfigurationDao" )
+@Component( role = org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao.class )
 public class DistributedDirectoryPurgeConfigurationDaoImpl
     extends AbstractDao
     implements DistributedDirectoryPurgeConfigurationDao

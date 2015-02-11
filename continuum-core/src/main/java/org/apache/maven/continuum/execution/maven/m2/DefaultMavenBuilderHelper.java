@@ -55,6 +55,9 @@ import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.io.xpp3.SettingsXpp3Writer;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Configuration;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
@@ -77,37 +80,26 @@ import java.util.List;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper" role-hint="default"
  */
+@Component( role = org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper.class, hint = "default" )
 public class DefaultMavenBuilderHelper
     implements MavenBuilderHelper, Contextualizable, Initializable
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultMavenBuilderHelper.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenProjectBuilder projectBuilder;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ArtifactRepositoryFactory artifactRepositoryFactory;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ArtifactRepositoryLayout repositoryLayout;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenSettingsBuilder mavenSettingsBuilder;
 
-    /**
-     * @plexus.configuration default-value="${plexus.home}/local-repository"
-     */
+    @Configuration( "${plexus.home}/local-repository" )
     private String localRepository;
 
     private PlexusContainer container;

@@ -19,6 +19,7 @@ package org.apache.continuum.buildagent.utils;
  * under the License.
  */
 
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -28,9 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator"
- */
+@Component( role = org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator.class )
 public class WorkingCopyContentGenerator
 {
     private static final DecimalFormat decFormatter = new DecimalFormat( "###.##" );

@@ -27,6 +27,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -34,10 +35,9 @@ import org.codehaus.plexus.util.StringUtils;
  * the specified {@link ProjectGroup}.
  *
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addGroupNotifier"
  * @since 1.1
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "addGroupNotifier", instantiationStrategy = "per-lookup" )
 public class AddGroupNotifierAction
     extends ContinuumActionSupport
 {

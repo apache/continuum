@@ -41,6 +41,7 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -75,19 +76,13 @@ public class MavenTwoBuildExecutor
     //
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenBuilderHelper builderHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenProjectHelper projectHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
     // ----------------------------------------------------------------------
@@ -363,7 +358,7 @@ public class MavenTwoBuildExecutor
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir( workingDir );
         scanner.setIncludes(
-            new String[]{"**/target/surefire-reports/TEST-*.xml", "**/target/surefire-it-reports/TEST-*.xml"} );
+            new String[] { "**/target/surefire-reports/TEST-*.xml", "**/target/surefire-it-reports/TEST-*.xml" } );
         scanner.scan();
 
         String[] testResultFiles = scanner.getIncludedFiles();

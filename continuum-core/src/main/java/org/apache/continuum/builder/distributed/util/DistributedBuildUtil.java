@@ -30,6 +30,8 @@ import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,21 +39,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.apache.continuum.builder.distributed.util.DistributedBuildUtil"
- */
+@Component( role = org.apache.continuum.builder.distributed.util.DistributedBuildUtil.class )
 public class DistributedBuildUtil
 {
     private Logger log = LoggerFactory.getLogger( DistributedBuildUtil.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
     public BuildResult convertMapToBuildResult( Map<String, Object> context )

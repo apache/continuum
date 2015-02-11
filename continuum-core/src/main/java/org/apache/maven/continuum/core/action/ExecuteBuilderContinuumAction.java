@@ -35,6 +35,8 @@ import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.Date;
@@ -43,38 +45,26 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="execute-builder"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "execute-builder" )
 public class ExecuteBuilderContinuumAction
     extends AbstractContinuumAction
 {
     private static final String KEY_CANCELLED = "cancelled";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildExecutorManager buildExecutorManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumNotificationDispatcher notifier;
 
     public void execute( Map context )

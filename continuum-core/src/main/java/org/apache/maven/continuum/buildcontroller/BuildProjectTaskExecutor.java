@@ -20,6 +20,7 @@ package org.apache.maven.continuum.buildcontroller;
  */
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
@@ -31,9 +32,8 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 public class BuildProjectTaskExecutor
     implements TaskExecutor
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private BuildController controller;
 
     // ----------------------------------------------------------------------

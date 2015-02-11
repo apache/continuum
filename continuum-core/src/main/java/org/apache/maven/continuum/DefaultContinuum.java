@@ -91,6 +91,8 @@ import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.action.Action;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -124,158 +126,101 @@ import java.util.regex.Pattern;
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l </a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.Continuum" role-hint="default"
  */
+@Component( role = org.apache.maven.continuum.Continuum.class, hint = "default" )
 public class DefaultContinuum
     implements Continuum, Initializable, Startable
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultContinuum.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ActionManager actionManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DaoUtils daoUtils;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private NotifierDao notifierDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ScheduleDao scheduleDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumReleaseResultDao releaseResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumInitializer initializer;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private SchedulesActivator schedulesActivator;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private InstallationService installationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProfileService profileService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionService buildDefinitionService;
 
     // ----------------------------------------------------------------------
     // Moved from core
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumReleaseManager releaseManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildExecutorManager executorManager;
 
-    /**
-     * @plexus.requirement role-hint="continuumUrl"
-     */
+    @Requirement( hint = "continuumUrl" )
     private ContinuumUrlValidator urlValidator;
 
     private boolean stopped = false;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumPurgeManager purgeManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryService repositoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private PurgeConfigurationService purgeConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private TaskQueueManager taskQueueManager;
 
-    /**
-     * @plexus.requirement role-hint="parallel"
-     */
+    @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildQueueService buildQueueService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedBuildManager distributedBuildManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedReleaseManager distributedReleaseManager;
 
     public DefaultContinuum()
@@ -872,7 +817,6 @@ public class DefaultContinuum
      * @param projectGroupId
      * @param bds
      * @param checkDefaultBuildDefinitionForProject
-     *
      * @param buildTrigger
      * @throws ContinuumException
      */
@@ -895,7 +839,6 @@ public class DefaultContinuum
 
     /**
      * takes a given schedule and determines which projects need to build
-     * <p/>
      * The build order is determined by the dependencies
      *
      * @param schedule The schedule
@@ -1127,7 +1070,6 @@ public class DefaultContinuum
         }
         removeBuildResult( buildResult );
     }
-
 
     private void removeBuildResult( BuildResult buildResult )
     {
@@ -1559,7 +1501,6 @@ public class DefaultContinuum
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
                                                        false, false, buildDefinitionTemplateId, false );
     }
-
 
     protected ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
                                                                                      String projectBuilderId,
@@ -2809,7 +2750,6 @@ public class DefaultContinuum
         }
     }
 
-
     public void startup()
         throws ContinuumException
     {
@@ -3826,7 +3766,7 @@ public class DefaultContinuum
                 ProjectScmRoot newScmRoot = new ProjectScmRoot();
                 if ( project.getScmUrl().equals( oldScmRoot.getScmRootAddress() ) )
                 {
-                    BeanUtils.copyProperties( oldScmRoot, newScmRoot, new String[]{"id", "projectGroup"} );
+                    BeanUtils.copyProperties( oldScmRoot, newScmRoot, new String[] { "id", "projectGroup" } );
                 }
                 else
                 {

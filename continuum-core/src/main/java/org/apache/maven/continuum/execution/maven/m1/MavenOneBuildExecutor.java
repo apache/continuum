@@ -32,6 +32,7 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -54,9 +55,7 @@ public class MavenOneBuildExecutor
 
     public final static String ID = ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenOneMetadataHelper metadataHelper;
 
     // ----------------------------------------------------------------------

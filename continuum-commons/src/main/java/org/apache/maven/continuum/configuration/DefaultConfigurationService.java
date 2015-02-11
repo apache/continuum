@@ -32,6 +32,7 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -54,9 +55,7 @@ public class DefaultConfigurationService
 
     // when adding a requirement, the template in spring-context.xml must be updated CONTINUUM-1207
 
-    /**
-     * @plexus.configuration default-value="${plexus.home}"
-     */
+    @Configuration( "${plexus.home}" )
     private File applicationHome;
 
     @Resource
@@ -544,7 +543,6 @@ public class DefaultConfigurationService
     //
     // ----------------------------------------------------------------------
 
-
     public File getBuildOutputDirectory( int projectId )
     {
         File dir = new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
@@ -711,7 +709,6 @@ public class DefaultConfigurationService
     {
         return loaded;
     }
-
 
     private void loadData()
         throws ConfigurationLoadingException, ContinuumConfigurationException

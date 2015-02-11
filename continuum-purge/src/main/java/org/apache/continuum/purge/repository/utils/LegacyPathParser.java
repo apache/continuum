@@ -25,12 +25,12 @@ import org.apache.maven.archiva.repository.content.ArtifactClassifierMapping;
 import org.apache.maven.archiva.repository.content.ArtifactExtensionMapping;
 import org.apache.maven.archiva.repository.content.PathParser;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+import org.codehaus.plexus.component.annotations.Component;
 
 /**
  * Codes were taken from Archiva's LegacyPathParser and made some few changes.
- *
- * @plexus.component role="org.apache.maven.archiva.repository.content.PathParser" role-hint="legacy-parser"
  */
+@Component( role = org.apache.maven.archiva.repository.content.PathParser.class, hint = "legacy-parser" )
 public class LegacyPathParser
     implements PathParser
 {
@@ -57,8 +57,8 @@ public class LegacyPathParser
         {
             // Illegal Path Parts Length.
             throw new LayoutException( INVALID_ARTIFACT_PATH +
-                                           "legacy paths should only have 3 parts [groupId]/[type]s/[artifactId]-[version].[type], found " +
-                                           pathParts.length + " instead." );
+                                           "legacy paths should only have 3 parts [groupId]/[type]s/[artifactId]-[version].[type], found "
+                                           + pathParts.length + " instead." );
         }
 
         // The Group ID.

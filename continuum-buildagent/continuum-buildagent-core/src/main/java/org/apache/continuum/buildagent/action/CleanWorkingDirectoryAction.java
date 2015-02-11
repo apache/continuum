@@ -25,19 +25,18 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 import org.codehaus.plexus.action.AbstractAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="clean-agent-working-directory"
- */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "clean-agent-working-directory" )
 public class CleanWorkingDirectoryAction
     extends AbstractAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void execute( Map context )

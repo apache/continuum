@@ -45,6 +45,8 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -62,9 +64,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.activation.MimetypesFileTypeMap;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.ContinuumBuildAgentService"
- */
+@Component( role = ContinuumBuildAgentService.class )
 public class ContinuumBuildAgentServiceImpl
     implements ContinuumBuildAgentService
 {
@@ -72,39 +72,26 @@ public class ContinuumBuildAgentServiceImpl
 
     private static final String FILE_SEPARATOR = System.getProperty( "file.separator" );
 
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildContextManager buildContextManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingCopyContentGenerator generator;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentReleaseManager buildAgentReleaseManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentManager buildAgentManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentPurgeManager purgeManager;
 
     public void buildProjects( List<Map<String, Object>> projectsBuildContext )

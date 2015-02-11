@@ -28,6 +28,8 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,17 +38,13 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.manager.BuildAgentPurgeManager" role-hint="default"
- */
+@Component( role = org.apache.continuum.buildagent.manager.BuildAgentPurgeManager.class, hint = "default" )
 public class DefaultBuildAgentPurgeManager
     implements BuildAgentPurgeManager
 {
     private static final Logger logger = LoggerFactory.getLogger( DefaultBuildAgentPurgeManager.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
@@ -54,10 +52,10 @@ public class DefaultBuildAgentPurgeManager
     {
         StringBuilder log = new StringBuilder().append(
             "Executing directory purge with the following settings[directoryType=" ).
-            append( directoryType ).append( ",daysOlder=" ).
-            append( daysOlder ).append( ", retentionCount=" ).
-            append( retentionCount ).append( ", deleteAll=" ).
-            append( deleteAll ).append( "]" );
+                                                   append( directoryType ).append( ",daysOlder=" ).
+                                                   append( daysOlder ).append( ", retentionCount=" ).
+                                                   append( retentionCount ).append( ", deleteAll=" ).
+                                                   append( deleteAll ).append( "]" );
         logger.info( log.toString() );
 
         File directory = null;

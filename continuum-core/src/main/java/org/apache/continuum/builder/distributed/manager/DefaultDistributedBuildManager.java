@@ -51,6 +51,8 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
@@ -74,10 +76,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Maria Catherine Tan
- * @plexus.component role="org.apache.continuum.builder.distributed.manager.DistributedBuildManager"
- */
+@Component( role = org.apache.continuum.builder.distributed.manager.DistributedBuildManager.class )
 public class DefaultDistributedBuildManager
     implements DistributedBuildManager, Contextualizable, Initializable
 {
@@ -88,34 +87,22 @@ public class DefaultDistributedBuildManager
 
     private List<ProjectRunSummary> currentRuns = Collections.synchronizedList( new ArrayList<ProjectRunSummary>() );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedBuildUtil distributedBuildUtil;
 
     private PlexusContainer container;
@@ -379,8 +366,8 @@ public class DefaultDistributedBuildManager
             {
                 PrepareBuildProjectsTask prepareBuildTask = prepareBuildTasks.get( key );
                 log.debug( "Current prepare build of agent {} :: Project Group {} - Scm Root {}",
-                           new Object[]{key, prepareBuildTask.getProjectGroupName(),
-                               prepareBuildTask.getProjectScmRootId()} );
+                           new Object[] { key, prepareBuildTask.getProjectGroupName(),
+                               prepareBuildTask.getProjectScmRootId() } );
             }
 
             Map<String, List<PrepareBuildProjectsTask>> prepareBuildQueues = getProjectsInPrepareBuildQueue();
@@ -390,8 +377,8 @@ public class DefaultDistributedBuildManager
                 for ( PrepareBuildProjectsTask prepareBuildTask : prepareBuildQueues.get( key ) )
                 {
                     log.debug( "Prepare Build Queue of agent {} : Project Group {} - Scm Root {}",
-                               new Object[]{key, prepareBuildTask.getProjectGroupName(),
-                                   prepareBuildTask.getProjectScmRootId()} );
+                               new Object[] { key, prepareBuildTask.getProjectGroupName(),
+                                   prepareBuildTask.getProjectScmRootId() } );
                 }
             }
         }
@@ -833,7 +820,7 @@ public class DefaultDistributedBuildManager
         else if ( isProjectCurrentlyBuilding( projectId, buildDefinitionId ) )
         {
             log.debug( "Cancel build of projectId={}, buildDefinitionId={} in build agent {}",
-                       new Object[]{projectId, buildDefinitionId, buildAgentUrl} );
+                       new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
             cancelDistributedBuild( buildAgentUrl );
             runsToDelete.add( run );
         }
@@ -855,14 +842,14 @@ public class DefaultDistributedBuildManager
 
                     log.debug(
                         "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
-                        new Object[]{projectId, buildDefinitionId, buildAgentUrl} );
+                        new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
                     runsToDelete.add( run );
                 }
                 else if ( scmRoot != null && scmRoot.getState() == ContinuumProjectState.ERROR )
                 {
                     log.debug(
                         "projectId={}, buildDefinitionId={} is not updating anymore. Problem encountered while return scm update result by build agent {}. Stopping the build.",
-                        new Object[]{projectId, buildDefinitionId, buildAgentUrl} );
+                        new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
                     runsToDelete.add( run );
                 }
                 else
@@ -893,7 +880,7 @@ public class DefaultDistributedBuildManager
 
                     log.debug(
                         "projectId={}, buildDefinitionId={} is not building anymore. Problem encountered while return build result by build agent {}. Stopping the build.",
-                        new Object[]{projectId, buildDefinitionId, buildAgentUrl} );
+                        new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
 
                     // create a build result
                     runsToDelete.add( run );
@@ -902,7 +889,7 @@ public class DefaultDistributedBuildManager
             catch ( Exception e )
             {
                 log.error( "Unable to end build for projectId={}, buildDefinitionId={} : {}",
-                           new Object[]{projectId, buildDefinitionId, e.getMessage()} );
+                           new Object[] { projectId, buildDefinitionId, e.getMessage() } );
             }
         }
     }
@@ -1004,7 +991,6 @@ public class DefaultDistributedBuildManager
             throw new ContinuumException( "Unable to get platform of build agent", e );
         }
     }
-
 
     public List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException
@@ -1564,7 +1550,7 @@ public class DefaultDistributedBuildManager
                         {
                             log.debug(
                                 "Checking if project {} with build definition {} is currently queued or processed in agent {}",
-                                new Object[]{projectId, buildDefinitionId, buildAgentUrl} );
+                                new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
 
                             SlaveBuildAgentTransportService client = createSlaveBuildAgentTransportClientConnection(
                                 buildAgentUrl );
@@ -1576,7 +1562,7 @@ public class DefaultDistributedBuildManager
                             {
                                 log.debug(
                                     "Project {} with build definition {} is currently queued or processed in agent {}",
-                                    new Object[]{projectId, buildDefinitionId, buildAgentUrl} );
+                                    new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
                                 agentUrl = buildAgentUrl;
                                 break;
                             }
@@ -1806,8 +1792,8 @@ public class DefaultDistributedBuildManager
                                 catch ( MalformedURLException e )
                                 {
                                     log.error(
-                                        "Error occurred while retrieving distributed build queue: Invalid build agent url " +
-                                            buildAgentUrl );
+                                        "Error occurred while retrieving distributed build queue: Invalid build agent url "
+                                            + buildAgentUrl );
                                 }
                                 catch ( Exception e )
                                 {

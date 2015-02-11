@@ -25,6 +25,8 @@ import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,18 +34,14 @@ import java.net.URL;
 
 /**
  * DirectoryPurgeController
- *
- * @author
- * @plexus.component role="org.apache.continuum.purge.controller.PurgeController" role-hint="purge-distributed-directory"
  */
+@Component( role = org.apache.continuum.purge.controller.PurgeController.class, hint = "purge-distributed-directory" )
 public class DistributedDirectoryPurgeController
     implements PurgeController
 {
     private static final Logger log = LoggerFactory.getLogger( DistributedDirectoryPurgeController.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ConfigurationService configurationService;
 
     private SlaveBuildAgentTransportService transportClient;
@@ -62,10 +60,10 @@ public class DistributedDirectoryPurgeController
 
             StringBuilder logMsg = new StringBuilder().append(
                 "Executing directory purge with the following settings[directoryType=" ).
-                append( dirPurge.getDirectoryType() ).append( ",daysOlder=" ).
-                append( dirPurge.getDaysOlder() ).append( ", retentionCount=" ).
-                append( dirPurge.getRetentionCount() ).append( ", deleteAll=" ).
-                append( dirPurge.isDeleteAll() ).append( "]" );
+                                                          append( dirPurge.getDirectoryType() ).append( ",daysOlder=" ).
+                                                          append( dirPurge.getDaysOlder() ).append( ", retentionCount=" ).
+                                                          append( dirPurge.getRetentionCount() ).append( ", deleteAll=" ).
+                                                          append( dirPurge.isDeleteAll() ).append( "]" );
 
             log.debug( logMsg.toString() );
 

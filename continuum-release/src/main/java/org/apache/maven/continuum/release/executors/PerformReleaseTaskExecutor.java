@@ -41,6 +41,7 @@ import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.env.DefaultReleaseEnvironment;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
@@ -55,15 +56,13 @@ import java.util.List;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
  */
 public class PerformReleaseTaskExecutor
     extends AbstractReleaseTaskExecutor
     implements Contextualizable
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private MavenProjectBuilder projectBuilder;
 
     private ProfileManager profileManager;
@@ -106,7 +105,7 @@ public class PerformReleaseTaskExecutor
                 MavenProject project = new MavenProject();
                 project.setFile( new File( descriptor.getCheckoutDirectory(), "pom.xml" ) );
                 reactorProjects = Collections.singletonList( project );
-//                reactorProjects = Collections.emptyList();
+                //                reactorProjects = Collections.emptyList();
             }
         }
         catch ( ContinuumReleaseException e )

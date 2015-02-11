@@ -23,19 +23,19 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationServ
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.action.AbstractAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="check-agent-working-directory"
- */
+
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "check-agent-working-directory" )
 public class CheckWorkingDirectoryAction
     extends AbstractAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void execute( Map context )

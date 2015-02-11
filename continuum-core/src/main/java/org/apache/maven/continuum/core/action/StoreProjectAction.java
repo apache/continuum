@@ -24,23 +24,21 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="store-project"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "store-project" )
 public class StoreProjectAction
     extends AbstractContinuumAction
 {
     private static final String KEY_SCM_USE_CREDENTIALS_CACHE = "useCredentialsCache";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
     public void execute( Map context )
@@ -86,7 +84,7 @@ public class StoreProjectAction
 
         project.setWorkingDirectory( projectWorkingDirectory.getAbsolutePath() );
 */
-//        store.updateProject( project );
+        //        store.updateProject( project );
     }
 
     public static boolean isUseScmCredentialsCache( Map<String, Object> context, boolean defaultValue )

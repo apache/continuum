@@ -34,6 +34,8 @@ import org.apache.maven.continuum.scheduler.ContinuumBuildJob;
 import org.apache.maven.continuum.scheduler.ContinuumPurgeJob;
 import org.apache.maven.continuum.scheduler.ContinuumSchedulerConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.scheduler.AbstractJob;
 import org.codehaus.plexus.scheduler.Scheduler;
 import org.codehaus.plexus.util.StringUtils;
@@ -51,43 +53,29 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.build.settings.SchedulesActivator"
  */
+@Component( role = org.apache.maven.continuum.build.settings.SchedulesActivator.class )
 public class DefaultSchedulesActivator
     implements SchedulesActivator
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultSchedulesActivator.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
 
-
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ScheduleDao scheduleDao;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private Scheduler scheduler;
 
     // private int delay = 3600;

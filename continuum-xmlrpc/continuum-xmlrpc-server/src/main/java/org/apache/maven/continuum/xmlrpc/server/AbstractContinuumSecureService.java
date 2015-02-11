@@ -22,6 +22,7 @@ package org.apache.maven.continuum.xmlrpc.server;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.xmlrpc.ContinuumService;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.system.SecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
@@ -29,14 +30,12 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public abstract class AbstractContinuumSecureService
     implements ContinuumService, ContinuumXmlRpcComponent
 {
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+
+    @Requirement( hint = "default" )
     private SecuritySystem securitySystem;
 
     private ContinuumXmlRpcConfig config;

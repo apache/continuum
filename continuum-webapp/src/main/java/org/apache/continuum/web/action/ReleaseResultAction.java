@@ -27,6 +27,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseResult"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "releaseResult", instantiationStrategy = "per-lookup" )
 public class ReleaseResultAction
     extends ContinuumConfirmAction
 {

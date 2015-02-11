@@ -26,6 +26,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.system.SecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
@@ -41,7 +42,6 @@ import java.util.ResourceBundle;
  * ContinuumActionSupport
  *
  * @author Jesse McConnell <jesse@codehaus.org>
- * @version $Id$
  */
 public class ContinuumActionSupport
     extends PlexusActionSupport
@@ -49,9 +49,7 @@ public class ContinuumActionSupport
 {
     private SecuritySession securitySession;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private SecuritySystem securitySystem;
 
     protected static final String REQUIRES_AUTHENTICATION = "requires-authentication";
@@ -66,9 +64,7 @@ public class ContinuumActionSupport
     protected static final String ERROR_MSG_PROCESSING_AUTHORIZATION =
         "An error occurred while performing authorization.";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private Continuum continuum;
 
     protected final SimpleDateFormat dateFormatter = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aaa z" );
@@ -432,9 +428,8 @@ public class ContinuumActionSupport
     /**
      * Check if the current user is authorized to manage the application's configuration
      *
-     * @throws AuthenticationRequiredException
-     *                                        if the user isn't authorized if the user isn't authenticated
-     * @throws AuthorizationRequiredException if the user isn't authorized if the user isn't authorized
+     * @throws AuthenticationRequiredException if the user isn't authorized if the user isn't authenticated
+     * @throws AuthorizationRequiredException  if the user isn't authorized if the user isn't authorized
      */
     protected void checkManageConfigurationAuthorization()
         throws AuthenticationRequiredException, AuthorizationRequiredException
@@ -450,9 +445,8 @@ public class ContinuumActionSupport
     /**
      * Check if the current user is authorized to manage the project build schedules
      *
-     * @throws AuthenticationRequiredException
-     *                                        if the user isn't authorized if the user isn't authenticated
-     * @throws AuthorizationRequiredException if the user isn't authorized if the user isn't authorized
+     * @throws AuthenticationRequiredException if the user isn't authorized if the user isn't authenticated
+     * @throws AuthorizationRequiredException  if the user isn't authorized if the user isn't authorized
      */
     protected void checkManageSchedulesAuthorization()
         throws AuthenticationRequiredException, AuthorizationRequiredException
@@ -468,9 +462,8 @@ public class ContinuumActionSupport
     /**
      * Check if the current user is authorized to manage queues
      *
-     * @throws AuthenticationRequiredException
-     *                                        if the user isn't authenticated
-     * @throws AuthorizationRequiredException if the user isn't authorized
+     * @throws AuthenticationRequiredException if the user isn't authenticated
+     * @throws AuthorizationRequiredException  if the user isn't authorized
      */
     protected void checkManageQueuesAuthorization()
         throws AuthenticationRequiredException, AuthorizationRequiredException

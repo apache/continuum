@@ -30,25 +30,22 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.action.AbstractAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="execute-agent-builder"
- */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "execute-agent-builder" )
 public class ExecuteBuilderAction
     extends AbstractAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private BuildAgentBuildExecutorManager buildAgentBuildExecutorManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void execute( Map context )

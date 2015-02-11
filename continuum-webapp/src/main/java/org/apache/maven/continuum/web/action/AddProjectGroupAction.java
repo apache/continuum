@@ -27,6 +27,7 @@ import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +35,8 @@ import java.util.List;
 
 /**
  * @author Henry Isidro <hisidro@exist.com>
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProjectGroup"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "addProjectGroup", instantiationStrategy = "per-lookup" )
 public class AddProjectGroupAction
     extends ContinuumActionSupport
 {

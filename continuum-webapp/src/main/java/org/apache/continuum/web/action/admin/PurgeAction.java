@@ -29,6 +29,8 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.struts2.ServletActionContext;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -41,11 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="purge"
- */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "purge", instantiationStrategy = "per-lookup"  )
 public class PurgeAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
@@ -76,14 +74,10 @@ public class PurgeAction
 
     private List<String> directoryTypes;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private PurgeConfigurationService purgeConfigService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryService repositoryService;
 
     private Schedule sched = null;

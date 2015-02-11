@@ -34,6 +34,8 @@ import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.AbstractAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.Date;
@@ -41,20 +43,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="update-agent-working-directory"
- */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "update-agent-working-directory" )
 public class UpdateWorkingDirectoryAction
     extends AbstractAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumScm scm;
 
     public void execute( Map context )

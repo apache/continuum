@@ -27,6 +27,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -34,9 +35,7 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
 
 import java.util.List;
 
-/**
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildQueueAction"
- */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildQueueAction", instantiationStrategy = "per-lookup" )
 public class BuildQueueAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction

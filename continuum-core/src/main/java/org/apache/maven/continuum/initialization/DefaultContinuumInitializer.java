@@ -34,6 +34,8 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jpox.SchemaTool;
 import org.slf4j.Logger;
@@ -44,11 +46,9 @@ import java.util.Collection;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id$
  * @todo use this, reintroduce default project group
- * @plexus.component role="org.apache.maven.continuum.initialization.ContinuumInitializer"
- * role-hint="default"
  */
+@Component( role = org.apache.maven.continuum.initialization.ContinuumInitializer.class, hint = "default" )
 public class DefaultContinuumInitializer
     implements ContinuumInitializer
 {
@@ -58,34 +58,22 @@ public class DefaultContinuumInitializer
     //  Requirements
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private LocalRepositoryDao localRepositoryDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectGroupDao projectGroupDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private SystemConfigurationDao systemConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionService buildDefinitionService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenSettingsBuilder mavenSettingsBuilder;
 
     // ----------------------------------------------------------------------
@@ -137,7 +125,6 @@ public class DefaultContinuumInitializer
         }
         log.info( "Continuum initializer end running ..." );
     }
-
 
     private void createDefaultProjectGroup()
         throws ContinuumStoreException, BuildDefinitionServiceException

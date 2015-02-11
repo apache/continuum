@@ -21,6 +21,8 @@ package org.apache.maven.continuum.management.redback;
 
 import org.apache.maven.continuum.management.DataManagementException;
 import org.apache.maven.continuum.management.DataManagementTool;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusStoreException;
@@ -65,10 +67,8 @@ import javax.xml.stream.XMLStreamException;
 
 /**
  * JDO implementation the database management tool API.
- *
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-redback-jdo"
  */
+@Component( role = org.apache.maven.continuum.management.DataManagementTool.class, hint = "legacy-redback-jdo" )
 public class LegacyJdoDataManagementTool
     implements DataManagementTool
 {
@@ -78,9 +78,7 @@ public class LegacyJdoDataManagementTool
 
     private static final String RBAC_XML_NAME = "rbac.xml";
 
-    /**
-     * @plexus.requirement role-hint="users"
-     */
+    @Requirement( hint = "users" )
     private JdoFactory jdoFactory;
 
     public void backupDatabase( File backupDirectory )
@@ -297,7 +295,7 @@ public class LegacyJdoDataManagementTool
 
             RBACObjectAssertions.assertValid( role );
 
-            PlexusJdoUtils.saveObject( getPersistenceManager(), role, new String[]{null} );
+            PlexusJdoUtils.saveObject( getPersistenceManager(), role, new String[] { null } );
         }
 
         for ( Iterator i = database.getUserAssignments().iterator(); i.hasNext(); )
@@ -306,7 +304,7 @@ public class LegacyJdoDataManagementTool
 
             RBACObjectAssertions.assertValid( "Save User Assignment", userAssignment );
 
-            PlexusJdoUtils.saveObject( getPersistenceManager(), userAssignment, new String[]{null} );
+            PlexusJdoUtils.saveObject( getPersistenceManager(), userAssignment, new String[] { null } );
         }
     }
 

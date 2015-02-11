@@ -31,19 +31,19 @@ import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseRollback"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "releaseRollback", instantiationStrategy = "per-lookup"  )
 public class ReleaseRollbackAction
     extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
     private int projectId;

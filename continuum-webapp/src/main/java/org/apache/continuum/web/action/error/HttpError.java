@@ -20,14 +20,14 @@ package org.apache.continuum.web.action.error;
  */
 
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.codehaus.plexus.component.annotations.Component;
 
 /**
  * AboutAction:
  *
  * @author: Emmanuel Venisse <evenisse@apache.org>
- * @version: $Id:$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="httpError"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "httpError", instantiationStrategy = "per-lookup"  )
 public class HttpError
     extends ContinuumActionSupport
 {

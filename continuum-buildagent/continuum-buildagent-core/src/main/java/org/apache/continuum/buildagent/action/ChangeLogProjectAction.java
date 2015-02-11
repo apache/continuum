@@ -29,26 +29,23 @@ import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.command.changelog.ChangeLogScmResult;
 import org.apache.maven.scm.command.changelog.ChangeLogSet;
 import org.codehaus.plexus.action.AbstractAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="changelog-agent-project"
- */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "changelog-agent-project")
 public class ChangeLogProjectAction
     extends AbstractAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumScm scm;
 
     public void execute( Map context )

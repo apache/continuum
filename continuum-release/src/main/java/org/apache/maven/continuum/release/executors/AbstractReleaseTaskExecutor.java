@@ -26,6 +26,7 @@ import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.release.ReleaseManager;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -34,24 +35,17 @@ import java.io.IOException;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
  */
 public abstract class AbstractReleaseTaskExecutor
     implements ReleaseTaskExecutor
 {
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     protected ContinuumReleaseManager continuumReleaseManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     protected ReleaseManager releaseManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenSettingsBuilder settingsBuilder;
 
     protected Settings settings;

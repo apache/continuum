@@ -37,6 +37,7 @@ import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -47,9 +48,8 @@ import java.util.Map;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releasePerform"
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "releasePerform", instantiationStrategy = "per-lookup" )
 public class ReleasePerformAction
     extends AbstractReleaseAction
 {

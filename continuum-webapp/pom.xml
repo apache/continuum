@@ -74,24 +74,12 @@
       </plugin>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
-        <configuration>
-          <roleDefaults>
-            <roleDefault>
-              <role>com.opensymphony.xwork2.Action</role>
-              <instantiation-strategy>per-lookup</instantiation-strategy>
-            </roleDefault>
-            <roleDefault>
-              <role>com.opensymphony.xwork2.validator.Validator</role>
-              <instantiation-strategy>per-lookup</instantiation-strategy>
-            </roleDefault>
-          </roleDefaults>
-        </configuration>
+        <artifactId>plexus-component-metadata</artifactId>
         <executions>
           <execution>
             <id>generate</id>
             <goals>
-              <goal>descriptor</goal>
+              <goal>generate-metadata</goal>
             </goals>
           </execution>
         </executions>
@@ -405,6 +393,10 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-component-annotations</artifactId>
     </dependency>
     <dependency> <!-- added since depMgt doesn't override imported dependencies -->
       <groupId>org.codehaus.plexus</groupId>

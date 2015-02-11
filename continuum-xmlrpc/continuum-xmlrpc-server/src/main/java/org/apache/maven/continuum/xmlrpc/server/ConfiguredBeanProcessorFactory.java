@@ -24,6 +24,8 @@ import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
@@ -38,17 +40,14 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
- * @plexus.component role="org.apache.xmlrpc.server.RequestProcessorFactoryFactory"
  */
+@Component( role = org.apache.xmlrpc.server.RequestProcessorFactoryFactory.class )
 public class ConfiguredBeanProcessorFactory
     implements RequestProcessorFactoryFactory, Initializable, Contextualizable
 {
     private static final Logger log = LoggerFactory.getLogger( ConfiguredBeanProcessorFactory.class );
 
-    /**
-     * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent"
-     */
+    @Requirement( role = org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent.class )
     private Map<String, Object> xmlrpcComponents;
 
     private Map<String, String> componentsMapping = new HashMap<String, String>();

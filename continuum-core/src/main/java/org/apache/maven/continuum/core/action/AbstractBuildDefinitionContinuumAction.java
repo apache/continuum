@@ -29,6 +29,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.util.List;
 
@@ -41,14 +42,10 @@ import java.util.List;
 public abstract class AbstractBuildDefinitionContinuumAction
     extends AbstractContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ScheduleDao scheduleDao;
 
     protected void resolveDefaultBuildDefinitionsForProject( BuildDefinition buildDefinition, Project project )

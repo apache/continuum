@@ -34,6 +34,8 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.io.File;
 import java.util.List;
@@ -41,41 +43,28 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="deploy-artifact"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "deploy-artifact" )
 public class DeployArtifactContinuumAction
     extends AbstractContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Requirement
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildExecutorManager buildExecutorManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private WorkingDirectoryService workingDirectoryService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ArtifactDeployer artifactDeployer;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenBuilderHelper builderHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ArtifactRepositoryFactory artifactRepositoryFactory;
 
     public void execute( Map context )

@@ -35,6 +35,8 @@ import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -44,9 +46,8 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="checkout-project"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "checkout-project" )
 public class CheckoutProjectContinuumAction
     extends AbstractContinuumAction
 {
@@ -58,24 +59,16 @@ public class CheckoutProjectContinuumAction
 
     private static final String KEY_CHECKOUT_SCM_RESULT = "checkout-result";
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumNotificationDispatcher notifier;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ContinuumScm scm;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
     public void execute( Map context )
@@ -114,7 +107,7 @@ public class CheckoutProjectContinuumAction
 
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, scmUserName,
                                                                        scmPassword, scmRootUrl, isRootDirectory(
-                context ) );
+                    context ) );
 
             String tag = config.getTag();
             getLogger().info(

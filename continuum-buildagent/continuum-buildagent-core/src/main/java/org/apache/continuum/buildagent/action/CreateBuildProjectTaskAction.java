@@ -27,6 +27,8 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
 import org.codehaus.plexus.action.AbstractAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,17 +36,13 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="create-agent-build-project-task"
- */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "create-agent-build-project-task" )
 public class CreateBuildProjectTaskAction
     extends AbstractAction
 {
     private static final Logger log = LoggerFactory.getLogger( CreateBuildProjectTaskAction.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
 
     public void execute( Map context )

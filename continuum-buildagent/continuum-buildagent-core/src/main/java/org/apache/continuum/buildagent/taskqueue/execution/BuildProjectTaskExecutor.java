@@ -49,6 +49,8 @@ import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
@@ -64,38 +66,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
- * role-hint="build-agent"
- */
+@Component( role = org.codehaus.plexus.taskqueue.execution.TaskExecutor.class, hint = "build-agent" )
 public class BuildProjectTaskExecutor
     implements TaskExecutor
 {
     private static final Logger log = LoggerFactory.getLogger( BuildProjectTaskExecutor.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildContextManager buildContextManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ActionManager actionManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentManager buildAgentManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentBuildExecutorManager buildAgentBuildExecutorManager;
 
     public void executeTask( Task task )

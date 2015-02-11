@@ -20,6 +20,7 @@ package org.apache.continuum.buildagent.buildcontext.manager;
  */
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +29,8 @@ import java.util.Map;
 
 /**
  * @author Jan Steven Ancajas
- * @plexus.component role="org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager" role-hint="default"
  */
+@Component( role = org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager.class, hint = "default" )
 public class DefaultBuildContextManager
     implements BuildContextManager
 {

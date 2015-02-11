@@ -34,6 +34,8 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.commandline.ExecutableResolver;
+import org.codehaus.plexus.component.annotations.Configuration;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
@@ -53,34 +55,22 @@ public abstract class AbstractBuildExecutor
 {
     protected static final Logger log = LoggerFactory.getLogger( AbstractBuildExecutor.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ShellCommandHelper shellCommandHelper;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ExecutableResolver executableResolver;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentInstallationService buildAgentInstallationService;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String defaultExecutable;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildAgentManager buildAgentManager;
 
     // ----------------------------------------------------------------------

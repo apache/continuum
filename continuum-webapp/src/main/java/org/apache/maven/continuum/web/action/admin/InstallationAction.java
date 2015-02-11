@@ -8,6 +8,8 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -40,18 +42,15 @@ import java.util.ResourceBundle;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="installation"
  * @since 14 juin 07
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "installation", instantiationStrategy = "per-lookup" )
 public class InstallationAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
 {
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Requirement( hint = "default" )
     private InstallationService installationService;
 
     private List<Installation> installations;

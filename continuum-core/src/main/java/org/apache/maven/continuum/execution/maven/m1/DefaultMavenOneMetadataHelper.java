@@ -25,6 +25,7 @@ import org.apache.maven.continuum.model.project.ProjectDeveloper;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
@@ -42,10 +43,8 @@ import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper"
- * role-hint="default"
  */
+@Component( role = org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper.class, hint = "default" )
 public class DefaultMavenOneMetadataHelper
     implements MavenOneMetadataHelper
 {
@@ -58,6 +57,7 @@ public class DefaultMavenOneMetadataHelper
     /**
      * @deprecated Use {@link #mapMetadata(ContinuumProjectBuildingResult, File, Project)} instead
      */
+    @Deprecated
     public void mapMetadata( File metadata, Project project )
         throws MavenOneMetadataHelperException
     {

@@ -46,11 +46,11 @@
       <!-- TODO: move up to continuum parent and use in all modules -->
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
+        <artifactId>plexus-component-metadata</artifactId>
         <executions>
           <execution>
             <goals>
-              <goal>descriptor</goal>
+              <goal>generate-metadata</goal>
             </goals>
           </execution>
         </executions>

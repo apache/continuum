@@ -35,6 +35,7 @@ import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.apache.maven.continuum.web.model.PrepareBuildSummary;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -49,10 +50,9 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
- * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="queues"
  * @since 24 sept. 07
  */
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "queues", instantiationStrategy = "per-lookup" )
 public class QueuesAction
     extends ContinuumActionSupport
     implements SecureAction

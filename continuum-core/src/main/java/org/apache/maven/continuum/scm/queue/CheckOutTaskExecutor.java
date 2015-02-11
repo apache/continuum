@@ -26,6 +26,8 @@ import org.apache.maven.continuum.core.action.CheckoutProjectContinuumAction;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.action.ActionManager;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
@@ -37,23 +39,18 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
- * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
- * role-hint="check-out-project" instantiation-strategy="per-lookup"
  */
+@Component( role = org.codehaus.plexus.taskqueue.execution.TaskExecutor.class, hint = "check-out-project",
+    instantiationStrategy = "per-lookup" )
 public class CheckOutTaskExecutor
     implements TaskExecutor
 {
     private static final Logger log = LoggerFactory.getLogger( CheckOutTaskExecutor.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ActionManager actionManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private ProjectDao projectDao;
 
     // ----------------------------------------------------------------------

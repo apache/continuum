@@ -60,6 +60,7 @@ import org.apache.maven.wagon.proxy.ProxyInfo;
 import org.apache.maven.wagon.repository.Repository;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
@@ -100,9 +101,7 @@ public class WagonContinuumNotifier
     @Resource
     private MavenSettingsBuilder settingsBuilder;
 
-    /**
-     * @plexus.configuration
-     */
+    @Configuration( "" )
     private String localRepository;
 
     private Settings settings;
@@ -110,6 +109,10 @@ public class WagonContinuumNotifier
     private ProfileManager profileManager;
 
     private PlexusContainer container;
+
+    public WagonContinuumNotifier()
+    {
+    }
 
     public String getType()
     {

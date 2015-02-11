@@ -23,6 +23,8 @@ import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 import java.util.Map;
 
@@ -30,18 +32,14 @@ import java.util.Map;
  * AddBuildDefinitionToProjectAction:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="remove-build-definition-from-project-group"
  */
+@Component( role = org.codehaus.plexus.action.Action.class, hint = "remove-build-definition-from-project-group" )
 public class RemoveBuildDefinitionFromProjectGroupAction
     extends AbstractBuildDefinitionContinuumAction
 {
-    /**
-     * @plexus.requirement
-     */
-    private ProjectGroupDao projectGroupDao;
 
+    @Requirement
+    private ProjectGroupDao projectGroupDao;
 
     public void execute( Map context )
         throws Exception

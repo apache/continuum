@@ -33,6 +33,8 @@ import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,27 +45,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * @plexus.component role="org.apache.continuum.buildagent.manager.BuildAgentReleaseManager" role-hint="default"
- */
+@Component( role = org.apache.continuum.buildagent.manager.BuildAgentReleaseManager.class, hint = "default" )
 public class DefaultBuildAgentReleaseManager
     implements BuildAgentReleaseManager
 {
     private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentReleaseManager.class );
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     ContinuumReleaseManager releaseManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     BuildAgentConfigurationService buildAgentConfigurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     BuildAgentInstallationService buildAgentInstallationService;
 
     public String releasePrepare( Map<String, Object> projectMap, Properties releaseProperties,
