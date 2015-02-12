@@ -46,9 +46,7 @@
         </div>
         
         <h4><s:text name="scmResult.scmError"/></h4>
-        <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-          <pre><s:property value="projectScmRoot.error"/></pre>
-        </div>
+        <div class="cmd-output pre-wrap"><s:property value="projectScmRoot.error"/></div>
       </div>
     </body>
   </s:i18n>

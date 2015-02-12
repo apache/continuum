@@ -70,9 +70,7 @@
             <s:text name="releaseViewResult.noOutput"/>
         </s:if>
         <s:else>
-          <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-            <pre><s:property value="result.output"/></pre>
-          </div>
+          <div class="cmd-output pre-wrap"><s:property value="result.output"/></div>
         </s:else>
       </p>
       <input type="button" value="<s:text name="back"/>" onClick="history.go(-1)">

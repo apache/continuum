@@ -252,9 +252,7 @@
 
         <s:if test="buildResult.state == 4">
           <h4><s:text name="buildResult.buildError"/></h4>
-          <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-            <pre><s:property value="buildResult.error"/></pre>
-          </div>
+          <div class="cmd-output pre-wrap"><s:property value="buildResult.error"/></div>
         </s:if>
         <s:else>
           <h4><s:text name="buildResult.buildOutput"/></h4>
@@ -268,9 +266,7 @@
                 <s:param name="buildId" value="buildId"/>
               </s:url>
               <s:a href="%{buildOutputTextUrl}"><s:text name="buildResult.buildOutput.text"/></s:a>
-              <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-                <pre><s:property value="buildOutput"/></pre>
-              </div>
+              <div class="cmd-output pre-wrap"><s:property value="buildOutput"/></div>
             </s:else>
           </p>
         </s:else>

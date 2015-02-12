@@ -65,9 +65,7 @@
     </div>
     <p><a href="#" onclick="showhide('stacktrace');">Show/hide Stack Trace</a></p>
     <div id="stacktrace" style="display: none;">
-      <pre>
-        <s:property value="exceptionStack"/>
-      </pre>
+      <div class="pre-wrap"><s:property value="exceptionStack"/></div>
     </div>
   </div>
 </body>
