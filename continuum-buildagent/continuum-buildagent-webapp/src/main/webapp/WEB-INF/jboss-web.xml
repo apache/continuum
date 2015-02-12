@@ -23,16 +23,7 @@
     "http://www.jboss.org/j2ee/dtd/jboss-web_5_0.dtd">
 <jboss-web>
 
-  <class-loading java2ClassLoadingCompliance='false'>
-    <loader-repository>
-      org.apache.continuum:loader=continuum-buildagent
-      <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
-    </loader-repository>
-
-  </class-loading>
-
   <context-root>continuum-buildagent</context-root>
-
 
 </jboss-web>
 

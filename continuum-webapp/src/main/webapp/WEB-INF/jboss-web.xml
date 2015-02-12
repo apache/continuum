@@ -23,29 +23,21 @@
     "http://www.jboss.org/j2ee/dtd/jboss-web_5_0.dtd">
 <jboss-web>
 
-  <class-loading java2ClassLoadingCompliance='false'>
-    <loader-repository>
-      org.apache.continuum:loader=continuum
-      <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
-    </loader-repository>
-
-  </class-loading>
-
   <context-root>continuum</context-root>
 
   <resource-ref>
     <res-ref-name>jdbc/continuum</res-ref-name>
-    <jndi-name>java:/continuum</jndi-name>
+    <jndi-name>java:jboss/datasources/ContinuumDS</jndi-name>
   </resource-ref>
 
   <resource-ref>
     <res-ref-name>jdbc/users</res-ref-name>
-    <jndi-name>java:/users</jndi-name>
+    <jndi-name>java:jboss/datasources/UsersDS</jndi-name>
   </resource-ref>
 
   <resource-ref>
     <res-ref-name>mail/Session</res-ref-name>
-    <jndi-name>java:/Mail</jndi-name>
+    <jndi-name>java:jboss/mail/Default</jndi-name>
   </resource-ref>
 
 </jboss-web>
