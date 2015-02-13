@@ -40,6 +40,18 @@
 
             var $ta = $('#outputArea');
 
+            function toggleOutput() {
+              if ($ta.html()) {
+                $('#noBuildOutput').hide();
+                $('#buildOutput').show();
+              } else {
+                $('#buildOutput').hide();
+                $('#noBuildOutput').show();
+              }
+            }
+
+            toggleOutput();  // Show appropriate initial controls
+
             function scrollToBottom($textArea) {
               var newHeight = $textArea.attr('scrollHeight');
               $textArea.attr('scrollTop', newHeight);
@@ -61,7 +73,9 @@
                   contentType: 'application/json;charset=utf-8',
                   success: function(data) {
                     parsed = JSON.parse(data);
-                    $ta.html(parsed.buildOutput);
+                    var output = parsed.buildOutput;
+                    $ta.html(output);
+                    toggleOutput();
                     if (autoScroll) {
                       scrollToBottom($ta);
                     }
@@ -307,17 +321,17 @@
         <s:else>
           <h4><s:text name="buildResult.buildOutput"/></h4>
           <p>
-            <s:if test="buildOutput == ''">
-                <s:text name="buildResult.noOutput"/>
-            </s:if>
-            <s:else>
+            <span id="noBuildOutput">
+              <s:text name="buildResult.noOutput"/>
+            </span>
+            <div id="buildOutput" style="display: none;">
               <s:url id="buildOutputTextUrl" action="buildOutputText">
                 <s:param name="projectId" value="projectId"/>
                 <s:param name="buildId" value="buildId"/>
               </s:url>
               <s:a href="%{buildOutputTextUrl}"><s:text name="buildResult.buildOutput.text"/></s:a>
               <div id="outputArea" class="cmd-output pre-wrap"><s:property value="buildOutput"/></div>
-            </s:else>
+            </div>
           </p>
         </s:else>
       </div>
