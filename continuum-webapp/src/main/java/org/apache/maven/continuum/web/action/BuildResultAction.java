@@ -49,7 +49,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
-@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildResult", instantiationStrategy = "per-lookup"  )
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildResult", instantiationStrategy = "per-lookup" )
 public class BuildResultAction
     extends AbstractBuildAction
 {
@@ -286,5 +286,10 @@ public class BuildResultAction
     public void setDistributedBuildManager( DistributedBuildManager distributedBuildManager )
     {
         this.distributedBuildManager = distributedBuildManager;
+    }
+
+    public boolean isBuildInProgress()
+    {
+        return buildResult.getState() == ContinuumProjectState.BUILDING;
     }
 }

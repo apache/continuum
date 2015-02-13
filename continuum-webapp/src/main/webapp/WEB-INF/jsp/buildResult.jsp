@@ -27,6 +27,56 @@
   <s:i18n name="localization.Continuum">
     <head>
         <title><s:text name="buildResult.page.title"/></title>
+        <script type="text/javascript">
+          <s:url id="outputAsyncUrl" action="buildOutputJSON" escapeAmp="false">
+            <s:param name="projectId" value="projectId"/>
+            <s:param name="buildId" value="buildId"/>
+          </s:url>
+          jQuery(document).ready(function($) {
+
+            var buildInProgress = <s:property value="buildInProgress" />;
+            var outputUrl = '<s:property value="#outputAsyncUrl" escapeHtml="false" />';
+            var refreshPending = false;
+
+            var $ta = $('#outputArea');
+
+            function scrollToBottom($textArea) {
+              var newHeight = $textArea.attr('scrollHeight');
+              $textArea.attr('scrollTop', newHeight);
+            }
+
+            function isScrolledToBottom($textArea) {
+              return $textArea.attr('scrollHeight') - $textArea.attr('clientHeight') == $textArea.attr('scrollTop')
+            }
+
+            // Scroll text area to bottom on page load
+            scrollToBottom($ta);
+
+            setInterval(function() {
+              if (buildInProgress && !refreshPending) {
+                refreshPending = true;
+                var autoScroll = isScrolledToBottom($ta);
+                $.ajax({
+                  url: outputUrl,
+                  contentType: 'application/json;charset=utf-8',
+                  success: function(data) {
+                    parsed = JSON.parse(data);
+                    $ta.html(parsed.buildOutput);
+                    if (autoScroll) {
+                      scrollToBottom($ta);
+                    }
+                    if (!parsed.buildInProgress) {
+                      location.reload();  // reload page when complete
+                    }
+                  },
+                  complete: function() {
+                    refreshPending = false;
+                  }
+                });
+              }
+            }, 5000);
+          });
+        </script>
     </head>
     <body>
       <div id="h3">
@@ -266,7 +316,7 @@
                 <s:param name="buildId" value="buildId"/>
               </s:url>
               <s:a href="%{buildOutputTextUrl}"><s:text name="buildResult.buildOutput.text"/></s:a>
-              <div class="cmd-output pre-wrap"><s:property value="buildOutput"/></div>
+              <div id="outputArea" class="cmd-output pre-wrap"><s:property value="buildOutput"/></div>
             </s:else>
           </p>
         </s:else>

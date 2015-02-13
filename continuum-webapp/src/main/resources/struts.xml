@@ -32,7 +32,7 @@
   <!-- Include plexus-security xwork configurations. -->
   <include file="struts-security.xml"/>
 
-  <package name="default" extends="struts-default">
+  <package name="default" extends="json-default">
 
     <interceptors>
       <interceptor-stack name="defaultStack">
@@ -493,6 +493,15 @@
       <result name="success" type="stream">
         <param name="inputName">buildOutputInputStream</param>
         <param name="contentDisposition">attachment; filename="build-output.txt"</param>
+      </result>
+    </action>
+
+    <action name="buildOutputJSON" class="buildResult">
+      <result type="json">
+        <param name="includeProperties">
+          ^buildInProgress$,
+          ^buildOutput$
+        </param>
       </result>
     </action>
 
