@@ -20,6 +20,7 @@ package org.apache.continuum.utils.shell;
  */
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,18 +44,14 @@ public class FileOutputConsumer
         throws IOException
     {
         this.writer = new PrintWriter( new FileWriter( outputFile ) );
+        this.writer.close();  // make the file exist immediately
+        this.writer = new PrintWriter( new FileWriter( outputFile, true ), true );  // append to created file
     }
 
     public void consume( String line )
     {
         if ( writer != null )
             writer.println( line );
-    }
-
-    public void flush()
-    {
-        if ( writer != null )
-            writer.flush();
     }
 
     public void close()

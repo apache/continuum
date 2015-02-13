@@ -146,7 +146,6 @@ public class DefaultShellCommandHelper
         }
         finally
         {
-            fileConsumer.flush();
             fileConsumer.close();
         }
     }
