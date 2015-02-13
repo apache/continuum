@@ -21,6 +21,7 @@
 
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
 <%@ taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 
 <html>
 <head>
@@ -32,6 +33,10 @@
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/print.css" includeParams="none"/>" media="print"/>
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
   <link rel="shortcut icon" href="<s:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>
+  <script type="text/javascript" src="<c:url value='/js/jquery-1.3.2.min.js'/>"></script>
+  <script language="javascript" type="text/javascript">
+    $.noConflict();
+  </script>
   <script type="text/javascript" src="<s:url value="/js/prototype.js" includeParams="none"/>"></script>
   <s:head/>
   <decorator:head/>
