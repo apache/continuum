@@ -23,8 +23,8 @@ import org.apache.continuum.web.test.parent.AbstractAdminTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-@Test( groups = { "buildResult" } )
-public class BuildResultTest
+@Test( groups = { "buildResults" } )
+public class BuildResultsTest
     extends AbstractAdminTest
 {
     private String projectGroupName;
@@ -38,9 +38,9 @@ public class BuildResultTest
     @BeforeClass
     public void createProject()
     {
-        projectGroupName = getProperty( "BUILD_RESULT_PROJECT_GROUP_NAME" );
-        projectGroupId = getProperty( "BUILD_RESULT_PROJECT_GROUP_ID" );
-        projectGroupDescription = getProperty( "BUILD_RESULT_PROJECT_GROUP_DESCRIPTION" );
+        projectGroupName = getProperty( "BUILD_RESULTS_PROJECT_GROUP_NAME" );
+        projectGroupId = getProperty( "BUILD_RESULTS_PROJECT_GROUP_ID" );
+        projectGroupDescription = getProperty( "BUILD_RESULTS_PROJECT_GROUP_DESCRIPTION" );
 
         projectName = getProperty( "MAVEN2_POM_PROJECT_NAME" );
         String projectPomUrl = getProperty( "MAVEN2_POM_URL" );
