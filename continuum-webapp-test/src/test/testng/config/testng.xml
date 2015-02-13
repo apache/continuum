@@ -66,6 +66,7 @@
         <include name="appearance"/>
         <include name="csrf"/>
         <include name="distributed"/>
+        <include name="buildResult"/>
         <include name="buildResults"/>
       </run>
     </groups>
