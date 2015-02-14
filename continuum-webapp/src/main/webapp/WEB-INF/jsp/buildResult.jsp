@@ -49,8 +49,17 @@
                 $('#noBuildOutput').show();
               }
             }
-
             toggleOutput();  // Show appropriate initial controls
+
+            function showTail(show) {
+              var $oa = $('#outputArea'), tailClass = 'tail-output';
+              if (show) {
+                $oa.addClass(tailClass);
+              } else {
+                $oa.removeClass(tailClass);
+              }
+            }
+            showTail(buildInProgress);  // Show tail indicator if in-progress
 
             function scrollToBottom($textArea) {
               var newHeight = $textArea.attr('scrollHeight');
@@ -79,6 +88,7 @@
                     if (autoScroll) {
                       scrollToBottom($ta);
                     }
+                    showTail(parsed.buildInProgress);
                     if (!parsed.buildInProgress) {
                       location.reload();  // reload page when complete
                     }
