@@ -51,54 +51,58 @@
             }
             toggleOutput();  // Show appropriate initial controls
 
-            function showTail(show) {
-              var $oa = $('#outputArea'), tailClass = 'tail-output';
-              if (show) {
-                $oa.addClass(tailClass);
-              } else {
-                $oa.removeClass(tailClass);
-              }
-            }
-            showTail(buildInProgress);  // Show tail indicator if in-progress
-
             function scrollToBottom($textArea) {
               var newHeight = $textArea.attr('scrollHeight');
               $textArea.attr('scrollTop', newHeight);
             }
+            scrollToBottom($ta);  // Scroll text area to bottom on intial page load
 
             function isScrolledToBottom($textArea) {
               return $textArea.attr('scrollHeight') - $textArea.attr('clientHeight') == $textArea.attr('scrollTop')
             }
 
-            // Scroll text area to bottom on page load
-            scrollToBottom($ta);
+            function showStatus(building, loading) {
+              if (loading) {
+                $ta.addClass('cmd-loading');
+                $ta.removeClass('cmd-building');
+              } else if (building) {
+                $ta.addClass('cmd-building');
+                $ta.removeClass('cmd-loading');
+              } else {
+                $ta.removeClass('cmd-building');
+                $ta.removeClass('cmd-loading');
+              }
+            }
+            showStatus(buildInProgress);
 
             setInterval(function() {
               if (buildInProgress && !refreshPending) {
                 refreshPending = true;
                 var autoScroll = isScrolledToBottom($ta);
+                showStatus(buildInProgress, true);
                 $.ajax({
                   url: outputUrl,
                   contentType: 'application/json;charset=utf-8',
                   success: function(data) {
                     parsed = JSON.parse(data);
                     var output = parsed.buildOutput;
+                    buildInProgress = parsed.buildInProgress;
                     $ta.html(output);
                     toggleOutput();
                     if (autoScroll) {
                       scrollToBottom($ta);
                     }
-                    showTail(parsed.buildInProgress);
-                    if (!parsed.buildInProgress) {
+                    if (!buildInProgress) {
                       location.reload();  // reload page when complete
                     }
                   },
                   complete: function() {
                     refreshPending = false;
+                    showStatus(buildInProgress, false);
                   }
                 });
               }
-            }, 5000);
+            }, 1000);
           });
         </script>
     </head>
