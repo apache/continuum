@@ -45,6 +45,11 @@
         });
       });
     </script>
+    <style>
+      form#generateProjectBuildsReport table.wwFormTable {
+        width: 100%;
+      }
+    </style>
   </head>
   
   <body>
@@ -52,6 +57,7 @@
  
     <s:form name="generateReportForm" action="generateProjectBuildsReport.action">
       <c:if test="${!empty actionErrors || !empty errorMessages}">
+        <tr><td>
         <div class="errormessage">
           <s:iterator value="actionErrors">
             <p><s:property/></p>
@@ -60,8 +66,10 @@
             <p><c:out value="${errorMessage}"/></p>
           </c:forEach>
         </div>
+        </td></tr>
       </c:if>
-      
+
+      <tr><td>
       <div class="axial">
         <table>
             <s:select label="%{getText('projectBuilds.report.project.group')}" name="projectGroupId" id="projectGroupId" list="projectGroups"/>
@@ -76,6 +84,7 @@
           <input type="button" id="resetFilter" value="<s:text name='projectBuilds.report.button.reset' />" />
         </div>
       </div>
+      </td></tr>
     </s:form>
     
     </p>
