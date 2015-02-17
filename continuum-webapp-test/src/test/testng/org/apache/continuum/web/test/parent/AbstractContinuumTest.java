@@ -365,7 +365,14 @@ public abstract class AbstractContinuumTest
         clickLinkWithText( projectName );
         waitForElementPresent( "link=Builds" );
         clickLinkWithText( "Builds" );
-        clickLinkWithText( "Result" );
+
+        if (success)
+        {
+            clickAndWait( "css=img[alt=\"Success\"]" );
+        }
+        else {
+            clickAndWait( "css=img[alt=\"Failed\"]" );
+        }
 
         assertPage( "Continuum - Build result" );
         assertTextPresent( "Build result for " + projectName );

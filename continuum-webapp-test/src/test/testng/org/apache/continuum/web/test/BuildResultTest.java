@@ -94,8 +94,7 @@ public class BuildResultTest
         clickAndWait( "link=Builds" );
 
         // Matches and clicks first result
-        assertElementPresent( "css=img[alt=\"Building\"]" );
-        clickAndWait( "link=Result" );
+        clickAndWait( "css=img[alt=\"Building\"]" );
 
         assertPage( "Continuum - Build result" );
         assertElementPresent( "css=img[alt=\"Building\"]" );    // confirm build is still in progress

@@ -19,13 +19,18 @@ package org.apache.maven.continuum.web.view.buildresults;
  * under the License.
  */
 
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.web.model.ProjectBuildsSummary;
 import org.apache.maven.continuum.web.util.StateGenerator;
+import org.apache.maven.continuum.web.util.UrlHelperFactory;
+import org.apache.struts2.ServletActionContext;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
+import java.util.HashMap;
 
 /**
  * Used in BuildResults
@@ -33,7 +38,7 @@ import javax.servlet.jsp.PageContext;
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @deprecated use of cells is discouraged due to lack of i18n and design in java code.
- *             Use jsp:include instead.
+ * Use jsp:include instead.
  */
 public class StateCell
     extends DisplayCell
@@ -41,6 +46,8 @@ public class StateCell
     protected String getCellValue( TableModel tableModel, Column column )
     {
         PageContext pageContext = (PageContext) tableModel.getContext().getContextObject();
+
+        Object result = tableModel.getCurrentRowBean();
 
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
@@ -55,8 +62,25 @@ public class StateCell
 
         value = StateGenerator.generate( state, request.getContextPath() );
 
+        if ( result instanceof BuildResult )
+        {
+            value = createActionLink( "buildResult", (BuildResult) result,
+                                      StateGenerator.generate( state, request.getContextPath() ) );
+        }
+
         column.setPropertyValue( value );
 
         return value.toString();
+    }
+
+    private static String createActionLink( String action, BuildResult result, String linkText )
+    {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put( "projectId", result.getProject().getId() );
+        params.put( "buildId", result.getId() );
+        String url = UrlHelperFactory.getInstance().buildUrl( "/" + action + ".action",
+                                                              ServletActionContext.getRequest(),
+                                                              ServletActionContext.getResponse(), params );
+        return String.format( "<a href='%s''>%s</a>", url, linkText );
     }
 }
