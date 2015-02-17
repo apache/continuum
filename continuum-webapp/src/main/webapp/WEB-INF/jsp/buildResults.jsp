@@ -73,12 +73,12 @@
                     <c:out value="${pageScope.buildResult.buildNumber}"/>
                   </c:if>
               </ec:column>
-              <ec:column property="startTime" title="buildResults.startTime" cell="date"/>
-              <ec:column property="endTime" title="buildResults.endTime" cell="date"/>
-              <ec:column property="duration" title="&nbsp;">
+              <ec:column property="startTime" title="buildResults.startTime" cell="date" format="yyyy-MM-dd HH:mm z"/>
+              <ec:column property="endTime" title="buildResults.endTime" cell="date" format="yyyy-MM-dd HH:mm z"/>
+              <ec:column property="duration" title="buildResults.duration">
                 <c:choose>
                   <c:when test="${buildResult.endTime gt 0}">
-                    <s:text name="buildResults.duration"/> : <c:out value="${buildResult.durationTime}"/>
+                    ${buildResult.durationTime}
                   </c:when>
                   <c:otherwise>
                     <s:text name="buildResults.startedSince"/> : <c:out value="${buildResult.elapsedTime}"/>
@@ -86,15 +86,25 @@
                 </c:choose>
               </ec:column>
               <ec:column property="state" title="buildResults.state" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
+              <ec:column property="trigger" title="buildResult.trigger">
+                <c:choose>
+                  <c:when test="${pageScope.buildResult.trigger == 1}">
+                    <s:text name="buildResult.trigger.1"/>
+                  </c:when>
+                  <c:otherwise>
+                    <s:text name="buildResult.trigger.0"/>
+                  </c:otherwise>
+                </c:choose>
+              </ec:column>
               <ec:column property="buildDefinition.description" title="buildResults.buildDefinition.description" />
-              <ec:column property="actions" title="&nbsp;">
+              <ec:column property="actions" title="buildResult.buildId">
                 <s:url id="buildResultUrl" action="buildResult">
                   <s:param name="projectId"><c:out value="${projectId}"/></s:param>
                   <s:param name="projectName"><c:out value="${projectName}"/></s:param>
                   <s:param name="buildId"><c:out value="${buildResult.id}"/></s:param>
                   <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
                 </s:url>
-                <s:a href="%{buildResultUrl}"><s:text name="buildResults.result"/></s:a>
+                <s:a href="%{buildResultUrl}">${buildResult.id}</s:a>
               </ec:column>
             </ec:row>
           </ec:table>
