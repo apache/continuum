@@ -39,6 +39,8 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +55,7 @@ import java.util.Map;
 public class BuildResultAction
     extends AbstractBuildAction
 {
+    private static Logger log = LoggerFactory.getLogger( BuildResultAction.class );
 
     @Requirement
     private DistributedBuildManager distributedBuildManager;
@@ -136,7 +139,14 @@ public class BuildResultAction
             hasSurefireResults = files != null && files.length > 0;
             changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
-            buildOutput = getBuildOutputText();
+            try
+            {
+                buildOutput = getBuildOutputText();
+            }
+            catch ( ConfigurationException ce )
+            {
+                log.warn( "failed to access build output", ce );
+            }
 
             if ( ServletActionContext.getRequest() != null )
             {

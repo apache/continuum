@@ -25,6 +25,8 @@ import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
+
+import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -52,6 +54,8 @@ public class BuildResultActionTest
 
     private BuildsManager buildsManager;
 
+    private Project project;
+
     @Before
     public void setUp()
         throws Exception
@@ -64,25 +68,26 @@ public class BuildResultActionTest
         action = new BuildResultActionStub();
         action.setContinuum( continuum );
         action.setDistributedBuildManager( distributedBuildManager );
+
+        project = createProject( "stub-project" );
+
+        when( continuum.getProject( anyInt() ) ).thenReturn( project );
+        when( continuum.getConfiguration() ).thenReturn( configurationService );
+        when( continuum.getBuildsManager() ).thenReturn( buildsManager );
     }
 
     @Test
     public void testViewPreviousBuild()
         throws Exception
     {
-        Project project = createProject( "stub-project" );
         BuildResult buildResult = createBuildResult( project );
-
-        when( continuum.getProject( anyInt() ) ).thenReturn( project );
         when( continuum.getBuildResult( anyInt() ) ).thenReturn( buildResult );
-        when( continuum.getConfiguration() ).thenReturn( configurationService );
         when( configurationService.isDistributedBuildEnabled() ).thenReturn( false );
         when( configurationService.getTestReportsDirectory( anyInt(), anyInt() ) ).thenReturn(
             new File( "testReportsDir" ) );
         when( continuum.getChangesSinceLastSuccess( anyInt(), anyInt() ) ).thenReturn( null );
         when( configurationService.getBuildOutputFile( anyInt(), anyInt() ) ).thenReturn(
             new File( "buildOutputFile" ) );
-        when( continuum.getBuildsManager() ).thenReturn( buildsManager );
         when( buildsManager.getCurrentBuilds() ).thenReturn( new HashMap<String, BuildProjectTask>() );
 
         assertEquals( Action.SUCCESS, action.execute() );
@@ -92,12 +97,20 @@ public class BuildResultActionTest
     public void testViewCurrentBuildInDistributedBuildAgent()
         throws Exception
     {
-        Project project = createProject( "stub-project" );
-
-        when( continuum.getProject( anyInt() ) ).thenReturn( project );
-        when( continuum.getConfiguration() ).thenReturn( configurationService );
         when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
         when( distributedBuildManager.getBuildResult( anyInt() ) ).thenReturn( new HashMap<String, Object>() );
+
+        assertEquals( Action.SUCCESS, action.execute() );
+    }
+
+    @Test
+    public void testSuccessfulWhenBuildOutputDirThrows()
+        throws Exception
+    {
+        when( configurationService.getTestReportsDirectory( anyInt(), anyInt() ) ).thenReturn(
+            new File( "non-existent" ) );
+        when( configurationService.getBuildOutputFile( anyInt(), anyInt() ) ).thenThrow(
+            new ConfigurationException( "failed creating dir" ) );
 
         assertEquals( Action.SUCCESS, action.execute() );
     }
