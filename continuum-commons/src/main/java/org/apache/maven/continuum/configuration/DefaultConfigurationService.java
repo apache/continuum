@@ -561,11 +561,15 @@ public class DefaultConfigurationService
     public File getTestReportsDirectory( int buildId, int projectId )
         throws ConfigurationException
     {
-        File ouputDirectory = getBuildOutputDirectory( projectId );
-
-        return new File(
-            ouputDirectory.getPath() + File.separatorChar + buildId + File.separatorChar + "surefire-reports" );
-
+        File outputDirectory = getBuildOutputDirectory( projectId );
+        File testDir = new File( outputDirectory.getPath() + File.separator + buildId + File.separator +
+                                     "surefire-reports" );
+        if ( !testDir.exists() && !testDir.mkdirs() )
+        {
+            throw new ConfigurationException(
+                String.format( "Could not make the test reports directory: '%s'.", testDir.getAbsolutePath() ) );
+        }
+        return testDir;
     }
 
     public File getBuildOutputFile( int buildId, int projectId )

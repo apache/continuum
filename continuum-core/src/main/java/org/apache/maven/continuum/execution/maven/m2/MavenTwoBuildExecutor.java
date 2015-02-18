@@ -349,10 +349,6 @@ public class MavenTwoBuildExecutor
         try
         {
             backupDirectory = configurationService.getTestReportsDirectory( buildId, project.getId() );
-            if ( !backupDirectory.exists() )
-            {
-                backupDirectory.mkdirs();
-            }
             testReportArchiver.archiveReports(
                 getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ),
                 backupDirectory );

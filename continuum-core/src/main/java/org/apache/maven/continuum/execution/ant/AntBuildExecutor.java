@@ -163,10 +163,6 @@ public class AntBuildExecutor
         try
         {
             File backupDirectory = configurationService.getTestReportsDirectory( buildId, project.getId() );
-            if ( !backupDirectory.exists() )
-            {
-                backupDirectory.mkdirs();
-            }
             testReportArchiver.archiveReports(
                 getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ),
                 backupDirectory );
