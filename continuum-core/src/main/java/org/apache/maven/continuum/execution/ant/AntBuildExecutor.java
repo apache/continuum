@@ -26,14 +26,13 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
+import org.apache.maven.continuum.execution.shared.JUnitReportArchiver;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -64,9 +63,7 @@ public class AntBuildExecutor
 
     private ConfigurationService configurationService;
 
-    private String[] testIncludes = { };
-
-    private String[] testExcludes = { };
+    private JUnitReportArchiver testReportArchiver;
 
     // ----------------------------------------------------------------------
     //
@@ -82,14 +79,9 @@ public class AntBuildExecutor
         this.configurationService = configurationService;
     }
 
-    public void setTestIncludes( String[] testIncludes )
+    public void setTestReportArchiver( JUnitReportArchiver testReportArchiver )
     {
-        this.testIncludes = testIncludes;
-    }
-
-    public void setTestExcludes( String[] testExcludes )
-    {
-        this.testExcludes = testExcludes;
+        this.testReportArchiver = testReportArchiver;
     }
 
     // ----------------------------------------------------------------------
@@ -175,7 +167,9 @@ public class AntBuildExecutor
             {
                 backupDirectory.mkdirs();
             }
-            backupTestFiles( getWorkingDirectoryService().getWorkingDirectory( project ), backupDirectory );
+            testReportArchiver.archiveReports(
+                getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ),
+                backupDirectory );
         }
         catch ( ConfigurationException e )
         {
@@ -187,28 +181,5 @@ public class AntBuildExecutor
         }
     }
 
-    private void backupTestFiles( File workingDir, File backupDirectory )
-        throws IOException
-    {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir( workingDir );
-        scanner.setIncludes( testIncludes );
-        scanner.setExcludes( testExcludes );
-        scanner.scan();
-
-        String[] testResultFiles = scanner.getIncludedFiles();
-        if ( testResultFiles.length > 0 )
-        {
-            log.info( "Backing up {} junit test reports", testResultFiles.length );
-        }
-        for ( String testResultFile : testResultFiles )
-        {
-            File xmlFile = new File( workingDir, testResultFile );
-            if ( backupDirectory != null )
-            {
-                FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
-            }
-        }
-    }
 }
 

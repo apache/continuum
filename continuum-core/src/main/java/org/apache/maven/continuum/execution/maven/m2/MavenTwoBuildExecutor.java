@@ -29,6 +29,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
+import org.apache.maven.continuum.execution.shared.JUnitReportArchiver;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -85,6 +86,9 @@ public class MavenTwoBuildExecutor
     @Requirement
     private ConfigurationService configurationService;
 
+    @Requirement
+    private JUnitReportArchiver testReportArchiver;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -122,6 +126,11 @@ public class MavenTwoBuildExecutor
     public void setConfigurationService( ConfigurationService configurationService )
     {
         this.configurationService = configurationService;
+    }
+
+    public void setTestReportArchiver( JUnitReportArchiver testReportArchiver )
+    {
+        this.testReportArchiver = testReportArchiver;
     }
 
     // ----------------------------------------------------------------------
@@ -344,42 +353,17 @@ public class MavenTwoBuildExecutor
             {
                 backupDirectory.mkdirs();
             }
+            testReportArchiver.archiveReports(
+                getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ),
+                backupDirectory );
         }
         catch ( ConfigurationException e )
         {
-            log.info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
+            log.error( "failed to get backup directory", e );
         }
-        backupTestFiles( getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ),
-                         backupDirectory );
-    }
-
-    private void backupTestFiles( File workingDir, File backupDirectory )
-    {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir( workingDir );
-        scanner.setIncludes(
-            new String[] { "**/target/surefire-reports/TEST-*.xml", "**/target/surefire-it-reports/TEST-*.xml" } );
-        scanner.scan();
-
-        String[] testResultFiles = scanner.getIncludedFiles();
-        if ( testResultFiles.length > 0 )
+        catch ( IOException e )
         {
-            log.info( "Backup surefire files." );
-        }
-        for ( String testResultFile : testResultFiles )
-        {
-            File xmlFile = new File( workingDir, testResultFile );
-            try
-            {
-                if ( backupDirectory != null )
-                {
-                    FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
-                }
-            }
-            catch ( IOException e )
-            {
-                log.info( "failed to backup unit report file " + xmlFile.getPath() );
-            }
+            log.warn( "failed to copy test results to backup directory", e );
         }
     }
 
