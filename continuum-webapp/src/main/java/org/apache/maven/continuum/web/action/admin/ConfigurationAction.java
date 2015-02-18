@@ -141,7 +141,7 @@ public class ConfigurationAction
         if ( numberOfAllowedBuildsinParallel <= 0 )
         {
             addActionError( "Number of Allowed Builds in Parallel must be greater than zero." );
-            return ERROR;
+            return INPUT;
         }
 
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -172,7 +172,7 @@ public class ConfigurationAction
         else if ( isRequireReleaseOutput() )
         {
             addActionError( getText( "configuration.releaseOutputDirectory.required" ) );
-            return ERROR;
+            return INPUT;
         }
         else
         {

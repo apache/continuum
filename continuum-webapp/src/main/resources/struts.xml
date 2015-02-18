@@ -756,7 +756,6 @@
       <interceptor-ref name="unconfiguredContinuumStack"/>
       <result name="input">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/configuration.jsp</result>
-      <result name="error">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
     </action>
 
     <action name="configureAppearance" class="configureAppearance" method="input">
