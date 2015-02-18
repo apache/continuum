@@ -75,18 +75,21 @@ public class ConfigurationAction
         if ( workingDirectoryFile != null )
         {
             workingDirectory = workingDirectoryFile.getAbsolutePath();
+            validateDir( "workingDirectory", workingDirectoryFile );
         }
 
         File buildOutputDirectoryFile = configuration.getBuildOutputDirectory();
         if ( buildOutputDirectoryFile != null )
         {
             buildOutputDirectory = buildOutputDirectoryFile.getAbsolutePath();
+            validateDir( "buildOutputDirectory", buildOutputDirectoryFile );
         }
 
         File deploymentRepositoryDirectoryFile = configuration.getDeploymentRepositoryDirectory();
         if ( deploymentRepositoryDirectoryFile != null )
         {
             deploymentRepositoryDirectory = deploymentRepositoryDirectoryFile.getAbsolutePath();
+            validateDir( "deploymentRepositoryDirectory", deploymentRepositoryDirectoryFile );
         }
 
         baseUrl = configuration.getUrl();
@@ -103,6 +106,7 @@ public class ConfigurationAction
         if ( releaseOutputDirectoryFile != null )
         {
             releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
+            validateDir( "releaseOutputDirectory", releaseOutputDirectoryFile );
         }
 
         numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();
@@ -186,6 +190,21 @@ public class ConfigurationAction
         configuration.store();
 
         return SUCCESS;
+    }
+
+    private void validateDir( String fieldName, File dir )
+    {
+        if ( dir.exists() )
+        {
+            if ( !dir.isDirectory() )
+            {
+                addFieldError( fieldName, getText( "configuration.dir.notdir" ) );
+            }
+            if ( !dir.canWrite() )
+            {
+                addFieldError( fieldName, getText( "configuration.dir.notwritable" ) );
+            }
+        }
     }
 
     public String getWorkingDirectory()
