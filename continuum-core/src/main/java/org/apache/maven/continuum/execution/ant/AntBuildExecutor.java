@@ -19,6 +19,8 @@ package org.apache.maven.continuum.execution.ant;
  * under the License.
  */
 
+import org.apache.maven.continuum.configuration.ConfigurationException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -30,9 +32,12 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -42,7 +47,6 @@ import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class AntBuildExecutor
     extends AbstractBuildExecutor
@@ -58,6 +62,12 @@ public class AntBuildExecutor
 
     public static final String ID = ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR;
 
+    private ConfigurationService configurationService;
+
+    private String[] testIncludes = { };
+
+    private String[] testExcludes = { };
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -65,6 +75,21 @@ public class AntBuildExecutor
     public AntBuildExecutor()
     {
         super( ID, true );
+    }
+
+    public void setConfigurationService( ConfigurationService configurationService )
+    {
+        this.configurationService = configurationService;
+    }
+
+    public void setTestIncludes( String[] testIncludes )
+    {
+        this.testIncludes = testIncludes;
+    }
+
+    public void setTestExcludes( String[] testExcludes )
+    {
+        this.testExcludes = testExcludes;
     }
 
     // ----------------------------------------------------------------------
@@ -138,4 +163,52 @@ public class AntBuildExecutor
         throws ContinuumBuildExecutorException
     {
     }
+
+    @Override
+    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl,
+                                 List<Project> projectsWithCommonScmRoot )
+    {
+        try
+        {
+            File backupDirectory = configurationService.getTestReportsDirectory( buildId, project.getId() );
+            if ( !backupDirectory.exists() )
+            {
+                backupDirectory.mkdirs();
+            }
+            backupTestFiles( getWorkingDirectoryService().getWorkingDirectory( project ), backupDirectory );
+        }
+        catch ( ConfigurationException e )
+        {
+            log.error( "failed to get backup directory", e );
+        }
+        catch ( IOException e )
+        {
+            log.warn( "failed to copy test results to backup directory", e );
+        }
+    }
+
+    private void backupTestFiles( File workingDir, File backupDirectory )
+        throws IOException
+    {
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setBasedir( workingDir );
+        scanner.setIncludes( testIncludes );
+        scanner.setExcludes( testExcludes );
+        scanner.scan();
+
+        String[] testResultFiles = scanner.getIncludedFiles();
+        if ( testResultFiles.length > 0 )
+        {
+            log.info( "Backing up {} junit test reports", testResultFiles.length );
+        }
+        for ( String testResultFile : testResultFiles )
+        {
+            File xmlFile = new File( workingDir, testResultFile );
+            if ( backupDirectory != null )
+            {
+                FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
+            }
+        }
+    }
 }
+

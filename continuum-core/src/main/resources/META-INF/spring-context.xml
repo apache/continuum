@@ -36,6 +36,7 @@
   <bean name="continuumBuildExecutor#ant"
         class="org.apache.maven.continuum.execution.ant.AntBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="ant"/>
+    <property name="testIncludes" value="**/TEST-*.xml"/>
   </bean>
   <bean name="continuumBuildExecutor#shell"
         class="org.apache.maven.continuum.execution.shell.ShellBuildExecutor" autowire="byName">
