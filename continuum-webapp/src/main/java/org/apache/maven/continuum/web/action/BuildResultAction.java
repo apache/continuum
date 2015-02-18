@@ -79,7 +79,7 @@ public class BuildResultAction
     private int projectGroupId;
 
     public String execute()
-        throws ContinuumException, ConfigurationException, IOException, BuildManagerException
+        throws ContinuumException, IOException, BuildManagerException
     {
         try
         {
@@ -134,9 +134,18 @@ public class BuildResultAction
             buildResult = getContinuum().getBuildResult( getBuildId() );
 
             // directory contains files ?
-            File surefireReportsDirectory = configuration.getTestReportsDirectory( buildId, getProjectId() );
-            File[] files = surefireReportsDirectory.listFiles();
-            hasSurefireResults = files != null && files.length > 0;
+            File[] testReports = null;
+            try
+            {
+                File surefireReportsDirectory = configuration.getTestReportsDirectory( buildId, getProjectId() );
+                testReports = surefireReportsDirectory.listFiles();
+            }
+            catch ( ConfigurationException ce )
+            {
+                log.warn( "failed to access test reports", ce );
+            }
+
+            hasSurefireResults = testReports != null && testReports.length > 0;
             changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
             try

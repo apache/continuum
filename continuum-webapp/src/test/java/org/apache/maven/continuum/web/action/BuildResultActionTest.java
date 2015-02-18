@@ -104,6 +104,17 @@ public class BuildResultActionTest
     }
 
     @Test
+    public void testSuccessfulWhenTestDirThrows()
+        throws Exception
+    {
+        when( configurationService.getTestReportsDirectory( anyInt(), anyInt() ) ).thenThrow(
+            new ConfigurationException( "failed creating dir" ) );
+        when( configurationService.getBuildOutputFile( anyInt(), anyInt() ) ).thenReturn( new File( "non-existent" ) );
+
+        assertEquals( Action.SUCCESS, action.execute() );
+    }
+
+    @Test
     public void testSuccessfulWhenBuildOutputDirThrows()
         throws Exception
     {
