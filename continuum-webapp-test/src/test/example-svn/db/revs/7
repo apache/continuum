@@ -1,0 +1,84 @@
+id: 80.0.r7/0
+type: dir
+count: 0
+cpath: /trunk/ivy-junit
+copyroot: 0 /
+
+PLAIN
+K 3
+ant
+V 17
+dir 1l.0.r1/40993
+K 22
+continuum-2437-example
+V 17
+dir 43.0.r1/55881
+K 31
+continuum-build-queue-test-data
+V 17
+dir 2n.0.r1/47692
+K 25
+continuum-failing-project
+V 16
+dir 6j.0.r3/5047
+K 12
+flat-example
+V 16
+dir 3.0.r1/40570
+K 9
+ivy-junit
+V 13
+dir 80.0.r7/0
+K 18
+maven-one-projects
+V 17
+dir 57.0.r1/58103
+K 18
+maven-two-projects
+V 17
+dir 3b.0.r1/51960
+K 5
+shell
+V 15
+dir 51.0.r4/328
+K 14
+simple-example
+V 17
+dir 1p.0.r1/44766
+K 11
+tail-output
+V 16
+dir 7k.0.r6/2578
+END
+ENDREP
+id: 1.0.r7/564
+type: dir
+pred: 1.0.r6/3181
+count: 5
+text: 7 72 479 0 a539eb77569458a6ff1466b21740c9fc
+cpath: /trunk
+copyroot: 0 /
+
+PLAIN
+K 4
+tags
+V 16
+dir 5h.0.r2/5880
+K 5
+trunk
+V 14
+dir 1.0.r7/564
+END
+ENDREP
+id: 0.0.r7/773
+type: dir
+pred: 0.0.r6/3393
+count: 7
+text: 7 695 65 0 26d443cc6b5370432af5a8b17934ec9a
+cpath: /
+copyroot: 0 /
+
+_1.0.t6-1 add false false /trunk/ivy-junit
+
+
+773 899
