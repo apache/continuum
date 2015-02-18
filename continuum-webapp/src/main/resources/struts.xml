@@ -483,10 +483,6 @@
     <action name="buildResult" class="buildResult">
       <interceptor-ref name="storeStack"/>
       <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
-      <result name="error" type="redirectAction">
-        <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
-      </result>
     </action>
 
     <action name="buildOutputText" class="buildResult">
