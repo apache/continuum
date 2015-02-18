@@ -47,7 +47,7 @@ public class ConfigurationAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction
 {
-    private static final Logger logger = LoggerFactory.getLogger( ConfigurationAction.class );
+    private static final Logger log = LoggerFactory.getLogger( ConfigurationAction.class );
 
     private String workingDirectory;
 
@@ -96,7 +96,7 @@ public class ConfigurationAction
             HttpServletRequest request = ServletActionContext.getRequest();
             baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
                 request.getContextPath();
-            logger.info( "baseUrl='" + baseUrl + "'" );
+            log.info( "baseUrl='" + baseUrl + "'" );
         }
 
         File releaseOutputDirectoryFile = configuration.getReleaseOutputDirectory();
