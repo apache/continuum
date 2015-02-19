@@ -317,6 +317,11 @@ public class BuildResultAction
         return buildResult.getState() == ContinuumProjectState.OK;
     }
 
+    public boolean isShowBuildNumber()
+    {
+        return isBuildSuccessful() && buildResult.getBuildNumber() != 0;
+    }
+
     public boolean isShowBuildError()
     {
         return !isBuildSuccessful() && !StringUtils.isEmpty( buildResult.getError() );

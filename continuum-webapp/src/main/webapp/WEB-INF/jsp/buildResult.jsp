@@ -142,7 +142,7 @@
             <tr class="b">
               <th><label class="label"><s:text name='buildResult.buildNumber'/>:</label></th>
               <td>
-                <s:if test="buildResult.buildNumber != 0">
+                <s:if test="showBuildNumber">
                   <s:property value="buildResult.buildNumber"/>
                 </s:if>
                 <s:else>
