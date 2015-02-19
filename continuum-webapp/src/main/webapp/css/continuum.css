@@ -24,12 +24,16 @@ td.tdLabel {
 
 .cmd-output {
   width:100%;
-  height:500px;
+  max-height:500px;
   overflow:auto;
   border-style: solid;
   border-width: 1px;
   font-size: normal;
   font-family: monospace;
+}
+
+.cmd-window {
+  height:500px;
 }
 
 .cmd-loading {

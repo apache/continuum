@@ -311,4 +311,14 @@ public class BuildResultAction
     {
         return buildResult.getState() == ContinuumProjectState.BUILDING;
     }
+
+    public boolean isBuildSuccessful()
+    {
+        return buildResult.getState() == ContinuumProjectState.OK;
+    }
+
+    public boolean isShowBuildError()
+    {
+        return !isBuildSuccessful() && !StringUtils.isEmpty( buildResult.getError() );
+    }
 }

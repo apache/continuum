@@ -328,26 +328,25 @@
           <s:a href="%{surefireReportUrl}"><s:text name="buildResult.generatedReports.surefire"/></s:a>
         </s:if>
 
-        <s:if test="buildResult.state == 4">
+        <s:if test="showBuildError">
           <h4><s:text name="buildResult.buildError"/></h4>
           <div class="cmd-output pre-wrap"><s:property value="buildResult.error"/></div>
         </s:if>
-        <s:else>
-          <h4><s:text name="buildResult.buildOutput"/></h4>
-          <p>
-            <span id="noBuildOutput">
-              <s:text name="buildResult.noOutput"/>
-            </span>
-            <div id="buildOutput" style="display: none;">
-              <s:url id="buildOutputTextUrl" action="buildOutputText">
-                <s:param name="projectId" value="projectId"/>
-                <s:param name="buildId" value="buildId"/>
-              </s:url>
-              <s:a href="%{buildOutputTextUrl}"><s:text name="buildResult.buildOutput.text"/></s:a>
-              <div id="outputArea" class="cmd-output pre-wrap"><s:property value="buildOutput"/></div>
-            </div>
-          </p>
-        </s:else>
+
+        <h4><s:text name="buildResult.buildOutput"/></h4>
+        <p>
+          <span id="noBuildOutput">
+            <s:text name="buildResult.noOutput"/>
+          </span>
+          <div id="buildOutput" style="display: none;">
+            <s:url id="buildOutputTextUrl" action="buildOutputText">
+              <s:param name="projectId" value="projectId"/>
+              <s:param name="buildId" value="buildId"/>
+            </s:url>
+            <s:a href="%{buildOutputTextUrl}"><s:text name="buildResult.buildOutput.text"/></s:a>
+            <div id="outputArea" class="cmd-output cmd-window pre-wrap"><s:property value="buildOutput"/></div>
+          </div>
+        </p>
       </div>
     </body>
   </s:i18n>
