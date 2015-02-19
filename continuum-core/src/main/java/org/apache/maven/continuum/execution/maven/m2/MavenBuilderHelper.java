@@ -43,7 +43,7 @@ public interface MavenBuilderHelper
      * @param result
      * @param mavenProject
      * @param continuumProject
-     * @param groupPom         map this project as if it is being used to initialize a project group
+     * @param updateDefinition
      */
     void mapMavenProjectToContinuumProject( ContinuumProjectBuildingResult result, MavenProject mavenProject,
                                             Project continuumProject, boolean updateDefinition );
