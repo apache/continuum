@@ -42,7 +42,7 @@
                         </c:if>
                         <table>
                           <tbody>
-                            <s:textfield label="%{getText('add.m1.project.m1PomUrl.label')}" name="m1PomUrl" size="100">
+                            <s:textfield label="%{getText('add.m1.project.m1PomUrl.label')}" requiredLabel="true" name="m1PomUrl" size="100">
                                 <s:param name="after">
                                 <table cellspacing="0" cellpadding="0">
                                   <tbody>
