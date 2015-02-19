@@ -150,50 +150,35 @@ public class ExecuteBuilderContinuumAction
         {
             project = projectDao.getProject( project.getId() );
 
-            if ( buildResult.getState() == ContinuumProjectState.CANCELLED )
+            buildResult.setEndTime( new Date().getTime() );
+
+            if ( buildResult.getState() == ContinuumProjectState.OK )
             {
-                project.setState( project.getOldState() );
-
-                project.setOldState( 0 );
-
-                int buildResultId = getOldBuildId( context );
-
-                project.setLatestBuildId( buildResultId );
-
-                buildResultDao.removeBuildResult( buildResult );
+                project.setBuildNumber( project.getBuildNumber() + 1 );
             }
-            else
+
+            project.setLatestBuildId( buildResult.getId() );
+
+            buildResult.setBuildNumber( project.getBuildNumber() );
+
+            if ( buildResult.getState() != ContinuumProjectState.OK &&
+                buildResult.getState() != ContinuumProjectState.FAILED &&
+                buildResult.getState() != ContinuumProjectState.ERROR )
             {
-                buildResult.setEndTime( new Date().getTime() );
-
-                if ( buildResult.getState() == ContinuumProjectState.OK )
-                {
-                    project.setBuildNumber( project.getBuildNumber() + 1 );
-                }
-
-                project.setLatestBuildId( buildResult.getId() );
-
-                buildResult.setBuildNumber( project.getBuildNumber() );
-
-                if ( buildResult.getState() != ContinuumProjectState.OK &&
-                    buildResult.getState() != ContinuumProjectState.FAILED &&
-                    buildResult.getState() != ContinuumProjectState.ERROR )
-                {
-                    buildResult.setState( ContinuumProjectState.ERROR );
-                }
-
-                project.setState( buildResult.getState() );
-
-                // ----------------------------------------------------------------------
-                // Copy over the buildResult result
-                // ----------------------------------------------------------------------
-
-                buildResultDao.updateBuildResult( buildResult );
-
-                buildResult = buildResultDao.getBuildResult( buildResult.getId() );
-
-                notifier.goalsCompleted( project, buildDefinition, buildResult );
+                buildResult.setState( ContinuumProjectState.ERROR );
             }
+
+            project.setState( buildResult.getState() );
+
+            // ----------------------------------------------------------------------
+            // Copy over the buildResult result
+            // ----------------------------------------------------------------------
+
+            buildResultDao.updateBuildResult( buildResult );
+
+            buildResult = buildResultDao.getBuildResult( buildResult.getId() );
+
+            notifier.goalsCompleted( project, buildDefinition, buildResult );
 
             AbstractContinuumAction.setProject( context, project );
 
