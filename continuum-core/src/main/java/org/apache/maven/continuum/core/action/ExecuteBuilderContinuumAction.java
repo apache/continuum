@@ -135,6 +135,11 @@ public class ExecuteBuilderContinuumAction
             getLogger().info( "Cancelled build" );
 
             buildResult.setState( ContinuumProjectState.CANCELLED );
+            buildResult.setError(
+                String.format( "Build canceled after exceeding %s's maximum execution time of %s seconds.",
+                               buildDefinition.getSchedule().getName(),
+                               buildDefinition.getSchedule().getMaxJobExecutionTime() )
+            );
 
             setCancelled( context, true );
         }
