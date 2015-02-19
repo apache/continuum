@@ -26,7 +26,6 @@ import org.apache.maven.continuum.model.project.Schedule;
 
 /**
  * @author Maria Catherine Tan
- * @version $Id$
  * @since 25 jul 07
  */
 public interface ContinuumPurgeManager

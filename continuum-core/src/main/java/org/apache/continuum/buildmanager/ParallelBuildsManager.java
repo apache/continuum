@@ -64,7 +64,6 @@ import org.slf4j.LoggerFactory;
  * Parallel builds manager.
  *
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @version $Id$
  */
 public class ParallelBuildsManager
     implements BuildsManager, Contextualizable

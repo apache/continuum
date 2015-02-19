@@ -32,7 +32,6 @@ import java.io.PrintStream;
  * TestContinuumActionLogging:
  *
  * @author jesse
- * @version $Id$
  */
 public class ContinuumActionLoggingTest
     extends PlexusInSpringTestCase

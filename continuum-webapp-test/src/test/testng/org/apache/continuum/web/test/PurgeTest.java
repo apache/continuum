@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"purge"} )
 public class PurgeTest

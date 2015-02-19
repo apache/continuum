@@ -42,7 +42,6 @@ import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  * @todo consider folding some of this into Maven SCM itself
  */
 @Service( "continuumScm" )

@@ -21,7 +21,6 @@ package org.apache.continuum.web.util;
 
 /**
  * @author Jevica Arianne B. Zurbano
- * @version $Id: AuditLogConstants.java
  * @since 09 apr 09
  */
 public class AuditLogConstants

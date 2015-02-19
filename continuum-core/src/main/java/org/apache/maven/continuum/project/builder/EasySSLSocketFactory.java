@@ -40,7 +40,6 @@ import javax.net.ssl.TrustManager;
  * This socket factory will create ssl socket that accepts self signed certificate
  *
  * @author olamy
- * @version $Id$
  * @since 1.2.3
  */
 public class EasySSLSocketFactory

@@ -25,7 +25,6 @@ import org.slf4j.MDC;
 
 /**
  * @author Jevica Arianne B. Zurbano
- * @version $Id: AuditLog.java
  * @since 17 apr 09
  */
 public class AuditLog

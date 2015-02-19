@@ -30,7 +30,6 @@ import static org.testng.Assert.assertEquals;
  * Based on AbstractContinuumTestCase of Emmanuel Venisse test.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 public abstract class AbstractContinuumTest
     extends AbstractSeleniumTest

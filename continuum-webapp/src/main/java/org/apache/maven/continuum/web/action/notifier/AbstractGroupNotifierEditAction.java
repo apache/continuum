@@ -29,7 +29,6 @@ import org.codehaus.plexus.util.StringUtils;
  * Common base class for all Project Group notifier edit actions.
  *
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
- * @version $Id$
  */
 public abstract class AbstractGroupNotifierEditAction
     extends AbstractNotifierEditActionSupport

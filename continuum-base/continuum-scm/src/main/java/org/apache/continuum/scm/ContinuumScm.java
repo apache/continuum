@@ -30,8 +30,6 @@ import java.io.IOException;
 
 /**
  * Component that manages SCM interactions and checkouts within Continuum.
- *
- * @version $Id$
  */
 public interface ContinuumScm
 {

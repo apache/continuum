@@ -37,7 +37,6 @@ import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
  *          TODO use some cache mechanism to prevent always reading from store ?
  * @since 15 juin 07
  */

@@ -21,7 +21,6 @@ package org.apache.maven.continuum.utils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 1.2
  */
 public class URLUserInfo

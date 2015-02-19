@@ -31,7 +31,6 @@ import java.util.ArrayList;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
  */
 public class PrepareReleaseTaskExecutor
     extends AbstractReleaseTaskExecutor

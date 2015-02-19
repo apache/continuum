@@ -19,9 +19,6 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
-/**
- * @version $Id$
- */
 public interface DatabaseFactoryConfigurator
 {
     void configure( DatabaseParams params );

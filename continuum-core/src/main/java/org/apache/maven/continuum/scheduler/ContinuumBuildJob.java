@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id$
  */
 public class ContinuumBuildJob
     extends AbstractJob

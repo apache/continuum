@@ -28,7 +28,6 @@ import java.util.Map;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 public final class GenerateRecipentNotifier
 {

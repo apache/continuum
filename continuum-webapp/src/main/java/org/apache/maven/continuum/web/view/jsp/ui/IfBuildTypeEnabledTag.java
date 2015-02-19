@@ -31,7 +31,6 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
  * ifBuildTypeEnabledTag:
  *
  * @author Jan Ancajas <jansquared@gmail.com>
- * @version $Id: IfBuildTypeEnabledTag.java
  */
 public class IfBuildTypeEnabledTag
     extends ConditionalTagSupport

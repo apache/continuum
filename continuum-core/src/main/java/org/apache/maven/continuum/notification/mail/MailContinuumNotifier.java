@@ -76,7 +76,6 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id$
  */
 public class MailContinuumNotifier
     extends AbstractContinuumNotifier

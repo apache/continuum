@@ -24,7 +24,6 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 24 juin 2008
  */
 public class ProxyConfiguration

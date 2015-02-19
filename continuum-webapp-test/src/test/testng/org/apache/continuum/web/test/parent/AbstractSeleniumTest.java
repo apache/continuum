@@ -38,7 +38,6 @@ import java.util.Properties;
  * Based on AbstractSeleniumTestCase of Emmanuel Venisse test.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 public abstract class AbstractSeleniumTest
 {

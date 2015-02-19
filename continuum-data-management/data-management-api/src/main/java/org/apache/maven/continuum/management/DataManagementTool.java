@@ -24,8 +24,6 @@ import java.io.IOException;
 
 /**
  * Delegate to the correct data management tool.
- *
- * @version $Id$
  */
 public interface DataManagementTool
 {

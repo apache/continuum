@@ -27,7 +27,6 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class ContinuumNotificationDispatcherTest
     extends AbstractContinuumTest

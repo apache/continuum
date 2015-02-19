@@ -21,7 +21,6 @@ package org.apache.maven.continuum.notification;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public class NotificationException
     extends Exception

@@ -26,8 +26,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * SLF4J logger for Maven SCM.
- *
- * @version $Id$
  * @todo move to maven-scm?
  */
 @Service( "scmLogger" )

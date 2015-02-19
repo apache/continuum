@@ -30,7 +30,6 @@ import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 @Service( "workingDirectoryService" )
 public class DefaultWorkingDirectoryService

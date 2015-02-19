@@ -22,7 +22,6 @@ package org.apache.maven.continuum.security;
  * ContinuumRoleConstants:
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $Id$
  */
 public class ContinuumRoleConstants
 {

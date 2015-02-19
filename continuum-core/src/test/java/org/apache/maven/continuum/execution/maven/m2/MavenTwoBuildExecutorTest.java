@@ -32,7 +32,6 @@ import java.util.List;
 
 /**
  * @author olamy
- * @version $Id$
  * @since 1.2.3
  */
 public class MavenTwoBuildExecutorTest

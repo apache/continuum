@@ -25,7 +25,6 @@ import java.io.File;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  */
 public class ContinuumUrlValidatorTest
     extends PlexusInSpringTestCase

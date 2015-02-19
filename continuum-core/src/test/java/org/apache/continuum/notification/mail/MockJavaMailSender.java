@@ -29,7 +29,6 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 26 sept. 2008
  */
 public class MockJavaMailSender

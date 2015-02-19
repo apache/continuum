@@ -21,7 +21,6 @@ package org.apache.continuum.configuration;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 30 Jun 08
  */
 public class ContinuumConfigurationException

@@ -24,10 +24,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.util.List;
 
-/**
- * @author
- * @version $Id$
- */
 public interface DistributedDirectoryPurgeConfigurationDao
 {
     /**

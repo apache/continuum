@@ -23,7 +23,6 @@ import org.apache.continuum.taskqueue.BuildProjectTask;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public class BuildProjectQueue
     extends Queue

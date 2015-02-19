@@ -31,7 +31,6 @@ import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
- * @version $Id$
  */
 @Service( "workingDirectoryService#chrootJail" )
 public class ChrootJailWorkingDirectoryService

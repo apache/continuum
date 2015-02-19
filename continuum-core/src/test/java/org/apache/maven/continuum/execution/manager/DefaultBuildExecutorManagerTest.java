@@ -28,7 +28,6 @@ import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class DefaultBuildExecutorManagerTest
     extends AbstractContinuumTest

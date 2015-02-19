@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
  * Based on ProjectGroupTest of Emmanuel Venisse test.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"projectGroup"} )
 public class ProjectGroupTest

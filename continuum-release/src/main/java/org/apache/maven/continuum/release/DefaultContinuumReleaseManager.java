@@ -59,7 +59,6 @@ import java.util.Properties;
 /**
  * @author Jason van Zyl
  * @author Edwin Punzalan
- * @version $Id$
  */
 public class DefaultContinuumReleaseManager
     implements ContinuumReleaseManager, Contextualizable

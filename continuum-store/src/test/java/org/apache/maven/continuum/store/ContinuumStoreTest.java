@@ -55,7 +55,6 @@ import javax.jdo.JDODetachedFieldAccessException;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
  * @todo I think this should have all the JDO stuff from the abstract test, and the abstract test
  * should use a mock continuum store with the exception of the integration tests which should be
  * running against a fully deployed plexus application instead

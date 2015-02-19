@@ -21,7 +21,6 @@ package org.apache.maven.continuum.project.builder;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class ContinuumProjectBuilderException
     extends Exception

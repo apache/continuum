@@ -50,7 +50,6 @@ import javax.servlet.http.HttpServletRequest;
  * Action to add a Maven project to Continuum, either Maven 1 or Maven 2.
  *
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
- * @version $Id$
  */
 public abstract class AddMavenProjectAction
     extends ContinuumActionSupport

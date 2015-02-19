@@ -21,7 +21,6 @@ package org.apache.maven.continuum.release;
 
 /**
  * @author Jason van Zyl
- * @version $Id$
  */
 public class ContinuumReleaseException
     extends Exception

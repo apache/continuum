@@ -23,7 +23,6 @@ import org.apache.maven.continuum.ContinuumException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 1.2
  */
 public class AlreadyExistsInstallationException

@@ -73,8 +73,6 @@ import java.util.Properties;
 /**
  * An application for performing database upgrades from old Continuum and Redback versions. A suitable tool until it
  * is natively incorporated into Continuum itself.
- *
- * @version $Id$
  */
 public class DataManagementCli
 {

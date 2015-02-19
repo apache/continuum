@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = { "queue" } )
 public class QueueTest

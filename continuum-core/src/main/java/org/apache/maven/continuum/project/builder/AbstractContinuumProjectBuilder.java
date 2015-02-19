@@ -66,7 +66,6 @@ import java.net.UnknownHostException;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public abstract class AbstractContinuumProjectBuilder
     implements ContinuumProjectBuilder, Initializable

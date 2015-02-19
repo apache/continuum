@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public class ContinuumXmlRpcServlet
     extends HttpServlet

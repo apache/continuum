@@ -21,7 +21,6 @@ package org.apache.continuum.web.test.parent;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 public abstract class AbstractLocalRepositoryTest
     extends AbstractAdminTest

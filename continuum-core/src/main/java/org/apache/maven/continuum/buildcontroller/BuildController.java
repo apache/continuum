@@ -25,7 +25,6 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public interface BuildController
 {

@@ -34,7 +34,6 @@ import java.util.Collections;
 
 /**
  * @author olamy
- * @version $Id$
  */
 public class AddMaven2ProjectTest
     extends AbstractAddProjectTest

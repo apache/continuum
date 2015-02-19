@@ -44,7 +44,6 @@ import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 @Service( "notifier#jabber" )
 public class JabberContinuumNotifier

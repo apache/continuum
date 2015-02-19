@@ -25,7 +25,6 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 10 nov. 07
  */
 public interface AppareanceConfiguration

@@ -54,7 +54,6 @@ import java.util.List;
  * Update working copy
  *
  * @author Edwin Punzalan
- * @version $Id$
  */
 public class UpdateWorkingCopyPhase
     extends AbstractReleasePhase

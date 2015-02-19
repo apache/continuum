@@ -26,8 +26,6 @@ import java.util.Map;
 
 /**
  * Default implementation of the SCM manager.
- *
- * @version $Id$
  * @todo move to maven-scm as the default
  */
 public class ScmManager

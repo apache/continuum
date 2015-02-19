@@ -25,7 +25,6 @@ import org.codehaus.plexus.taskqueue.Task;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
  */
 public abstract class AbstractReleaseProjectTask
     implements Task, ReleaseProjectTask

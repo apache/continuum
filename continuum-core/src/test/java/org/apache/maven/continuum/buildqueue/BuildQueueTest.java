@@ -30,7 +30,6 @@ import org.codehaus.plexus.taskqueue.TaskQueue;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class BuildQueueTest
     extends AbstractContinuumTest

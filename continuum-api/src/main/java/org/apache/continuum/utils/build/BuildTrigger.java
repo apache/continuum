@@ -21,7 +21,6 @@ package org.apache.continuum.utils.build;
 
 /**
  * @author Jevica Arianne B. Zurbano
- * @version $Id: BuildTrigger.java
  * @since 19 jun 09
  */
 public class BuildTrigger

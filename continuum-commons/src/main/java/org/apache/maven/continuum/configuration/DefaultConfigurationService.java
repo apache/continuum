@@ -46,7 +46,6 @@ import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id$
  */
 public class DefaultConfigurationService
     implements ConfigurationService

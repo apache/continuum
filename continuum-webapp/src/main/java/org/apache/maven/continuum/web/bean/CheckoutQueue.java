@@ -23,7 +23,6 @@ import org.apache.continuum.taskqueue.CheckOutTask;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public class CheckoutQueue
     extends Queue

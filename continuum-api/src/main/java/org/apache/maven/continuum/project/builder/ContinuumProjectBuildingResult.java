@@ -34,7 +34,6 @@ import java.util.Map;
  *
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
- * @version $Id$
  */
 public class ContinuumProjectBuildingResult
 {

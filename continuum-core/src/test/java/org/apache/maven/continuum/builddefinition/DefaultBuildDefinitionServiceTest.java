@@ -32,7 +32,6 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 15 sept. 07
  */
 public class DefaultBuildDefinitionServiceTest

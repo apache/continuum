@@ -38,7 +38,6 @@ import java.util.Map;
  * </p>
  *
  * @author Carlos Sanchez <carlos@apache.org>
- * @version $Id$
  */
 public class ScmProviderFactoryBean
     implements FactoryBean, ApplicationContextAware

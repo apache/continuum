@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = { "schedule" } )
 public class ScheduleTest

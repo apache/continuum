@@ -21,7 +21,6 @@ package org.apache.maven.continuum.execution;
 
 /**
  * @author <a href="mailto:olamy at apache.org">olamy</a>
- * @version $Id$
  * @since 11 sept. 07
  */
 public class ContinuumBuildExecutorConstants

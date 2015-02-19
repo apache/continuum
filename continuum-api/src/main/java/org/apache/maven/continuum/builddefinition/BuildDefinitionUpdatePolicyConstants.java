@@ -21,7 +21,6 @@ package org.apache.maven.continuum.builddefinition;
 
 /**
  * @author Jose Morales Martinez
- * @version $Id$
  */
 public class BuildDefinitionUpdatePolicyConstants
 {

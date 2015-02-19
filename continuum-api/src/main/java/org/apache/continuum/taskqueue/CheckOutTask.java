@@ -27,7 +27,6 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public class CheckOutTask
     implements Task

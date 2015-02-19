@@ -29,7 +29,6 @@ import java.util.List;
  * Codes were taken from Archiva and made some changes.
  *
  * @author Maria Catherine Tan
- * @version $Id$
  * @since 25 jul 07
  */
 public interface RepositoryScanner

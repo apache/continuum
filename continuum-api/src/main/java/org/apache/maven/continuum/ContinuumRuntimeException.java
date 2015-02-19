@@ -21,8 +21,6 @@ package org.apache.maven.continuum;
 
 /**
  * Exception thrown as a result of a Continuum programming error so that the user need not deal with it.
- *
- * @version $Id$
  */
 public class ContinuumRuntimeException
     extends RuntimeException

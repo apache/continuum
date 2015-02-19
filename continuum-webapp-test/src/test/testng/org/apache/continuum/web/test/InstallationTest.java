@@ -28,7 +28,6 @@ import java.util.Arrays;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"installation"} )
 public class InstallationTest

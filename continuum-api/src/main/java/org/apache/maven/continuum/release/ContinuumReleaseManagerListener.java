@@ -23,7 +23,6 @@ import java.util.List;
 
 /**
  * @author Edwin Punzalan
- * @version $Id$
  */
 public interface ContinuumReleaseManagerListener
 {

@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
  * Based on AddMavenTwoProjectTest of Emmanuel Venisse test.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = { "mavenTwoProject" } )
 public class MavenTwoProjectTest

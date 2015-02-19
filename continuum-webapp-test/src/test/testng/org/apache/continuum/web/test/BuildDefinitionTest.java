@@ -31,7 +31,6 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = { "buildDefinition" } )
 public class BuildDefinitionTest

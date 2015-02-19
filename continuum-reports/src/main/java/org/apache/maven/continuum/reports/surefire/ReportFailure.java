@@ -21,7 +21,6 @@ package org.apache.maven.continuum.reports.surefire;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 13 nov. 07
  */
 public class ReportFailure

@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
  * Based on AddShellProjectTestCase of Emmanuel Venisse.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"shellProject"} )
 public class ShellProjectTest

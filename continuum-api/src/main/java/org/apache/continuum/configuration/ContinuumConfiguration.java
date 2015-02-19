@@ -23,7 +23,6 @@ import java.io.File;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 17 juin 2008
  */
 public interface ContinuumConfiguration

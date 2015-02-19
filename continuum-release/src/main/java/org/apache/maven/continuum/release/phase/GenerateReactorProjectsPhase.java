@@ -65,7 +65,6 @@ import java.util.StringTokenizer;
  * Generate the reactor projects
  *
  * @author Edwin Punzalan
- * @version $Id$
  */
 public class GenerateReactorProjectsPhase
     extends AbstractReleasePhase

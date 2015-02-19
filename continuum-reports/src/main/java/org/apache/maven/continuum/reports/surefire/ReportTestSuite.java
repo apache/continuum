@@ -35,7 +35,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 12 nov. 07
  */
 public class ReportTestSuite

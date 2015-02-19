@@ -26,7 +26,6 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
  * @since 15 juin 07
  */
 public interface ProfileService

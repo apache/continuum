@@ -32,7 +32,6 @@ import org.testng.annotations.Test;
  * Based on LoginTest of Emmanuel Venisse test.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"login"} )
 public class LoginTest

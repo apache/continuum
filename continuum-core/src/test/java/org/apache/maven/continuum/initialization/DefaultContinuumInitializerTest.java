@@ -26,7 +26,6 @@ import org.apache.maven.continuum.model.project.Schedule;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
  * @since 4 juin 07
  */
 public class DefaultContinuumInitializerTest

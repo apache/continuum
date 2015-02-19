@@ -24,7 +24,6 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  */
 public abstract class AbstractValidationContinuumAction
     extends AbstractContinuumAction

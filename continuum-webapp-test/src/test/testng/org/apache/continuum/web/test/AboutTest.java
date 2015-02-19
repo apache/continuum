@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
  * Based on AboutTest of Wendy Smoak test.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"about"}, alwaysRun = true )
 public class AboutTest

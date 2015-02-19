@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"buildDefinitionTemplate"} )
 public class BuildDefinitionTemplateTest

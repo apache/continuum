@@ -30,7 +30,6 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 5 oct. 07
  */
 public abstract class AbstractBuildAction

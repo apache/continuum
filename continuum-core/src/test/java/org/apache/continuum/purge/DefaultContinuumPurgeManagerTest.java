@@ -35,7 +35,6 @@ import org.codehaus.plexus.taskqueue.TaskQueue;
 
 /**
  * @author Maria Catherine Tan
- * @version $Id$
  * @since 25 jul 07
  */
 public class DefaultContinuumPurgeManagerTest

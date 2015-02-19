@@ -35,7 +35,6 @@ import java.util.Collections;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 12 juin 2008
  */
 public class AddProjectTest

@@ -53,7 +53,6 @@ import javax.annotation.Resource;
  * <b>This implementation assumes there aren't concurrent acces to the IRCConnection</b>
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 @Service( "notifier#irc" )
 public class IrcContinuumNotifier

@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
  * Based on MyAccountTest of Emmanuel Venisse test.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"myAccount"} )
 public class MyAccountTest

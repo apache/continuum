@@ -34,7 +34,6 @@ import javax.servlet.ServletContextListener;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 15 mars 2008
  */
 public class ContinuumStartup

@@ -43,7 +43,6 @@ import javax.annotation.Resource;
  * "Overall" build queue which has a checkout queue and a build queue.
  *
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @version $Id$
  */
 public class DefaultOverallBuildQueue
     implements OverallBuildQueue

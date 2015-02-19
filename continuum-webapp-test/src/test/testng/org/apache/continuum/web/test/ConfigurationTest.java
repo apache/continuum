@@ -25,7 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = { "configuration" } )
 public class ConfigurationTest

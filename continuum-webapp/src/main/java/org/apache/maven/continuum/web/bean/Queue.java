@@ -21,7 +21,6 @@ package org.apache.maven.continuum.web.bean;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public class Queue
 {

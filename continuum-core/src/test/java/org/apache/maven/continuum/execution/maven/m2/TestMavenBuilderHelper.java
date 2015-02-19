@@ -30,7 +30,6 @@ import java.io.File;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 6 juin 2008
  */
 public class TestMavenBuilderHelper

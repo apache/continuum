@@ -21,7 +21,6 @@ package org.apache.maven.continuum.execution;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
  * @since 19 juin 07
  */
 public class ExecutorConfigurator

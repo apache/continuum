@@ -33,7 +33,6 @@ import java.util.Set;
  * Taken from Archiva's ManagedRepositoryContent interface and made some few changes.
  *
  * @author Maria Catherine Tan
- * @version $Id$
  * @since 25 jul 07
  */
 public interface RepositoryManagedContent

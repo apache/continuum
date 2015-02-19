@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
  * Based on AddAntProjectTestCase of Emmanuel Venisse.
  *
  * @author José Morales Martínez
- * @version $Id$
  */
 @Test( groups = {"antProject"} )
 public class AntProjectTest

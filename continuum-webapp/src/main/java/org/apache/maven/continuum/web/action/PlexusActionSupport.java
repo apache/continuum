@@ -28,7 +28,6 @@ import java.util.Map;
  * LogEnabled and SessionAware ActionSupport
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
  */
 public abstract class PlexusActionSupport
     extends ActionSupport

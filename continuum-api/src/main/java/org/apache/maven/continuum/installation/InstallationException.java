@@ -21,7 +21,6 @@ package org.apache.maven.continuum.installation;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
  * @since 13 juin 07
  */
 public class InstallationException

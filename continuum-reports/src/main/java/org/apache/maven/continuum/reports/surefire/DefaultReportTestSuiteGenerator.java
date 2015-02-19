@@ -38,7 +38,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
  * @since 12 nov. 07
  */
 @Service( "reportTestSuiteGenerator" )

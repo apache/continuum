@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
  * TestAction:
  *
  * @author jesse
- * @version $Id$
  */
 public class TestAction
     extends PlexusActionSupport

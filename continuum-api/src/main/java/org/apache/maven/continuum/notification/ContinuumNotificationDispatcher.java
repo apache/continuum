@@ -26,7 +26,6 @@ import org.apache.maven.continuum.model.project.Project;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
  * @todo use build result for all of these? need project for those that do?
  */
 public interface ContinuumNotificationDispatcher

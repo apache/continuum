@@ -21,7 +21,6 @@ package org.apache.maven.continuum.scheduler;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id$
  */
 public class ContinuumSchedulerConstants
 {
