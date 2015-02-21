@@ -26,6 +26,8 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 import edu.emory.mathcs.backport.java.util.concurrent.Future;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
+import org.codehaus.plexus.component.annotations.Configuration;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -50,19 +52,13 @@ public class ThreadedDistributedBuildTaskQueueExecutor
 
     private static final Logger log = LoggerFactory.getLogger( ThreadedDistributedBuildTaskQueueExecutor.class );
 
-    /**
-     * @requirement
-     */
+    @Requirement
     private TaskQueue queue;
 
-    /**
-     * @requirement
-     */
+    @Requirement
     private DistributedBuildTaskExecutor executor;
 
-    /**
-     * @configuration
-     */
+    @Configuration( "" )
     private String name;
 
     // ----------------------------------------------------------------------

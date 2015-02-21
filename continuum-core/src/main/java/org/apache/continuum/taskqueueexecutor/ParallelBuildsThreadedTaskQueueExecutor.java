@@ -26,6 +26,8 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 import edu.emory.mathcs.backport.java.util.concurrent.Future;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
+import org.codehaus.plexus.component.annotations.Configuration;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -52,19 +54,13 @@ public class ParallelBuildsThreadedTaskQueueExecutor
 
     private static final int CANCEL_TASK = 2;
 
-    /**
-     * @requirement
-     */
+    @Requirement
     private TaskQueue queue;
 
-    /**
-     * @requirement
-     */
+    @Requirement
     private TaskExecutor executor;
 
-    /**
-     * @configuration
-     */
+    @Configuration( "" )
     private String name;
 
     // ----------------------------------------------------------------------
