@@ -32,6 +32,4 @@
       base-package="org.apache.continuum.installation,org.apache.continuum.profile,
                   org.apache.maven.continuum.configuration,org.apache.maven.continuum.utils,
                   org.apache.continuum.utils.shell"/>
-
-  <bean id="shellCommandHelper" class="org.apache.continuum.utils.shell.DefaultShellCommandHelper"/>
 </beans>
