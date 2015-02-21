@@ -24,7 +24,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
-import org.apache.continuum.utils.release.ReleaseUtil;
+import org.apache.continuum.utils.release.ReleaseHelper;
 import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -38,6 +38,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -81,6 +82,9 @@ public class ReleasePerformAction
     private List<Profile> profiles;
 
     private int profileId;
+
+    @Requirement
+    private ReleaseHelper releaseHelper;
 
     private void init()
         throws Exception
@@ -170,7 +174,7 @@ public class ReleasePerformAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = ReleaseUtil.extractPluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = releaseHelper.extractPluginParameters( workingDirectory, pomFilename );
 
         if ( params.get( "use-release-profile" ) != null )
         {

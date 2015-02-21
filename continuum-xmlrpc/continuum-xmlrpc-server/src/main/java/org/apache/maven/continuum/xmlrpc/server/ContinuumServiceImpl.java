@@ -34,7 +34,7 @@ import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
-import org.apache.continuum.utils.release.ReleaseUtil;
+import org.apache.continuum.utils.release.ReleaseHelper;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -157,6 +157,9 @@ public class ContinuumServiceImpl
 
     @Requirement
     private DistributedBuildManager distributedBuildManager;
+
+    @Requirement
+    private ReleaseHelper releaseHelper;
 
     public boolean ping()
         throws ContinuumException
@@ -4001,8 +4004,8 @@ public class ContinuumServiceImpl
             }
             else
             {
-                params = ReleaseUtil.extractPluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
-                                                              "pom.xml" );
+                params = releaseHelper.extractPluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
+                                                                "pom.xml" );
             }
 
             // set scm tag and scm tag base if no values yet
@@ -4076,8 +4079,9 @@ public class ContinuumServiceImpl
             }
             else
             {
-                ReleaseUtil.buildVersionParams( continuum.getWorkingDirectory( projectId ).getPath(), pomFilename,
-                                                autoVersionSubmodules, projects );
+                releaseHelper.buildVersionParams( continuum.getWorkingDirectory( projectId ).getPath(),
+                                                  pomFilename,
+                                                  autoVersionSubmodules, projects );
             }
 
             return projects;

@@ -23,7 +23,7 @@ import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
-import org.apache.continuum.utils.release.ReleaseUtil;
+import org.apache.continuum.utils.release.ReleaseHelper;
 import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
@@ -38,6 +38,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -103,6 +104,9 @@ public class ReleasePrepareAction
     private boolean addSchema = true;
 
     private ReleaseListenerSummary listenerSummary;
+
+    @Requirement
+    private ReleaseHelper releaseHelper;
 
     public String input()
         throws Exception
@@ -184,7 +188,7 @@ public class ReleasePrepareAction
 
                 getReleasePluginParameters( workingDirectory, "pom.xml" );
 
-                ReleaseUtil.buildVersionParams( workingDirectory, "pom.xml", autoVersionSubmodules, projects );
+                releaseHelper.buildVersionParams( workingDirectory, "pom.xml", autoVersionSubmodules, projects );
             }
             catch ( Exception e )
             {
@@ -204,7 +208,7 @@ public class ReleasePrepareAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = ReleaseUtil.extractPluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = releaseHelper.extractPluginParameters( workingDirectory, pomFilename );
 
         // TODO: use constants for this
         if ( params.get( "scm-tag" ) != null )

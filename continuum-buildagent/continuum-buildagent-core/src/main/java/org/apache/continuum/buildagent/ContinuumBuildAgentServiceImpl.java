@@ -36,7 +36,7 @@ import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
-import org.apache.continuum.utils.release.ReleaseUtil;
+import org.apache.continuum.utils.release.ReleaseHelper;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.scm.ChangeFile;
@@ -72,7 +72,6 @@ public class ContinuumBuildAgentServiceImpl
 
     private static final String FILE_SEPARATOR = System.getProperty( "file.separator" );
 
-
     @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
@@ -93,6 +92,9 @@ public class ContinuumBuildAgentServiceImpl
 
     @Requirement
     private BuildAgentPurgeManager purgeManager;
+
+    @Requirement
+    private ReleaseHelper releaseHelper;
 
     public void buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws ContinuumBuildAgentException
@@ -364,7 +366,7 @@ public class ContinuumBuildAgentServiceImpl
         try
         {
             log.debug( "Getting release plugin parameters of project {}", projectId );
-            return ReleaseUtil.extractPluginParameters( workingDirectory, pomFilename );
+            return releaseHelper.extractPluginParameters( workingDirectory, pomFilename );
         }
         catch ( Exception e )
         {
@@ -381,7 +383,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            ReleaseUtil.buildVersionParams( workingDirectory, pomFilename, autoVersionSubmodules, projects );
+            releaseHelper.buildVersionParams( workingDirectory, pomFilename, autoVersionSubmodules, projects );
         }
         catch ( Exception e )
         {

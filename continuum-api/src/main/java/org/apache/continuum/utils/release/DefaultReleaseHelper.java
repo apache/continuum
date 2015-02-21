@@ -27,6 +27,7 @@ import org.apache.maven.shared.release.versions.VersionInfo;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,7 +35,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class ReleaseUtil
+@Service( "releaseHelper" )
+public class DefaultReleaseHelper
+    implements ReleaseHelper
 {
     /**
      * Extracts parameters specified for the maven-release-plugin from the given project's metadata.
@@ -44,7 +47,7 @@ public class ReleaseUtil
      * @return a map consisting of the release plugin parameters from project metadata
      * @throws Exception
      */
-    public static Map<String, Object> extractPluginParameters( String workingDirectory, String pomFilename )
+    public Map<String, Object> extractPluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -153,8 +156,8 @@ public class ReleaseUtil
      * @param projects              the resulting list of parameter maps for the project and its modules
      * @throws Exception
      */
-    public static void buildVersionParams( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
-                                           List<Map<String, String>> projects )
+    public void buildVersionParams( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
+                                    List<Map<String, String>> projects )
         throws Exception
     {
         Model model = getMavenModel( workingDirectory, pomFilename );
