@@ -103,8 +103,16 @@ public abstract class AbstractContinuumTest
     protected void tearDown()
         throws Exception
     {
-        daoUtils.eraseDatabase();
-        super.tearDown();
+
+        // Failure to remove database should gracefully tear down *and* fail the test by throwing
+        try
+        {
+            daoUtils.eraseDatabase();
+        }
+        finally
+        {
+            super.tearDown();
+        }
     }
 
     protected void createDefaultProjectGroup()
