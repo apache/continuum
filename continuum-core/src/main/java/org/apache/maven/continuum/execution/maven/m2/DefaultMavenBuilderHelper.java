@@ -104,8 +104,6 @@ public class DefaultMavenBuilderHelper
 
     private PlexusContainer container;
 
-    private LocalRepository repository;
-
     // ----------------------------------------------------------------------
     // MavenBuilderHelper Implementation
     // ----------------------------------------------------------------------
@@ -483,7 +481,13 @@ public class DefaultMavenBuilderHelper
     public ArtifactRepository getLocalRepository()
         throws SettingsConfigurationException
     {
-        return getRepository( getSettings() );
+        return getRepository( null, getSettings() );
+    }
+
+    public ArtifactRepository getLocalRepository( LocalRepository localRepo )
+        throws SettingsConfigurationException
+    {
+        return getRepository( localRepo, getSettings() );
     }
 
     // ----------------------------------------------------------------------
@@ -579,7 +583,7 @@ public class DefaultMavenBuilderHelper
         }
     }
 
-    private ArtifactRepository getRepository( Settings settings )
+    private ArtifactRepository getRepository( LocalRepository repository, Settings settings )
     {
         // ----------------------------------------------------------------------
         // Set our configured location as the default but try to use the defaults
@@ -770,10 +774,5 @@ public class DefaultMavenBuilderHelper
         {
             throw new InitializationException( "Can't initialize '" + getClass().getName() + "'", e );
         }
-    }
-
-    public void setLocalRepository( LocalRepository repository )
-    {
-        this.repository = repository;
     }
 }

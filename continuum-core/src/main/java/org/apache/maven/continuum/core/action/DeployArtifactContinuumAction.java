@@ -102,10 +102,7 @@ public class DeployArtifactContinuumAction
                                                                                  buildDefinition );
 
                 LocalRepository repository = project.getProjectGroup().getLocalRepository();
-
-                builderHelper.setLocalRepository( repository );
-
-                ArtifactRepository localRepository = builderHelper.getLocalRepository();
+                ArtifactRepository localRepository = builderHelper.getLocalRepository( repository );
 
                 for ( Artifact artifact : artifacts )
                 {

@@ -51,5 +51,6 @@ public interface MavenBuilderHelper
     ArtifactRepository getLocalRepository()
         throws SettingsConfigurationException;
 
-    void setLocalRepository( LocalRepository repository );
+    ArtifactRepository getLocalRepository( LocalRepository localRepo )
+        throws SettingsConfigurationException;
 }
