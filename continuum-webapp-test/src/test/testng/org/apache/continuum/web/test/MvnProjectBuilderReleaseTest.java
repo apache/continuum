@@ -59,6 +59,8 @@ public class MvnProjectBuilderReleaseTest
         String pomPassword = getProperty( "MAVEN2_POM_PASSWORD" );
         String projectName = getProperty( "MAVEN2_MODULES_WITH_VARS_PROJECT_NAME" );
 
+        removeProjectGroup( projectGroupName, false );
+
         addProjectGroup( projectGroupName, projectGroupId, description, true, false );
         clickLinkWithText( projectGroupName );
 
