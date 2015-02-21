@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.deployer.ArtifactDeployer;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -29,7 +30,6 @@ import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
-import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -62,7 +62,7 @@ public class DeployArtifactContinuumAction
     private ArtifactDeployer artifactDeployer;
 
     @Requirement
-    private MavenBuilderHelper builderHelper;
+    private LocalRepositoryHelper localRepositoryHelper;
 
     @Requirement
     private ArtifactRepositoryFactory artifactRepositoryFactory;
@@ -102,7 +102,7 @@ public class DeployArtifactContinuumAction
                                                                                  buildDefinition );
 
                 LocalRepository repository = project.getProjectGroup().getLocalRepository();
-                ArtifactRepository localRepository = builderHelper.getLocalRepository( repository );
+                ArtifactRepository localRepository = localRepositoryHelper.getLocalRepository( repository );
 
                 for ( Artifact artifact : artifacts )
                 {

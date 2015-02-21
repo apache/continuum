@@ -23,10 +23,12 @@ import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.release.ReleaseListenerSummary;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
-import org.apache.continuum.utils.release.ReleaseHelper;
+import org.apache.continuum.release.utils.ReleaseHelper;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.Project;
@@ -108,6 +110,9 @@ public class ReleasePrepareAction
     @Requirement
     private ReleaseHelper releaseHelper;
 
+    @Requirement
+    private LocalRepositoryHelper localRepositoryHelper;
+
     public String input()
         throws Exception
     {
@@ -160,6 +165,8 @@ public class ReleasePrepareAction
 
         prepareGoals = "clean integration-test";
 
+        String defaultPomName = "pom.xml";
+
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
@@ -167,9 +174,9 @@ public class ReleasePrepareAction
             try
             {
                 getReleasePluginParameters( distributedReleaseManager.getReleasePluginParameters( projectId,
-                                                                                                  "pom.xml" ) );
+                                                                                                  defaultPomName ) );
 
-                projects = distributedReleaseManager.processProject( projectId, "pom.xml", autoVersionSubmodules );
+                projects = distributedReleaseManager.processProject( projectId, defaultPomName, autoVersionSubmodules );
             }
             catch ( BuildAgentConfigurationException e )
             {
@@ -186,9 +193,13 @@ public class ReleasePrepareAction
             {
                 String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
 
-                getReleasePluginParameters( workingDirectory, "pom.xml" );
+                ArtifactRepository localRepo =
+                    localRepositoryHelper.getLocalRepository( project.getProjectGroup().getLocalRepository() );
 
-                releaseHelper.buildVersionParams( workingDirectory, "pom.xml", autoVersionSubmodules, projects );
+                getReleasePluginParameters( localRepo, workingDirectory, defaultPomName );
+
+                releaseHelper.buildVersionParams( localRepo, workingDirectory, defaultPomName, autoVersionSubmodules,
+                                                  projects );
             }
             catch ( Exception e )
             {
@@ -205,10 +216,10 @@ public class ReleasePrepareAction
         return SUCCESS;
     }
 
-    private void getReleasePluginParameters( String workingDirectory, String pomFilename )
+    private void getReleasePluginParameters( ArtifactRepository localRepo, String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = releaseHelper.extractPluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = releaseHelper.extractPluginParameters( localRepo, workingDirectory, pomFilename );
 
         // TODO: use constants for this
         if ( params.get( "scm-tag" ) != null )

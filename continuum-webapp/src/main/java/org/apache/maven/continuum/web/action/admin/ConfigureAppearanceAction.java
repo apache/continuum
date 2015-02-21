@@ -20,11 +20,11 @@ package org.apache.maven.continuum.web.action.admin;
  */
 
 import com.opensymphony.xwork2.ModelDriven;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
-import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.continuum.execution.SettingsConfigurationException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.component.AbstractFooterAction;
@@ -75,7 +75,7 @@ public class ConfigureAppearanceAction
     private CompanyPomHandler companyPomHandler;
 
     @Requirement
-    private MavenBuilderHelper helper;
+    private LocalRepositoryHelper helper;
 
     @Requirement
     private MavenSettingsBuilder mavenSettingsBuilder;

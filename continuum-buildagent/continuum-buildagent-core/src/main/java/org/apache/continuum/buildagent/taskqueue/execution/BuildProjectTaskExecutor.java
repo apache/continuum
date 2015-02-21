@@ -25,6 +25,7 @@ import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecut
 import org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
@@ -168,16 +169,17 @@ public class BuildProjectTaskExecutor
             buildContext.getBuildDefinitionId(), getInstallationType( buildContext ) ) );
 
         // CONTINUUM-2391
-        if ( buildContext.getLocalRepository() != null )
+        String localRepoName = buildContext.getLocalRepository();
+        if ( localRepoName != null )
         {
-            List<LocalRepository> localRepos = buildAgentConfigurationService.getLocalRepositories();
-            for ( LocalRepository local : localRepos )
+            try
             {
-                if ( local.getName().equalsIgnoreCase( buildContext.getLocalRepository() ) )
-                {
-                    actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, local.getLocation() );
-                    break;
-                }
+                LocalRepository localRepo = buildAgentConfigurationService.getLocalRepositoryByName( localRepoName );
+                actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, localRepo.getLocation() );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                log.warn( "failed to initialize local repo", e );
             }
         }
 

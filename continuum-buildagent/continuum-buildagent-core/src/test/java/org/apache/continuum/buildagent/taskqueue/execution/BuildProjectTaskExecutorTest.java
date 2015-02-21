@@ -96,10 +96,13 @@ public class BuildProjectTaskExecutorTest
         buildContext = createBuildContext();
 
         localRepos = new ArrayList<LocalRepository>();
-        LocalRepository localRepo = createLocalRepository( "temp", "/tmp/.m2/repository", "default" );
-        localRepos.add( localRepo );
-        localRepo = createLocalRepository( "default", "/home/user/.m2/repository", "default" );
-        localRepos.add( localRepo );
+        localRepos.add( createLocalRepository( "temp", "/tmp/.m2/repository", "default" ) );
+        localRepos.add( createLocalRepository( "default", "/home/user/.m2/repository", "default" ) );
+        for ( LocalRepository localRepo : localRepos )
+        {
+            when( buildAgentConfigurationService.getLocalRepositoryByName( localRepo.getName() ) ).thenReturn(
+                localRepo );
+        }
 
         masterBuildEnvironments = new HashMap<String, String>();
         masterBuildEnvironments.put( "M2_HOME", "/tmp/apache-maven-2.2.1" );
@@ -113,7 +116,7 @@ public class BuildProjectTaskExecutorTest
         when( buildContextManager.getBuildContext( 1 ) ).thenReturn( buildContext );
         when( buildAgentManager.getEnvironments( 1, "maven2" ) ).thenReturn( masterBuildEnvironments );
         when( buildAgentConfigurationService.getAvailableInstallations() ).thenReturn( slaveBuildEnvironments );
-        when( buildAgentConfigurationService.getLocalRepositories() ).thenReturn( localRepos );
+
         when( buildAgentManager.shouldBuild( anyMap() ) ).thenReturn( true );
         when( buildAgentBuildExecutorManager.getBuildExecutor(
             ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ).thenReturn( executor );

@@ -1,4 +1,4 @@
-package org.apache.continuum.utils.release;
+package org.apache.continuum.release.utils;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,6 +19,8 @@ package org.apache.continuum.utils.release;
  * under the License.
  */
 
+import org.apache.maven.artifact.repository.ArtifactRepository;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +30,14 @@ public interface ReleaseHelper
     /**
      * Extracts parameters specified for the maven-release-plugin from the given project's metadata.
      *
+     * @param localRepo        the local artifact repo to use for resolving project metadata
      * @param workingDirectory working directory of project containing pom file
      * @param pomFilename      the name of the pom file in working directory
      * @return a map consisting of the release plugin parameters from project metadata
      * @throws Exception
      */
-    Map<String, Object> extractPluginParameters( String workingDirectory, String pomFilename )
+    Map<String, Object> extractPluginParameters( ArtifactRepository localRepo, String workingDirectory,
+                                                 String pomFilename )
         throws Exception;
 
     /**
@@ -46,13 +50,15 @@ public interface ReleaseHelper
      * <li>release - the version the project will ultimately released as when performing</li>
      * </ul>
      *
+     * @param localRepo             the local artifact repo to use for resolving project metadata
      * @param workingDirectory      working directory of project
      * @param pomFilename           the filename of the pom inside the working directory
      * @param autoVersionSubmodules true sets all modules to the root project's version, false uses module versions
      * @param projects              the resulting list of parameter maps for the project and its modules
      * @throws Exception
      */
-    public void buildVersionParams( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
-                                    List<Map<String, String>> projects )
+    public void buildVersionParams( ArtifactRepository localRepo, String workingDirectory, String pomFilename,
+                                    boolean autoVersionSubmodules, List<Map<String, String>> projects )
         throws Exception;
+
 }

@@ -34,12 +34,14 @@ import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
-import org.apache.continuum.utils.release.ReleaseHelper;
+import org.apache.continuum.release.utils.ReleaseHelper;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
 import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.utils.BuildTrigger;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -160,6 +162,9 @@ public class ContinuumServiceImpl
 
     @Requirement
     private ReleaseHelper releaseHelper;
+
+    @Requirement
+    private LocalRepositoryHelper localRepositoryHelper;
 
     public boolean ping()
         throws ContinuumException
@@ -4004,7 +4009,10 @@ public class ContinuumServiceImpl
             }
             else
             {
-                params = releaseHelper.extractPluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
+                ArtifactRepository localRepo = localRepositoryHelper.getLocalRepository(
+                    project.getProjectGroup().getLocalRepository() );
+                params = releaseHelper.extractPluginParameters( localRepo,
+                                                                continuum.getWorkingDirectory( projectId ).getPath(),
                                                                 "pom.xml" );
             }
 
@@ -4079,9 +4087,10 @@ public class ContinuumServiceImpl
             }
             else
             {
-                releaseHelper.buildVersionParams( continuum.getWorkingDirectory( projectId ).getPath(),
-                                                  pomFilename,
-                                                  autoVersionSubmodules, projects );
+                ArtifactRepository localRepo =
+                    localRepositoryHelper.getLocalRepository( project.getProjectGroup().getLocalRepository() );
+                releaseHelper.buildVersionParams( localRepo, continuum.getWorkingDirectory( projectId ).getPath(),
+                                                  pomFilename, autoVersionSubmodules, projects );
             }
 
             return projects;

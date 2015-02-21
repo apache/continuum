@@ -19,12 +19,14 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
@@ -59,6 +61,9 @@ public class DefaultBuildAgentReleaseManager
 
     @Requirement
     BuildAgentInstallationService buildAgentInstallationService;
+
+    @Requirement
+    LocalRepositoryHelper localRepositoryHelper;
 
     public String releasePrepare( Map<String, Object> projectMap, Properties releaseProperties,
                                   Map<String, String> releaseVersion, Map<String, String> developmentVersion,
@@ -185,20 +190,16 @@ public class DefaultBuildAgentReleaseManager
 
         if ( !repository.isEmpty() )
         {
-            List<org.apache.continuum.buildagent.model.LocalRepository> localRepos =
-                buildAgentConfigurationService.getLocalRepositories();
-            for ( org.apache.continuum.buildagent.model.LocalRepository localRepo : localRepos )
+            String repoName = ContinuumBuildAgentUtil.getLocalRepositoryName( repository );
+            try
             {
-                if ( localRepo.getName().equalsIgnoreCase( ContinuumBuildAgentUtil.getLocalRepositoryName(
-                    repository ) ) )
-                {
-                    repo = new LocalRepository();
-                    repo.setLayout( localRepo.getLayout() );
-                    repo.setName( localRepo.getName() );
-                    repo.setLocation( localRepo.getLocation() );
-
-                    break;
-                }
+                org.apache.continuum.buildagent.model.LocalRepository agentRepo =
+                    buildAgentConfigurationService.getLocalRepositoryByName( repoName );
+                repo = localRepositoryHelper.convertAgentRepo( agentRepo );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                log.warn( "failed to configure local repo during perform", e.getMessage() );
             }
         }
 
@@ -294,25 +295,24 @@ public class DefaultBuildAgentReleaseManager
 
         ProjectGroup group = new ProjectGroup();
 
-        String localRepo = ContinuumBuildAgentUtil.getLocalRepositoryName( context );
+        String localRepoName = ContinuumBuildAgentUtil.getLocalRepositoryName( context );
 
-        if ( StringUtils.isBlank( localRepo ) )
+        if ( StringUtils.isBlank( localRepoName ) )
         {
             group.setLocalRepository( null );
         }
         else
         {
-            LocalRepository localRepository = new LocalRepository();
-            List<org.apache.continuum.buildagent.model.LocalRepository> localRepos =
-                buildAgentConfigurationService.getLocalRepositories();
-            for ( org.apache.continuum.buildagent.model.LocalRepository localRepoBA : localRepos )
+            try
             {
-                if ( localRepoBA.getName().equalsIgnoreCase( localRepo ) )
-                {
-                    localRepository.setLocation( localRepoBA.getLocation() );
-                    group.setLocalRepository( localRepository );
-                    break;
-                }
+                org.apache.continuum.buildagent.model.LocalRepository agentRepo =
+                    buildAgentConfigurationService.getLocalRepositoryByName( localRepoName );
+                LocalRepository convertedRepo = localRepositoryHelper.convertAgentRepo( agentRepo );
+                group.setLocalRepository( convertedRepo );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                log.warn( "failed to configure local repo", e );
             }
         }
 

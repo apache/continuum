@@ -19,11 +19,9 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
-import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
+import org.apache.continuum.utils.m2.SettingsHelper;
 import org.apache.maven.artifact.manager.WagonManager;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
-import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.continuum.execution.SettingsConfigurationException;
 import org.apache.maven.continuum.model.project.Project;
@@ -48,7 +46,6 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.validation.ModelValidationResult;
-import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
@@ -57,7 +54,6 @@ import org.apache.maven.settings.io.xpp3.SettingsXpp3Writer;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -68,7 +64,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,16 +87,10 @@ public class DefaultMavenBuilderHelper
     private MavenProjectBuilder projectBuilder;
 
     @Requirement
-    private ArtifactRepositoryFactory artifactRepositoryFactory;
+    private SettingsHelper settingsHelper;
 
     @Requirement
-    private ArtifactRepositoryLayout repositoryLayout;
-
-    @Requirement
-    private MavenSettingsBuilder mavenSettingsBuilder;
-
-    @Configuration( "${plexus.home}/local-repository" )
-    private String localRepository;
+    private LocalRepositoryHelper localRepoHelper;
 
     private PlexusContainer container;
 
@@ -373,7 +362,7 @@ public class DefaultMavenBuilderHelper
             //   TODO: This seems like code that is shared with DefaultMaven, so it should be moved to the project
             //   builder perhaps
 
-            Settings settings = getSettings();
+            Settings settings = settingsHelper.getSettings();
 
             if ( log.isDebugEnabled() )
             {
@@ -382,7 +371,7 @@ public class DefaultMavenBuilderHelper
 
             ProfileManager profileManager = new DefaultProfileManager( container, settings );
 
-            project = projectBuilder.build( file, getLocalRepository(), profileManager, true );
+            project = projectBuilder.build( file, localRepoHelper.getLocalRepository(), profileManager, true );
 
             if ( log.isDebugEnabled() )
             {
@@ -479,18 +468,6 @@ public class DefaultMavenBuilderHelper
         return project;
     }
 
-    public ArtifactRepository getLocalRepository()
-        throws SettingsConfigurationException
-    {
-        return getRepository( null, getSettings() );
-    }
-
-    public ArtifactRepository getLocalRepository( LocalRepository localRepo )
-        throws SettingsConfigurationException
-    {
-        return getRepository( localRepo, getSettings() );
-    }
-
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -565,48 +542,6 @@ public class DefaultMavenBuilderHelper
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
-
-    private Settings getSettings()
-        throws SettingsConfigurationException
-    {
-        try
-        {
-            return mavenSettingsBuilder.buildSettings( false );
-        }
-        catch ( IOException e )
-        {
-            throw new SettingsConfigurationException( "Error reading settings file", e );
-        }
-        catch ( XmlPullParserException e )
-        {
-            throw new SettingsConfigurationException( e.getMessage(), e.getDetail(), e.getLineNumber(),
-                                                      e.getColumnNumber() );
-        }
-    }
-
-    private ArtifactRepository getRepository( LocalRepository repository, Settings settings )
-    {
-        // ----------------------------------------------------------------------
-        // Set our configured location as the default but try to use the defaults
-        // as returned by the MavenSettings component.
-        // ----------------------------------------------------------------------
-
-        String localRepo = localRepository;
-
-        if ( repository != null )
-        {
-            return artifactRepositoryFactory.createArtifactRepository( repository.getName(),
-                                                                       "file://" + repository.getLocation(),
-                                                                       repositoryLayout, null, null );
-        }
-        else if ( !( StringUtils.isEmpty( settings.getLocalRepository() ) ) )
-        {
-            localRepo = settings.getLocalRepository();
-        }
-
-        return artifactRepositoryFactory.createArtifactRepository( "local", "file://" + localRepo, repositoryLayout,
-                                                                   null, null );
-    }
 
     private void writeSettings( Settings settings )
     {
@@ -767,7 +702,7 @@ public class DefaultMavenBuilderHelper
     {
         try
         {
-            Settings settings = getSettings();
+            Settings settings = settingsHelper.getSettings();
 
             resolveParameters( settings );
         }

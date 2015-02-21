@@ -19,8 +19,6 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
-import org.apache.continuum.model.repository.LocalRepository;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
@@ -47,10 +45,4 @@ public interface MavenBuilderHelper
      */
     void mapMavenProjectToContinuumProject( ContinuumProjectBuildingResult result, MavenProject mavenProject,
                                             Project continuumProject, boolean updateDefinition );
-
-    ArtifactRepository getLocalRepository()
-        throws SettingsConfigurationException;
-
-    ArtifactRepository getLocalRepository( LocalRepository localRepo )
-        throws SettingsConfigurationException;
 }

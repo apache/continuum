@@ -1,4 +1,4 @@
-package org.apache.continuum.utils.release;
+package org.apache.continuum.release.utils;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,16 +19,18 @@ package org.apache.continuum.utils.release;
  * under the License.
  */
 
-import org.apache.maven.model.Model;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Plugin;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.shared.release.versions.DefaultVersionInfo;
 import org.apache.maven.shared.release.versions.VersionInfo;
-import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,21 +41,17 @@ import java.util.Map;
 public class DefaultReleaseHelper
     implements ReleaseHelper
 {
-    /**
-     * Extracts parameters specified for the maven-release-plugin from the given project's metadata.
-     *
-     * @param workingDirectory working directory of project containing pom file
-     * @param pomFilename      the name of the pom file in working directory
-     * @return a map consisting of the release plugin parameters from project metadata
-     * @throws Exception
-     */
-    public Map<String, Object> extractPluginParameters( String workingDirectory, String pomFilename )
+    @Resource
+    MavenProjectBuilder mavenProjectBuilder;
+
+    public Map<String, Object> extractPluginParameters( ArtifactRepository localRepo, String workingDirectory,
+                                                        String pomFilename )
         throws Exception
     {
         Map<String, Object> params = new HashMap<String, Object>();
 
         // TODO: Use the model reader so we'll can get the plugin configuration from parent too
-        Model model = getMavenModel( workingDirectory, pomFilename );
+        MavenProject model = getMavenProject( localRepo, workingDirectory, pomFilename );
 
         if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
         {
@@ -140,27 +138,11 @@ public class DefaultReleaseHelper
         return params;
     }
 
-    /**
-     * Constructs a list of release preparation parameters for the given project and its modules. The parameter map for
-     * each project consists of:
-     * <ul>
-     * <li>key - groupId:artifactId</li>
-     * <li>name - name or artifactId if none</li>
-     * <li>dev - the version the project will assume after preparation</li>
-     * <li>release - the version the project will ultimately released as when performing</li>
-     * </ul>
-     *
-     * @param workingDirectory      working directory of project
-     * @param pomFilename           the filename of the pom inside the working directory
-     * @param autoVersionSubmodules true sets all modules to the root project's version, false uses module versions
-     * @param projects              the resulting list of parameter maps for the project and its modules
-     * @throws Exception
-     */
-    public void buildVersionParams( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
-                                    List<Map<String, String>> projects )
+    public void buildVersionParams( ArtifactRepository localRepo, String workingDirectory, String pomFilename,
+                                    boolean autoVersionSubmodules, List<Map<String, String>> projects )
         throws Exception
     {
-        Model model = getMavenModel( workingDirectory, pomFilename );
+        MavenProject model = getMavenProject( localRepo, workingDirectory, pomFilename );
 
         if ( model.getGroupId() == null )
         {
@@ -178,11 +160,13 @@ public class DefaultReleaseHelper
         {
             String module = StringUtils.replace( modules.next().toString(), '\\', '/' );
 
-            buildVersionParams( workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules, projects );
+            buildVersionParams( localRepo, workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules,
+                                projects );
         }
     }
 
-    private static void setProperties( Model model, boolean autoVersionSubmodules, List<Map<String, String>> projects )
+    private void setProperties( MavenProject model, boolean autoVersionSubmodules,
+                                List<Map<String, String>> projects )
         throws Exception
     {
         Map<String, String> params = new HashMap<String, String>();
@@ -211,10 +195,10 @@ public class DefaultReleaseHelper
         projects.add( params );
     }
 
-    private static Model getMavenModel( String workingDirectory, String pomFilename )
-        throws Exception
+    private MavenProject getMavenProject( ArtifactRepository localRepo, String workingDirectory,
+                                          String pomFilename )
+        throws ProjectBuildingException
     {
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        return pomReader.read( ReaderFactory.newXmlReader( new File( workingDirectory, pomFilename ) ) );
+        return mavenProjectBuilder.build( new File( workingDirectory, pomFilename ), localRepo, null );
     }
 }

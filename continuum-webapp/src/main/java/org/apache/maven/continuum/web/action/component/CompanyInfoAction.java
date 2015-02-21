@@ -20,7 +20,7 @@ package org.apache.maven.continuum.web.action.component;
  */
 
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.model.Model;
 import org.apache.maven.shared.app.company.CompanyPomHandler;
 import org.apache.maven.shared.app.configuration.MavenAppConfiguration;
@@ -47,7 +47,7 @@ public class CompanyInfoAction
     private MavenAppConfiguration appConfiguration;
 
     @Requirement
-    private MavenBuilderHelper helper;
+    private LocalRepositoryHelper helper;
 
     public String execute()
         throws Exception

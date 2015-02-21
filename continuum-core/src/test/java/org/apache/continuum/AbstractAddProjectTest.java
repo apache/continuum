@@ -19,9 +19,9 @@ package org.apache.continuum;
  * under the License.
  */
 
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.AbstractContinuumTest;
-import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.continuum.execution.SettingsConfigurationException;
 import org.codehaus.plexus.util.FileUtils;
 
@@ -43,7 +43,7 @@ public abstract class AbstractAddProjectTest
     protected void createLocalRepository()
         throws IOException, SettingsConfigurationException
     {
-        MavenBuilderHelper helper = (MavenBuilderHelper) lookup( MavenBuilderHelper.class );
+        LocalRepositoryHelper helper = (LocalRepositoryHelper) lookup( LocalRepositoryHelper.class );
         ArtifactRepository repo = helper.getLocalRepository();
 
         File localRepo = new File( repo.getBasedir() );

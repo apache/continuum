@@ -149,6 +149,19 @@ public class DefaultBuildAgentConfigurationService
         return generalBuildAgentConfiguration.getLocalRepositories();
     }
 
+    public LocalRepository getLocalRepositoryByName( String name )
+        throws BuildAgentConfigurationException
+    {
+        for ( LocalRepository repo : generalBuildAgentConfiguration.getLocalRepositories() )
+        {
+            if ( name.equalsIgnoreCase( repo.getName() ) )
+            {
+                return repo;
+            }
+        }
+        throw new BuildAgentConfigurationException( String.format( "local repository matching '%s' not found", name ) );
+    }
+
     public String getSharedSecretPassword()
     {
         return generalBuildAgentConfiguration.getSharedSecretPassword();

@@ -19,6 +19,7 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
@@ -41,6 +42,11 @@ import static org.mockito.Mockito.*;
 public class BuildAgentReleaseManagerTest
     extends PlexusInSpringTestCase
 {
+
+    public static final String DEFAULT_NAME = "DEFAULT";
+
+    public static final String UNKNOWN_NAME = "NON-EXISTENT";
+
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     private DefaultBuildAgentReleaseManager releaseManager;
@@ -59,7 +65,16 @@ public class BuildAgentReleaseManagerTest
         final List<LocalRepository> localRepos = createLocalRepositories();
         final File workingDir = new File( getBasedir(), "target/test-classes/working-dir" );
 
-        when( buildAgentConfigurationService.getLocalRepositories() ).thenReturn( localRepos );
+        for ( LocalRepository localRepo : localRepos )
+        {
+            String repoName = localRepo.getName();
+            when( buildAgentConfigurationService.getLocalRepositoryByName( repoName ) ).thenReturn( localRepo );
+            when( buildAgentConfigurationService.getLocalRepositoryByName( repoName.toUpperCase() ) ).thenReturn(
+                localRepo );
+        }
+        when( buildAgentConfigurationService.getLocalRepositoryByName( UNKNOWN_NAME ) ).thenThrow(
+            new BuildAgentConfigurationException( "could not locate the repo" ) );
+
         when( buildAgentConfigurationService.getWorkingDirectory( 1 ) ).thenReturn( workingDir );
     }
 
@@ -93,6 +108,24 @@ public class BuildAgentReleaseManagerTest
     {
         when( buildAgentConfigurationService.getAvailableInstallations() ).thenReturn( null );
         Map<String, Object> map = createProjectMap();
+        map.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, DEFAULT_NAME );
+        try
+        {
+            releaseManager.releasePrepare( map, createProperties(), createReleaseVersionMap(), createDevVersionMap(),
+                                           createEnvironmentsMap(), "user" );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            fail( "An exception should not have been thrown!" );
+        }
+    }
+
+    public void testUnknownRepositoryNameInReleasePrepare()
+        throws Exception
+    {
+        when( buildAgentConfigurationService.getAvailableInstallations() ).thenReturn( null );
+        Map<String, Object> map = createProjectMap();
+        map.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, DEFAULT_NAME );
         try
         {
             releaseManager.releasePrepare( map, createProperties(), createReleaseVersionMap(), createDevVersionMap(),
@@ -109,11 +142,9 @@ public class BuildAgentReleaseManagerTest
     public void testLocalRepositoryInReleasePerform()
         throws Exception
     {
-        Map repository = createRepositoryMap();
-        repository.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, "DEFAULT" );
         try
         {
-            releaseManager.releasePerform( "1", "clean deploy", "", true, repository, "user" );
+            releaseManager.releasePerform( "1", "clean deploy", "", true, createRepositoryMap(), "user" );
         }
         catch ( ContinuumReleaseException e )
         {
@@ -125,9 +156,26 @@ public class BuildAgentReleaseManagerTest
     public void testLocalRepositoryNameMismatchedCaseInReleasePerform()
         throws Exception
     {
+        Map repoMap = createRepositoryMap();
+        repoMap.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, DEFAULT_NAME );
         try
         {
-            releaseManager.releasePerform( "1", "clean deploy", "", true, createRepositoryMap(), "user" );
+            releaseManager.releasePerform( "1", "clean deploy", "", true, repoMap, "user" );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            fail( "An exception should not have been thrown!" );
+        }
+    }
+
+    public void testUnknownRepositoryNameInReleasePerform()
+        throws Exception
+    {
+        Map repoMap = createRepositoryMap();
+        repoMap.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY_NAME, DEFAULT_NAME );
+        try
+        {
+            releaseManager.releasePerform( "1", "clean deploy", "", true, repoMap, "user" );
         }
         catch ( ContinuumReleaseException e )
         {

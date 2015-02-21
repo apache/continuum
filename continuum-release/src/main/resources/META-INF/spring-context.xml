@@ -24,12 +24,10 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-           http://www.springframework.org/schema/context 
+           http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
   <context:annotation-config/>
-  <context:component-scan
-      base-package="org.apache.continuum.installation,org.apache.continuum.profile,
-                  org.apache.maven.continuum.configuration,org.apache.maven.continuum.utils,
-                  org.apache.continuum.utils.m2,org.apache.continuum.utils.shell"/>
+  <context:component-scan base-package="org.apache.continuum.release.utils"/>
+
 </beans>

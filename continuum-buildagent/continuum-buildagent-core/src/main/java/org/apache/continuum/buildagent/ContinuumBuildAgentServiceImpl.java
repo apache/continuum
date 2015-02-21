@@ -24,11 +24,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.manager.BuildAgentPurgeManager;
 import org.apache.continuum.buildagent.manager.BuildAgentReleaseManager;
 import org.apache.continuum.buildagent.model.Installation;
+import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
@@ -36,8 +38,11 @@ import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
-import org.apache.continuum.utils.release.ReleaseHelper;
+import org.apache.continuum.release.utils.ReleaseHelper;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.execution.SettingsConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
@@ -95,6 +100,9 @@ public class ContinuumBuildAgentServiceImpl
 
     @Requirement
     private ReleaseHelper releaseHelper;
+
+    @Requirement
+    LocalRepositoryHelper localRepositoryHelper;
 
     public void buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws ContinuumBuildAgentException
@@ -358,6 +366,26 @@ public class ContinuumBuildAgentServiceImpl
         return projectFile;
     }
 
+    private ArtifactRepository getArtifactRepository( int projectId )
+        throws SettingsConfigurationException
+    {
+        BuildContext buildContext = buildContextManager.getBuildContext( projectId );
+
+        org.apache.continuum.model.repository.LocalRepository localRepo = null;
+        try
+        {
+            LocalRepository agentRepo = null;
+            buildAgentConfigurationService.getLocalRepositoryByName( buildContext.getLocalRepository() );
+            localRepo = localRepositoryHelper.convertAgentRepo( agentRepo );
+        }
+        catch ( BuildAgentConfigurationException e )
+        {
+            log.warn( "failed to find local repo for project {}: {}", projectId, e.getMessage() );
+        }
+
+        return localRepositoryHelper.getLocalRepository( localRepo );
+    }
+
     public Map<String, Object> getReleasePluginParameters( int projectId, String pomFilename )
         throws ContinuumBuildAgentException
     {
@@ -366,7 +394,8 @@ public class ContinuumBuildAgentServiceImpl
         try
         {
             log.debug( "Getting release plugin parameters of project {}", projectId );
-            return releaseHelper.extractPluginParameters( workingDirectory, pomFilename );
+            ArtifactRepository repo = getArtifactRepository( projectId );
+            return releaseHelper.extractPluginParameters( repo, workingDirectory, pomFilename );
         }
         catch ( Exception e )
         {
@@ -383,7 +412,8 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            releaseHelper.buildVersionParams( workingDirectory, pomFilename, autoVersionSubmodules, projects );
+            ArtifactRepository repo = getArtifactRepository( projectId );
+            releaseHelper.buildVersionParams( repo, workingDirectory, pomFilename, autoVersionSubmodules, projects );
         }
         catch ( Exception e )
         {

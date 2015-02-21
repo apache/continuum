@@ -24,10 +24,12 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
-import org.apache.continuum.utils.release.ReleaseHelper;
+import org.apache.continuum.release.utils.ReleaseHelper;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Profile;
@@ -86,6 +88,9 @@ public class ReleasePerformAction
     @Requirement
     private ReleaseHelper releaseHelper;
 
+    @Requirement
+    private LocalRepositoryHelper localRepositoryHelper;
+
     private void init()
         throws Exception
     {
@@ -101,7 +106,9 @@ public class ReleasePerformAction
 
             String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
 
-            getReleasePluginParameters( workingDirectory, "pom.xml" );
+            ArtifactRepository localRepo =
+                localRepositoryHelper.getLocalRepository( project.getProjectGroup().getLocalRepository() );
+            getReleasePluginParameters( localRepo, workingDirectory, "pom.xml" );
         }
     }
 
@@ -171,10 +178,10 @@ public class ReleasePerformAction
      * FIXME olamy is it really the good place to do that ? should be moved to continuum-release
      * TODO handle remoteTagging
      */
-    private void getReleasePluginParameters( String workingDirectory, String pomFilename )
+    private void getReleasePluginParameters( ArtifactRepository localRepo, String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = releaseHelper.extractPluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = releaseHelper.extractPluginParameters( localRepo, workingDirectory, pomFilename );
 
         if ( params.get( "use-release-profile" ) != null )
         {
