@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.execution.maven.m2;
+package org.apache.maven.continuum.execution;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

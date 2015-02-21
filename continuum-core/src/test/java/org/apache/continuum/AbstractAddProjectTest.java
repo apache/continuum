@@ -22,7 +22,7 @@ package org.apache.continuum;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
-import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
+import org.apache.maven.continuum.execution.SettingsConfigurationException;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
