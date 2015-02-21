@@ -184,7 +184,7 @@ public class ReleasePrepareAction
 
                 getReleasePluginParameters( workingDirectory, "pom.xml" );
 
-                ReleaseUtil.processProject( workingDirectory, "pom.xml", autoVersionSubmodules, projects );
+                ReleaseUtil.buildVersionParams( workingDirectory, "pom.xml", autoVersionSubmodules, projects );
             }
             catch ( Exception e )
             {
@@ -204,7 +204,7 @@ public class ReleasePrepareAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = ReleaseUtil.getReleasePluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = ReleaseUtil.extractPluginParameters( workingDirectory, pomFilename );
 
         // TODO: use constants for this
         if ( params.get( "scm-tag" ) != null )

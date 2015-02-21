@@ -364,7 +364,7 @@ public class ContinuumBuildAgentServiceImpl
         try
         {
             log.debug( "Getting release plugin parameters of project {}", projectId );
-            return ReleaseUtil.getReleasePluginParameters( workingDirectory, pomFilename );
+            return ReleaseUtil.extractPluginParameters( workingDirectory, pomFilename );
         }
         catch ( Exception e )
         {
@@ -381,7 +381,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            ReleaseUtil.processProject( workingDirectory, pomFilename, autoVersionSubmodules, projects );
+            ReleaseUtil.buildVersionParams( workingDirectory, pomFilename, autoVersionSubmodules, projects );
         }
         catch ( Exception e )
         {

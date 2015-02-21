@@ -42,7 +42,6 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -171,7 +170,7 @@ public class ReleasePerformAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
-        Map<String, Object> params = ReleaseUtil.getReleasePluginParameters( workingDirectory, pomFilename );
+        Map<String, Object> params = ReleaseUtil.extractPluginParameters( workingDirectory, pomFilename );
 
         if ( params.get( "use-release-profile" ) != null )
         {

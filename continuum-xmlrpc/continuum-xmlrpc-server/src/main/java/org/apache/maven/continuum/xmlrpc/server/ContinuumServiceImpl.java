@@ -4001,8 +4001,8 @@ public class ContinuumServiceImpl
             }
             else
             {
-                params = ReleaseUtil.getReleasePluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
-                                                                 "pom.xml" );
+                params = ReleaseUtil.extractPluginParameters( continuum.getWorkingDirectory( projectId ).getPath(),
+                                                              "pom.xml" );
             }
 
             // set scm tag and scm tag base if no values yet
@@ -4076,8 +4076,8 @@ public class ContinuumServiceImpl
             }
             else
             {
-                ReleaseUtil.processProject( continuum.getWorkingDirectory( projectId ).getPath(), pomFilename,
-                                            autoVersionSubmodules, projects );
+                ReleaseUtil.buildVersionParams( continuum.getWorkingDirectory( projectId ).getPath(), pomFilename,
+                                                autoVersionSubmodules, projects );
             }
 
             return projects;

@@ -36,8 +36,15 @@ import java.util.Map;
 
 public class ReleaseUtil
 {
-    @SuppressWarnings( "unchecked" )
-    public static Map<String, Object> getReleasePluginParameters( String workingDirectory, String pomFilename )
+    /**
+     * Extracts parameters specified for the maven-release-plugin from the given project's metadata.
+     *
+     * @param workingDirectory working directory of project containing pom file
+     * @param pomFilename      the name of the pom file in working directory
+     * @return a map consisting of the release plugin parameters from project metadata
+     * @throws Exception
+     */
+    public static Map<String, Object> extractPluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -47,7 +54,7 @@ public class ReleaseUtil
 
         if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
         {
-            for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
+            for ( Plugin plugin : model.getBuild().getPlugins() )
             {
                 if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
                     plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
@@ -130,8 +137,24 @@ public class ReleaseUtil
         return params;
     }
 
-    public static void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
-                                       List<Map<String, String>> projects )
+    /**
+     * Constructs a list of release preparation parameters for the given project and its modules. The parameter map for
+     * each project consists of:
+     * <ul>
+     * <li>key - groupId:artifactId</li>
+     * <li>name - name or artifactId if none</li>
+     * <li>dev - the version the project will assume after preparation</li>
+     * <li>release - the version the project will ultimately released as when performing</li>
+     * </ul>
+     *
+     * @param workingDirectory      working directory of project
+     * @param pomFilename           the filename of the pom inside the working directory
+     * @param autoVersionSubmodules true sets all modules to the root project's version, false uses module versions
+     * @param projects              the resulting list of parameter maps for the project and its modules
+     * @throws Exception
+     */
+    public static void buildVersionParams( String workingDirectory, String pomFilename, boolean autoVersionSubmodules,
+                                           List<Map<String, String>> projects )
         throws Exception
     {
         Model model = getMavenModel( workingDirectory, pomFilename );
@@ -152,7 +175,7 @@ public class ReleaseUtil
         {
             String module = StringUtils.replace( modules.next().toString(), '\\', '/' );
 
-            processProject( workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules, projects );
+            buildVersionParams( workingDirectory + "/" + module, "pom.xml", autoVersionSubmodules, projects );
         }
     }
 
