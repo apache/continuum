@@ -26,14 +26,12 @@
   <head>
     <title><s:text name="installationTypeChoice.page.title"/></title>
   </head>
-  
   <div id="h3">
     <h3>
       <s:text name="installationTypeChoice.section.title"/>
     </h3>  
-    <form action="editInstallation_input.action">
+    <s:form action="editInstallation_input" theme="simple">
       <div class="axial">
-
         <table>
           <tbody>    
             <s:select name="installationType" list="installationTypes"
@@ -41,11 +39,11 @@
           </tbody>
         </table>
         <div class="functnbar3">
-          <s:submit value="%{getText('add')}" theme="simple"/>
-          <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
+          <s:submit value="%{getText('add')}" />
+          <s:submit type="button" name="Cancel" value="%{getText('cancel')}" onclick="history.back();" />
         </div>        
       </div>
-  
+    </s:form>
   </div>
-  
 </s:i18n>
+</html>

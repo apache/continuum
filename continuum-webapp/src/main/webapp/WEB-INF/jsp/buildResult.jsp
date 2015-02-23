@@ -168,9 +168,9 @@
             <tr>
               <td>
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                  <form action="removeBuildResult.action">
-                    <input type="hidden" name="projectId" value="<s:property value="projectId"/>"/>
-                    <input type="hidden" name="buildId" value="<s:property value="buildId"/>"/>
+                  <s:form action="removeBuildResult" theme="simple">
+                    <s:hidden name="projectId" />
+                    <s:hidden name="buildId" />
                     <s:token/>
                     <s:if test="canDelete">
                       <input type="submit" name="delete-project" value="<s:text name="delete"/>"/>
@@ -178,7 +178,7 @@
                     <s:else>
                       <input type="submit" disabled="true" name="delete-project" value="<s:text name="delete"/>"/>
                     </s:else>
-                  </form>
+                  </s:form>
                 </redback:ifAuthorized>
               </td>
             </tr>

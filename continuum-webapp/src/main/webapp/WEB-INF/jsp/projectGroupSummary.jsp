@@ -142,29 +142,29 @@
             <td>
               <table>
                 <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
-                  <form action="buildProjectGroup.action" method="post">
-                    <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
+                  <s:form action="buildProjectGroup" theme="simple">
+                    <s:hidden name="projectGroupId" />
                     <s:select theme="simple" name="buildDefinitionId" list="buildDefinitions"
                                listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}" />                    
                     <input type="submit" name="build" value="<s:text name="projectGroup.buildGroup"/>"/>
-                  </form>
+                  </s:form>
                 </redback:ifAuthorized>
               </table>
             </td>
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
-                <form action="editProjectGroup.action" method="post">
-                  <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
-                  <input type="submit" name="edit" value="<s:text name="edit"/>"/>
-                </form>
+                <s:form action="editProjectGroup" theme="simple">
+                  <s:hidden name="projectGroupId" />
+                  <s:submit name="edit" value="%{getText('edit')}"/>
+                </s:form>
               </redback:ifAuthorized>
             </td>
             <td>
               <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
-                <form action="releaseProjectGroup.action" method="post">
-                  <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
-                  <input type="submit" name="release" value="<s:text name="release"/>"/>
-                </form>
+                <s:form action="releaseProjectGroup" theme="simple">
+                  <s:hidden name="projectGroupId" />
+                  <s:submit name="release" value="%{getText('release')}" />
+                </s:form>
               </redback:ifAuthorized>
             </td>
             <td>
@@ -184,18 +184,18 @@
             </td>
             <td>
               <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
-                <form action="confirmRemoveProjectGroup.action" method="post">
-                  <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
-                  <input type="submit" name="remove" value="<s:text name="projectGroup.deleteGroup"/>"/>
-                </form>
+                <s:form action="confirmRemoveProjectGroup" theme="simple">
+                  <s:hidden name="projectGroupId" />
+                  <s:submit name="remove" value="%{getText('projectGroup.deleteGroup')}" />
+                </s:form>
               </redback:ifAuthorized>
             </td>
             <td>
               <redback:ifAuthorized permission="continuum-build-project-in-group" resource="${projectGroup.name}">
-                <form action="cancelGroupBuild.action" method="post">
-                  <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
-                  <input type="submit" name="cancel" value="<s:text name="projectGroup.cancelGroupBuild"/>"/>
-                </form>
+                <s:form action="cancelGroupBuild" theme="simple">
+                  <s:hidden name="projectGroupId" />
+                  <s:submit name="cancel" value="%{getText('projectGroup.cancelGroupBuild')}" />
+                </s:form>
               </redback:ifAuthorized>
             </td>
           </tr>

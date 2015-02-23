@@ -49,7 +49,7 @@
           </div>
         </c:if>
 
-        <form id="buildResultsForm" action="removeBuildResults.action" method="post">
+        <s:form id="buildResultsForm" action="removeBuildResults" theme="simple">
           <s:token/>
           <s:set name="buildResults" value="buildResults" scope="request"/>
           <s:hidden name="projectGroupId"/>
@@ -114,7 +114,7 @@
               </table>
             </div>
           </c:if>
-        </form>
+        </s:form>
       </div>
     </body>
   </s:i18n>

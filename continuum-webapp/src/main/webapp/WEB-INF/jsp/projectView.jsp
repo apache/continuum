@@ -77,17 +77,17 @@
               <tbody>
               <tr>
                 <td>
-                  <form action="projectEdit.action" method="post">
-                    <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
+                  <s:form action="projectEdit" theme="simple">
+                    <s:hidden name="projectId" />
                     <input type="submit" name="edit-project" value="<s:text name="edit"/>"/>
-                  </form>
+                  </s:form>
                 </td>
                 <td>
-                  <form method="post" action="buildProject.action">
-                    <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
-                    <input type="hidden" name="fromProjectPage" value="true"/>
-                    <input type="submit" name="build-project" value="<s:text name="summary.buildNow"/>"/>
-                  </form>
+                  <s:form action="buildProject" theme="simple">
+                    <s:hidden name="projectId" />
+                    <s:hidden name="fromProjectPage" value="true"/>
+                    <s:submit name="build-project" value="%{getText('summary.buildNow')}"/>
+                  </s:form>
                 </td>
               </tr>
               </tbody>

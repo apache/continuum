@@ -36,9 +36,9 @@
         <s:param name="tabName" value="'ReleaseResults'"/>
       </s:action>
     
-      <h3><s:text name="projectGroup.releaseResults.section.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
+      <h3><s:property value="%{ getText('projectGroup.releaseResults.section.title', { projectGroup.name }) }"/></h3>
       
-      <form id="releaseResultsForm" action="removeReleaseResults.action" method="post">
+      <s:form id="releaseResultsForm" action="removeReleaseResults" theme="simple">
         <s:token/>
         <ec:table items="releaseResults"
                 var="result"
@@ -93,7 +93,7 @@
             </table>
           </div>
         </c:if>
-      </form>
+      </s:form>
       </div>
     </body>
   </s:i18n>

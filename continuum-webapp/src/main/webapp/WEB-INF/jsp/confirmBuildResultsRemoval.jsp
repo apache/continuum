@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -36,25 +35,21 @@
           </div>
         </s:if>
         <!-- in this case we come from the build result edit -->
-        <s:if test="buildId">
-          <c:set var="action" value="removeBuildResult.action" />
-        </s:if>
-        <s:else>
-          <c:set var="action" value="removeBuildResults.action" />
-        </s:else>
-        <form action="${action}" method="post">
+        <s:form action="%{buildId ? 'removeBuildResult' : 'removeBuildResults'}" theme="simple">
           <s:token/>
           <s:hidden name="projectGroupId"/>
           <s:hidden name="projectId"/>
-          <s:hidden name="buildId"/>
+          <s:if test="buildId">
+            <s:hidden name="buildId"/>
+          </s:if>
           <s:hidden name="confirmed" value="true"/>
           <s:if test="selectedBuildResults">
-          <s:iterator value="selectedBuildResults">
-            <input type="hidden" value="<s:property/>" name="selectedBuildResults" />
-          </s:iterator>
+            <s:iterator value="selectedBuildResults" var="resultId">
+              <s:hidden name="selectedBuildResults" value="%{resultId}" />
+            </s:iterator>
           </s:if>
           <s:else>
-            <input type="hidden" value="<s:property value="buildId"/>" name="selectedBuildResults" />
+            <s:hidden name="selectedBuildResults" value="buildId" />
           </s:else>
           
           <s:actionerror/>
@@ -78,7 +73,7 @@
             </s:elseif>
             <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
           </div>
-        </form>
+        </s:form>
         </div>
       </div>
     </body>
