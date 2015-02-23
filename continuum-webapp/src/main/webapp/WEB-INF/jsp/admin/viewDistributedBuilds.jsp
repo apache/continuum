@@ -79,7 +79,7 @@
           </c:if>
         </div>
       
-      <s:form id="removeBuildForm" action="removeDistributedBuildEntries.action" method="post" theme="simple">
+      <s:form id="removeBuildForm" action="removeDistributedBuildEntries" method="post" theme="simple">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.buildQueue.section.title"/>
@@ -174,7 +174,7 @@
         </div>
       
       
-      <s:form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries.action" method="post" theme="simple">
+      <s:form id="removePrepareBuildForm" action="removeDistributedPrepareBuildEntries" method="post" theme="simple">
         <div id="h3">
           <h3>
             <s:text name="distributedBuilds.prepareBuildQueue.section.title"/>

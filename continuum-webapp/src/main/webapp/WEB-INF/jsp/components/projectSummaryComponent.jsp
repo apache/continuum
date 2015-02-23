@@ -41,10 +41,10 @@
 
   <h3><s:text name="projectGroup.projects.title"/></h3>
 
-  <form id="projectsForm" action="ProjectsList.action" method="post">
-    <input type="hidden" name="methodToCall" value="" />
-    <input type="hidden" name="buildDefinitionId" value="-1" />
-    <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
+  <s:form id="projectsForm" action="ProjectsList" theme="simple">
+    <s:hidden name="methodToCall" value="" />
+    <s:hidden name="buildDefinitionId" value="-1" />
+    <s:hidden name="projectGroupId" />
   <ec:table items="projects"
             var="project"
             autoIncludeParameters="false"
@@ -251,6 +251,6 @@
       </table>
     </div>
   </c:if>
-  </form>
+  </s:form>
 </c:if>
 </s:i18n>

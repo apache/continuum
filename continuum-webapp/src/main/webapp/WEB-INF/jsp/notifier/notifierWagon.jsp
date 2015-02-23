@@ -43,7 +43,7 @@
         </h3>
 
         <div class="axial">
-          <s:form action="%{actionUrl}" method="post" validate="true">
+          <s:form action="%{projectId > 0? 'wagonProjectNotifierSave' : 'wagonProjectGroupNotifierSave'}" method="post" validate="true">
             <s:hidden name="notifierId"/>
             <s:hidden name="projectId"/>
             <s:hidden name="projectGroupId"/>

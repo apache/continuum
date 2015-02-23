@@ -39,7 +39,7 @@
         </div>
         <div class="functnbar3">
           <s:if test="projectId == -1">
-            <s:form action="deleteProjectGroupNotifier.action" method="post">
+            <s:form action="deleteProjectGroupNotifier" method="post">
               <s:token/>
               <s:hidden name="notifierId"/>
               <s:hidden name="projectGroupId" />
@@ -48,7 +48,7 @@
             </s:form>
           </s:if>
           <s:else>
-            <s:form action="deleteProjectNotifier.action" method="post">
+            <s:form action="deleteProjectNotifier" method="post">
               <s:token/>            
               <s:hidden name="notifierId"/>
               <s:hidden name="projectId"/>

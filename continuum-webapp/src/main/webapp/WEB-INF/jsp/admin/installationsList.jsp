@@ -61,7 +61,7 @@
     </ec:table>
     </c:if>
     <div class="functnbar3">
-      <s:form action="installationsTypeChoice.action" method="post">
+      <s:form action="installationsTypeChoice" method="post">
         <s:submit value="%{getText('add')}"/>
       </s:form>
     </div>  

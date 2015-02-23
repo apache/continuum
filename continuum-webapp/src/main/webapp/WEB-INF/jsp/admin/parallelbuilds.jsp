@@ -67,7 +67,7 @@
       </c:if>
       
        <div class="functnbar3">
-        <s:form action="addBuildQueue.action" method="post">
+        <s:form action="addBuildQueue" method="post">
           <s:submit value="%{getText('add')}"/>
         </s:form>
       </div> 

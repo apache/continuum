@@ -29,13 +29,7 @@
     </head>
     <body>
       <div id="axial" class="h3">
-        <s:if test="projectId > 0">
-            <s:url id="actionUrl" action="mailProjectNotifierSave" includeContext="false" includeParams="none" />
-        </s:if>
-        <s:else>
-            <s:url id="actionUrl" action="mailProjectGroupNotifierSave" includeContext="false" includeParams="none"/>
-        </s:else>
-        
+
         <h3>
             <s:text name="notifier.section.title">
                 <s:param>Mail</s:param>
@@ -46,7 +40,7 @@
         <s:actionmessage/>
 
         <div class="axial">
-          <s:form action="%{actionUrl}" method="post" validate="true">
+          <s:form action="%{projectId > 0? 'mailProjectNotifierSave' : 'mailProjectGroupNotifierSave'}" method="post" validate="true">
             <s:hidden name="notifierId"/>
             <s:hidden name="projectId"/>
             <s:hidden name="projectGroupId"/>

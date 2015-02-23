@@ -74,7 +74,7 @@
 
   <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
     <div class="functnbar3">
-      <s:url id="addUrl" action="addProjectGroupNotifier" namespace="/"  includeContext="false" includeParams="none" />
+      <s:set var="addUrl" value="%{'addProjectGroupNotifier'}" />
       <s:form action="%{addUrl}" method="post">
         <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
         <s:submit value="%{getText('add')}" theme="simple"/>

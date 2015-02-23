@@ -37,7 +37,7 @@
           </p>
         </div>
         <div class="functnbar3">
-          <s:form action="ProjectsList.action" method="post">
+          <s:form action="ProjectsList" method="post">
             <s:iterator value="selectedProjects">
               <input type="hidden" value="<s:property/>" name="selectedProjects"/>
             </s:iterator>

@@ -29,7 +29,7 @@
             <div id="axial" class="h3">
                 <h3><s:text name="add.m2.project.section.title"/></h3>
                 <div class="axial">
-                    <s:form method="post" action="addMavenTwoProject.action" name="addMavenTwoProject" enctype="multipart/form-data">
+                    <s:form method="post" action="addMavenTwoProject" name="addMavenTwoProject" enctype="multipart/form-data">
                         <c:if test="${!empty actionErrors || !empty errorMessages}">
                           <div class="errormessage">
                             <s:iterator value="actionErrors">

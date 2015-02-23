@@ -73,7 +73,7 @@
         </div>
       
       
-      <s:form id="removeBuildForm" action="removeBuildQueueEntries.action" method="post" theme="simple">
+      <s:form id="removeBuildForm" action="removeBuildQueueEntries" method="post" theme="simple">
         <div id="h3">
           <h3>
             <s:text name="buildQueue.section.title"/>
@@ -183,7 +183,7 @@
         </div>
       
         
-      <s:form id="removeCheckoutForm" action="removeCheckoutQueueEntries.action" method="post" theme="simple">
+      <s:form id="removeCheckoutForm" action="removeCheckoutQueueEntries" method="post" theme="simple">
         <div id="h3">
           <h3>
             <s:text name="checkoutQueue.section.title"/>
@@ -277,7 +277,7 @@
         </div>
       
        
-      <s:form id="removePrepareBuildForm" action="removePrepareBuildEntries.action" method="post" theme="simple">
+      <s:form id="removePrepareBuildForm" action="removePrepareBuildEntries" method="post" theme="simple">
         <div id="h3">
           <h3>
             <s:text name="prepareBuildQueue.section.title"/>

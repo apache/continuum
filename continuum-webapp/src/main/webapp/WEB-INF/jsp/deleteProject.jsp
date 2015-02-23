@@ -37,7 +37,7 @@
           </p>
         </div>
         <div class="functnbar3">
-          <s:form action="deleteProject.action" method="post">
+          <s:form action="deleteProject" method="post">
             <s:token/>
             <s:hidden name="projectId"/>
             <s:hidden name="projectGroupId"/>

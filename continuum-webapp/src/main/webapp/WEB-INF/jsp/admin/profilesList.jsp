@@ -84,7 +84,7 @@
     </ec:table>
     </c:if>
     <div class="functnbar3">
-      <s:form action="addBuildEnv.action" method="post">
+      <s:form action="addBuildEnv" method="post">
         <s:submit value="%{getText('add')}"/>
       </s:form>
     </div>    

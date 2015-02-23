@@ -37,7 +37,7 @@
           </p>
         </div>
         <div class="functnbar3">
-          <s:form action="deleteBuildEnv.action" method="post">
+          <s:form action="deleteBuildEnv" method="post">
             <s:token/>
             <input type="hidden" name="profile.id" value="${profile.id}" />
             <s:submit value="%{getText('delete')}" theme="simple"/>

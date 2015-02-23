@@ -55,7 +55,7 @@
   <body>
     <h3><s:text name="projectBuilds.report.section.title"/></h3>
  
-    <s:form name="generateReportForm" action="generateProjectBuildsReport.action">
+    <s:form name="generateReportForm" action="generateProjectBuildsReport">
       <c:if test="${!empty actionErrors || !empty errorMessages}">
         <tr><td>
         <div class="errormessage">

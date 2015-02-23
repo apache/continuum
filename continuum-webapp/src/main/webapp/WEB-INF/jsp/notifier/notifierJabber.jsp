@@ -29,12 +29,7 @@
     </head>
     <body>
       <div id="axial" class="h3">
-        <s:if test="projectId > 0">
-            <s:url id="actionUrl" action="jabberProjectNotifierSave" includeContext="false" includeParams="none" />
-        </s:if>
-        <s:else>
-            <s:url id="actionUrl" action="jabberProjectGroupNotifierSave" includeContext="false" includeParams="none"/>
-        </s:else>
+
         <h3>
             <s:text name="notifier.section.title">
                 <s:param>Jabber</s:param>
@@ -42,7 +37,7 @@
         </h3>
 
         <div class="axial">
-          <s:form action="%{actionUrl}" method="post" validate="true">
+          <s:form action="%{projectId > 0? 'jabberProjectNotifierSave' : 'jabberProjectGroupNotifierSave' }" method="post" validate="true">
             <s:hidden name="notifierId"/>
             <s:hidden name="projectId"/>
             <s:hidden name="projectGroupId"/>

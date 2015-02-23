@@ -98,7 +98,7 @@
             </ec:row>
           </ec:table>
           <s:if test="allInstallations.size > 0">
-            <s:form action="addInstallationBuildEnv.action" method="get">
+            <s:form action="addInstallationBuildEnv" method="get">
               <s:hidden name="profile.id" />
               <div class="functnbar3">
                 <!-- can't use default profile to display this select -->

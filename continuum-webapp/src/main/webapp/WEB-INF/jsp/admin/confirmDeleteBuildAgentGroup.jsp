@@ -38,7 +38,7 @@
           </p>
         </div>
         <div class="functnbar3">
-          <s:form action="deleteBuildAgentGroup.action" method="post">
+          <s:form action="deleteBuildAgentGroup" method="post">
             <s:token/>
             <input type="hidden" name="buildAgentGroup.name" value="${buildAgentGroup.name}" />
             <s:hidden name="confirmed" value="true"/>

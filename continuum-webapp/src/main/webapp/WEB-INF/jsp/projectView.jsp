@@ -180,7 +180,7 @@
         </c:if>
         <div class="functnbar3">
            <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
-          <s:form action="addProjectNotifier.action" method="post">
+          <s:form action="addProjectNotifier" method="post">
             <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
             <s:submit value="%{getText('add')}" theme="simple"/>
