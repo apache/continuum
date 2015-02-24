@@ -212,74 +212,88 @@ public class DataManagementCli
         DatabaseParams params = new DatabaseParams( databaseType.defaultParams );
         params.setUrl( jdbcUrl );
 
-        PlexusClassPathXmlApplicationContext classPathApplicationContext = new PlexusClassPathXmlApplicationContext(
-            new String[]{"classpath*:/META-INF/spring-context.xml", "classpath*:/META-INF/plexus/components.xml",
-                "classpath*:/META-INF/plexus/plexus.xml"} );
-
-        PlexusContainerAdapter container = new PlexusContainerAdapter();
-        container.setApplicationContext( classPathApplicationContext );
-
-        initializeWagon( container, setting );
-
-        List<Artifact> artifacts = new ArrayList<Artifact>();
-        artifacts.addAll( downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion(),
-                                            setting ) );
-        artifacts.addAll( downloadArtifact( container, "org.apache.continuum", managementArtifactId, applicationVersion,
-                                            setting ) );
-        artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion(), setting ) );
-
-        // Filter the list so we only use jars
-        TypeArtifactFilter jarFilter = new TypeArtifactFilter( "jar" );
-        for ( Iterator<Artifact> iter = artifacts.iterator(); iter.hasNext(); iter.next() )
+        PlexusClassPathXmlApplicationContext classPathApplicationContext = null;
+        PlexusFileSystemXmlApplicationContext fileSystemApplicationContext = null;
+        try
         {
-            if ( !jarFilter.include( iter.next() ) )
+            classPathApplicationContext = new PlexusClassPathXmlApplicationContext(
+                new String[] { "classpath*:/META-INF/spring-context.xml", "classpath*:/META-INF/plexus/components.xml",
+                    "classpath*:/META-INF/plexus/plexus.xml" } );
+
+            PlexusContainerAdapter container = new PlexusContainerAdapter();
+            container.setApplicationContext( classPathApplicationContext );
+
+            initializeWagon( container, setting );
+
+            List<Artifact> artifacts = new ArrayList<Artifact>();
+            artifacts.addAll(
+                downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion(),
+                                  setting ) );
+            artifacts.addAll(
+                downloadArtifact( container, "org.apache.continuum", managementArtifactId, applicationVersion,
+                                  setting ) );
+            artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion(), setting ) );
+
+            // Filter the list so we only use jars
+            TypeArtifactFilter jarFilter = new TypeArtifactFilter( "jar" );
+            for ( Iterator<Artifact> iter = artifacts.iterator(); iter.hasNext(); iter.next() )
             {
-                iter.remove();
-            }
-        }
-
-        List<String> jars = new ArrayList<String>();
-
-        // Little hack to make it work more nicely in the IDE
-        List<String> exclusions = new ArrayList<String>();
-        URLClassLoader cp = (URLClassLoader) DataManagementCli.class.getClassLoader();
-        List<URL> jarUrls = new ArrayList<URL>();
-
-        for ( URL url : cp.getURLs() )
-        {
-            String urlEF = url.toExternalForm();
-            if ( urlEF.endsWith( "target/classes/" ) )
-            {
-                int idEndIdx = urlEF.length() - 16;
-                String id = urlEF.substring( urlEF.lastIndexOf( '/', idEndIdx - 1 ) + 1, idEndIdx );
-                // continuum-legacy included because the IDE doesn't do the proper assembly of enhanced classes and JDO metadata
-                if ( !"data-management-api".equals( id ) && !"data-management-cli".equals( id ) &&
-                    !"continuum-legacy".equals( id ) && !"continuum-model".equals( id ) &&
-                    !"redback-legacy".equals( id ) )
+                if ( !jarFilter.include( iter.next() ) )
                 {
-                    LOGGER.debug( "[IDE Help] Adding '" + id + "' as an exclusion and using one from classpath" );
-                    exclusions.add( "org.apache.continuum:" + id );
+                    iter.remove();
+                }
+            }
+
+            List<String> jars = new ArrayList<String>();
+
+            // Little hack to make it work more nicely in the IDE
+            List<String> exclusions = new ArrayList<String>();
+            URLClassLoader cp = (URLClassLoader) DataManagementCli.class.getClassLoader();
+            List<URL> jarUrls = new ArrayList<URL>();
+
+            for ( URL url : cp.getURLs() )
+            {
+                String urlEF = url.toExternalForm();
+                if ( urlEF.endsWith( "target/classes/" ) )
+                {
+                    int idEndIdx = urlEF.length() - 16;
+                    String id = urlEF.substring( urlEF.lastIndexOf( '/', idEndIdx - 1 ) + 1, idEndIdx );
+                    // continuum-legacy included because the IDE doesn't do the proper assembly of enhanced classes and JDO metadata
+                    if ( !"data-management-api".equals( id ) && !"data-management-cli".equals( id ) &&
+                        !"continuum-legacy".equals( id ) && !"continuum-model".equals( id ) &&
+                        !"redback-legacy".equals( id ) )
+                    {
+                        LOGGER.debug( "[IDE Help] Adding '" + id + "' as an exclusion and using one from classpath" );
+                        exclusions.add( "org.apache.continuum:" + id );
+                        jars.add( url.getPath() );
+                        jarUrls.add( url );
+                    }
+                }
+
+                // Sometimes finds its way into the IDE. Make sure it is loaded in the extra classloader too
+                if ( urlEF.contains( "jpox-enhancer" ) )
+                {
+                    LOGGER.debug( "[IDE Help] Adding 'jpox-enhancer' as an exclusion and using one from classpath" );
                     jars.add( url.getPath() );
                     jarUrls.add( url );
                 }
             }
 
-            // Sometimes finds its way into the IDE. Make sure it is loaded in the extra classloader too
-            if ( urlEF.contains( "jpox-enhancer" ) )
-            {
-                LOGGER.debug( "[IDE Help] Adding 'jpox-enhancer' as an exclusion and using one from classpath" );
-                jars.add( url.getPath() );
-                jarUrls.add( url );
-            }
-        }
+            ArtifactFilter filter = new ExcludesArtifactFilter( exclusions );
 
-        ArtifactFilter filter = new ExcludesArtifactFilter( exclusions );
-
-        for ( Artifact a : artifacts )
-        {
-            if ( "jpox".equals( a.getGroupId() ) && "jpox".equals( a.getArtifactId() ) )
+            for ( Artifact a : artifacts )
             {
-                if ( a.getVersion().equals( databaseFormat.getJpoxVersion() ) )
+                if ( "jpox".equals( a.getGroupId() ) && "jpox".equals( a.getArtifactId() ) )
+                {
+                    if ( a.getVersion().equals( databaseFormat.getJpoxVersion() ) )
+                    {
+                        LOGGER.debug( "Adding artifact: " + a.getFile() );
+                        jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + SPRING_CONTEXT_LOC );
+                        jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + PLEXUS_XML_LOC );
+                        jarUrls.add( new URL( FILE_PREFIX + a.getFile().getAbsolutePath() ) );
+                    }
+                }
+                else if ( filter.include( a ) )
                 {
                     LOGGER.debug( "Adding artifact: " + a.getFile() );
                     jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + SPRING_CONTEXT_LOC );
@@ -287,39 +301,40 @@ public class DataManagementCli
                     jarUrls.add( new URL( FILE_PREFIX + a.getFile().getAbsolutePath() ) );
                 }
             }
-            else if ( filter.include( a ) )
+
+            URLClassLoader newClassLoader =
+                new URLClassLoader( (URL[]) jarUrls.toArray( new URL[jarUrls.size()] ), cp );
+            Thread.currentThread().setContextClassLoader( newClassLoader );
+            classPathApplicationContext.setClassLoader( newClassLoader );
+
+            fileSystemApplicationContext = new PlexusFileSystemXmlApplicationContext(
+                (String[]) jars.toArray( new String[jars.size()] ), classPathApplicationContext );
+            fileSystemApplicationContext.setClassLoader( newClassLoader );
+            container.setApplicationContext( fileSystemApplicationContext );
+
+            DatabaseFactoryConfigurator configurator = (DatabaseFactoryConfigurator) container.lookup(
+                DatabaseFactoryConfigurator.class.getName(), configRoleHint );
+            configurator.configure( params );
+
+            DataManagementTool manager = (DataManagementTool) container.lookup( DataManagementTool.class.getName(),
+                                                                                toolRoleHint );
+
+            if ( mode == OperationMode.EXPORT )
             {
-                LOGGER.debug( "Adding artifact: " + a.getFile() );
-                jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + SPRING_CONTEXT_LOC );
-                jars.add( JAR_FILE_PREFIX + a.getFile().getAbsolutePath() + PLEXUS_XML_LOC );
-                jarUrls.add( new URL( FILE_PREFIX + a.getFile().getAbsolutePath() ) );
+                manager.backupDatabase( directory );
+            }
+            else if ( mode == OperationMode.IMPORT )
+            {
+                manager.eraseDatabase();
+                manager.restoreDatabase( directory, strict );
             }
         }
-
-        URLClassLoader newClassLoader = new URLClassLoader( (URL[]) jarUrls.toArray( new URL[jarUrls.size()] ), cp );
-        Thread.currentThread().setContextClassLoader( newClassLoader );
-        classPathApplicationContext.setClassLoader( newClassLoader );
-
-        PlexusFileSystemXmlApplicationContext fileSystemApplicationContext = new PlexusFileSystemXmlApplicationContext(
-            (String[]) jars.toArray( new String[jars.size()] ), classPathApplicationContext );
-        fileSystemApplicationContext.setClassLoader( newClassLoader );
-        container.setApplicationContext( fileSystemApplicationContext );
-
-        DatabaseFactoryConfigurator configurator = (DatabaseFactoryConfigurator) container.lookup(
-            DatabaseFactoryConfigurator.class.getName(), configRoleHint );
-        configurator.configure( params );
-
-        DataManagementTool manager = (DataManagementTool) container.lookup( DataManagementTool.class.getName(),
-                                                                            toolRoleHint );
-
-        if ( mode == OperationMode.EXPORT )
+        finally
         {
-            manager.backupDatabase( directory );
-        }
-        else if ( mode == OperationMode.IMPORT )
-        {
-            manager.eraseDatabase();
-            manager.restoreDatabase( directory, strict );
+            if ( fileSystemApplicationContext != null )
+                fileSystemApplicationContext.close();
+            if ( classPathApplicationContext != null )
+                classPathApplicationContext.close();
         }
     }
 
