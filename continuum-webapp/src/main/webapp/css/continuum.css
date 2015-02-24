@@ -37,12 +37,12 @@ td.tdLabel {
 }
 
 .cmd-loading {
-  background: url(/images/wait.gif) 5px 479px no-repeat;
+  background: url(../images/wait.gif) 5px 479px no-repeat;
   background-size: 16px 16px;
 }
 
 .cmd-building {
-  background: url(/images/building.gif) 5px 479px no-repeat;
+  background: url(../images/building.gif) 5px 479px no-repeat;
   background-size: 16px 16px;
 }
 
