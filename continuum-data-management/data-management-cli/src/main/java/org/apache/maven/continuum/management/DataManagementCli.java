@@ -239,7 +239,8 @@ public class DataManagementCli
 
             // Filter the list so we only use jars
             TypeArtifactFilter jarFilter = new TypeArtifactFilter( "jar" );
-            for ( Iterator<Artifact> iter = artifacts.iterator(); iter.hasNext(); iter.next() )
+            Iterator<Artifact> iter = artifacts.iterator();
+            while ( iter.hasNext() )
             {
                 if ( !jarFilter.include( iter.next() ) )
                 {
