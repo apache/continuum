@@ -198,6 +198,8 @@ public class DataManagementCli
                              command.settings, databaseFormat.getRedbackToolRoleHint(), "data-management-redback-jdo",
                              "redback", command.strict );
         }
+
+        LOGGER.info( "Export complete. Shutting down..." );
     }
 
     private static void processDatabase( SupportedDatabase databaseType, DatabaseFormat databaseFormat,
