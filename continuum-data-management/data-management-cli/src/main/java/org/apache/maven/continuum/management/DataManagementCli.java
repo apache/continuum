@@ -40,6 +40,7 @@ import org.apache.maven.artifact.resolver.DebugResolutionListener;
 import org.apache.maven.artifact.resolver.ResolutionListener;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
+import org.apache.maven.artifact.resolver.filter.TypeArtifactFilter;
 import org.apache.maven.continuum.management.util.PlexusFileSystemXmlApplicationContext;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Mirror;
@@ -226,6 +227,16 @@ public class DataManagementCli
         artifacts.addAll( downloadArtifact( container, "org.apache.continuum", managementArtifactId, applicationVersion,
                                             setting ) );
         artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion(), setting ) );
+
+        // Filter the list so we only use jars
+        TypeArtifactFilter jarFilter = new TypeArtifactFilter( "jar" );
+        for ( Iterator<Artifact> iter = artifacts.iterator(); iter.hasNext(); iter.next() )
+        {
+            if ( !jarFilter.include( iter.next() ) )
+            {
+                iter.remove();
+            }
+        }
 
         List<String> jars = new ArrayList<String>();
 
