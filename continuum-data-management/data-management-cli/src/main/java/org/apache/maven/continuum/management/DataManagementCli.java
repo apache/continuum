@@ -216,6 +216,7 @@ public class DataManagementCli
 
         PlexusClassPathXmlApplicationContext classPathApplicationContext = null;
         PlexusFileSystemXmlApplicationContext fileSystemApplicationContext = null;
+        ClassLoader origContextClassLoader = Thread.currentThread().getContextClassLoader();
         try
         {
             classPathApplicationContext = new PlexusClassPathXmlApplicationContext(
@@ -337,6 +338,7 @@ public class DataManagementCli
                 fileSystemApplicationContext.close();
             if ( classPathApplicationContext != null )
                 classPathApplicationContext.close();
+            Thread.currentThread().setContextClassLoader( origContextClassLoader );
         }
     }
 
