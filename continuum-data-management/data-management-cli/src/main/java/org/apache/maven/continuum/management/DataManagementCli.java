@@ -21,6 +21,7 @@ package org.apache.maven.continuum.management;
 
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
+import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -61,6 +62,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -202,6 +204,22 @@ public class DataManagementCli
         LOGGER.info( "Export complete. Shutting down..." );
     }
 
+    private static void shutdownResolverThreadPool( PlexusContainerAdapter container )
+    {
+        try
+        {
+            ArtifactResolver resolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE );
+            Field f = resolver.getClass().getDeclaredField( "resolveArtifactPool" );
+            f.setAccessible( true );
+            ThreadPoolExecutor executor = (ThreadPoolExecutor) f.get( resolver );
+            executor.shutdownNow();
+        }
+        catch ( Exception e )
+        {
+            LOGGER.error( "failed to shutdown resolver thread pool", e );
+        }
+    }
+
     private static void processDatabase( SupportedDatabase databaseType, DatabaseFormat databaseFormat,
                                          OperationMode mode, String jdbcUrl, File directory, File setting,
                                          String toolRoleHint, String managementArtifactId, String configRoleHint,
@@ -229,13 +247,21 @@ public class DataManagementCli
             initializeWagon( container, setting );
 
             List<Artifact> artifacts = new ArrayList<Artifact>();
-            artifacts.addAll(
-                downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion(),
-                                  setting ) );
-            artifacts.addAll(
-                downloadArtifact( container, "org.apache.continuum", managementArtifactId, applicationVersion,
-                                  setting ) );
-            artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion(), setting ) );
+            try
+            {
+                artifacts.addAll(
+                    downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion(),
+                                      setting ) );
+                artifacts.addAll(
+                    downloadArtifact( container, "org.apache.continuum", managementArtifactId, applicationVersion,
+                                      setting ) );
+                artifacts.addAll(
+                    downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion(), setting ) );
+            }
+            finally
+            {
+                shutdownResolverThreadPool( container );
+            }
 
             // Filter the list so we only use jars
             TypeArtifactFilter jarFilter = new TypeArtifactFilter( "jar" );
