@@ -19,6 +19,7 @@ package org.apache.continuum.builder.distributed;
  * under the License.
  */
 
+import org.apache.commons.io.IOUtils;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.distributed.util.DistributedBuildUtil;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
@@ -164,13 +165,16 @@ public class DefaultDistributedBuildService
             projectDao.updateProject( project );
 
             File buildOutputFile = configurationService.getBuildOutputFile( buildResult.getId(), project.getId() );
-
-            FileWriter fstream = new FileWriter( buildOutputFile );
-            BufferedWriter out = new BufferedWriter( fstream );
-            out.write( ContinuumBuildConstant.getBuildOutput( context ) == null
-                           ? ""
-                           : ContinuumBuildConstant.getBuildOutput( context ) );
-            out.close();
+            FileWriter fileWriter = null;
+            try
+            {
+                fileWriter = new FileWriter( buildOutputFile );
+                String output = ContinuumBuildConstant.getBuildOutput( context );
+                fileWriter.write( output == null ? "" : output );
+            } finally
+            {
+                IOUtils.closeQuietly(fileWriter);
+            }
 
             if ( buildResult.getState() != ContinuumProjectState.CANCELLED )
             {
