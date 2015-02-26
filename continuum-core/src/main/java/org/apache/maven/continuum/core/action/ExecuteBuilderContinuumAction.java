@@ -170,7 +170,8 @@ public class ExecuteBuilderContinuumAction
 
             if ( buildResult.getState() != ContinuumProjectState.OK &&
                 buildResult.getState() != ContinuumProjectState.FAILED &&
-                buildResult.getState() != ContinuumProjectState.ERROR )
+                buildResult.getState() != ContinuumProjectState.ERROR &&
+                buildResult.getState() != ContinuumProjectState.CANCELLED )
             {
                 buildResult.setState( ContinuumProjectState.ERROR );
             }
