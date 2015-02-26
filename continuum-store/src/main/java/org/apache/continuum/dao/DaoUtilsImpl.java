@@ -147,7 +147,7 @@ public class DaoUtilsImpl
      * ones inherited by their project group
      *
      * @param scheduleId
-     * @return
+     * @return mapping of project ids to lists of build definition ids
      * @throws org.apache.maven.continuum.store.ContinuumStoreException
      * @todo Move to a better place
      */
@@ -159,15 +159,13 @@ public class DaoUtilsImpl
 
         Map<Integer, Object> aggregate = new HashMap<Integer, Object>();
 
-        // start out by checking if we have projects with this scheduleId
+        // Pre-load result with definitions from projects with the schedule id
         if ( projectSource != null )
         {
             aggregate.putAll( projectSource );
         }
 
-        // iterate through the project groups and make sure we are not walking
-        // over projects that
-        // might define their own build definitions
+        // Ensure project group definitions are used only if project build definitions do not exist
         if ( projectGroupSource != null )
         {
             for ( Integer projectGroupId : projectGroupSource.keySet() )
@@ -263,7 +261,7 @@ public class DaoUtilsImpl
 
     /**
      * @param scheduleId
-     * @return
+     * @return mapping of project group ids to lists of corresponding build definition ids
      * @throws ContinuumStoreException
      * @todo Move to a better place
      */
