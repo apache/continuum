@@ -19,8 +19,7 @@ package org.apache.maven.continuum.web.view;
  * under the License.
  */
 
-import java.util.HashMap;
-
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -39,7 +38,7 @@ import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
 
-import com.opensymphony.xwork2.ActionContext;
+import java.util.HashMap;
 
 /**
  * Used in Summary view
@@ -53,84 +52,33 @@ public class StateCell
 {
     protected String getCellValue( TableModel tableModel, Column column )
     {
+        String contextPath = tableModel.getContext().getContextPath();
+
         if ( tableModel.getCurrentRowBean() instanceof ProjectSummary )
         {
             ProjectSummary project = (ProjectSummary) tableModel.getCurrentRowBean();
-
-            switch ( project.getState() )
+            String state = StateGenerator.generate( project.getState(), contextPath );
+            if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) &&
+                project.getState() != ContinuumProjectState.UPDATING && isAuthorized( project.getProjectGroupName() ) )
             {
-                case ContinuumProjectState.NEW:
-                case ContinuumProjectState.OK:
-                case ContinuumProjectState.FAILED:
-                case ContinuumProjectState.ERROR:
-                case ContinuumProjectState.BUILDING:
-                case ContinuumProjectState.UPDATING:
-                case ContinuumProjectState.CHECKING_OUT:
-                {
-                    String state = StateGenerator.generate( project.getState(),
-                                                            tableModel.getContext().getContextPath() );
-
-                    if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) &&
-                        project.getState() != ContinuumProjectState.UPDATING )
-                    {
-                        if ( isAuthorized( project.getProjectGroupName() ) )
-                        {
-                            return createActionLink( "buildResult", project, state );
-                        }
-                        else
-                        {
-                            return state;
-                        }
-                    }
-                    else
-                    {
-                        return state;
-                    }
-                }
-
-                default:
-                {
-                    return "&nbsp;";
-                }
+                return createActionLink( "buildResult", project, state );
             }
+            return state;
         }
-        else
+
+        if ( tableModel.getCurrentRowBean() instanceof ProjectScmRoot )
         {
             ProjectScmRoot projectScmRoot = (ProjectScmRoot) tableModel.getCurrentRowBean();
-
-            switch ( projectScmRoot.getState() )
+            String state = StateGenerator.generate( projectScmRoot.getState(), contextPath );
+            if ( !StateGenerator.NEW.equals( state ) && isAuthorized( projectScmRoot.getProjectGroup().getName() ) &&
+                projectScmRoot.getState() == ContinuumProjectState.ERROR )
             {
-                case ContinuumProjectState.UPDATING:
-                case ContinuumProjectState.UPDATED:
-                case ContinuumProjectState.ERROR:
-                {
-                    String state = StateGenerator.generate( projectScmRoot.getState(),
-                                                            tableModel.getContext().getContextPath() );
-
-                    if ( !StateGenerator.NEW.equals( state ) )
-                    {
-                        if ( isAuthorized( projectScmRoot.getProjectGroup().getName() ) &&
-                            projectScmRoot.getState() == ContinuumProjectState.ERROR )
-                        {
-                            return createActionLink( "scmResult", projectScmRoot, state );
-                        }
-                        else
-                        {
-                            return state;
-                        }
-                    }
-                    else
-                    {
-                        return state;
-                    }
-                }
-
-                default:
-                {
-                    return "&nbsp;";
-                }
+                return createActionLink( "scmResult", projectScmRoot, state );
             }
+            return state;
         }
+
+        return StateGenerator.generate( StateGenerator.UNKNOWN_STATE, contextPath );
     }
 
     private static String createActionLink( String action, ProjectSummary project, String state )

@@ -21,6 +21,9 @@ package org.apache.maven.continuum.web.util;
 
 import org.apache.maven.continuum.project.ContinuumProjectState;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
@@ -34,53 +37,54 @@ public class StateGenerator
 
     public static final String ERROR = "Error";
 
+    public static final String CANCELLED = "Canceled";
+
     public static final String BUILDING = "Building";
 
     public static final String UPDATING = "Updating";
 
+    public static final String UPDATED = "Updated";
+
     public static final String CHECKING_OUT = "Checking Out";
+
+    public static final String CHECKED_OUT = "Checked Out";
+
+    public static final int UNKNOWN_STATE = Integer.MIN_VALUE;
 
     public static final String UNKNOWN = "Unknown";
 
+    public static final Map<Integer, String[]> stateIconArgs = new HashMap<Integer, String[]>();
+
+    static
+    {
+        stateIconArgs.put( ContinuumProjectState.OK, new String[] { "/images/icon_success_sml.gif", SUCCESS } );
+        stateIconArgs.put( ContinuumProjectState.UPDATED, new String[] { "/images/icon_success_sml.gif", UPDATED } );
+        stateIconArgs.put( ContinuumProjectState.FAILED, new String[] { "/images/icon_warning_sml.gif", FAILED } );
+        stateIconArgs.put( ContinuumProjectState.ERROR, new String[] { "/images/icon_error_sml.gif", ERROR } );
+        stateIconArgs.put( ContinuumProjectState.BUILDING, new String[] { "/images/building.gif", BUILDING } );
+        stateIconArgs.put( ContinuumProjectState.UPDATING, new String[] { "/images/checkingout.gif", UPDATING } );
+        stateIconArgs.put( ContinuumProjectState.CHECKING_OUT,
+                           new String[] { "/images/checkingout.gif", CHECKING_OUT } );
+        stateIconArgs.put( ContinuumProjectState.CHECKEDOUT,
+                           new String[] { "/images/icon_success_sml.gif", CHECKED_OUT } );
+        stateIconArgs.put( ContinuumProjectState.CANCELLED,
+                           new String[] { "/images/icon_unknown_sml.gif", CANCELLED } );
+    }
+
     public static String generate( int state, String contextPath )
     {
+        String iconFmt = "<img src=\"" + contextPath + "%s\" alt=\"%2$s\" title=\"%2$s\" border=\"0\" />";
+
         if ( state == ContinuumProjectState.NEW )
         {
             return NEW;
         }
-        else if ( state == ContinuumProjectState.OK || state == ContinuumProjectState.UPDATED )
+
+        if ( stateIconArgs.containsKey( state ) )
         {
-            return "<img src=\"" + contextPath + "/images/icon_success_sml.gif\" alt=\"" + SUCCESS + "\" title=\"" +
-                SUCCESS + "\" border=\"0\" />";
+            return String.format( iconFmt, stateIconArgs.get( state ) );
         }
-        else if ( state == ContinuumProjectState.FAILED )
-        {
-            return "<img src=\"" + contextPath + "/images/icon_warning_sml.gif\" alt=\"" + FAILED + "\" title=\"" +
-                FAILED + "\" border=\"0\" />";
-        }
-        else if ( state == ContinuumProjectState.ERROR )
-        {
-            return "<img src=\"" + contextPath + "/images/icon_error_sml.gif\" alt=\"" + ERROR + "\" title=\"" + ERROR +
-                "\" border=\"0\" />";
-        }
-        else if ( state == ContinuumProjectState.BUILDING )
-        {
-            return "<img src=\"" + contextPath + "/images/building.gif\" alt=\"" + BUILDING + "\" title=\"" + BUILDING +
-                "\" border=\"0\" />";
-        }
-        else if ( state == ContinuumProjectState.UPDATING )
-        {
-            return "<img src=\"" + contextPath + "/images/checkingout.gif\" alt=\"" + UPDATING + "\" title=\"" +
-                UPDATING + "\" border=\"0\" />";
-        }
-        else if ( state == ContinuumProjectState.CHECKING_OUT )
-        {
-            return "<img src=\"" + contextPath + "/images/checkingout.gif\" alt=\"" + CHECKING_OUT + "\" title=\"" +
-                CHECKING_OUT + "\" border=\"0\" />";
-        }
-        else
-        {
-            return UNKNOWN;
-        }
+
+        return String.format( iconFmt, "/images/icon_unknown_sml.gif", UNKNOWN );
     }
 }
