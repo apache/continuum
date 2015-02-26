@@ -129,38 +129,30 @@ public class DefaultDistributedBuildService
 
             BuildResult buildResult = distributedBuildUtil.convertMapToBuildResult( context );
 
-            if ( buildResult.getState() != ContinuumProjectState.CANCELLED )
+            buildResult.setBuildDefinition( buildDefinition );
+            buildResult.setBuildNumber( buildNumber );
+            buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( oldBuildResult,
+                                                                                               context ) );
+            buildResult.setScmResult( distributedBuildUtil.getScmResult( context ) );
+
+            Date date = ContinuumBuildConstant.getLatestUpdateDate( context );
+            if ( date != null )
             {
-                buildResult.setBuildDefinition( buildDefinition );
-                buildResult.setBuildNumber( buildNumber );
-                buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( oldBuildResult,
-                                                                                                   context ) );
-                buildResult.setScmResult( distributedBuildUtil.getScmResult( context ) );
-
-                Date date = ContinuumBuildConstant.getLatestUpdateDate( context );
-                if ( date != null )
-                {
-                    buildResult.setLastChangedDate( date.getTime() );
-                }
-                else if ( oldBuildResult != null )
-                {
-                    buildResult.setLastChangedDate( oldBuildResult.getLastChangedDate() );
-                }
-
-                buildResultDao.addBuildResult( project, buildResult );
-
-                buildResult = buildResultDao.getBuildResult( buildResult.getId() );
-
-                project.setOldState( project.getState() );
-                project.setState( ContinuumBuildConstant.getBuildState( context ) );
-                project.setBuildNumber( buildNumber );
-                project.setLatestBuildId( buildResult.getId() );
+                buildResult.setLastChangedDate( date.getTime() );
             }
-            else
+            else if ( oldBuildResult != null )
             {
-                project.setState( project.getOldState() );
-                project.setOldState( 0 );
+                buildResult.setLastChangedDate( oldBuildResult.getLastChangedDate() );
             }
+
+            buildResultDao.addBuildResult( project, buildResult );
+
+            buildResult = buildResultDao.getBuildResult( buildResult.getId() );
+
+            project.setOldState( project.getState() );
+            project.setState( ContinuumBuildConstant.getBuildState( context ) );
+            project.setBuildNumber( buildNumber );
+            project.setLatestBuildId( buildResult.getId() );
 
             projectDao.updateProject( project );
 
@@ -176,10 +168,7 @@ public class DefaultDistributedBuildService
                 IOUtils.closeQuietly(fileWriter);
             }
 
-            if ( buildResult.getState() != ContinuumProjectState.CANCELLED )
-            {
-                notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
-            }
+            notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
 
             distributedBuildManager.removeCurrentRun( projectId, buildDefinitionId );
         }
