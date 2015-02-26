@@ -105,8 +105,9 @@ public class ExecuteBuilderAction
         catch ( ContinuumAgentBuildCancelledException e )
         {
             getLogger().info( "Cancelled build" );
-
             buildResult.setState( ContinuumProjectState.CANCELLED );
+            buildResult.setError( "Build was canceled. It may have been canceled manually or exceeded its schedule's"
+                                      + " maximum execution time." );
         }
         catch ( Throwable e )
         {
