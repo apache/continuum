@@ -26,12 +26,12 @@
 </head>
 
 <body>
-<h1><s:text name="appearance.section.title"/></h1>
 
+<div class="h3">
+<h3><s:text name="appearance.companyDetails"/></h3>
 <div style="float: right">
   <a href="<s:url action='editAppearance' />"><s:text name="edit"/></a>
 </div>
-<h2><s:text name="appearance.companyDetails"/></h2>
 
 <p>
   <s:text name="appearance.description"/>
@@ -97,6 +97,7 @@
     </c:otherwise>
   </c:choose>
 </c:if>
+</div>
 
 <s:actionmessage/>
 <s:form action="saveFooter" method="post" namespace="/admin">

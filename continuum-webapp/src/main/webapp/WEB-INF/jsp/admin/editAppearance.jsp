@@ -25,20 +25,20 @@
 </head>
 
 <body>
-  <h1><s:text name="appearance.section.title"/></h1>
+  <div class="h3">
+    <h3><s:text name="appearance.companyDetails"/></h3>
 
-  <h2><s:text name="appearance.companyDetails"/></h2>
+    <p>
+      <s:text name="appearance.enterCompanyPom"/>
+    </p>
 
-  <p>
-    <s:text name="appearance.enterCompanyPom"/>
-  </p>
-
-  <s:actionmessage/>
-  <s:form method="post" action="saveAppearance" namespace="/admin" validate="true">
-    <s:textfield name="companyPom.groupId" label="%{getText('appearance.companyPom.groupId')}" size="100"/>
-    <s:textfield name="companyPom.artifactId" label="%{getText('appearance.companyPom.artifactId')}" size="100"/>
-    <s:submit value="%{getText('save')}"/>
-  </s:form>
+    <s:actionmessage/>
+    <s:form method="post" action="saveAppearance" namespace="/admin" validate="true">
+      <s:textfield name="companyPom.groupId" label="%{getText('appearance.companyPom.groupId')}" size="100"/>
+      <s:textfield name="companyPom.artifactId" label="%{getText('appearance.companyPom.artifactId')}" size="100"/>
+      <s:submit value="%{getText('save')}"/>
+    </s:form>
+  </div>
 </body>
 </s:i18n>
 </html>
