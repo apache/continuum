@@ -110,16 +110,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1048,8 +1039,29 @@ public class DefaultContinuum
                 parallelBuildsManager.isProjectInAnyCurrentBuild( project.getId() ) )
             {
                 throw new ContinuumException(
-                    "Unable to remove build result because it is currently being used by" + "a building project " +
+                    "Unable to remove build result because it is currently being used by a building project " +
                         project.getId() );
+            }
+
+            int projectId = buildResult.getProject().getId();
+            int buildDefId = buildResult.getBuildDefinition().getId();
+            boolean resultPending = false;
+
+            try
+            {
+                resultPending =
+                    distributedBuildManager.getCurrentRun( projectId, buildDefId ).getBuildResultId() == buildId;
+            }
+            catch ( ContinuumException e )
+            {
+                // No current run for given project/builddef
+            }
+
+            if ( resultPending )
+            {
+                throw new ContinuumException(
+                    String.format( "Unable to remove build result %s, response is pending from build agent %s.",
+                                   buildId, buildResult.getBuildUrl() ) );
             }
         }
         catch ( BuildManagerException e )
