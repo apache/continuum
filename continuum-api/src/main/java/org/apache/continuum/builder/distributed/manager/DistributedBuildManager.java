@@ -83,7 +83,7 @@ public interface DistributedBuildManager
     Map<String, BuildProjectTask> getProjectsCurrentlyBuilding()
         throws ContinuumException;
 
-    void removeFromPrepareBuildQueue( String buildAgnetUrl, int projectGroupId, int scmRootId )
+    void removeFromPrepareBuildQueue( String buildAgentUrl, int projectGroupId, int scmRootId )
         throws ContinuumException;
 
     void removeFromPrepareBuildQueue( List<String> hashCodes )
