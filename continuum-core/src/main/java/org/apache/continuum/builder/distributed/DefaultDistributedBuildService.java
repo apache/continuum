@@ -27,6 +27,7 @@ import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
+import org.apache.continuum.model.project.ProjectRunSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
@@ -119,6 +120,8 @@ public class DefaultDistributedBuildService
 
             log.info( "update build result of project '{}'", projectId );
 
+            // Get the result id for this build, it may be current or canceled
+            ProjectRunSummary canceledRun = null;
             int existingResultId = 0;
             try
             {
@@ -127,7 +130,16 @@ public class DefaultDistributedBuildService
             }
             catch ( ContinuumException e )
             {
-                log.warn( "failed to find result for remote build {}", e.getMessage() );
+                try
+                {
+                    log.debug( "no current run summary found, attempting to find canceled run" );
+                    canceledRun = distributedBuildManager.getCanceledRun( projectId, buildDefinitionId );
+                    existingResultId = canceledRun.getBuildResultId();
+                }
+                catch ( ContinuumException e1 )
+                {
+                    log.warn( "failed to find result for remote build {}", e.getMessage() );
+                }
             }
 
             boolean existingResult = existingResultId > 0;
@@ -195,9 +207,17 @@ public class DefaultDistributedBuildService
                 IOUtils.closeQuietly( fileWriter );
             }
 
-            notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
-
-            distributedBuildManager.removeCurrentRun( projectId, buildDefinitionId );
+            if ( canceledRun != null )
+            {
+                // We have joined the cancellation with the result, time to clean it up
+                distributedBuildManager.removeCanceledRun( canceledRun );
+            }
+            else
+            {
+                // Build was successful, notify and cleanup associated run
+                notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
+                distributedBuildManager.removeCurrentRun( projectId, buildDefinitionId );
+            }
         }
         catch ( ContinuumStoreException e )
         {

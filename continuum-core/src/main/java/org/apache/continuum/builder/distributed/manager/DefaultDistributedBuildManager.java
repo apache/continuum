@@ -52,6 +52,7 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -73,6 +74,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +88,12 @@ public class DefaultDistributedBuildManager
         new HashMap<String, OverallDistributedBuildQueue>() );
 
     private List<ProjectRunSummary> currentRuns = Collections.synchronizedList( new ArrayList<ProjectRunSummary>() );
+
+    private Map<ProjectRunSummary, Long> canceledRuns =
+        Collections.synchronizedMap( new HashMap<ProjectRunSummary, Long>() );
+
+    @Configuration( "300000" )
+    private Long cancellationTimeToLive;
 
     @Requirement
     private ConfigurationService configurationService;
@@ -769,10 +777,7 @@ public class DefaultDistributedBuildManager
                 }
             }
 
-            if ( runsToDelete.size() > 0 )
-            {
-                currentRuns.removeAll( runsToDelete );
-            }
+            cleanupCanceledRuns( runsToDelete );
         }
     }
 
@@ -793,9 +798,36 @@ public class DefaultDistributedBuildManager
                 }
             }
 
-            if ( runsToDelete.size() > 0 )
+            cleanupCanceledRuns( runsToDelete );
+        }
+    }
+
+    /**
+     * Removes canceled runs from the list of currently running and retires old cancelation records.
+     *
+     * @param runsToDelete
+     */
+    private void cleanupCanceledRuns( List<ProjectRunSummary> runsToDelete )
+    {
+        // Remove the canceled builds
+        if ( runsToDelete.size() > 0 )
+        {
+            currentRuns.removeAll( runsToDelete );
+        }
+
+        // Remove stale cancellation records
+        synchronized ( canceledRuns )
+        {
+            long now = System.currentTimeMillis();
+            Iterator<Map.Entry<ProjectRunSummary, Long>> iter = canceledRuns.entrySet().iterator();
+            while ( iter.hasNext() )
             {
-                currentRuns.removeAll( runsToDelete );
+                Map.Entry<ProjectRunSummary, Long> entry = iter.next();
+                long cancelTime = entry.getValue();
+                if ( now - cancelTime > cancellationTimeToLive )
+                {
+                    iter.remove();
+                }
             }
         }
     }
@@ -821,6 +853,7 @@ public class DefaultDistributedBuildManager
         {
             log.debug( "Cancel build of projectId={}, buildDefinitionId={} in build agent {}",
                        new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
+            canceledRuns.put( run, System.currentTimeMillis() );
             cancelDistributedBuild( buildAgentUrl );
             runsToDelete.add( run );
         }
@@ -2030,6 +2063,24 @@ public class DefaultDistributedBuildManager
             String.format( "no run summary for projectId=%s, buildDefinitionId=%s", projectId, buildDefinitionId ) );
     }
 
+    public ProjectRunSummary getCanceledRun( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
+        synchronized ( canceledRuns )
+        {
+            for ( ProjectRunSummary currentRun : canceledRuns.keySet() )
+            {
+                if ( currentRun.getProjectId() == projectId && currentRun.getBuildDefinitionId() == buildDefinitionId )
+                {
+                    return currentRun;
+                }
+            }
+        }
+        throw new ContinuumException(
+            String.format( "no canceled run summary for projectId=%s, buildDefinitionId=%s", projectId,
+                           buildDefinitionId ) );
+    }
+
     public void removeCurrentRun( int projectId, int buildDefinitionId )
     {
         synchronized ( currentRuns )
@@ -2043,6 +2094,14 @@ public class DefaultDistributedBuildManager
             {
                 log.warn( "failed to remove run summary: {}", e.getMessage() );
             }
+        }
+    }
+
+    public void removeCanceledRun( ProjectRunSummary canceled )
+    {
+        if ( canceled != null )
+        {
+            canceledRuns.remove( canceled );
         }
     }
 
