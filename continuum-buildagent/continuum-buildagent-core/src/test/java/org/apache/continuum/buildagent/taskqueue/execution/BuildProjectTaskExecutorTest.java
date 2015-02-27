@@ -196,7 +196,7 @@ public class BuildProjectTaskExecutorTest
     private void assertBuilt()
         throws ContinuumException
     {
-        verify( buildAgentManager ).startProjectBuild( 1 );
+        verify( buildAgentManager ).startProjectBuild( 1, 1 );
         verify( buildAgentManager ).returnBuildResult( anyMap() );
         verify( buildContextManager ).removeBuildContext( 1 );
     }

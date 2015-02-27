@@ -35,7 +35,7 @@ public interface DistributedBuildService
     void startPrepareBuild( Map<String, Object> context )
         throws ContinuumException;
 
-    void startProjectBuild( int projectId )
+    void startProjectBuild( int projectId, int buildDefinitionId )
         throws ContinuumException;
 
     void updateBuildResult( Map<String, Object> context )

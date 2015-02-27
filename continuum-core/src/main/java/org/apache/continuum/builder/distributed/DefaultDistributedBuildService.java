@@ -246,7 +246,7 @@ public class DefaultDistributedBuildService
         }
     }
 
-    public void startProjectBuild( int projectId )
+    public void startProjectBuild( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
         try
@@ -256,10 +256,21 @@ public class DefaultDistributedBuildService
             project.setState( ContinuumProjectState.BUILDING );
             projectDao.updateProject( project );
 
-            // Should actually use current run summary, only the tuple (project, buildDef) is unique
-            BuildResult result = buildResultDao.getBuildResult( project.getLatestBuildId() );
-            result.setState( ContinuumProjectState.BUILDING );
-            buildResultDao.updateBuildResult( result );
+            try
+            {
+                int existingResultId =
+                    distributedBuildManager.getCurrentRun( projectId, buildDefinitionId ).getBuildResultId();
+                if ( existingResultId > 0 )
+                {
+                    BuildResult result = buildResultDao.getBuildResult( project.getLatestBuildId() );
+                    result.setState( ContinuumProjectState.BUILDING );
+                    buildResultDao.updateBuildResult( result );
+                }
+            }
+            catch ( ContinuumException e )
+            {
+                log.warn( "failed to update result status to 'building': {}", e.getMessage() );
+            }
         }
         catch ( ContinuumStoreException e )
         {

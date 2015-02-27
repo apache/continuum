@@ -67,11 +67,12 @@ public class MasterBuildAgentTransportServer
         return Boolean.TRUE;
     }
 
-    public Boolean startProjectBuild( Integer projectId, String buildAgentUrl )
+    public Boolean startProjectBuild( Integer projectId, Integer buildDefinitionId, String buildAgentUrl )
         throws Exception
     {
-        distributedBuildService.startProjectBuild( projectId );
-        log.info( "Start building project (projectId={}) in build agent {}.", projectId, buildAgentUrl );
+        distributedBuildService.startProjectBuild( projectId, buildDefinitionId );
+        log.info( "Start building project (projectId={}, buildDefId={}) in build agent {}.",
+                  new Object[] { projectId, buildDefinitionId, buildAgentUrl } );
         return Boolean.TRUE;
     }
 
@@ -89,7 +90,7 @@ public class MasterBuildAgentTransportServer
     {
         Map<String, String> envs = distributedBuildService.getEnvironments( buildDefinitionId, installationType );
         log.debug( "Retrieving environments buildDefinitionId={}, installationType={}",
-                   new Object[]{buildDefinitionId, installationType} );
+                   new Object[] { buildDefinitionId, installationType } );
         return envs;
     }
 

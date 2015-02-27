@@ -32,7 +32,7 @@ public interface MasterBuildAgentTransportService
     public Boolean returnBuildResult( Map<String, Object> buildResult, String buildAgentUrl )
         throws Exception;
 
-    public Boolean startProjectBuild( Integer projectId, String buildAgentUrl )
+    public Boolean startProjectBuild( Integer projectId, Integer buildDefinitionId, String buildAgentUrl )
         throws Exception;
 
     public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult, String buildAgentUrl )

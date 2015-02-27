@@ -30,7 +30,7 @@ public interface BuildAgentManager
     void returnBuildResult( Map<String, Object> result )
         throws ContinuumException;
 
-    void startProjectBuild( int projectId )
+    void startProjectBuild( int projectId, int buildDefinition )
         throws ContinuumException;
 
     Map<String, String> getEnvironments( int buildDefinitionId, String installationType )

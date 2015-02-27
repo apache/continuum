@@ -209,7 +209,7 @@ public class BuildProjectTaskExecutor
     {
         try
         {
-            buildAgentManager.startProjectBuild( buildContext.getProjectId() );
+            buildAgentManager.startProjectBuild( buildContext.getProjectId(), buildContext.getBuildDefinitionId() );
         }
         catch ( ContinuumException e )
         {

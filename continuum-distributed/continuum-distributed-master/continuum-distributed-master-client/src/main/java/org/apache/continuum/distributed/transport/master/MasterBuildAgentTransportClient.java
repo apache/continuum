@@ -141,15 +141,15 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Boolean startProjectBuild( Integer projectId, String buildAgentUrl )
+    public Boolean startProjectBuild( Integer projectId, Integer buildDefinitionId, String buildAgentUrl )
         throws Exception
     {
         Boolean result;
 
         try
         {
-            result = master.startProjectBuild( projectId, buildAgentUrl );
-            log.info( "Start project {} build", projectId );
+            result = master.startProjectBuild( projectId, buildDefinitionId, buildAgentUrl );
+            log.info( "Start project {}, buildDef {} build", projectId, buildDefinitionId );
         }
         catch ( Exception e )
         {

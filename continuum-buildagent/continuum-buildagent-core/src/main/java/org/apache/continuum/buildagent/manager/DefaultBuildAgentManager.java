@@ -47,14 +47,14 @@ public class DefaultBuildAgentManager
     @Requirement
     private BuildContextManager buildContextManager;
 
-    public void startProjectBuild( int projectId )
+    public void startProjectBuild( int projectId, int buildDefinition )
         throws ContinuumException
     {
         try
         {
             MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient( new URL(
                 buildAgentConfigurationService.getContinuumServerUrl() ) );
-            client.startProjectBuild( projectId, getBuildAgentUrl( projectId ) );
+            client.startProjectBuild( projectId, buildDefinition, getBuildAgentUrl( projectId ) );
         }
         catch ( MalformedURLException e )
         {
