@@ -96,12 +96,28 @@ public class BuildResultAction
 
         ConfigurationService configuration = getContinuum().getConfiguration();
 
-        // view build result of the current build from the distributed build agent
-        if ( configuration.isDistributedBuildEnabled() &&
-            project.getState() == ContinuumProjectState.BUILDING && getBuildId() == 0 )
+        buildResult = getContinuum().getBuildResult( getBuildId() );
+
+        boolean runningOnAgent = false;
+
+        if ( configuration.isDistributedBuildEnabled() )
         {
-            // if the project is currently building in distributed build agent, the build result will be stored in the database after the build is finished. 
-            // it's safe to assume that the build result will be null at this point
+            try
+            {
+                int buildDefinitionId = buildResult.getBuildDefinition().getId();
+                runningOnAgent = buildResult.getState() == ContinuumProjectState.BUILDING &&
+                    distributedBuildManager.getCurrentRun( getProjectId(), buildDefinitionId ).getBuildResultId()
+                        == getBuildId();
+            }
+            catch ( ContinuumException e )
+            {
+                log.debug( "running distributed build not found: {}", e.getMessage() );
+            }
+        }
+
+        // view build result of the current build from the distributed build agent
+        if ( runningOnAgent )
+        {
             Map<String, Object> map = distributedBuildManager.getBuildResult( project.getId() );
 
             if ( map == null )
@@ -309,7 +325,8 @@ public class BuildResultAction
 
     public boolean isBuildInProgress()
     {
-        return buildResult.getState() == ContinuumProjectState.BUILDING;
+        int buildState = buildResult.getState();
+        return buildState == ContinuumProjectState.BUILDING || buildState == ContinuumProjectState.SENT_TO_AGENT;
     }
 
     public boolean isBuildSuccessful()

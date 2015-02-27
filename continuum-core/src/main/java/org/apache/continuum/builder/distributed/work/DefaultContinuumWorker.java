@@ -125,32 +125,55 @@ public class DefaultContinuumWorker
                             if ( !distributedBuildManager.isProjectCurrentlyBuilding( currentRun.getProjectId(),
                                                                                       currentRun.getBuildDefinitionId() ) )
                             {
-                                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition(
-                                    currentRun.getBuildDefinitionId() );
-
                                 // no longer building, but state was not updated
-                                BuildResult buildResult = new BuildResult();
-                                buildResult.setBuildDefinition( buildDefinition );
-                                buildResult.setBuildUrl( currentRun.getBuildAgentUrl() );
-                                buildResult.setTrigger( currentRun.getTrigger() );
-                                buildResult.setUsername( currentRun.getTriggeredBy() );
-                                buildResult.setState( ContinuumProjectState.ERROR );
-                                buildResult.setSuccess( false );
-                                buildResult.setStartTime( new Date().getTime() );
-                                buildResult.setEndTime( new Date().getTime() );
-                                buildResult.setExitCode( 1 );
-                                buildResult.setError(
-                                    "Problem encountered while returning build result to master by build agent '" +
-                                        currentRun.getBuildAgentUrl() + "'. \n" +
-                                        "Make sure build agent is configured properly. Check the logs for more information." );
-                                buildResultDao.addBuildResult( project, buildResult );
+
+                                String msg = String.format(
+                                    "Problem encountered while returning build result to master by build agent '%s'.%n"
+                                        + "Make sure build agent is configured properly. Check the logs for more information.",
+                                    currentRun.getBuildAgentUrl() );
+
+                                BuildResult buildResult;
+                                int existingResultId = currentRun.getBuildResultId();
+                                if ( existingResultId > 0 )
+                                {
+                                    // Attempt to update existing result
+                                    BuildResult existingResult =
+                                        buildResultDao.getBuildResult( currentRun.getBuildResultId() );
+                                    existingResult.setState( ContinuumProjectState.ERROR );
+                                    existingResult.setSuccess( false );
+                                    existingResult.setEndTime( new Date().getTime() );
+                                    existingResult.setExitCode( 1 );
+                                    existingResult.setError( msg );
+                                    buildResultDao.updateBuildResult( existingResult );
+                                    buildResult = existingResult;
+                                }
+                                else
+                                {
+                                    // No existing build result, we have to add it
+                                    BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition(
+                                        currentRun.getBuildDefinitionId() );
+                                    buildResult = new BuildResult();
+                                    buildResult.setBuildDefinition( buildDefinition );
+                                    buildResult.setBuildUrl( currentRun.getBuildAgentUrl() );
+                                    buildResult.setTrigger( currentRun.getTrigger() );
+                                    buildResult.setUsername( currentRun.getTriggeredBy() );
+                                    buildResult.setState( ContinuumProjectState.ERROR );
+                                    buildResult.setSuccess( false );
+                                    buildResult.setStartTime( new Date().getTime() );
+                                    buildResult.setEndTime( new Date().getTime() );
+                                    buildResult.setExitCode( 1 );
+                                    buildResult.setError( msg );
+                                    buildResultDao.addBuildResult( project, buildResult );
+                                }
 
                                 project.setState( ContinuumProjectState.ERROR );
                                 project.setLatestBuildId( buildResult.getId() );
                                 projectDao.updateProject( project );
 
                                 log.debug(
-                                    "projectId={}, buildDefinitionId={} is not building anymore. Problem encountered while return build result by build agent {}. Stopping the build.",
+                                    "projectId={}, buildDefinitionId={} is not building anymore. "
+                                        + "Problem encountered while return build result by build agent {}. "
+                                        + "Stopping the build.",
                                     new Object[] { currentRun.getProjectId(), currentRun.getBuildDefinitionId(),
                                         currentRun.getBuildAgentUrl() } );
 

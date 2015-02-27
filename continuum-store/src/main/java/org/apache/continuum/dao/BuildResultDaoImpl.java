@@ -26,16 +26,16 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -214,6 +214,50 @@ public class BuildResultDaoImpl
             Object[] params = new Object[2];
             params[0] = projectId;
             params[1] = buildDefinitionId;
+
+            List<BuildResult> result = (List<BuildResult>) query.executeWithArray( params );
+
+            result = (List<BuildResult>) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            if ( result != null && !result.isEmpty() )
+            {
+                return result.get( 0 );
+            }
+        }
+        finally
+        {
+            rollback( tx );
+        }
+        return null;
+    }
+
+    public BuildResult getPreviousBuildResultForBuildDefinition( int projectId, int buildDefinitionId,
+                                                                 int buildResultId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, int buildDefinitionId, int buildResultId" );
+
+            query.setFilter( "this.project.id == projectId && this.buildDefinition.id == buildDefinitionId "
+                                 + "&& this.id < buildResultId" );
+            query.setOrdering( "id descending" );
+
+            Object[] params = new Object[3];
+            params[0] = projectId;
+            params[1] = buildDefinitionId;
+            params[2] = buildResultId;
 
             List<BuildResult> result = (List<BuildResult>) query.executeWithArray( params );
 

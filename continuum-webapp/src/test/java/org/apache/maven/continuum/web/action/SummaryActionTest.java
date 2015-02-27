@@ -67,34 +67,6 @@ public class SummaryActionTest
     }
 
     @Test
-    public void testLatestBuildIdWhenCurrentlyBuildingInDistributedBuild()
-        throws Exception
-    {
-        Collection<Project> projectsInGroup = createProjectsInGroup( 1, ContinuumProjectState.BUILDING );
-        Map<Integer, BuildResult> buildResults = createBuildResults( 0, ContinuumProjectState.OK );
-        Map<Integer, BuildResult> buildResultsInSuccess = new HashMap<Integer, BuildResult>();
-
-        when( continuum.getProjectsInGroup( anyInt() ) ).thenReturn( projectsInGroup );
-        when( continuum.getLatestBuildResults( anyInt() ) ).thenReturn( buildResults );
-        when( continuum.getBuildResultsInSuccess( anyInt() ) ).thenReturn( buildResultsInSuccess );
-        when( buildsManager.isInAnyBuildQueue( anyInt() ) ).thenReturn( false );
-        when( buildsManager.isInPrepareBuildQueue( anyInt() ) ).thenReturn( false );
-        when( buildsManager.isInAnyCheckoutQueue( anyInt() ) ).thenReturn( false );
-        when( continuum.getConfiguration() ).thenReturn( configurationService );
-        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
-
-        action.execute(); // expected result?
-
-        List<ProjectSummary> projects = action.getProjects();
-
-        assertNotNull( projects );
-        assertEquals( 1, projects.size() );
-
-        ProjectSummary summary = projects.get( 0 );
-        assertEquals( 0, summary.getLatestBuildId() );
-    }
-
-    @Test
     public void testLatestBuildIdInDistributedBuild()
         throws Exception
     {

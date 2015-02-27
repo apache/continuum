@@ -54,6 +54,13 @@ public class DistributedBuildUtil
     {
         BuildResult buildResult = new BuildResult();
 
+        updateBuildResultFromMap( buildResult, context );
+
+        return buildResult;
+    }
+
+    public void updateBuildResultFromMap( BuildResult buildResult, Map<String, Object> context )
+    {
         buildResult.setStartTime( ContinuumBuildConstant.getStartTime( context ) );
         buildResult.setEndTime( ContinuumBuildConstant.getEndTime( context ) );
         buildResult.setError( ContinuumBuildConstant.getBuildError( context ) );
@@ -62,8 +69,6 @@ public class DistributedBuildUtil
         buildResult.setTrigger( ContinuumBuildConstant.getTrigger( context ) );
         buildResult.setUsername( ContinuumBuildConstant.getUsername( context ) );
         buildResult.setBuildUrl( ContinuumBuildConstant.getBuildAgentUrl( context ) );
-
-        return buildResult;
     }
 
     public List<ProjectDependency> getModifiedDependencies( BuildResult oldBuildResult, Map<String, Object> context )

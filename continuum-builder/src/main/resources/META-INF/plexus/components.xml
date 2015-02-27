@@ -56,6 +56,9 @@
         <requirement>
           <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.continuum.builder.distributed.manager.DistributedBuildManager</role>
+        </requirement>
       </requirements>
     </component>
 

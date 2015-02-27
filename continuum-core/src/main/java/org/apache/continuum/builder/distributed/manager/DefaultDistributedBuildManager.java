@@ -854,11 +854,22 @@ public class DefaultDistributedBuildManager
                 }
                 else
                 {
+                    // no longer building, but state was not updated
+
                     Project project = projectDao.getProject( projectId );
                     BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
 
-                    // no longer building, but state was not updated
-                    BuildResult buildResult = new BuildResult();
+                    BuildResult buildResult;
+                    boolean existingResult = run.getBuildResultId() > 0;
+                    if ( existingResult )
+                    {
+                        buildResult = buildResultDao.getBuildResult( run.getBuildResultId() );
+                    }
+                    else
+                    {
+                        buildResult = new BuildResult();
+                    }
+
                     buildResult.setBuildDefinition( buildDefinition );
                     buildResult.setBuildUrl( run.getBuildAgentUrl() );
                     buildResult.setTrigger( run.getTrigger() );
@@ -872,7 +883,15 @@ public class DefaultDistributedBuildManager
                         "Problem encountered while returning build result to master by build agent '" + buildAgentUrl +
                             "'. \n" +
                             "Make sure build agent is configured properly. Check the logs for more information." );
-                    buildResultDao.addBuildResult( project, buildResult );
+
+                    if ( existingResult )
+                    {
+                        buildResultDao.updateBuildResult( buildResult );
+                    }
+                    else
+                    {
+                        buildResultDao.addBuildResult( project, buildResult );
+                    }
 
                     project.setState( ContinuumProjectState.ERROR );
                     project.setLatestBuildId( buildResult.getId() );
@@ -1994,62 +2013,66 @@ public class DefaultDistributedBuildManager
         return currentRuns;
     }
 
-    public void removeCurrentRun( int projectId, int buildDefinitionId )
+    public ProjectRunSummary getCurrentRun( int projectId, int buildDefinitionId )
+        throws ContinuumException
     {
         synchronized ( currentRuns )
         {
-            boolean found = false;
-            ProjectRunSummary runToDelete = null;
-
             for ( ProjectRunSummary currentRun : currentRuns )
             {
                 if ( currentRun.getProjectId() == projectId && currentRun.getBuildDefinitionId() == buildDefinitionId )
                 {
-                    found = true;
-                    runToDelete = currentRun;
-                    break;
+                    return currentRun;
                 }
             }
+        }
+        throw new ContinuumException(
+            String.format( "no run summary for projectId=%s, buildDefinitionId=%s", projectId, buildDefinitionId ) );
+    }
 
-            if ( found )
+    public void removeCurrentRun( int projectId, int buildDefinitionId )
+    {
+        synchronized ( currentRuns )
+        {
+            try
             {
+                ProjectRunSummary runToDelete = getCurrentRun( projectId, buildDefinitionId );
                 currentRuns.remove( runToDelete );
+            }
+            catch ( ContinuumException e )
+            {
+                log.warn( "failed to remove run summary: {}", e.getMessage() );
             }
         }
     }
 
     private void createProjectRunSummaries( PrepareBuildProjectsTask task, String buildAgentUrl )
     {
-        synchronized ( currentRuns )
+        int projectGroupId = task.getProjectGroupId();
+        int projectScmRootId = task.getProjectScmRootId();
+        Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+
+        for ( Map.Entry<Integer, Integer> projectEntry : map.entrySet() )
         {
-            int projectGroupId = task.getProjectGroupId();
-            int projectScmRootId = task.getProjectScmRootId();
-            Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+            int projectId = projectEntry.getKey();
+            int buildDefinitionId = projectEntry.getValue();
 
-            for ( int projectId : map.keySet() )
+            synchronized ( currentRuns )
             {
-                int buildDefinitionId = map.get( projectId );
-
-                ProjectRunSummary runToDelete = null;
-
-                // check if there is an existing current run with that project id and build definition id
-                for ( ProjectRunSummary currentRun : currentRuns )
+                // Remove stale run summary if one exists
+                try
                 {
-                    if ( currentRun.getProjectId() == projectId &&
-                        currentRun.getBuildDefinitionId() == buildDefinitionId )
-                    {
-                        runToDelete = currentRun;
-                        break;
-                    }
+                    ProjectRunSummary existingRun = getCurrentRun( projectId, buildDefinitionId );
+                    log.info( "removing stale run summary for projectId={}, buildDefinitionId={}",
+                              projectId, buildDefinitionId );
+                    currentRuns.remove( existingRun );
+                }
+                catch ( ContinuumException e )
+                {
+                    log.debug( "stale run summary not removed: {}", e.getMessage() );
                 }
 
-                if ( runToDelete != null )
-                {
-                    // previous run already finished, but was not removed from the list
-                    // removed it
-                    currentRuns.remove( runToDelete );
-                }
-
+                // Create run summary for project build
                 ProjectRunSummary run = new ProjectRunSummary();
                 run.setProjectGroupId( projectGroupId );
                 run.setProjectScmRootId( projectScmRootId );
@@ -2058,6 +2081,7 @@ public class DefaultDistributedBuildManager
                 run.setTriggeredBy( task.getBuildTrigger().getTriggeredBy() );
                 run.setTrigger( task.getBuildTrigger().getTrigger() );
                 run.setBuildAgentUrl( buildAgentUrl );
+
                 currentRuns.add( run );
             }
         }

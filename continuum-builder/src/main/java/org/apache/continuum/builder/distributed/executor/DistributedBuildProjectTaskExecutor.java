@@ -19,6 +19,7 @@ package org.apache.continuum.builder.distributed.executor;
  * under the License.
  */
 
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -82,6 +83,9 @@ public class DistributedBuildProjectTaskExecutor
     @Requirement
     private ConfigurationService configurationService;
 
+    @Requirement
+    private DistributedBuildManager distributedBuildManager;
+
     public void setBuildAgentUrl( String buildAgentUrl )
     {
         this.buildAgentUrl = buildAgentUrl;
@@ -108,6 +112,7 @@ public class DistributedBuildProjectTaskExecutor
                 prepareBuildTask.getScmRootAddress(), prepareBuildTask.getProjectScmRootId() );
 
             startTime = System.currentTimeMillis();
+            createInitialResults( prepareBuildTask );
             client.buildProjects( buildContext );
             endTime = System.currentTimeMillis();
         }
@@ -120,7 +125,7 @@ public class DistributedBuildProjectTaskExecutor
         {
             log.error( "Error occurred while building task", e );
             endTime = System.currentTimeMillis();
-            createResult( prepareBuildTask, ContinuumUtils.throwableToString( e ) );
+            recordErrorResults( prepareBuildTask, ContinuumUtils.throwableToString( e ) );
         }
     }
 
@@ -272,7 +277,42 @@ public class DistributedBuildProjectTaskExecutor
         }
     }
 
-    private void createResult( PrepareBuildProjectsTask task, String error )
+    private void createInitialResults( PrepareBuildProjectsTask task )
+        throws ContinuumStoreException
+    {
+        Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+        for ( Map.Entry<Integer, Integer> build : map.entrySet() )
+        {
+            int projectId = build.getKey();
+            int buildDefinitionId = build.getValue();
+
+            Project project = projectDao.getProject( projectId );
+            BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+
+            BuildResult buildResult = new BuildResult();
+            buildResult.setError( "Sent build request to build agent " + buildAgentUrl );
+            buildResult.setBuildUrl( buildAgentUrl );
+            buildResult.setState( ContinuumProjectState.SENT_TO_AGENT );
+            buildResult.setBuildDefinition( buildDef );
+            buildResult.setTrigger( task.getBuildTrigger().getTrigger() );
+            buildResult.setUsername( task.getBuildTrigger().getTriggeredBy() );
+            buildResult.setStartTime( startTime );
+            buildResultDao.addBuildResult( project, buildResult );
+
+            try
+            {
+                // Install the build result for the current run, so we can safely update
+                distributedBuildManager.getCurrentRun( projectId, buildDefinitionId ).setBuildResultId(
+                    buildResult.getId() );
+            }
+            catch ( ContinuumException e )
+            {
+                log.warn( "failed to install initial build result: {} ", e.getMessage() );
+            }
+        }
+    }
+
+    private void recordErrorResults( PrepareBuildProjectsTask task, String error )
         throws TaskExecutionException
     {
         try
@@ -289,17 +329,38 @@ public class DistributedBuildProjectTaskExecutor
             else
             {
                 Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
-                for ( Integer projectId : map.keySet() )
+                for ( Map.Entry<Integer, Integer> build : map.entrySet() )
                 {
-                    int buildDefinitionId = map.get( projectId );
-                    Project project = projectDao.getProject( projectId );
-                    BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-                    BuildResult latestBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId,
-                                                                                                           buildDefinitionId );
-                    if ( latestBuildResult == null ||
-                        ( latestBuildResult.getStartTime() >= startTime && latestBuildResult.getEndTime() > 0 &&
-                            latestBuildResult.getEndTime() < endTime ) || latestBuildResult.getStartTime() < startTime )
+                    int projectId = build.getKey();
+                    int buildDefinitionId = build.getValue();
+
+                    boolean updatedExisting = false;
+                    try
                     {
+                        // Attempt to update the existing build result
+                        int existingResultId =
+                            distributedBuildManager.getCurrentRun( projectId, buildDefinitionId ).getBuildResultId();
+                        if ( existingResultId > 0 )
+                        {
+                            BuildResult result = buildResultDao.getBuildResult( existingResultId );
+                            result.setError( error );
+                            result.setState( ContinuumProjectState.ERROR );
+                            result.setEndTime( endTime );
+                            buildResultDao.updateBuildResult( result );
+                            updatedExisting = true;
+                        }
+                    }
+                    catch ( ContinuumException e )
+                    {
+                        log.debug( "failed to update existing result: {}", e.getMessage() );
+                    }
+
+                    if ( !updatedExisting )
+                    {
+                        // No build result existed (likely failed before sending build to agent), add one
+                        Project project = projectDao.getProject( projectId );
+                        BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+
                         BuildResult buildResult = new BuildResult();
                         buildResult.setBuildDefinition( buildDef );
                         buildResult.setError( error );
@@ -308,11 +369,9 @@ public class DistributedBuildProjectTaskExecutor
                         buildResult.setUsername( task.getBuildTrigger().getTriggeredBy() );
                         buildResult.setStartTime( startTime );
                         buildResult.setEndTime( endTime );
-
                         buildResultDao.addBuildResult( project, buildResult );
                     }
                 }
-
             }
         }
         catch ( ContinuumStoreException e )

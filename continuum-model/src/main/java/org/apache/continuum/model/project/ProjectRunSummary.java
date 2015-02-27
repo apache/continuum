@@ -35,6 +35,8 @@ public class ProjectRunSummary
 
     private String triggeredBy;
 
+    private int buildResultId;
+
     public int getProjectId()
     {
         return projectId;
@@ -104,4 +106,15 @@ public class ProjectRunSummary
     {
         this.triggeredBy = triggeredBy;
     }
+
+    public int getBuildResultId()
+    {
+        return buildResultId;
+    }
+
+    public void setBuildResultId( int buildResultId )
+    {
+        this.buildResultId = buildResultId;
+    }
+
 }

@@ -157,13 +157,6 @@ public class SummaryAction
                     model.setLastBuildDateTime( latestBuild.getEndTime() );
                     model.setLastBuildDuration( latestBuild.getDurationTime() );
                 }
-
-                ConfigurationService configuration = getContinuum().getConfiguration();
-
-                if ( configuration.isDistributedBuildEnabled() && project.getState() == ContinuumProjectState.BUILDING )
-                {
-                    model.setLatestBuildId( 0 );
-                }
             }
 
             summary.add( model );

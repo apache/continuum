@@ -49,6 +49,8 @@ public interface BuildResultDao
 
     BuildResult getLatestBuildResultForBuildDefinition( int projectId, int buildDefinitionId );
 
+    BuildResult getPreviousBuildResultForBuildDefinition( int projectId, int buildDefinitionId, int buildResultId );
+
     BuildResult getLatestBuildResultInSuccess( int projectId );
 
     BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )

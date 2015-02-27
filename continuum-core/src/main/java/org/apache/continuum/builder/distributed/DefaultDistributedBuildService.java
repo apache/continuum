@@ -52,7 +52,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -104,16 +103,9 @@ public class DefaultDistributedBuildService
             int projectId = ContinuumBuildConstant.getProjectId( context );
             int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( context );
 
-            log.info( "update build result of project '" + projectId + "'" );
-
             Project project = projectDao.getProjectWithAllDetails( projectId );
-            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-
-            BuildResult oldBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId,
-                                                                                                buildDefinitionId );
 
             int buildNumber;
-
             if ( ContinuumBuildConstant.getBuildState( context ) == ContinuumProjectState.OK )
             {
                 buildNumber = project.getBuildNumber() + 1;
@@ -123,12 +115,40 @@ public class DefaultDistributedBuildService
                 buildNumber = project.getBuildNumber();
             }
 
-            // ----------------------------------------------------------------------
-            // Make the buildResult
-            // ----------------------------------------------------------------------
+            BuildResult buildResult, oldBuildResult;
 
-            BuildResult buildResult = distributedBuildUtil.convertMapToBuildResult( context );
+            log.info( "update build result of project '{}'", projectId );
 
+            int existingResultId = 0;
+            try
+            {
+                existingResultId =
+                    distributedBuildManager.getCurrentRun( projectId, buildDefinitionId ).getBuildResultId();
+            }
+            catch ( ContinuumException e )
+            {
+                log.warn( "failed to find result for remote build {}", e.getMessage() );
+            }
+
+            boolean existingResult = existingResultId > 0;
+
+            if ( existingResult )
+            {
+                buildResult = buildResultDao.getBuildResult( existingResultId );
+                distributedBuildUtil.updateBuildResultFromMap( buildResult, context );
+                oldBuildResult =
+                    buildResultDao.getPreviousBuildResultForBuildDefinition( projectId, buildDefinitionId,
+                                                                             existingResultId );
+            }
+            else
+            {
+                buildResult = distributedBuildUtil.convertMapToBuildResult( context );
+                oldBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+            }
+
+            // Set the complete contents of the build result...
+
+            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
             buildResult.setBuildDefinition( buildDefinition );
             buildResult.setBuildNumber( buildNumber );
             buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( oldBuildResult,
@@ -145,9 +165,15 @@ public class DefaultDistributedBuildService
                 buildResult.setLastChangedDate( oldBuildResult.getLastChangedDate() );
             }
 
-            buildResultDao.addBuildResult( project, buildResult );
-
-            buildResult = buildResultDao.getBuildResult( buildResult.getId() );
+            if ( existingResult )
+            {
+                buildResultDao.updateBuildResult( buildResult );
+            }
+            else
+            {
+                buildResultDao.addBuildResult( project, buildResult );
+                buildResult = buildResultDao.getBuildResult( buildResult.getId() );
+            }
 
             project.setOldState( project.getState() );
             project.setState( ContinuumBuildConstant.getBuildState( context ) );
@@ -163,9 +189,10 @@ public class DefaultDistributedBuildService
                 fileWriter = new FileWriter( buildOutputFile );
                 String output = ContinuumBuildConstant.getBuildOutput( context );
                 fileWriter.write( output == null ? "" : output );
-            } finally
+            }
+            finally
             {
-                IOUtils.closeQuietly(fileWriter);
+                IOUtils.closeQuietly( fileWriter );
             }
 
             notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
@@ -228,6 +255,11 @@ public class DefaultDistributedBuildService
             project.setOldState( project.getState() );
             project.setState( ContinuumProjectState.BUILDING );
             projectDao.updateProject( project );
+
+            // Should actually use current run summary, only the tuple (project, buildDef) is unique
+            BuildResult result = buildResultDao.getBuildResult( project.getLatestBuildId() );
+            result.setState( ContinuumProjectState.BUILDING );
+            buildResultDao.updateBuildResult( result );
         }
         catch ( ContinuumStoreException e )
         {

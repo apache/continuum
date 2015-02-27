@@ -22,16 +22,17 @@ package org.apache.maven.continuum.web.action;
 import com.opensymphony.xwork2.Action;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.model.project.ProjectRunSummary;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.web.action.AbstractActionTest;
 import org.apache.maven.continuum.Continuum;
-
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.action.stub.BuildResultActionStub;
-import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,6 +57,8 @@ public class BuildResultActionTest
 
     private Project project;
 
+    private BuildResult buildResult;
+
     @Before
     public void setUp()
         throws Exception
@@ -74,14 +77,15 @@ public class BuildResultActionTest
         when( continuum.getProject( anyInt() ) ).thenReturn( project );
         when( continuum.getConfiguration() ).thenReturn( configurationService );
         when( continuum.getBuildsManager() ).thenReturn( buildsManager );
+
+        buildResult = createBuildResult( project );
+        when( continuum.getBuildResult( anyInt() ) ).thenReturn( buildResult );
     }
 
     @Test
     public void testViewPreviousBuild()
         throws Exception
     {
-        BuildResult buildResult = createBuildResult( project );
-        when( continuum.getBuildResult( anyInt() ) ).thenReturn( buildResult );
         when( configurationService.isDistributedBuildEnabled() ).thenReturn( false );
         when( configurationService.getTestReportsDirectory( anyInt(), anyInt() ) ).thenReturn(
             new File( "testReportsDir" ) );
@@ -97,10 +101,40 @@ public class BuildResultActionTest
     public void testViewCurrentBuildInDistributedBuildAgent()
         throws Exception
     {
+        int expectedResultId = 777;
+        action.setBuildId( expectedResultId );
+        buildResult.setState( org.apache.maven.continuum.project.ContinuumProjectState.BUILDING );
+        ProjectRunSummary runSummary = new ProjectRunSummary();
+        runSummary.setBuildResultId( expectedResultId );
         when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
         when( distributedBuildManager.getBuildResult( anyInt() ) ).thenReturn( new HashMap<String, Object>() );
+        when( distributedBuildManager.getCurrentRun( anyInt(), anyInt() ) ).thenReturn( runSummary );
 
         assertEquals( Action.SUCCESS, action.execute() );
+
+        verify( distributedBuildManager ).getBuildResult( anyInt() );
+    }
+
+    @Test
+    public void testViewBuildSentToDistributedBuildAgent()
+        throws Exception
+    {
+        int expectedResultId = 777;
+        action.setBuildId( expectedResultId );
+        buildResult.setState( org.apache.maven.continuum.project.ContinuumProjectState.SENT_TO_AGENT );
+        ProjectRunSummary runSummary = new ProjectRunSummary();
+        runSummary.setBuildResultId( expectedResultId );
+        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
+        when( configurationService.getTestReportsDirectory( anyInt(), anyInt() ) ).thenReturn(
+            new File( "non-existent" ) );
+        when( configurationService.getBuildOutputFile( anyInt(), anyInt() ) ).thenReturn(
+            new File( "nonExistentBuildOutputFile" ) );
+        when( distributedBuildManager.getBuildResult( anyInt() ) ).thenReturn( new HashMap<String, Object>() );
+        when( distributedBuildManager.getCurrentRun( anyInt(), anyInt() ) ).thenReturn( runSummary );
+
+        assertEquals( Action.SUCCESS, action.execute() );
+
+        verify( distributedBuildManager, never() ).getBuildResult( anyInt() );
     }
 
     @Test
@@ -143,6 +177,7 @@ public class BuildResultActionTest
         BuildResult buildResult = new BuildResult();
         buildResult.setId( 1 );
         buildResult.setProject( project );
+        buildResult.setBuildDefinition( new BuildDefinition() );
 
         return buildResult;
     }
