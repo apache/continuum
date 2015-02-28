@@ -18,6 +18,7 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -37,6 +38,27 @@
               <td><s:text name="about.buildnumber"/></td>
             </tr>
           </table>
+          <redback:ifAuthorized permission="continuum-manage-configuration">
+          <table border="1" cellspacing="2" cellpadding="3" width="100%">
+            <h3><s:text name="about.platform.title"/></h3>
+            <tr class="b">
+              <th><label class="label"><s:text name='about.java.version'/>:</label></th>
+              <td><s:property value="systemProperties['java.version']"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='about.java.vendor'/>:</label></th>
+              <td><s:property value="systemProperties['java.vendor']"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='about.os.name'/>:</label></th>
+              <td><s:property value="systemProperties['os.name']"/></td>
+            </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='about.os.arch'/>:</label></th>
+              <td><s:property value="systemProperties['os.arch']"/></td>
+            </tr>
+          </table>
+          </redback:ifAuthorized>
         </div>
       </div>
     </body>

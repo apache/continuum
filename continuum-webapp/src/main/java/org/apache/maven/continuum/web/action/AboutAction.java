@@ -21,6 +21,8 @@ package org.apache.maven.continuum.web.action;
 
 import org.codehaus.plexus.component.annotations.Component;
 
+import java.util.Properties;
+
 /**
  * AboutAction:
  *
@@ -30,9 +32,18 @@ import org.codehaus.plexus.component.annotations.Component;
 public class AboutAction
     extends ContinuumActionSupport
 {
+    private Properties systemProperties;
+
     public String execute()
         throws Exception
     {
+        systemProperties = System.getProperties();
+
         return SUCCESS;
+    }
+
+    public Properties getSystemProperties()
+    {
+        return systemProperties;
     }
 }
