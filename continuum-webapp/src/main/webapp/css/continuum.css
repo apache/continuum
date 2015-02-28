@@ -53,3 +53,16 @@ td.tdLabel {
   white-space: -o-pre-wrap;
   word-wrap: break-word;
 }
+
+table.releasePhases {
+  width: 100%;
+}
+table.releasePhases th {
+  text-align: left;
+}
+table.releasePhases td:nth-child(1) {
+  text-align: center;
+}
+table.releasePhases td:nth-child(2) {
+  width: 100%;
+}

@@ -25,10 +25,12 @@
         <title><s:text name="releasePerformFromScm.page.title"/></title>
     </head>
     <body>
-      <h2><s:text name="releasePerformFromScm.section.title"/></h2>
-      <s:form action="releasePerformFromScm" method="post" validate="true">
-        <h3><s:text name="releasePerformFromScm.parameters.section.title"/></h3>
+      <h3><s:text name="releasePerformFromScm.section.title"/></h3>
+      <s:form action="releasePerformFromScm" validate="true">
+        <tr><td>
         <s:hidden name="projectId"/>
+        </td></tr>
+        <tr><td>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <s:textfield label="%{getText('releasePerformFromScm.scmUrl.label')}" name="scmUrl" size="100"/>
@@ -46,6 +48,7 @@
           </table>
         </div>
         <s:submit value="%{getText('submit')}"/>
+        </tr></td>
       </s:form>
     </body>
   </s:i18n>

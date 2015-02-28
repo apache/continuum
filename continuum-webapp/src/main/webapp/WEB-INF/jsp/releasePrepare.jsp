@@ -25,11 +25,17 @@
       <title><s:text name="releaseProject.page.title"/></title>
     </head>
     <body>
-      <h2><s:text name="releasePrepare.section.title"/></h2>
-      <s:form action="releasePrepare" method="post">
-        <h3><s:text name="releasePrepare.parameters"/></h3>
-        <input type="hidden" name="projectId" value="<s:property value="projectId"/>"/>
-        <input type="hidden" name="autoVersionSubmodules" value="<s:property value="autoVersionSubmodules"/>"/>
+
+      <h3><s:text name="releasePrepare.section.title"/></h3>
+
+      <s:form action="releasePrepare">
+
+        <tr><td>
+          <s:hidden name="projectId" />
+          <s:hidden name="autoVersionSubmodules" />
+        </td></tr>
+
+        <tr><td>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <s:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername" size="100"/>
@@ -50,8 +56,10 @@
             </c:if>
           </table>
         </div>
+        </td></tr>
 
         <s:iterator value="projects">
+          <tr><td>
           <h3><s:property value="name"/></h3>
           <input type="hidden" name="projectKeys" value="<s:property value="key"/>">
           <div class="axial">
@@ -72,6 +80,7 @@
               </tr>
              </table>
            </div>
+          </td></tr>
         </s:iterator>
 
         <s:submit value="%{getText('submit')}"/>

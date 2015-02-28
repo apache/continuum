@@ -24,10 +24,9 @@
         <title><s:text name="releaseProject.page.title"/></title>
     </head>
     <body>
-      <h2><s:text name="releaseInProgress.section.title"/></h2>
-      <h3><s:property value="name"/></h3>
+      <h3><s:text name="releaseInProgress.section.title"/> - <s:property value="projectName"/></h3>
       <div class="axial">
-        <table width="100%">
+        <table class="releasePhases">
           <tr>
             <th><s:text name="releaseInProgress.status"/></th>
             <th width="100%"><s:text name="releaseInProgress.phase"/></th>

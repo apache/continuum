@@ -89,7 +89,6 @@ public abstract class AbstractReleaseTest
     {
         assertPage( "Continuum - Release Project" );
         assertTextPresent( "Prepare Project for Release" );
-        assertTextPresent( "Release Prepare Parameters" );
         assertTextPresent( "SCM Username" );
         assertTextPresent( "SCM Password" );
         assertTextPresent( "SCM Tag" );
@@ -107,7 +106,6 @@ public abstract class AbstractReleaseTest
     {
         assertPage( "Continuum - Perform Project Release" );
         assertTextPresent( "Perform Project Release" );
-        assertTextPresent( "Release Perform Parameters" );
         assertTextPresent( "SCM Connection URL" );
         assertTextPresent( "SCM Username" );
         assertTextPresent( "SCM Password" );
