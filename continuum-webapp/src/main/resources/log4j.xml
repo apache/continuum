@@ -50,6 +50,18 @@
     </layout>
   </appender>
 
+  <appender name="webViewable" class="org.apache.continuum.web.util.FixedBufferAppender">
+      <param name="linesBuffered" value="800" />
+      <layout class="org.apache.log4j.PatternLayout">
+          <param name="ConversionPattern" value="%d %-5p [%t] %c{1} - %m%n"/>
+      </layout>
+  </appender>
+
+  <appender name="async" class="org.apache.log4j.AsyncAppender">
+    <param name="Blocking" value="true" />
+    <appender-ref ref="webViewable" />
+  </appender>
+
   <logger name="org.apache.continuum.web.util.AuditLog" additivity="false">
     <level value="info"/>
     <appender-ref ref="continuumAuditlog"/>
@@ -164,6 +176,7 @@
   <root>
     <priority value="info"/>
     <appender-ref ref="rolling"/>
+    <appender-ref ref="async"/>
   </root>
 
 </log4j:configuration>

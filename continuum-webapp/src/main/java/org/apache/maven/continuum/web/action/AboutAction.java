@@ -19,6 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.web.util.FixedBufferAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.AppenderAttachable;
+import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.codehaus.plexus.component.annotations.Component;
 
 import java.util.Properties;
@@ -34,16 +38,50 @@ public class AboutAction
 {
     private Properties systemProperties;
 
+    private String logOutput;
+
     public String execute()
         throws Exception
     {
-        systemProperties = System.getProperties();
-
+        try
+        {
+            checkManageConfigurationAuthorization();
+            systemProperties = System.getProperties();
+            logOutput = constructOutput();
+        }
+        catch ( Exception e )
+        {
+            // Ignore, just hide additional system information
+        }
         return SUCCESS;
+    }
+
+    private String constructOutput()
+    {
+        StringBuilder buf = new StringBuilder();
+        Object async = Logger.getRootLogger().getAppender( "async" );
+        if ( async != null && async instanceof AppenderAttachable )
+        {
+            Object webViewable = ( (AppenderAttachable) async ).getAppender( "webViewable" );
+            if ( webViewable != null && webViewable instanceof FixedBufferAppender )
+            {
+                FixedBufferAppender appender = (FixedBufferAppender) webViewable;
+                for ( String line : appender.getLines() )
+                {
+                    buf.append( line );
+                }
+            }
+        }
+        return buf.toString();
     }
 
     public Properties getSystemProperties()
     {
         return systemProperties;
+    }
+
+    public String getLogOutput()
+    {
+        return logOutput;
     }
 }

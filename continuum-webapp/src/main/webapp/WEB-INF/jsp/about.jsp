@@ -22,7 +22,60 @@
 <html>
   <s:i18n name="localization.Continuum">
     <head>
-        <title><s:text name="about.page.title"/></title>
+      <title><s:text name="about.page.title"/></title>
+      <script type="text/javascript">
+        <s:url id="outputAsyncUrl" action="aboutJSON" />
+        jQuery(document).ready(function($) {
+
+          var outputUrl = '<s:property value="#outputAsyncUrl" escapeHtml="false" />';
+          var refreshPending = false;
+
+          var $ta = $('#logOutput');
+
+          function scrollToBottom($textArea) {
+            var newHeight = $textArea.attr('scrollHeight');
+            $textArea.attr('scrollTop', newHeight);
+          }
+          scrollToBottom($ta);  // Scroll text area to bottom on intial page load
+
+          function isScrolledToBottom($textArea) {
+            return $textArea.attr('scrollHeight') - $textArea.attr('clientHeight') == $textArea.attr('scrollTop')
+          }
+
+          function showLoading(loading) {
+            if (loading) {
+              $ta.addClass('cmd-loading');
+
+            } else {
+              $ta.removeClass('cmd-loading');
+            }
+          }
+
+          setInterval(function() {
+            if (!refreshPending) {
+              refreshPending = true;
+              var autoScroll = isScrolledToBottom($ta);
+              showLoading(true);
+              $.ajax({
+                url: outputUrl,
+                contentType: 'application/json;charset=utf-8',
+                success: function(data) {
+                  parsed = JSON.parse(data);
+                  var output = parsed.logOutput;
+                  $ta.html(output);
+                  if (autoScroll) {
+                    scrollToBottom($ta);
+                  }
+                },
+                complete: function() {
+                  refreshPending = false;
+                  showLoading(false);
+                }
+              });
+            }
+          }, 1000);
+        });
+      </script>
     </head>
     <body>
       <div id="axial" class="h3">
@@ -58,6 +111,8 @@
               <td><s:property value="systemProperties['os.arch']"/></td>
             </tr>
           </table>
+          <h3><s:text name="about.applog.title"/></h3>
+          <div id="logOutput" class="cmd-output cmd-window pre-wrap"><s:property value="logOutput" /></div>
           </redback:ifAuthorized>
         </div>
       </div>

@@ -222,6 +222,14 @@
       <result name="success">/WEB-INF/jsp/about.jsp</result>
     </action>
 
+    <action name="aboutJSON" class="about">
+      <result type="json">
+        <param name="includeProperties">
+          ^logOutput$
+        </param>
+      </result>
+    </action>
+
     <action name="companyInfo" class="companyInfo">
       <result name="success">/WEB-INF/jsp/components/companyLogo.jsp</result>
       <interceptor-ref name="basicStack"/>
