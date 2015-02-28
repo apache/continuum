@@ -119,21 +119,24 @@ public class CreateProjectsFromMetadataAction
             else
             {
                 url = new URL( curl );
+                String host = url.getHost();
                 String username = null;
                 String password = null;
 
                 try
                 {
+                    getLogger().info( "consulting settings for credentials to " + host );
                     Settings settings = getSettings();
-
-                    getLogger().info( "checking for settings auth setup" );
-                    if ( settings != null && settings.getServer( url.getHost() ) != null )
+                    Server server = settings.getServer( url.getHost() );
+                    if ( server != null )
                     {
-                        getLogger().info( "found setting based auth setup, using" );
-                        Server server = settings.getServer( url.getHost() );
-
                         username = server.getUsername();
                         password = server.getPassword();
+                        getLogger().info( "credentials found in settings, will fetch metadata as " + username );
+                    }
+                    else
+                    {
+                        getLogger().info( "credentials not found for server " + host );
                     }
                 }
                 catch ( SettingsConfigurationException se )
