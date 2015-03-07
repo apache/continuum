@@ -35,7 +35,9 @@ public class FileTypes
 
     public static final List<String> DEFAULT_EXCLUSIONS = Arrays.asList( "**/maven-metadata.xml",
                                                                          "**/maven-metadata-*.xml", "**/*.sha1",
-                                                                         "**/*.asc", "**/*.md5", "**/*.pgp" );
+                                                                         "**/*.asc", "**/*.md5", "**/*.pgp",
+                                                                         "**/*.lastUpdated", "**/*.repositories",
+                                                                         "**/resolver-status.properties" );
 
     public List<String> getIgnoredFileTypePatterns()
     {

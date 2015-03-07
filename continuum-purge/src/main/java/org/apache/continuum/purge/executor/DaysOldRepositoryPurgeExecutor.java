@@ -27,6 +27,8 @@ import org.apache.maven.archiva.model.ArtifactReference;
 import org.apache.maven.archiva.model.VersionedReference;
 import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.ParseException;
@@ -48,6 +50,8 @@ public class DaysOldRepositoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
+    private static final Logger log = LoggerFactory.getLogger( DaysOldRepositoryPurgeExecutor.class );
+
     private final int daysOlder;
 
     private final int retentionCount;
@@ -68,18 +72,21 @@ public class DaysOldRepositoryPurgeExecutor
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
+        File artifactFile = new File( repository.getRepoRoot(), path );
+
+        if ( !artifactFile.exists() )
+        {
+            return;
+        }
+
+        ArtifactReference artifact;
+        List<String> versions;
+        Calendar olderThanThisDate;
         try
         {
-            File artifactFile = new File( repository.getRepoRoot(), path );
+            artifact = repository.toArtifactReference( path );
 
-            if ( !artifactFile.exists() )
-            {
-                return;
-            }
-
-            ArtifactReference artifact = repository.toArtifactReference( path );
-
-            Calendar olderThanThisDate = Calendar.getInstance( DateUtils.UTC_TIME_ZONE );
+            olderThanThisDate = Calendar.getInstance( DateUtils.UTC_TIME_ZONE );
             olderThanThisDate.add( Calendar.DATE, -daysOlder );
 
             // respect retention count
@@ -88,27 +95,35 @@ public class DaysOldRepositoryPurgeExecutor
             reference.setArtifactId( artifact.getArtifactId() );
             reference.setVersion( artifact.getVersion() );
 
-            List<String> versions = new ArrayList<String>( repository.getVersions( reference ) );
+            versions = new ArrayList<String>( repository.getVersions( reference ) );
+        }
+        catch ( Exception le )
+        {
+            log.warn( "ignoring {}, could not identify artifact versions: {}", path, le.getMessage() );
+            return;
+        }
 
-            Collections.sort( versions, VersionComparator.getInstance() );
+        Collections.sort( versions, VersionComparator.getInstance() );
 
-            if ( retentionCount > versions.size() )
-            {
-                // Done. nothing to do here. skip it.
-                return;
-            }
+        if ( retentionCount > versions.size() )
+        {
+            // Done. nothing to do here. skip it.
+            return;
+        }
 
-            int countToPurge = versions.size() - retentionCount;
+        int countToPurge = versions.size() - retentionCount;
 
-            for ( String version : versions )
+        for ( String version : versions )
+        {
+            try
             {
                 if ( countToPurge <= 0 )
                 {
                     break;
                 }
 
-                ArtifactReference newArtifactReference = repository.toArtifactReference(
-                    artifactFile.getAbsolutePath() );
+                ArtifactReference newArtifactReference =
+                    repository.toArtifactReference( artifactFile.getAbsolutePath() );
                 newArtifactReference.setVersion( version );
 
                 File newArtifactFile = repository.toFile( newArtifactReference );
@@ -139,14 +154,11 @@ public class DaysOldRepositoryPurgeExecutor
                     }
                 }
             }
-        }
-        catch ( LayoutException e )
-        {
-            throw new ContinuumPurgeExecutorException( e.getMessage() + ": " + path, e );
-        }
-        catch ( ContentNotFoundException e )
-        {
-            throw new ContinuumPurgeExecutorException( e.getMessage(), e );
+            catch ( LayoutException le )
+            {
+                log.warn( "ignoring version {} of '{}': {}",
+                          new Object[] { version, artifactFile, le.getMessage() } );
+            }
         }
     }
 
