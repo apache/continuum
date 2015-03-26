@@ -76,11 +76,12 @@
               </c:choose>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
-                <s:token/>
+                <s:set var="tname" value="'remRepoToken' + #attr['repository'].id" scope="page"/>
+                <s:token name="%{#attr['tname']}"/>
                 <s:url id="removeRepositoryUrl" action="removeRepository">
                   <s:param name="repository.id"><c:out value="${pageScope.repository.id}"/></s:param>
-                  <s:param name="struts.token.name">token</s:param>
-                  <s:param name="token"><s:property value="token"/></s:param>
+                  <s:param name="struts.token.name" value="#attr['tname']"/>
+                  <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                 </s:url>
                 <c:choose>
                   <c:when test="${repository.name == 'DEFAULT'}">
