@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -46,7 +45,7 @@
             <ec:column property="active" title="schedules.table.active"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editScheduleUrl" action="schedule">
-                  <s:param name="id"><c:out value="${pageScope.schedule.id}"/></s:param>
+                  <s:param name="id" value="#attr['schedule'].id"/>
                 </s:url>
                 <s:a href="%{editScheduleUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
@@ -54,8 +53,8 @@
                 <s:set var="tname" value="'remScheduleToken' + #attr['schedule'].id" scope="page"/>
                 <s:token name="%{#attr['tname']}"/>
                 <s:url id="removeScheduleUrl" action="removeSchedule">
-                  <s:param name="id"><c:out value="${pageScope.schedule.id}"/></s:param>
-                  <s:param name="name"><c:out value="${pageScope.schedule.name}"/></s:param>
+                  <s:param name="id" value="#attr['schedule'].id"/>
+                  <s:param name="name" value="#attr['schedule'].name"/>
                   <s:param name="struts.token.name" value="#attr['tname']" />
                   <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                 </s:url>
