@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -50,13 +49,13 @@
             <ec:column property="buildAgentUrl" title="purgeConfigs.table.buildAgent"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editPurgeConfigUrl" action="editDistributedPurgeConfig">
-                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
+                  <s:param name="purgeConfigId" value="#attr['dirPurge'].id"/>
                 </s:url>
                 <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
                 <s:url id="purgeUrl" action="doDistributedPurge">
-                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
+                  <s:param name="purgeConfigId" value="#attr['dirPurge'].id"/>
                 </s:url>
                 <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
             </ec:column>
@@ -64,8 +63,8 @@
                 <s:set var="tname" value="'remPurgeToken' + #attr['dirPurge'].id"/>
                 <s:token name="%{#attr['tname']}"/>
                 <s:url id="removePurgeConfigUrl" action="removeDistributedPurgeConfig">
-                  <s:param name="purgeConfigId"><c:out value="${pageScope.dirPurge.id}"/></s:param>
-                  <s:param name="description"><c:out value="${pageScope.dirPurge.description}"/></s:param>
+                  <s:param name="purgeConfigId" value="#attr['dirPurge'].id"/>
+                  <s:param name="description" value="#attr['dirPurge'].description"/>
                   <s:param name="struts.token.name" value="#attr['tname']" />
                   <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                 </s:url>
