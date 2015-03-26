@@ -210,11 +210,12 @@
         <c:choose>
           <c:when
               test="${projectIdle}">
-            <s:token/>
-            <s:url id="deleteProjectUrl" value="deleteProject_default.action" namespace="/">
+            <s:set var="tname" value="'delProjectToken' + #attr['project'].id" scope="page"/>
+            <s:token name="%{#attr['tname']}"/>
+            <s:url id="deleteProjectUrl" action="deleteProject_default" namespace="/">
               <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-              <s:param name="struts.token.name">token</s:param>
-              <s:param name="token"><s:property value="token"/></s:param>
+              <s:param name="struts.token.name" value="#attr['tname']"/>
+              <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
             </s:url>
             <s:a href="%{deleteProjectUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
