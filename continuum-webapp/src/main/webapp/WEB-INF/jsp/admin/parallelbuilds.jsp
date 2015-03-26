@@ -47,12 +47,13 @@
            
         <ec:column property="id" title="&nbsp;" width="1%">
           <c:if test="${buildQueue.id != 1}">
-            <s:token/>
+            <s:set var="tname" value="'delToken' + #attr['buildQueue'].id" scope="page"/>
+            <s:token name="%{#attr['tname']}"/>
             <s:url id="deleteBuildQueueUrl" action="deleteBuildQueue">
               <s:param name="buildQueue.id"><c:out value="${pageScope.buildQueue.id}"/></s:param>
               <s:param name="buildQueue.name"><c:out value="${pageScope.buildQueue.name}"/></s:param>
-              <s:param name="struts.token.name">token</s:param>
-              <s:param name="token"><s:property value="token"/></s:param>
+              <s:param name="struts.token.name" value="#attr['tname']"/>
+              <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
             </s:url>          
             <s:a href="%{deleteBuildQueueUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
