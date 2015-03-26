@@ -38,6 +38,7 @@
         </div>
         <div class="functnbar3">
           <s:form action="deleteBuildDefinitionAsTemplate" method="post">
+            <s:token/>
             <s:hidden name="buildDefinition.id"/>
             <s:hidden name="confirmed" value="true"/>
             <s:submit value="%{getText('delete')}" theme="simple"/>

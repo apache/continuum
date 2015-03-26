@@ -943,6 +943,9 @@
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionAsTemplate.jsp</result>
       <result name="error">/WEB-INF/jsp/error/buildDefinitionError.jsp</result>
+      <interceptor-ref name="configuredContinuumStack">
+        <param name="tokenSession.includeMethods">deleteBuildDefinition</param>
+      </interceptor-ref>
     </action>
 
     <action name="displayQueues" class="queues" method="display">

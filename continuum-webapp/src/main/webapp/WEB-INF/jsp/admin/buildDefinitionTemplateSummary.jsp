@@ -56,12 +56,13 @@
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
             </c:when>
             <c:otherwise>
-              <s:token/>
+              <s:set var="tname" value="'delTemplateToken' + #attr['template'].id" scope="page"/>
+              <s:token name="%{#attr['tname']}"/>
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" namespace="/">
                 <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
                 <s:param name="buildDefinitionTemplate.name"><c:out value="${pageScope.template.name}"/></s:param>
-                <s:param name="struts.token.name">token</s:param>
-                <s:param name="token"><s:property value="token"/></s:param>
+                <s:param name="struts.token.name" value="#attr['tname']" />
+                <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </c:otherwise>
@@ -108,9 +109,13 @@
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
             </c:when>
             <c:otherwise>
+              <s:set var="tname" value="'delBuildDefToken' + #attr['buildDefinitionSummary'].id" scope="page"/>
+              <s:token name="%{#attr['tname']}" />
               <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" namespace="/">
                 <s:param name="buildDefinition.id"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                 <s:param name="buildDefinition.description"><c:out value="${pageScope.buildDefinitionSummary.description}"/></s:param>
+                <s:param name="struts.token.name" value="#attr['tname']" />
+                <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </c:otherwise>
