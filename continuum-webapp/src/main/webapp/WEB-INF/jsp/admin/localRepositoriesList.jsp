@@ -19,7 +19,6 @@
   
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -28,13 +27,13 @@
     <body>
       <div id="h3">
         <h3><s:text name="repositories.section.title"/></h3>
-        <c:if test="${!empty actionErrors}">
+        <s:if test="hasActionErrors()">
           <div class="errormessage">
             <s:iterator value="actionErrors">
               <p><s:property/></p>
             </s:iterator>
           </div>
-        </c:if>
+        </s:if>
         <s:set name="repositories" value="repositories" scope="request"/>
         <ec:table items="repositories"
                   var="repository"
@@ -50,47 +49,41 @@
             <ec:column property="layout" title="repositories.table.layout"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editRepositoryUrl" action="editRepository">
-                  <s:param name="repository.id"><c:out value="${pageScope.repository.id}"/></s:param>
+                  <s:param name="repository.id" value="#attr['repository'].id"/>
                 </s:url>
-                <c:choose>
-                  <c:when test="${repository.name == 'DEFAULT'}">
+                <s:if test="#attr['repository'].name == 'DEFAULT'">
                     <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
-                  </c:when>
-                  <c:otherwise>
+                </s:if>
+                <s:else>
                     <s:a href="%{editRepositoryUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
-                  </c:otherwise>
-                </c:choose>
+                </s:else>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
-              <c:set var="repositoryName" value="${pageScope.repository.name}" scope="request"/>
-              <c:choose>
-                <c:when test="${defaultPurgeMap[repositoryName]}">
+              <s:set var="repositoryName" value="#attr['repository'].name" scope="request"/>
+              <s:if test="defaultPurgeMap[#attr['repositoryName']]">
                   <s:url id="purgeRepositoryUrl" action="purgeRepository">
-                    <s:param name="repository.id"><c:out value="${pageScope.repository.id}"/></s:param>
+                    <s:param name="repository.id" value="#attr['repository'].id"/>
                   </s:url>
                   <s:a href="%{purgeRepositoryUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
-                </c:when>
-                <c:otherwise>
+              </s:if>
+              <s:else>
                   <s:a href="%{purgeRepositoryUrl}"><img src="<s:url value='/images/disabled_purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
-                </c:otherwise>
-              </c:choose>
+              </s:else>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
                 <s:set var="tname" value="'remRepoToken' + #attr['repository'].id" scope="page"/>
                 <s:token name="%{#attr['tname']}"/>
                 <s:url id="removeRepositoryUrl" action="removeRepository">
-                  <s:param name="repository.id"><c:out value="${pageScope.repository.id}"/></s:param>
+                  <s:param name="repository.id" value="#attr['repository'].id"/>
                   <s:param name="struts.token.name" value="#attr['tname']"/>
                   <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                 </s:url>
-                <c:choose>
-                  <c:when test="${repository.name == 'DEFAULT'}">
+                <s:if test="#attr['repository'].name == 'DEFAULT'">
                     <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
-                  </c:when>
-                  <c:otherwise>
+                </s:if>
+                <s:else>
                     <s:a href="%{removeRepositoryUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
-                  </c:otherwise>
-                </c:choose>
+                </s:else>
             </ec:column>
           </ec:row>
         </ec:table>
