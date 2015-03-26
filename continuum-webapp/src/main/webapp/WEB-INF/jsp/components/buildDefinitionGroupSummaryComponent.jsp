@@ -98,13 +98,14 @@
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
           </c:when>
           <c:otherwise>
-            <s:token/>
+            <s:set var="tname" value="'remGroupDefToken' + #attr['buildDefinitionSummary'].id" scope="page"/>
+            <s:token name="%{#attr['tname']}"/>
             <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
               <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
               <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
               <s:param name="confirmed" value="false"/>
-              <s:param name="struts.token.name">token</s:param>
-              <s:param name="token"><s:property value="token"/></s:param> 
+              <s:param name="struts.token.name" value="#attr['tname']"/>
+              <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
             </s:url>
             <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
@@ -205,13 +206,14 @@
       </ec:column>
       <ec:column property="removeAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <s:token/>
+          <s:set var="tname" value="'remDefToken' + #attr['buildDefinitionSummary'].id" scope="page" />
+          <s:token name="%{#attr['tname']}"/>
           <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             <s:param name="confirmed" value="false"/>
-            <s:param name="struts.token.name">token</s:param>
-            <s:param name="token"><s:property value="token"/></s:param>
+            <s:param name="struts.token.name" value="#attr['tname']"/>
+            <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
           </s:url>
           <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
