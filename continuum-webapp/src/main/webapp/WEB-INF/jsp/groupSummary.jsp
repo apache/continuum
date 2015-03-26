@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -33,26 +32,24 @@
   <div id="h3">
 
     <s:if test="infoMessage != null">
-       <p><c:out value="${infoMessage}"/></p>
+       <p><s:property value="infoMessage"/></p>
     </s:if>
     <s:else>
        <h3><s:text name="groups.page.section.title"/></h3>
     </s:else>
   
-    <c:if test="${!empty actionErrors}">
+    <s:if test="hasActionErrors()">
       <div class="errormessage">
         <s:iterator value="actionErrors">
           <p><s:property/></p>
         </s:iterator>
       </div>
-    </c:if>
+    </s:if>
 
-    <c:if test="${empty groups}">
+    <s:if test="groups == null || groups.size() == 0">
       <s:text name="groups.page.list.empty"/>
-    </c:if>
-
-    <c:if test="${not empty groups}">
-
+    </s:if>
+    <s:else>
     <ec:table items="groups"
               var="group"
               autoIncludeParameters="false"
@@ -64,17 +61,15 @@
       <ec:row highlightRow="true">
         <ec:column property="name" title="groups.table.name" width="40%" style="white-space: nowrap">
           <s:url id="projectGroupSummaryUrl" action="projectGroupSummary" namespace="/">
-            <s:param name="projectGroupId">
-              <c:out value="${group.id}" />
-            </s:param>
+            <s:param name="projectGroupId" value="#attr['group'].id" />
           </s:url>
-          <a href="${projectGroupSummaryUrl}"><c:out value="${group.name}"/></a>
+          <a href="${projectGroupSummaryUrl}"><s:property value="#attr['group'].name"/></a>
         </ec:column>
         <ec:column property="groupId" title="groups.table.groupId" width="40%"/>
         <ec:column property="buildGroupNowAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="buildProjectGroupUrl" action="buildProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
+              <s:param name="projectGroupId" value="#attr['group'].id" />
               <s:param name="buildDefinitionId" value="-1"/>
               <s:param name="fromSummaryPage" value="true"/>
             </s:url>
@@ -89,7 +84,7 @@
         <ec:column property="releaseProjectGroupAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="releaseProjectGroupUrl" action="releaseProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
+              <s:param name="projectGroupId" value="#attr['group'].id"/>
             </s:url>
             <s:a href="%{releaseProjectGroupUrl}">
               <img src="<s:url value='/images/releaseproject.gif'/>" alt="<s:text name="projectGroup.releaseNow"/>" title="<s:text name="projectGroup.releaseNow"/>" border="0">
@@ -122,7 +117,7 @@
         <ec:column property="numProjects" title="groups.table.totalProjects" format="0" width="1%" style="text-align: right" headerStyle="text-align: center" calc="total"/>
       </ec:row>
     </ec:table>
-    </c:if>
+    </s:else>
     <redback:ifAuthorized permission="continuum-add-group">
       <div class="functnbar3">
         <table>
