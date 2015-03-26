@@ -51,12 +51,13 @@
                 <s:a href="%{editScheduleUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="editActions" title="&nbsp;" width="1%">
-                <s:token/>
+                <s:set var="tname" value="'remScheduleToken' + #attr['schedule'].id" scope="page"/>
+                <s:token name="%{#attr['tname']}"/>
                 <s:url id="removeScheduleUrl" action="removeSchedule">
                   <s:param name="id"><c:out value="${pageScope.schedule.id}"/></s:param>
                   <s:param name="name"><c:out value="${pageScope.schedule.name}"/></s:param>
-                  <s:param name="struts.token.name">token</s:param>
-                  <s:param name="token"><s:property value="token"/></s:param>
+                  <s:param name="struts.token.name" value="#attr['tname']" />
+                  <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                 </s:url>
                 <s:a href="%{removeScheduleUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </ec:column>
