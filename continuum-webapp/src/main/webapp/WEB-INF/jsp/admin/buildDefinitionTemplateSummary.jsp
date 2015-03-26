@@ -17,7 +17,6 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 
@@ -45,28 +44,26 @@
           <ec:column property="name" title="buildDefinition.template.name"/>
           <ec:column property="editAction" title="&nbsp;" width="1%">
             <s:url id="editUrl" action="editBuildDefinitionTemplate" namespace="/">
-              <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
+              <s:param name="buildDefinitionTemplate.id" value="#attr['template'].id"/>
             </s:url>
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
           </ec:column>  
           <!-- TODO list attached buildDefs -->
           <ec:column property="deleteAction" title="&nbsp;" width="1%">
-            <c:choose>
-            <c:when test="${template.continuumDefault == true}">
+            <s:if test="#attr['template'].continuumDefault">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
-            </c:when>
-            <c:otherwise>
+            </s:if>
+            <s:else>
               <s:set var="tname" value="'delTemplateToken' + #attr['template'].id" scope="page"/>
               <s:token name="%{#attr['tname']}"/>
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" namespace="/">
-                <s:param name="buildDefinitionTemplate.id"><c:out value="${pageScope.template.id}"/></s:param>
-                <s:param name="buildDefinitionTemplate.name"><c:out value="${pageScope.template.name}"/></s:param>
+                <s:param name="buildDefinitionTemplate.id" value="#attr['template'].id"/>
+                <s:param name="buildDefinitionTemplate.name" value="#attr['template'].name"/>
                 <s:param name="struts.token.name" value="#attr['tname']" />
                 <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
-            </c:otherwise>
-            </c:choose>
+            </s:else>
           </ec:column>                     
         </ec:row>  
       </ec:table> 
@@ -99,27 +96,25 @@
           <ec:column property="type" title="buildDefinition.template.buildDefinition.type"/>
           <ec:column property="editAction" title="&nbsp;" width="1%">
             <s:url id="editUrl" action="editBuildDefinitionAsTemplate" namespace="/">
-              <s:param name="buildDefinition.id"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+              <s:param name="buildDefinition.id" value="#attr['buildDefinitionSummary'].id"/>
             </s:url>
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
           </ec:column>          
           <ec:column property="deleteAction" title="&nbsp;" width="1%">
-            <c:choose>
-            <c:when test="${buildDefinitionSummary.isDefault == true}">
+            <s:if test="#attr['buildDefinitionSummary'].isDefault">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
-            </c:when>
-            <c:otherwise>
+            </s:if>
+            <s:else>
               <s:set var="tname" value="'delBuildDefToken' + #attr['buildDefinitionSummary'].id" scope="page"/>
               <s:token name="%{#attr['tname']}" />
               <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" namespace="/">
-                <s:param name="buildDefinition.id"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
-                <s:param name="buildDefinition.description"><c:out value="${pageScope.buildDefinitionSummary.description}"/></s:param>
+                <s:param name="buildDefinition.id" value="#attr['buildDefinitionSummary'].id"/>
+                <s:param name="buildDefinition.description" value="#attr['buildDefinitionSummary'].description"/>
                 <s:param name="struts.token.name" value="#attr['tname']" />
                 <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
-            </c:otherwise>
-            </c:choose>
+            </s:else>
           </ec:column>
         </ec:row>  
       </ec:table>      
