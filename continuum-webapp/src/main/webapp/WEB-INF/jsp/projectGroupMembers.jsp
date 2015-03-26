@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -40,7 +39,7 @@
       -->
     </div>
 
-    <h3><s:text name="projectGroup.members.section.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
+    <h3><s:text name="projectGroup.members.section.title"><s:param value="#attr['projectGroup'].name"/></s:text></h3>
 
     <ec:table items="groupProjects"
               var="project"
@@ -53,28 +52,25 @@
       <ec:row highlightRow="true">
         <ec:column property="name" title="summary.projectTable.name" width="48%">
           <s:url id="projectViewUrl" action="projectView">
-            <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
+            <s:param name="projectId" value="#attr['project'].id"/>
           </s:url>
-          <s:a href="%{projectViewUrl}"><c:out value="${pageScope.project.name}"/></s:a>
+          <s:a href="%{projectViewUrl}"><s:property value="#attr['project'].name"/></s:a>
         </ec:column>
         <ec:column property="editAction" title="&nbsp;" width="1%" sortable="false">
           <center>
             <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
-            <c:choose>
-              <c:when
-                  test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
+              <s:if test="#attr['project'].state in {10, 2, 3, 4}">
                 <s:url id="editProjectUrl" action="projectEdit">
-                  <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
-                  <s:param name="projectName"><c:out value="${project.name}"/></s:param>
+                  <s:param name="projectId" value="#attr['project'].id"/>
+                  <s:param name="projectName" value="#attr['project'].name"/>
                 </s:url>
                 <s:a href="%{editProjectUrl}">
                   <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
                 </s:a>
-              </c:when>
-              <c:otherwise>
+              </s:if>
+              <s:else>
                 <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
-              </c:otherwise>
-            </c:choose>
+              </s:else>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
                 <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
@@ -84,27 +80,24 @@
         <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
           <center>
             <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
-            <c:choose>
               <%-- NEW, OK, FAILED, ERROR, CHECKEDOUT --%>
-              <c:when
-                  test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
+              <s:if test="#attr['project'].state in {1, 10, 2, 3, 4}">
                 <s:set var="tname" value="'remProjectToken' + #attr['project'].id" scope="page" />
                 <s:token name="%{#attr['tname']}"/>
                 <s:url id="removeProjectUrl" action="deleteProject_default.action">
-                  <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
-                  <s:param name="projectName"><c:out value="${pageScope.project.name}"/></s:param>
+                  <s:param name="projectId" value="#attr['project'].id"/>
+                  <s:param name="projectName" value="#attr['project'].name"/>
                   <s:param name="struts.token.name" value="#attr['tname']"/>
                   <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                 </s:url>
                 <s:a href="%{removeProjectUrl}">
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
                 </s:a>
-              </c:when>
+              </s:if>
               <%-- BUILDING, CHECKING_OUT, UPDATING, WARNING, UPDATED, CANCELLED --%>
-              <c:otherwise>
+              <s:else>
                 <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
-              </c:otherwise>
-            </c:choose>
+              </s:else>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
                 <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
