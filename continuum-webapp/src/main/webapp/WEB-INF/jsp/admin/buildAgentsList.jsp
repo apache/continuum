@@ -62,11 +62,12 @@
               </s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
-              <s:token/>
+              <s:set var="tname" value="'remBuildAgentToken' + #attr['buildAgent'].url.hashCode()" scope="page"/>
+              <s:token name="%{#attr['tname']}"/>
               <s:url id="removeBuildAgentUrl" action="deleteBuildAgent">
                 <s:param name="buildAgent.url"><c:out value="${pageScope.buildAgent.url}"/></s:param>
-                <s:param name="struts.token.name">token</s:param>
-                <s:param name="token"><s:property value="token"/></s:param>
+                <s:param name="struts.token.name" value="#attr['tname']" />
+                <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
               </s:url>
               <s:a href="%{removeBuildAgentUrl}">
                 <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"/>
@@ -111,11 +112,12 @@
               </s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
-              <s:token/>
+              <s:set var='tname' value="'remGroupToken' + #attr['buildAgentGroup'].name" scope="page"/>
+              <s:token name="%{#attr['tname']}"/>
               <s:url id="removeBuildAgentGroupUrl" action="deleteBuildAgentGroup">
                 <s:param name="buildAgentGroup.name"><c:out value="${pageScope.buildAgentGroup.name}"/></s:param>
-                <s:param name="struts.token.name">token</s:param>
-                <s:param name="token"><s:property value="token"/></s:param>
+                <s:param name="struts.token.name" value="#attr['tname']"/>
+                <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
               </s:url>
               <s:a href="%{removeBuildAgentGroupUrl}">
                 <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"/>
