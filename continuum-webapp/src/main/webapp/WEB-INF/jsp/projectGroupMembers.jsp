@@ -88,12 +88,13 @@
               <%-- NEW, OK, FAILED, ERROR, CHECKEDOUT --%>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
-                <s:token/>  
+                <s:set var="tname" value="'remProjectToken' + #attr['project'].id" scope="page" />
+                <s:token name="%{#attr['tname']}"/>
                 <s:url id="removeProjectUrl" action="deleteProject_default.action">
                   <s:param name="projectId"><c:out value="${pageScope.project.id}"/></s:param>
                   <s:param name="projectName"><c:out value="${pageScope.project.name}"/></s:param>
-                  <s:param name="struts.token.name">token</s:param>
-                  <s:param name="token"><s:property value="token"/></s:param>
+                  <s:param name="struts.token.name" value="#attr['tname']"/>
+                  <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                 </s:url>
                 <s:a href="%{removeProjectUrl}">
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
