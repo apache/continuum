@@ -101,9 +101,12 @@
         </ec:column>
         <ec:column property="removeProjectGroupAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-remove-group" resource="${group.name}">
-            <s:token/>
+            <s:set var="tname" value="'remProjectToken' + #attr['group'].id" scope="page"/>
+            <s:token name="%{#attr['tname']}"/>
             <s:url id="removeProjectGroupUrl" action="confirmRemoveProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId"><c:out value="${group.id}"/></s:param>
+              <s:param name="projectGroupId" value="#attr['group'].id"/>
+              <s:param name="struts.token.name" value="#attr['tname']"/>
+              <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
             </s:url>
             <s:a href="%{removeProjectGroupUrl}">
               <img src="<s:url value='/images/delete.gif'/>" alt="<s:text name="projectGroup.deleteGroup"/>" title="<s:text name="projectGroup.deleteGroup"/>" border="0">
