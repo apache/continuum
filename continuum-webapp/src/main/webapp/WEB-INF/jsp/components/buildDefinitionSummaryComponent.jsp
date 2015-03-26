@@ -100,13 +100,14 @@
          <c:choose>
           <c:when test="${pageScope.buildDefinitionSummary.from=='PROJECT'}">
             <redback:ifAuthorized permission="continuum-remove-project-build-definition" resource="${projectGroupName}">
-              <s:token/>
+              <s:set var="tname" value="'delToken' + #attr['buildDefinitionSummary'].id" scope="page" />
+              <s:token name="%{#attr['tname']}"/>
               <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
                 <s:param name="projectId"><c:out value="${projectId}"/></s:param>
                 <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                 <s:param name="confirmed" value="false"/>
-                <s:param name="struts.token.name">token</s:param>
-                <s:param name="token"><s:property value="token"/></s:param>
+                <s:param name="struts.token.name" value="#attr['tname']"/>
+                <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
               </s:url>
               <s:set id="removeId">remove-build-definition-${pageScope.buildDefinitionSummary.id}</s:set>
               <s:a href="%{removeUrl}" id="%{removeId}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
@@ -122,14 +123,15 @@
                   <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
                 </c:when>
                 <c:otherwise>
-                  <s:token/>
+                  <s:set var="tname" value="'delGroupToken' + #attr['buildDefinitionSummary'].id" scope="page"/>
+                  <s:token name="%{#attr['tname']}"/>
                   <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
                     <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
                     <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
                     <s:param name="groupBuildDefinition">true</s:param>
                     <s:param name="confirmed" value="false"/>
-                    <s:param name="struts.token.name">token</s:param>
-                    <s:param name="token"><s:property value="token"/></s:param>
+                    <s:param name="struts.token.name" value="#attr['tname']"/>
+                    <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
                   </s:url>
                   <s:a href="%{removeUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
                 </c:otherwise>
