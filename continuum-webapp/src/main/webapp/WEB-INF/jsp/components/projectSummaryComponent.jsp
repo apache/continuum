@@ -19,21 +19,20 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <s:i18n name="localization.Continuum">
-<c:if test="${not empty projects}">
+<s:if test="projects.size() > 0">
 
   <h3><s:text name="projectGroup.buildsStatut.title"/></h3>
   <table>
     <tr>
       <td>
-          <s:text name="projectGroup.buildsStatut.success"/> : <c:out value="${groupSummary.numSuccesses}"/>
+          <s:text name="projectGroup.buildsStatut.success"/> : <s:property value="groupSummary.numSuccesses"/>
           &nbsp;<img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" alt="<s:text name="projectGroup.buildsStatut.success"/>">
-          &nbsp; <s:text name="projectGroup.buildsStatut.errors"/> : <c:out value="${groupSummary.numErrors}"/>
+          &nbsp; <s:text name="projectGroup.buildsStatut.errors"/> : <s:property value="groupSummary.numErrors"/>
           &nbsp;<img src="<s:url value='/images/icon_error_sml.gif' includeParams="none"/>" alt="<s:text name="projectGroup.buildsStatut.errors"/>">
-          &nbsp; <s:text name="projectGroup.buildsStatut.failures"/> : <c:out value="${groupSummary.numFailures}"/>
+          &nbsp; <s:text name="projectGroup.buildsStatut.failures"/> : <s:property value="groupSummary.numFailures"/>
           &nbsp;<img src="<s:url value='/images/icon_warning_sml.gif' includeParams="none"/>" alt="<s:text name="projectGroup.buildsStatut.failures"/>">
       <td>      
     </tr>
@@ -56,10 +55,10 @@
     <ec:row highlightRow="true">
 
       <%-- needed to access project in included pages --%>
-      <c:set var="project" value="${pageScope.project}" scope="request"/>
+      <s:set var="project" value="#attr['project']" scope="request"/>
 
       <%-- placed here for reusability --%>
-      <c:set var="projectIdle" value="${!project.inBuildingQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 7 or project.state gt 8 ) }" scope="request"/>
+      <s:set var="projectIdle" value="!#attr['project'].inBuildingQueue && (#attr['project'].state in {1, 2, 3, 4, 7} || #attr['project'].state > 8)" scope="request"/>
 
       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <ec:column alias="selectedProjects" title=" " style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
@@ -69,99 +68,87 @@
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
       <ec:column property="name" title="summary.projectTable.name" width="50%">
         <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-          <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+          <s:param name="projectId" value="#attr['project'].id"/>
         </s:url>
-        <s:a href="%{projectUrl}"><c:out value="${pageScope.project.name}"/></s:a>
+        <s:a href="%{projectUrl}"><s:property value="#attr['project'].name"/></s:a>
       </ec:column>
       <ec:column property="version" title="summary.projectTable.version" width="12%"/>
       <ec:column property="buildNumber" title="summary.projectTable.build" width="2%" style="text-align: center">
-        <c:choose>
-          <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId gt 0}">
+          <s:if test="#attr['project'].buildNumber > 0 && #attr['project'].buildInSuccessId > 0">
             <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
               <s:url id="buildResult" action="buildResult">
-                <s:param name="projecGroupId"><c:out value="${project.projectGroupId}"/></s:param>
-                <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-                <s:param name="projectName"><c:out value="${project.name}"/></s:param>
-                <s:param name="buildId"><c:out value="${project.buildInSuccessId}"/></s:param>
+                <s:param name="projecGroupId" value="#attr['project'].projectGroupId"/>
+                <s:param name="projectId" value="#attr['project'].id"/>
+                <s:param name="projectName" value="#attr['project'].name"/>
+                <s:param name="buildId" value="#attr['project'].buildInSuccessId"/>
               </s:url>
-              <s:a href="%{buildResult}"><c:out value="${project.buildNumber}"/></s:a>
+              <s:a href="%{buildResult}"><s:property value="#attr['project'].buildNumber"/></s:a>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-              <c:out value="${project.buildNumber}"/>
+              <s:property value="#attr['project'].buildNumber"/>
             </redback:elseAuthorized>
-          </c:when>
-          <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId lt 0}">
-              <c:out value="${project.buildNumber}"/>
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:elseif test="#attr['project'].buildNumber > 0 && #attr['project'].buildInSuccessId < 0}">
+              <s:property value="#attr['project'].buildNumber"/>
+          </s:elseif>
+          <s:else>
             &nbsp;
-          </c:otherwise>
-        </c:choose>
+          </s:else>
       </ec:column>
       <ec:column property="lastBuildDateTime" title="summary.projectTable.lastBuildDateTime" width="30%" cell="date"/>
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
-        <c:choose>
-          <c:when test="${project.inBuildingQueue}">
+          <s:if test="#attr['project'].inBuildingQueue">
             <img src="<s:url value='/images/inqueue.gif' includeParams="none"/>" alt="<s:text name="legend.queuedBuild"/>" title="<s:text name="legend.queuedBuild"/>" border="0">
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:else>
             <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-              <c:choose>
-                <c:when test="${projectIdle}">
+                <s:if test="#attr['projectIdle']">
                   <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
-                    <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-                    <s:param name="projectGroupId"><c:out value="${project.projectGroupId}"/></s:param>
+                    <s:param name="projectId" value="#attr['project'].id"/>
+                    <s:param name="projectGroupId" value="#attr['project'].projectGroupId"/>
                     <s:param name="fromGroupPage" value="true"/>
                   </s:url>
                   <s:a href="%{buildProjectUrl}">
                     <img src="<s:url value='/images/buildnow.gif' includeParams="none"/>" alt="<s:text name="legend.buildNow"/>" title="<s:text name="legend.buildNow"/>" border="0">
                   </s:a>
-                </c:when>
-                <c:otherwise>
+                </s:if>
+                <s:else>
                   <s:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
-                    <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-                    <s:param name="projectGroupId"><c:out value="${project.projectGroupId}"/></s:param>
+                    <s:param name="projectId" value="#attr['project'].id"/>
+                    <s:param name="projectGroupId" value="#attr['project'].projectGroupId"/>
                   </s:url>
-                  <c:choose>
-                    <c:when test="${project.state != 8}">
+                    <s:if test="#attr['project'].state != 8">
                       <s:a href="%{cancelBuildProjectUrl}">
                         <img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name="legend.cancelBuild"/>" title="<s:text name="legend.cancelBuild"/>" border="0">
                       </s:a>
-                    </c:when>
-                    <c:otherwise>
+                    </s:if>
+                    <s:else>
                       <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.cancelBuild"/>" title="<s:text name="legend.cancelBuild"/>" border="0">
-                    </c:otherwise>
-                  </c:choose>
-                </c:otherwise>
-              </c:choose>
+                    </s:else>
+                </s:else>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-              <c:choose>
-                <c:when test="${projectIdle}">
+                <s:if test="#attr['projectIdle']">
                   <img src="<s:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.buildNow"/>" title="<s:text name="legend.buildNow"/>" border="0">
-                </c:when>
-                <c:otherwise>
+                </s:if>
+                <s:else>
                   <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.cancelBuild"/>" title="<s:text name="legend.cancelBuild"/>" border="0">
-                </c:otherwise>
-              </c:choose>
+                </s:else>
             </redback:elseAuthorized>
-          </c:otherwise>
-        </c:choose>
+          </s:else>
       </ec:column>
       <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
-        <c:choose>
-          <c:when test="${pageScope.project.latestBuildId > 0}">
+          <s:if test="#attr['project'].latestBuildId > 0">
             <s:url id="buildResultsUrl" action="buildResults" namespace="/">
-              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-              <s:param name="projectName"><c:out value="${project.name}"/></s:param>
+              <s:param name="projectId" value="#attr['project'].id"/>
+              <s:param name="projectName" value="#attr['project'].name"/>
             </s:url>
             <s:a href="%{buildResultsUrl}"><img src="<s:url value='/images/buildhistory.gif' includeParams="none"/>" alt="<s:text name="legend.buildHistory"/>" title="<s:text name="legend.buildHistory"/>" border="0"></s:a>
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:else>
             <img src="<s:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.buildHistory"/>" title="<s:text name="legend.buildHistory"/>" border="0">
-          </c:otherwise>
-        </c:choose>
+          </s:else>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           <img src="<s:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.buildHistory"/>" title="<s:text name="legend.buildHistory"/>" border="0">
@@ -169,17 +156,15 @@
       </ec:column>
       <ec:column property="workingCopyAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
-        <c:choose>
-          <c:when test="${pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4 || pageScope.project.state == 6}">
+          <s:if test="#attr['project'].state in {10, 2, 3, 4, 6}">
             <s:url id="workingCopyUrl" action="workingCopy" namespace="/">
-              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+              <s:param name="projectId" value="#attr['project'].id"/>
             </s:url>
             <s:a href="%{workingCopyUrl}"><img src="<s:url value='/images/workingcopy.gif' includeParams="none"/>" alt="<s:text name="legend.workingCopy"/>" title="<s:text name="legend.workingCopy"/>" border="0"></s:a>
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:else>
             <img src="<s:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.workingCopy"/>" title="<s:text name="legend.workingCopy"/>" border="0">
-          </c:otherwise>
-        </c:choose>
+          </s:else>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           <img src="<s:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.workingCopy"/>" title="<s:text name="legend.workingCopy"/>" border="0">
@@ -187,19 +172,17 @@
       </ec:column>
       <ec:column property="releaseAction" title="&nbsp;" width="1%" sortable="false">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-        <c:choose>
-          <c:when test="${pageScope.project.state == 2 && pageScope.project.projectType == 'maven2'}">
+          <s:if test="#attr['project'].state == 2 && #attr['project'].projectType == 'maven2'">
             <s:url id="releaseProjectUrl" action="releasePromptGoal" namespace="/">
-              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+              <s:param name="projectId" value="#attr['project'].id"/>
             </s:url>
             <s:a href="%{releaseProjectUrl}">
               <img src="<s:url value='/images/releaseproject.gif' includeParams="none"/>" alt="<s:text name="legend.release"/>" title="<s:text name="legend.release"/>" border="0"/>
             </s:a>
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:else>
             <img src="<s:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.release"/>" title="<s:text name="legend.release"/>" border="0"/>
-          </c:otherwise>
-        </c:choose>
+          </s:else>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           <img src="<s:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="<s:text name="legend.release"/>" title="<s:text name="legend.release"/>" border="0">
@@ -207,24 +190,21 @@
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-        <c:choose>
-          <c:when
-              test="${projectIdle}">
+          <s:if test="#attr['projectIdle']">
             <s:set var="tname" value="'delProjectToken' + #attr['project'].id" scope="page"/>
             <s:token name="%{#attr['tname']}"/>
             <s:url id="deleteProjectUrl" action="deleteProject_default" namespace="/">
-              <s:param name="projectId"><c:out value="${project.id}"/></s:param>
+              <s:param name="projectId" value="#attr['project'].id"/>
               <s:param name="struts.token.name" value="#attr['tname']"/>
               <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
             </s:url>
             <s:a href="%{deleteProjectUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
             </s:a>
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:else>
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
-          </c:otherwise>
-        </c:choose>
+          </s:else>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
@@ -232,7 +212,7 @@
       </ec:column>
     </ec:row>
   </ec:table>
-  <c:if test="${not empty projects}">
+  <s:if test="projects.size() > 0">
     <div class="functnbar3">
       <table>
         <tbody>
@@ -251,7 +231,7 @@
         </tbody>
       </table>
     </div>
-  </c:if>
+  </s:if>
   </s:form>
-</c:if>
+</s:if>
 </s:i18n>
