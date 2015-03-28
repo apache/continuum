@@ -16,8 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   --%>
-
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
   <s:i18n name="localization.Continuum">
@@ -31,39 +29,34 @@
 
     <div class="axial">
       <s:form action="savePurgeConfig" method="post" validate="true">
-        <c:if test="${!empty actionErrors}">
+        <s:if test="hasActionErrors()">
           <div class="errormessage">
             <s:iterator value="actionErrors">
               <p><s:property/></p>
             </s:iterator>
           </div>
-        </c:if>
-        <c:choose>
-	    <c:when test="${(!empty repositories) || purgeType == 'directory' }">
+        </s:if>
+        <s:if test="repositories.size() > 0 || purgeType == 'directory'">
           <table>
-            <c:choose>
-              <c:when test="${purgeType == 'repository'}">
+            <s:if test="purgeType == 'repository'">
                 <s:select label="%{getText('purgeConfig.repository.label')}" name="repositoryId" list="repositories" requiredLabel="true"/>
-              </c:when>
-              <c:otherwise>
+            </s:if>
+            <s:else>
                 <s:select label="%{getText('purgeConfig.directoryType.label')}" name="directoryType" list="directoryTypes"/>
-              </c:otherwise>
-            </c:choose>
+            </s:else>
             <s:textfield label="%{getText('purgeConfig.daysOlder.label')}" name="daysOlder" size="100"/>
             <s:textfield label="%{getText('purgeConfig.retentionCount.label')}" name="retentionCount" size="100"/>
             <s:checkbox label="%{getText('purgeConfig.deleteAll.label')}" name="deleteAll"/>
             <s:if test="purgeType == 'repository'">
               <s:checkbox label="%{getText('purgeConfig.deleteReleasedSnapshots.label')}" name="deleteReleasedSnapshots"/>
             </s:if>
-            <c:choose>
-              <c:when test="${defaultPurgeConfiguration == true}">
+            <s:if test="defaultPurgeConfiguration">
                 <s:hidden name="defaultPurgeConfiguration"/>
                 <s:label label="%{getText('purgeConfig.defaultPurge.label')}" value="true"/>
-              </c:when>
-              <c:otherwise>
+            </s:if>
+            <s:else>
                 <s:checkbox label="%{getText('purgeConfig.defaultPurge.label')}" name="defaultPurgeConfiguration" value="defaultPurgeConfiguration" fieldValue="true"/>
-              </c:otherwise>
-            </c:choose>
+            </s:else>
             <s:select label="%{getText('purgeConfig.schedule.label')}" name="scheduleId" list="schedules"
                        headerKey="-1" headerValue=""/>
             <s:textfield label="%{getText('purgeConfig.description.label')}" name="description" size="100"/>
@@ -75,11 +68,10 @@
             <s:submit value="%{getText('save')}" theme="simple"/>
             <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
           </div>
-        </c:when>
-        <c:otherwise>
+        </s:if>
+        <s:else>
           <div class="warningmessage" style="color: red"><s:text name="purgeConfig.no.repositories" /></div>
-        </c:otherwise>
-      </c:choose>
+        </s:else>
       </s:form>
     </div>
   </div>
