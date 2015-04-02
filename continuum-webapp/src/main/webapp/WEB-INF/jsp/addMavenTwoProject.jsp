@@ -47,11 +47,11 @@
 		                              <tbody>
 		                                <tr>
 		                                  <td><s:text name="add.m2.project.m2PomUrl.username.label"/>: </td>
-		                                  <td><input type="text" name="scmUsername" size="20" id="addMavenTwoProject_scmUsername"/></td>
+		                                  <td><s:textfield name="scmUsername" size="20" id="addMavenTwoProject_scmUsername" theme="simple"/></td>
 		                                </tr>  
 		                                <tr>
 		                                  <td><s:text name="add.m2.project.m2PomUrl.password.label"/>: </td>
-		                                  <td><input type="password" name="scmPassword" size="20" id="addMavenTwoProject_scmPassword"/></td>
+		                                  <td><s:password name="scmPassword" size="20" id="addMavenTwoProject_scmPassword" theme="simple"/></td>
 		                                </tr>  
 		                              </tbody>
 		                                <tr>
@@ -77,27 +77,9 @@
                               <s:select label="%{getText('add.m2.project.projectGroup')}" name="selectedProjectGroup"
                                          list="projectGroups" listKey="id" listValue="name"/>
                             </s:else>
-                            <s:label>
-                              <s:param name="after">
-                                <table cellspacing="0" cellpadding="0">
-	                              <tbody>
-	                                <tr>
-	                                  <td><input name="checkoutOption" type="radio" value="checkoutInSeparateDirectories" checked /></td>
-                                      <td><s:text name="add.m2.project.checkoutInSeparateDirectories"/></td>
-	                                </tr>
-	                                <tr>
-	                                  <td><input name="checkoutOption" type="radio" value="checkoutInSingleDirectory"/></td>
-                                      <td><s:text name="add.m2.project.checkoutInSingleDirectory"/></td>
-	                                </tr>
-	                                <tr>
-	                                  <td><input name="checkoutOption" type="radio" value="nonRecursiveProject"/></td>
-                                      <td><s:text name="add.m2.project.nonRecursiveProject"/></td>
-	                                </tr>
-	                              </tbody>
-	                            </table>
-                              </s:param>
-                            </s:label>	 
-                            
+
+                            <s:radio label="%{getText('add.m2.project.importType')}" name="importType" list="importOptions" />
+
                             <s:select label="%{getText('add.m2.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
                                        headerValue="%{getText('add.m2.project.defaultBuildDefinition')}"/> 

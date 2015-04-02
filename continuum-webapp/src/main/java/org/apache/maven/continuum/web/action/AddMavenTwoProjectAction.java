@@ -33,7 +33,9 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Add a Maven 2 project to Continuum.
@@ -45,6 +47,63 @@ import java.util.List;
 public class AddMavenTwoProjectAction
     extends AddMavenProjectAction
 {
+
+    @Override
+    public void prepare()
+        throws Exception
+    {
+        super.prepare();
+        setImportType( ImportType.SEPARATE_SCM );
+    }
+
+    public enum ImportType
+    {
+        SEPARATE_SCM( "add.m2.project.importType.projectPerModuleSeparateScm", true, false ),
+        SINGLE_SCM( "add.m2.project.importType.projectPerModuleSingleScm", true, true ),
+        SINGLE_MULTI_MODULE( "add.m2.project.importType.singleMultiModule", false, false );
+
+        private String textKey;
+
+        private boolean recursiveImport;
+
+        private boolean singleDirCheckout;
+
+        ImportType( String textKey, boolean recursiveImport, boolean singleCheckout )
+        {
+            this.textKey = textKey;
+            this.recursiveImport = recursiveImport;
+            this.singleDirCheckout = singleCheckout;
+        }
+
+        public String getTextKey()
+        {
+            return textKey;
+        }
+
+        public boolean isSingleCheckout()
+        {
+            return singleDirCheckout;
+        }
+
+        public boolean isRecursiveImport()
+        {
+            return recursiveImport;
+        }
+    }
+
+    /**
+     * Generates locale-sensitive import options.
+     */
+    public Map<ImportType, String> getImportOptions()
+    {
+        Map<ImportType, String> options = new LinkedHashMap<ImportType, String>();
+        for ( ImportType type : ImportType.values() )
+        {
+            options.put( type, getText( type.getTextKey() ) );
+        }
+        return options;
+    }
+
     // TODO: remove this part once uploading of an m2 project with modules is supported ( CONTINUUM-1098 )
     public static final String ERROR_UPLOADING_M2_PROJECT_WITH_MODULES = "add.m2.project.upload.modules.error";
 
@@ -52,7 +111,7 @@ public class AddMavenTwoProjectAction
 
     public static final String FILE_SCHEME = "file:/";
 
-    private String checkoutOption;
+    private ImportType importType;
 
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
                                                         boolean scmUseCache )
@@ -60,27 +119,12 @@ public class AddMavenTwoProjectAction
     {
         ContinuumProjectBuildingResult result = null;
 
-        boolean nonRecursiveProject;
-        boolean checkoutInSingleDirectory;
-
-        if ( "checkoutInSingleDirectory".equals( checkoutOption ) )
-        {
-            checkoutInSingleDirectory = true;
-            nonRecursiveProject = false;
-        }
-        else if ( "nonRecursiveProject".equals( checkoutOption ) )
-        {
-            checkoutInSingleDirectory = false;
-            nonRecursiveProject = true;
-        }
-        else
-        {
-            checkoutInSingleDirectory = false;
-            nonRecursiveProject = false;
-        }
+        ImportType importType = getImportType();
+        boolean recursiveImport = importType.isRecursiveImport();
+        boolean checkoutInSingleDirectory = importType.isSingleCheckout();
 
         // TODO: remove this part once uploading of an m2 project with modules is supported ( CONTINUUM-1098 )
-        boolean preventModulesInFileUpload = !checkProtocol && !nonRecursiveProject;
+        boolean preventModulesInFileUpload = !checkProtocol && recursiveImport;
         if ( preventModulesInFileUpload )
         {
             List modules = fileToModel( urlToFile( pomUrl ) ).getModules();
@@ -94,7 +138,7 @@ public class AddMavenTwoProjectAction
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
-                                                        !nonRecursiveProject, this.getBuildDefinitionTemplateId(),
+                                                        recursiveImport, this.getBuildDefinitionTemplateId(),
                                                         checkoutInSingleDirectory );
         }
 
@@ -181,13 +225,13 @@ public class AddMavenTwoProjectAction
         setPomUrl( pomUrl );
     }
 
-    public String getCheckoutOption()
+    public ImportType getImportType()
     {
-        return checkoutOption;
+        return importType;
     }
 
-    public void setCheckoutOption( String checkoutOption )
+    public void setImportType( ImportType importType )
     {
-        this.checkoutOption = checkoutOption;
+        this.importType = importType;
     }
 }

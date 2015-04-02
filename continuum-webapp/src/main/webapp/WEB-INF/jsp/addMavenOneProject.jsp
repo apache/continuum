@@ -47,11 +47,11 @@
                                   <tbody>
                                     <tr>
                                       <td><s:text name="add.m1.project.m1PomUrl.username.label"/>: </td>
-                                      <td><input type="text" name="scmUsername" size="20" id="addMavenOneProject_scmUsername"/><td>
+                                      <td><s:textfield name="scmUsername" size="20" id="addMavenOneProject_scmUsername" theme="simple"/><td>
                                     </tr>  
                                     <tr>
                                       <td><s:text name="add.m1.project.m1PomUrl.password.label"/>: </td>
-                                      <td><input type="password" name="scmPassword" size="20" id="addMavenOneProject_scmPassword"/><td>
+                                      <td><s:password name="scmPassword" size="20" id="addMavenOneProject_scmPassword" theme="simple"/><td>
                                     </tr>  
                                   </tbody>
                                     <tr>
