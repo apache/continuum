@@ -60,50 +60,6 @@ public class AddMavenTwoProjectAction
     {
         ContinuumProjectBuildingResult result = null;
 
-        // TODO: remove this part once uploading of an m2 project with modules is supported ( CONTINUUM-1098 )
-        if ( !checkProtocol )
-        {
-            MavenXpp3Reader m2pomReader = new MavenXpp3Reader();
-
-            try
-            {
-                String filePath = pomUrl;
-
-                if ( !filePath.startsWith( FILE_SCHEME + "/" ) && filePath.startsWith( FILE_SCHEME ) )
-                {
-                    //Little hack for linux (CONTINUUM-1169)
-                    filePath = StringUtils.replace( filePath, FILE_SCHEME, FILE_SCHEME + "/" );
-                }
-
-                if ( filePath.startsWith( FILE_SCHEME ) )
-                {
-                    filePath = filePath.substring( FILE_SCHEME.length() );
-                }
-
-                Model model = m2pomReader.read( ReaderFactory.newXmlReader( new File( filePath ) ) );
-
-                List modules = model.getModules();
-
-                if ( modules != null && modules.size() != 0 )
-                {
-                    result = new ContinuumProjectBuildingResult();
-                    result.addError( ERROR_UPLOADING_M2_PROJECT_WITH_MODULES );
-                }
-            }
-            catch ( FileNotFoundException e )
-            {
-                throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
-            }
-            catch ( IOException e )
-            {
-                throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
-            }
-            catch ( XmlPullParserException e )
-            {
-                throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
-            }
-        }
-
         boolean nonRecursiveProject;
         boolean checkoutInSingleDirectory;
 
@@ -121,6 +77,18 @@ public class AddMavenTwoProjectAction
         {
             checkoutInSingleDirectory = false;
             nonRecursiveProject = false;
+        }
+
+        // TODO: remove this part once uploading of an m2 project with modules is supported ( CONTINUUM-1098 )
+        boolean preventModulesInFileUpload = !checkProtocol && !nonRecursiveProject;
+        if ( preventModulesInFileUpload )
+        {
+            List modules = fileToModel( urlToFile( pomUrl ) ).getModules();
+            if ( modules != null && modules.size() != 0 )
+            {
+                result = new ContinuumProjectBuildingResult();
+                result.addError( ERROR_UPLOADING_M2_PROJECT_WITH_MODULES );
+            }
         }
 
         if ( result == null )
@@ -141,6 +109,44 @@ public class AddMavenTwoProjectAction
 
         event.log();
         return result;
+    }
+
+    private Model fileToModel( File pomFile )
+        throws ContinuumException
+    {
+        MavenXpp3Reader m2pomReader = new MavenXpp3Reader();
+        try
+        {
+            return m2pomReader.read( ReaderFactory.newXmlReader( pomFile ) );
+        }
+        catch ( FileNotFoundException e )
+        {
+            throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
+        }
+        catch ( XmlPullParserException e )
+        {
+            throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
+        }
+    }
+
+    private File urlToFile( String url )
+    {
+        if ( !url.startsWith( FILE_SCHEME + "/" ) && url.startsWith( FILE_SCHEME ) )
+        {
+            //Little hack for linux (CONTINUUM-1169)
+            url = StringUtils.replace( url, FILE_SCHEME, FILE_SCHEME + "/" );
+        }
+
+        if ( url.startsWith( FILE_SCHEME ) )
+        {
+            url = url.substring( FILE_SCHEME.length() );
+        }
+
+        return new File( url );
     }
 
     /**
