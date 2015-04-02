@@ -66,7 +66,7 @@
                             <s:label>
                               <s:param name="after"><strong><s:text name="or"/></strong></s:param>
                             </s:label>
-                            <s:file label="%{getText('add.m2.project.m2PomFile.label')}" name="m2PomFile" size="100">
+                            <s:file label="%{getText('add.m2.project.m2PomFile.label')}" name="m2PomFile" size="100" accept="application/xml,text/xml">
                                 <s:param name="after"><p><s:text name="add.m2.project.m2PomFile.message"/></p></s:param>
                             </s:file>
                             <c:choose>
