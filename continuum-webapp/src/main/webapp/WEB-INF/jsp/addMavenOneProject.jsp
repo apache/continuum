@@ -17,7 +17,6 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <s:i18n name="localization.Continuum">
 <html>
@@ -30,16 +29,16 @@
             <h3><s:text name="add.m1.project.section.title"/></h3>
                 <div class="axial">
                     <s:form method="post" action="addMavenOneProject" name="addMavenOneProject" enctype="multipart/form-data">
-                        <c:if test="${!empty actionErrors || !empty errorMessages}">
+                        <s:if test="hasActionErrors() || errorMessages.size() > 0">
                           <div class="errormessage">
                             <s:iterator value="actionErrors">
                               <p><s:property/></p>
                             </s:iterator>
-                            <c:forEach items="${errorMessages}" var="errorMessage">
-                              <p><c:out value="${errorMessage}"/></p>
-                            </c:forEach>
+                            <s:iterator value="errorMessages">
+                              <p><s:property/></p>
+                            </s:iterator>
                           </div>
-                        </c:if>
+                        </s:if>
                         <table>
                           <tbody>
                             <s:textfield label="%{getText('add.m1.project.m1PomUrl.label')}" requiredLabel="true" name="m1PomUrl" size="100">
@@ -69,16 +68,14 @@
                             <s:file label="%{getText('add.m1.project.m1PomFile.label')}" name="m1PomFile" size="100" accept="application/xml,text/xml">
                                 <s:param name="after"><p><s:text name="add.m1.project.m1PomFile.message"/></p></s:param>
                             </s:file>
-                            <c:choose>
-                            <c:when test="${disableGroupSelection == true}">
+                            <s:if test="disableGroupSelection">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
                               <s:textfield label="%{getText('add.m1.project.projectGroup')}" name="projectGroupName" disabled="true" size="100"/>
-                            </c:when>
-                            <c:otherwise>
+                            </s:if>
+                            <s:else>
                               <s:select label="%{getText('add.m1.project.projectGroup')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
-                            </c:otherwise>
-                            </c:choose>
+                            </s:else>
                             <s:select label="%{getText('add.m1.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
                                        headerValue="%{getText('add.m1.project.defaultBuildDefinition')}"/>                            
