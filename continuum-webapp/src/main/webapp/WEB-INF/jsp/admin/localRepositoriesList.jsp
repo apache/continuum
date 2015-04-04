@@ -29,9 +29,12 @@
         <h3><s:text name="repositories.section.title"/></h3>
         <s:if test="hasActionErrors()">
           <div class="errormessage">
-            <s:iterator value="actionErrors">
-              <p><s:property/></p>
-            </s:iterator>
+            <s:actionerror/>
+          </div>
+        </s:if>
+        <s:if test="hasActionMessages()">
+          <div class="warningmessage">
+            <s:actionmessage/>
           </div>
         </s:if>
         <s:set name="repositories" value="repositories" scope="request"/>

@@ -47,7 +47,7 @@ import java.util.Map;
  * @author Maria Catherine Tan
  * @since 25 jul 07
  */
-@Component( role = com.opensymphony.xwork2.Action.class, hint = "localRepository", instantiationStrategy = "per-lookup"  )
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "localRepository", instantiationStrategy = "per-lookup" )
 public class LocalRepositoryAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
@@ -242,26 +242,30 @@ public class LocalRepositoryAction
         {
             addActionError( getText( "repository.error.purge.in.use",
                                      "Unable to purge repository because it is in use" ) );
+            return ERROR;
         }
 
-        if ( !hasActionErrors() )
+        // get default purge configuration for repository
+        RepositoryPurgeConfiguration purgeConfig = purgeConfigService.getDefaultPurgeConfigurationForRepository(
+            repository.getId() );
+
+        if ( purgeConfig != null )
         {
-            // get default purge configuration for repository
-            RepositoryPurgeConfiguration purgeConfig = purgeConfigService.getDefaultPurgeConfigurationForRepository(
-                repository.getId() );
+            purgeManager.purgeRepository( purgeConfig );
 
-            if ( purgeConfig != null )
-            {
-                purgeManager.purgeRepository( purgeConfig );
+            AuditLog event = new AuditLog( "Repository id=" + repository.getId(),
+                                           AuditLogConstants.PURGE_LOCAL_REPOSITORY );
+            event.setCategory( AuditLogConstants.LOCAL_REPOSITORY );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
 
-                AuditLog event = new AuditLog( "Repository id=" + repository.getId(),
-                                               AuditLogConstants.PURGE_LOCAL_REPOSITORY );
-                event.setCategory( AuditLogConstants.LOCAL_REPOSITORY );
-                event.setCurrentUser( getPrincipal() );
-                event.log();
-            }
+            addActionMessage( getText( "repository.purge.success" ) );
+            return SUCCESS;
         }
-        return SUCCESS;
+
+        addActionError(
+            getText( "repository.error.not.found", new String[] { Integer.toString( repository.getId() ) } ) );
+        return ERROR;
     }
 
     public LocalRepository getRepository()

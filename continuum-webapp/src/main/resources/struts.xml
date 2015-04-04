@@ -1097,6 +1097,9 @@
       <result name="success" type="redirectAction">
         <param name="actionName">repositoryList</param>
       </result>
+      <result name="error" type="redirectAction">
+        <param name="actionName">repositoryList</param>
+      </result>
     </action>
 
     <!--
