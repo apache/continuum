@@ -286,7 +286,7 @@ body .grid td {
   color: #333;
 }
 
-.errormark,.warningmark,.donemark {
+.errormark,.warningmark,.infomark,.donemark {
   background: url(../images/icon_error_sml.gif) no-repeat;
 }
 
@@ -296,6 +296,10 @@ body .grid td {
 
 .donemark {
   background-image: url(../images/icon_success_sml.gif);
+}
+
+.infomark {
+  background-image: url(../images/icon_info_sml.gif);
 }
 
 .cvsdiff,.cvsblame {
@@ -907,7 +911,7 @@ td.filebrowse h3 {
   min-height: 32px;
 }
 
-.errormark,.warningmark,.donemark {
+.errormark,.warningmark,.infomark,.donemark {
   padding-left: 20px;
   min-height: 15px;
 }
