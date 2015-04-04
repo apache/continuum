@@ -23,4 +23,25 @@
   <buildOutputDirectory>data/build-output-directory</buildOutputDirectory>
   <workingDirectory>data/working-directory</workingDirectory>
   <sharedSecretPassword></sharedSecretPassword>
+  <!--
+    Builds sent from a master specifying a local repository name will use localRepository configuration matching its
+    name *exactly*. If the named repository is not found, it will use the default user's settings. For example, with no
+    configured localRepositories:
+
+    master requests build using 'DEFAULT' or 'another'  ->  agent uses ${settings.localRepository}
+
+    While building will default to user settings, purging is only supported for configured repositories. For example,
+    with no configured localRepositories:
+
+    master sends purge using 'DEFAULT'  ->  agent fails to purge anything
+
+    In contrast, if you configure the DEFAULT repository the purge will be attempted.
+   -->
+  <!--localRepositories>
+    <localRepository>
+      <name>DEFAULT</name>
+      <location>...</location>
+      <layout>default</layout>
+    </localRepository>
+  </localRepositories-->
 </continuum-buildagent-configuration>
