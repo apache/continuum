@@ -181,7 +181,7 @@ public class QueueTest
 
     void assertBuildQueuePage()
     {
-        assertPage( "Continumm - Parallel Build Queue" );
+        assertPage( "Continuum - Parallel Build Queue" );
         assertTextPresent( "Parallel Build Queue" );
         assertTextPresent( "Name" );
         assertTextPresent( "DEFAULT_BUILD_QUEUE" );
