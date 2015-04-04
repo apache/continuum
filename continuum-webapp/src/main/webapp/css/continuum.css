@@ -69,4 +69,6 @@ table.releasePhases td:nth-child(2) {
 
 message {
   display: block;
+  margin-top: .67em;
+  margin-bottom: .67em;
 }
