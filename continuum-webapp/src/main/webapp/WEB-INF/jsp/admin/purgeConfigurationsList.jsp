@@ -81,7 +81,7 @@
                 <s:set var="tname" value="'repoPurgeToken' + #attr['repoPurge'].id" scope="page"/>
                 <s:token name="%{#attr['tname']}"/>
                 <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
-                  <s:param name="purgeConfigId" value="#attr['repoPurge']id"/>
+                  <s:param name="purgeConfigId" value="#attr['repoPurge'].id"/>
                   <s:param name="description" value="#attr['repoPurge'].description"/>
                   <s:param name="struts.token.name" value="#attr['tname']"/>
                   <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
