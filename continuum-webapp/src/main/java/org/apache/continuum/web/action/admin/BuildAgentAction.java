@@ -167,7 +167,7 @@ public class BuildAgentAction
                 {
                     if ( type.equals( "new" ) )
                     {
-                        addActionError( getResourceBundle().getString( "buildAgent.error.duplicate" ) );
+                        addActionError( getText( "buildAgent.error.duplicate" ) );
                         return INPUT;
                     }
                     else
@@ -320,7 +320,7 @@ public class BuildAgentAction
         {
             if ( buildAgentGroup.getName().equals( "" ) )
             {
-                addActionError( getResourceBundle().getString( "buildAgentGroup.error.name.required" ) );
+                addActionError( getText( "buildAgentGroup.error.name.required" ) );
                 return INPUT;
             }
             else if ( buildAgentGroup.getName().trim().equals( "" ) )
@@ -360,7 +360,7 @@ public class BuildAgentAction
         {
             if ( typeGroup.equals( "new" ) )
             {
-                addActionError( getResourceBundle().getString( "buildAgentGroup.error.duplicate" ) );
+                addActionError( getText( "buildAgentGroup.error.duplicate" ) );
                 return INPUT;
             }
             else if ( typeGroup.equals( "edit" ) )
