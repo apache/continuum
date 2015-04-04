@@ -170,7 +170,7 @@ public class BuildAgentConfigurationTest
     private LocalRepository getExpectedLocalRepo()
     {
         LocalRepository expectedLocalRepo = new LocalRepository();
-        expectedLocalRepo.setName( "default" );
+        expectedLocalRepo.setName( "DEFAULT" );
         expectedLocalRepo.setLayout( "default" );
         expectedLocalRepo.setLocation( "/tmp/.m2/repository" );
         return expectedLocalRepo;

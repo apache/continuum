@@ -32,7 +32,7 @@
   </installations>
   <localRepositories>
     <localRepository>
-      <name>default</name>
+      <name>DEFAULT</name>
       <location>/tmp/.m2/repository</location>
       <layout>default</layout>
     </localRepository>
