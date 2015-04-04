@@ -168,19 +168,22 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
+        <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
+            <id>copy-agent-app-configs</id>
             <phase>generate-resources</phase>
             <goals>
-              <goal>run</goal>
+              <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <tasks>
-                <copy todir="${project.build.directory}/appserver-base">
-                  <fileset dir="src/appserver-base" />
-                </copy>
-              </tasks>
+              <outputDirectory>${project.build.directory}/appserver-base</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/appserver-base</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
