@@ -53,11 +53,11 @@ public class SlaveBuildAgentTransportServer
             continuumBuildAgentService.buildProjects( projectsBuildContext );
             result = Boolean.TRUE;
 
-            log.info( "Building projects." );
+            log.debug( "building projects" );
         }
         catch ( ContinuumBuildAgentException e )
         {
-            log.error( "Failed to build projects.", e );
+            log.error( "failed to build projects", e );
             throw e;
         }
 
@@ -461,46 +461,46 @@ public class SlaveBuildAgentTransportServer
     public Boolean isProjectCurrentlyBuilding( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is currently building in agent", projectId,
-                  buildDefinitionId );
+        log.debug( "Checking if projectId={}, buildDefinitionId={} is currently building in agent", projectId,
+                   buildDefinitionId );
         return continuumBuildAgentService.isProjectCurrentlyBuilding( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectInBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is in build queue of agent", projectId,
-                  buildDefinitionId );
+        log.debug( "Checking if projectId={}, buildDefinitionId={} is in build queue of agent", projectId,
+                   buildDefinitionId );
         return continuumBuildAgentService.isProjectInBuildQueue( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectCurrentlyPreparingBuild( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is currently preparing build", projectId,
-                  buildDefinitionId );
+        log.debug( "Checking if projectId={}, buildDefinitionId={} is currently preparing build", projectId,
+                   buildDefinitionId );
         return continuumBuildAgentService.isProjectCurrentlyPreparingBuild( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectInPrepareBuildQueue( int projectId, int buildDefinitionId )
         throws Exception
     {
-        log.info( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId,
-                  buildDefinitionId );
+        log.debug( "Checking if projectId={}, buildDefinitionId={} is in prepare build queue", projectId,
+                   buildDefinitionId );
         return continuumBuildAgentService.isProjectInPrepareBuildQueue( projectId, buildDefinitionId );
     }
 
     public Boolean isProjectGroupInPrepareBuildQueue( int projectGroupId )
         throws Exception
     {
-        log.info( "Checking if project group '" + projectGroupId + "' is in prepare build queue" );
+        log.debug( "Checking if project group {} is in prepare build queue", projectGroupId );
         return continuumBuildAgentService.isProjectGroupInPrepareBuildQueue( projectGroupId );
     }
 
     public Boolean isProjectGroupCurrentlyPreparingBuild( int projectGroupId )
         throws Exception
     {
-        log.info( "Checking if project group '" + projectGroupId + "' is currently preparing build" );
+        log.debug( "Checking if project group {} is currently preparing build", projectGroupId );
         return continuumBuildAgentService.isProjectGroupCurrentlyPreparingBuild( projectGroupId );
     }
 
@@ -509,8 +509,8 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
-            log.info( "Remove projects from prepare build queue. projectGroupId=" + projectGroupId +
-                          ", scmRootId=" + scmRootId );
+            log.debug( "Remove projects from prepare build queue. projectGroupId={}, scmRootId={}", projectGroupId,
+                      scmRootId );
             return continuumBuildAgentService.removeFromPrepareBuildQueue( projectGroupId, scmRootId );
         }
         catch ( ContinuumBuildAgentException e )
@@ -530,7 +530,7 @@ public class SlaveBuildAgentTransportServer
         {
             continuumBuildAgentService.removeFromPrepareBuildQueue( hashCodes );
             result = Boolean.TRUE;
-            log.info( "Remove projects from prepare build queue" );
+            log.debug( "removed projects from prepare build queue" );
         }
         catch ( ContinuumBuildAgentException e )
         {
@@ -565,7 +565,7 @@ public class SlaveBuildAgentTransportServer
         {
             continuumBuildAgentService.removeFromBuildQueue( hashCodes );
             result = Boolean.TRUE;
-            log.info( "Remove projects from build queue" );
+            log.debug( "removed projects from build queue" );
         }
         catch ( ContinuumBuildAgentException e )
         {
