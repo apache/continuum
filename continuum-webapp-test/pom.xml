@@ -618,5 +618,6 @@
     <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
     <plexus.system.path/>
     <selenium.version>2.41.0</selenium.version>
+    <agentRepo>${project.build.directory}/data/build-agent/.m2/repository</agentRepo>
   </properties>
 </project>

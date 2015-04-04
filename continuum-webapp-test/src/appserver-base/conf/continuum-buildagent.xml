@@ -23,4 +23,16 @@
   <buildOutputDirectory>target/data/build-agent/build-output-directory</buildOutputDirectory>
   <workingDirectory>target/data/build-agent/working-directory</workingDirectory>
   <sharedSecretPassword>continuum1234</sharedSecretPassword>
+  <localRepositories>
+    <localRepository>
+      <name>DEFAULT</name>
+      <location>${settings.localRepository}</location>
+      <layout>default</layout>
+    </localRepository>
+    <localRepository>
+      <name>purgeable</name>
+      <location>${agentRepo}</location>
+      <layout>default</layout>
+    </localRepository>
+  </localRepositories>
 </continuum-buildagent-configuration>
