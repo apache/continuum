@@ -63,7 +63,7 @@ Installing and Configuring a Build Agent
   </installations>
   <localRepositories>
     <localRepository>
-      <name>default</name>
+      <name>DEFAULT</name>
       <location>/home/user/.m2/repository</location>
       <layout>default</layout>
     </localRepository>
