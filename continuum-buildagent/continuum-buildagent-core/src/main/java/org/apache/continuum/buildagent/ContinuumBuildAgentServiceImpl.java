@@ -367,9 +367,16 @@ public class ContinuumBuildAgentServiceImpl
     }
 
     private ArtifactRepository getArtifactRepository( int projectId )
-        throws SettingsConfigurationException
+        throws SettingsConfigurationException, ContinuumBuildAgentException
     {
         BuildContext buildContext = buildContextManager.getBuildContext( projectId );
+
+        if ( buildContext == null )
+        {
+            String notFoundMsg = String.format( "build context for project id %s not found", projectId );
+            log.warn( notFoundMsg );
+            throw new ContinuumBuildAgentException( notFoundMsg );
+        }
 
         org.apache.continuum.model.repository.LocalRepository localRepo = null;
         try
