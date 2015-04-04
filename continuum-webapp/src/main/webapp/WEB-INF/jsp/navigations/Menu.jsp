@@ -254,7 +254,8 @@
       <div id="litem10" class="body"><s:text name="legend.release"/></div>
       <div id="litem11" class="body"><s:text name="legend.buildInSuccess"/></div>
       <div id="litem12" class="body"><s:text name="legend.buildInFailure"/></div>
-      <div id="litem13" class="body"><s:text name="legend.buildInError"/></div>
+      <div id="litem13" class="body"><s:text name="legend.buildInUnknown"/></div>
+      <div id="litem14" class="body"><s:text name="legend.buildInError"/></div>
     </div>
   </div>
 </div>

@@ -727,6 +727,10 @@ dd {
 }
 
 #litem13 {
+  background: url(../images/icon_unknown_sml.gif) 134px 5px no-repeat;
+}
+
+#litem14 {
   background: url(../images/icon_error_sml.gif) 134px 5px no-repeat;
 }
 
