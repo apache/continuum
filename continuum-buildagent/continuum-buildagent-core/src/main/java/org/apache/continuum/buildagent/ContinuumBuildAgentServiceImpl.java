@@ -374,8 +374,8 @@ public class ContinuumBuildAgentServiceImpl
         org.apache.continuum.model.repository.LocalRepository localRepo = null;
         try
         {
-            LocalRepository agentRepo = null;
-            buildAgentConfigurationService.getLocalRepositoryByName( buildContext.getLocalRepository() );
+            LocalRepository agentRepo = buildAgentConfigurationService.getLocalRepositoryByName(
+                buildContext.getLocalRepository() );
             localRepo = localRepositoryHelper.convertAgentRepo( agentRepo );
         }
         catch ( BuildAgentConfigurationException e )
