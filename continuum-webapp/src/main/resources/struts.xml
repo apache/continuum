@@ -1194,6 +1194,7 @@
     -->
 
     <action name="buildAgentList" class="buildAgent" method="list">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/buildAgentsList.jsp</result>
     </action>
 
@@ -1211,9 +1212,9 @@
     </action>
 
     <action name="deleteBuildAgent" class="buildAgent" method="delete">
+      <interceptor-ref name="storeStack"/>
       <result name="error" type="redirectAction">
-        <param name="actionName">buildAgentList</param>
-        <param name="errorMessage">${message}</param>
+        <param name="actionName">buildAgentList</param>e
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgent.jsp</result>
       <result name="success" type="redirectAction">
@@ -1229,9 +1230,9 @@
     </action>
 
     <action name="deleteBuildAgentGroup" class="buildAgent" method="deleteGroup">
+      <interceptor-ref name="storeStack"/>
       <result name="error" type="redirectAction">
         <param name="actionName">buildAgentList</param>
-        <param name="errorMessage">${message}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgentGroup.jsp</result>
       <result name="success" type="redirectAction">

@@ -29,9 +29,7 @@
         <h3><s:text name="buildAgents.section.title"/></h3>
         <s:if test="hasActionErrors()">
           <div class="errormessage">
-            <s:iterator value="actionErrors">
-              <p><s:property/></p>
-            </s:iterator>
+            <s:actionerror/>
           </div>
         </s:if>
         <s:set name="buildAgents" value="buildAgents" scope="request"/>

@@ -30,7 +30,6 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
-import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.util.StringUtils;
@@ -69,8 +68,6 @@ public class BuildAgentAction
     private List<Installation> installations;
 
     private boolean confirmed;
-
-    private String message;
 
     private String type;
 
@@ -115,16 +112,8 @@ public class BuildAgentAction
     public String list()
         throws Exception
     {
-        String errorMessage = ServletActionContext.getRequest().getParameter( "errorMessage" );
-
-        if ( errorMessage != null )
-        {
-            addActionError( errorMessage );
-        }
-
         this.buildAgents = getContinuum().getConfiguration().getBuildAgents();
         this.buildAgentGroups = getContinuum().getConfiguration().getBuildAgentGroups();
-
         return SUCCESS;
     }
 
@@ -232,7 +221,7 @@ public class BuildAgentAction
 
         if ( getContinuum().getDistributedBuildManager().isBuildAgentBusy( buildAgent.getUrl() ) )
         {
-            message = getText( "buildAgent.error.delete.busy" );
+            addActionError( getText( "buildAgent.error.delete.busy" ) );
             return ERROR;
         }
 
@@ -244,7 +233,7 @@ public class BuildAgentAction
             {
                 if ( configuration.containsBuildAgentUrl( buildAgent.getUrl(), buildAgentGroup ) )
                 {
-                    message = getText( "buildAgent.error.remove.in.use" );
+                    addActionError( getText( "buildAgent.error.remove.in.use" ) );
                     return ERROR;
                 }
             }
@@ -273,8 +262,7 @@ public class BuildAgentAction
                 }
             }
         }
-
-        message = getText( "buildAgent.error.notfound" );
+        addActionError( getText( "buildAgent.error.notfound" ) );
         return ERROR;
     }
 
@@ -293,7 +281,7 @@ public class BuildAgentAction
         {
             if ( buildAgentGroup.getName().equals( profile.getBuildAgentGroup() ) )
             {
-                message = getText( "buildAgentGroup.error.remove.in.use", new String[] { profile.getName() } );
+                addActionError( getText( "buildAgentGroup.error.remove.in.use", new String[] { profile.getName() } ) );
                 return ERROR;
             }
         }
@@ -316,7 +304,7 @@ public class BuildAgentAction
             }
         }
 
-        message = getText( "buildAgentGroup.error.doesnotexist" );
+        addActionError( getText( "buildAgentGroup.error.doesnotexist" ) );
         return ERROR;
     }
 
@@ -510,16 +498,6 @@ public class BuildAgentAction
     public void setConfirmed( boolean confirmed )
     {
         this.confirmed = confirmed;
-    }
-
-    public String getMessage()
-    {
-        return this.message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
     }
 
     public String getType()
