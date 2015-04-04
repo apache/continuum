@@ -16,8 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   --%>
-
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
@@ -33,11 +31,11 @@
   <div id="axial" class="h3">
     <h3><s:text name="parallel.build.queue.section.title"/></h3>
 
-    <c:if test="${!empty actionErrors}">
+    <s:if test="hasActionErrors()">
       <div class="errormessage">
-        <p><s:actionerror/></p>
+        <s:actionerror/>
       </div>
-    </c:if>
+    </s:if>
     
     <div class="axial">
       <s:form action="saveBuildQueue" method="post" validate="true">
