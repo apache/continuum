@@ -5,6 +5,7 @@ target
 .classpath
 continuum-webapp/src/main/webapp/template/
 continuum-webapp/overlays/
+continuum-webapp/data/
 *.iml
 .idea
 build/
