@@ -20,8 +20,8 @@
 
 <continuum-buildagent-configuration>
   <continuumServerUrl>${baseUrl}/master-xmlrpc</continuumServerUrl>
-  <buildOutputDirectory>target/data/build-agent/build-output-directory</buildOutputDirectory>
-  <workingDirectory>target/data/build-agent/working-directory</workingDirectory>
+  <buildOutputDirectory>${project.build.directory}/data/build-agent/build-output-directory</buildOutputDirectory>
+  <workingDirectory>${project.build.directory}/data/build-agent/working-directory</workingDirectory>
   <sharedSecretPassword>continuum1234</sharedSecretPassword>
   <localRepositories>
     <localRepository>
