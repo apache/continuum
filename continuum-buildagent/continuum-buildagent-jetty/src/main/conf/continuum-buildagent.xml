@@ -22,6 +22,7 @@
   <continuumServerUrl>http://localhost:8080/continuum/master-xmlrpc</continuumServerUrl>
   <buildOutputDirectory>data/build-output-directory</buildOutputDirectory>
   <workingDirectory>data/working-directory</workingDirectory>
+  <!-- This value must match the 'Shared Secret Password' configured for your continuum master. -->
   <sharedSecretPassword></sharedSecretPassword>
   <!--
     Builds sent from a master specifying a local repository name will use localRepository configuration matching its
