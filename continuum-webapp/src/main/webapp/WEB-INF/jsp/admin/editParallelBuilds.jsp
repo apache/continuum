@@ -39,13 +39,17 @@
     
     <div class="axial">
       <s:form action="saveBuildQueue" method="post" validate="true">
+        <tr><td>
           <table>
             <s:textfield label="%{getText('parallel.build.queue.name')}" name="name" requiredLabel="true" size="100" />
           </table>
+        </td></tr>
+        <tr><td>
           <div class="functnbar3">
             <s:submit value="%{getText('save')}" theme="simple"/>
             <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
           </div>
+        </td></tr>
       </s:form>
     </div>
   </div>
