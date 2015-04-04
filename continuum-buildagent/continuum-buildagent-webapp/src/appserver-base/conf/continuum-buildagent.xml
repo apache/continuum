@@ -23,4 +23,11 @@
   <buildOutputDirectory>${project.build.directory}/data/build-agent/build-output-directory</buildOutputDirectory>
   <workingDirectory>${project.build.directory}/data/build-agent/working-directory</workingDirectory>
   <sharedSecretPassword>continuum1234</sharedSecretPassword>
+  <localRepositories>
+    <localRepository>
+      <name>DEFAULT</name>
+      <location>${project.build.directory}/data/build-agent/.m2/repository</location>
+      <layout>default</layout>
+    </localRepository>
+  </localRepositories>
 </continuum-buildagent-configuration>
