@@ -66,3 +66,7 @@ table.releasePhases td:nth-child(1) {
 table.releasePhases td:nth-child(2) {
   width: 100%;
 }
+
+message {
+  display: block;
+}
