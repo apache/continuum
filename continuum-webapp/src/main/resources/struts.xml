@@ -1035,21 +1035,22 @@
     * Build Queue (Parallel Builds)
     -->
 
-    <action name="buildQueueList" class="buildQueueAction" method="list">
+    <action name="buildQueueList" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="list">
       <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
     </action>
 
-    <action name="addBuildQueue" class="buildQueueAction" method="input">
+    <action name="addBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="input">
       <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
     </action>
 
-    <action name="saveBuildQueue" class="buildQueueAction" method="save">
+    <action name="saveBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="save">
       <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
       <result name="success" type="redirectAction">buildQueueList</result>
     </action>
 
-    <action name="deleteBuildQueue" class="buildQueueAction" method="delete">
+    <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction"
+            method="delete">
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildQueue.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">buildQueueList</param>
