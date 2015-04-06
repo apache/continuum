@@ -23,7 +23,6 @@ import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
-import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.purge.controller.PurgeController;
@@ -40,7 +39,8 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 
-import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Maria Catherine Tan
@@ -49,6 +49,16 @@ import java.io.File;
 public class PurgeTaskExecutor
     implements TaskExecutor, Contextualizable
 {
+
+    static final Map<Class, String> configControllerHints = new HashMap<Class, String>();
+
+    static
+    {
+        configControllerHints.put( RepositoryPurgeConfiguration.class, "purge-repository" );
+        configControllerHints.put( DirectoryPurgeConfiguration.class, "purge-directory" );
+        configControllerHints.put( DistributedRepositoryPurgeConfiguration.class, "purge-distributed-repository" );
+        configControllerHints.put( DistributedDirectoryPurgeConfiguration.class, "purge-distributed-directory" );
+    }
 
     @Requirement
     private PurgeConfigurationService purgeConfigurationService;
@@ -65,52 +75,10 @@ public class PurgeTaskExecutor
 
         try
         {
-            if ( purgeConfig != null && purgeConfig instanceof RepositoryPurgeConfiguration )
+            if ( purgeConfig != null )
             {
-                RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-
-                LocalRepository repository = repoPurge.getRepository();
-
-                if ( repository == null )
-                {
-                    throw new TaskExecutionException(
-                        "Error while executing purge repository task: no repository set" );
-                }
-
-                PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
-                                                                                      "purge-repository" );
-                purgeController.initializeExecutors( repoPurge );
-                purgeController.doPurge( repoPurge );
+                performPurge( purgeConfig );
             }
-            else if ( purgeConfig != null && purgeConfig instanceof DirectoryPurgeConfiguration )
-            {
-                DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
-
-                PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
-                                                                                      "purge-directory" );
-                purgeController.initializeExecutors( dirPurge );
-                purgeController.doPurge( dirPurge.getLocation() );
-            }
-            else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
-            {
-                DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
-
-                PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
-                                                                                      "purge-distributed-directory" );
-                purgeController.initializeExecutors( dirPurge );
-                purgeController.doPurge( dirPurge );
-            }
-            else if ( purgeConfig instanceof DistributedRepositoryPurgeConfiguration )
-            {
-                DistributedRepositoryPurgeConfiguration dirPurge =
-                    (DistributedRepositoryPurgeConfiguration) purgeConfig;
-
-                PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
-                                                                                      "purge-distributed-repository" );
-                purgeController.initializeExecutors( dirPurge );
-                purgeController.doPurge( dirPurge );
-            }
-
         }
         catch ( ComponentLookupException e )
         {
@@ -120,6 +88,21 @@ public class PurgeTaskExecutor
         {
             throw new TaskExecutionException( "Error while executing purge task", e );
         }
+    }
+
+    private void performPurge( AbstractPurgeConfiguration config )
+        throws ContinuumPurgeExecutorException, ComponentLookupException
+    {
+        PurgeController controller = getController( config.getClass() );
+        controller.initializeExecutors( config );
+        controller.doPurge( config );
+    }
+
+    private PurgeController getController( Class configClass )
+        throws ComponentLookupException
+    {
+        String controllerHint = configControllerHints.get( configClass );
+        return (PurgeController) container.lookup( PurgeController.ROLE, controllerHint );
     }
 
     public void contextualize( Context context )
