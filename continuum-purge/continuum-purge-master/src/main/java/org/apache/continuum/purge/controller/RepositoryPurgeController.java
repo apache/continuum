@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DefaultPurgeController
@@ -47,23 +49,17 @@ import java.io.File;
  */
 @Component( role = org.apache.continuum.purge.controller.PurgeController.class, hint = "purge-repository" )
 public class RepositoryPurgeController
-    implements PurgeController, ScannerHandler
+    implements PurgeController
 {
     private static final Logger log = LoggerFactory.getLogger( RepositoryPurgeController.class );
 
-    private ContinuumPurgeExecutor purgeExecutor;
-
-    private ContinuumPurgeExecutor purgeReleasedSnapshotsExecutor;
+    private ContinuumPurgeExecutor executor;
 
     @Requirement
     private PurgeConfigurationService purgeConfigurationService;
 
     @Requirement( hint = "repository-scanner" )
     private RepositoryScanner scanner;
-
-    private boolean deleteReleasedSnapshots = false;
-
-    private boolean deleteAll = false;
 
     public void configure( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
@@ -81,58 +77,73 @@ public class RepositoryPurgeController
         {
             throw new ContinuumPurgeExecutorException( "Error while initializing purge executors", e );
         }
-
-        if ( repoPurge.isDeleteAll() )
-        {
-            deleteAll = true;
-            purgeExecutor = new CleanAllPurgeExecutor( ContinuumPurgeConstants.PURGE_REPOSITORY );
-        }
-        else
-        {
-            if ( repoPurge.getDaysOlder() > 0 )
-            {
-                purgeExecutor = new DaysOldRepositoryPurgeExecutor( repositoryContent, repoPurge.getDaysOlder(),
-                                                                    repoPurge.getRetentionCount() );
-            }
-            else
-            {
-                purgeExecutor = new RetentionCountRepositoryPurgeExecutor( repositoryContent,
-                                                                           repoPurge.getRetentionCount() );
-            }
-
-            purgeReleasedSnapshotsExecutor = new ReleasedSnapshotsRepositoryPurgeExecutor( repositoryContent );
-            deleteReleasedSnapshots = repoPurge.isDeleteReleasedSnapshots();
-        }
+        executor =
+            new RepositoryPurgeExecutorFactoryImpl( scanner ).create( repoPurge.isDeleteAll(), repoPurge.getDaysOlder(),
+                                                                      repoPurge.getRetentionCount(),
+                                                                      repoPurge.isDeleteReleasedSnapshots(),
+                                                                      repositoryContent );
     }
 
     public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-        doPurge( repoPurge.getRepository().getLocation() );
-    }
-
-    private void doPurge( String path )
-    {
+        String path = repoPurge.getRepository().getLocation();
         log.info( "--- Start: Purging repository {} ---", path );
-        if ( deleteAll )
+        try
         {
-            handle( path );
+            executor.purge( path );
         }
-        else
+        catch ( ContinuumPurgeExecutorException e )
         {
-            try
-            {
-                scan( path );
-            }
-            catch ( ContinuumPurgeExecutorException e )
-            {
-                log.error( "failure while scanning", e );
-            }
+            log.error( "failure during repo purge", e );
         }
         log.info( "--- End: Purging repository {} ---", path );
     }
+}
 
-    private void scan( String path )
+interface RepositoryPurgeExecutorFactory
+{
+    ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, boolean deleteReleasedSnapshots,
+                                   RepositoryManagedContent repoContent );
+}
+
+class MultiplexedPurgeExecutor
+    implements ContinuumPurgeExecutor
+{
+    List<ContinuumPurgeExecutor> constituents;
+
+    public MultiplexedPurgeExecutor( ContinuumPurgeExecutor... executors )
+    {
+        constituents = Arrays.asList( executors );
+    }
+
+    public void purge( String path )
+        throws ContinuumPurgeExecutorException
+    {
+        for ( ContinuumPurgeExecutor child : constituents )
+        {
+            child.purge( path );
+        }
+    }
+}
+
+class ScanningPurgeExecutor
+    implements ContinuumPurgeExecutor, ScannerHandler
+{
+
+    private static final Logger log = LoggerFactory.getLogger( ScanningPurgeExecutor.class );
+
+    RepositoryScanner scanner;
+
+    ContinuumPurgeExecutor executor;
+
+    public ScanningPurgeExecutor( RepositoryScanner scanner, ContinuumPurgeExecutor executor )
+    {
+        this.scanner = scanner;
+        this.executor = executor;
+    }
+
+    public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
         scanner.scan( new File( path ), this );
@@ -142,15 +153,49 @@ public class RepositoryPurgeController
     {
         try
         {
-            if ( !deleteAll && deleteReleasedSnapshots )
-            {
-                purgeReleasedSnapshotsExecutor.purge( path );
-            }
-            purgeExecutor.purge( path );
+            executor.purge( path );
         }
         catch ( ContinuumPurgeExecutorException e )
         {
-            log.error( String.format( "failure handling path '%s'", path ), e );
+            log.error( String.format( "handling failed %s: %s", path, e.getMessage() ), e );
         }
+    }
+}
+
+class RepositoryPurgeExecutorFactoryImpl
+    implements RepositoryPurgeExecutorFactory
+{
+    RepositoryScanner scanner;
+
+    public RepositoryPurgeExecutorFactoryImpl( RepositoryScanner scanner )
+    {
+        this.scanner = scanner;
+    }
+
+    public ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount,
+                                          boolean deleteReleasedSnapshots, RepositoryManagedContent repoContent )
+    {
+        if ( deleteAll )
+        {
+            return new CleanAllPurgeExecutor( ContinuumPurgeConstants.PURGE_REPOSITORY );
+        }
+
+        ContinuumPurgeExecutor executor;
+        if ( daysOld > 0 )
+        {
+            executor = new DaysOldRepositoryPurgeExecutor( repoContent, daysOld, retentionCount );
+        }
+        else
+        {
+            executor = new RetentionCountRepositoryPurgeExecutor( repoContent, retentionCount );
+        }
+
+        if ( deleteReleasedSnapshots )
+        {
+            ContinuumPurgeExecutor snapshots = new ReleasedSnapshotsRepositoryPurgeExecutor( repoContent );
+            executor = new MultiplexedPurgeExecutor( snapshots, executor );
+        }
+
+        return new ScanningPurgeExecutor( scanner, executor );
     }
 }
