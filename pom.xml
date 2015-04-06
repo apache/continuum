@@ -1497,7 +1497,12 @@
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-purge</artifactId>
+        <artifactId>continuum-purge-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-purge-master</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

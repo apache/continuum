@@ -82,7 +82,7 @@ public abstract class AbstractPurgeExecutorTest
     {
         repoConfig = new RepositoryPurgeConfiguration();
         repoConfig.setRepository( defaultRepository );
-        repoConfig.setDaysOlder( TEST_DAYS_OLDER );
+        repoConfig.setDaysOlder( AbstractPurgeTest.TEST_DAYS_OLDER );
         repoConfig = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( repoConfig );
 
         return new PurgeTask( repoConfig.getId() );
@@ -94,7 +94,7 @@ public abstract class AbstractPurgeExecutorTest
         repoConfig = new RepositoryPurgeConfiguration();
         repoConfig.setRepository( defaultRepository );
         repoConfig.setDaysOlder( -1 );
-        repoConfig.setRetentionCount( TEST_RETENTION_COUNT );
+        repoConfig.setRetentionCount( AbstractPurgeTest.TEST_RETENTION_COUNT );
         repoConfig = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( repoConfig );
 
         return new PurgeTask( repoConfig.getId() );
@@ -106,7 +106,7 @@ public abstract class AbstractPurgeExecutorTest
         repoConfig = new RepositoryPurgeConfiguration();
         repoConfig.setRepository( defaultRepository );
         repoConfig.setDaysOlder( -1 );
-        repoConfig.setRetentionCount( TEST_RETENTION_COUNT );
+        repoConfig.setRetentionCount( AbstractPurgeTest.TEST_RETENTION_COUNT );
         repoConfig.setDeleteReleasedSnapshots( true );
         repoConfig = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( repoConfig );
 
@@ -117,9 +117,9 @@ public abstract class AbstractPurgeExecutorTest
         throws Exception
     {
         dirConfig = new DirectoryPurgeConfiguration();
-        dirConfig.setDirectoryType( TEST_RELEASES_DIRECTORY_TYPE );
+        dirConfig.setDirectoryType( AbstractPurgeTest.TEST_RELEASES_DIRECTORY_TYPE );
         dirConfig.setLocation( getReleasesDirectoryLocation().getAbsolutePath() );
-        dirConfig.setDaysOlder( TEST_DAYS_OLDER );
+        dirConfig.setDaysOlder( AbstractPurgeTest.TEST_DAYS_OLDER );
         dirConfig = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( dirConfig );
 
         return new PurgeTask( dirConfig.getId() );
@@ -129,9 +129,9 @@ public abstract class AbstractPurgeExecutorTest
         throws Exception
     {
         dirConfig = new DirectoryPurgeConfiguration();
-        dirConfig.setDirectoryType( TEST_BUILDOUTPUT_DIRECTORY_TYPE );
+        dirConfig.setDirectoryType( AbstractPurgeTest.TEST_BUILDOUTPUT_DIRECTORY_TYPE );
         dirConfig.setLocation( getBuildOutputDirectoryLocation().getAbsolutePath() );
-        dirConfig.setDaysOlder( TEST_DAYS_OLDER );
+        dirConfig.setDaysOlder( AbstractPurgeTest.TEST_DAYS_OLDER );
         dirConfig = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( dirConfig );
 
         return new PurgeTask( dirConfig.getId() );
@@ -141,10 +141,10 @@ public abstract class AbstractPurgeExecutorTest
         throws Exception
     {
         dirConfig = new DirectoryPurgeConfiguration();
-        dirConfig.setDirectoryType( TEST_RELEASES_DIRECTORY_TYPE );
+        dirConfig.setDirectoryType( AbstractPurgeTest.TEST_RELEASES_DIRECTORY_TYPE );
         dirConfig.setLocation( getReleasesDirectoryLocation().getAbsolutePath() );
         dirConfig.setDaysOlder( -1 );
-        dirConfig.setRetentionCount( TEST_RETENTION_COUNT );
+        dirConfig.setRetentionCount( AbstractPurgeTest.TEST_RETENTION_COUNT );
         dirConfig = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( dirConfig );
 
         return new PurgeTask( dirConfig.getId() );
@@ -154,10 +154,10 @@ public abstract class AbstractPurgeExecutorTest
         throws Exception
     {
         dirConfig = new DirectoryPurgeConfiguration();
-        dirConfig.setDirectoryType( TEST_BUILDOUTPUT_DIRECTORY_TYPE );
+        dirConfig.setDirectoryType( AbstractPurgeTest.TEST_BUILDOUTPUT_DIRECTORY_TYPE );
         dirConfig.setLocation( getBuildOutputDirectoryLocation().getAbsolutePath() );
         dirConfig.setDaysOlder( -1 );
-        dirConfig.setRetentionCount( TEST_RETENTION_COUNT );
+        dirConfig.setRetentionCount( AbstractPurgeTest.TEST_RETENTION_COUNT );
         dirConfig = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( dirConfig );
 
         return new PurgeTask( dirConfig.getId() );

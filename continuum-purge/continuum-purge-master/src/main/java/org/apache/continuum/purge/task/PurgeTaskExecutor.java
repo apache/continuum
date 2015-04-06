@@ -31,6 +31,7 @@ import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.repository.scanner.RepositoryScanner;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
@@ -43,6 +44,7 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 /**
  * @author Maria Catherine Tan
  */
+@Component( role = org.codehaus.plexus.taskqueue.execution.TaskExecutor.class, hint = "purge" )
 public class PurgeTaskExecutor
     implements TaskExecutor, Contextualizable
 {
@@ -50,7 +52,7 @@ public class PurgeTaskExecutor
     @Requirement
     private PurgeConfigurationService purgeConfigurationService;
 
-    @Requirement
+    @Requirement( hint = "repository-scanner" )
     private RepositoryScanner scanner;
 
     private PlexusContainer container;
