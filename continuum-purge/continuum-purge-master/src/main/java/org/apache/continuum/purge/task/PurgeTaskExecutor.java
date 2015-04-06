@@ -28,7 +28,6 @@ import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-import org.apache.continuum.purge.repository.scanner.RepositoryScanner;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -53,9 +52,6 @@ public class PurgeTaskExecutor
 
     @Requirement
     private PurgeConfigurationService purgeConfigurationService;
-
-    @Requirement( hint = "repository-scanner" )
-    private RepositoryScanner scanner;
 
     private PlexusContainer container;
 
@@ -83,18 +79,8 @@ public class PurgeTaskExecutor
 
                 PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
                                                                                       "purge-repository" );
-
                 purgeController.initializeExecutors( repoPurge );
-
-                if ( repoPurge.isDeleteAll() )
-                {
-                    purgeController.doPurge( repoPurge );
-                }
-                else
-                {
-                    File repoLocation = new File( repository.getLocation() ).getAbsoluteFile();
-                    scanner.scan( repoLocation, purgeController );
-                }
+                purgeController.doPurge( repoPurge );
             }
             else if ( purgeConfig != null && purgeConfig instanceof DirectoryPurgeConfiguration )
             {
@@ -102,9 +88,7 @@ public class PurgeTaskExecutor
 
                 PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
                                                                                       "purge-directory" );
-
                 purgeController.initializeExecutors( dirPurge );
-
                 purgeController.doPurge( dirPurge.getLocation() );
             }
             else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
@@ -113,9 +97,7 @@ public class PurgeTaskExecutor
 
                 PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
                                                                                       "purge-distributed-directory" );
-
                 purgeController.initializeExecutors( dirPurge );
-
                 purgeController.doPurge( dirPurge );
             }
             else if ( purgeConfig instanceof DistributedRepositoryPurgeConfiguration )
@@ -125,9 +107,7 @@ public class PurgeTaskExecutor
 
                 PurgeController purgeController = (PurgeController) container.lookup( PurgeController.ROLE,
                                                                                       "purge-distributed-repository" );
-
                 purgeController.initializeExecutors( dirPurge );
-
                 purgeController.doPurge( dirPurge );
             }
 

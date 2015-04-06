@@ -20,7 +20,6 @@ package org.apache.continuum.purge.repository.scanner;
  */
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.repository.utils.FileTypes;
 import org.codehaus.plexus.component.annotations.Component;
@@ -42,14 +41,14 @@ public class DefaultRepositoryScanner
     @Requirement( hint = "file-types" )
     private FileTypes filetypes;
 
-    public void scan( File repoLocation, PurgeController purgeController )
+    public void scan( File repoLocation, ScannerHandler handler )
         throws ContinuumPurgeExecutorException
     {
         List<String> ignoredPatterns = filetypes.getIgnoredFileTypePatterns();
-        scan( repoLocation, purgeController, ignoredPatterns );
+        scan( repoLocation, handler, ignoredPatterns );
     }
 
-    public void scan( File repositoryLocation, PurgeController purgeController, List<String> ignoredContentPatterns )
+    public void scan( File repositoryLocation, ScannerHandler handler, List<String> ignoredContentPatterns )
         throws ContinuumPurgeExecutorException
     {
 
@@ -87,7 +86,7 @@ public class DefaultRepositoryScanner
         dirWalker.setExcludes( allExcludes );
 
         RepositoryScannerInstance scannerInstance =
-            new RepositoryScannerInstance( repositoryLocation, purgeController );
+            new RepositoryScannerInstance( repositoryLocation, handler );
 
         dirWalker.addDirectoryWalkListener( scannerInstance );
 

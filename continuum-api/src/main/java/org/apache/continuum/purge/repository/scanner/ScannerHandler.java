@@ -19,24 +19,7 @@ package org.apache.continuum.purge.repository.scanner;
  * under the License.
  */
 
-import org.apache.continuum.purge.controller.PurgeController;
-import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-
-import java.io.File;
-import java.util.List;
-
-/**
- * Codes were taken from Archiva and made some changes.
- *
- * @author Maria Catherine Tan
- * @since 25 jul 07
- */
-public interface RepositoryScanner
+public interface ScannerHandler
 {
-
-    void scan( File repoLocation, ScannerHandler handler )
-        throws ContinuumPurgeExecutorException;
-
-    void scan( File repoLocation, ScannerHandler handler, List<String> ignoredContentPatterns )
-        throws ContinuumPurgeExecutorException;
+    void handle( String path );
 }

@@ -31,10 +31,14 @@ import org.apache.continuum.purge.executor.DaysOldRepositoryPurgeExecutor;
 import org.apache.continuum.purge.executor.ReleasedSnapshotsRepositoryPurgeExecutor;
 import org.apache.continuum.purge.executor.RetentionCountRepositoryPurgeExecutor;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.continuum.purge.repository.scanner.RepositoryScanner;
+import org.apache.continuum.purge.repository.scanner.ScannerHandler;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * DefaultPurgeController
@@ -43,7 +47,7 @@ import org.slf4j.LoggerFactory;
  */
 @Component( role = org.apache.continuum.purge.controller.PurgeController.class, hint = "purge-repository" )
 public class RepositoryPurgeController
-    implements PurgeController
+    implements PurgeController, ScannerHandler
 {
     private static final Logger log = LoggerFactory.getLogger( RepositoryPurgeController.class );
 
@@ -54,7 +58,12 @@ public class RepositoryPurgeController
     @Requirement
     private PurgeConfigurationService purgeConfigurationService;
 
+    @Requirement( hint = "repository-scanner" )
+    private RepositoryScanner scanner;
+
     private boolean deleteReleasedSnapshots = false;
+
+    private boolean deleteAll = false;
 
     public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
@@ -75,6 +84,7 @@ public class RepositoryPurgeController
 
         if ( repoPurge.isDeleteAll() )
         {
+            deleteAll = true;
             purgeExecutor = new CleanAllPurgeExecutor( ContinuumPurgeConstants.PURGE_REPOSITORY );
         }
         else
@@ -98,27 +108,49 @@ public class RepositoryPurgeController
     public void doPurge( AbstractPurgeConfiguration purgeConfig )
     {
         RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-        log.info( "--- Start: Purging repository [{}] {} ---", repoPurge.getRepository().getId(),
-                  repoPurge.getRepository().getLocation() );
         doPurge( repoPurge.getRepository().getLocation() );
-        log.info( "--- End: Purging repository [{}] {} ---", repoPurge.getRepository().getId(),
-                  repoPurge.getRepository().getLocation() );
     }
 
     public void doPurge( String path )
     {
+        log.info( "--- Start: Purging repository {} ---", path );
+        if ( deleteAll )
+        {
+            handle( path );
+        }
+        else
+        {
+            try
+            {
+                scan( path );
+            }
+            catch ( ContinuumPurgeExecutorException e )
+            {
+                log.error( "failure while scanning", e );
+            }
+        }
+        log.info( "--- End: Purging repository {} ---", path );
+    }
+
+    private void scan( String path )
+        throws ContinuumPurgeExecutorException
+    {
+        scanner.scan( new File( path ), this );
+    }
+
+    public void handle( String path )
+    {
         try
         {
-            if ( deleteReleasedSnapshots )
+            if ( !deleteAll && deleteReleasedSnapshots )
             {
                 purgeReleasedSnapshotsExecutor.purge( path );
             }
-
             purgeExecutor.purge( path );
         }
         catch ( ContinuumPurgeExecutorException e )
         {
-            log.error( e.getMessage(), e );
+            log.error( String.format( "failure handling path '%s'", path ), e );
         }
     }
 }

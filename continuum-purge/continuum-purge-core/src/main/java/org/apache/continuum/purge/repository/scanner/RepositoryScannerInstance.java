@@ -19,7 +19,6 @@ package org.apache.continuum.purge.repository.scanner;
  * under the License.
  */
 
-import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.maven.archiva.common.utils.BaseFile;
 import org.codehaus.plexus.util.DirectoryWalkListener;
 import org.slf4j.Logger;
@@ -37,12 +36,12 @@ public class RepositoryScannerInstance
 
     private final File repository;
 
-    private final PurgeController purgeController;
+    private final ScannerHandler handler;
 
-    public RepositoryScannerInstance( File repoLocation, PurgeController purgeController )
+    public RepositoryScannerInstance( File repoLocation, ScannerHandler handler )
     {
         this.repository = repoLocation;
-        this.purgeController = purgeController;
+        this.handler = handler;
     }
 
     public void debug( String message )
@@ -63,7 +62,7 @@ public class RepositoryScannerInstance
     public void directoryWalkStep( int percentage, File file )
     {
         BaseFile basefile = new BaseFile( repository, file );
-        purgeController.doPurge( basefile.getRelativePath() );
+        handler.handle( basefile.getRelativePath() );
     }
 
 }
