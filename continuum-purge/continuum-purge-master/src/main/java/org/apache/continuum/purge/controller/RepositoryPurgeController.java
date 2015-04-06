@@ -49,17 +49,18 @@ public class RepositoryPurgeController
     @Requirement
     private RepositoryPurgeExecutorFactory executorFactory;
 
-    public void purge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration config )
     {
-        RepositoryPurgeConfiguration config = (RepositoryPurgeConfiguration) purgeConfig;
+        RepositoryPurgeConfiguration repoConfig = (RepositoryPurgeConfiguration) config;
         try
         {
-            String path = config.getRepository().getLocation();
-            RepositoryManagedContent repositoryContent = getManagedContent( config.getRepository().getId() );
-            ContinuumPurgeExecutor executor = executorFactory.create( config.isDeleteAll(), config.getDaysOlder(),
-                                                                      config.getRetentionCount(),
-                                                                      config.isDeleteReleasedSnapshots(),
-                                                                      repositoryContent );
+            String path = repoConfig.getRepository().getLocation();
+            RepositoryManagedContent repositoryContent = getManagedContent( repoConfig.getRepository().getId() );
+            ContinuumPurgeExecutor executor =
+                executorFactory.create( repoConfig.isDeleteAll(), repoConfig.getDaysOlder(),
+                                        repoConfig.getRetentionCount(),
+                                        repoConfig.isDeleteReleasedSnapshots(),
+                                        repositoryContent );
             log.info( "purging repository '{}'", path );
             executor.purge( path );
             log.info( "purge complete '{}'", path );

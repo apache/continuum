@@ -43,9 +43,9 @@ public class DirectoryPurgeController
     @Requirement
     private DirectoryPurgeExecutorFactory executorFactory;
 
-    public void purge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration config )
     {
-        DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
+        DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) config;
         String path = dirPurge.getLocation();
         ContinuumPurgeExecutor executor = executorFactory.create( dirPurge.isDeleteAll(), dirPurge.getDaysOlder(),
                                                                   dirPurge.getRetentionCount(),

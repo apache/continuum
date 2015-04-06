@@ -43,39 +43,35 @@ public class DistributedDirectoryPurgeController
     @Requirement
     private ConfigurationService configurationService;
 
-    public void purge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration config )
     {
-        DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
+        DistributedDirectoryPurgeConfiguration dirConfig = (DistributedDirectoryPurgeConfiguration) config;
+        String agentUrl = dirConfig.getBuildAgentUrl();
         try
         {
             SlaveBuildAgentTransportService transportClient =
-                new SlaveBuildAgentTransportClient( new URL( dirPurge.getBuildAgentUrl() ), "",
+                new SlaveBuildAgentTransportClient( new URL( dirConfig.getBuildAgentUrl() ), "",
                                                     configurationService.getSharedSecretPassword() );
 
             transportClient.ping();
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                StringBuilder logMsg = new StringBuilder().append(
-                    "Executing directory purge with the following settings[directoryType=" )
-                                                          .append( dirPurge.getDirectoryType() )
-                                                          .append( ",daysOlder=" )
-                                                          .append( dirPurge.getDaysOlder() )
-                                                          .append( ", retentionCount=" )
-                                                          .append( dirPurge.getRetentionCount() )
-                                                          .append( ", deleteAll=" )
-                                                          .append( dirPurge.isDeleteAll() )
-                                                          .append( "]" );
-                log.debug( logMsg.toString() );
+                log.info( "sending request to {} [dirType={},full={},maxAge={},retain={}]",
+                          new Object[] {
+                              dirConfig.getBuildAgentUrl(), dirConfig.getDirectoryType(),
+                              dirConfig.isDeleteAll(), dirConfig.getDaysOlder(), dirConfig.getRetentionCount()
+                          } );
             }
 
-            transportClient.executeDirectoryPurge( dirPurge.getDirectoryType(), dirPurge.getDaysOlder(),
-                                                   dirPurge.getRetentionCount(), dirPurge.isDeleteAll() );
+            transportClient.executeDirectoryPurge( dirConfig.getDirectoryType(), dirConfig.getDaysOlder(),
+                                                   dirConfig.getRetentionCount(), dirConfig.isDeleteAll() );
 
         }
         catch ( Exception e )
         {
-            log.error( "Unable to execute purge: " + e.getMessage(), e );
+            log.error( String.format( "sending request to %s failed: %s", agentUrl, e.getMessage() ),
+                       e );
         }
     }
 }

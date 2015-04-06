@@ -23,7 +23,6 @@ import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransport
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
-import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
@@ -44,42 +43,34 @@ public class DistributedRepositoryPurgeController
     @Requirement
     private ConfigurationService configurationService;
 
-    public void purge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration config )
     {
-        DistributedRepositoryPurgeConfiguration repoPurge = (DistributedRepositoryPurgeConfiguration) purgeConfig;
+        DistributedRepositoryPurgeConfiguration repoConfig = (DistributedRepositoryPurgeConfiguration) config;
+        String agentUrl = repoConfig.getBuildAgentUrl();
         try
         {
             SlaveBuildAgentTransportService transportClient =
-                new SlaveBuildAgentTransportClient( new URL( repoPurge.getBuildAgentUrl() ), "",
+                new SlaveBuildAgentTransportClient( new URL( repoConfig.getBuildAgentUrl() ), "",
                                                     configurationService.getSharedSecretPassword() );
 
             transportClient.ping();
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                StringBuilder logMsg = new StringBuilder().append(
-                    "Executing repository purge with the following settings[" )
-                                                          .append( "repo=" )
-                                                          .append( repoPurge.getRepositoryName() )
-                                                          .append( ",daysOlder=" )
-                                                          .append( repoPurge.getDaysOlder() )
-                                                          .append( ", retentionCount=" )
-                                                          .append( repoPurge.getRetentionCount() )
-                                                          .append( ", deleteAll=" )
-                                                          .append( repoPurge.isDeleteAll() )
-                                                          .append( ",deleteReleasedSnapshots=" )
-                                                          .append( repoPurge.isDeleteReleasedSnapshots() )
-                                                          .append( "]" );
-                log.debug( logMsg.toString() );
+                log.info( "sending request to {} [repo={},full={},maxAge={},retain={},snapshots={}]",
+                          new Object[] {
+                              agentUrl, repoConfig.getRepositoryName(), repoConfig.isDeleteAll(),
+                              repoConfig.getDaysOlder(), repoConfig.getRetentionCount(),
+                              repoConfig.isDeleteReleasedSnapshots() } );
             }
 
-            transportClient.executeRepositoryPurge( repoPurge.getRepositoryName(), repoPurge.getDaysOlder(),
-                                                    repoPurge.getRetentionCount(), repoPurge.isDeleteAll(),
-                                                    repoPurge.isDeleteReleasedSnapshots() );
+            transportClient.executeRepositoryPurge( repoConfig.getRepositoryName(), repoConfig.getDaysOlder(),
+                                                    repoConfig.getRetentionCount(), repoConfig.isDeleteAll(),
+                                                    repoConfig.isDeleteReleasedSnapshots() );
         }
         catch ( Exception e )
         {
-            log.error( "Unable to execute purge: " + e.getMessage(), e );
+            log.error( String.format( "sending request to %s failed: %s", agentUrl, e.getMessage() ), e );
         }
     }
 }

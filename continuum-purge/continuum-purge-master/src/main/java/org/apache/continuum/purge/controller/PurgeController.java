@@ -29,5 +29,5 @@ public interface PurgeController
 {
     String ROLE = PurgeController.class.getName();
 
-    void purge( AbstractPurgeConfiguration purgeConfig );
+    void purge( AbstractPurgeConfiguration config );
 }
