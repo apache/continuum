@@ -233,7 +233,7 @@
             </deployable>
             <!-- Test resources -->
             <deployable>
-              <location>${basedir}/src/test/example-projects</location>
+              <location>${sampleProjectsDir}</location>
               <type>war</type>
               <properties>
                 <context>example-projects</context>
@@ -300,6 +300,10 @@
                 <property>
                   <name>seleniumPort</name>
                   <value>${seleniumPort}</value>
+                </property>
+                <property>
+                  <name>sampleProjectsDir</name>
+                  <value>${sampleProjectsDir}</value>
                 </property>
               </systemProperties>
             </configuration>
@@ -415,7 +419,7 @@
                 <deployables>
                   <!-- Skip all but test resources -->
                   <deployable>
-                    <location>${basedir}/src/test/example-projects</location>
+                    <location>${sampleProjectsDir}</location>
                     <type>war</type>
                     <properties>
                       <context>example-projects</context>
@@ -610,6 +614,7 @@
     <seleniumPort>4444</seleniumPort>
     <continuum.port>9595</continuum.port>
     <baseUrl>http://localhost:${continuum.port}/continuum</baseUrl>
+    <sampleProjectsDir>${basedir}/src/test/example-projects</sampleProjectsDir>
     <sampleProjectsUrl>http://localhost:${continuum.port}</sampleProjectsUrl>
     <buildAgentUrl>http://localhost:${continuum.port}/continuum-buildagent/xmlrpc</buildAgentUrl>
     <appserverBase>${project.build.directory}</appserverBase>

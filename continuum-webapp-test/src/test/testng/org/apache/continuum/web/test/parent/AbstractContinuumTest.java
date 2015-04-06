@@ -24,6 +24,8 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
+import java.io.File;
+
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -365,11 +367,12 @@ public abstract class AbstractContinuumTest
         waitForElementPresent( "link=Builds" );
         clickLinkWithText( "Builds" );
 
-        if (success)
+        if ( success )
         {
             clickAndWait( "css=img[alt=\"Success\"]" );
         }
-        else {
+        else
+        {
             clickAndWait( "css=img[alt=\"Failed\"]" );
         }
 
@@ -596,6 +599,25 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "selectedProjectGroup" );
     }
 
+    protected void uploadMavenTwoProject( File pomFile, String projectGroup, String importType,
+                                          boolean success )
+    {
+        goToAddMavenTwoProjectPage();
+
+        setFieldValue( "m2PomFile", pomFile.getAbsolutePath() );
+
+        if ( projectGroup != null )
+        {
+            selectValue( "addMavenTwoProject_selectedProjectGroup", projectGroup );
+        }
+
+        String typeRadioId = "addMavenTwoProject_importType" + importType;
+        click( typeRadioId );
+
+        submit();
+        waitForAddProjectResult( success );
+    }
+
     protected void addMavenTwoProject( String pomUrl, String username, String password, String projectGroup,
                                        boolean success )
     {
@@ -611,6 +633,11 @@ public abstract class AbstractContinuumTest
             selectValue( "addMavenTwoProject_selectedProjectGroup", projectGroup );
         }
         submit();
+        waitForAddProjectResult( success );
+    }
+
+    private void waitForAddProjectResult( boolean success )
+    {
         String title;
         if ( success )
         {
