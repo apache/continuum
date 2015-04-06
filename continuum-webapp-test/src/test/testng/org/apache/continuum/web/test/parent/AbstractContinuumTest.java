@@ -686,7 +686,7 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "selectedProjectGroup" );
         if ( existingProjectGroup == null )
         {
-            assertOptionPresent( "selectedProjectGroup", new String[]{"Defined by POM", "Default Project Group"} );
+            assertOptionPresent( "selectedProjectGroup", new String[] { "Defined by POM", "Default Project Group" } );
         }
         else
         {
@@ -695,8 +695,8 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId",
-                             new String[]{"Default", "Default Ant Template", "Default Maven 1 Template",
-                                 "Default Maven Template", "Default Shell Template"} );
+                             new String[] { "Default", "Default Ant Template", "Default Maven 1 Template",
+                                 "Default Maven Template", "Default Shell Template" } );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -765,12 +765,12 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "projectScmUseCache" );
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertOptionPresent( "selectedProjectGroup", new String[]{"Default Project Group"} );
+        assertOptionPresent( "selectedProjectGroup", new String[] { "Default Project Group" } );
         assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
         assertOptionPresent( "buildDefinitionTemplateId",
-                             new String[]{"Default", "Default Ant Template", "Default Maven 1 Template",
-                                 "Default Maven Template", "Default Shell Template"} );
+                             new String[] { "Default", "Default Ant Template", "Default Maven 1 Template",
+                                 "Default Maven Template", "Default Shell Template" } );
         assertButtonWithValuePresent( "Add" );
         assertButtonWithValuePresent( "Cancel" );
     }
@@ -1032,7 +1032,7 @@ public abstract class AbstractContinuumTest
     }
 
     @BeforeSuite( alwaysRun = true )
-    @Parameters( {"baseUrl", "browser", "seleniumHost", "seleniumPort"} )
+    @Parameters( { "baseUrl", "browser", "seleniumHost", "seleniumPort" } )
     public void initializeContinuum( @Optional( "http://localhost:9595/continuum" ) String baseUrl,
                                      @Optional( "*firefox" ) String browser,
                                      @Optional( "localhost" ) String seleniumHost,
@@ -1355,10 +1355,10 @@ public abstract class AbstractContinuumTest
 
     protected void assertAppearancePage()
     {
-        assertPage("Configure Appearance");
-        assertTextPresent("Appearance");
-        assertTextPresent("Company Details");
-        assertTextPresent("Footer Content");
+        assertPage( "Configure Appearance" );
+        assertTextPresent( "Appearance" );
+        assertTextPresent( "Company Details" );
+        assertTextPresent( "Footer Content" );
         assertButtonWithValuePresent( "Save" );
     }
 }
