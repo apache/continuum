@@ -209,25 +209,22 @@ public class LocalRepositoryAction
         {
             addActionError( getText( "repository.error.remove.in.use",
                                      "Unable to remove local repository because it is in use" ) );
+            return ERROR;
         }
 
         if ( repository.getName().equals( "DEFAULT" ) )
         {
             addActionError( getText( "repository.error.remove.default", "Unable to remove default local repository" ) );
+            return ERROR;
         }
 
-        if ( !hasActionErrors() )
+        if ( !confirmed )
         {
-            if ( confirmed )
-            {
-                repositoryService.removeLocalRepository( repository.getId() );
-            }
-            else
-            {
-                return CONFIRM;
-            }
+            return CONFIRM;
         }
 
+        repositoryService.removeLocalRepository( repository.getId() );
+        addActionMessage( getText( "repository.remove.success" ) );
         return SUCCESS;
     }
 
