@@ -19,10 +19,10 @@ package org.apache.continuum.purge.repository.scanner;
  * under the License.
  */
 
-import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -33,19 +33,10 @@ import java.util.List;
  */
 public interface RepositoryScanner
 {
-    /**
-     * <p>
-     * Typical Ignorable Content patterns.
-     * </p>
-     */
-    public static final String[] IGNORABLE_CONTENT =
-        {"bin/**", "reports/**", ".index", ".reports/**", ".maven/**", "**/.svn/**", "**/*snapshot-version",
-            "*/website/**", "*/licences/**", "**/.htaccess", "**/*.html", "**/*.txt", "**/README*", "**/CHANGELOG*",
-            "**/KEYS*" + "**/*.xml*"};
 
-    public void scan( LocalRepository repository, PurgeController purgeController )
+    void scan( File repoLocation, PurgeController purgeController )
         throws ContinuumPurgeExecutorException;
 
-    public void scan( LocalRepository repository, PurgeController purgeController, List<String> ignoredContentPatterns )
+    void scan( File repoLocation, PurgeController purgeController, List<String> ignoredContentPatterns )
         throws ContinuumPurgeExecutorException;
 }

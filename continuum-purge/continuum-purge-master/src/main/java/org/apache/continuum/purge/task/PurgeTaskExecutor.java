@@ -41,6 +41,8 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 
+import java.io.File;
+
 /**
  * @author Maria Catherine Tan
  */
@@ -90,7 +92,8 @@ public class PurgeTaskExecutor
                 }
                 else
                 {
-                    scanner.scan( repository, purgeController );
+                    File repoLocation = new File( repository.getLocation() ).getAbsoluteFile();
+                    scanner.scan( repoLocation, purgeController );
                 }
             }
             else if ( purgeConfig != null && purgeConfig instanceof DirectoryPurgeConfiguration )

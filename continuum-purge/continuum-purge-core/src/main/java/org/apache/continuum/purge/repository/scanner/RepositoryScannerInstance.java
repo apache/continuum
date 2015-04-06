@@ -19,7 +19,6 @@ package org.apache.continuum.purge.repository.scanner;
  * under the License.
  */
 
-import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.maven.archiva.common.utils.BaseFile;
 import org.codehaus.plexus.util.DirectoryWalkListener;
@@ -36,13 +35,13 @@ public class RepositoryScannerInstance
 {
     private static final Logger log = LoggerFactory.getLogger( RepositoryScannerInstance.class );
 
-    private final LocalRepository repository;
+    private final File repository;
 
     private final PurgeController purgeController;
 
-    public RepositoryScannerInstance( LocalRepository repository, PurgeController purgeController )
+    public RepositoryScannerInstance( File repoLocation, PurgeController purgeController )
     {
-        this.repository = repository;
+        this.repository = repoLocation;
         this.purgeController = purgeController;
     }
 
@@ -53,17 +52,17 @@ public class RepositoryScannerInstance
 
     public void directoryWalkFinished()
     {
-        log.info( "Walk Finished: [" + this.repository.getId() + "] " + this.repository.getLocation() );
+        log.info( "scan stopped: {}", repository );
     }
 
     public void directoryWalkStarting( File file )
     {
-        log.info( "Walk started [" + this.repository.getId() + "] " + this.repository.getLocation() );
+        log.info( "scan started: {}", repository );
     }
 
     public void directoryWalkStep( int percentage, File file )
     {
-        BaseFile basefile = new BaseFile( repository.getLocation(), file );
+        BaseFile basefile = new BaseFile( repository, file );
         purgeController.doPurge( basefile.getRelativePath() );
     }
 
