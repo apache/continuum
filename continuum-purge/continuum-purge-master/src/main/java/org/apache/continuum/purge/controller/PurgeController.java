@@ -20,7 +20,6 @@ package org.apache.continuum.purge.controller;
  */
 
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
-import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 
 /**
  * @author Maria Catherine Tan
@@ -29,9 +28,6 @@ import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 public interface PurgeController
 {
     String ROLE = PurgeController.class.getName();
-
-    void configure( AbstractPurgeConfiguration purgeConfig )
-        throws ContinuumPurgeExecutorException;
 
     void purge( AbstractPurgeConfiguration purgeConfig );
 }

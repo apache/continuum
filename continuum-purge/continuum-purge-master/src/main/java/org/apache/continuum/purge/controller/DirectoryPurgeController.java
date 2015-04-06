@@ -41,35 +41,25 @@ public class DirectoryPurgeController
 {
     private static final Logger log = LoggerFactory.getLogger( DirectoryPurgeController.class );
 
-    private ContinuumPurgeExecutor purgeExecutor;
+    private DirectoryPurgeExecutorFactory executorFactory = new DirectoryPurgeExecutorFactoryImpl();
 
     public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
-        doPurge( dirPurge.getLocation() );
-    }
-
-    private void doPurge( String path )
-    {
-        log.info( "--- Start: Purging directory path '{}'---", path );
+        String path = dirPurge.getLocation();
+        ContinuumPurgeExecutor executor = executorFactory.create( dirPurge.isDeleteAll(), dirPurge.getDaysOlder(),
+                                                                  dirPurge.getRetentionCount(),
+                                                                  dirPurge.getDirectoryType() );
         try
         {
-            purgeExecutor.purge( path );
+            log.info( "purging directory '{}'", path );
+            executor.purge( path );
+            log.info( "purge complete '{}'", path );
         }
         catch ( ContinuumPurgeExecutorException e )
         {
             log.error( e.getMessage(), e );
         }
-        log.info( "--- End: Purging directory path '{}'---", path );
-    }
-
-    public void configure( AbstractPurgeConfiguration purgeConfig )
-        throws ContinuumPurgeExecutorException
-    {
-        DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
-        purgeExecutor = new DirectoryPurgeExecutorFactoryImpl().create( dirPurge.isDeleteAll(), dirPurge.getDaysOlder(),
-                                                                        dirPurge.getRetentionCount(),
-                                                                        dirPurge.getDirectoryType() );
     }
 }
 

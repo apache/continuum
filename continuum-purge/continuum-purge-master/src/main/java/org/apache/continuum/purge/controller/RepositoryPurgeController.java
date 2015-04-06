@@ -53,51 +53,43 @@ public class RepositoryPurgeController
 {
     private static final Logger log = LoggerFactory.getLogger( RepositoryPurgeController.class );
 
-    private ContinuumPurgeExecutor executor;
-
     @Requirement
     private PurgeConfigurationService purgeConfigurationService;
 
     @Requirement( hint = "repository-scanner" )
     private RepositoryScanner scanner;
 
-    public void configure( AbstractPurgeConfiguration purgeConfig )
-        throws ContinuumPurgeExecutorException
-    {
-        RepositoryManagedContent repositoryContent;
-
-        RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-
-        try
-        {
-            repositoryContent = purgeConfigurationService.getManagedRepositoryContent(
-                repoPurge.getRepository().getId() );
-        }
-        catch ( PurgeConfigurationServiceException e )
-        {
-            throw new ContinuumPurgeExecutorException( "Error while initializing purge executors", e );
-        }
-        executor =
-            new RepositoryPurgeExecutorFactoryImpl( scanner ).create( repoPurge.isDeleteAll(), repoPurge.getDaysOlder(),
-                                                                      repoPurge.getRetentionCount(),
-                                                                      repoPurge.isDeleteReleasedSnapshots(),
-                                                                      repositoryContent );
-    }
-
     public void purge( AbstractPurgeConfiguration purgeConfig )
     {
-        RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-        String path = repoPurge.getRepository().getLocation();
-        log.info( "--- Start: Purging repository {} ---", path );
+        RepositoryPurgeConfiguration config = (RepositoryPurgeConfiguration) purgeConfig;
         try
         {
+            String path = config.getRepository().getLocation();
+            RepositoryManagedContent repositoryContent = getManagedContent( config.getRepository().getId() );
+            ContinuumPurgeExecutor executor = new RepositoryPurgeExecutorFactoryImpl( scanner )
+                .create( config.isDeleteAll(), config.getDaysOlder(), config.getRetentionCount(),
+                         config.isDeleteReleasedSnapshots(), repositoryContent );
+            log.info( "purging repository '{}'", path );
             executor.purge( path );
+            log.info( "purge complete '{}'", path );
         }
         catch ( ContinuumPurgeExecutorException e )
         {
             log.error( "failure during repo purge", e );
         }
-        log.info( "--- End: Purging repository {} ---", path );
+    }
+
+    private RepositoryManagedContent getManagedContent( int repoId )
+        throws ContinuumPurgeExecutorException
+    {
+        try
+        {
+            return purgeConfigurationService.getManagedRepositoryContent( repoId );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumPurgeExecutorException( "Error while initializing purge executors", e );
+        }
     }
 }
 
@@ -130,7 +122,6 @@ class MultiplexedPurgeExecutor
 class ScanningPurgeExecutor
     implements ContinuumPurgeExecutor, ScannerHandler
 {
-
     private static final Logger log = LoggerFactory.getLogger( ScanningPurgeExecutor.class );
 
     RepositoryScanner scanner;

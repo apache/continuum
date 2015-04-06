@@ -23,7 +23,6 @@ import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransport
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
-import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
@@ -44,13 +43,15 @@ public class DistributedDirectoryPurgeController
     @Requirement
     private ConfigurationService configurationService;
 
-    private SlaveBuildAgentTransportService transportClient;
-
     public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
         try
         {
+            SlaveBuildAgentTransportService transportClient =
+                new SlaveBuildAgentTransportClient( new URL( dirPurge.getBuildAgentUrl() ), "",
+                                                    configurationService.getSharedSecretPassword() );
+
             transportClient.ping();
 
             if ( log.isDebugEnabled() )
@@ -70,26 +71,11 @@ public class DistributedDirectoryPurgeController
 
             transportClient.executeDirectoryPurge( dirPurge.getDirectoryType(), dirPurge.getDaysOlder(),
                                                    dirPurge.getRetentionCount(), dirPurge.isDeleteAll() );
+
         }
         catch ( Exception e )
         {
             log.error( "Unable to execute purge: " + e.getMessage(), e );
-        }
-    }
-
-    public void configure( AbstractPurgeConfiguration purgeConfig )
-        throws ContinuumPurgeExecutorException
-    {
-        DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
-
-        try
-        {
-            transportClient = new SlaveBuildAgentTransportClient( new URL( dirPurge.getBuildAgentUrl() ), "",
-                                                                  configurationService.getSharedSecretPassword() );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumPurgeExecutorException( e.getMessage(), e );
         }
     }
 }

@@ -44,13 +44,15 @@ public class DistributedRepositoryPurgeController
     @Requirement
     private ConfigurationService configurationService;
 
-    private SlaveBuildAgentTransportService transportClient;
-
     public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         DistributedRepositoryPurgeConfiguration repoPurge = (DistributedRepositoryPurgeConfiguration) purgeConfig;
         try
         {
+            SlaveBuildAgentTransportService transportClient =
+                new SlaveBuildAgentTransportClient( new URL( repoPurge.getBuildAgentUrl() ), "",
+                                                    configurationService.getSharedSecretPassword() );
+
             transportClient.ping();
 
             if ( log.isDebugEnabled() )
@@ -78,21 +80,6 @@ public class DistributedRepositoryPurgeController
         catch ( Exception e )
         {
             log.error( "Unable to execute purge: " + e.getMessage(), e );
-        }
-    }
-
-    public void configure( AbstractPurgeConfiguration purgeConfig )
-        throws ContinuumPurgeExecutorException
-    {
-        DistributedRepositoryPurgeConfiguration repoPurge = (DistributedRepositoryPurgeConfiguration) purgeConfig;
-        try
-        {
-            transportClient = new SlaveBuildAgentTransportClient( new URL( repoPurge.getBuildAgentUrl() ), "",
-                                                                  configurationService.getSharedSecretPassword() );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumPurgeExecutorException( e.getMessage(), e );
         }
     }
 }
