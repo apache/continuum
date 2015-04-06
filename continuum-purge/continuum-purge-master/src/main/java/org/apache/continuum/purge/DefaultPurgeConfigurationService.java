@@ -31,6 +31,7 @@ import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfigura
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.continuum.purge.repository.content.RepositoryManagedContentFactory;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
@@ -70,6 +71,9 @@ public class DefaultPurgeConfigurationService
 
     @Requirement
     private DistributedRepositoryPurgeConfigurationDao distributedRepositoryPurgeConfigurationDao;
+
+    @Requirement
+    private RepositoryManagedContentFactory contentFactory;
 
     private PlexusContainer container;
 
@@ -406,13 +410,8 @@ public class DefaultPurgeConfigurationService
         try
         {
             LocalRepository repository = localRepositoryDao.getLocalRepository( repositoryId );
-
-            RepositoryManagedContent repoContent;
-
-            repoContent = (RepositoryManagedContent) container.lookup( RepositoryManagedContent.class,
-                                                                       repository.getLayout() );
+            RepositoryManagedContent repoContent = contentFactory.create( repository.getLayout() );
             repoContent.setRepository( repository );
-
             return repoContent;
         }
         catch ( ContinuumObjectNotFoundException e )

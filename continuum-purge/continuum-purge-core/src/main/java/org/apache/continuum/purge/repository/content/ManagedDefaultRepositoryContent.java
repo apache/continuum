@@ -44,8 +44,7 @@ import java.util.Set;
 /**
  * Taken from Archiva's ManagedDefaultRepositoryContent and made some few changes.
  */
-@Component( role = org.apache.continuum.purge.repository.content.RepositoryManagedContent.class, hint = "default",
-    instantiationStrategy = "per-lookup" )
+@Component( role = RepositoryManagedContent.class, hint = "default", instantiationStrategy = "per-lookup" )
 public class ManagedDefaultRepositoryContent
     implements RepositoryManagedContent
 {

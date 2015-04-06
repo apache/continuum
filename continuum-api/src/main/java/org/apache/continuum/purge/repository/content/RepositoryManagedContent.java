@@ -37,6 +37,8 @@ import java.util.Set;
  */
 public interface RepositoryManagedContent
 {
+    String ROLE = RepositoryManagedContent.class.getName();
+
     /**
      * Delete from the local repository all files / directories associated with the
      * provided version reference.
@@ -51,7 +53,6 @@ public interface RepositoryManagedContent
      * <p>
      * Convenience method to get the repository id.
      * </p>
-     *
      * <p>
      * Equivalent to calling <code>.getRepository().getId()</code>
      * </p>
@@ -66,7 +67,6 @@ public interface RepositoryManagedContent
      * This typically inclues the pom files, and those things with
      * classifiers (such as doc, source code, test libs, etc...)
      * </p>
-     *
      * <p>
      * <strong>NOTE:</strong> Some layouts (such as maven 1 "legacy") are not compatible with this query.
      * </p>
@@ -83,7 +83,6 @@ public interface RepositoryManagedContent
      * <p>
      * Convenience method to get the repository (on disk) root directory.
      * </p>
-     *
      * <p>
      * Equivalent to calling <code>.getLocalRepository().getDirectory()</code>
      * </p>
@@ -117,7 +116,6 @@ public interface RepositoryManagedContent
      * Given a specific {@link VersionedReference}, return the list of available versions for that
      * versioned reference.
      * </p>
-     *
      * <p>
      * <strong>NOTE:</strong> This is really only useful when working with SNAPSHOTs.
      * </p>
@@ -143,7 +141,7 @@ public interface RepositoryManagedContent
      *
      * @param path the path relative to the repository base dir for the artifact.
      * @return the {@link ArtifactReference} representing the path.  (or null if path cannot be converted to
-     *         a {@link ArtifactReference})
+     * a {@link ArtifactReference})
      * @throws LayoutException if there was a problem converting the path to an artifact.
      */
     public ArtifactReference toArtifactReference( String path )

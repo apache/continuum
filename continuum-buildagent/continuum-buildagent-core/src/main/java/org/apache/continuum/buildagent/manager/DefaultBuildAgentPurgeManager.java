@@ -19,7 +19,6 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.io.filefilter.AndFileFilter;
@@ -27,9 +26,19 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.model.LocalRepository;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
+import org.apache.continuum.purge.executor.RepositoryPurgeExecutorFactory;
+import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.continuum.purge.repository.content.RepositoryManagedContentFactory;
+import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,43 +51,44 @@ import java.util.Arrays;
 public class DefaultBuildAgentPurgeManager
     implements BuildAgentPurgeManager
 {
-    private static final Logger logger = LoggerFactory.getLogger( DefaultBuildAgentPurgeManager.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentPurgeManager.class );
 
     @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
+    @Requirement
+    private RepositoryPurgeExecutorFactory repoExecutorFactory;
+
+    @Requirement
+    private RepositoryManagedContentFactory contentFactory;
+
+    @Requirement
+    private LocalRepositoryHelper localRepositoryHelper;
+
     public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws Exception
     {
-        StringBuilder log = new StringBuilder().append(
-            "Executing directory purge with the following settings[directoryType=" ).
-                                                   append( directoryType ).append( ",daysOlder=" ).
-                                                   append( daysOlder ).append( ", retentionCount=" ).
-                                                   append( retentionCount ).append( ", deleteAll=" ).
-                                                   append( deleteAll ).append( "]" );
-        logger.info( log.toString() );
-
-        File directory = null;
-
         if ( "working".equals( directoryType ) || "releases".equals( directoryType ) )
         {
-            directory = buildAgentConfigurationService.getWorkingDirectory();
+            File directory = buildAgentConfigurationService.getWorkingDirectory();
+            String path = directory.getPath();
+            log.info( "purging directory '{}' [type={},full={},age={},retain={}]",
+                      new Object[] { path, directoryType, deleteAll, daysOlder, retentionCount } );
+            if ( deleteAll )
+            {
+                purgeAll( directory, directoryType );
+            }
+            else
+            {
+                purgeFiles( directory, directoryType, daysOlder, retentionCount );
+            }
+            log.info( "purge completed '{}'", path );
         }
         else
         {
-            logger.warn( "Cannot execute purge: DirectoryType: " + directoryType + " is not valid." );
-            return;
-        }
-        if ( deleteAll )
-        {
-            purgeAll( directory, directoryType );
-        }
-        else
-        {
-            purgeFiles( directory, directoryType, daysOlder, retentionCount );
+            log.warn( "ignoring directory purge, directory type {} is invalid.", directoryType );
         }
 
-        logger.info( "Directory purge execution done" );
     }
 
     private void purgeAll( File directory, String directoryType )
@@ -101,7 +111,8 @@ public class DefaultBuildAgentPurgeManager
             }
             catch ( IOException e )
             {
-                logger.warn( "Unable to purge " + directoryType + " directory: " + file.getName() );
+                log.warn( "failed to purge {} directory {}: {}",
+                          new Object[] { directoryType, file.getName(), e.getMessage() } );
             }
         }
     }
@@ -150,7 +161,8 @@ public class DefaultBuildAgentPurgeManager
             }
             catch ( IOException e )
             {
-                logger.warn( "Unable to purge " + directoryType + " directory: " + file.getName() );
+                log.warn( "failed to purge {} directory {}: {}",
+                          new Object[] { directoryType, file.getName(), e.getMessage() } );
             }
         }
 
@@ -171,6 +183,45 @@ public class DefaultBuildAgentPurgeManager
         else
         {
             return null;
+        }
+    }
+
+    private RepositoryManagedContent getManagedContent( LocalRepository localRepo )
+        throws BuildAgentConfigurationException
+    {
+        String layout = localRepo.getLayout();
+        try
+        {
+            RepositoryManagedContent managedContent = contentFactory.create( layout );
+            managedContent.setRepository( localRepositoryHelper.convertAgentRepo( localRepo ) );
+            return managedContent;
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new BuildAgentConfigurationException(
+                String.format( "managed repo layout %s not found", layout ) );
+        }
+    }
+
+    public void executeRepositoryPurge( String repoName, int daysOlder, int retentionCount, boolean deleteAll,
+                                        boolean deleteReleasedSnapshots )
+        throws ContinuumPurgeExecutorException
+    {
+        try
+        {
+            LocalRepository localRepo = buildAgentConfigurationService.getLocalRepositoryByName( repoName );
+            String path = localRepo.getLocation(), layout = localRepo.getLayout();
+            RepositoryManagedContent managedContent = getManagedContent( localRepo );
+            ContinuumPurgeExecutor executor = repoExecutorFactory.create( deleteAll, daysOlder, retentionCount,
+                                                                          deleteReleasedSnapshots, managedContent );
+            log.info( "purging repo '{}' [full={},age={},retain={},snapshots={},layout={}]",
+                      new Object[] { path, deleteAll, daysOlder, retentionCount, deleteReleasedSnapshots, layout } );
+            executor.purge( path );
+            log.info( "purge completed '{}'", path );
+        }
+        catch ( BuildAgentConfigurationException e )
+        {
+            log.warn( "ignoring repository purge, check agent repo configuration: {}", e.getMessage() );
         }
     }
 

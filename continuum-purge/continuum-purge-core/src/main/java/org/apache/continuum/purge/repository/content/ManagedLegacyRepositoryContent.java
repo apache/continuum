@@ -42,8 +42,7 @@ import java.util.Set;
 /**
  * Taken from Archiva's ManagedLegacyRepositoryContent and made some few changes
  */
-@Component( role = org.apache.continuum.purge.repository.content.RepositoryManagedContent.class, hint = "legacy",
-    instantiationStrategy = "per-lookup" )
+@Component( role = RepositoryManagedContent.class, hint = "legacy", instantiationStrategy = "per-lookup" )
 public class ManagedLegacyRepositoryContent
     implements RepositoryManagedContent
 {
@@ -64,7 +63,7 @@ public class ManagedLegacyRepositoryContent
 
     @Requirement( hint = "legacy-parser" )
     private PathParser legacyPathParser;
-    
+
     @Requirement( hint = "file-types" )
     private FileTypes filetypes;
 

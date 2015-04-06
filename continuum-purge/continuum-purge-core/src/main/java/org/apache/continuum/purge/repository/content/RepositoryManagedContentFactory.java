@@ -1,4 +1,4 @@
-package org.apache.continuum.buildagent.manager;
+package org.apache.continuum.purge.repository.content;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,14 +19,10 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
-public interface BuildAgentPurgeManager
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+
+public interface RepositoryManagedContentFactory
 {
-    String ROLE = BuildAgentPurgeManager.class.getName();
-
-    void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
-        throws Exception;
-
-    void executeRepositoryPurge( String repoName, int daysOlder, int retentionCount, boolean deleteAll,
-                                 boolean deleteReleasedSnapshots )
-        throws Exception;
+    RepositoryManagedContent create( String layout )
+        throws ComponentLookupException;
 }

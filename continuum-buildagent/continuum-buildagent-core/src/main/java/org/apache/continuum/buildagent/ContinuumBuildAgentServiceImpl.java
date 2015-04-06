@@ -35,10 +35,10 @@ import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
+import org.apache.continuum.release.utils.ReleaseHelper;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
-import org.apache.continuum.release.utils.ReleaseHelper;
 import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.ContinuumException;
@@ -57,9 +57,9 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +67,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.activation.MimetypesFileTypeMap;
 
 @Component( role = ContinuumBuildAgentService.class )
 public class ContinuumBuildAgentServiceImpl
@@ -1131,37 +1130,23 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
+    private void assertPurgePossible()
+        throws ContinuumBuildAgentException
+    {
+        if ( isExecutingBuild() )
+        {
+            throw new ContinuumBuildAgentException( "agent is executing build" );
+        }
+        if ( isExecutingRelease() )
+        {
+            throw new ContinuumBuildAgentException( "agent is executing release" );
+        }
+    }
+
     public void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws ContinuumBuildAgentException
     {
-        String logMsgFormat =
-            "Directory purge [directoryType={0}, daysOlder={1}, retentionCount={2}, deleteAll={3}] not possible; {4}";
-        if ( isExecutingBuild() )
-        {
-            log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll,
-                                            "Build Agent busy" ) );
-            return;
-        }
-
-        try
-        {
-            if ( isExecutingRelease() )
-            {
-                log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll,
-                                                "Build Agent is executing a release." ) );
-                return;
-            }
-        }
-        catch ( ContinuumBuildAgentException e )
-        {
-            if ( isExecutingRelease() )
-            {
-                log.info( MessageFormat.format( logMsgFormat, directoryType, daysOlder, retentionCount, deleteAll,
-                                                "Unable to determine if Build Agent is executing a release." ) );
-                return;
-            }
-        }
-
+        assertPurgePossible();
         try
         {
             purgeManager.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
@@ -1176,14 +1161,15 @@ public class ContinuumBuildAgentServiceImpl
                                         boolean deleteReleasedSnapshots )
         throws ContinuumBuildAgentException
     {
+        assertPurgePossible();
         try
         {
-            LocalRepository localRepo = buildAgentConfigurationService.getLocalRepositoryByName( repoName );
-            log.warn( "purging repository {}", repoName );
+            purgeManager.executeRepositoryPurge( repoName, daysOlder, retentionCount, deleteAll,
+                                                 deleteReleasedSnapshots );
         }
-        catch ( BuildAgentConfigurationException e )
+        catch ( Exception e )
         {
-            log.warn( "purge request ignored, repository {} not found", repoName );
+            throw new ContinuumBuildAgentException( e.getMessage(), e );
         }
     }
 
