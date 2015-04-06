@@ -21,6 +21,7 @@ package org.apache.continuum.purge;
 
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.model.project.Schedule;
 
@@ -66,5 +67,14 @@ public interface ContinuumPurgeManager
      * @throws ContinuumPurgeManagerException
      */
     void purgeDistributedDirectory( DistributedDirectoryPurgeConfiguration dirPurgeConfig )
+        throws ContinuumPurgeManagerException;
+
+    /**
+     * Purge repository in distributed build mode
+     *
+     * @param repoPurgeConfig distributed purge configuration
+     * @throws ContinuumPurgeManagerException
+     */
+    void purgeDistributedRepository( DistributedRepositoryPurgeConfiguration repoPurgeConfig )
         throws ContinuumPurgeManagerException;
 }

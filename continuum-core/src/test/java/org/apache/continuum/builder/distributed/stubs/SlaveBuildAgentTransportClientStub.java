@@ -301,4 +301,11 @@ public class SlaveBuildAgentTransportClientStub
 
     }
 
+    public void executeRepositoryPurge( String repoName, int daysOlder, int retentionCount, boolean deleteAll,
+                                        boolean deleteReleasedSnapshots )
+        throws Exception
+    {
+
+    }
+
 }

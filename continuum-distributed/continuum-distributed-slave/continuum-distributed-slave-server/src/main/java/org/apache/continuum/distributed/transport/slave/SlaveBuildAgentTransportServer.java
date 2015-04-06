@@ -587,4 +587,13 @@ public class SlaveBuildAgentTransportServer
     {
         continuumBuildAgentService.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
     }
+
+    public void executeRepositoryPurge( String repoName, int daysOlder, int retentionCount, boolean deleteAll,
+                                        boolean deleteReleasedSnapshots )
+        throws Exception
+    {
+        continuumBuildAgentService.executeRepositoryPurge( repoName, daysOlder, retentionCount, deleteAll,
+                                                           deleteReleasedSnapshots );
+    }
+
 }

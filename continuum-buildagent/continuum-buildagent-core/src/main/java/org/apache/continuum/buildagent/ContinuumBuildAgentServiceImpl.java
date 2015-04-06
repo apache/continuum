@@ -1172,6 +1172,21 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
+    public void executeRepositoryPurge( String repoName, int daysOlder, int retentionCount, boolean deleteAll,
+                                        boolean deleteReleasedSnapshots )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            LocalRepository localRepo = buildAgentConfigurationService.getLocalRepositoryByName( repoName );
+            log.warn( "purging repository {}", repoName );
+        }
+        catch ( BuildAgentConfigurationException e )
+        {
+            log.warn( "purge request ignored, repository {} not found", repoName );
+        }
+    }
+
     private List<BuildContext> initializeBuildContext( List<Map<String, Object>> projectsBuildContext )
     {
         List<BuildContext> buildContext = new ArrayList<BuildContext>();

@@ -22,6 +22,7 @@ package org.apache.continuum.purge;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.task.PurgeTask;
@@ -65,18 +66,23 @@ public class DefaultContinuumPurgeManager
     public void purge( Schedule schedule )
         throws ContinuumPurgeManagerException
     {
-        List<RepositoryPurgeConfiguration> repoPurgeList = null;
-        List<DirectoryPurgeConfiguration> dirPurgeList = null;
-        List<DistributedDirectoryPurgeConfiguration> distributedDirPurgeList = null;
+        List<RepositoryPurgeConfiguration> repoPurgeList;
+        List<DirectoryPurgeConfiguration> dirPurgeList;
+        List<DistributedDirectoryPurgeConfiguration> distributedDirPurgeList;
+        List<DistributedRepositoryPurgeConfiguration> distributedRepoPurgeList;
 
         repoPurgeList = purgeConfigurationService.getEnableRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
         dirPurgeList = purgeConfigurationService.getEnableDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
         distributedDirPurgeList = purgeConfigurationService.getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
             schedule.getId() );
+        distributedRepoPurgeList =
+            purgeConfigurationService.getEnableDistributedRepositoryPurgeConfigurationsBySchedule(
+                schedule.getId() );
 
         boolean hasRepoPurge = repoPurgeList != null && repoPurgeList.size() > 0;
         boolean hasDirPurge = dirPurgeList != null && dirPurgeList.size() > 0;
         boolean hasDitributedDirPurge = distributedDirPurgeList != null && distributedDirPurgeList.size() > 0;
+        boolean hasDistributedRepoPurge = distributedRepoPurgeList != null && distributedRepoPurgeList.size() > 0;
 
         if ( hasRepoPurge )
         {
@@ -102,7 +108,15 @@ public class DefaultContinuumPurgeManager
             }
         }
 
-        if ( !hasRepoPurge && !hasDirPurge && !hasDitributedDirPurge )
+        if ( hasDistributedRepoPurge )
+        {
+            for ( DistributedRepositoryPurgeConfiguration repoPurge : distributedRepoPurgeList )
+            {
+                purgeDistributedRepository( repoPurge );
+            }
+        }
+
+        if ( !hasRepoPurge && !hasDirPurge && !hasDitributedDirPurge && !hasDistributedRepoPurge )
         {
             // This purge is not enable for a purge process.
             try
@@ -185,6 +199,19 @@ public class DefaultContinuumPurgeManager
         catch ( TaskQueueException e )
         {
             throw new ContinuumPurgeManagerException( "Error while enqueuing distributed directory", e );
+        }
+    }
+
+    public void purgeDistributedRepository( DistributedRepositoryPurgeConfiguration repoPurgeConfig )
+        throws ContinuumPurgeManagerException
+    {
+        try
+        {
+            taskQueueManager.getPurgeQueue().put( new PurgeTask( repoPurgeConfig.getId() ) );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumPurgeManagerException( "Error while enqueuing distributed repository", e );
         }
     }
 

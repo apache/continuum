@@ -393,6 +393,12 @@
       <field name="buildAgentUrl" null-value="exception"/>
       <field name="directoryType"/>
     </class>
+    <class name="DistributedRepositoryPurgeConfiguration" persistence-capable-superclass="org.apache.continuum.model.repository.AbstractPurgeConfiguration" detachable="true" table="DistributedRepositoryPurgeConfiguration">
+      <inheritance strategy="new-table"/>
+      <field name="repositoryName" null-value="exception" />
+      <field name="deleteReleasedSnapshots"/>
+      <field name="buildAgentUrl" null-value="exception"/>
+    </class>
   </package>
   <package name="org.apache.maven.continuum.model.scm">
     <class name="ScmResult" detachable="true" table="ScmResult">

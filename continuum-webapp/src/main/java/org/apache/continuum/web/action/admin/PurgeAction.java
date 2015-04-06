@@ -22,6 +22,7 @@ package org.apache.continuum.web.action.admin;
 import com.opensymphony.xwork2.Preparable;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
@@ -72,6 +73,8 @@ public class PurgeAction
 
     private List<DistributedDirectoryPurgeConfiguration> distributedDirPurgeConfigs;
 
+    private List<DistributedRepositoryPurgeConfiguration> distributedRepoPurgeConfigs;
+
     private List<String> directoryTypes;
 
     @Requirement
@@ -105,6 +108,7 @@ public class PurgeAction
                 addActionError( getText( errorMessage ) );
             }
             distributedDirPurgeConfigs = purgeConfigService.getAllDistributedDirectoryPurgeConfigurations();
+            distributedRepoPurgeConfigs = purgeConfigService.getAllDistributedRepositoryPurgeConfigurations();
 
             return DISTRIBUTED_BUILD_SUCCESS;
         }
@@ -173,6 +177,17 @@ public class PurgeAction
     public void setDistributedDirPurgeConfigs( List<DistributedDirectoryPurgeConfiguration> distributedDirPurgeConfigs )
     {
         this.distributedDirPurgeConfigs = distributedDirPurgeConfigs;
+    }
+
+    public List<DistributedRepositoryPurgeConfiguration> getDistributedRepoPurgeConfigs()
+    {
+        return distributedRepoPurgeConfigs;
+    }
+
+    public void setDistributedRepoPurgeConfigs(
+        List<DistributedRepositoryPurgeConfiguration> distributedRepoPurgeConfigs )
+    {
+        this.distributedRepoPurgeConfigs = distributedRepoPurgeConfigs;
     }
 
     public List<String> getDirectoryTypes()

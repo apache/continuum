@@ -170,4 +170,18 @@ public interface ContinuumBuildAgentService
     void executeDirectoryPurge( String directoryType, int daysOlder, int retentionCount, boolean deleteAll )
         throws ContinuumBuildAgentException;
 
+    /**
+     * Execute a repository purge on the build agent
+     *
+     * @param repoName                used to determine location at the build agent
+     * @param daysOlder               age in days when file is eligible for purging
+     * @param retentionCount          number of artifact versions required to retain
+     * @param deleteAll               triggers full deletion
+     * @param deleteReleasedSnapshots whether to remove all snapshots matching a released artifact version
+     * @throws Exception
+     */
+    public void executeRepositoryPurge( String repoName, int daysOlder, int retentionCount, boolean deleteAll,
+                                        boolean deleteReleasedSnapshots )
+        throws ContinuumBuildAgentException;
+
 }

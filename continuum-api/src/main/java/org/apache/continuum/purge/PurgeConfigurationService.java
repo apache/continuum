@@ -22,6 +22,7 @@ package org.apache.continuum.purge;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 
@@ -92,6 +93,8 @@ public interface PurgeConfigurationService
 
     List<DistributedDirectoryPurgeConfiguration> getAllDistributedDirectoryPurgeConfigurations();
 
+    List<DistributedRepositoryPurgeConfiguration> getAllDistributedRepositoryPurgeConfigurations();
+
     DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int dirPurgeId )
         throws PurgeConfigurationServiceException;
 
@@ -110,11 +113,13 @@ public interface PurgeConfigurationService
     List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
         int scheduleId );
 
+    List<DistributedRepositoryPurgeConfiguration> getEnableDistributedRepositoryPurgeConfigurationsBySchedule(
+        int scheduleId );
+
     /**
      * @param repositoryId
      * @return
      * @throws PurgeConfigurationServiceException
-     *
      */
     RepositoryManagedContent getManagedRepositoryContent( int repositoryId )
         throws PurgeConfigurationServiceException;

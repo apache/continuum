@@ -22,7 +22,7 @@ package org.apache.continuum.purge.controller;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
-import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.codehaus.plexus.component.annotations.Component;
@@ -35,11 +35,11 @@ import java.net.URL;
 /**
  * DirectoryPurgeController
  */
-@Component( role = org.apache.continuum.purge.controller.PurgeController.class, hint = "purge-distributed-directory" )
-public class DistributedDirectoryPurgeController
+@Component( role = PurgeController.class, hint = "purge-distributed-repository" )
+public class DistributedRepositoryPurgeController
     implements PurgeController
 {
-    private static final Logger log = LoggerFactory.getLogger( DistributedDirectoryPurgeController.class );
+    private static final Logger log = LoggerFactory.getLogger( DistributedRepositoryPurgeController.class );
 
     @Requirement
     private ConfigurationService configurationService;
@@ -48,12 +48,13 @@ public class DistributedDirectoryPurgeController
 
     public void doPurge( String path )
     {
-        log.warn( "doPurge( String ) is not supported for DistributedDirectoryPurgeController" );
+        log.warn( "doPurge( String ) is not supported for {}",
+                  DistributedRepositoryPurgeController.class.getSimpleName() );
     }
 
     public void doPurge( AbstractPurgeConfiguration purgeConfig )
     {
-        DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
+        DistributedRepositoryPurgeConfiguration repoPurge = (DistributedRepositoryPurgeConfiguration) purgeConfig;
         try
         {
             transportClient.ping();
@@ -61,20 +62,24 @@ public class DistributedDirectoryPurgeController
             if ( log.isDebugEnabled() )
             {
                 StringBuilder logMsg = new StringBuilder().append(
-                    "Executing directory purge with the following settings[directoryType=" )
-                                                          .append( dirPurge.getDirectoryType() )
+                    "Executing repository purge with the following settings[" )
+                                                          .append( "repo=" )
+                                                          .append( repoPurge.getRepositoryName() )
                                                           .append( ",daysOlder=" )
-                                                          .append( dirPurge.getDaysOlder() )
+                                                          .append( repoPurge.getDaysOlder() )
                                                           .append( ", retentionCount=" )
-                                                          .append( dirPurge.getRetentionCount() )
+                                                          .append( repoPurge.getRetentionCount() )
                                                           .append( ", deleteAll=" )
-                                                          .append( dirPurge.isDeleteAll() )
+                                                          .append( repoPurge.isDeleteAll() )
+                                                          .append( ",deleteReleasedSnapshots=" )
+                                                          .append( repoPurge.isDeleteReleasedSnapshots() )
                                                           .append( "]" );
                 log.debug( logMsg.toString() );
             }
 
-            transportClient.executeDirectoryPurge( dirPurge.getDirectoryType(), dirPurge.getDaysOlder(),
-                                                   dirPurge.getRetentionCount(), dirPurge.isDeleteAll() );
+            transportClient.executeRepositoryPurge( repoPurge.getRepositoryName(), repoPurge.getDaysOlder(),
+                                                    repoPurge.getRetentionCount(), repoPurge.isDeleteAll(),
+                                                    repoPurge.isDeleteReleasedSnapshots() );
         }
         catch ( Exception e )
         {
@@ -85,11 +90,10 @@ public class DistributedDirectoryPurgeController
     public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
     {
-        DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
-
+        DistributedRepositoryPurgeConfiguration repoPurge = (DistributedRepositoryPurgeConfiguration) purgeConfig;
         try
         {
-            transportClient = new SlaveBuildAgentTransportClient( new URL( dirPurge.getBuildAgentUrl() ), "",
+            transportClient = new SlaveBuildAgentTransportClient( new URL( repoPurge.getBuildAgentUrl() ), "",
                                                                   configurationService.getSharedSecretPassword() );
         }
         catch ( Exception e )

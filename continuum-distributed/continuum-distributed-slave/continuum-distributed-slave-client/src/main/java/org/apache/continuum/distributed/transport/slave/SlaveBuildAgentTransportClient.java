@@ -887,4 +887,11 @@ public class SlaveBuildAgentTransportClient
     {
         slave.executeDirectoryPurge( directoryType, daysOlder, retentionCount, deleteAll );
     }
+
+    public void executeRepositoryPurge( String repoName, int daysOlder, int retentionCount, boolean deleteAll,
+                                        boolean deleteReleasedSnapshots )
+        throws Exception
+    {
+        slave.executeRepositoryPurge( repoName, daysOlder, retentionCount, deleteAll, deleteReleasedSnapshots );
+    }
 }

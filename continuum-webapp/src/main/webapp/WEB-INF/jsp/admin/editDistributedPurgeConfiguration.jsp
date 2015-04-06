@@ -16,8 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   --%>
-
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
   <s:i18n name="localization.Continuum">
@@ -31,15 +29,21 @@
 
     <div class="axial">
       <s:form action="saveDistributedPurgeConfig" method="post" validate="true">
-        <c:if test="${!empty actionErrors}">
+        <s:if test="hasActionErrors()">
           <div class="errormessage">
             <s:iterator value="actionErrors">
               <p><s:property/></p>
             </s:iterator>
           </div>
-        </c:if>
+        </s:if>
+        <s:if test="repositories.size() > 0 || purgeType == 'directory'">
           <table>
-            <s:select label="%{getText('purgeConfig.directoryType.label')}" name="directoryType" list="directoryTypes"/>
+            <s:if test="purgeType == 'repository'">
+              <s:select label="%{getText('purgeConfig.repository.label')}" name="repositoryName" list="repositories" requiredLabel="true"/>
+            </s:if>
+            <s:else>
+              <s:select label="%{getText('purgeConfig.directoryType.label')}" name="directoryType" list="directoryTypes"/>
+            </s:else>
             <s:textfield label="%{getText('purgeConfig.daysOlder.label')}" name="daysOlder" size="100"/>
             <s:textfield label="%{getText('purgeConfig.retentionCount.label')}" name="retentionCount" size="100"/>
             <s:checkbox label="%{getText('purgeConfig.deleteAll.label')}" name="deleteAll"/>
@@ -58,6 +62,10 @@
             <s:submit value="%{getText('save')}" theme="simple"/>
             <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
           </div>
+        </s:if>
+        <s:else>
+          <div class="warningmessage" style="color: red"><s:text name="purgeConfig.no.repositories" /></div>
+        </s:else>
       </s:form>
     </div>
   </div>

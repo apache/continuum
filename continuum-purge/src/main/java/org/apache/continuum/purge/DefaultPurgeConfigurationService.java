@@ -21,11 +21,13 @@ package org.apache.continuum.purge;
 
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.DistributedRepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
@@ -66,6 +68,9 @@ public class DefaultPurgeConfigurationService
     @Requirement
     private DistributedDirectoryPurgeConfigurationDao distributedDirectoryPurgeConfigurationDao;
 
+    @Requirement
+    private DistributedRepositoryPurgeConfigurationDao distributedRepositoryPurgeConfigurationDao;
+
     private PlexusContainer container;
 
     public AbstractPurgeConfiguration addPurgeConfiguration( AbstractPurgeConfiguration purgeConfig )
@@ -86,6 +91,11 @@ public class DefaultPurgeConfigurationService
             purgeConfiguration = addDistributedDirectoryPurgeConfiguration(
                 (DistributedDirectoryPurgeConfiguration) purgeConfig );
         }
+        else if ( purgeConfig instanceof DistributedRepositoryPurgeConfiguration )
+        {
+            purgeConfiguration =
+                addDistributedRepositoryPurgeConfiguration( (DistributedRepositoryPurgeConfiguration) purgeConfig );
+        }
 
         return purgeConfiguration;
     }
@@ -105,6 +115,10 @@ public class DefaultPurgeConfigurationService
         {
             updateDistributedDirectoryPurgeConfiguration( (DistributedDirectoryPurgeConfiguration) purgeConfig );
         }
+        else if ( purgeConfig instanceof DistributedRepositoryPurgeConfiguration )
+        {
+            updateDistributedRepositoryPurgeConfiguration( (DistributedRepositoryPurgeConfiguration) purgeConfig );
+        }
     }
 
     public void removePurgeConfiguration( int purgeConfigId )
@@ -123,6 +137,10 @@ public class DefaultPurgeConfigurationService
         else if ( purgeConfig instanceof DistributedDirectoryPurgeConfiguration )
         {
             removeDistributedDirectoryPurgeConfiguration( (DistributedDirectoryPurgeConfiguration) purgeConfig );
+        }
+        else if ( purgeConfig instanceof DistributedRepositoryPurgeConfiguration )
+        {
+            removeDistributedRepositoryPurgeConfiguration( (DistributedRepositoryPurgeConfiguration) purgeConfig );
         }
     }
 
@@ -367,6 +385,18 @@ public class DefaultPurgeConfigurationService
             }
         }
 
+        if ( purgeConfig == null )
+        {
+            try
+            {
+                purgeConfig = getDistributedRepositoryPurgeConfiguration( purgeConfigId );
+            }
+            catch ( PurgeConfigurationServiceException e )
+            {
+                // purgeConfigId is not of type directory purge configuration
+            }
+        }
+
         return purgeConfig;
     }
 
@@ -407,24 +437,38 @@ public class DefaultPurgeConfigurationService
         return distributedDirectoryPurgeConfigurationDao.getAllDistributedDirectoryPurgeConfigurations();
     }
 
+    public List<DistributedRepositoryPurgeConfiguration> getAllDistributedRepositoryPurgeConfigurations()
+    {
+        return distributedRepositoryPurgeConfigurationDao.getAllDistributedRepositoryPurgeConfigurations();
+    }
+
     public DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration(
         DistributedDirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException
     {
-        DistributedDirectoryPurgeConfiguration dirPurgeConfig;
-
         try
         {
-            dirPurgeConfig = distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration(
-                dirPurge );
+            return distributedDirectoryPurgeConfigurationDao.addDistributedDirectoryPurgeConfiguration( dirPurge );
         }
         catch ( ContinuumStoreException e )
         {
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
+    }
 
-        return dirPurgeConfig;
-
+    public DistributedRepositoryPurgeConfiguration addDistributedRepositoryPurgeConfiguration(
+        DistributedRepositoryPurgeConfiguration repoPurge )
+        throws PurgeConfigurationServiceException
+    {
+        try
+        {
+            return distributedRepositoryPurgeConfigurationDao.addDistributedRepositoryPurgeConfiguration(
+                repoPurge );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
     }
 
     public DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int dirPurgeId )
@@ -457,6 +501,19 @@ public class DefaultPurgeConfigurationService
         }
     }
 
+    private void updateDistributedRepositoryPurgeConfiguration( DistributedRepositoryPurgeConfiguration purgeConfig )
+        throws PurgeConfigurationServiceException
+    {
+        try
+        {
+            distributedRepositoryPurgeConfigurationDao.updateDistributedRepositoryPurgeConfiguration( purgeConfig );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+    }
+
     public void removeDistributedDirectoryPurgeConfiguration( DistributedDirectoryPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException
     {
@@ -470,10 +527,47 @@ public class DefaultPurgeConfigurationService
         }
     }
 
+    public void removeDistributedRepositoryPurgeConfiguration( DistributedRepositoryPurgeConfiguration purgeConfig )
+        throws PurgeConfigurationServiceException
+    {
+        try
+        {
+            distributedRepositoryPurgeConfigurationDao.removeDistributedRepositoryPurgeConfiguration( purgeConfig );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+    }
+
+    public DistributedRepositoryPurgeConfiguration getDistributedRepositoryPurgeConfiguration( int dirPurgeId )
+        throws PurgeConfigurationServiceException
+    {
+        try
+        {
+            return distributedRepositoryPurgeConfigurationDao.getDistributedRepositoryPurgeConfiguration( dirPurgeId );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new PurgeConfigurationServiceException( e.getMessage(), e );
+        }
+    }
+
     public List<DistributedDirectoryPurgeConfiguration> getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
         int scheduleId )
     {
         return distributedDirectoryPurgeConfigurationDao.getEnableDistributedDirectoryPurgeConfigurationsBySchedule(
+            scheduleId );
+    }
+
+    public List<DistributedRepositoryPurgeConfiguration> getEnableDistributedRepositoryPurgeConfigurationsBySchedule(
+        int scheduleId )
+    {
+        return distributedRepositoryPurgeConfigurationDao.getEnableDistributedRepositoryPurgeConfigurationsBySchedule(
             scheduleId );
     }
 
