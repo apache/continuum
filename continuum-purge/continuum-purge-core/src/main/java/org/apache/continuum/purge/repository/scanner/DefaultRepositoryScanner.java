@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Codes were taken from Archiva and made some changes.
  */
-@Component( role = org.apache.continuum.purge.repository.scanner.RepositoryScanner.class, hint = "repository-scanner" )
+@Component( role = RepositoryScanner.class, hint = "purge" )
 public class DefaultRepositoryScanner
     implements RepositoryScanner
 {

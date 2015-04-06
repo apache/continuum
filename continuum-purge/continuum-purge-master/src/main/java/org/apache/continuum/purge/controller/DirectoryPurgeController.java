@@ -21,12 +21,11 @@ package org.apache.continuum.purge.controller;
 
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
-import org.apache.continuum.purge.executor.CleanAllPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-import org.apache.continuum.purge.executor.DaysOldDirectoryPurgeExecutor;
-import org.apache.continuum.purge.executor.RetentionCountDirectoryPurgeExecutor;
+import org.apache.continuum.purge.executor.DirectoryPurgeExecutorFactory;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +40,8 @@ public class DirectoryPurgeController
 {
     private static final Logger log = LoggerFactory.getLogger( DirectoryPurgeController.class );
 
-    private DirectoryPurgeExecutorFactory executorFactory = new DirectoryPurgeExecutorFactoryImpl();
+    @Requirement
+    private DirectoryPurgeExecutorFactory executorFactory;
 
     public void purge( AbstractPurgeConfiguration purgeConfig )
     {
@@ -63,26 +63,3 @@ public class DirectoryPurgeController
     }
 }
 
-interface DirectoryPurgeExecutorFactory
-{
-    ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, String dirType );
-}
-
-class DirectoryPurgeExecutorFactoryImpl
-    implements DirectoryPurgeExecutorFactory
-{
-    public ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, String dirType )
-    {
-        if ( deleteAll )
-        {
-            return new CleanAllPurgeExecutor( dirType );
-        }
-
-        if ( daysOld > 0 )
-        {
-            return new DaysOldDirectoryPurgeExecutor( daysOld, retentionCount, dirType );
-        }
-
-        return new RetentionCountDirectoryPurgeExecutor( retentionCount, dirType );
-    }
-}
