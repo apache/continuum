@@ -35,7 +35,6 @@ import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
-import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
@@ -76,8 +75,6 @@ public class PurgeConfigurationAction
     private String directoryType;
 
     private String description;
-
-    private String message;
 
     private boolean deleteAll;
 
@@ -216,16 +213,8 @@ public class PurgeConfigurationAction
     public String list()
         throws Exception
     {
-        String errorMessage = ServletActionContext.getRequest().getParameter( "errorMessage" );
-
-        if ( errorMessage != null )
-        {
-            addActionError( getText( errorMessage ) );
-        }
-
         repoPurgeConfigs = purgeConfigService.getAllRepositoryPurgeConfigurations();
         dirPurgeConfigs = purgeConfigService.getAllDirectoryPurgeConfigurations();
-
         return SUCCESS;
     }
 
@@ -271,15 +260,12 @@ public class PurgeConfigurationAction
     public String remove()
         throws Exception
     {
-        if ( confirmed )
-        {
-            purgeConfigService.removePurgeConfiguration( purgeConfigId );
-        }
-        else
+        if ( !confirmed )
         {
             return CONFIRM;
         }
-
+        purgeConfigService.removePurgeConfiguration( purgeConfigId );
+        addActionMessage( getText( "purgeConfig.removeSuccess" ) );
         return SUCCESS;
     }
 
@@ -302,7 +288,7 @@ public class PurgeConfigurationAction
                 // check if repository is in use
                 if ( taskQueueManager.isRepositoryInUse( repoPurge.getRepository().getId() ) )
                 {
-                    message = "repository.error.purge.in.use";
+                    addActionError( getText( "repository.error.purge.in.use" ) );
                     return ERROR;
                 }
 
@@ -311,7 +297,7 @@ public class PurgeConfigurationAction
                 event = new AuditLog( repoPurge.getRepository().getName(), AuditLogConstants.PURGE_LOCAL_REPOSITORY );
                 event.setCategory( AuditLogConstants.LOCAL_REPOSITORY );
             }
-            else
+            else if ( purgeConfig instanceof DirectoryPurgeConfiguration )
             {
                 DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
                 purgeManager.purgeDirectory( dirPurge );
@@ -327,11 +313,16 @@ public class PurgeConfigurationAction
 
                 event.setCategory( AuditLogConstants.DIRECTORY );
             }
+            else
+            {
+                addActionError( getText( "purgeConfig.unknownType" ) );
+                return ERROR;
+            }
 
+            addActionMessage( getText( "purgeConfig.purgeSuccess" ) );
             event.setCurrentUser( getPrincipal() );
             event.log();
         }
-
         return SUCCESS;
     }
 
@@ -363,16 +354,6 @@ public class PurgeConfigurationAction
     public void setDescription( String description )
     {
         this.description = description;
-    }
-
-    public String getMessage()
-    {
-        return this.message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
     }
 
     public boolean isDeleteAll()

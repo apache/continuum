@@ -1106,6 +1106,7 @@
     * Purge actions
     -->
     <action name="displayPurge" class="purge" method="display">
+      <interceptor-ref name="retrieveStack" />
       <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
       <result name="distributed-build-success">/WEB-INF/jsp/admin/distributedPurgeConfigurationsList.jsp</result>
     </action>
@@ -1114,6 +1115,7 @@
     * Parallel Purge Actions
     -->
     <action name="purgeConfigList" class="purgeConfiguration" method="list">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
     </action>
 
@@ -1130,9 +1132,9 @@
     </action>
 
     <action name="removePurgeConfig" class="purgeConfiguration" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="error" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
-        <param name="errorMessage">${message}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeletePurgeConfiguration.jsp</result>
       <result name="success" type="redirectAction">
@@ -1144,12 +1146,12 @@
     </action>
 
     <action name="doPurge" class="purgeConfiguration" method="purge">
+      <interceptor-ref name="storeStack" />
       <result name="success" type="redirectAction">
         <param name="actionName">displayPurge</param>
       </result>
       <result name="error" type="redirectAction">
         <param name="actionName">displayPurge</param>
-        <param name="errorMessage">${message}</param>
       </result>
     </action>
 
@@ -1169,9 +1171,9 @@
     </action>
 
     <action name="removeDistributedPurgeConfig" class="distributedPurgeConfiguration" method="remove">
+      <interceptor-ref name="storeStack"/>
       <result name="error" type="redirectAction">
         <param name="actionName">purgeConfigList</param>
-        <param name="errorMessage">${message}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteDistributedPurgeConfiguration.jsp</result>
       <result name="success" type="redirectAction">
@@ -1183,12 +1185,12 @@
     </action>
 
     <action name="doDistributedPurge" class="distributedPurgeConfiguration" method="purge">
+      <interceptor-ref name="storeStack"/>
       <result name="success" type="redirectAction">
         <param name="actionName">displayPurge</param>
       </result>
       <result name="error" type="redirectAction">
         <param name="actionName">displayPurge</param>
-        <param name="errorMessage">${message}</param>
       </result>
     </action>
 

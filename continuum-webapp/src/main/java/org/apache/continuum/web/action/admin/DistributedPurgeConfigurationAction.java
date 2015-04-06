@@ -77,8 +77,6 @@ public class DistributedPurgeConfigurationAction
 
     private String description;
 
-    private String message;
-
     private boolean deleteAll;
 
     private boolean deleteReleasedSnapshots;
@@ -257,15 +255,12 @@ public class DistributedPurgeConfigurationAction
     public String remove()
         throws Exception
     {
-        if ( confirmed )
-        {
-            purgeConfigService.removePurgeConfiguration( purgeConfigId );
-        }
-        else
+        if ( !confirmed )
         {
             return CONFIRM;
         }
-
+        purgeConfigService.removePurgeConfiguration( purgeConfigId );
+        addActionMessage( getText( "purgeConfig.removeSuccess" ) );
         return SUCCESS;
     }
 
@@ -288,6 +283,12 @@ public class DistributedPurgeConfigurationAction
                     (DistributedRepositoryPurgeConfiguration) purgeConfig;
                 purgeManager.purgeDistributedRepository( repoPurge );
             }
+            else
+            {
+                addActionError( getText( "purgeConfig.unknownType" ) );
+                return ERROR;
+            }
+            addActionMessage( getText( "purgeConfig.purgeSuccess" ) );
         }
 
         return SUCCESS;
@@ -321,16 +322,6 @@ public class DistributedPurgeConfigurationAction
     public void setDescription( String description )
     {
         this.description = description;
-    }
-
-    public String getMessage()
-    {
-        return this.message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
     }
 
     public boolean isDeleteAll()
