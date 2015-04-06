@@ -22,9 +22,13 @@ package org.apache.continuum.purge.repository.scanner;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.repository.utils.FileTypes;
+import org.apache.maven.archiva.common.utils.BaseFile;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.util.DirectoryWalkListener;
 import org.codehaus.plexus.util.DirectoryWalker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,13 +89,48 @@ public class DefaultRepositoryScanner
         dirWalker.setIncludes( allIncludes );
         dirWalker.setExcludes( allExcludes );
 
-        RepositoryScannerInstance scannerInstance =
-            new RepositoryScannerInstance( repositoryLocation, handler );
+        ScanListener listener = new ScanListener( repositoryLocation, handler );
 
-        dirWalker.addDirectoryWalkListener( scannerInstance );
+        dirWalker.addDirectoryWalkListener( listener );
 
         // Execute scan.
         dirWalker.scan();
+    }
+}
 
+class ScanListener
+    implements DirectoryWalkListener
+{
+    private static final Logger log = LoggerFactory.getLogger( ScanListener.class );
+
+    private final File repository;
+
+    private final ScannerHandler handler;
+
+    public ScanListener( File repoLocation, ScannerHandler handler )
+    {
+        this.repository = repoLocation;
+        this.handler = handler;
+    }
+
+    public void debug( String message )
+    {
+        log.debug( "Repository Scanner: " + message );
+    }
+
+    public void directoryWalkFinished()
+    {
+        log.info( "scan stopped: {}", repository );
+    }
+
+    public void directoryWalkStarting( File file )
+    {
+        log.info( "scan started: {}", repository );
+    }
+
+    public void directoryWalkStep( int percentage, File file )
+    {
+        BaseFile basefile = new BaseFile( repository, file );
+        handler.handle( basefile.getRelativePath() );
     }
 }
