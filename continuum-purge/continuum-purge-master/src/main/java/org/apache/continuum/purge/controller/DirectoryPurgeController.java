@@ -67,20 +67,32 @@ public class DirectoryPurgeController
         throws ContinuumPurgeExecutorException
     {
         DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
+        purgeExecutor = new DirectoryPurgeExecutorFactoryImpl().create( dirPurge.isDeleteAll(), dirPurge.getDaysOlder(),
+                                                                        dirPurge.getRetentionCount(),
+                                                                        dirPurge.getDirectoryType() );
+    }
+}
 
-        if ( dirPurge.isDeleteAll() )
+interface DirectoryPurgeExecutorFactory
+{
+    ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, String dirType );
+}
+
+class DirectoryPurgeExecutorFactoryImpl
+    implements DirectoryPurgeExecutorFactory
+{
+    public ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, String dirType )
+    {
+        if ( deleteAll )
         {
-            purgeExecutor = new CleanAllPurgeExecutor( dirPurge.getDirectoryType() );
+            return new CleanAllPurgeExecutor( dirType );
         }
-        else if ( dirPurge.getDaysOlder() > 0 )
+
+        if ( daysOld > 0 )
         {
-            purgeExecutor = new DaysOldDirectoryPurgeExecutor( dirPurge.getDaysOlder(), dirPurge.getRetentionCount(),
-                                                               dirPurge.getDirectoryType() );
+            return new DaysOldDirectoryPurgeExecutor( daysOld, retentionCount, dirType );
         }
-        else
-        {
-            purgeExecutor = new RetentionCountDirectoryPurgeExecutor( dirPurge.getRetentionCount(),
-                                                                      dirPurge.getDirectoryType() );
-        }
+
+        return new RetentionCountDirectoryPurgeExecutor( retentionCount, dirType );
     }
 }
