@@ -46,12 +46,7 @@ public class DistributedDirectoryPurgeController
 
     private SlaveBuildAgentTransportService transportClient;
 
-    public void doPurge( String path )
-    {
-        log.warn( "doPurge( String ) is not supported for DistributedDirectoryPurgeController" );
-    }
-
-    public void doPurge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;
         try
@@ -82,7 +77,7 @@ public class DistributedDirectoryPurgeController
         }
     }
 
-    public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
+    public void configure( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
     {
         DistributedDirectoryPurgeConfiguration dirPurge = (DistributedDirectoryPurgeConfiguration) purgeConfig;

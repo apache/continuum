@@ -43,13 +43,13 @@ public class DirectoryPurgeController
 
     private ContinuumPurgeExecutor purgeExecutor;
 
-    public void doPurge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
         doPurge( dirPurge.getLocation() );
     }
 
-    public void doPurge( String path )
+    private void doPurge( String path )
     {
         log.info( "--- Start: Purging directory path '{}'---", path );
         try
@@ -63,7 +63,7 @@ public class DirectoryPurgeController
         log.info( "--- End: Purging directory path '{}'---", path );
     }
 
-    public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
+    public void configure( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
     {
         DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;

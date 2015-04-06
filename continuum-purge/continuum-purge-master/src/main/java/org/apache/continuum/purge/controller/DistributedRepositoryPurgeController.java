@@ -46,13 +46,7 @@ public class DistributedRepositoryPurgeController
 
     private SlaveBuildAgentTransportService transportClient;
 
-    public void doPurge( String path )
-    {
-        log.warn( "doPurge( String ) is not supported for {}",
-                  DistributedRepositoryPurgeController.class.getSimpleName() );
-    }
-
-    public void doPurge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         DistributedRepositoryPurgeConfiguration repoPurge = (DistributedRepositoryPurgeConfiguration) purgeConfig;
         try
@@ -87,7 +81,7 @@ public class DistributedRepositoryPurgeController
         }
     }
 
-    public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
+    public void configure( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
     {
         DistributedRepositoryPurgeConfiguration repoPurge = (DistributedRepositoryPurgeConfiguration) purgeConfig;

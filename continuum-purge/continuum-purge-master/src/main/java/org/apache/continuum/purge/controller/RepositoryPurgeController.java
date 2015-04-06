@@ -65,7 +65,7 @@ public class RepositoryPurgeController
 
     private boolean deleteAll = false;
 
-    public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
+    public void configure( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
     {
         RepositoryManagedContent repositoryContent;
@@ -105,13 +105,13 @@ public class RepositoryPurgeController
         }
     }
 
-    public void doPurge( AbstractPurgeConfiguration purgeConfig )
+    public void purge( AbstractPurgeConfiguration purgeConfig )
     {
         RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
         doPurge( repoPurge.getRepository().getLocation() );
     }
 
-    public void doPurge( String path )
+    private void doPurge( String path )
     {
         log.info( "--- Start: Purging repository {} ---", path );
         if ( deleteAll )

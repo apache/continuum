@@ -30,10 +30,8 @@ public interface PurgeController
 {
     String ROLE = PurgeController.class.getName();
 
-    void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
+    void configure( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException;
 
-    void doPurge( AbstractPurgeConfiguration purgeConfig );
-
-    void doPurge( String path );
+    void purge( AbstractPurgeConfiguration purgeConfig );
 }

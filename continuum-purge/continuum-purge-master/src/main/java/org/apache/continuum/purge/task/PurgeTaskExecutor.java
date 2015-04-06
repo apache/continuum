@@ -94,8 +94,8 @@ public class PurgeTaskExecutor
         throws ContinuumPurgeExecutorException, ComponentLookupException
     {
         PurgeController controller = getController( config.getClass() );
-        controller.initializeExecutors( config );
-        controller.doPurge( config );
+        controller.configure( config );
+        controller.purge( config );
     }
 
     private PurgeController getController( Class configClass )

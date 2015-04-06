@@ -19,7 +19,6 @@ package org.apache.continuum.purge.repository.scanner;
  * under the License.
  */
 
-import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 
 import java.io.File;
