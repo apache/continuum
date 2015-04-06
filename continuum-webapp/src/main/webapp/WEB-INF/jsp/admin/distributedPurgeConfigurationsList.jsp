@@ -55,7 +55,6 @@
             <ec:column property="deleteAll" title="purgeConfigs.table.deleteAll"/>
             <ec:column property="deleteReleasedSnapshots" title="purgeConfigs.table.deleteReleasedSnapshots"/>
             <ec:column property="schedule.name" title="purgeConfigs.table.schedule"/>
-            <ec:column property="defaultPurge" title="purgeConfigs.table.default"/>
             <ec:column property="enabled" title="purgeConfigs.table.enabled"/>
             <ec:column property="description" title="purgeConfigs.table.description"/>
             <ec:column property="buildAgentUrl" title="purgeConfigs.table.buildAgent"/>
