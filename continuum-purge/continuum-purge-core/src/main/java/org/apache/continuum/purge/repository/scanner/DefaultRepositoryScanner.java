@@ -115,17 +115,17 @@ class ScanListener
 
     public void debug( String message )
     {
-        log.debug( "Repository Scanner: " + message );
+        log.debug( "repo scan: {}", message );
     }
 
     public void directoryWalkFinished()
     {
-        log.info( "scan stopped: {}", repository );
+        log.debug( "finished walk: {}", repository );
     }
 
     public void directoryWalkStarting( File file )
     {
-        log.info( "scan started: {}", repository );
+        log.debug( "starting walk: {}", repository );
     }
 
     public void directoryWalkStep( int percentage, File file )
