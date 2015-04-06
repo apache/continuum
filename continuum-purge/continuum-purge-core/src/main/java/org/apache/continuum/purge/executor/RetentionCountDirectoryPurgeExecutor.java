@@ -70,7 +70,7 @@ public class RetentionCountDirectoryPurgeExecutor
 
         File[] files = releaseDir.listFiles( filter );
 
-        if ( retentionCount > files.length )
+        if ( files == null || retentionCount > files.length )
         {
             return;
         }

@@ -80,7 +80,7 @@ public class DaysOldDirectoryPurgeExecutor
 
         File[] releasesDir = releaseDir.listFiles( filter );
 
-        if ( retentionCount > releasesDir.length )
+        if ( releasesDir == null || retentionCount > releasesDir.length )
         {
             return;
         }
