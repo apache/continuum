@@ -25,43 +25,27 @@ import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfigurat
 import org.apache.continuum.model.repository.DistributedRepositoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.PurgeConfigurationService;
-import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
-import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component( role = com.opensymphony.xwork2.Action.class, hint = "purge", instantiationStrategy = "per-lookup"  )
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "purge", instantiationStrategy = "per-lookup" )
 public class PurgeAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
 {
-    private static final Logger logger = LoggerFactory.getLogger( PurgeConfigurationAction.class );
-
     private static final String DISTRIBUTED_BUILD_SUCCESS = "distributed-build-success";
-
-    private static final String PURGE_TYPE_REPOSITORY = "repository";
-
-    private static final String PURGE_TYPE_DIRECTORY = "directory";
-
-    private static final String PURGE_DIRECTORY_RELEASES = "releases";
-
-    private static final String PURGE_DIRECTORY_BUILDOUTPUT = "buildOutput";
-
-    private static final String PURGE_DIRECTORY_WORKING = "working";
 
     private Map<Integer, String> repositories;
 
@@ -80,51 +64,32 @@ public class PurgeAction
     @Requirement
     private PurgeConfigurationService purgeConfigService;
 
-    @Requirement
-    private RepositoryService repositoryService;
-
-    private Schedule sched = null;
+    @Override
+    public void prepare()
+        throws Exception
+    {
+        super.prepare();
+        schedules = new HashMap<Integer, String>();
+        Collection<Schedule> allSchedules = getContinuum().getSchedules();
+        for ( Schedule schedule : allSchedules )
+        {
+            schedules.put( schedule.getId(), schedule.getName() );
+        }
+    }
 
     public String display()
         throws Exception
     {
-        if ( schedules == null )
-        {
-            schedules = new HashMap<Integer, String>();
-
-            Collection<Schedule> allSchedules = getContinuum().getSchedules();
-
-            for ( Schedule schedule : allSchedules )
-            {
-                schedules.put( schedule.getId(), schedule.getName() );
-            }
-        }
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            String errorMessage = ServletActionContext.getRequest().getParameter( "errorMessage" );
-
-            if ( errorMessage != null )
-            {
-                addActionError( getText( errorMessage ) );
-            }
             distributedDirPurgeConfigs = purgeConfigService.getAllDistributedDirectoryPurgeConfigurations();
             distributedRepoPurgeConfigs = purgeConfigService.getAllDistributedRepositoryPurgeConfigurations();
-
             return DISTRIBUTED_BUILD_SUCCESS;
         }
         else
         {
-
-            String errorMessage = ServletActionContext.getRequest().getParameter( "errorMessage" );
-
-            if ( errorMessage != null )
-            {
-                addActionError( getText( errorMessage ) );
-            }
-
             repoPurgeConfigs = purgeConfigService.getAllRepositoryPurgeConfigurations();
             dirPurgeConfigs = purgeConfigService.getAllDirectoryPurgeConfigurations();
-
             return SUCCESS;
         }
     }
@@ -135,7 +100,6 @@ public class PurgeAction
         SecureActionBundle bundle = new SecureActionBundle();
         bundle.setRequiresAuthentication( true );
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PURGING, Resource.GLOBAL );
-
         return bundle;
     }
 

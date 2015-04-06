@@ -42,8 +42,6 @@ import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,7 +58,6 @@ public class PurgeConfigurationAction
     extends ContinuumConfirmAction
     implements Preparable, SecureAction
 {
-    private static final Logger logger = LoggerFactory.getLogger( PurgeConfigurationAction.class );
 
     private static final String PURGE_TYPE_REPOSITORY = "repository";
 
