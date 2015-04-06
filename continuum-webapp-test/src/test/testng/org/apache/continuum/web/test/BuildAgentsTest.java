@@ -147,8 +147,6 @@ public class BuildAgentsTest
         throws Exception
     {
         addBuildAgent( buildAgentUrl, buildAgentDescription );
-
-        goToBuildAgentPage();
         removeBuildAgent( buildAgentUrl );
         assertTextNotPresent( buildAgentUrl );
     }

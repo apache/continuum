@@ -243,6 +243,12 @@ public abstract class AbstractContinuumTest
     protected void addProjectGroup( String name, String groupId, String description, boolean success,
                                     boolean failIfExists )
     {
+        addProjectGroup( name, groupId, description, null, success, failIfExists );
+    }
+
+    protected void addProjectGroup( String name, String groupId, String description, String repo, boolean success,
+                                    boolean failIfExists )
+    {
         goToProjectGroupsSummaryPage();
         if ( failIfExists )
         {
@@ -263,6 +269,12 @@ public abstract class AbstractContinuumTest
         // Enter values into Add Project Group fields, and submit
         setFieldValue( "name", name );
         setFieldValue( "groupId", groupId );
+
+        if ( repo != null )
+        {
+            selectValue( "repositoryId", repo );
+        }
+
         setFieldValue( "description", description );
 
         submit();

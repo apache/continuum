@@ -274,6 +274,7 @@ public abstract class AbstractAdminTest
     protected void removeBuildAgent( String agentName )
         throws Exception
     {
+        goToBuildAgentPage();
         removeBuildAgent( agentName, true );
     }
 

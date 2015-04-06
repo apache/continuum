@@ -305,6 +305,14 @@
                   <name>sampleProjectsDir</name>
                   <value>${sampleProjectsDir}</value>
                 </property>
+                <property>
+                  <name>agentRepoName</name>
+                  <value>${agentRepoName}</value>
+                </property>
+                <property>
+                  <name>agentRepo</name>
+                  <value>${agentRepo}</value>
+                </property>
               </systemProperties>
             </configuration>
           </execution>
@@ -623,6 +631,7 @@
     <cargo.jvmargs>-Xmx512m -XX:MaxPermSize=128m</cargo.jvmargs>
     <plexus.system.path/>
     <selenium.version>2.41.0</selenium.version>
+    <agentRepoName>purgeable</agentRepoName>
     <agentRepo>${project.build.directory}/data/build-agent/.m2/repository</agentRepo>
   </properties>
 </project>

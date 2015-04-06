@@ -30,7 +30,7 @@
       <layout>default</layout>
     </localRepository>
     <localRepository>
-      <name>purgeable</name>
+      <name>${agentRepoName}</name>
       <location>${agentRepo}</location>
       <layout>default</layout>
     </localRepository>
