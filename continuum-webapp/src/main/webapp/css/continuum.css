@@ -67,8 +67,14 @@ table.releasePhases td:nth-child(2) {
   width: 100%;
 }
 
-message {
+message, div.errormessage p {
   display: block;
   margin-top: .67em;
   margin-bottom: .67em;
+}
+
+div.errormessage p, span.errorMessage {
+  background: url(../images/icon_error_sml.gif) no-repeat;
+  padding-left: 20px;
+  min-height: 15px;
 }
