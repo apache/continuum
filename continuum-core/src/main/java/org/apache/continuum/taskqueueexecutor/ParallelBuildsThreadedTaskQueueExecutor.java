@@ -28,6 +28,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -46,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * Modified plexus ThreadedTaskQueueExecutor
  */
 public class ParallelBuildsThreadedTaskQueueExecutor
-    implements TaskQueueExecutor, Initializable, Startable
+    implements TaskQueueExecutor, Initializable, Startable, Disposable
 {
     private static final Logger log = LoggerFactory.getLogger( ParallelBuildsThreadedTaskQueueExecutor.class );
 
@@ -329,6 +330,11 @@ public class ParallelBuildsThreadedTaskQueueExecutor
             // notify again, just in case.
             executorRunnable.shutdown();
         }
+    }
+
+    public void dispose()
+    {
+        executorRunnable.shutdown();
     }
 
     public Task getCurrentTask()

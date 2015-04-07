@@ -28,6 +28,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -44,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * Codes were taken from Plexus' ThreadedTaskQueueExecutor
  */
 public class ThreadedDistributedBuildTaskQueueExecutor
-    implements DistributedBuildTaskQueueExecutor, Initializable, Startable
+    implements DistributedBuildTaskQueueExecutor, Initializable, Startable, Disposable
 {
     private static final int SHUTDOWN = 1;
 
@@ -327,6 +328,11 @@ public class ThreadedDistributedBuildTaskQueueExecutor
             // notify again, just in case.
             executorRunnable.shutdown();
         }
+    }
+
+    public void dispose()
+    {
+        executorRunnable.shutdown();
     }
 
     public Task getCurrentTask()
