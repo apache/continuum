@@ -134,7 +134,7 @@
         <ref bean="distributedBuildStatusTrigger"/>
       </list>
     </property>
-    <property name="schedulerName" value="Continuum Scheduler"/>
+    <property name="schedulerName" value="continuum-maintenance"/>
     <property name="waitForJobsToCompleteOnShutdown" value="true"/>
     <property name="quartzProperties">
       <props>
