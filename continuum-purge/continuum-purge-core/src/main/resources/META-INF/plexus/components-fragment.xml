@@ -44,7 +44,7 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>purge</role-hint>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <implementation>org.apache.continuum.taskqueue.ThreadedTaskQueueExecutor</implementation>
       <instantiation-strategy>singleton</instantiation-strategy>
       <requirements>
         <requirement>

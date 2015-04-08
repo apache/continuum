@@ -91,7 +91,7 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>prepare-release</role-hint>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <implementation>org.apache.continuum.taskqueue.ThreadedTaskQueueExecutor</implementation>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
@@ -152,7 +152,7 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>perform-release</role-hint>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <implementation>org.apache.continuum.taskqueue.ThreadedTaskQueueExecutor</implementation>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
@@ -210,7 +210,7 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>rollback-release</role-hint>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <implementation>org.apache.continuum.taskqueue.ThreadedTaskQueueExecutor</implementation>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
