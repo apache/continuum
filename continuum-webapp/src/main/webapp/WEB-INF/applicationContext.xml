@@ -135,6 +135,7 @@
       </list>
     </property>
     <property name="schedulerName" value="continuum-maintenance"/>
+    <property name="startupDelay" value="30"/>
     <property name="waitForJobsToCompleteOnShutdown" value="true"/>
     <property name="quartzProperties">
       <props>
