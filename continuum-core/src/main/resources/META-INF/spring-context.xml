@@ -68,10 +68,10 @@
     <property name="prepareBuildTaskQueueExecutor" ref="taskQueueExecutor#prepare-build-project"/>
   </bean>
 
-  <!-- jobs -->
-  <bean name="continuumBuildJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-    <property name="targetObject" ref="continuumWorker"/>
-    <property name="targetMethod" value="work"/>
+  <bean name="distributedBuildStatusUpdateJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="targetObject" ref="buildStatusUpdater#distributed"/>
+    <property name="targetMethod" value="performScan"/>
     <property name="concurrent" value="false"/>
   </bean>
+
 </beans>

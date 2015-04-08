@@ -38,7 +38,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class DefaultContinuumWorkerTest
+public class DefaultBuildStatusUpdaterTest
     extends PlexusInSpringTestCase
 {
 
@@ -54,7 +54,7 @@ public class DefaultContinuumWorkerTest
 
     private ConfigurationService configurationService;
 
-    private DefaultContinuumWorker worker;
+    private DefaultBuildStatusUpdater worker;
 
     @Override
     public void setUp()
@@ -69,7 +69,7 @@ public class DefaultContinuumWorkerTest
         configurationService = mock( ConfigurationService.class );
         distributedBuildManager = mock( DistributedBuildManager.class );
 
-        worker = (DefaultContinuumWorker) lookup( ContinuumWorker.class );
+        worker = (DefaultBuildStatusUpdater) lookup( BuildStatusUpdater.class, "distributed" );
         worker.setBuildDefinitionDao( buildDefinitionDao );
         worker.setBuildResultDao( buildResultDao );
         worker.setProjectDao( projectDao );
@@ -91,7 +91,7 @@ public class DefaultContinuumWorkerTest
         when( buildDefinitionDao.getBuildDefinition( 1 ) ).thenReturn( new BuildDefinition() );
         when( projectDao.getProject( 2 ) ).thenReturn( getProject( 2, ContinuumProjectState.OK ) );
 
-        worker.work();
+        worker.performScan();
 
         verify( buildResultDao ).addBuildResult( any( Project.class ), any( BuildResult.class ) );
         verify( projectDao ).updateProject( project1 );
@@ -105,7 +105,7 @@ public class DefaultContinuumWorkerTest
                                                                      getScmRoot( ContinuumProjectState.ERROR ) );
         when( distributedBuildManager.isProjectCurrentlyPreparingBuild( 1, 1 ) ).thenReturn( false );
 
-        worker.work();
+        worker.performScan();
 
         verify( projectScmRootDao ).updateProjectScmRoot( scmRootUpdating );
     }

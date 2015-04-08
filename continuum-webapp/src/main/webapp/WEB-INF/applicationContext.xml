@@ -121,17 +121,17 @@
     <constructor-arg ref="securitySystem"/>
   </bean>
 
-  <!-- triggers -->
-  <bean id="continuumBuildTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-    <property name="jobDetail" ref="continuumBuildJob"/>
+  <!-- maintenance job triggers -->
+  <bean id="distributedBuildStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="distributedBuildStatusUpdateJob"/>
     <property name="cronExpression" value="0 * * * * ?"/>
   </bean>
 
-  <!-- scheduler -->
+  <!-- maintenance scheduler -->
   <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
       <list>
-        <ref bean="continuumBuildTrigger"/>
+        <ref bean="distributedBuildStatusTrigger"/>
       </list>
     </property>
     <property name="schedulerName" value="Continuum Scheduler"/>

@@ -19,7 +19,7 @@ package org.apache.continuum.builder.distributed.work;
  * under the License.
  */
 
-public interface ContinuumWorker
+public interface BuildStatusUpdater
 {
-    void work();
+    void performScan();
 }

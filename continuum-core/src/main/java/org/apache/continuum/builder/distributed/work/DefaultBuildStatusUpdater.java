@@ -40,11 +40,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Component( role = org.apache.continuum.builder.distributed.work.ContinuumWorker.class )
-public class DefaultContinuumWorker
-    implements ContinuumWorker
+@Component( role = BuildStatusUpdater.class, hint = "distributed" )
+public class DefaultBuildStatusUpdater
+    implements BuildStatusUpdater
 {
-    private static final Logger log = LoggerFactory.getLogger( DefaultContinuumWorker.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildStatusUpdater.class );
 
     @Requirement
     private ProjectDao projectDao;
@@ -64,7 +64,7 @@ public class DefaultContinuumWorker
     @Requirement
     private ConfigurationService configurationService;
 
-    public synchronized void work()
+    public synchronized void performScan()
     {
         if ( !configurationService.isDistributedBuildEnabled() )
         {
