@@ -318,7 +318,7 @@
         <properties>
           <property>
             <name>org.quartz.scheduler.instanceName</name>
-            <value>continuum-scheduler</value>
+            <value>scheduler</value>
           </property>
           <property>
             <name>org.quartz.threadPool.class</name>
