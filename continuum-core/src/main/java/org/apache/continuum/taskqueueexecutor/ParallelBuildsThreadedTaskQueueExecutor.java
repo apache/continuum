@@ -26,6 +26,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 import edu.emory.mathcs.backport.java.util.concurrent.Future;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
+import org.apache.continuum.utils.ThreadNames;
 import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
@@ -74,13 +75,6 @@ public class ParallelBuildsThreadedTaskQueueExecutor
 
     private Task currentTask;
 
-    private int threadNum;
-
-    private synchronized int nextThreadNum()
-    {
-        return threadNum++;
-    }
-
     private class ExecutorRunnable
         extends Thread
     {
@@ -90,7 +84,7 @@ public class ParallelBuildsThreadedTaskQueueExecutor
 
         public ExecutorRunnable()
         {
-            super( String.format( "%s-executor-%s", name, nextThreadNum() ) );
+            super( ThreadNames.formatNext( "%s-executor", name ) );
         }
 
         public void run()

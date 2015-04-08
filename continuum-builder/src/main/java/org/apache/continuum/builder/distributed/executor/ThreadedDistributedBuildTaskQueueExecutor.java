@@ -26,6 +26,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 import edu.emory.mathcs.backport.java.util.concurrent.Future;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
+import org.apache.continuum.utils.ThreadNames;
 import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
@@ -78,6 +79,11 @@ public class ThreadedDistributedBuildTaskQueueExecutor
         private volatile int command;
 
         private boolean done;
+
+        public ExecutorRunnable()
+        {
+            super( ThreadNames.formatNext( "%s-executor", name ) );
+        }
 
         public void run()
         {
