@@ -143,6 +143,7 @@
         <prop key="org.quartz.plugin.shutdownhook.class">org.quartz.plugins.management.ShutdownHookPlugin
         </prop>
         <prop key="org.quartz.plugin.shutdownhook.cleanShutdown">true</prop>
+        <prop key="org.quartz.threadPool.threadCount">1</prop>
       </props>
     </property>
   </bean>
