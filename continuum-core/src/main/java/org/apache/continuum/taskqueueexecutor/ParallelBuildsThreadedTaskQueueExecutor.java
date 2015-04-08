@@ -74,12 +74,24 @@ public class ParallelBuildsThreadedTaskQueueExecutor
 
     private Task currentTask;
 
+    private int threadNum;
+
+    private synchronized int nextThreadNum()
+    {
+        return threadNum++;
+    }
+
     private class ExecutorRunnable
         extends Thread
     {
         private volatile int command;
 
         private boolean done;
+
+        public ExecutorRunnable()
+        {
+            super( String.format( "%s-executor-%s", name, nextThreadNum() ) );
+        }
 
         public void run()
         {
