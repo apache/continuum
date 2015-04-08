@@ -144,6 +144,7 @@
         </prop>
         <prop key="org.quartz.plugin.shutdownhook.cleanShutdown">true</prop>
         <prop key="org.quartz.threadPool.threadCount">1</prop>
+        <prop key="org.quartz.threadPool.threadPriority">3</prop>
       </props>
     </property>
   </bean>
