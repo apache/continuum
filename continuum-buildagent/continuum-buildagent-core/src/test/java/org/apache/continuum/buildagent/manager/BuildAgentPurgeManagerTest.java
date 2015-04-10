@@ -21,7 +21,7 @@ package org.apache.continuum.buildagent.manager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
-import org.apache.continuum.buildagent.purge.DirectoryPurgeExecutorFactoryImpl;
+import org.apache.continuum.purge.executor.agent.DirectoryPurgeExecutorFactoryImpl;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 import java.io.File;

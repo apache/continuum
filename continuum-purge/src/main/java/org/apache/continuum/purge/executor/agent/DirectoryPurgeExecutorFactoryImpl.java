@@ -1,4 +1,4 @@
-package org.apache.continuum.buildagent.purge;
+package org.apache.continuum.purge.executor.agent;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
