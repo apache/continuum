@@ -26,11 +26,10 @@ import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * For CONTINUUM-2658 tests, Support purging of working and release directories of build agents on a schedule
@@ -38,19 +37,23 @@ import static org.mockito.Mockito.*;
 public class BuildAgentPurgeManagerTest
     extends PlexusInSpringTestCase
 {
-    private static final int DAYS_OLD = 2;
+    private static final int AGE = 2;
 
-    private static final int RELEASES_COUNT = 5;
+    private static final int NONE = 0;
 
-    private static final int RELEASES_DAYS_OLD_COUNT = 3;
+    private static final int RELEASE_DIRS = 5;
 
-    private static final int WORKING_COUNT = 10;
+    private static final int OLD_RELEASE_DIRS = 3;
 
-    private static final int WORKING_DAYS_OLD_COUNT = 9;
+    private static final int WORKING_DIRS = 10;
 
-    private static final String DIRECTORY_TYPE_RELEASES = "releases";
+    private static final int OLD_WORKING_DIRS = 9;
 
-    private static final String DIRECTORY_TYPE_WORKING = "working";
+    private static final int REGULAR_FILES = 2;
+
+    public static final int TOTAL_FILES_AND_DIRS = RELEASE_DIRS + WORKING_DIRS + REGULAR_FILES;
+
+    private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
@@ -69,7 +72,9 @@ public class BuildAgentPurgeManagerTest
 
         purgeManager.setBuildAgentConfigurationService( buildAgentConfigurationService );
 
-        createTestDirectoriesAndFiles();
+        createTestFiles();
+
+        assertEquals( TOTAL_FILES_AND_DIRS, tempDir.list().length );
 
         when( buildAgentConfigurationService.getWorkingDirectory() ).thenReturn( tempDir );
     }
@@ -78,106 +83,132 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         purgeManager = null;
-        cleanUpTestDirectoriesAndFiles();
+        cleanUpTestFiles();
         super.tearDown();
     }
 
     // CONTINUUM-2658
-    public void testCleanAllPurge()
+    public void testAllWorking()
         throws Exception
     {
-        //confirm current content of directory
-        //2 random files
-        assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_WORKING, 1, 1, true );
-
-        //confirm current content of directory
-        //working directories deleted
-        assertEquals( RELEASES_COUNT + 2, tempDir.list().length );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_RELEASES, 1, 1, true );
-
-        //confirm current content of directory
-        //releases directories deleted
-        assertEquals( 2, tempDir.list().length );
+        int ignored = 1;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, ignored, ignored, true );
+        assertEquals( RELEASE_DIRS + REGULAR_FILES, fileCount() );
     }
 
-    public void testRetentionOnlyPurge()
+    // CONTINUUM-2658
+    public void testAllReleases()
         throws Exception
     {
-        //confirm current content of directory
-        //2 random files
-        assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_WORKING, 0, 2, false );
-
-        List<String> fileNames = Arrays.asList( tempDir.list() );
-
-        //confirm current content of directory
-        //2 working directories left
-        assertEquals( RELEASES_COUNT + 2 + 2, fileNames.size() );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_RELEASES, 0, 4, false );
-
-        fileNames = Arrays.asList( tempDir.list() );
-
-        //confirm current content of directory
-        //4 releases directories left
-        assertEquals( 4 + 2 + 2, fileNames.size() );
+        int ignored = 1;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, ignored, ignored, true );
+        assertEquals( WORKING_DIRS + REGULAR_FILES, fileCount() );
     }
 
-    public void testDaysOldOnlyPurge()
+    // CONTINUUM-2658
+    public void testAllWorkingAndReleases()
         throws Exception
     {
-        //confirm current content of directory
-        //2 random files
-        assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_WORKING, 1, 0, false );
-
-        List<String> fileNames = Arrays.asList( tempDir.list() );
-
-        //confirm current content of directory
-        //days old directories are deleted
-        assertEquals( RELEASES_COUNT + ( WORKING_COUNT - WORKING_DAYS_OLD_COUNT ) + 2, fileNames.size() );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_RELEASES, 1, 0, false );
-
-        fileNames = Arrays.asList( tempDir.list() );
-
-        //confirm current content of directory
-        //days old directories are deleted
-        assertEquals( ( RELEASES_COUNT - RELEASES_DAYS_OLD_COUNT ) + ( WORKING_COUNT - WORKING_DAYS_OLD_COUNT ) + 2,
-                      fileNames.size() );
+        int ignored = 1;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, ignored, ignored, true );
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, ignored, ignored, true );
+        assertEquals( REGULAR_FILES, fileCount() );
     }
 
-    public void testRetentionAndDaysOldOnlyPurge()
+    public void testRetentionOnlyWorking()
         throws Exception
     {
-        //confirm current content of directory
-        //2 random files
-        assertEquals( RELEASES_COUNT + WORKING_COUNT + 2, tempDir.list().length );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_WORKING, 1, 5, false );
-
-        List<String> fileNames = Arrays.asList( tempDir.list() );
-
-        //confirm current content of directory
-        //days old directories are deleted
-        assertEquals( RELEASES_COUNT + Math.max( 5, WORKING_COUNT - WORKING_DAYS_OLD_COUNT ) + 2, fileNames.size() );
-
-        purgeManager.executeDirectoryPurge( DIRECTORY_TYPE_RELEASES, 1, 1, false );
-
-        fileNames = Arrays.asList( tempDir.list() );
-
-        //confirm current content of directory
-        //days old directories are deleted
-        assertEquals( Math.max( 1, RELEASES_COUNT - RELEASES_DAYS_OLD_COUNT ) + Math.max( 5, WORKING_COUNT -
-            WORKING_DAYS_OLD_COUNT ) + 2, fileNames.size() );
+        int retainedWorking = 2;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, NONE, retainedWorking, false );
+        assertEquals( RELEASE_DIRS + REGULAR_FILES + retainedWorking, fileCount() );
     }
 
-    private void createTestDirectoriesAndFiles()
+    public void testRetentionOnlyReleases()
+        throws Exception
+    {
+        int retainedReleases = 4;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, NONE, retainedReleases, false );
+        assertEquals( WORKING_DIRS + retainedReleases + REGULAR_FILES, fileCount() );
+    }
+
+    public void testRetentionOnlyWorkingAndReleases()
+        throws Exception
+    {
+        int retainedReleases = 4, retainedWorking = 2;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, NONE, retainedWorking, false );
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, NONE, retainedReleases, false );
+        assertEquals( retainedWorking + retainedReleases + REGULAR_FILES, fileCount() );
+    }
+
+    public void testDaysOldOnlyWorking()
+        throws Exception
+    {
+        int maxAge = 1, ineligibleWorkDirs = WORKING_DIRS - OLD_WORKING_DIRS;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, NONE, false );
+        assertEquals( RELEASE_DIRS + ineligibleWorkDirs + REGULAR_FILES, fileCount() );
+    }
+
+    public void testDaysOldOnlyReleases()
+        throws Exception
+    {
+        int maxAge = 1, ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, NONE, false );
+        assertEquals( WORKING_DIRS + ineligibleReleaseDirs + REGULAR_FILES, fileCount() );
+    }
+
+    public void testDaysOldOnlyWorkingAndReleases()
+        throws Exception
+    {
+        int maxAge = 1;
+        int ineligibleWorkDirs = WORKING_DIRS - OLD_WORKING_DIRS;
+        int ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, NONE, false );
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, NONE, false );
+        assertEquals( ineligibleWorkDirs + ineligibleReleaseDirs + REGULAR_FILES, fileCount() );
+    }
+
+    public void testRetentionAndDaysOldWorking()
+        throws Exception
+    {
+        int maxAge = 1;
+        int retainWorking = 5;
+        int ineligibleWorkDirs = WORKING_DIRS - OLD_WORKING_DIRS;
+        int expectedWorkDirs = retainWorking + ineligibleWorkDirs;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, retainWorking, false );
+        assertEquals( RELEASE_DIRS + expectedWorkDirs + REGULAR_FILES, fileCount() );
+    }
+
+    public void testRetentionAndDaysOldReleases()
+        throws Exception
+    {
+        int maxAge = 1;
+        int retainRelease = 1;
+        int ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
+        int expectedReleaseDirs = retainRelease + ineligibleReleaseDirs;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, retainRelease, false );
+        assertEquals( WORKING_DIRS + expectedReleaseDirs + REGULAR_FILES, fileCount() );
+    }
+
+    public void testRetentionAndDaysOldWorkingAndReleases()
+        throws Exception
+    {
+        int maxAge = 1;
+        int retainWorking = 5, retainRelease = 1;
+        int ineligibleWorkDirs = WORKING_DIRS - OLD_WORKING_DIRS;
+        int ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
+        int expectedWorkDirs = retainWorking + ineligibleWorkDirs;
+        int expectedReleaseDirs = retainRelease + ineligibleReleaseDirs;
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, retainWorking, false );
+        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, retainRelease, false );
+        assertEquals( expectedReleaseDirs + expectedWorkDirs + REGULAR_FILES, fileCount() );
+    }
+
+    private int fileCount()
+    {
+        return tempDir.list().length;
+    }
+
+    private void createTestFiles()
         throws Exception
     {
         SimpleDateFormat format = new SimpleDateFormat( "yyyyMMddHHmmss" );
@@ -187,70 +218,56 @@ public class BuildAgentPurgeManagerTest
         {
             throw new IOException( "Unable to create test directory: " + tempDir.getName() );
         }
-
-        createReleasesDirectories( tempDir, RELEASES_COUNT, DAYS_OLD, RELEASES_DAYS_OLD_COUNT );
-        createWorkingDirectories( tempDir, WORKING_COUNT, DAYS_OLD, WORKING_DAYS_OLD_COUNT );
-        createRandomFile( tempDir, "random.txt" );
-        createRandomFile( tempDir, "releases-random.txt" );
+        createReleasesDirectories( RELEASE_DIRS, AGE, OLD_RELEASE_DIRS );
+        createWorkingDirectories( WORKING_DIRS, AGE, OLD_WORKING_DIRS );
+        createRegularFile( "random.txt" );
+        createRegularFile( "releases-random.txt" );
     }
 
-    private void createReleasesDirectories( File parentDir, int count, int daysOld, int daysOldCount )
-        throws Exception
-    {
-        int daysOldIndex = 0;
-        for ( int x = 1; x <= count; x++ )
-        {
-            File file = new File( tempDir.getAbsolutePath() + System.getProperty( "file.separator" ) + "releases-" +
-                                      x );
-            if ( !file.mkdirs() )
-            {
-                throw new IOException( "Unable to create test directory: " + file.getName() );
-            }
-            if ( daysOldIndex < daysOldCount )
-            {
-                long daysOldTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000 * daysOld;
-                file.setLastModified( daysOldTime );
-                daysOldIndex++;
-            }
-
-        }
-    }
-
-    private void createWorkingDirectories( File parentDir, int count, int daysOld, int daysOldCount )
-        throws Exception
-    {
-        int daysOldIndex = 0;
-        for ( int x = 1; x <= count; x++ )
-        {
-            File file = new File( tempDir.getAbsolutePath() + System.getProperty( "file.separator" ) + x );
-            if ( !file.mkdirs() )
-            {
-                throw new IOException( "Unable to create test directory: " + file.getName() );
-            }
-            if ( daysOldIndex < daysOldCount )
-            {
-                long daysOldTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000 * daysOld;
-                file.setLastModified( daysOldTime );
-                daysOldIndex++;
-            }
-
-        }
-    }
-
-    private File createRandomFile( File parentDir, String fileName )
+    private void cleanUpTestFiles()
         throws IOException
     {
-        File randomFile = new File( parentDir.getAbsolutePath() + System.getProperty( "file.separator" ) + fileName );
+        FileUtils.deleteDirectory( tempDir );
+    }
+
+    private void createReleasesDirectories( int count, int daysOld, int daysOldCount )
+        throws Exception
+    {
+        createDirectories( "releases-", count, daysOld, daysOldCount );
+    }
+
+    private void createWorkingDirectories( int count, int daysOld, int daysOldCount )
+        throws IOException
+    {
+        createDirectories( "", count, daysOld, daysOldCount );
+    }
+
+    private void createDirectories( String namePrefix, int count, int age, int toAge )
+        throws IOException
+    {
+        long generationStart = System.currentTimeMillis();
+        for ( int x = 1; x <= count; x++ )
+        {
+            File file = new File( tempDir.getAbsolutePath() + System.getProperty( "file.separator" ) + namePrefix + x );
+            if ( !file.mkdirs() )
+            {
+                throw new IOException( "Unable to create test directory: " + file.getName() );
+            }
+            if ( x <= toAge )
+            {
+                file.setLastModified( generationStart - ( age * MILLIS_IN_DAY ) );
+            }
+        }
+    }
+
+    private File createRegularFile( String fileName )
+        throws IOException
+    {
+        File randomFile = new File( tempDir.getAbsolutePath() + System.getProperty( "file.separator" ) + fileName );
         if ( !randomFile.exists() )
         {
             randomFile.createNewFile();
         }
         return randomFile;
-    }
-
-    private void cleanUpTestDirectoriesAndFiles()
-        throws IOException
-    {
-        FileUtils.deleteDirectory( tempDir );
     }
 }
