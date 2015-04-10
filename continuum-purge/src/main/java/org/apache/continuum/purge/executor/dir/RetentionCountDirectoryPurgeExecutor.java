@@ -25,6 +25,7 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 
 import java.io.File;
@@ -39,14 +40,16 @@ import java.util.Arrays;
 public class RetentionCountDirectoryPurgeExecutor
     implements ContinuumPurgeExecutor
 {
+    private final FileSystemManager fsManager;
+
     private final int retentionCount;
 
     private final String directoryType;
 
-    public RetentionCountDirectoryPurgeExecutor( int retentionCount, String directoryType )
+    public RetentionCountDirectoryPurgeExecutor( FileSystemManager fsManager, int retentionCount, String directoryType )
     {
+        this.fsManager = fsManager;
         this.retentionCount = retentionCount;
-
         this.directoryType = directoryType;
     }
 

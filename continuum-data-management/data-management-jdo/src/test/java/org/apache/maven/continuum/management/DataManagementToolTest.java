@@ -19,9 +19,9 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.store.AbstractContinuumStoreTestCase;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.custommonkey.xmlunit.Diff;
 import org.jdom.Document;
@@ -29,6 +29,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,7 +41,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * Test the database management tool.
@@ -49,6 +49,8 @@ public class DataManagementToolTest
     extends AbstractContinuumStoreTestCase
 {
     private DataManagementTool dataManagementTool;
+
+    private FileSystemManager fsManager;
 
     private File targetDirectory;
 
@@ -60,6 +62,7 @@ public class DataManagementToolTest
         super.setUp();
 
         dataManagementTool = (DataManagementTool) lookup( DataManagementTool.class.getName(), "continuum-jdo" );
+        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
 
         targetDirectory = createBackupDirectory();
     }
@@ -71,7 +74,7 @@ public class DataManagementToolTest
         Statement stmt = connection.createStatement();
         try
         {
-            stmt.execute("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK");
+            stmt.execute( "TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK" );
             connection.commit();
         }
         finally
@@ -81,22 +84,6 @@ public class DataManagementToolTest
         }
         super.tearDown();
     }
-
-/*
-    protected ContinuumStore createStore()
-        throws Exception
-    {
-        DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE );
-
-        File database = getTestFile( "target/database/" + getName());
-        FileUtils.deleteDirectory( database );
-
-        jdoFactory.setDriverName( "org.apache.derby.jdbc.EmbeddedDriver");
-        jdoFactory.setUrl( "jdbc:derby:"+database.getAbsolutePath() + ";create=true" );
-
-        return (ContinuumStore) lookup( ContinuumStore.ROLE );
-    }
-*/
 
     public void testBackupBuilds()
         throws IOException, ContinuumStoreException, XMLStreamException, Exception
@@ -116,9 +103,7 @@ public class DataManagementToolTest
 
         IOUtil.copy( getClass().getResourceAsStream( "/expected.xml" ), sw );
 
-        //assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
-        //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );        
-        assertXmlSimilar( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils.fileRead(
+        assertXmlSimilar( removeTimestampVariance( sw.toString() ), removeTimestampVariance( fsManager.fileContents(
             backupFile ) ) );
     }
 
@@ -144,7 +129,8 @@ public class DataManagementToolTest
         IOUtil.copy( getClass().getResourceAsStream( "/expected.xml" ), new FileWriter( backupFile ) );
 
         dataManagementTool.restoreDatabase( targetDirectory, true );
-/*
+
+        /*
         // TODO: why is this wrong?
         assertBuildDatabase();
 
@@ -158,7 +144,8 @@ public class DataManagementToolTest
         //assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
         //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );
         assertXmlSimilar( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils
-            .fileRead( backupFile ) ) );*/
+            .fileRead( backupFile ) ) );
+        */
     }
 
     private static File createBackupDirectory()
@@ -173,10 +160,6 @@ public class DataManagementToolTest
 
     private static String removeTimestampVariance( String content )
     {
-        /*return fixXmlQuotes( removeTagContent( removeTagContent( removeTagContent( removeTagContent( content,
-                                                                                                     "startTime" ),
-                                                                                   "endTime" ), "date" ), "id" ) );*/
-
         return removeTagContent( removeTagContent( removeTagContent( removeTagContent( content, "startTime" ),
                                                                      "endTime" ), "date" ), "id" );
     }
@@ -190,7 +173,6 @@ public class DataManagementToolTest
         StringBuffer diffMessage = new StringBuffer();
         assertTrue( " xml diff not identical " + diff.appendMessage( diffMessage ).toString(), diff.identical() );
     }
-
 
     public void assertXmlSimilar( String expected, String test )
         throws Exception

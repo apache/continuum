@@ -24,6 +24,7 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -40,14 +41,14 @@ import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
 
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -64,6 +65,8 @@ public abstract class AbstractContinuumTest
     private ScheduleDao scheduleDao;
 
     private ProjectScmRootDao projectScmRootDao;
+
+    private FileSystemManager fsManager;
 
     // ----------------------------------------------------------------------
     //
@@ -84,6 +87,8 @@ public abstract class AbstractContinuumTest
         getScheduleDao();
 
         getProjectScmRootDao();
+
+        getFileSystemManager();
 
         setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
 
@@ -174,25 +179,11 @@ public abstract class AbstractContinuumTest
 
         MemoryJdoFactory jdoFactory = (MemoryJdoFactory) o;
 
-//        jdoFactory.setPersistenceManagerFactoryClass( "org.jpox.PersistenceManagerFactoryImpl" );
-//
-//        jdoFactory.setDriverName( "org.hsqldb.jdbcDriver" );
-
         String url = "jdbc:hsqldb:mem:" + getClass().getName() + "." + getName();
 
         jdoFactory.setUrl( url );
 
         jdoFactory.reconfigure();
-
-//        jdoFactory.setUserName( "sa" );
-//
-//        jdoFactory.setPassword( "" );
-//
-//        jdoFactory.setProperty( "org.jpox.transactionIsolation", "READ_UNCOMMITTED" );
-//
-//        jdoFactory.setProperty( "org.jpox.poid.transactionIsolation", "READ_UNCOMMITTED" );
-//
-//        jdoFactory.setProperty( "org.jpox.autoCreateTables", "true" );
 
         // ----------------------------------------------------------------------
         // Check the configuration
@@ -219,7 +210,8 @@ public abstract class AbstractContinuumTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/package.jdo" )}, new URL[]{}, null, false,
+        SchemaTool.createSchemaTables( new URL[] { getClass().getResource( "/package.jdo" ) }, new URL[] {}, null,
+                                       false,
                                        null );
 
         // ----------------------------------------------------------------------
@@ -263,6 +255,15 @@ public abstract class AbstractContinuumTest
             projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
         }
         return projectScmRootDao;
+    }
+
+    public FileSystemManager getFileSystemManager()
+    {
+        if ( fsManager == null )
+        {
+            fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+        }
+        return fsManager;
     }
 
     // ----------------------------------------------------------------------
@@ -409,8 +410,6 @@ public abstract class AbstractContinuumTest
     public void assertProjectEquals( String name, List<ProjectNotifier> notifiers, String version, Project actual )
     {
         assertEquals( "project.name", name, actual.getName() );
-
-//        assertEquals( "project.scmUrl", scmUrl, actual.getScmUrl() );
 
         if ( notifiers != null )
         {

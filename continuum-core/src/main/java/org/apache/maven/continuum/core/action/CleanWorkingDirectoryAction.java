@@ -20,13 +20,11 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.apache.maven.shared.model.fileset.FileSet;
-import org.apache.maven.shared.model.fileset.util.FileSetManager;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.List;
@@ -46,6 +44,9 @@ public class CleanWorkingDirectoryAction
     @Requirement
     private ProjectDao projectDao;
 
+    @Requirement
+    FileSystemManager fsManager;
+
     public void execute( Map context )
         throws Exception
     {
@@ -58,7 +59,7 @@ public class CleanWorkingDirectoryAction
 
         if ( workingDirectory.exists() )
         {
-            FileUtils.deleteDirectory( workingDirectory );
+            fsManager.removeDir( workingDirectory );
         }
     }
 }

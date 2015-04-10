@@ -21,8 +21,8 @@ package org.apache.continuum.purge.executor;
 
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
-import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +39,13 @@ public class CleanAllPurgeExecutor
 {
     private Logger log = LoggerFactory.getLogger( CleanAllPurgeExecutor.class );
 
+    private FileSystemManager fsManager;
+
     private final String purgeType;
 
-    public CleanAllPurgeExecutor( String purgeType )
+    public CleanAllPurgeExecutor( FileSystemManager fsManager, String purgeType )
     {
+        this.fsManager = fsManager;
         this.purgeType = purgeType;
     }
 
@@ -68,7 +71,7 @@ public class CleanAllPurgeExecutor
     {
         try
         {
-            FileUtils.cleanDirectory( path );
+            fsManager.wipeDir( new File( path ) );
         }
         catch ( IOException e )
         {
@@ -82,16 +85,13 @@ public class CleanAllPurgeExecutor
         throws ContinuumPurgeExecutorException
     {
         File workingDir = new File( path );
-
         FilenameFilter filter = new ArtifactFilenameFilter( "releases-" );
-
         File[] releasesDir = workingDir.listFiles( filter );
-
         try
         {
             for ( File releaseDir : releasesDir )
             {
-                FileUtils.deleteDirectory( releaseDir );
+                fsManager.removeDir( releaseDir );
                 log.info( ContinuumPurgeConstants.PURGE_DIR_CONTENTS + " - " + releaseDir.getName() );
             }
         }
@@ -105,16 +105,13 @@ public class CleanAllPurgeExecutor
         throws ContinuumPurgeExecutorException
     {
         File buildOutputDir = new File( path );
-
         FileFilter filter = DirectoryFileFilter.DIRECTORY;
-
         File[] projectsDir = buildOutputDir.listFiles( filter );
-
         try
         {
             for ( File projectDir : projectsDir )
             {
-                FileUtils.cleanDirectory( projectDir );
+                fsManager.wipeDir( projectDir );
                 log.info( ContinuumPurgeConstants.PURGE_DIR_CONTENTS + " - " + projectDir.getName() );
             }
         }

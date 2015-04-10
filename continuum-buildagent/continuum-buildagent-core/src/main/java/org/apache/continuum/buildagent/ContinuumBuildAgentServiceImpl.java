@@ -19,7 +19,6 @@ package org.apache.continuum.buildagent;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
@@ -39,6 +38,7 @@ import org.apache.continuum.release.utils.ReleaseHelper;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.ContinuumException;
@@ -101,7 +101,10 @@ public class ContinuumBuildAgentServiceImpl
     private ReleaseHelper releaseHelper;
 
     @Requirement
-    LocalRepositoryHelper localRepositoryHelper;
+    private LocalRepositoryHelper localRepositoryHelper;
+
+    @Requirement
+    private FileSystemManager fsManager;
 
     public void buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws ContinuumBuildAgentException
@@ -321,7 +324,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            downloadFile = FileUtils.readFileToByteArray( userFile );
+            downloadFile = fsManager.fileBytes( userFile );
         }
         catch ( IOException e )
         {
@@ -347,7 +350,7 @@ public class ContinuumBuildAgentServiceImpl
         {
             try
             {
-                fileContent = FileUtils.readFileToString( userFile );
+                fileContent = fsManager.fileContents( userFile );
             }
             catch ( IOException e )
             {
@@ -1224,7 +1227,7 @@ public class ContinuumBuildAgentServiceImpl
 
             if ( buildOutputFile.exists() )
             {
-                return StringEscapeUtils.escapeHtml( FileUtils.readFileToString( buildOutputFile ) );
+                return StringEscapeUtils.escapeHtml( fsManager.fileContents( buildOutputFile ) );
             }
         }
         catch ( Exception e )

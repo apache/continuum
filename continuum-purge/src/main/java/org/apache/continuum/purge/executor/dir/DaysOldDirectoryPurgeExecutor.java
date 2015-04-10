@@ -19,13 +19,13 @@ package org.apache.continuum.purge.executor.dir;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,18 +45,20 @@ public class DaysOldDirectoryPurgeExecutor
 {
     private Logger log = LoggerFactory.getLogger( DaysOldDirectoryPurgeExecutor.class );
 
+    private final FileSystemManager fsManager;
+
     private final int daysOlder;
 
     private final int retentionCount;
 
     private final String directoryType;
 
-    public DaysOldDirectoryPurgeExecutor( int daysOlder, int retentionCount, String directoryType )
+    public DaysOldDirectoryPurgeExecutor( FileSystemManager fsManager, int daysOlder, int retentionCount,
+                                          String directoryType )
     {
+        this.fsManager = fsManager;
         this.daysOlder = daysOlder;
-
         this.retentionCount = retentionCount;
-
         this.directoryType = directoryType;
     }
 
@@ -76,9 +78,7 @@ public class DaysOldDirectoryPurgeExecutor
     private void purgeReleaseDirectory( String path )
     {
         File releaseDir = new File( path );
-
         FilenameFilter filter = new ArtifactFilenameFilter( "releases-" );
-
         File[] releasesDir = releaseDir.listFiles( filter );
 
         if ( releasesDir == null || retentionCount > releasesDir.length )
@@ -105,7 +105,7 @@ public class DaysOldDirectoryPurgeExecutor
                 try
                 {
                     log.info( ContinuumPurgeConstants.PURGE_DIR_CONTENTS + " - " + dir.getName() );
-                    FileUtils.deleteDirectory( dir );
+                    fsManager.removeDir( dir );
                     countToPurge--;
                 }
                 catch ( IOException e )
@@ -119,22 +119,18 @@ public class DaysOldDirectoryPurgeExecutor
     private void purgeBuildOutputDirectory( String path )
     {
         File buildOutputDir = new File( path );
-
         FileFilter filter = DirectoryFileFilter.DIRECTORY;
-
         File[] projectsDir = buildOutputDir.listFiles( filter );
 
         for ( File projectDir : projectsDir )
         {
             File[] buildsDir = projectDir.listFiles( filter );
-
             if ( retentionCount > buildsDir.length )
             {
                 continue;
             }
 
             int countToPurge = buildsDir.length - retentionCount;
-
             Calendar olderThanThisDate = Calendar.getInstance( DateUtils.UTC_TIME_ZONE );
             olderThanThisDate.add( Calendar.DATE, -daysOlder );
 
@@ -152,15 +148,13 @@ public class DaysOldDirectoryPurgeExecutor
                     try
                     {
                         log.info( ContinuumPurgeConstants.PURGE_DIR_CONTENTS + " - " + buildDir.getName() );
-                        FileUtils.deleteDirectory( buildDir );
+                        fsManager.removeDir( buildDir );
                         File logFile = new File( buildDir.getAbsoluteFile() + ".log.txt" );
-
                         if ( logFile.exists() )
                         {
                             log.info( ContinuumPurgeConstants.PURGE_FILE + " - " + logFile.getName() );
                             logFile.delete();
                         }
-
                         countToPurge--;
                     }
                     catch ( IOException e )

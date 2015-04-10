@@ -1,7 +1,7 @@
 package org.apache.maven.continuum.execution.shared;
 
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +12,11 @@ public class JUnitReportArchiver
 {
     private static Logger log = LoggerFactory.getLogger( JUnitReportArchiver.class );
 
-    private String[] includeFiles = { };
+    private String[] includeFiles = {};
 
-    private String[] excludeFiles = { };
+    private String[] excludeFiles = {};
+
+    private FileSystemManager fsManager;
 
     public void setIncludeFiles( String[] includeFiles )
     {
@@ -24,6 +26,11 @@ public class JUnitReportArchiver
     public void setExcludeFiles( String[] excludeFiles )
     {
         this.excludeFiles = excludeFiles;
+    }
+
+    public void setFileSystemManager( FileSystemManager fsManager )
+    {
+        this.fsManager = fsManager;
     }
 
     public String[] findReports( File workingDir )
@@ -49,7 +56,7 @@ public class JUnitReportArchiver
             File xmlFile = new File( workingDir, testResultFile );
             if ( backupDir != null )
             {
-                FileUtils.copyFileToDirectory( xmlFile, backupDir );
+                fsManager.copyFileToDir( xmlFile, backupDir );
             }
         }
     }

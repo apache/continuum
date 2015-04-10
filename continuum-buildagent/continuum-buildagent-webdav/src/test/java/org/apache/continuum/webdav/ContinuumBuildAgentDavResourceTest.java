@@ -19,7 +19,7 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceFactory;
@@ -29,8 +29,8 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.DavSession;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
-import java.io.File;
 import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
 
 public class ContinuumBuildAgentDavResourceTest
     extends PlexusInSpringTestCase
@@ -44,6 +44,8 @@ public class ContinuumBuildAgentDavResourceTest
     private DavResource resource;
 
     private MimetypesFileTypeMap mimeTypes;
+
+    private FileSystemManager fsManager;
 
     private File baseDir;
 
@@ -64,14 +66,16 @@ public class ContinuumBuildAgentDavResourceTest
         mimeTypes.addMimeTypes( "application/java-class class" );
         mimeTypes.addMimeTypes( "image/png png" );
 
+        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+
         baseDir = getTestFile( "target/DavResourceTest" );
         baseDir.mkdirs();
         resourceFile = new File( baseDir, RESOURCE_FILE );
         resourceFile.createNewFile();
 
         resourceFactory = new RootContextDavResourceFactory();
-        resourceLocator = (ContinuumBuildAgentDavResourceLocator) new ContinuumBuildAgentDavLocatorFactory().
-            createResourceLocator( "/", RESOURCE_FILE );
+        resourceLocator = (ContinuumBuildAgentDavResourceLocator) new ContinuumBuildAgentDavLocatorFactory()
+            .createResourceLocator( "/", RESOURCE_FILE );
         resource = getDavResource( resourceLocator.getHref( false ), resourceFile );
     }
 
@@ -81,7 +85,7 @@ public class ContinuumBuildAgentDavResourceTest
     {
         if ( baseDir.exists() )
         {
-            FileUtils.deleteDirectory( baseDir );
+            fsManager.removeDir( baseDir );
         }
 
         super.tearDown();
@@ -120,7 +124,7 @@ public class ContinuumBuildAgentDavResourceTest
         }
         finally
         {
-            FileUtils.deleteDirectory( dir );
+            fsManager.removeDir( dir );
         }
     }
 

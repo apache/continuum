@@ -35,6 +35,7 @@ import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -55,7 +56,6 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +87,9 @@ public class BuildProjectTaskExecutor
 
     @Requirement
     private BuildAgentBuildExecutorManager buildAgentBuildExecutorManager;
+
+    @Requirement
+    FileSystemManager fsManager;
 
     public void executeTask( Task task )
         throws TaskExecutionException
@@ -374,7 +377,7 @@ public class BuildProjectTaskExecutor
 
             if ( buildOutputFile.exists() )
             {
-                return StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
+                return StringEscapeUtils.escapeHtml( fsManager.fileContents( buildOutputFile ) );
             }
         }
         catch ( Exception e )

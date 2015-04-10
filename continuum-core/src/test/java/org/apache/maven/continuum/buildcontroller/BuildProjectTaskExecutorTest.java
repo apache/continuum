@@ -21,6 +21,7 @@ package org.apache.maven.continuum.buildcontroller;
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -34,7 +35,6 @@ import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -179,8 +179,9 @@ public class BuildProjectTaskExecutorTest
     {
         BuildProjectTask task = createTask( maxRunTime );
 
-        FileUtils.forceDelete( getTestFile( "src/test-projects/timeout/target/TEST-STARTED" ) );
-        FileUtils.forceDelete( getTestFile( "src/test-projects/timeout/target/TEST-COMPLETED" ) );
+        FileSystemManager fsManager = getFileSystemManager();
+        fsManager.delete( getTestFile( "src/test-projects/timeout/target/TEST-STARTED" ) );
+        fsManager.delete( getTestFile( "src/test-projects/timeout/target/TEST-COMPLETED" ) );
 
         System.err.println( "Queueing build" );
 

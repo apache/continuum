@@ -19,10 +19,10 @@ package org.apache.continuum.purge.repository.content;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.repository.utils.FileTypes;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.archiva.common.utils.PathUtil;
 import org.apache.maven.archiva.common.utils.VersionUtil;
 import org.apache.maven.archiva.model.ArtifactReference;
@@ -61,6 +61,9 @@ public class ManagedDefaultRepositoryContent
     @Requirement( hint = "file-types" )
     private FileTypes filetypes;
 
+    @Requirement
+    private FileSystemManager fsManager;
+
     private LocalRepository repository;
 
     public void deleteVersion( VersionedReference reference )
@@ -75,7 +78,7 @@ public class ManagedDefaultRepositoryContent
         {
             try
             {
-                FileUtils.deleteDirectory( projectDir );
+                fsManager.removeDir( projectDir );
             }
             catch ( IOException e )
             {

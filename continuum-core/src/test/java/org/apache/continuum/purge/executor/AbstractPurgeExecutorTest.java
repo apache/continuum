@@ -19,11 +19,11 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.AbstractPurgeTest;
 import org.apache.continuum.purge.task.PurgeTask;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 
 import java.io.File;
@@ -36,11 +36,11 @@ import java.util.List;
 public abstract class AbstractPurgeExecutorTest
     extends AbstractPurgeTest
 {
-    private static final String[] jar_extensions = new String[]{".jar", ".jar.md5", ".jar.sha1"};
+    private static final String[] jar_extensions = new String[] { ".jar", ".jar.md5", ".jar.sha1" };
 
-    private static final String[] pom_extensions = new String[]{".pom", ".pom.md5", ".pom.sha1"};
+    private static final String[] pom_extensions = new String[] { ".pom", ".pom.md5", ".pom.sha1" };
 
-    private static final String[] metadata_extensions = new String[]{".xml", ".xml.sha1", ".xml.md5"};
+    private static final String[] metadata_extensions = new String[] { ".xml", ".xml.sha1", ".xml.md5" };
 
     private static final String TEST_MAVEN_METADATA = "maven-metadata-central";
 
@@ -56,6 +56,8 @@ public abstract class AbstractPurgeExecutorTest
 
     protected PurgeTask purgeBuildOutputDirTask;
 
+    protected FileSystemManager fsManager;
+
     protected void setUp()
         throws Exception
     {
@@ -65,6 +67,8 @@ public abstract class AbstractPurgeExecutorTest
         {
             purgeExecutor = (TaskExecutor) lookup( TaskExecutor.class.getName(), "purge" );
         }
+
+        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
     }
 
     protected void tearDown()
@@ -72,9 +76,9 @@ public abstract class AbstractPurgeExecutorTest
     {
         super.tearDown();
 
-        FileUtils.deleteDirectory( getDefaultRepositoryLocation() );
-        FileUtils.deleteDirectory( getReleasesDirectoryLocation() );
-        FileUtils.deleteDirectory( getBuildOutputDirectoryLocation() );
+        fsManager.removeDir( getDefaultRepositoryLocation() );
+        fsManager.removeDir( getReleasesDirectoryLocation() );
+        fsManager.removeDir( getBuildOutputDirectoryLocation() );
     }
 
     protected PurgeTask getDaysOldRepoPurgeTask()
@@ -297,7 +301,8 @@ public abstract class AbstractPurgeExecutorTest
 
         String repoPath = getReleasesDirectoryLocation().getAbsolutePath();
 
-        String[] folders = new String[]{"1", "releases-4234729018", "", "releases-1234567809", "releases-1234567890"};
+        String[] folders =
+            new String[] { "1", "releases-4234729018", "", "releases-1234567809", "releases-1234567890" };
 
         for ( String folder : folders )
         {
@@ -319,8 +324,8 @@ public abstract class AbstractPurgeExecutorTest
         File projectDir2 = new File( repoPath, "2" );
         projectDir2.mkdir();
 
-        String[] buildOutputs1 = new String[]{"1", "3", "6"};
-        String[] buildOutputs2 = new String[]{"4", "7", "9"};
+        String[] buildOutputs1 = new String[] { "1", "3", "6" };
+        String[] buildOutputs2 = new String[] { "4", "7", "9" };
 
         for ( int i = 0; i < 3; i++ )
         {
@@ -376,8 +381,8 @@ public abstract class AbstractPurgeExecutorTest
     private void prepareTestFolders()
         throws Exception
     {
-        FileUtils.cleanDirectory( getDefaultRepositoryLocation() );
-        FileUtils.cleanDirectory( getReleasesDirectoryLocation() );
-        FileUtils.cleanDirectory( getBuildOutputDirectoryLocation() );
+        fsManager.wipeDir( getDefaultRepositoryLocation() );
+        fsManager.wipeDir( getReleasesDirectoryLocation() );
+        fsManager.wipeDir( getBuildOutputDirectoryLocation() );
     }
 }

@@ -20,6 +20,7 @@ package org.apache.maven.continuum.release.executors;
  */
 
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -36,7 +37,6 @@ import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
 import java.io.File;
@@ -61,6 +61,8 @@ public class ReleaseTaskExecutorTest
     private TaskExecutor rollbackExec;
 
     private ContinuumReleaseManager releaseManager;
+
+    private FileSystemManager fsManager;
 
     protected void setUp()
         throws Exception
@@ -91,9 +93,15 @@ public class ReleaseTaskExecutorTest
         {
             releaseManager = (ContinuumReleaseManager) lookup( ContinuumReleaseManager.ROLE );
         }
+
+        if ( fsManager == null )
+        {
+            fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+        }
+
         File scmPath = new File( getBasedir(), "target/scm-src" ).getAbsoluteFile();
         File scmTargetPath = new File( getBasedir(), "target/scm-test" ).getAbsoluteFile();
-        FileUtils.copyDirectoryStructure( scmPath, scmTargetPath );
+        fsManager.copyDir( scmPath, scmTargetPath );
     }
 
     public void releaseSimpleProject()
@@ -101,9 +109,9 @@ public class ReleaseTaskExecutorTest
     {
         String scmPath = new File( getBasedir(), "target/scm-test" ).getAbsolutePath().replace( '\\', '/' );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
-        FileUtils.deleteDirectory( workDir );
+        fsManager.removeDir( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
-        FileUtils.deleteDirectory( testDir );
+        fsManager.removeDir( testDir );
 
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
@@ -114,19 +122,19 @@ public class ReleaseTaskExecutorTest
         ScmFileSet fileSet = new ScmFileSet( workDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        String pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test dev version", pom.indexOf( "<version>1.0-SNAPSHOT</version>" ) > 0 );
 
         doPrepareWithNoError( descriptor );
 
-        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test version increment", pom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
 
         repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/test-artifact-1.0" );
         fileSet = new ScmFileSet( testDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( testDir, "pom.xml" ) );
         assertTrue( "Test released version", pom.indexOf( "<version>1.0</version>" ) > 0 );
     }
 
@@ -146,9 +154,9 @@ public class ReleaseTaskExecutorTest
     {
         String scmPath = new File( getBasedir(), "target/scm-test" ).getAbsolutePath().replace( '\\', '/' );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
-        FileUtils.deleteDirectory( workDir );
+        fsManager.removeDir( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
-        FileUtils.deleteDirectory( testDir );
+        fsManager.removeDir( testDir );
 
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
@@ -161,19 +169,19 @@ public class ReleaseTaskExecutorTest
         ScmFileSet fileSet = new ScmFileSet( workDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        String pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test dev version", pom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
 
         doPrepareWithNoError( descriptor );
 
-        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test version increment", pom.indexOf( "<version>2.1-SNAPSHOT</version>" ) > 0 );
 
         repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/test-artifact-2.0" );
         fileSet = new ScmFileSet( testDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( testDir, "pom.xml" ) );
         assertTrue( "Test released version", pom.indexOf( "<version>2.0</version>" ) > 0 );
 
 /* CONTINUUM-2559
@@ -193,9 +201,9 @@ public class ReleaseTaskExecutorTest
     {
         String scmPath = new File( getBasedir(), "target/scm-test" ).getAbsolutePath().replace( '\\', '/' );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
-        FileUtils.deleteDirectory( workDir );
+        fsManager.removeDir( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
-        FileUtils.deleteDirectory( testDir );
+        fsManager.removeDir( testDir );
 
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
@@ -206,24 +214,24 @@ public class ReleaseTaskExecutorTest
         ScmFileSet fileSet = new ScmFileSet( workDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        String pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test dev version", pom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
 
         doPrepareWithNoError( descriptor );
 
-        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test version increment", pom.indexOf( "<version>1.2-SNAPSHOT</version>" ) > 0 );
 
         repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/test-artifact-1.1" );
         fileSet = new ScmFileSet( testDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( testDir, "pom.xml" ) );
         assertTrue( "Test released version", pom.indexOf( "<version>1.1</version>" ) > 0 );
 
         rollbackExec.executeTask( new RollbackReleaseProjectTask( "testRelease", descriptor, null ) );
 
-        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test rollback version", pom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
 
         assertFalse( "Test that release.properties has been cleaned", new File( workDir,
@@ -238,9 +246,9 @@ public class ReleaseTaskExecutorTest
     {
         String scmPath = new File( getBasedir(), "target/scm-test" ).getAbsolutePath().replace( '\\', '/' );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
-        FileUtils.deleteDirectory( workDir );
+        fsManager.removeDir( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
-        FileUtils.deleteDirectory( testDir );
+        fsManager.removeDir( testDir );
 
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
@@ -251,19 +259,19 @@ public class ReleaseTaskExecutorTest
         ScmFileSet fileSet = new ScmFileSet( workDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        String pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test dev version", pom.indexOf( "<version>2.1-SNAPSHOT</version>" ) > 0 );
 
         doPrepareWithNoError( descriptor );
 
-        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test version increment", pom.indexOf( "<version>2.2-SNAPSHOT</version>" ) > 0 );
 
         repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/test-artifact-2.1" );
         fileSet = new ScmFileSet( testDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( testDir, "pom.xml" ) );
         assertTrue( "Test released version", pom.indexOf( "<version>2.1</version>" ) > 0 );
 
         File file = new File( descriptor.getWorkingDirectory(), "release.properties" );
@@ -309,9 +317,9 @@ public class ReleaseTaskExecutorTest
         String scmPath = new File( getBasedir(), "target/scm-test/continuum-1814" ).getAbsolutePath().replace( '\\',
                                                                                                                '/' );
         File workDir = new File( getBasedir(), "target/test-classes/continuum-1814" );
-        FileUtils.deleteDirectory( workDir );
+        fsManager.removeDir( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
-        FileUtils.deleteDirectory( testDir );
+        fsManager.removeDir( testDir );
 
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
@@ -322,19 +330,19 @@ public class ReleaseTaskExecutorTest
         ScmFileSet fileSet = new ScmFileSet( workDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        String pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test dev version", pom.indexOf( "<version>1.6-SNAPSHOT</version>" ) > 0 );
 
         doPrepareWithNoError( descriptor );
 
-        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test version increment", pom.indexOf( "<version>1.7-SNAPSHOT</version>" ) > 0 );
 
         repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/continuum-1814-1.6" );
         fileSet = new ScmFileSet( testDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( testDir, "pom.xml" ) );
         assertTrue( "Test released version", pom.indexOf( "<version>1.6</version>" ) > 0 );
 
 /* CONTINUUM-2559
@@ -356,9 +364,9 @@ public class ReleaseTaskExecutorTest
         String scmPath = new File( getBasedir(), "target/scm-test/continuum-2610" ).getAbsolutePath().replace( '\\',
                                                                                                                '/' );
         File workDir = new File( getBasedir(), "target/test-classes/continuum-2610" );
-        FileUtils.deleteDirectory( workDir );
+        fsManager.removeDir( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
-        FileUtils.deleteDirectory( testDir );
+        fsManager.removeDir( testDir );
 
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
@@ -370,31 +378,31 @@ public class ReleaseTaskExecutorTest
         ScmFileSet fileSet = new ScmFileSet( workDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        String pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        String pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test root dev version", pom.indexOf( "<version>1.0-SNAPSHOT</version>" ) > 0 );
-        String moduleAPom = FileUtils.fileRead( new File( workDir, "module-A/pom.xml" ) );
+        String moduleAPom = fsManager.fileContents( new File( workDir, "module-A/pom.xml" ) );
         assertTrue( "Test module A dev version", moduleAPom.indexOf( "<version>1.0-SNAPSHOT</version>" ) > 0 );
-        String moduleBPom = FileUtils.fileRead( new File( workDir, "module-B/pom.xml" ) );
+        String moduleBPom = fsManager.fileContents( new File( workDir, "module-B/pom.xml" ) );
         assertTrue( "Test module B dev version", moduleBPom.indexOf( "<version>1.0-SNAPSHOT</version>" ) > 0 );
 
         doPrepareWithNoError( descriptor );
 
-        pom = FileUtils.fileRead( new File( workDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( workDir, "pom.xml" ) );
         assertTrue( "Test root version increment", pom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
-        moduleAPom = FileUtils.fileRead( new File( workDir, "module-A/pom.xml" ) );
+        moduleAPom = fsManager.fileContents( new File( workDir, "module-A/pom.xml" ) );
         assertTrue( "Test module A version increment", moduleAPom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
-        moduleBPom = FileUtils.fileRead( new File( workDir, "module-B/pom.xml" ) );
+        moduleBPom = fsManager.fileContents( new File( workDir, "module-B/pom.xml" ) );
         assertTrue( "Test module B version increment", moduleBPom.indexOf( "<version>1.1-SNAPSHOT</version>" ) > 0 );
 
         repository = getScmRepositorty( "scm:svn:file://localhost/" + scmPath + "/tags/continuum-2610-1.0" );
         fileSet = new ScmFileSet( testDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, (ScmVersion) null );
 
-        pom = FileUtils.fileRead( new File( testDir, "pom.xml" ) );
+        pom = fsManager.fileContents( new File( testDir, "pom.xml" ) );
         assertTrue( "Test root released version", pom.indexOf( "<version>1.0</version>" ) > 0 );
-        moduleAPom = FileUtils.fileRead( new File( testDir, "module-A/pom.xml" ) );
+        moduleAPom = fsManager.fileContents( new File( testDir, "module-A/pom.xml" ) );
         assertTrue( "Test module A released version", moduleAPom.indexOf( "<version>1.0</version>" ) > 0 );
-        moduleBPom = FileUtils.fileRead( new File( testDir, "module-B/pom.xml" ) );
+        moduleBPom = fsManager.fileContents( new File( testDir, "module-B/pom.xml" ) );
         assertTrue( "Test module B released version", moduleBPom.indexOf( "<version>1.0</version>" ) > 0 );
     }
 

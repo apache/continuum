@@ -28,8 +28,9 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.executor.dir.DirectoryPurgeExecutorFactory;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,9 @@ public class DirectoryPurgeExecutorFactoryImpl
 
     private Set<String> supportedTypes = new HashSet<String>();
 
+    @Requirement
+    private FileSystemManager fsManager;
+
     public DirectoryPurgeExecutorFactoryImpl()
     {
         supportedTypes.add( RELEASE_TYPE );
@@ -74,9 +78,9 @@ public class DirectoryPurgeExecutorFactoryImpl
         {
             if ( deleteAll )
             {
-                return new DeleteAllPurgeExecutor( dirType );
+                return new DeleteAllPurgeExecutor( fsManager, dirType );
             }
-            return new DefaultPurgeExecutor( daysOld, retentionCount, dirType );
+            return new DefaultPurgeExecutor( fsManager, daysOld, retentionCount, dirType );
         }
         return new UnsupportedPurgeExecutor( dirType );
     }
@@ -93,8 +97,11 @@ abstract class AbstractPurgeExecutor
 
     protected String type;
 
-    AbstractPurgeExecutor( String dirType )
+    protected FileSystemManager fsManager;
+
+    AbstractPurgeExecutor( FileSystemManager fsManager, String dirType )
     {
+        this.fsManager = fsManager;
         this.type = dirType;
     }
 
@@ -165,9 +172,9 @@ class DeleteAllPurgeExecutor
 {
     private static final Logger log = LoggerFactory.getLogger( DeleteAllPurgeExecutor.class );
 
-    DeleteAllPurgeExecutor( String dirType )
+    DeleteAllPurgeExecutor( FileSystemManager fsManager, String dirType )
     {
-        super( dirType );
+        super( fsManager, dirType );
     }
 
     public void purgeDir( File directory )
@@ -176,7 +183,7 @@ class DeleteAllPurgeExecutor
         {
             try
             {
-                FileUtils.deleteDirectory( file );
+                fsManager.removeDir( file );
             }
             catch ( IOException e )
             {
@@ -201,9 +208,9 @@ class DefaultPurgeExecutor
 
     private int retentionCount;
 
-    DefaultPurgeExecutor( int daysOld, int retentionCount, String dirType )
+    DefaultPurgeExecutor( FileSystemManager fsManager, int daysOld, int retentionCount, String dirType )
     {
-        super( dirType );
+        super( fsManager, dirType );
         this.daysOld = daysOld;
         this.retentionCount = retentionCount;
     }
@@ -225,7 +232,7 @@ class DefaultPurgeExecutor
             }
             try
             {
-                FileUtils.deleteDirectory( file );
+                fsManager.removeDir( file );
                 remaining--;
             }
             catch ( IOException e )

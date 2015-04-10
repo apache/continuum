@@ -25,6 +25,7 @@ import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.MultiplexedPurgeExecutor;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.continuum.purge.repository.scanner.RepositoryScanner;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 
@@ -35,12 +36,15 @@ public class RepositoryPurgeExecutorFactoryImpl
     @Requirement( hint = "purge" )
     private RepositoryScanner scanner;
 
+    @Requirement
+    private FileSystemManager fsManager;
+
     public ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount,
                                           boolean deleteReleasedSnapshots, RepositoryManagedContent repoContent )
     {
         if ( deleteAll )
         {
-            return new CleanAllPurgeExecutor( ContinuumPurgeConstants.PURGE_REPOSITORY );
+            return new CleanAllPurgeExecutor( fsManager, ContinuumPurgeConstants.PURGE_REPOSITORY );
         }
 
         ContinuumPurgeExecutor executor;

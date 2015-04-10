@@ -20,24 +20,30 @@ package org.apache.maven.continuum.release.phase;
  */
 
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.release.phase.ReleasePhase;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 
 public class UpdateWorkingCopyPhaseTest
     extends PlexusInSpringTestCase
 {
+    private FileSystemManager fsManager;
+
     private UpdateWorkingCopyPhase phase;
+
     private ContinuumReleaseDescriptor releaseDescriptor;
+
     private File workingDirectory;
 
     protected void setUp()
         throws Exception
     {
         super.setUp();
+
+        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
 
         phase = (UpdateWorkingCopyPhase) lookup( ReleasePhase.ROLE, "update-working-copy" );
         assertNotNull( phase );
@@ -47,13 +53,13 @@ public class UpdateWorkingCopyPhaseTest
         workingDirectory = new File( releaseDescriptor.getWorkingDirectory() );
 
         // Ensure every test method starts with no working dir
-        FileUtils.deleteDirectory( workingDirectory );
+        fsManager.removeDir( workingDirectory );
         assertFalse( workingDirectory.exists() );
 
         // set up project scm
         File scmPathFile = new File( getBasedir(), "target/scm-src" ).getAbsoluteFile();
         File scmTargetPathFile = new File( getBasedir(), "/target/scm-test" ).getAbsoluteFile();
-        FileUtils.copyDirectoryStructure( scmPathFile, scmTargetPathFile );
+        fsManager.copyDir( scmPathFile, scmTargetPathFile );
     }
 
     public void testWorkingDirDoesNotExist()

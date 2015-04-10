@@ -21,8 +21,9 @@ package org.apache.maven.continuum.configuration;
 
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
+import org.apache.continuum.utils.file.DefaultFileSystemManager;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,10 +39,13 @@ public class ConfigurationServiceTest
 
     private static final String confFile = "target/test-classes/conf/continuum.xml";
 
+    private FileSystemManager fsManager;
+
     @Override
     protected void setUp()
         throws Exception
     {
+        fsManager = new DefaultFileSystemManager();  // can't lookup, before setup
         File originalConf = new File( getBasedir(), "src/test/resources/conf/continuum.xml" );
 
         File confUsed = new File( getBasedir(), confFile );
@@ -49,7 +53,8 @@ public class ConfigurationServiceTest
         {
             confUsed.delete();
         }
-        FileUtils.copyFile( originalConf, confUsed );
+        fsManager.copyFile( originalConf, confUsed );
+
         super.setUp();
     }
 
@@ -81,14 +86,6 @@ public class ConfigurationServiceTest
 
         assertNotNull( service );
 
-//        service.load();
-
-//        assertEquals( "http://test", service.getUrl() );
-
-//        assertEquals( "build-output-directory", service.getBuildOutputDirectory().getName() );
-
-//        assertEquals( "working-directory", service.getWorkingDirectory().getName() );
-
         assertEquals( "check # build agents", 1, service.getBuildAgents().size() );
 
         service.setUrl( "http://test/zloug" );
@@ -98,10 +95,7 @@ public class ConfigurationServiceTest
         service.addBuildAgent( buildAgent );
 
         service.store();
-
-        String contents = FileUtils.fileRead( conf );
-        //assertTrue( contents.indexOf( "http://test/zloug" ) > 0 );
-
+        fsManager.fileContents( conf );
         service.reload();
 
         assertEquals( "http://test/zloug", service.getUrl() );

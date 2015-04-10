@@ -29,6 +29,7 @@
     <property name="projectHelper" ref="mavenProjectHelper"/>
     <property name="testReportArchiver">
         <bean class="org.apache.maven.continuum.execution.shared.JUnitReportArchiver">
+            <property name="fileSystemManager" ref="fileSystemManager"/>
             <property name="includeFiles" value="**/target/surefire-reports/TEST-*.xml,**/target/surefire-it-reports/TEST-*.xml"/>
         </bean>
     </property>
@@ -43,6 +44,7 @@
     <property name="defaultExecutable" value="ant"/>
     <property name="testReportArchiver">
       <bean class="org.apache.maven.continuum.execution.shared.JUnitReportArchiver">
+        <property name="fileSystemManager" ref="fileSystemManager"/>
         <property name="includeFiles" value="**/TEST-*.xml"/>
       </bean>
     </property>

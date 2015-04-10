@@ -50,6 +50,7 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -98,7 +99,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -213,6 +213,9 @@ public class DefaultContinuum
 
     @Requirement
     private DistributedReleaseManager distributedReleaseManager;
+
+    @Requirement
+    private FileSystemManager fsManager;
 
     public DefaultContinuum()
     {
@@ -606,7 +609,7 @@ public class DefaultContinuum
 
                 if ( releaseOutputDirectory != null )
                 {
-                    FileUtils.deleteDirectory( releaseOutputDirectory );
+                    fsManager.removeDir( releaseOutputDirectory );
                 }
             }
             catch ( ContinuumStoreException e )
@@ -639,11 +642,11 @@ public class DefaultContinuum
 
             File workingDirectory = getWorkingDirectory( projectId );
 
-            FileUtils.deleteDirectory( workingDirectory );
+            fsManager.removeDir( workingDirectory );
 
             File buildOutputDirectory = configurationService.getBuildOutputDirectory( projectId );
 
-            FileUtils.deleteDirectory( buildOutputDirectory );
+            fsManager.removeDir( buildOutputDirectory );
 
             projectDao.removeProject( projectDao.getProject( projectId ) );
 
@@ -1095,13 +1098,13 @@ public class DefaultContinuum
 
             if ( buildDirectory.exists() )
             {
-                FileUtils.deleteDirectory( buildDirectory );
+                fsManager.removeDir( buildDirectory );
             }
             File buildOutputFile = getConfiguration().getBuildOutputFile( buildResult.getId(),
                                                                           buildResult.getProject().getId() );
             if ( buildOutputFile.exists() )
             {
-                FileUtils.forceDelete( buildOutputFile );
+                fsManager.delete( buildOutputFile );
             }
         }
         catch ( ConfigurationException e )
@@ -2520,7 +2523,7 @@ public class DefaultContinuum
 
         try
         {
-            return FileUtils.fileRead( userFile );
+            return fsManager.fileContents( userFile );
         }
         catch ( IOException e )
         {
@@ -2902,7 +2905,7 @@ public class DefaultContinuum
             {
                 File workingDirectory = getWorkingDirectory( project.getId() );
 
-                FileUtils.deleteDirectory( workingDirectory );
+                fsManager.removeDir( workingDirectory );
             }
 
             if ( StringUtils.isEmpty( project.getScmTag() ) )
@@ -3279,7 +3282,7 @@ public class DefaultContinuum
             {
                 try
                 {
-                    FileUtils.forceDelete( releaseFile );
+                    fsManager.delete( releaseFile );
                 }
                 catch ( IOException e )
                 {

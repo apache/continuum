@@ -23,7 +23,6 @@ import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,14 +59,14 @@ public class MavenOneBuildExecutorTest
             assertTrue( checkOut.mkdirs() );
         }
 
-        FileUtils.cleanDirectory( checkOut );
+        getFileSystemManager().wipeDir( checkOut );
 
     }
 
     public void testUpdatingAProjectFromScmWithAExistingProjectAndAEmptyMaven1Pom()
         throws Exception
     {
-        FileUtils.fileWrite( new File( checkOut, "project.xml" ).getAbsolutePath(), "<project/>" );
+        getFileSystemManager().writeFile( new File( checkOut, "project.xml" ), "<project/>" );
 
         // ----------------------------------------------------------------------
         // Make the "existing" project
@@ -127,8 +126,8 @@ public class MavenOneBuildExecutorTest
     public void testUpdatingAProjectWithNagEMailAddress()
         throws Exception
     {
-        FileUtils.fileWrite( new File( checkOut, "project.xml" ).getAbsolutePath(),
-                             "<project><build><nagEmailAddress>myuser@myhost.org</nagEmailAddress></build></project>" );
+        getFileSystemManager().writeFile( new File( checkOut, "project.xml" ),
+                                          "<project><build><nagEmailAddress>myuser@myhost.org</nagEmailAddress></build></project>" );
 
         // ----------------------------------------------------------------------
         // Make the "existing" project
@@ -186,8 +185,8 @@ public class MavenOneBuildExecutorTest
     public void testUpdatingAProjectWithNagEMailAddressAndOneNotifier()
         throws Exception
     {
-        FileUtils.fileWrite( new File( checkOut, "project.xml" ).getAbsolutePath(),
-                             "<project><build><nagEmailAddress>myuser@myhost.org</nagEmailAddress></build></project>" );
+        getFileSystemManager().writeFile( new File( checkOut, "project.xml" ),
+                                          "<project><build><nagEmailAddress>myuser@myhost.org</nagEmailAddress></build></project>" );
 
         // ----------------------------------------------------------------------
         // Make the "existing" project
@@ -269,7 +268,7 @@ public class MavenOneBuildExecutorTest
     public void testUpdatingAProjectWithOneNotifier()
         throws Exception
     {
-        FileUtils.fileWrite( new File( checkOut, "project.xml" ).getAbsolutePath(), "<project/>" );
+        getFileSystemManager().writeFile( new File( checkOut, "project.xml" ), "<project/>" );
 
         // ----------------------------------------------------------------------
         // Make the "existing" project

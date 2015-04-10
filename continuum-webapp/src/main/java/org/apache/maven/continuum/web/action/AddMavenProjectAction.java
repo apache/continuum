@@ -25,7 +25,7 @@ import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.apache.commons.io.FileUtils;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -33,8 +33,10 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -44,7 +46,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Action to add a Maven project to Continuum, either Maven 1 or Maven 2.
@@ -58,6 +59,9 @@ public abstract class AddMavenProjectAction
     private static final long serialVersionUID = -3965565189557706469L;
 
     private static final int DEFINED_BY_POM_GROUP_ID = -1;
+
+    @Requirement
+    private FileSystemManager fsManager;
 
     private String pomUrl;
 
@@ -189,7 +193,7 @@ public abstract class AddMavenProjectAction
                     // CONTINUUM-1897
                     // File.c copyFile to tmp one
                     File tmpPom = File.createTempFile( "continuum_tmp", "tmp" );
-                    FileUtils.copyFile( pomFile, tmpPom );
+                    fsManager.copyFile( pomFile, tmpPom );
                     pom = tmpPom.toURL().toString();
                 }
                 catch ( MalformedURLException e )

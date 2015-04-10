@@ -28,21 +28,21 @@ import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.configuration.GeneralConfiguration;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Configuration;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -68,6 +68,9 @@ public class DefaultConfigurationService
 
     @Resource
     private ContinuumConfiguration configuration;
+
+    @Resource
+    private FileSystemManager fsManager;
 
     private GeneralConfiguration generalConfiguration;
 
@@ -242,7 +245,7 @@ public class DefaultConfigurationService
         {
             if ( file.exists() )
             {
-                return FileUtils.fileRead( file.getAbsolutePath() );
+                return fsManager.fileContents( file );
             }
             else
             {
@@ -633,7 +636,7 @@ public class DefaultConfigurationService
         {
             if ( file.exists() )
             {
-                return FileUtils.fileRead( file.getAbsolutePath() );
+                return fsManager.fileContents( file );
             }
             else
             {

@@ -21,6 +21,7 @@ package org.apache.continuum.web.action;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -28,7 +29,7 @@ import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,9 @@ public class ReleaseResultAction
     extends ContinuumConfirmAction
 {
     private static final Logger logger = LoggerFactory.getLogger( ReleaseResultAction.class );
+
+    @Requirement
+    private FileSystemManager fsManager;
 
     private int projectGroupId;
 
@@ -155,7 +159,7 @@ public class ReleaseResultAction
 
             if ( releaseOutputFile.exists() )
             {
-                String str = StringEscapeUtils.escapeHtml( FileUtils.fileRead( releaseOutputFile ) );
+                String str = StringEscapeUtils.escapeHtml( fsManager.fileContents( releaseOutputFile ) );
                 result.appendOutput( str );
             }
         }

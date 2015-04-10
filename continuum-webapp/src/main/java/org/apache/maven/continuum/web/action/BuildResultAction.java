@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
@@ -37,7 +38,6 @@ import org.apache.maven.continuum.web.util.StateGenerator;
 import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +56,9 @@ public class BuildResultAction
     extends AbstractBuildAction
 {
     private static Logger log = LoggerFactory.getLogger( BuildResultAction.class );
+
+    @Requirement
+    private FileSystemManager fsManager;
 
     @Requirement
     private DistributedBuildManager distributedBuildManager;
@@ -251,7 +254,7 @@ public class BuildResultAction
 
         if ( buildOutputFile.exists() )
         {
-            return FileUtils.fileRead( buildOutputFile );
+            return fsManager.fileContents( buildOutputFile );
         }
         return null;
     }

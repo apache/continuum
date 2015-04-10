@@ -27,14 +27,14 @@ import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
 import net.sf.ehcache.CacheManager;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.Base64;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 
 public class WorkingCopyServletTest
     extends PlexusInSpringTestCase
@@ -48,6 +48,8 @@ public class WorkingCopyServletTest
     private ServletRunner sr;
 
     private ServletUnitClient sc;
+
+    private FileSystemManager fsManager;
 
     private File workingDirectory;
 
@@ -69,6 +71,8 @@ public class WorkingCopyServletTest
         sr = new ServletRunner( getTestFile( "src/test/resources/WEB-INF/web.xml" ) );
         sr.registerServlet( "/workingcopy/*", MockWorkingCopyServlet.class.getName() );
         sc = sr.newClient();
+
+        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
 
         new File( workingDirectory, "1/src/main/java/org/apache/continuum" ).mkdirs();
         new File( workingDirectory, "1/src/main/java/org/apache/continuum/App.java" ).createNewFile();
@@ -94,7 +98,7 @@ public class WorkingCopyServletTest
 
         if ( workingDirectory.exists() )
         {
-            FileUtils.deleteDirectory( workingDirectory );
+            fsManager.removeDir( workingDirectory );
         }
 
         super.tearDown();
@@ -116,7 +120,7 @@ public class WorkingCopyServletTest
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
-        String expectedLinks[] = new String[]{"pom.xml", "src/", "target/"};
+        String expectedLinks[] = new String[] { "pom.xml", "src/", "target/" };
         assertLinks( expectedLinks, response.getLinks() );
     }
 
@@ -129,7 +133,7 @@ public class WorkingCopyServletTest
         response = sc.getResponse( request );
         assertEquals( "Response", HttpServletResponse.SC_OK, response.getResponseCode() );
 
-        String expectedLinks[] = new String[]{"../", "main/", "test/"};
+        String expectedLinks[] = new String[] { "../", "main/", "test/" };
         assertLinks( expectedLinks, response.getLinks() );
     }
 

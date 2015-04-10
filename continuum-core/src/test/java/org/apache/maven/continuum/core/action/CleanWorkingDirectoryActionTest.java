@@ -21,9 +21,10 @@ package org.apache.maven.continuum.core.action;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.utils.file.DefaultFileSystemManager;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.codehaus.plexus.util.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +36,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests that the cleanup action works properly. This is a non-portable test, and needs a special setup to run.
@@ -54,6 +56,8 @@ public class CleanWorkingDirectoryActionTest
 
     private WorkingDirectoryService mockWorkingDirectoryService;
 
+    private FileSystemManager fsManager;
+
     private ProjectDao mockProjectDao;
 
     /**
@@ -70,7 +74,7 @@ public class CleanWorkingDirectoryActionTest
         throws IOException
     {
         // Create a root path if one isn't specified
-        root = root == null ? FileUtils.createTempFile( FILE_PREFIX, "", null ) : root;
+        root = root == null ? fsManager.createTempFile( FILE_PREFIX, "", null ) : root;
 
         // Create the directory at that path
         if ( !root.mkdir() )
@@ -81,8 +85,8 @@ public class CleanWorkingDirectoryActionTest
         // Create the files for this directory
         for ( int i = 0; i < files; i++ )
         {
-            File newFile = FileUtils.createTempFile( FILE_PREFIX, "", root );
-            FileUtils.fileWrite( newFile.getAbsolutePath(), "" );
+            File newFile = fsManager.createTempFile( FILE_PREFIX, "", root );
+            fsManager.writeFile( newFile, "" );
         }
 
         // Create the directories
@@ -91,7 +95,7 @@ public class CleanWorkingDirectoryActionTest
             for ( int i = 0; i < dirs; i++ )
             {
 
-                File newDir = FileUtils.createTempFile( FILE_PREFIX, "", root );
+                File newDir = fsManager.createTempFile( FILE_PREFIX, "", root );
                 createFileTree( newDir, levels - 1, files, dirs );
             }
         }
@@ -105,12 +109,14 @@ public class CleanWorkingDirectoryActionTest
         // Create mocks
         mockWorkingDirectoryService = mock( WorkingDirectoryService.class );
         mockProjectDao = mock( ProjectDao.class );
+        fsManager = new DefaultFileSystemManager();
 
         action = new CleanWorkingDirectoryAction();
 
         // Get the private fields and make them accessible
         Field wdsField = action.getClass().getDeclaredField( "workingDirectoryService" );
         Field pdField = action.getClass().getDeclaredField( "projectDao" );
+        Field fsMgrField = action.getClass().getDeclaredField( "fsManager" );
         for ( Field f : new Field[] { wdsField, pdField } )
         {
             f.setAccessible( true );
@@ -119,6 +125,7 @@ public class CleanWorkingDirectoryActionTest
         // Inject the mocks as dependencies
         wdsField.set( action, mockWorkingDirectoryService );
         pdField.set( action, mockProjectDao );
+        fsMgrField.set( action, fsManager );
     }
 
     /**

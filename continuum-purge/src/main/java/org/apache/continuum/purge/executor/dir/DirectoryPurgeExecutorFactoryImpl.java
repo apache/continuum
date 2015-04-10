@@ -21,24 +21,29 @@ package org.apache.continuum.purge.executor.dir;
 
 import org.apache.continuum.purge.executor.CleanAllPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 
 @Component( role = DirectoryPurgeExecutorFactory.class )
 public class DirectoryPurgeExecutorFactoryImpl
     implements DirectoryPurgeExecutorFactory
 {
+    @Requirement
+    private FileSystemManager fsManager;
+
     public ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, String dirType )
     {
         if ( deleteAll )
         {
-            return new CleanAllPurgeExecutor( dirType );
+            return new CleanAllPurgeExecutor( fsManager, dirType );
         }
 
         if ( daysOld > 0 )
         {
-            return new DaysOldDirectoryPurgeExecutor( daysOld, retentionCount, dirType );
+            return new DaysOldDirectoryPurgeExecutor( fsManager, daysOld, retentionCount, dirType );
         }
 
-        return new RetentionCountDirectoryPurgeExecutor( retentionCount, dirType );
+        return new RetentionCountDirectoryPurgeExecutor( fsManager, retentionCount, dirType );
     }
 }

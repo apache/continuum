@@ -23,7 +23,6 @@ import org.apache.continuum.utils.m2.LocalRepositoryHelper;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.SettingsConfigurationException;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +52,6 @@ public abstract class AbstractAddProjectTest
                                   "org/apache/maven/continuum/continuum-parent/1.0.3/continuum-parent-1.0.3.pom" );
         mkdirs( artifact.getParentFile() );
 
-        FileUtils.copyFile( getTestFile( "src/test/resources/projects/continuum/pom.xml" ), artifact );
+        getFileSystemManager().copyFile( getTestFile( "src/test/resources/projects/continuum/pom.xml" ), artifact );
     }
 }

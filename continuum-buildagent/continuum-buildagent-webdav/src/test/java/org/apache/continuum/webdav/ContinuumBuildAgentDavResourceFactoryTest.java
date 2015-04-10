@@ -19,8 +19,8 @@ package org.apache.continuum.webdav;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceLocator;
@@ -30,7 +30,8 @@ import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 import java.io.File;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ContinuumBuildAgentDavResourceFactoryTest
     extends PlexusInSpringTestCase
@@ -42,6 +43,8 @@ public class ContinuumBuildAgentDavResourceFactoryTest
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     private ContinuumBuildAgentDavResourceFactory resourceFactory;
+
+    private FileSystemManager fsManager;
 
     private File workingDirectory;
 
@@ -58,6 +61,8 @@ public class ContinuumBuildAgentDavResourceFactoryTest
         resourceFactory = new ContinuumBuildAgentDavResourceFactory();
         resourceFactory.setBuildAgentConfigurationService( buildAgentConfigurationService );
 
+        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+
         String appserverBase = getTestFile( "target/appserver-base" ).getAbsolutePath();
         System.setProperty( "appserver.base", appserverBase );
 
@@ -73,7 +78,7 @@ public class ContinuumBuildAgentDavResourceFactoryTest
     {
         if ( workingDirectory.exists() )
         {
-            FileUtils.deleteDirectory( workingDirectory );
+            fsManager.removeDir( workingDirectory );
         }
 
         super.tearDown();

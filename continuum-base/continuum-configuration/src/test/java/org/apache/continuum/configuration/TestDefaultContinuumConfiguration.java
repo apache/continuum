@@ -19,8 +19,9 @@ package org.apache.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.utils.file.DefaultFileSystemManager;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +40,15 @@ public class TestDefaultContinuumConfiguration
 
     private static final String confFile = "target/test-classes/conf/continuum.xml";
 
+    private FileSystemManager fsManager;
+
     @Override
     protected void setUp()
         throws Exception
     {
         log.info( "appserver.base : " + System.getProperty( "appserver.base" ) );
+
+        fsManager = new DefaultFileSystemManager(); // can't lookup since we're before spring/plexus setup
 
         File originalConf = new File( getBasedir(), "src/test/resources/conf/continuum.xml" );
 
@@ -52,7 +57,7 @@ public class TestDefaultContinuumConfiguration
         {
             confUsed.delete();
         }
-        FileUtils.copyFile( originalConf, confUsed );
+        fsManager.copyFile( originalConf, confUsed );
 
         super.setUp();
     }
@@ -129,7 +134,7 @@ public class TestDefaultContinuumConfiguration
         configuration.setGeneralConfiguration( generalConfiguration );
         configuration.save();
 
-        String contents = FileUtils.fileRead( conf );
+        String contents = fsManager.fileContents( conf );
         assertTrue( contents.indexOf( "http://test/zloug" ) > 0 );
         assertTrue( contents.indexOf( "localhost" ) > 0 );
         assertTrue( contents.indexOf( "8080" ) > 0 );
