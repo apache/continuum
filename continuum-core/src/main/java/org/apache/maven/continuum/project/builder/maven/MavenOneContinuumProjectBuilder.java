@@ -20,6 +20,7 @@ package org.apache.maven.continuum.project.builder.maven;
  */
 
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
@@ -39,8 +40,8 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -126,9 +127,7 @@ public class MavenOneContinuumProjectBuilder
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
-        File pomFile;
-
-        pomFile = createMetadataFile( result, url, username, password );
+        File pomFile = createMetadataFile( result, url, username, password );
 
         if ( pomFile == null )
         {
@@ -145,7 +144,7 @@ public class MavenOneContinuumProjectBuilder
             {
                 return result;
             }
-            for ( BuildDefinition bd : (List<BuildDefinition>) buildDefinitionTemplate.getBuildDefinitions() )
+            for ( BuildDefinition bd : buildDefinitionTemplate.getBuildDefinitions() )
             {
                 BuildDefinition cloneBuildDefinition = buildDefinitionService.cloneBuildDefinition( bd );
                 cloneBuildDefinition.setTemplate( false );
@@ -161,9 +160,17 @@ public class MavenOneContinuumProjectBuilder
         }
         finally
         {
-            if ( pomFile.exists() )
+            if ( pomFile != null && pomFile.exists() )
             {
-                pomFile.delete();
+                File projectRoot = pomFile.getParentFile();
+                try
+                {
+                    fsManager.removeDir( projectRoot );
+                }
+                catch ( IOException e )
+                {
+                    log.warn( "failed to remove directory after metadata creation: {}", projectRoot );
+                }
             }
         }
 
