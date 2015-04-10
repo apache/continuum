@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.repo;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,6 +20,8 @@ package org.apache.continuum.purge.executor;
  */
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.common.utils.VersionComparator;
 import org.apache.maven.archiva.common.utils.VersionUtil;
@@ -47,7 +49,7 @@ import java.util.regex.Matcher;
  * @author Maria Catherine Tan
  */
 public class DaysOldRepositoryPurgeExecutor
-    extends AbstractContinuumPurgeExecutor
+    extends AbstractRepositoryPurgeExecutor
     implements ContinuumPurgeExecutor
 {
     private static final Logger log = LoggerFactory.getLogger( DaysOldRepositoryPurgeExecutor.class );

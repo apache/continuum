@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.repo;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,6 +20,7 @@ package org.apache.continuum.purge.executor;
  */
 
 import org.apache.continuum.purge.ContinuumPurgeConstants;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.common.utils.VersionComparator;
 import org.apache.maven.archiva.common.utils.VersionUtil;
@@ -42,7 +43,7 @@ import java.util.List;
  * @author Maria Catherine Tan
  */
 public class ReleasedSnapshotsRepositoryPurgeExecutor
-    extends AbstractContinuumPurgeExecutor
+    extends AbstractRepositoryPurgeExecutor
 {
     private Logger log = LoggerFactory.getLogger( ReleasedSnapshotsRepositoryPurgeExecutor.class );
 

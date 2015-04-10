@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor.agent;
+package org.apache.continuum.purge.executor.dir.agent;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,6 +27,7 @@ import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
+import org.apache.continuum.purge.executor.dir.DirectoryPurgeExecutorFactory;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -42,9 +43,9 @@ import java.util.Set;
 /**
  * Enables creation of purge executors for distributed agent working directories.
  */
-@Component( role = org.apache.continuum.purge.executor.DirectoryPurgeExecutorFactory.class, hint = "distributed" )
+@Component( role = DirectoryPurgeExecutorFactory.class, hint = "distributed" )
 public class DirectoryPurgeExecutorFactoryImpl
-    implements org.apache.continuum.purge.executor.DirectoryPurgeExecutorFactory
+    implements DirectoryPurgeExecutorFactory
 {
     public static final String WORKING_TYPE = "working";
 

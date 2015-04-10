@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.dir;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,6 +23,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 
 import java.io.File;
@@ -35,7 +37,6 @@ import java.util.Arrays;
  * @author Maria Catherine Tan
  */
 public class RetentionCountDirectoryPurgeExecutor
-    extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
     private final int retentionCount;

@@ -24,8 +24,8 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationServ
 import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-import org.apache.continuum.purge.executor.DirectoryPurgeExecutorFactory;
-import org.apache.continuum.purge.executor.RepositoryPurgeExecutorFactory;
+import org.apache.continuum.purge.executor.dir.DirectoryPurgeExecutorFactory;
+import org.apache.continuum.purge.executor.repo.RepositoryPurgeExecutorFactory;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContentFactory;
 import org.apache.continuum.utils.m2.LocalRepositoryHelper;

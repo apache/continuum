@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.repo;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,6 +20,7 @@ package org.apache.continuum.purge.executor;
  */
 
 import org.apache.continuum.purge.ContinuumPurgeConstants;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.apache.maven.archiva.model.ArtifactReference;
@@ -35,10 +36,10 @@ import java.util.Set;
  *
  * @author Maria Catherine Tan
  */
-public abstract class AbstractContinuumPurgeExecutor
+public abstract class AbstractRepositoryPurgeExecutor
     implements ContinuumPurgeExecutor
 {
-    private static final Logger log = LoggerFactory.getLogger( AbstractContinuumPurgeExecutor.class );
+    private static final Logger log = LoggerFactory.getLogger( AbstractRepositoryPurgeExecutor.class );
 
     public void purge( Set<ArtifactReference> references, RepositoryManagedContent repository )
     {

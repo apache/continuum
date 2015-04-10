@@ -25,7 +25,7 @@ import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-import org.apache.continuum.purge.executor.RepositoryPurgeExecutorFactory;
+import org.apache.continuum.purge.executor.repo.RepositoryPurgeExecutorFactory;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;

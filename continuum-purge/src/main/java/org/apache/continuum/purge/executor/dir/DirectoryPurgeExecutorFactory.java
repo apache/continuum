@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.dir;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,10 +19,9 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 
-public interface RepositoryPurgeExecutorFactory
+public interface DirectoryPurgeExecutorFactory
 {
-    ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, boolean deleteReleasedSnapshots,
-                                   RepositoryManagedContent repoContent );
+    ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, String dirType );
 }

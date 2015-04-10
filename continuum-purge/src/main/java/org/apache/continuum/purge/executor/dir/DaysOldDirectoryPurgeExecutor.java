@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.dir;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,6 +24,8 @@ import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,6 @@ import java.util.Calendar;
  * @author Maria Catherine Tan
  */
 public class DaysOldDirectoryPurgeExecutor
-    extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
     private Logger log = LoggerFactory.getLogger( DaysOldDirectoryPurgeExecutor.class );

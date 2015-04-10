@@ -35,7 +35,7 @@ import java.io.IOException;
  * @author Maria Catherine Tan
  */
 public class CleanAllPurgeExecutor
-    extends AbstractContinuumPurgeExecutor
+    implements ContinuumPurgeExecutor
 {
     private Logger log = LoggerFactory.getLogger( CleanAllPurgeExecutor.class );
 

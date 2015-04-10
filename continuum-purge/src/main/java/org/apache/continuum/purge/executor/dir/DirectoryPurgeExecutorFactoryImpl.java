@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.dir;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,6 +19,8 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.apache.continuum.purge.executor.CleanAllPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.codehaus.plexus.component.annotations.Component;
 
 @Component( role = DirectoryPurgeExecutorFactory.class )

@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor;
+package org.apache.continuum.purge.executor.repo;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,6 +19,8 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.repository.scanner.RepositoryScanner;
 import org.apache.continuum.purge.repository.scanner.ScannerHandler;
 import org.slf4j.Logger;
