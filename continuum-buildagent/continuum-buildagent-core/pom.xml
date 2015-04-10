@@ -48,7 +48,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-purge-core</artifactId>
+      <artifactId>continuum-purge</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
