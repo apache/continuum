@@ -1,4 +1,4 @@
-package org.apache.continuum.buildagent.manager;
+package org.apache.continuum.buildagent.purge;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,7 +27,6 @@ import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-import org.apache.continuum.purge.executor.DirectoryPurgeExecutorFactory;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -43,16 +42,20 @@ import java.util.Set;
 /**
  * Enables creation of purge executors for distributed agent working directories.
  */
-@Component( role = DirectoryPurgeExecutorFactory.class, hint = "distributed" )
-public class DistributedDirectoryPurgeExecutorFactory
-    implements DirectoryPurgeExecutorFactory
+@Component( role = org.apache.continuum.purge.executor.DirectoryPurgeExecutorFactory.class, hint = "distributed" )
+public class DirectoryPurgeExecutorFactoryImpl
+    implements org.apache.continuum.purge.executor.DirectoryPurgeExecutorFactory
 {
+    public static final String WORKING_TYPE = "working";
+
+    public static final String RELEASE_TYPE = "releases";
+
     private Set<String> supportedTypes = new HashSet<String>();
 
-    public DistributedDirectoryPurgeExecutorFactory()
+    public DirectoryPurgeExecutorFactoryImpl()
     {
-        supportedTypes.add( AbstractPurgeExecutor.RELEASE_TYPE );
-        supportedTypes.add( AbstractPurgeExecutor.WORKING_TYPE );
+        supportedTypes.add( RELEASE_TYPE );
+        supportedTypes.add( WORKING_TYPE );
     }
 
     /**
@@ -86,10 +89,6 @@ abstract class AbstractPurgeExecutor
     implements ContinuumPurgeExecutor
 {
     private static final Logger log = LoggerFactory.getLogger( AbstractPurgeExecutor.class );
-
-    public static final String WORKING_TYPE = "working";
-
-    public static final String RELEASE_TYPE = "releases";
 
     protected String type;
 
@@ -148,7 +147,7 @@ abstract class AbstractPurgeExecutor
         AndFileFilter resultFilter = new AndFileFilter();
         resultFilter.addFileFilter( DirectoryFileFilter.DIRECTORY );
         WildcardFileFilter releasesFilter = new WildcardFileFilter( "releases-*" );
-        if ( WORKING_TYPE.equals( directoryType ) )
+        if ( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE.equals( directoryType ) )
         {
             resultFilter.addFileFilter( new NotFileFilter( releasesFilter ) );
         }

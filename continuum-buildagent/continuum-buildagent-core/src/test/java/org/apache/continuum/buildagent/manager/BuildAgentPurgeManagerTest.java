@@ -21,6 +21,7 @@ package org.apache.continuum.buildagent.manager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.purge.DirectoryPurgeExecutorFactoryImpl;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 import java.io.File;
@@ -92,7 +93,7 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int ignored = 1;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, ignored, ignored, true );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, ignored, ignored, true );
         assertEquals( RELEASE_DIRS + REGULAR_FILES, fileCount() );
     }
 
@@ -101,7 +102,7 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int ignored = 1;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, ignored, ignored, true );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, ignored, ignored, true );
         assertEquals( WORKING_DIRS + REGULAR_FILES, fileCount() );
     }
 
@@ -110,8 +111,8 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int ignored = 1;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, ignored, ignored, true );
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, ignored, ignored, true );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, ignored, ignored, true );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, ignored, ignored, true );
         assertEquals( REGULAR_FILES, fileCount() );
     }
 
@@ -119,7 +120,7 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int retainedWorking = 2;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, NONE, retainedWorking, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, NONE, retainedWorking, false );
         assertEquals( RELEASE_DIRS + REGULAR_FILES + retainedWorking, fileCount() );
     }
 
@@ -127,7 +128,7 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int retainedReleases = 4;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, NONE, retainedReleases, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, NONE, retainedReleases, false );
         assertEquals( WORKING_DIRS + retainedReleases + REGULAR_FILES, fileCount() );
     }
 
@@ -135,8 +136,8 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int retainedReleases = 4, retainedWorking = 2;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, NONE, retainedWorking, false );
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, NONE, retainedReleases, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, NONE, retainedWorking, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, NONE, retainedReleases, false );
         assertEquals( retainedWorking + retainedReleases + REGULAR_FILES, fileCount() );
     }
 
@@ -144,7 +145,7 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int maxAge = 1, ineligibleWorkDirs = WORKING_DIRS - OLD_WORKING_DIRS;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, NONE, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, maxAge, NONE, false );
         assertEquals( RELEASE_DIRS + ineligibleWorkDirs + REGULAR_FILES, fileCount() );
     }
 
@@ -152,7 +153,7 @@ public class BuildAgentPurgeManagerTest
         throws Exception
     {
         int maxAge = 1, ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, NONE, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, maxAge, NONE, false );
         assertEquals( WORKING_DIRS + ineligibleReleaseDirs + REGULAR_FILES, fileCount() );
     }
 
@@ -162,8 +163,8 @@ public class BuildAgentPurgeManagerTest
         int maxAge = 1;
         int ineligibleWorkDirs = WORKING_DIRS - OLD_WORKING_DIRS;
         int ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, NONE, false );
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, NONE, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, maxAge, NONE, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, maxAge, NONE, false );
         assertEquals( ineligibleWorkDirs + ineligibleReleaseDirs + REGULAR_FILES, fileCount() );
     }
 
@@ -174,7 +175,7 @@ public class BuildAgentPurgeManagerTest
         int retainWorking = 5;
         int ineligibleWorkDirs = WORKING_DIRS - OLD_WORKING_DIRS;
         int expectedWorkDirs = retainWorking + ineligibleWorkDirs;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, retainWorking, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, maxAge, retainWorking, false );
         assertEquals( RELEASE_DIRS + expectedWorkDirs + REGULAR_FILES, fileCount() );
     }
 
@@ -185,7 +186,7 @@ public class BuildAgentPurgeManagerTest
         int retainRelease = 1;
         int ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
         int expectedReleaseDirs = retainRelease + ineligibleReleaseDirs;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, retainRelease, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, maxAge, retainRelease, false );
         assertEquals( WORKING_DIRS + expectedReleaseDirs + REGULAR_FILES, fileCount() );
     }
 
@@ -198,8 +199,8 @@ public class BuildAgentPurgeManagerTest
         int ineligibleReleaseDirs = RELEASE_DIRS - OLD_RELEASE_DIRS;
         int expectedWorkDirs = retainWorking + ineligibleWorkDirs;
         int expectedReleaseDirs = retainRelease + ineligibleReleaseDirs;
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.WORKING_TYPE, maxAge, retainWorking, false );
-        purgeManager.executeDirectoryPurge( AbstractPurgeExecutor.RELEASE_TYPE, maxAge, retainRelease, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.WORKING_TYPE, maxAge, retainWorking, false );
+        purgeManager.executeDirectoryPurge( DirectoryPurgeExecutorFactoryImpl.RELEASE_TYPE, maxAge, retainRelease, false );
         assertEquals( expectedReleaseDirs + expectedWorkDirs + REGULAR_FILES, fileCount() );
     }
 
