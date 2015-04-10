@@ -1,6 +1,26 @@
 package org.apache.continuum.utils.shell;
 
-import org.apache.commons.io.FileUtils;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import org.apache.continuum.utils.file.DefaultFileSystemManager;
+import org.apache.continuum.utils.file.FileSystemManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +40,8 @@ public class FileOutputConsumerTest
 
     FileOutputConsumer consumer;
 
+    FileSystemManager fsManager;
+
     @Before
     public void setUp()
         throws IOException
@@ -28,6 +50,7 @@ public class FileOutputConsumerTest
         outputFile.delete();  // we want to test whether it is created
         assertFalse( "file should not exist", outputFile.exists() );
         consumer = new FileOutputConsumer( outputFile );
+        fsManager = new DefaultFileSystemManager();
     }
 
     @After
@@ -96,7 +119,7 @@ public class FileOutputConsumerTest
     private void assertFileEmpty()
         throws IOException
     {
-        assertEquals( "file should have been empty", "", FileUtils.readFileToString( outputFile ) );
+        assertEquals( "file should have been empty", "", fsManager.fileContents( outputFile ) );
     }
 
     private void assertFileContents( String... contents )
@@ -109,6 +132,6 @@ public class FileOutputConsumerTest
                 finalContents.append( String.format( "%s%n", line ) );
         }
         assertEquals( "file did not contain expected contents", finalContents.toString(),
-                      FileUtils.readFileToString( outputFile ) );
+                      fsManager.fileContents( outputFile ) );
     }
 }
