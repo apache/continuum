@@ -46,11 +46,10 @@ public class DefaultRepositoryServiceTest
     {
         super.setUp();
 
-        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
-            RepositoryPurgeConfigurationDao.class.getName() );
+        repositoryPurgeConfigurationDao =
+            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class );
 
-        repositoryService = (RepositoryService) lookup( RepositoryService.ROLE );
-
+        repositoryService = (RepositoryService) lookup( RepositoryService.class );
     }
 
     public void testRemoveRepository()
