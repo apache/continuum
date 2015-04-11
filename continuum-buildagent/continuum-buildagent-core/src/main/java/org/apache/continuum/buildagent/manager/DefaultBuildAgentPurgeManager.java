@@ -46,7 +46,7 @@ public class DefaultBuildAgentPurgeManager
     @Requirement
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    @Requirement( hint = "distributed" )
+    @Requirement
     private DirectoryPurgeExecutorFactory dirExecutorFactory;
 
     @Requirement

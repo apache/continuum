@@ -19,24 +19,30 @@ package org.apache.continuum.purge.executor.dir;
  * under the License.
  */
 
-import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.utils.file.FileSystemManager;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 
-@Component( role = DirectoryPurgeExecutorFactory.class )
-public class DirectoryPurgeExecutorFactoryImpl
-    implements DirectoryPurgeExecutorFactory
+import java.io.File;
+import java.io.IOException;
+
+class RemoveDirHandler
+    implements Handler
 {
-    @Requirement
-    private FileSystemManager fsManager;
+    FileSystemManager fsManager;
 
-    public ContinuumPurgeExecutor create( boolean deleteAll, int daysOld, int retentionCount, String dirType )
+    RemoveDirHandler( FileSystemManager fsManager )
     {
-        if ( deleteAll )
+        this.fsManager = fsManager;
+    }
+
+    public void handle( File dir )
+    {
+        try
         {
-            return new CleanAllPurgeExecutor( fsManager, dirType );
+            fsManager.removeDir( dir );
         }
-        return new DirectoryPurgeExecutor( fsManager, daysOld, retentionCount, dirType );
+        catch ( IOException e )
+        {
+            //swallow?
+        }
     }
 }

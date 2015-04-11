@@ -19,15 +19,17 @@ package org.apache.continuum.purge.executor.repo;
  * under the License.
  */
 
-import org.apache.continuum.purge.ContinuumPurgeConstants;
-import org.apache.continuum.purge.executor.CleanAllPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.executor.MultiplexedPurgeExecutor;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.continuum.purge.repository.scanner.RepositoryScanner;
 import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+
+import java.io.File;
+import java.io.IOException;
 
 @Component( role = RepositoryPurgeExecutorFactory.class )
 public class RepositoryPurgeExecutorFactoryImpl
@@ -44,7 +46,7 @@ public class RepositoryPurgeExecutorFactoryImpl
     {
         if ( deleteAll )
         {
-            return new CleanAllPurgeExecutor( fsManager, ContinuumPurgeConstants.PURGE_REPOSITORY );
+            return new CleanAllPurgeExecutor( fsManager );
         }
 
         ContinuumPurgeExecutor executor;
@@ -64,5 +66,30 @@ public class RepositoryPurgeExecutorFactoryImpl
         }
 
         return new ScanningPurgeExecutor( scanner, executor );
+    }
+}
+
+class CleanAllPurgeExecutor
+    implements ContinuumPurgeExecutor
+{
+
+    FileSystemManager fsManager;
+
+    CleanAllPurgeExecutor( FileSystemManager fsManager )
+    {
+        this.fsManager = fsManager;
+    }
+
+    public void purge( String path )
+        throws ContinuumPurgeExecutorException
+    {
+        try
+        {
+            fsManager.wipeDir( new File( path ) );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumPurgeExecutorException( "failed to remove repo" + path, e );
+        }
     }
 }

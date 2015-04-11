@@ -29,7 +29,11 @@ public class ContinuumPurgeConstants
 
     public static final String PURGE_DIRECTORY_RELEASES = "releases";
 
+    public static final String PURGE_DIRECTORY_WORKING = "working";
+
     public static final String PURGE_DIRECTORY_BUILDOUTPUT = "buildOutput";
+
+    public static final String RELEASE_DIR_PATTERN = "releases-*";
 
     public static final String PURGE = "PURGE";
 
