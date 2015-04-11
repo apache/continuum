@@ -21,7 +21,6 @@ package org.apache.continuum.purge.executor.repo;
 
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-import org.apache.continuum.purge.executor.MultiplexedPurgeExecutor;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.continuum.purge.repository.scanner.RepositoryScanner;
 import org.apache.continuum.utils.file.FileSystemManager;

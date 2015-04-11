@@ -1,4 +1,4 @@
-package org.apache.continuum.purge.executor.dir;
+package org.apache.continuum.purge.executor.repo;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,30 +19,28 @@ package org.apache.continuum.purge.executor.dir;
  * under the License.
  */
 
-import org.apache.continuum.utils.file.FileSystemManager;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
+import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-class RemoveDirHandler
-    implements Handler
+public class MultiplexedPurgeExecutor
+    implements ContinuumPurgeExecutor
 {
-    FileSystemManager fsManager;
+    private List<ContinuumPurgeExecutor> constituents;
 
-    RemoveDirHandler( FileSystemManager fsManager )
+    public MultiplexedPurgeExecutor( ContinuumPurgeExecutor... executors )
     {
-        this.fsManager = fsManager;
+        constituents = Arrays.asList( executors );
     }
 
-    public void handle( File dir )
+    public void purge( String path )
+        throws ContinuumPurgeExecutorException
     {
-        try
+        for ( ContinuumPurgeExecutor child : constituents )
         {
-            fsManager.removeDir( dir );
-        }
-        catch ( IOException e )
-        {
-            //swallow?
+            child.purge( path );
         }
     }
 }
