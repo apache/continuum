@@ -51,12 +51,13 @@ public class DefaultRepositoryServiceTest
 
         repositoryService = (RepositoryService) lookup( RepositoryService.ROLE );
 
-        setupDefaultRepository();
     }
 
     public void testRemoveRepository()
         throws Exception
     {
+        setupDefaultRepository();
+
         repositoryService.removeLocalRepository( repository.getId() );
 
         List<LocalRepository> repositories = repositoryService.getAllLocalRepositories();
