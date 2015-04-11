@@ -28,9 +28,7 @@
     <body>
       <div id="h3">
 
-        <jsp:include page="/WEB-INF/jsp/navigations/ProjectMenu.jsp">
-          <jsp:param name="tab" value="view"/>
-        </jsp:include>
+        <jsp:include page="/WEB-INF/jsp/navigations/ProjectMenu.jsp" />
 
         <h3>
             <s:text name="surefireReport.section.title">
