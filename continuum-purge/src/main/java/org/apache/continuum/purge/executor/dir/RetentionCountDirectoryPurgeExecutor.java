@@ -19,7 +19,6 @@ package org.apache.continuum.purge.executor.dir;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
@@ -92,7 +91,7 @@ public class RetentionCountDirectoryPurgeExecutor
 
             try
             {
-                FileUtils.deleteDirectory( file );
+                fsManager.removeDir( file );
                 countToPurge--;
             }
             catch ( IOException e )
@@ -132,7 +131,7 @@ public class RetentionCountDirectoryPurgeExecutor
 
                 try
                 {
-                    FileUtils.deleteDirectory( buildDir );
+                    fsManager.removeDir( buildDir );
                     File logFile = new File( buildDir.getAbsoluteFile() + ".log.txt" );
 
                     if ( logFile.exists() )
