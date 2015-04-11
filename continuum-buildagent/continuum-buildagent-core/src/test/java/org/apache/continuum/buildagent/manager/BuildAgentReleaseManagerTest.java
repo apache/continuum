@@ -33,7 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * For the CONTINUUM-2391 tests, checking of the local repository details is in ContinuumReleaseManagerStub. An
@@ -76,6 +77,7 @@ public class BuildAgentReleaseManagerTest
             new BuildAgentConfigurationException( "could not locate the repo" ) );
 
         when( buildAgentConfigurationService.getWorkingDirectory( 1 ) ).thenReturn( workingDir );
+        when( buildAgentConfigurationService.getWorkingDirectory() ).thenReturn( workingDir );
     }
 
     protected void tearDown()
