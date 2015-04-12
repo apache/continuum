@@ -19,21 +19,25 @@ package org.apache.maven.continuum.utils;
  * under the License.
  */
 
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public class DefaultWorkingDirectoryServiceTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private DefaultWorkingDirectoryService workingDirectoryService;
 
@@ -41,11 +45,10 @@ public class DefaultWorkingDirectoryServiceTest
 
     private File baseWorkingDirectory;
 
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         configurationService = mock( ConfigurationService.class );
 
         baseWorkingDirectory = new File( getBasedir(), "target" + File.separator + "working-directory" );
@@ -69,6 +72,7 @@ public class DefaultWorkingDirectoryServiceTest
         return project;
     }
 
+    @Test
     public void testGetWorkingDirectoryOfSingleCheckoutFlatMultiModules()
         throws Exception
     {
@@ -97,6 +101,7 @@ public class DefaultWorkingDirectoryServiceTest
             File.separator + "6" + File.separator + "module-a", projectWorkingDirectory.getPath() );
     }
 
+    @Test
     public void testGetWorkingDirectoryOfSingleCheckoutRegularMultiModules()
         throws Exception
     {

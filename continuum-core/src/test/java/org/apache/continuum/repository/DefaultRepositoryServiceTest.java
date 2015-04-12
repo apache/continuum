@@ -24,8 +24,12 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Maria Catherine Tan
@@ -40,23 +44,19 @@ public class DefaultRepositoryServiceTest
 
     private LocalRepository repository;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        repositoryPurgeConfigurationDao =
-            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class );
-
-        repositoryService = (RepositoryService) lookup( RepositoryService.class );
+        repositoryPurgeConfigurationDao = lookup( RepositoryPurgeConfigurationDao.class );
+        repositoryService = lookup( RepositoryService.class );
+        setupDefaultRepository();
     }
 
+    @Test
     public void testRemoveRepository()
         throws Exception
     {
-        setupDefaultRepository();
-
         repositoryService.removeLocalRepository( repository.getId() );
 
         List<LocalRepository> repositories = repositoryService.getAllLocalRepositories();

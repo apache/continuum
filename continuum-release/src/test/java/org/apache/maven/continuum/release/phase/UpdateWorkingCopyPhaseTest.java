@@ -21,14 +21,18 @@ package org.apache.maven.continuum.release.phase;
 
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.utils.file.FileSystemManager;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.release.phase.ReleasePhase;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.*;
+
 public class UpdateWorkingCopyPhaseTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private FileSystemManager fsManager;
 
@@ -38,14 +42,13 @@ public class UpdateWorkingCopyPhaseTest
 
     private File workingDirectory;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
+        fsManager = lookup( FileSystemManager.class );
 
-        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
-
-        phase = (UpdateWorkingCopyPhase) lookup( ReleasePhase.ROLE, "update-working-copy" );
+        phase = (UpdateWorkingCopyPhase) lookup( ReleasePhase.class, "update-working-copy" );
         assertNotNull( phase );
 
         releaseDescriptor = createReleaseDescriptor();
@@ -62,6 +65,7 @@ public class UpdateWorkingCopyPhaseTest
         fsManager.copyDir( scmPathFile, scmTargetPathFile );
     }
 
+    @Test
     public void testWorkingDirDoesNotExist()
         throws Exception
     {
@@ -69,6 +73,7 @@ public class UpdateWorkingCopyPhaseTest
         assertPopulatedWorkingDirectory();
     }
 
+    @Test
     public void testWorkingDirAlreadyExistsWithProjectCheckout()
         throws Exception
     {
@@ -81,6 +86,7 @@ public class UpdateWorkingCopyPhaseTest
         assertPopulatedWorkingDirectory();
     }
 
+    @Test
     public void testWorkingDirAlreadyExistsNoProjectCheckout()
         throws Exception
     {

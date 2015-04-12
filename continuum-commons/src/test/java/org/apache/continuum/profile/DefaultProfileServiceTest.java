@@ -1,15 +1,5 @@
 package org.apache.continuum.profile;
 
-import org.apache.continuum.dao.DaoUtils;
-import org.apache.maven.continuum.AbstractContinuumTest;
-import org.apache.maven.continuum.installation.InstallationService;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.Profile;
-import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
-import org.apache.maven.continuum.profile.ProfileService;
-
-import java.util.List;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,6 +18,20 @@ import java.util.List;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.continuum.dao.DaoUtils;
+import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.installation.InstallationService;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
+import org.apache.maven.continuum.profile.ProfileService;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -69,11 +73,11 @@ public class DefaultProfileServiceTest
 
     private static final String mvnOpts2Name = "mvnOpts2";
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-        DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+        DaoUtils daoUtils = lookup( DaoUtils.class );
         daoUtils.eraseDatabase();
 
         jdk1 = new Installation();
@@ -140,6 +144,7 @@ public class DefaultProfileServiceTest
         return (ProfileService) lookup( ProfileService.ROLE, "default" );
     }
 
+    @Test
     public void testAddProfile()
         throws Exception
     {
@@ -152,6 +157,7 @@ public class DefaultProfileServiceTest
         assertEquals( 3, getProfileService().getAllProfiles().size() );
     }
 
+    @Test
     public void testAddDuplicateProfile()
         throws Exception
     {
@@ -177,6 +183,7 @@ public class DefaultProfileServiceTest
         assertEquals( 3, getProfileService().getAllProfiles().size() );
     }
 
+    @Test
     public void testDeleteProfile()
         throws Exception
     {
@@ -189,7 +196,8 @@ public class DefaultProfileServiceTest
         assertNull( getProfileService().getProfile( id ) );
     }
 
-    public void testgetAllProfile()
+    @Test
+    public void testGetAllProfile()
         throws Exception
     {
         List<Profile> all = getProfileService().getAllProfiles();
@@ -198,7 +206,8 @@ public class DefaultProfileServiceTest
         assertEquals( 2, all.size() );
     }
 
-    public void testupdateProfile()
+    @Test
+    public void testUpdateProfile()
         throws Exception
     {
         Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
@@ -212,7 +221,8 @@ public class DefaultProfileServiceTest
         assertEquals( newName, getted.getName() );
     }
 
-    public void testupdateProfileDuplicateName()
+    @Test
+    public void testUpdateProfileDuplicateName()
         throws Exception
     {
         int profileId = jdk1mvn205.getId();
@@ -235,7 +245,8 @@ public class DefaultProfileServiceTest
         assertEquals( jdk1mvn205Name, getted.getName() );
     }
 
-    public void testsetJdkInProfile()
+    @Test
+    public void testSetJdkInProfile()
         throws Exception
     {
         Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
@@ -246,7 +257,8 @@ public class DefaultProfileServiceTest
         assertEquals( jdk2.getVarValue(), profile.getJdk().getVarValue() );
     }
 
-    public void testsetBuilderInProfile()
+    @Test
+    public void testSetBuilderInProfile()
         throws Exception
     {
         Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
@@ -257,7 +269,8 @@ public class DefaultProfileServiceTest
 
     }
 
-    public void testaddEnvVarInProfile()
+    @Test
+    public void testAddEnvVarInProfile()
         throws Exception
     {
         Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
@@ -268,6 +281,7 @@ public class DefaultProfileServiceTest
         assertEquals( 1, profile.getEnvironmentVariables().size() );
     }
 
+    @Test
     public void testRemoveInstallationLinkedToAProfile()
         throws Exception
     {
@@ -275,10 +289,11 @@ public class DefaultProfileServiceTest
         getProfileService().setJdkInProfile( profile, jdk2 );
 
         getProfileService().getProfile( jdk1mvn205.getId() );
-        InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
+        InstallationService installationService = lookup( InstallationService.class, "default" );
         installationService.delete( jdk2 );
     }
 
+    @Test
     public void testRemoveEnvVarFromProfile()
         throws Exception
     {
@@ -308,6 +323,5 @@ public class DefaultProfileServiceTest
         assertNull( profile.getJdk() );
         assertEquals( 0, profile.getEnvironmentVariables().size() );
     }
-
 
 }

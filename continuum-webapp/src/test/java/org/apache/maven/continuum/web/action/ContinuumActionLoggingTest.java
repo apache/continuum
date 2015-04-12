@@ -19,7 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -28,35 +31,34 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * TestContinuumActionLogging:
  *
  * @author jesse
  */
 public class ContinuumActionLoggingTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
-
     StringBuffer testOutput = new StringBuffer();
 
-
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         PrintStream systemPrintStream = new PrintStream( new FilteredStream( System.out ), true );
         System.setOut( systemPrintStream );
     }
 
-
+    @After
     public void tearDown()
     {
         System.setOut( new PrintStream( new BufferedOutputStream( new FileOutputStream( java.io.FileDescriptor.out ),
                                                                   128 ), true ) );
     }
 
-
+    @Test
     public void testActionLogging()
         throws Exception
     {
@@ -68,7 +70,6 @@ public class ContinuumActionLoggingTest
 
         assertTrue( testOutput.toString().indexOf( testString ) != -1 );
     }
-
 
     class FilteredStream
         extends FilterOutputStream

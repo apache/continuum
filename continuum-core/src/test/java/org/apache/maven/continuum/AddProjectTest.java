@@ -30,8 +30,13 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Collections;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -48,24 +53,20 @@ public class AddProjectTest
 
     private String scmUrl;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         createLocalRepository();
-
         server = startJettyServer();
         int port = server.getConnectors()[0].getLocalPort();
         scmUrl = "http://test:;password@localhost:" + port + "/projects/continuum/continuum-core/pom.xml";
     }
 
-    @Override
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
-        super.tearDown();
         server.stop();
     }
 
@@ -76,16 +77,17 @@ public class AddProjectTest
         ResourceHandler handler = new ResourceHandler();
         handler.setResourceBase( getTestFile( "src/test/resources" ).getAbsolutePath() );
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers( new Handler[]{ handler, new DefaultHandler() } );
+        handlers.setHandlers( new Handler[] { handler, new DefaultHandler() } );
         server.setHandler( handlers );
         server.start();
         return server;
     }
 
+    @Test
     public void testScmUserNamePasswordNotStoring()
         throws Exception
     {
-        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
+        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.class );
 
         ContinuumProjectBuildingResult result = continuum.executeAddProjectsFromMetadataActivity( scmUrl,
                                                                                                   MavenTwoContinuumProjectBuilder.ID,
@@ -103,10 +105,11 @@ public class AddProjectTest
         assertTrue( project.isScmUseCache() );
     }
 
+    @Test
     public void testScmUserNamePasswordStoring()
         throws Exception
     {
-        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
+        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.class );
 
         ContinuumProjectBuildingResult result = continuum.executeAddProjectsFromMetadataActivity( scmUrl,
                                                                                                   MavenTwoContinuumProjectBuilder.ID,
@@ -124,10 +127,11 @@ public class AddProjectTest
         assertFalse( project.isScmUseCache() );
     }
 
+    @Test
     public void testAntProjectScmUserNamePasswordNotStoring()
         throws Exception
     {
-        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         Project project = new Project();
         project.setName( "Sample Ant Project" );
@@ -137,7 +141,7 @@ public class AddProjectTest
         project.setScmUrl( this.scmUrl );
         project.setScmUseCache( true );
 
-        BuildDefinitionService bdService = (BuildDefinitionService) lookup( BuildDefinitionService.class.getName() );
+        BuildDefinitionService bdService = lookup( BuildDefinitionService.class );
 
         int projectId = continuum.addProject( project, ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR,
                                               getDefaultProjectGroup().getId(),
@@ -150,10 +154,11 @@ public class AddProjectTest
         assertTrue( retrievedProject.isScmUseCache() );
     }
 
+    @Test
     public void testAntProjectScmUserNamePasswordStoring()
         throws Exception
     {
-        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         Project project = new Project();
         project.setName( "Sample Ant Project" );
@@ -163,7 +168,7 @@ public class AddProjectTest
         project.setScmUrl( scmUrl );
         project.setScmUseCache( false );
 
-        BuildDefinitionService bdService = (BuildDefinitionService) lookup( BuildDefinitionService.class.getName() );
+        BuildDefinitionService bdService = lookup( BuildDefinitionService.class );
 
         int projectId = continuum.addProject( project, ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR,
                                               getDefaultProjectGroup().getId(),

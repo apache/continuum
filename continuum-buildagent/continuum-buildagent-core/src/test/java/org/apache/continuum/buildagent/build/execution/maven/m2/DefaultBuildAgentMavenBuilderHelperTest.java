@@ -19,6 +19,7 @@ package org.apache.continuum.buildagent.build.execution.maven.m2;
  * under the License.
  */
 
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.MavenSettingsBuilder;
@@ -26,28 +27,28 @@ import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.RepositoryPolicy;
 import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DefaultBuildAgentMavenBuilderHelperTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private DefaultBuildAgentMavenBuilderHelper helper;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         helper = (DefaultBuildAgentMavenBuilderHelper) lookup( BuildAgentMavenBuilderHelper.class );
 
-        MavenSettingsBuilder builder = mock(MavenSettingsBuilder.class);
-        when( builder.buildSettings( false )).thenReturn( createSettings() );
+        MavenSettingsBuilder builder = mock( MavenSettingsBuilder.class );
+        when( builder.buildSettings( false ) ).thenReturn( createSettings() );
         helper.setMavenSettingsBuilder( builder );
     }
 
@@ -70,6 +71,7 @@ public class DefaultBuildAgentMavenBuilderHelperTest
         return settings;
     }
 
+    @Test
     public void testGetMavenProjectWithMaven3Metadata()
         throws Exception
     {

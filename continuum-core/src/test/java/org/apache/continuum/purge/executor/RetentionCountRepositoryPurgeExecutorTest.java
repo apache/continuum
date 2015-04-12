@@ -19,20 +19,23 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * Tests were taken from Archiva and just added a check if the metadata was deleted.
  */
 public class RetentionCountRepositoryPurgeExecutorTest
     extends AbstractPurgeExecutorTest
 {
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         purgeDefaultRepoTask = getRetentionCountRepoPurgeTask();
     }
 
+    @Test
     public void testRetentionCountPurging()
         throws Exception
     {
@@ -103,6 +106,7 @@ public class RetentionCountRepositoryPurgeExecutorTest
         assertExists( projectRoot2 + "/1.1.2-SNAPSHOT/castor-anttasks-1.1.2-20070506.163513-2.jar.sha1" );
     }
 
+    @Test
     public void testOrderOfDeletion()
         throws Exception
     {

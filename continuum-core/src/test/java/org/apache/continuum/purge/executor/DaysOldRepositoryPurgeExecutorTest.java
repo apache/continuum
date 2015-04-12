@@ -19,22 +19,24 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * Tests were taken from Archiva and just added a check if the metadata was deleted.
  */
 public class DaysOldRepositoryPurgeExecutorTest
     extends AbstractPurgeExecutorTest
 {
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         populateDefaultRepository();
-
         purgeDefaultRepoTask = getDaysOldRepoPurgeTask();
     }
 
+    @Test
     public void testDefaultRepoPurgingByLastModified()
         throws Exception
     {
@@ -71,6 +73,7 @@ public class DaysOldRepositoryPurgeExecutorTest
         assertExists( projectRoot + "/2.2-SNAPSHOT/maven-install-plugin-2.2-20061118.060401-2.pom.sha1" );
     }
 
+    @Test
     public void testDefaultRepoOrderOfDeletion()
         throws Exception
     {

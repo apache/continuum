@@ -23,11 +23,15 @@ import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -39,12 +43,11 @@ public class MavenOneBuildExecutorTest
 
     private MavenOneBuildExecutor executor;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        BuildExecutorManager builderManager = (BuildExecutorManager) lookup( BuildExecutorManager.ROLE );
+        BuildExecutorManager builderManager = lookup( BuildExecutorManager.class );
 
         executor = (MavenOneBuildExecutor) builderManager.getBuildExecutor( MavenOneBuildExecutor.ID );
 
@@ -63,6 +66,7 @@ public class MavenOneBuildExecutorTest
 
     }
 
+    @Test
     public void testUpdatingAProjectFromScmWithAExistingProjectAndAEmptyMaven1Pom()
         throws Exception
     {
@@ -123,6 +127,7 @@ public class MavenOneBuildExecutorTest
         assertEquals( "1.1-SNAPSHOT", project.getVersion() );
     }
 
+    @Test
     public void testUpdatingAProjectWithNagEMailAddress()
         throws Exception
     {
@@ -182,6 +187,7 @@ public class MavenOneBuildExecutorTest
         assertEquals( "myuser@myhost.org", actualNotifier.getConfiguration().get( "address" ) );
     }
 
+    @Test
     public void testUpdatingAProjectWithNagEMailAddressAndOneNotifier()
         throws Exception
     {
@@ -265,6 +271,7 @@ public class MavenOneBuildExecutorTest
         assertEquals( "dev@maven.apache.org", actualNotifier.getConfiguration().get( "address" ) );
     }
 
+    @Test
     public void testUpdatingAProjectWithOneNotifier()
         throws Exception
     {

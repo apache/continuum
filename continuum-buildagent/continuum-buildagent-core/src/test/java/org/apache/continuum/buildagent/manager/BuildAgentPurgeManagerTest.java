@@ -21,7 +21,10 @@ package org.apache.continuum.buildagent.manager;
 
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.utils.file.FileSystemManager;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +33,7 @@ import java.util.Date;
 
 import static org.apache.continuum.purge.ContinuumPurgeConstants.PURGE_DIRECTORY_RELEASES;
 import static org.apache.continuum.purge.ContinuumPurgeConstants.PURGE_DIRECTORY_WORKING;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +41,7 @@ import static org.mockito.Mockito.when;
  * For CONTINUUM-2658 tests, Support purging of working and release directories of build agents on a schedule
  */
 public class BuildAgentPurgeManagerTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private static final int AGE = 2;
 
@@ -65,14 +69,13 @@ public class BuildAgentPurgeManagerTest
 
     private File tempDir;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         purgeManager = (DefaultBuildAgentPurgeManager) lookup( BuildAgentPurgeManager.class );
 
-        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+        fsManager = lookup( FileSystemManager.class );
 
         buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
 
@@ -85,15 +88,16 @@ public class BuildAgentPurgeManagerTest
         when( buildAgentConfigurationService.getWorkingDirectory() ).thenReturn( tempDir );
     }
 
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
         purgeManager = null;
         cleanUpTestFiles();
-        super.tearDown();
     }
 
     // CONTINUUM-2658
+    @Test
     public void testAllWorking()
         throws Exception
     {
@@ -103,6 +107,7 @@ public class BuildAgentPurgeManagerTest
     }
 
     // CONTINUUM-2658
+    @Test
     public void testAllReleases()
         throws Exception
     {
@@ -112,6 +117,7 @@ public class BuildAgentPurgeManagerTest
     }
 
     // CONTINUUM-2658
+    @Test
     public void testAllWorkingAndReleases()
         throws Exception
     {
@@ -121,6 +127,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testRetentionOnlyWorking()
         throws Exception
     {
@@ -129,6 +136,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( RELEASE_DIRS + REGULAR_FILES + retainedWorking, fileCount() );
     }
 
+    @Test
     public void testRetentionOnlyReleases()
         throws Exception
     {
@@ -137,6 +145,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( WORKING_DIRS + retainedReleases + REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testRetentionOnlyWorkingAndReleases()
         throws Exception
     {
@@ -146,6 +155,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( retainedWorking + retainedReleases + REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testDaysOldOnlyWorking()
         throws Exception
     {
@@ -154,6 +164,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( RELEASE_DIRS + ineligibleWorkDirs + REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testDaysOldOnlyReleases()
         throws Exception
     {
@@ -162,6 +173,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( WORKING_DIRS + ineligibleReleaseDirs + REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testDaysOldOnlyWorkingAndReleases()
         throws Exception
     {
@@ -173,6 +185,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( ineligibleWorkDirs + ineligibleReleaseDirs + REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testRetentionAndDaysOldWorking()
         throws Exception
     {
@@ -184,6 +197,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( RELEASE_DIRS + expectedWorkDirs + REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testRetentionAndDaysOldReleases()
         throws Exception
     {
@@ -195,6 +209,7 @@ public class BuildAgentPurgeManagerTest
         assertEquals( WORKING_DIRS + expectedReleaseDirs + REGULAR_FILES, fileCount() );
     }
 
+    @Test
     public void testRetentionAndDaysOldWorkingAndReleases()
         throws Exception
     {

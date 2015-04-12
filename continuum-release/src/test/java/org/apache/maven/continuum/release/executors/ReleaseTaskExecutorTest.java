@@ -21,6 +21,7 @@ package org.apache.maven.continuum.release.executors;
 
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.utils.file.FileSystemManager;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -33,11 +34,12 @@ import org.apache.maven.scm.repository.ScmRepository;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.IOUtil;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,11 +48,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import static org.junit.Assert.*;
+
 /**
  * @author Edwin Punzalan
  */
 public class ReleaseTaskExecutorTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private ScmManager scmManager;
 
@@ -64,39 +68,38 @@ public class ReleaseTaskExecutorTest
 
     private FileSystemManager fsManager;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         if ( scmManager == null )
         {
-            scmManager = (ScmManager) lookup( "org.apache.maven.scm.manager.ScmManager" );
+            scmManager = lookup( ScmManager.class );
         }
 
         if ( prepareExec == null )
         {
-            prepareExec = (TaskExecutor) lookup( TaskExecutor.class.getName(), "prepare-release" );
+            prepareExec = lookup( TaskExecutor.class, "prepare-release" );
         }
 
         if ( performExec == null )
         {
-            performExec = (TaskExecutor) lookup( TaskExecutor.class.getName(), "perform-release" );
+            performExec = lookup( TaskExecutor.class, "perform-release" );
         }
 
         if ( rollbackExec == null )
         {
-            rollbackExec = (TaskExecutor) lookup( TaskExecutor.class.getName(), "rollback-release" );
+            rollbackExec = lookup( TaskExecutor.class, "rollback-release" );
         }
 
         if ( releaseManager == null )
         {
-            releaseManager = (ContinuumReleaseManager) lookup( ContinuumReleaseManager.ROLE );
+            releaseManager = lookup( ContinuumReleaseManager.class );
         }
 
         if ( fsManager == null )
         {
-            fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+            fsManager = lookup( FileSystemManager.class );
         }
 
         File scmPath = new File( getBasedir(), "target/scm-src" ).getAbsoluteFile();
@@ -138,6 +141,7 @@ public class ReleaseTaskExecutorTest
         assertTrue( "Test released version", pom.indexOf( "<version>1.0</version>" ) > 0 );
     }
 
+    @Test
     public void testReleases()
         throws Exception
     {

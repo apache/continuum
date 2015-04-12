@@ -31,12 +31,14 @@ import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,10 +47,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class BuildProjectTaskExecutorTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private BuildContextManager buildContextManager;
 
@@ -76,11 +79,10 @@ public class BuildProjectTaskExecutorTest
 
     private File outputFile;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         buildContextManager = mock( BuildContextManager.class );
         buildAgentBuildExecutorManager = mock( BuildAgentBuildExecutorManager.class );
         buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
@@ -128,6 +130,7 @@ public class BuildProjectTaskExecutorTest
     // CONTINUUM-2391
     // Note: The checking of the local repo set in the context is in ContinuumActionStub. If the
     // local repo path is incorrect, an exception will be thrown by the action stub.
+    @Test
     public void testBuildProjectLocalRepository()
         throws Exception
     {
@@ -143,6 +146,7 @@ public class BuildProjectTaskExecutorTest
         assertBuilt();
     }
 
+    @Test
     public void testBuildProjectWithConfiguredInstallationsFromBuildAgent()
         throws Exception
     {
@@ -172,6 +176,7 @@ public class BuildProjectTaskExecutorTest
         assertBuilt();
     }
 
+    @Test
     public void testBuildProjectWithNoConfiguredInstallationsFromBuildAgent()
         throws Exception
     {

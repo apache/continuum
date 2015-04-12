@@ -19,6 +19,7 @@ package org.apache.maven.continuum.wagon;
  * under the License.
  */
 
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -26,13 +27,14 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.Notifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:nramirez@exist">Napoleon Esmundo C. Ramirez</a>
  */
 public class WagonContinuumNotifierTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private ServletServer server;
 
@@ -40,13 +42,11 @@ public class WagonContinuumNotifierTest
 
     private MessageContext context;
 
-
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        server = (ServletServer) lookup( ServletServer.ROLE );
+        server = lookup( ServletServer.class );
         notifier = (Notifier) lookup( Notifier.class.getName(), "wagon" );
 
         Project project = new Project();
@@ -76,15 +76,10 @@ public class WagonContinuumNotifierTest
         }
     }
 
+    @Test
     public void testSendNotification()
         throws Exception
     {
         notifier.sendMessage( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE, context );
-    }
-
-    protected void tearDown()
-        throws Exception
-    {
-        release( server );
     }
 }

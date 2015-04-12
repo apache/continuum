@@ -26,23 +26,29 @@ import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.jdo.MemoryJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Maria Catherine Tan
  */
 public abstract class AbstractPurgeTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private static final String TEST_DEFAULT_REPO_DIR = "target/default-repository";
 
@@ -80,24 +86,24 @@ public abstract class AbstractPurgeTest
 
     protected LocalRepository defaultRepository;
 
-    @Override
-    protected void setUp()
+    @Rule
+    public TestName testName = new TestName();
+
+    protected String getName()
+    {
+        return testName.getMethodName();
+    }
+
+    @Before
+    public void createInitialSetup()
         throws Exception
     {
-        super.setUp();
-
         init();
 
-        localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
-
-        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
-            RepositoryPurgeConfigurationDao.class );
-
-        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup(
-            DirectoryPurgeConfigurationDao.class );
-
-        distributedDirectoryPurgeConfigurationDao = (DistributedDirectoryPurgeConfigurationDao) lookup(
-            DistributedDirectoryPurgeConfigurationDao.class );
+        localRepositoryDao = lookup( LocalRepositoryDao.class );
+        repositoryPurgeConfigurationDao = lookup( RepositoryPurgeConfigurationDao.class );
+        directoryPurgeConfigurationDao = lookup( DirectoryPurgeConfigurationDao.class );
+        distributedDirectoryPurgeConfigurationDao = lookup( DistributedDirectoryPurgeConfigurationDao.class );
 
         if ( localRepositoryDao.getAllLocalRepositories().size() == 0 )
         {
@@ -143,11 +149,9 @@ public abstract class AbstractPurgeTest
         // Set up the JDO factory
         // ----------------------------------------------------------------------
 
-        Object o = lookup( JdoFactory.ROLE, "continuum" );
+        MemoryJdoFactory jdoFactory = (MemoryJdoFactory) lookup( JdoFactory.class, "continuum" );
 
-        assertEquals( MemoryJdoFactory.class.getName(), o.getClass().getName() );
-
-        MemoryJdoFactory jdoFactory = (MemoryJdoFactory) o;
+        assertEquals( MemoryJdoFactory.class.getName(), jdoFactory.getClass().getName() );
 
         String url = "jdbc:hsqldb:mem:" + getClass().getName() + "." + getName();
 
@@ -180,7 +184,8 @@ public abstract class AbstractPurgeTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/package.jdo" )}, new URL[]{}, null, false,
+        SchemaTool.createSchemaTables( new URL[] { getClass().getResource( "/package.jdo" ) }, new URL[] {}, null,
+                                       false,
                                        null );
     }
 

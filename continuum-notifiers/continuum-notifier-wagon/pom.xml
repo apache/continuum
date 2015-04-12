@@ -90,6 +90,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-api</artifactId>
     </dependency>

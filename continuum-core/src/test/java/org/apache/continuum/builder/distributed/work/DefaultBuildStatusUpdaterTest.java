@@ -26,12 +26,14 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectRunSummary;
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +41,8 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class DefaultBuildStatusUpdaterTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
-
     private ProjectDao projectDao;
 
     private ProjectScmRootDao projectScmRootDao;
@@ -56,12 +57,10 @@ public class DefaultBuildStatusUpdaterTest
 
     private DefaultBuildStatusUpdater worker;
 
-    @Override
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         projectDao = mock( ProjectDao.class );
         projectScmRootDao = mock( ProjectScmRootDao.class );
         buildDefinitionDao = mock( BuildDefinitionDao.class );
@@ -81,6 +80,7 @@ public class DefaultBuildStatusUpdaterTest
         when( distributedBuildManager.getCurrentRuns() ).thenReturn( getCurrentRuns() );
     }
 
+    @Test
     public void testWorkerWithStuckBuild()
         throws Exception
     {
@@ -97,6 +97,7 @@ public class DefaultBuildStatusUpdaterTest
         verify( projectDao ).updateProject( project1 );
     }
 
+    @Test
     public void testWorkerWithStuckScm()
         throws Exception
     {

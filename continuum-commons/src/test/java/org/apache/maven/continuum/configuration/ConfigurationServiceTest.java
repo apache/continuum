@@ -23,17 +23,21 @@ import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.utils.file.DefaultFileSystemManager;
 import org.apache.continuum.utils.file.FileSystemManager;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  */
 public class ConfigurationServiceTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private static final Logger log = LoggerFactory.getLogger( ConfigurationServiceTest.class );
 
@@ -42,8 +46,8 @@ public class ConfigurationServiceTest
     private FileSystemManager fsManager;
 
     @Override
-    protected void setUp()
-        throws Exception
+    protected void preContextStart()
+        throws IOException
     {
         fsManager = new DefaultFileSystemManager();  // can't lookup, before setup
         File originalConf = new File( getBasedir(), "src/test/resources/conf/continuum.xml" );
@@ -54,10 +58,9 @@ public class ConfigurationServiceTest
             confUsed.delete();
         }
         fsManager.copyFile( originalConf, confUsed );
-
-        super.setUp();
     }
 
+    @Test
     public void testLoad()
         throws Exception
     {
@@ -73,6 +76,7 @@ public class ConfigurationServiceTest
                       service.getBuildOutputDirectory().getAbsolutePath() );
     }
 
+    @Test
     public void testConfigurationService()
         throws Exception
     {
@@ -157,6 +161,7 @@ public class ConfigurationServiceTest
         assertEquals( "password", service.getSharedSecretPassword() );
     }
 
+    @Test
     public void testAddDuplicateBuildAgentUrl()
         throws Exception
     {

@@ -23,6 +23,10 @@ import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -31,17 +35,17 @@ import org.apache.maven.continuum.model.project.Schedule;
 public class DefaultContinuumInitializerTest
     extends AbstractContinuumTest
 {
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-        DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+        DaoUtils daoUtils = lookup( DaoUtils.class );
         daoUtils.eraseDatabase();
-        ContinuumInitializer continuumInitializer = (ContinuumInitializer) lookup( ContinuumInitializer.ROLE,
-                                                                                   "default" );
+        ContinuumInitializer continuumInitializer = lookup( ContinuumInitializer.class, "default" );
         continuumInitializer.initialize();
     }
 
+    @Test
     public void testDefaultSchedule()
         throws Exception
     {

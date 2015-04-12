@@ -38,8 +38,11 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.JdoFactory;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -50,11 +53,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  */
 public abstract class AbstractContinuumTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private DaoUtils daoUtils;
 
@@ -68,56 +74,46 @@ public abstract class AbstractContinuumTest
 
     private FileSystemManager fsManager;
 
+    @Rule
+    public TestName testName = new TestName();
+
+    protected String getName()
+    {
+        return testName.getMethodName();
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setupContinuum()
         throws Exception
     {
-        super.setUp();
-
         init();
-
         getProjectDao();
-
         getProjectGroupDao();
-
         getScheduleDao();
-
         getProjectScmRootDao();
-
         getFileSystemManager();
 
         setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
 
         Collection<ProjectGroup> projectGroups = projectGroupDao.getAllProjectGroupsWithProjects();
-
         if ( projectGroups.size() == 0 ) //if ContinuumInitializer is loaded by Spring at startup, size == 1
         {
             createDefaultProjectGroup();
-
             projectGroups = projectGroupDao.getAllProjectGroupsWithProjects();
         }
 
         assertEquals( 1, projectGroups.size() );
     }
 
-    @Override
-    protected void tearDown()
+    @After
+    public void wipeData()
         throws Exception
     {
-
-        // Failure to remove database should gracefully tear down *and* fail the test by throwing
-        try
-        {
-            daoUtils.eraseDatabase();
-        }
-        finally
-        {
-            super.tearDown();
-        }
+        daoUtils.eraseDatabase();
     }
 
     protected void createDefaultProjectGroup()
@@ -173,11 +169,9 @@ public abstract class AbstractContinuumTest
         // Set up the JDO factory
         // ----------------------------------------------------------------------
 
-        Object o = lookup( JdoFactory.ROLE, "continuum" );
+        MemoryJdoFactory jdoFactory = (MemoryJdoFactory) lookup( JdoFactory.class, "continuum" );
 
-        assertEquals( MemoryJdoFactory.class.getName(), o.getClass().getName() );
-
-        MemoryJdoFactory jdoFactory = (MemoryJdoFactory) o;
+        assertEquals( MemoryJdoFactory.class.getName(), jdoFactory.getClass().getName() );
 
         String url = "jdbc:hsqldb:mem:" + getClass().getName() + "." + getName();
 
@@ -218,7 +212,7 @@ public abstract class AbstractContinuumTest
         //
         // ----------------------------------------------------------------------
 
-        daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+        daoUtils = lookup( DaoUtils.class );
     }
 
     protected ProjectDao getProjectDao()

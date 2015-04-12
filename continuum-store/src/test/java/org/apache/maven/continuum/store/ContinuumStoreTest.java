@@ -30,19 +30,13 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
-import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
-import org.apache.maven.continuum.model.project.BuildQueue;
-import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectDependency;
-import org.apache.maven.continuum.model.project.ProjectDeveloper;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.project.*;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.junit.Before;
+import org.junit.Test;
 
+import javax.jdo.JDODetachedFieldAccessException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -51,7 +45,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.jdo.JDODetachedFieldAccessException;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -75,6 +70,7 @@ public class ContinuumStoreTest
     //  TEST METHODS
     // ----------------------------------------------------------------------
 
+    @Test
     public void testAddProjectGroup()
         throws ContinuumStoreException
     {
@@ -93,6 +89,7 @@ public class ContinuumStoreTest
         assertLocalRepositoryEquals( testLocalRepository3, retrievedGroup.getLocalRepository() );
     }
 
+    @Test
     public void testGetProjectGroup()
         throws ContinuumStoreException
     {
@@ -109,17 +106,18 @@ public class ContinuumStoreTest
 
         Project project = projects.get( 0 );
         checkProjectDefaultFetchGroup( project );
-        //assertSame( "Check project group reference matches", project.getProjectGroup(), retrievedGroup );
+
         assertEquals( project.getProjectGroup().getId(), retrievedGroup.getId() );
         assertProjectEquals( testProject1, project );
 
         project = projects.get( 1 );
         checkProjectDefaultFetchGroup( project );
-        //assertSame( "Check project group reference matches", project.getProjectGroup(), retrievedGroup );
+
         assertEquals( project.getProjectGroup().getId(), retrievedGroup.getId() );
         assertProjectEquals( testProject2, project );
     }
 
+    @Test
     public void testGetInvalidProjectGroup()
         throws ContinuumStoreException
     {
@@ -134,6 +132,7 @@ public class ContinuumStoreTest
         }
     }
 
+    @Test
     public void testEditProjectGroup()
         throws ContinuumStoreException
     {
@@ -152,6 +151,7 @@ public class ContinuumStoreTest
         assertLocalRepositoryEquals( testLocalRepository2, retrievedGroup.getLocalRepository() );
     }
 
+    @Test
     public void testUpdateUndetachedGroup()
     {
         ProjectGroup newGroup = new ProjectGroup();
@@ -172,6 +172,7 @@ public class ContinuumStoreTest
         }
     }
 
+    @Test
     public void testGetAllProjectGroups()
     {
         Collection<ProjectGroup> groups = projectGroupDao.getAllProjectGroupsWithProjects();
@@ -206,6 +207,7 @@ public class ContinuumStoreTest
         }
     }
 
+    @Test
     public void testGetProject()
         throws ContinuumStoreException
     {
@@ -214,6 +216,7 @@ public class ContinuumStoreTest
         checkProjectDefaultFetchGroup( retrievedProject );
     }
 
+    @Test
     public void testGetProjectWithDetails()
         throws ContinuumStoreException
     {
@@ -227,6 +230,7 @@ public class ContinuumStoreTest
         assertDependenciesEqual( testProject1.getDependencies(), retrievedProject.getDependencies() );
     }
 
+    @Test
     public void testGetProjectWithCheckoutResult()
         throws ContinuumStoreException
     {
@@ -236,6 +240,7 @@ public class ContinuumStoreTest
         checkProjectFetchGroup( retrievedProject, true, false, false, false );
     }
 
+    @Test
     public void testGetInvalidProject()
         throws ContinuumStoreException
     {
@@ -250,6 +255,7 @@ public class ContinuumStoreTest
         }
     }
 
+    @Test
     public void testEditProject()
         throws ContinuumStoreException
     {
@@ -268,6 +274,7 @@ public class ContinuumStoreTest
 
     }
 
+    @Test
     public void testUpdateUndetachedProject()
     {
         Project newProject = new Project();
@@ -288,6 +295,7 @@ public class ContinuumStoreTest
         }
     }
 
+    @Test
     public void testGetAllProjects()
     {
         List<Project> projects = projectDao.getAllProjectsByName();
@@ -299,6 +307,7 @@ public class ContinuumStoreTest
         assertNotNull( "Check project group reference matches", project.getProjectGroup() );
     }
 
+    @Test
     public void testAddSchedule()
         throws ContinuumStoreException
     {
@@ -318,6 +327,7 @@ public class ContinuumStoreTest
         assertBuildQueueEquals( buildQueue, retrievedSchedule.getBuildQueues().get( 0 ) );
     }
 
+    @Test
     public void testEditSchedule()
         throws ContinuumStoreException
     {
@@ -339,6 +349,7 @@ public class ContinuumStoreTest
         assertBuildQueueEquals( buildQueue2, retrievedSchedule.getBuildQueues().get( 1 ) );
     }
 
+    @Test
     public void testRemoveSchedule()
     {
         Schedule schedule = scheduleDao.getAllSchedulesByName().get( 2 );
@@ -352,6 +363,7 @@ public class ContinuumStoreTest
         assertFalse( "check not there", schedules.contains( schedule ) );
     }
 
+    @Test
     public void testGetAllSchedules()
         throws ContinuumStoreException
     {
@@ -383,6 +395,7 @@ public class ContinuumStoreTest
         assertEquals( "check size of buildQueues", 0, schedule.getBuildQueues().size() );
     }
 
+    @Test
     public void testAddProfile()
         throws Exception
     {
@@ -400,6 +413,7 @@ public class ContinuumStoreTest
         assertInstallationEquals( testInstallationJava14, retrievedProfile.getJdk() );
     }
 
+    @Test
     public void testEditProfile()
         throws ContinuumStoreException
     {
@@ -418,6 +432,7 @@ public class ContinuumStoreTest
 
     }
 
+    @Test
     public void testRemoveProfile()
     {
         Profile profile = profileDao.getAllProfilesByName().get( 2 );
@@ -431,6 +446,7 @@ public class ContinuumStoreTest
         assertFalse( "check not there", profiles.contains( profile ) );
     }
 
+    @Test
     public void testGetAllProfiles()
     {
         List<Profile> profiles = profileDao.getAllProfilesByName();
@@ -459,14 +475,7 @@ public class ContinuumStoreTest
                                   profile.getEnvironmentVariables().get( 0 ) );
     }
 
-    /*
-        public void testGetgetProfileByName()
-            throws ContinuumStoreException
-        {
-            Profile profile = store.getProfileByName( "name1" );
-            assertNotNull( profile );
-        }
-    */
+    @Test
     public void testGetAllInstallations()
         throws Exception
     {
@@ -485,6 +494,7 @@ public class ContinuumStoreTest
         assertInstallationEquals( testInstallationEnvVar, installation );
     }
 
+    @Test
     public void testUpdateInstallation()
         throws Exception
     {
@@ -504,6 +514,7 @@ public class ContinuumStoreTest
         assertInstallationEquals( fromStore, updatedFromStore );
     }
 
+    @Test
     public void testRemoveInstallation()
         throws Exception
     {
@@ -516,6 +527,7 @@ public class ContinuumStoreTest
         assertNull( fromStore );
     }
 
+    @Test
     public void testRemoveLinkedInstallations()
         throws Exception
     {
@@ -636,6 +648,7 @@ public class ContinuumStoreTest
         assertEquals( 0, secondGetted.getEnvironmentVariables().size() );
     }
 
+    @Test
     public void testDeleteProject()
         throws ContinuumStoreException
     {
@@ -650,6 +663,7 @@ public class ContinuumStoreTest
         confirmProjectDeletion( testProject1 );
     }
 
+    @Test
     public void testDeleteProjectGroup()
         throws ContinuumStoreException
     {
@@ -671,6 +685,7 @@ public class ContinuumStoreTest
         // TODO: test the project group's build definitions are physically deleted
     }
 
+    @Test
     public void testDeleteBuildResult()
         throws ContinuumStoreException
     {
@@ -700,6 +715,7 @@ public class ContinuumStoreTest
         // TODO: test the build result's SCM result's change sets and change files were physically deleted
     }
 
+    @Test
     public void testGetInvalidBuildResult()
         throws ContinuumStoreException
     {
@@ -714,6 +730,7 @@ public class ContinuumStoreTest
         }
     }
 
+    @Test
     public void testGetAllBuildsForAProject()
     {
         List<BuildResult> results = buildResultDao.getAllBuildsForAProjectByDate( testProject1.getId() );
@@ -731,6 +748,7 @@ public class ContinuumStoreTest
         //checkBuildResultDefaultFetchGroup( buildResult );
     }
 
+    @Test
     public void testGetBuildResult()
         throws ContinuumStoreException
     {
@@ -741,6 +759,7 @@ public class ContinuumStoreTest
         // TODO: reports, artifacts, data
     }
 
+    @Test
     public void testGetProjectGroupWithDetails()
         throws ContinuumStoreException
     {
@@ -770,6 +789,7 @@ public class ContinuumStoreTest
         assertBuildDefinitionsEqual( project.getBuildDefinitions(), testProject2.getBuildDefinitions() );
     }
 
+    @Test
     public void testGetAllProjectsGroupWithDetails()
     {
         List<ProjectGroup> projectGroups = projectGroupDao.getAllProjectGroupsWithBuildDetails();
@@ -803,6 +823,7 @@ public class ContinuumStoreTest
         assertEquals( "Check number of projects", 0, projects.size() );
     }
 
+    @Test
     public void testAddDeveloperToProject()
         throws ContinuumStoreException
     {
@@ -818,6 +839,7 @@ public class ContinuumStoreTest
         assertDeveloperEquals( copy, project.getDevelopers().get( 1 ) );
     }
 
+    @Test
     public void testEditDeveloper()
         throws ContinuumStoreException
     {
@@ -835,6 +857,7 @@ public class ContinuumStoreTest
         assertDeveloperEquals( copy, project.getDevelopers().get( 0 ) );
     }
 
+    @Test
     public void testDeleteDeveloper()
         throws ContinuumStoreException
     {
@@ -849,6 +872,7 @@ public class ContinuumStoreTest
         // TODO: test the developer was physically deleted
     }
 
+    @Test
     public void testAddDependencyToProject()
         throws ContinuumStoreException
     {
@@ -864,6 +888,7 @@ public class ContinuumStoreTest
         assertDependencyEquals( copy, project.getDependencies().get( 2 ) );
     }
 
+    @Test
     public void testEditDependency()
         throws ContinuumStoreException
     {
@@ -881,6 +906,7 @@ public class ContinuumStoreTest
         assertDependencyEquals( copy, project.getDependencies().get( 0 ) );
     }
 
+    @Test
     public void testDeleteDependency()
         throws ContinuumStoreException
     {
@@ -897,6 +923,7 @@ public class ContinuumStoreTest
         // TODO: test the dependency was physically deleted
     }
 
+    @Test
     public void testAddNotifierToProject()
         throws ContinuumStoreException
     {
@@ -912,6 +939,7 @@ public class ContinuumStoreTest
         assertNotifierEquals( copy, project.getNotifiers().get( 1 ) );
     }
 
+    @Test
     public void testEditNotifier()
         throws ContinuumStoreException
     {
@@ -930,6 +958,7 @@ public class ContinuumStoreTest
         assertNotifierEquals( copy, project.getNotifiers().get( 0 ) );
     }
 
+    @Test
     public void testDeleteNotifier()
         throws ContinuumStoreException
     {
@@ -944,6 +973,7 @@ public class ContinuumStoreTest
         // TODO: test the notifier was physically deleted
     }
 
+    @Test
     public void testAddBuildDefinitionToProject()
         throws ContinuumStoreException
     {
@@ -965,6 +995,7 @@ public class ContinuumStoreTest
         assertProfileEquals( testProfile1, retrievedBuildDefinition.getProfile() );
     }
 
+    @Test
     public void testEditBuildDefinition()
         throws ContinuumStoreException
     {
@@ -987,6 +1018,7 @@ public class ContinuumStoreTest
         assertProfileEquals( testProfile2, retrievedBuildDefinition.getProfile() );
     }
 
+    @Test
     public void testDeleteBuildDefinition()
         throws ContinuumStoreException
     {
@@ -1007,6 +1039,7 @@ public class ContinuumStoreTest
         // TODO: test the schedule/profile was NOT physically deleted
     }
 
+    @Test
     public void testAddNotifierToProjectGroup()
         throws ContinuumStoreException
     {
@@ -1023,6 +1056,7 @@ public class ContinuumStoreTest
         assertNotifierEquals( copy, projectGroup.getNotifiers().get( 2 ) );
     }
 
+    @Test
     public void testEditGroupNotifier()
         throws ContinuumStoreException
     {
@@ -1042,6 +1076,7 @@ public class ContinuumStoreTest
         assertNotifierEquals( copy, projectGroup.getNotifiers().get( 0 ) );
     }
 
+    @Test
     public void testDeleteGroupNotifier()
         throws ContinuumStoreException
     {
@@ -1059,6 +1094,7 @@ public class ContinuumStoreTest
         // TODO: test the notifier was physically deleted
     }
 
+    @Test
     public void testAddBuildDefinitionToProjectGroup()
         throws ContinuumStoreException
     {
@@ -1081,6 +1117,7 @@ public class ContinuumStoreTest
         assertProfileEquals( testProfile1, retrievedBuildDefinition.getProfile() );
     }
 
+    @Test
     public void testEditGroupBuildDefinition()
         throws ContinuumStoreException
     {
@@ -1104,6 +1141,7 @@ public class ContinuumStoreTest
         assertProfileEquals( testProfile1, retrievedBuildDefinition.getProfile() );
     }
 
+    @Test
     public void testDeleteGroupBuildDefinition()
         throws ContinuumStoreException
     {
@@ -1120,7 +1158,8 @@ public class ContinuumStoreTest
         // TODO: test the schedule/profile was NOT physically deleted
     }
 
-    public void testgetTemplatesBuildDefinitions()
+    @Test
+    public void testGetTemplatesBuildDefinitions()
         throws Exception
     {
 
@@ -1155,6 +1194,7 @@ public class ContinuumStoreTest
         assertEquals( 2, buildDefinitionTemplateDao.getAllBuildDefinitionTemplate().size() );
     }
 
+    @Test
     public void testAddLocalRepository()
         throws Exception
     {
@@ -1172,6 +1212,7 @@ public class ContinuumStoreTest
         assertLocalRepositoryEquals( copy, retrievedRepository );
     }
 
+    @Test
     public void testRemoveLocalRepository()
         throws Exception
     {
@@ -1198,6 +1239,7 @@ public class ContinuumStoreTest
         assertFalse( "check not there", localRepositories.contains( repository ) );
     }
 
+    @Test
     public void testGetAllLocalRepositories()
         throws Exception
     {
@@ -1209,6 +1251,7 @@ public class ContinuumStoreTest
         assertLocalRepositoryEquals( testLocalRepository3, localRepositories.get( 2 ) );
     }
 
+    @Test
     public void testAddRepositoryPurgeConfiguration()
         throws Exception
     {
@@ -1229,6 +1272,7 @@ public class ContinuumStoreTest
         assertScheduleEquals( testSchedule1, retrieved.getSchedule() );
     }
 
+    @Test
     public void testRemoveRepositoryPurgeConfiguration()
         throws Exception
     {
@@ -1242,6 +1286,7 @@ public class ContinuumStoreTest
         assertFalse( "check not there", repoPurgeList.contains( repoPurge ) );
     }
 
+    @Test
     public void testAddDirectoryPurgeConfiguration()
         throws Exception
     {
@@ -1262,6 +1307,7 @@ public class ContinuumStoreTest
         assertScheduleEquals( testSchedule1, retrieved.getSchedule() );
     }
 
+    @Test
     public void testRemoveDirectoryPurgeConfiguration()
         throws Exception
     {
@@ -1274,6 +1320,7 @@ public class ContinuumStoreTest
         assertEquals( "check #  dir purge configurations", 0, dirPurgeList.size() );
     }
 
+    @Test
     public void testGetPurgeConfigurationsBySchedule()
         throws Exception
     {
@@ -1290,6 +1337,7 @@ public class ContinuumStoreTest
         assertDirectoryPurgeConfigurationEquals( testDirectoryPurgeConfig, dirPurgeList.get( 0 ) );
     }
 
+    @Test
     public void testAddProjectScmRoot()
         throws Exception
     {
@@ -1310,6 +1358,7 @@ public class ContinuumStoreTest
         assertProjectGroupEquals( projectScmRoot.getProjectGroup(), retrievedProjectScmRoot.getProjectGroup() );
     }
 
+    @Test
     public void testRemoveProjectScmRoot()
         throws Exception
     {
@@ -1328,6 +1377,7 @@ public class ContinuumStoreTest
         assertEquals( "check # of project scm root", 0, projectScmRoots.size() );
     }
 
+    @Test
     public void testRemoveProjectWithReleaseResult()
         throws Exception
     {
@@ -1354,6 +1404,7 @@ public class ContinuumStoreTest
         assertEquals( "check size of continuum release results", 1, releaseResults.size() );
     }
 
+    @Test
     public void testGetProjectSummaryByProjectGroup()
         throws Exception
     {
@@ -1399,6 +1450,7 @@ public class ContinuumStoreTest
 
     }
 
+    @Test
     public void testGetBuildResultsInRange()
         throws Exception
     {
@@ -1493,18 +1545,13 @@ public class ContinuumStoreTest
         checkProjectFetchGroup( project, false, false, false, false );
     }
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        buildDefinitionDao = (BuildDefinitionDao) lookup( BuildDefinitionDao.class.getName() );
-
-        buildDefinitionTemplateDao = (BuildDefinitionTemplateDao) lookup( BuildDefinitionTemplateDao.class.getName() );
-
-        buildResultDao = (BuildResultDao) lookup( BuildResultDao.class.getName() );
-
+        buildDefinitionDao = lookup( BuildDefinitionDao.class );
+        buildDefinitionTemplateDao = lookup( BuildDefinitionTemplateDao.class );
+        buildResultDao = lookup( BuildResultDao.class );
         createBuildDatabase( false );
     }
 
@@ -1590,22 +1637,4 @@ public class ContinuumStoreTest
             }
         }
     }
-
-//    private static void checkBuildResultDefaultFetchGroup( BuildResult buildResult )
-//    {
-//        try
-//        {
-//            buildResult.getScmResult();
-//
-//            fail( "scmResult should not be in the default fetch group" );
-//        }
-//        catch ( JDODetachedFieldAccessException expected )
-//        {
-//            assertTrue( true );
-//        }
-//        // TODO: artifacts
-//        // TODO: report
-//        // TODO: long error data
-//    }
-
 }

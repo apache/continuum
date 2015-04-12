@@ -20,7 +20,6 @@ package org.apache.maven.continuum.scm.queue;
  */
 
 import org.apache.continuum.buildmanager.BuildsManager;
-import org.apache.continuum.buildmanager.ParallelBuildsManager;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
@@ -38,12 +37,16 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.util.StringUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class PrepareBuildProjectsTaskExecutorTest
     extends AbstractContinuumTest
@@ -58,24 +61,18 @@ public class PrepareBuildProjectsTaskExecutorTest
 
     private BuildsManager buildsManager;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                           MavenTwoContinuumProjectBuilder.ID );
-
-        projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
-
-        actionManager = (ActionManager) lookup( ActionManager.ROLE );
-
+        projectBuilder = lookup( ContinuumProjectBuilder.class, MavenTwoContinuumProjectBuilder.ID );
+        projectScmRootDao = lookup( ProjectScmRootDao.class );
+        actionManager = lookup( ActionManager.class );
         configurationService = (ConfigurationService) lookup( "configurationService" );
-
-        buildsManager = (ParallelBuildsManager) lookup( BuildsManager.class, "parallel" );
+        buildsManager = lookup( BuildsManager.class, "parallel" );
     }
 
+    @Test
     public void testCheckoutPrepareBuildMultiModuleProject()
         throws Exception
     {
@@ -131,6 +128,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         waitForBuildToFinish();
     }
 
+    @Test
     public void testCheckoutPrepareBuildMultiModuleProjectFreshBuild()
         throws Exception
     {
@@ -186,6 +184,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         waitForBuildToFinish();
     }
 
+    @Test
     public void testCheckoutPrepareBuildSingleCheckedoutMultiModuleProject()
         throws Exception
     {
@@ -234,6 +233,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         waitForBuildToFinish();
     }
 
+    @Test
     public void testCheckoutPrepareBuildSingleCheckedoutMultiModuleProjectFreshBuild()
         throws Exception
     {
@@ -282,6 +282,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         waitForBuildToFinish();
     }
 
+    @Test
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProject()
         throws Exception
     {
@@ -332,6 +333,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         waitForPrepareBuildToFinish( task.getProjectGroupId(), task.getProjectScmRootId() );
     }
 
+    @Test
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProjectBuildFresh()
         throws Exception
     {
@@ -382,6 +384,7 @@ public class PrepareBuildProjectsTaskExecutorTest
         waitForBuildToFinish();
     }
 
+    @Test
     public void testCheckoutPrepareBuildSingleCheckoutFlatMultiModuleProjectBuildFreshAfterRemovingWorkingCopy()
         throws Exception
     {
@@ -557,8 +560,6 @@ public class PrepareBuildProjectsTaskExecutorTest
 
         projectScmRoot.setScmRootAddress( url );
 
-        //projectScmRoot.setState( ContinuumProjectState.ERROR );
-
         return projectScmRootDao.addProjectScmRoot( projectScmRoot );
     }
 
@@ -566,7 +567,7 @@ public class PrepareBuildProjectsTaskExecutorTest
     {
         String scmRootUrl = null;
 
-        for ( Project project : (List<Project>) pg.getProjects() )
+        for ( Project project : pg.getProjects() )
         {
             String scmUrl = project.getScmUrl();
 

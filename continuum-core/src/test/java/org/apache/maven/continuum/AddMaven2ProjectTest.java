@@ -7,11 +7,15 @@ import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collections;
+
+import static org.junit.Assert.*;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -46,18 +50,16 @@ public class AddMaven2ProjectTest
 
     protected BuildDefinitionService bds;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
         bd = new BuildDefinition();
         bd.setGoals( "clean deploy" );
         bd.setBuildFile( "pom.xml" );
         bd.setDescription( "my foo" );
         bd.setTemplate( true );
-        bds = (BuildDefinitionService) lookup( BuildDefinitionService.class.getName(),
-                                                                      "default" );
+        bds = lookup( BuildDefinitionService.class, "default" );
         bd = bds.addBuildDefinition( bd );
 
         assertEquals( 5, bds.getAllBuildDefinitions().size() );
@@ -72,10 +74,10 @@ public class AddMaven2ProjectTest
         createLocalRepository();
     }
 
+    @Test
     public void testAddProjectToExistingGroupWithBuildDefTemplate()
         throws Exception
     {
-
         ProjectGroup pg = new ProjectGroup();
         pg.setName( "foo" );
         pg.setDescription( "foo pg" );
@@ -108,6 +110,7 @@ public class AddMaven2ProjectTest
         assertEquals( "clean deploy", project.getBuildDefinitions().get( 0 ).getGoals() );
     }
 
+    @Test
     public void testAddProjectWithGroupCreationWithBuildDefTemplate()
         throws Exception
     {
@@ -139,11 +142,12 @@ public class AddMaven2ProjectTest
         log.info( " pg groupId " + pg.getGroupId() );
         //@ group level the db from template must be used
         log.info( " pg builddefs size " + pg.getBuildDefinitions().size() );
-        log.info( "pg bd goals " + ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
-        assertEquals( "clean deploy", ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
+        log.info( "pg bd goals " + ( pg.getBuildDefinitions().get( 0 ) ).getGoals() );
+        assertEquals( "clean deploy", ( pg.getBuildDefinitions().get( 0 ) ).getGoals() );
 
     }
 
+    @Test
     public void testAddProjectWithGroupCreationDefaultBuildDef()
         throws Exception
     {
@@ -180,9 +184,9 @@ public class AddMaven2ProjectTest
 
         //@ group level the db from template must be used
         assertEquals( "clean install", pg.getBuildDefinitions().get( 0 ).getGoals() );
-
     }
 
+    @Test
     public void testAddProjectToExistingGroupDefaultBuildDef()
         throws Exception
     {
@@ -221,6 +225,7 @@ public class AddMaven2ProjectTest
         assertEquals( "--batch-mode", buildDefinition.getArguments() );
     }
 
+    @Test
     public void testAddProjectToExistingGroupMatchingBuildDef()
         throws Exception
     {
@@ -277,6 +282,5 @@ public class AddMaven2ProjectTest
     {
         return "applicationContextSlf4jPlexusLogger.xml";
     }
-
 
 }

@@ -23,10 +23,13 @@ import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -37,10 +40,11 @@ public class TestMavenBuilderHelper
 {
     private static final Logger log = LoggerFactory.getLogger( TestMavenBuilderHelper.class );
 
-    public void testgetMavenProject()
+    @Test
+    public void testGetMavenProject()
         throws Exception
     {
-        MavenBuilderHelper mavenBuilderHelper = (MavenBuilderHelper) lookup( MavenBuilderHelper.ROLE, "default" );
+        MavenBuilderHelper mavenBuilderHelper = lookup( MavenBuilderHelper.class, "default" );
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
         File file = new File( getBasedir(), "src/test-poms/pom.xml" );
         MavenProject project = mavenBuilderHelper.getMavenProject( result, file );
@@ -54,10 +58,11 @@ public class TestMavenBuilderHelper
         assertTrue( result.getErrors().isEmpty() );
     }
 
-    public void testgetMavenProjectMissingDeps()
+    @Test
+    public void testGetMavenProjectMissingDeps()
         throws Exception
     {
-        MavenBuilderHelper mavenBuilderHelper = (MavenBuilderHelper) lookup( MavenBuilderHelper.ROLE, "default" );
+        MavenBuilderHelper mavenBuilderHelper = lookup( MavenBuilderHelper.class, "default" );
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
         File file = new File( getBasedir(), "src/test-poms/pom-unknown-dependency.xml" );
         mavenBuilderHelper.getMavenProject( result, file );

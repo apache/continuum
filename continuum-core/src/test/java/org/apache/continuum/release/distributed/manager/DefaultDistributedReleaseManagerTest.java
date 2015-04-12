@@ -20,33 +20,35 @@ package org.apache.continuum.release.distributed.manager;
  */
 
 import org.apache.continuum.dao.BuildResultDao;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.model.project.BuildResult;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * DefaultDistributedReleaseManagerTest
  */
 public class DefaultDistributedReleaseManagerTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private DefaultDistributedReleaseManager distributedReleaseManager;
 
     private BuildResultDao buildResultDao;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         distributedReleaseManager = new DefaultDistributedReleaseManager();
-
         buildResultDao = mock( BuildResultDao.class );
         distributedReleaseManager.setBuildResultDao( buildResultDao );
     }
 
+    @Test
     public void testGetDefaultBuildagent()
         throws Exception
     {
@@ -63,6 +65,7 @@ public class DefaultDistributedReleaseManagerTest
         assertEquals( returnedBuildagent, defaultBuildagentUrl );
     }
 
+    @Test
     public void testGetDefaultBuildagentNullBuildResult()
         throws Exception
     {

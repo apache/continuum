@@ -26,6 +26,7 @@ import org.apache.continuum.release.distributed.manager.DistributedReleaseManage
 import org.apache.continuum.xmlrpc.utils.BuildTrigger;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -40,9 +41,9 @@ import org.apache.maven.continuum.xmlrpc.project.ReleaseListenerSummary;
 import org.apache.maven.continuum.xmlrpc.server.ContinuumServiceImpl;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.codehaus.plexus.redback.role.RoleManager;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.internal.matchers.CapturesArguments;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,10 +51,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ContinuumServiceImplTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private ContinuumServiceImpl continuumService;
 
@@ -73,12 +75,10 @@ public class ContinuumServiceImplTest
 
     private RoleManager roleManager;
 
-    @Override
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         distributedReleaseManager = mock( DistributedReleaseManager.class );
         releaseManager = mock( ContinuumReleaseManager.class );
         configurationService = mock( ConfigurationService.class );
@@ -102,6 +102,7 @@ public class ContinuumServiceImplTest
         project.setScmUrl( "scm:svn:http://svn.test.org/repository/project" );
     }
 
+    @Test
     public void testGetReleasePluginParameters()
         throws Exception
     {
@@ -124,6 +125,7 @@ public class ContinuumServiceImplTest
                                                   "continuum-test-1.0" );
     }
 
+    @Test
     public void testGetListenerWithDistributedBuilds()
         throws Exception
     {
@@ -142,6 +144,7 @@ public class ContinuumServiceImplTest
         assertEquals( "completed-phase", summary.getCompletedPhases().get( 0 ) );
     }
 
+    @Test
     public void testPopulateBuildDefinition()
         throws Exception
     {
@@ -163,6 +166,7 @@ public class ContinuumServiceImplTest
         assertEquals( buildDef.isDefaultForProject(), buildDefinition.isDefaultForProject() );
     }
 
+    @Test
     public void testBuildProjectWithBuildTrigger()
         throws Exception
     {
@@ -184,6 +188,7 @@ public class ContinuumServiceImplTest
         assertEquals( 0, result );
     }
 
+    @Test
     public void testGetProjectScmRootByProjectGroup()
         throws Exception
     {
@@ -218,6 +223,7 @@ public class ContinuumServiceImplTest
         assertEquals( 2, projectScmRoots.get( 1 ).getState() );
     }
 
+    @Test
     public void testGetProjectScmRootByProject()
         throws Exception
     {
@@ -244,6 +250,7 @@ public class ContinuumServiceImplTest
         assertEquals( "address1", projectScmRoot.getScmRootAddress() );
     }
 
+    @Test
     public void testGetBuildAgentUrl()
         throws Exception
     {
@@ -258,6 +265,7 @@ public class ContinuumServiceImplTest
         assertEquals( expectedUrl, buildAgentUrl );
     }
 
+    @Test
     public void testGetBuildAgentUrlNotSupported()
         throws Exception
     {
@@ -275,6 +283,7 @@ public class ContinuumServiceImplTest
         }
     }
 
+    @Test
     public void testGetNonExistingBuildAgentGroup()
         throws Exception
     {
@@ -287,6 +296,7 @@ public class ContinuumServiceImplTest
         assertEquals( 0, result );
     }
 
+    @Test
     public void testRemoveNonExistingBuildAgentGroup()
         throws Exception
     {
@@ -299,6 +309,7 @@ public class ContinuumServiceImplTest
         verify( configurationService, never() ).removeBuildAgentGroup( any( BuildAgentGroupConfiguration.class ) );
     }
 
+    @Test
     public void testGetBuildAgentsWithInstallations()
         throws Exception
     {
@@ -347,6 +358,7 @@ public class ContinuumServiceImplTest
         assertEquals( 1, agent.getInstallations().size() );
     }
 
+    @Test
     public void testAddProjectGroupWithPunctuation()
         throws Exception
     {
@@ -365,6 +377,7 @@ public class ContinuumServiceImplTest
         verify( continuum ).addProjectGroup( group );
     }
 
+    @Test
     public void testEditProjectGroupWithPunctuation()
         throws Exception
     {
@@ -402,6 +415,7 @@ public class ContinuumServiceImplTest
         }
     }
 
+    @Test
     public void testInstallationEnvironmentVariableWithOtherOptions()
         throws ContinuumException, InstallationException
     {

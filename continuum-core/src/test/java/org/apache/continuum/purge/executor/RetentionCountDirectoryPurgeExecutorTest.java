@@ -1,12 +1,5 @@
 package org.apache.continuum.purge.executor;
 
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,22 +19,32 @@ import java.io.FilenameFilter;
  * under the License.
  */
 
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author Maria Catherine Tan
  */
 public class RetentionCountDirectoryPurgeExecutorTest
     extends AbstractPurgeExecutorTest
 {
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         purgeReleasesDirTask = getRetentionCountReleasesDirPurgeTask();
-
         purgeBuildOutputDirTask = getRetentionCountBuildOutputDirPurgeTask();
     }
 
+    @Test
     public void testReleasesDirPurging()
         throws Exception
     {
@@ -67,6 +70,7 @@ public class RetentionCountDirectoryPurgeExecutorTest
         assertExists( dirPath + "/1" );
     }
 
+    @Test
     public void testBuildOutputDirPurging()
         throws Exception
     {

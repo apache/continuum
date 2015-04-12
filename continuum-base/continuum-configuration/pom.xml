@@ -135,6 +135,12 @@
       <artifactId>plexus-spring</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <dependency> <!-- added since depMgt doesn't override imported dependencies -->
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>

@@ -24,6 +24,8 @@ import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -33,19 +35,18 @@ public class ContinuumNotificationDispatcherTest
 {
     private BuildResultDao buildResultDao;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-        buildResultDao = (BuildResultDao) lookup( BuildResultDao.class.getName() );
+        buildResultDao = lookup( BuildResultDao.class );
     }
 
+    @Test
     public void testNotificationDispatcher()
         throws Exception
     {
-        ContinuumNotificationDispatcher notificationDispatcher = (ContinuumNotificationDispatcher) lookup(
-            ContinuumNotificationDispatcher.ROLE );
+        ContinuumNotificationDispatcher notificationDispatcher = lookup( ContinuumNotificationDispatcher.class );
 
         Project project = addProject( "Notification Dispatcher Test Project" );
 

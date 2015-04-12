@@ -24,8 +24,12 @@ import org.apache.continuum.model.repository.DistributedDirectoryPurgeConfigurat
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.ManagedDefaultRepositoryContent;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Maria Catherine Tan
@@ -35,14 +39,14 @@ public class DefaultPurgeConfigurationServiceTest
 {
     private PurgeConfigurationService purgeConfigurationService;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         purgeConfigurationService = (PurgeConfigurationService) lookup( PurgeConfigurationService.ROLE );
     }
 
+    @Test
     public void testRepositoryPurgeConfiguration()
         throws Exception
     {
@@ -70,6 +74,7 @@ public class DefaultPurgeConfigurationServiceTest
             defaultRepository.getId() ) );
     }
 
+    @Test
     public void testDirectoryPurgeConfiguration()
         throws Exception
     {
@@ -99,6 +104,7 @@ public class DefaultPurgeConfigurationServiceTest
         assertFalse( "check if dir purge configuration was removed", dirConfigs.contains( dirConfig ) );
     }
 
+    @Test
     public void testDistributedDirectoryPurgeConfiguration()
         throws Exception
     {
@@ -130,6 +136,7 @@ public class DefaultPurgeConfigurationServiceTest
         assertFalse( "check if dir purge configuration was removed", dirConfigs.contains( dirConfig ) );
     }
 
+    @Test
     public void testRepositoryManagedContent()
         throws Exception
     {

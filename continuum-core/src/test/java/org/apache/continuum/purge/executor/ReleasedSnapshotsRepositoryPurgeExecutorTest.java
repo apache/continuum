@@ -19,22 +19,24 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * Tests were taken from Archiva and added a check if metadata was deleted.
  */
 public class ReleasedSnapshotsRepositoryPurgeExecutorTest
     extends AbstractPurgeExecutorTest
 {
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         populateDefaultRepositoryForReleasedSnapshots();
-
         purgeDefaultRepoTask = getReleasedSnapshotsRepoPurgeTask();
     }
 
+    @Test
     public void testDefaultRepoReleasedSnapshotsPurging()
         throws Exception
     {

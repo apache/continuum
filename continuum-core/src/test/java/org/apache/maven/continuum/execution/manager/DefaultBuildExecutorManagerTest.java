@@ -25,6 +25,10 @@ import org.apache.maven.continuum.execution.ant.AntBuildExecutor;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
 import org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor;
 import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -34,14 +38,14 @@ public class DefaultBuildExecutorManagerTest
 {
     private BuildExecutorManager builderManager;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-        builderManager = (BuildExecutorManager) lookup( BuildExecutorManager.ROLE );
+        builderManager = lookup( BuildExecutorManager.class );
     }
 
+    @Test
     public void testMavenTwoBuildExecutorDependencyInjection()
         throws Exception
     {
@@ -54,6 +58,7 @@ public class DefaultBuildExecutorManagerTest
         assertNotNull( executor.getConfigurationService() );
     }
 
+    @Test
     public void testMavenOneBuildExecutorDependencyInjection()
         throws Exception
     {
@@ -64,6 +69,7 @@ public class DefaultBuildExecutorManagerTest
         assertNotNull( executor.getMetadataHelper() );
     }
 
+    @Test
     public void testAntBuildExecutorDependencyInjection()
         throws Exception
     {
@@ -72,6 +78,7 @@ public class DefaultBuildExecutorManagerTest
         assertCommonFields( executor );
     }
 
+    @Test
     public void testShellBuildExecutorDependencyInjection()
         throws Exception
     {

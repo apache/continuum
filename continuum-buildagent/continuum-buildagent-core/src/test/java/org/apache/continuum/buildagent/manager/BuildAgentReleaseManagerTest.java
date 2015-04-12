@@ -23,8 +23,11 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationExce
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.model.LocalRepository;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,9 +45,8 @@ import static org.mockito.Mockito.when;
  * exception is thrown if the set local repository in the repository map is incorrect.
  */
 public class BuildAgentReleaseManagerTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
-
     public static final String DEFAULT_NAME = "DEFAULT";
 
     public static final String UNKNOWN_NAME = "NON-EXISTENT";
@@ -52,15 +55,12 @@ public class BuildAgentReleaseManagerTest
 
     private DefaultBuildAgentReleaseManager releaseManager;
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         releaseManager = (DefaultBuildAgentReleaseManager) lookup( BuildAgentReleaseManager.class );
-
         buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
-
         releaseManager.setBuildAgentConfigurationService( buildAgentConfigurationService );
 
         final List<LocalRepository> localRepos = createLocalRepositories();
@@ -80,15 +80,15 @@ public class BuildAgentReleaseManagerTest
         when( buildAgentConfigurationService.getWorkingDirectory() ).thenReturn( workingDir );
     }
 
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
         releaseManager = null;
-
-        super.tearDown();
     }
 
     // CONTINUUM-2391
+    @Test
     public void testLocalRepositoryInReleasePrepare()
         throws Exception
     {
@@ -105,6 +105,7 @@ public class BuildAgentReleaseManagerTest
     }
 
     // CONTINUUM-2391
+    @Test
     public void testLocalRepositoryNameMismatchedCaseInReleasePrepare()
         throws Exception
     {
@@ -122,6 +123,7 @@ public class BuildAgentReleaseManagerTest
         }
     }
 
+    @Test
     public void testUnknownRepositoryNameInReleasePrepare()
         throws Exception
     {
@@ -140,6 +142,8 @@ public class BuildAgentReleaseManagerTest
     }
 
     // CONTINUUM-2391
+
+    @Test
     @SuppressWarnings( "unchecked" )
     public void testLocalRepositoryInReleasePerform()
         throws Exception
@@ -155,6 +159,7 @@ public class BuildAgentReleaseManagerTest
     }
 
     // CONTINUUM-2391
+    @Test
     public void testLocalRepositoryNameMismatchedCaseInReleasePerform()
         throws Exception
     {
@@ -170,6 +175,7 @@ public class BuildAgentReleaseManagerTest
         }
     }
 
+    @Test
     public void testUnknownRepositoryNameInReleasePerform()
         throws Exception
     {
@@ -186,6 +192,7 @@ public class BuildAgentReleaseManagerTest
     }
 
     // CONTINUUM-2391
+    @Test
     @SuppressWarnings( "unchecked" )
     public void testLocalRepositoryInReleasePerformFromScm()
         throws Exception

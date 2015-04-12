@@ -28,6 +28,10 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -35,11 +39,13 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 public class MavenOneContinuumProjectBuilderTest
     extends AbstractContinuumTest
 {
+
+    @Test
     public void testBuildingAProjectFromMetadataWithACompleteMaven1Pom()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenOneContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenOneContinuumProjectBuilder.ID );
 
         BuildDefinition bd = new BuildDefinition();
 
@@ -53,7 +59,7 @@ public class MavenOneContinuumProjectBuilderTest
 
         bd.setTemplate( true );
 
-        BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
+        BuildDefinitionService service = lookup( BuildDefinitionService.class );
 
         BuildDefinitionTemplate bdt = new BuildDefinitionTemplate();
         bdt.setName( "maven1" );
@@ -68,16 +74,18 @@ public class MavenOneContinuumProjectBuilderTest
 
     }
 
+    @Test
     public void testBuildingAProjectFromMetadataWithACompleteMaven1PomWithDefaultBuildDef()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenOneContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenOneContinuumProjectBuilder.ID );
 
-        BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
+        BuildDefinitionService service = lookup( BuildDefinitionService.class );
 
         ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( getTestFile(
-            "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null, false,
+                                                                                              "src/test/resources/projects/maven-1.pom.xml" ).toURL(),
+                                                                                          null, null, false,
                                                                                           service.getDefaultMavenOneBuildDefinitionTemplate(),
                                                                                           false );
 
@@ -110,7 +118,7 @@ public class MavenOneContinuumProjectBuilderTest
 
         assertEquals( "scm:svn:http://svn.apache.org/repos/asf:maven/maven-1/core/trunk/", project.getScmUrl() );
 
-        ProjectNotifier notifier = (ProjectNotifier) project.getNotifiers().get( 0 );
+        ProjectNotifier notifier = project.getNotifiers().get( 0 );
 
         assertEquals( "mail", notifier.getType() );
 

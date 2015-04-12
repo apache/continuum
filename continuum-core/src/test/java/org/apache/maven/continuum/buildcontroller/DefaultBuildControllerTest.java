@@ -33,6 +33,8 @@ import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,6 +42,8 @@ import java.io.FileWriter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class DefaultBuildControllerTest
     extends AbstractContinuumTest
@@ -58,14 +62,13 @@ public class DefaultBuildControllerTest
 
     int buildDefinitionId2;
 
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
+        BuildDefinitionDao buildDefinitionDao = lookup( BuildDefinitionDao.class );
 
-        BuildDefinitionDao buildDefinitionDao = (BuildDefinitionDao) lookup( BuildDefinitionDao.class.getName() );
-
-        BuildResultDao buildResultDao = (BuildResultDao) lookup( BuildResultDao.class.getName() );
+        BuildResultDao buildResultDao = lookup( BuildResultDao.class );
 
         Project project1 = createProject( "project1" );
         BuildDefinition bd1 = createBuildDefinition();
@@ -108,7 +111,7 @@ public class DefaultBuildControllerTest
         buildDefinitionId2 = buildDefinitionDao.getDefaultBuildDefinition( projectId2 ).getId();
         createPomFile( getProjectDao().getProjectWithAllDetails( projectId2 ) );
 
-        controller = (DefaultBuildController) lookup( BuildController.ROLE );
+        controller = (DefaultBuildController) lookup( BuildController.class );
     }
 
     private Project createProject( String artifactId )
@@ -166,6 +169,7 @@ public class DefaultBuildControllerTest
         return context;
     }
 
+    @Test
     public void testWithoutDependencyChanges()
         throws Exception
     {
@@ -175,6 +179,7 @@ public class DefaultBuildControllerTest
         assertFalse( controller.shouldBuild( context ) );
     }
 
+    @Test
     public void testWithNewProjects()
         throws Exception
     {
@@ -192,6 +197,7 @@ public class DefaultBuildControllerTest
         assertTrue( controller.shouldBuild( context ) );
     }
 
+    @Test
     public void testWithNewBuildDefinition()
         throws Exception
     {
@@ -200,6 +206,7 @@ public class DefaultBuildControllerTest
         assertTrue( controller.shouldBuild( context ) );
     }
 
+    @Test
     public void testWithDependencyChanges()
         throws Exception
     {
@@ -209,6 +216,7 @@ public class DefaultBuildControllerTest
         assertTrue( controller.shouldBuild( context ) );
     }
 
+    @Test
     public void testWithNullScmResult()
         throws Exception
     {
@@ -219,6 +227,7 @@ public class DefaultBuildControllerTest
         assertFalse( controller.shouldBuild( context ) );
     }
 
+    @Test
     public void testForcedBuildTriggeredByField()
         throws Exception
     {
@@ -226,6 +235,7 @@ public class DefaultBuildControllerTest
         assertEquals( FORCED_BUILD_USER, context.getBuildTrigger().getTriggeredBy() );
     }
 
+    @Test
     public void testScheduledBuildTriggeredByField()
         throws Exception
     {
@@ -233,6 +243,7 @@ public class DefaultBuildControllerTest
         assertEquals( SCHEDULE_NAME, context.getBuildTrigger().getTriggeredBy() );
     }
 
+    @Test
     public void testScheduledBuildTriggeredByField_UsernameProvided()
         throws Exception
     {

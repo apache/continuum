@@ -35,11 +35,15 @@ import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:kenney@apache.org">Kenney Westerhof</a>
@@ -55,29 +59,17 @@ public class BuildProjectTaskExecutorTest
 
     private ActionManager actionManager;
 
+    @Before
     public void setUp()
         throws Exception
     {
-        try
-        {
-            super.setUp();
-
-            projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                               MavenTwoContinuumProjectBuilder.ID );
-
-            buildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "build-project" );
-
-            taskQueueExecutor = (TaskQueueExecutor) lookup( TaskQueueExecutor.ROLE, "build-project" );
-
-            actionManager = (ActionManager) lookup( ActionManager.ROLE );
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-            throw e;
-        }
+        projectBuilder = lookup( ContinuumProjectBuilder.class, MavenTwoContinuumProjectBuilder.ID );
+        buildQueue = lookup( TaskQueue.class, "build-project" );
+        taskQueueExecutor = lookup( TaskQueueExecutor.class, "build-project" );
+        actionManager = lookup( ActionManager.class );
     }
 
+    @Test
     public void testAutomaticCancellation()
         throws Exception
     {
@@ -100,6 +92,7 @@ public class BuildProjectTaskExecutorTest
         assertFalse( "Build completed", getTestFile( "src/test-projects/timeout/target/TEST-COMPLETED" ).exists() );
     }
 
+    @Test
     public void testManualCancellation()
         throws Exception
     {
@@ -121,6 +114,7 @@ public class BuildProjectTaskExecutorTest
         assertFalse( "Build completed", getTestFile( "src/test-projects/timeout/target/TEST-COMPLETED" ).exists() );
     }
 
+    @Test
     public void testNoCancellation()
         throws Exception
     {
@@ -219,7 +213,7 @@ public class BuildProjectTaskExecutorTest
         throws Exception
     {
         ProjectGroup projectGroup = getProjectGroup( "src/test-projects/timeout/pom.xml" );
-        Project project = (Project) projectGroup.getProjects().get( 0 );
+        Project project = projectGroup.getProjects().get( 0 );
 
         BuildDefinition buildDefinition = new BuildDefinition();
         buildDefinition.setId( 0 );
@@ -241,14 +235,12 @@ public class BuildProjectTaskExecutorTest
 
         projectGroup = getProjectGroupDao().getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 
-        project = (Project) projectGroup.getProjects().get( 0 );
+        project = projectGroup.getProjects().get( 0 );
 
-        buildDefinition = (BuildDefinition) projectGroup.getBuildDefinitions().get( 0 );
+        buildDefinition = projectGroup.getBuildDefinitions().get( 0 );
 
-        // projectGroup = continuumStore.addProjectGroup( projectGroup );
-
-        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), new BuildTrigger( 0,
-                                                                                                                  "" ),
+        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(),
+                                                      new BuildTrigger( 0, "" ),
                                                       project.getName(), buildDefinition.getDescription(), null,
                                                       projectGroupId );
 

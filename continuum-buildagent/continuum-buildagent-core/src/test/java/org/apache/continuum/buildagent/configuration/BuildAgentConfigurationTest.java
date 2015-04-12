@@ -21,15 +21,19 @@ package org.apache.continuum.buildagent.configuration;
 
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.model.LocalRepository;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 public class BuildAgentConfigurationTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
+    @Test
     public void testInitialize()
         throws Exception
     {
@@ -57,6 +61,7 @@ public class BuildAgentConfigurationTest
         assertLocalRepository( getExpectedLocalRepo(), localRepo );
     }
 
+    @Test
     public void testSaveExistingConfiguration()
         throws Exception
     {
@@ -101,6 +106,7 @@ public class BuildAgentConfigurationTest
         assertLocalRepository( expectedLocalRepo, localRepo );
     }
 
+    @Test
     public void testSaveNewConfiguration()
         throws Exception
     {

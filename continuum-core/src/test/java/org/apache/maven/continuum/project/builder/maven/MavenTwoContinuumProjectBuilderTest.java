@@ -31,6 +31,7 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  */
@@ -48,11 +51,12 @@ public class MavenTwoContinuumProjectBuilderTest
 {
     private static final Logger logger = LoggerFactory.getLogger( MavenTwoContinuumProjectBuilderTest.class );
 
+    @Test
     public void testGetEmailAddressWhenTypeIsSetToEmail()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         File pom = getTestFile( "src/test/repository/maven-builder-helper-1.xml" );
 
@@ -74,7 +78,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, project.getNotifiers().size() );
 
-        ProjectNotifier notifier = (ProjectNotifier) project.getNotifiers().get( 0 );
+        ProjectNotifier notifier = project.getNotifiers().get( 0 );
 
         assertEquals( "mail", notifier.getType() );
 
@@ -89,11 +93,12 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( 0, pg.getNotifiers().size() );
     }
 
+    @Test
     public void testGetEmailAddressWhenTypeIsntSet()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         File pom = getTestFile( "src/test/repository/maven-builder-helper-2.xml" );
 
@@ -115,7 +120,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, project.getNotifiers().size() );
 
-        ProjectNotifier notifier = (ProjectNotifier) project.getNotifiers().get( 0 );
+        ProjectNotifier notifier = project.getNotifiers().get( 0 );
 
         assertEquals( "mail", notifier.getType() );
 
@@ -130,11 +135,12 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( 0, pg.getNotifiers().size() );
     }
 
+    @Test
     public void testGetScmUrlWithParams()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         File pom = getTestFile( "src/test/repository/maven-builder-helper-3.xml" );
 
@@ -163,11 +169,12 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( scmUrl, project.getScmUrl() );
     }
 
+    @Test
     public void testCreateProjectsWithModules()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         URL url = getClass().getClassLoader().getResource( "projects/continuum/pom.xml" );
 
@@ -200,8 +207,6 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( "projectGroup.name", "Continuum Parent Project", projectGroup.getName() );
 
         assertEquals( "projectGroup.description", "Continuum Project Description", projectGroup.getDescription() );
-
-        // assertEquals( "projectGroup.url", "http://cvs.continuum.codehaus.org/", projectGroup.getUrl() );
 
         // ----------------------------------------------------------------------
         // Assert the projects built
@@ -243,11 +248,12 @@ public class MavenTwoContinuumProjectBuilderTest
         assertDependency( "Continuum Model", "Continuum Web", projects );
     }
 
+    @Test
     public void testCreateProjectsWithModuleswithParentPomIsntPomXml()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         URL url = getClass().getClassLoader().getResource( "projects/continuum/pom_ci.xml" );
 
@@ -321,12 +327,13 @@ public class MavenTwoContinuumProjectBuilderTest
         assertDependency( "Continuum Model", "Continuum Web", projects );
     }
 
+    @Test
     public void testCreateProjectWithoutModules()
         throws Exception
     {
 
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         URL url = getClass().getClassLoader().getResource( "projects/continuum/continuum-core/pom.xml" );
 
@@ -342,7 +349,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
 
-        BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
+        BuildDefinitionService service = lookup( BuildDefinitionService.class );
 
         bd = service.addBuildDefinition( bd );
         BuildDefinitionTemplate bdt = new BuildDefinitionTemplate();
@@ -390,11 +397,12 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( 0, projectGroup.getProjects().size() );
     }
 
+    @Test
     public void testCreateProjectWithFlatStructure()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         URL url = getTestFile( "/src/test-projects/flat-multi-module/parent-project/pom.xml" ).toURL();
 
@@ -434,11 +442,12 @@ public class MavenTwoContinuumProjectBuilderTest
     }
 
     // CONTINUUM-2563
+    @Test
     public void testCreateMultiModuleProjectLoadRecursiveProjectsIsFalse()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder = lookup( ContinuumProjectBuilder.class,
+                                                         MavenTwoContinuumProjectBuilder.ID );
 
         URL url = getClass().getClassLoader().getResource( "projects/continuum/pom.xml" );
 

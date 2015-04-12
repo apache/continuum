@@ -39,6 +39,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -65,25 +69,26 @@ public class DefaultContinuumTest
 
     private BuildResultDao buildResultDao;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
         taskQueueManager = mock( TaskQueueManager.class );
         projectDao = mock( ProjectDao.class );
     }
 
+    @Test
     public void testContinuumConfiguration()
         throws Exception
     {
         lookup( Continuum.ROLE );
     }
 
+    @Test
     public void testAddMavenTwoProjectSet()
         throws Exception
     {
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         int projectCount = getProjectDao().getAllProjectsByName().size();
 
@@ -219,10 +224,11 @@ public class DefaultContinuumTest
     }
 */
 
+    @Test
     public void testUpdateMavenTwoProject()
         throws Exception
     {
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         // ----------------------------------------------------------------------
         // Test projects with duplicate names
@@ -252,10 +258,11 @@ public class DefaultContinuumTest
         project = continuum.getProject( project.getId() );
     }
 
+    @Test
     public void testRemoveMavenTwoProject()
         throws Exception
     {
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         Project project = makeStubProject( "test-project" );
 
@@ -294,10 +301,11 @@ public class DefaultContinuumTest
         }
     }
 
+    @Test
     public void testBuildDefinitions()
         throws Exception
     {
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
 
@@ -368,10 +376,11 @@ public class DefaultContinuumTest
     /**
      * todo add another project group to test
      */
+    @Test
     public void testProjectGroups()
         throws Exception
     {
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         Collection projectGroupList = continuum.getAllProjectGroups();
 
@@ -426,10 +435,11 @@ public class DefaultContinuumTest
     /**
      * test the logic for notifiers
      */
+    @Test
     public void testProjectAndGroupNotifiers()
         throws Exception
     {
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+        Continuum continuum = lookup( Continuum.class );
 
         Collection projectGroupList = continuum.getAllProjectGroups();
 
@@ -464,10 +474,11 @@ public class DefaultContinuumTest
         }
     }
 
+    @Test
     public void testExecuteAction()
         throws Exception
     {
-        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.ROLE );
+        DefaultContinuum continuum = (DefaultContinuum) lookup( Continuum.class );
 
         String exceptionName = ContinuumException.class.getName();
         try
@@ -485,6 +496,7 @@ public class DefaultContinuumTest
         }
     }
 
+    @Test
     public void testRemoveProjectFromCheckoutQueue()
         throws Exception
     {
@@ -557,6 +569,7 @@ public class DefaultContinuumTest
     assertEquals( "#scmRoots in the group", 1, scmRoots.size() );
 }    */
 
+    @Test
     public void testAddAntProjectWithdefaultBuildDef()
         throws Exception
     {
@@ -572,12 +585,12 @@ public class DefaultContinuumTest
         project = continuum.getProjectWithAllDetails( projectId );
         assertNotNull( project );
 
-        BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
+        BuildDefinitionService service = lookup( BuildDefinitionService.class );
         assertEquals( 4, service.getAllBuildDefinitionTemplate().size() );
         assertEquals( 5, service.getAllBuildDefinitions().size() );
 
         BuildDefinition buildDef =
-            (BuildDefinition) service.getDefaultAntBuildDefinitionTemplate().getBuildDefinitions().get( 0 );
+            service.getDefaultAntBuildDefinitionTemplate().getBuildDefinitions().get( 0 );
         buildDef = service.cloneBuildDefinition( buildDef );
         buildDef.setTemplate( false );
         continuum.addBuildDefinitionToProject( project.getId(), buildDef );
@@ -587,11 +600,12 @@ public class DefaultContinuumTest
         assertEquals( 6, service.getAllBuildDefinitions().size() );
     }
 
+    @Test
     public void testRemoveProjectGroupWithRepository()
         throws Exception
     {
         Continuum continuum = getContinuum();
-        RepositoryService service = (RepositoryService) lookup( RepositoryService.ROLE );
+        RepositoryService service = lookup( RepositoryService.class );
 
         LocalRepository repository = new LocalRepository();
         repository.setName( "defaultRepo" );
@@ -624,6 +638,7 @@ public class DefaultContinuumTest
         assertEquals( repository, retrievedRepository );
     }
 
+    @Test
     public void testContinuumReleaseResult()
         throws Exception
     {
@@ -666,6 +681,7 @@ public class DefaultContinuumTest
             ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
     }
 
+    @Test
     public void testBuildProjectWhileProjectIsInReleaseStage()
         throws Exception
     {
@@ -693,6 +709,7 @@ public class DefaultContinuumTest
         }
     }
 
+    @Test
     public void testBuildProjectGroupWhileAtLeastOneProjectIsInReleaseStage()
         throws Exception
     {
@@ -732,11 +749,11 @@ public class DefaultContinuumTest
     private Continuum getContinuum()
         throws Exception
     {
-        return (Continuum) lookup( Continuum.ROLE );
+        return lookup( Continuum.class );
     }
 
     private BuildResultDao getBuildResultDao()
     {
-        return (BuildResultDao) lookup( BuildResultDao.class.getName() );
+        return lookup( BuildResultDao.class );
     }
 }

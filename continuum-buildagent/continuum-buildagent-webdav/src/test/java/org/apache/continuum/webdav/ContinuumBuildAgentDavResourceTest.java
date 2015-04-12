@@ -27,13 +27,18 @@ import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.DavSession;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 
+import static org.junit.Assert.*;
+
 public class ContinuumBuildAgentDavResourceTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private DavSession session;
 
@@ -53,12 +58,10 @@ public class ContinuumBuildAgentDavResourceTest
 
     private final String RESOURCE_FILE = "resource.jar";
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         session = new ContinuumBuildAgentDavSession();
 
         mimeTypes = new MimetypesFileTypeMap();
@@ -66,7 +69,7 @@ public class ContinuumBuildAgentDavResourceTest
         mimeTypes.addMimeTypes( "application/java-class class" );
         mimeTypes.addMimeTypes( "image/png png" );
 
-        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+        fsManager = lookup( FileSystemManager.class );
 
         baseDir = getTestFile( "target/DavResourceTest" );
         baseDir.mkdirs();
@@ -79,18 +82,17 @@ public class ContinuumBuildAgentDavResourceTest
         resource = getDavResource( resourceLocator.getHref( false ), resourceFile );
     }
 
-    @Override
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
         if ( baseDir.exists() )
         {
             fsManager.removeDir( baseDir );
         }
-
-        super.tearDown();
     }
 
+    @Test
     public void testAddResource()
         throws Exception
     {
@@ -107,6 +109,7 @@ public class ContinuumBuildAgentDavResourceTest
         }
     }
 
+    @Test
     public void testDeleteCollection()
         throws Exception
     {
@@ -128,6 +131,7 @@ public class ContinuumBuildAgentDavResourceTest
         }
     }
 
+    @Test
     public void testDeleteResource()
         throws Exception
     {

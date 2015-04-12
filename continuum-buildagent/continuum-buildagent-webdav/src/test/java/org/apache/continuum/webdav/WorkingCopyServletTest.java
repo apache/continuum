@@ -29,15 +29,21 @@ import com.meterware.servletunit.ServletUnitClient;
 import net.sf.ehcache.CacheManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.continuum.utils.file.FileSystemManager;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.codehaus.plexus.util.Base64;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 public class WorkingCopyServletTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private static final String REQUEST_PATH = "http://machine.com/workingcopy/1/";
 
@@ -53,12 +59,10 @@ public class WorkingCopyServletTest
 
     private File workingDirectory;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         String appserverBase = getTestFile( "target/appserver-base" ).getAbsolutePath();
         System.setProperty( "appserver.base", appserverBase );
 
@@ -72,7 +76,7 @@ public class WorkingCopyServletTest
         sr.registerServlet( "/workingcopy/*", MockWorkingCopyServlet.class.getName() );
         sc = sr.newClient();
 
-        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+        fsManager = lookup( FileSystemManager.class );
 
         new File( workingDirectory, "1/src/main/java/org/apache/continuum" ).mkdirs();
         new File( workingDirectory, "1/src/main/java/org/apache/continuum/App.java" ).createNewFile();
@@ -82,8 +86,8 @@ public class WorkingCopyServletTest
         new File( workingDirectory, "1/target/continuum-artifact-1.0.jar" ).createNewFile();
     }
 
-    @Override
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
         if ( sc != null )
@@ -100,10 +104,9 @@ public class WorkingCopyServletTest
         {
             fsManager.removeDir( workingDirectory );
         }
-
-        super.tearDown();
     }
 
+    @Test
     public void testGetWorkingCopy()
         throws Exception
     {
@@ -111,6 +114,7 @@ public class WorkingCopyServletTest
         assertNotNull( servlet );
     }
 
+    @Test
     public void testBrowse()
         throws Exception
     {
@@ -124,6 +128,7 @@ public class WorkingCopyServletTest
         assertLinks( expectedLinks, response.getLinks() );
     }
 
+    @Test
     public void testBrowseSubDirectory()
         throws Exception
     {
@@ -137,6 +142,7 @@ public class WorkingCopyServletTest
         assertLinks( expectedLinks, response.getLinks() );
     }
 
+    @Test
     public void testGetFile()
         throws Exception
     {

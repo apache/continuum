@@ -19,36 +19,15 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import org.apache.continuum.dao.BuildDefinitionTemplateDao;
-import org.apache.continuum.dao.BuildQueueDao;
-import org.apache.continuum.dao.ContinuumReleaseResultDao;
-import org.apache.continuum.dao.DaoUtils;
-import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
-import org.apache.continuum.dao.InstallationDao;
-import org.apache.continuum.dao.LocalRepositoryDao;
-import org.apache.continuum.dao.ProfileDao;
-import org.apache.continuum.dao.ProjectDao;
-import org.apache.continuum.dao.ProjectGroupDao;
-import org.apache.continuum.dao.ProjectScmRootDao;
-import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
-import org.apache.continuum.dao.ScheduleDao;
-import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.dao.*;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.installation.InstallationService;
-import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
-import org.apache.maven.continuum.model.project.BuildQueue;
-import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectDependency;
-import org.apache.maven.continuum.model.project.ProjectDeveloper;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.project.*;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
@@ -57,7 +36,10 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,12 +49,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
+
 /**
  * Base class for tests using the continuum store.
  */
 public abstract class AbstractContinuumStoreTestCase
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
+    @Rule
+    public TestName testName = new TestName();
+
+    protected String getName()
+    {
+        return testName.getMethodName();
+    }
+
     protected DaoUtils daoUtilsImpl;
 
     protected DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
@@ -167,41 +159,32 @@ public abstract class AbstractContinuumStoreTestCase
 
     private SystemConfiguration systemConfiguration;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setupStoreAndDaos()
         throws Exception
     {
-        super.setUp();
-
         createStore();
+        directoryPurgeConfigurationDao = lookup( DirectoryPurgeConfigurationDao.class );
+        localRepositoryDao = lookup( LocalRepositoryDao.class );
+        repositoryPurgeConfigurationDao = lookup( RepositoryPurgeConfigurationDao.class );
+        installationDao = lookup( InstallationDao.class );
+        profileDao = lookup( ProfileDao.class );
+        projectGroupDao = lookup( ProjectGroupDao.class );
+        projectDao = lookup( ProjectDao.class );
+        scheduleDao = lookup( ScheduleDao.class );
+        systemConfigurationDao = lookup( SystemConfigurationDao.class );
+        projectScmRootDao = lookup( ProjectScmRootDao.class );
+        releaseResultDao = lookup( ContinuumReleaseResultDao.class );
+        buildQueueDao = lookup( BuildQueueDao.class );
+        buildDefinitionTemplateDao = lookup( BuildDefinitionTemplateDao.class );
+    }
 
-        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup(
-            DirectoryPurgeConfigurationDao.class.getName() );
-
-        localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
-
-        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
-            RepositoryPurgeConfigurationDao.class.getName() );
-
-        installationDao = (InstallationDao) lookup( InstallationDao.class.getName() );
-
-        profileDao = (ProfileDao) lookup( ProfileDao.class.getName() );
-
-        projectGroupDao = (ProjectGroupDao) lookup( ProjectGroupDao.class.getName() );
-
-        projectDao = (ProjectDao) lookup( ProjectDao.class.getName() );
-
-        scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
-
-        systemConfigurationDao = (SystemConfigurationDao) lookup( SystemConfigurationDao.class.getName() );
-
-        projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
-
-        releaseResultDao = (ContinuumReleaseResultDao) lookup( ContinuumReleaseResultDao.class.getName() );
-
-        buildQueueDao = (BuildQueueDao) lookup( BuildQueueDao.class.getName() );
-
-        buildDefinitionTemplateDao = (BuildDefinitionTemplateDao) lookup( BuildDefinitionTemplateDao.class.getName() );
+    @After
+    public void tearDownStore()
+        throws Exception
+    {
+        daoUtilsImpl.eraseDatabase();
+        daoUtilsImpl.closeStore();
     }
 
     protected void createBuildDatabase( boolean isTestFromDataManagementTool )
@@ -784,17 +767,6 @@ public abstract class AbstractContinuumStoreTestCase
         {
             testContinuumReleaseResult.setId( 1 );
         }
-    }
-
-    @Override
-    protected void tearDown()
-        throws Exception
-    {
-        super.tearDown();
-
-        daoUtilsImpl.eraseDatabase();
-
-        daoUtilsImpl.closeStore();
     }
 
     protected void assertBuildDatabase()

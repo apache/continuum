@@ -21,7 +21,9 @@ package org.apache.continuum.configuration;
 
 import org.apache.continuum.utils.file.DefaultFileSystemManager;
 import org.apache.continuum.utils.file.FileSystemManager;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +31,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @since 17 juin 2008
  */
 public class TestDefaultContinuumConfiguration
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private static final Logger log = LoggerFactory.getLogger( TestDefaultContinuumConfiguration.class );
 
@@ -42,8 +46,8 @@ public class TestDefaultContinuumConfiguration
 
     private FileSystemManager fsManager;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
         log.info( "appserver.base : " + System.getProperty( "appserver.base" ) );
@@ -58,10 +62,9 @@ public class TestDefaultContinuumConfiguration
             confUsed.delete();
         }
         fsManager.copyFile( originalConf, confUsed );
-
-        super.setUp();
     }
 
+    @Test
     public void testLoad()
         throws Exception
     {
@@ -90,6 +93,7 @@ public class TestDefaultContinuumConfiguration
         assertEquals( "linux", agentConfig.getDescription() );
     }
 
+    @Test
     public void testDefaultConfiguration()
         throws Exception
     {

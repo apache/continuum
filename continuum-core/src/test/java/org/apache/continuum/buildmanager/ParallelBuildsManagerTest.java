@@ -28,17 +28,20 @@ import org.apache.continuum.taskqueue.OverallBuildQueue;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -55,7 +59,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public class ParallelBuildsManagerTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private ParallelBuildsManager buildsManager;
 
@@ -81,12 +85,10 @@ public class ParallelBuildsManagerTest
 
     private TaskQueueExecutor prepareBuildTaskQueueExecutor;
 
-    @Override
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         buildsManager = (ParallelBuildsManager) lookup( BuildsManager.class, "parallel" );
 
         buildDefinitionDao = mock( BuildDefinitionDao.class );
@@ -106,11 +108,10 @@ public class ParallelBuildsManagerTest
         buildsManager.setProjectDao( projectDao );
     }
 
-    @Override
+    @After
     public void tearDown()
         throws Exception
     {
-        super.tearDown();
         buildsManager = null;
     }
 
@@ -225,6 +226,7 @@ public class ParallelBuildsManagerTest
 
     // start of test cases..
 
+    @Test
     public void testContainer()
         throws Exception
     {
@@ -233,6 +235,7 @@ public class ParallelBuildsManagerTest
         assertTrue( true ); // why is this necessary?
     }
 
+    @Test
     public void testBuildProjectNoProjectQueuedInAnyOverallBuildQueues()
         throws Exception
     {
@@ -250,6 +253,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).addToBuildQueue( any( BuildProjectTask.class ) );
     }
 
+    @Test
     public void testBuildProjectProjectsAreAlreadyQueuedInOverallBuildQueues()
         throws Exception
     {
@@ -301,6 +305,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).addToBuildQueue( any( BuildProjectTask.class ) );
     }
 
+    @Test
     public void testRemoveProjectFromBuildQueue()
         throws Exception
     {
@@ -312,6 +317,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).removeProjectFromBuildQueue( 1 );
     }
 
+    @Test
     public void testRemoveProjectsFromBuildQueue()
         throws Exception
     {
@@ -325,6 +331,7 @@ public class ParallelBuildsManagerTest
             verify( overallBuildQueue ).removeProjectFromBuildQueue( projectId );
     }
 
+    @Test
     public void testCheckoutProjectSingle()
         throws Exception
     {
@@ -343,6 +350,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).addToCheckoutQueue( any( CheckOutTask.class ) );
     }
 
+    @Test
     public void testCheckoutProjectMultiple()
         throws Exception
     {
@@ -396,6 +404,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).addToCheckoutQueue( any( CheckOutTask.class ) );
     }
 
+    @Test
     public void testRemoveProjectFromCheckoutQueue()
         throws Exception
     {
@@ -407,6 +416,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).removeProjectFromCheckoutQueue( 1 );
     }
 
+    @Test
     public void testRemoveProjectsFromCheckoutQueue()
         throws Exception
     {
@@ -420,6 +430,7 @@ public class ParallelBuildsManagerTest
             verify( overallBuildQueue ).removeProjectFromCheckoutQueue( projectId );
     }
 
+    @Test
     public void testRemoveProjectFromCheckoutQueueProjectNotFound()
         throws Exception
     {
@@ -432,6 +443,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue, never() ).removeProjectFromCheckoutQueue( 1 );
     }
 
+    @Test
     public void testRemoveDefaultOverallBuildQueue()
         throws Exception
     {
@@ -449,6 +461,7 @@ public class ParallelBuildsManagerTest
         }
     }
 
+    @Test
     public void testRemoveOverallBuildQueueNoTasksCurrentlyExecuting()
         throws Exception
     {
@@ -535,6 +548,7 @@ public class ParallelBuildsManagerTest
         assertNull( overallBuildQueues.get( 5 ) );
     }
 
+    @Test
     public void testRemoveOverallBuildQueueTasksCurrentlyExecuting()
         throws Exception
     {
@@ -571,6 +585,7 @@ public class ParallelBuildsManagerTest
         }
     }
 
+    @Test
     public void testNoBuildQueuesConfigured()
         throws Exception
     {
@@ -604,6 +619,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).addToBuildQueue( any( BuildProjectTask.class ) );
     }
 
+    @Test
     public void testGetProjectsInBuildQueue()
         throws Exception
     {
@@ -625,6 +641,7 @@ public class ParallelBuildsManagerTest
         assertEquals( tasks, result.get( queueName ) );
     }
 
+    @Test
     public void testGetProjectsInCheckoutQueue()
         throws Exception
     {
@@ -646,6 +663,7 @@ public class ParallelBuildsManagerTest
     }
 
     // prepare build queue
+    @Test
     public void testPrepareBuildProjectNoProjectQueuedInAnyOverallBuildQueues()
         throws Exception
     {
@@ -666,6 +684,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).addToPrepareBuildQueue( any( PrepareBuildProjectsTask.class ) );
     }
 
+    @Test
     public void testPrepareBuildProjectsAlreadyQueued()
         throws Exception
     {
@@ -710,6 +729,7 @@ public class ParallelBuildsManagerTest
         verify( overallBuildQueue ).addToPrepareBuildQueue( any( PrepareBuildProjectsTask.class ) );
     }
 
+    @Test
     public void testGetProjectsInPrepareBuildQueue()
         throws Exception
     {
@@ -730,6 +750,7 @@ public class ParallelBuildsManagerTest
         assertEquals( tasks, result.get( queueName ) );
     }
 
+    @Test
     public void testRemoveProjectFromPrepareBuildQueue()
         throws Exception
     {

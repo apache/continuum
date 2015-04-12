@@ -21,18 +21,18 @@ package org.apache.maven.continuum.management;
 
 import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.store.AbstractContinuumStoreTestCase;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.IOUtil;
 import org.custommonkey.xmlunit.Diff;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Connection;
@@ -41,6 +41,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the database management tool.
@@ -56,17 +58,16 @@ public class DataManagementToolTest
 
     private static final String BUILDS_XML = "builds.xml";
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        dataManagementTool = (DataManagementTool) lookup( DataManagementTool.class.getName(), "continuum-jdo" );
-        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
-
+        dataManagementTool = lookup( DataManagementTool.class, "continuum-jdo" );
+        fsManager = lookup( FileSystemManager.class );
         targetDirectory = createBackupDirectory();
     }
 
+    @After
     public void tearDown()
         throws Exception
     {
@@ -82,11 +83,11 @@ public class DataManagementToolTest
             stmt.close();
             connection.close();
         }
-        super.tearDown();
     }
 
+    @Test
     public void testBackupBuilds()
-        throws IOException, ContinuumStoreException, XMLStreamException, Exception
+        throws Exception
     {
         createBuildDatabase( true );
 
@@ -107,6 +108,7 @@ public class DataManagementToolTest
             backupFile ) ) );
     }
 
+    @Test
     public void testEraseBuilds()
         throws Exception
     {
@@ -117,6 +119,7 @@ public class DataManagementToolTest
         assertEmpty( false );
     }
 
+    @Test
     public void testRestoreBuilds()
         throws Exception
     {

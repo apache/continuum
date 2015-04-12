@@ -1,9 +1,5 @@
 package org.apache.maven.continuum.utils;
 
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-
-import java.io.File;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,11 +19,18 @@ import java.io.File;
  * under the License.
  */
 
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.*;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  */
 public class ContinuumUrlValidatorTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
 
     protected ContinuumUrlValidator getContinuumUrlValidator()
@@ -39,21 +42,24 @@ public class ContinuumUrlValidatorTest
     protected ContinuumUrlValidator getContinuumUrlValidator( String roleHint )
         throws Exception
     {
-        return (ContinuumUrlValidator) lookup( ContinuumUrlValidator.class, roleHint );
+        return lookup( ContinuumUrlValidator.class, roleHint );
     }
 
+    @Test
     public void testSuccessHttp()
         throws Exception
     {
         assertTrue( getContinuumUrlValidator().validate( "http://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testFailureHttp()
         throws Exception
     {
         assertFalse( getContinuumUrlValidator().validate( "ttp://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testSuccessHttpWithAuth()
         throws Exception
     {
@@ -61,6 +67,7 @@ public class ContinuumUrlValidatorTest
             "https://username:password@svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testFailureHttpWithAuth()
         throws Exception
     {
@@ -68,18 +75,21 @@ public class ContinuumUrlValidatorTest
             "http://username:passwordsvn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testFailureHttpWithFile()
         throws Exception
     {
         assertFalse( getContinuumUrlValidator( "continuumUrlWithoutFile" ).validate( "file:///home/zloug/pom.xml" ) );
     }
 
+    @Test
     public void testSuccessHttps()
         throws Exception
     {
         assertTrue( getContinuumUrlValidator().validate( "https://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testSuccessHttpsWithAuth()
         throws Exception
     {
@@ -87,6 +97,7 @@ public class ContinuumUrlValidatorTest
             "https://username:password@svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testSuccessHttpviewvc()
         throws Exception
     {
@@ -94,6 +105,7 @@ public class ContinuumUrlValidatorTest
             "http://svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
+    @Test
     public void testSuccessHttpviewvcWithAuth()
         throws Exception
     {
@@ -101,6 +113,7 @@ public class ContinuumUrlValidatorTest
             "http://username:password@svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
+    @Test
     public void testSuccessHttpsviewvc()
         throws Exception
     {
@@ -108,6 +121,7 @@ public class ContinuumUrlValidatorTest
             "https://svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
+    @Test
     public void testSuccessHttpsviewvcWithAuth()
         throws Exception
     {
@@ -115,6 +129,7 @@ public class ContinuumUrlValidatorTest
             "https://username:password@svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
+    @Test
     public void testSuccessHttpfisheye()
         throws Exception
     {
@@ -122,6 +137,7 @@ public class ContinuumUrlValidatorTest
             "http://fisheye6.atlassian.com/browse/~raw,r=680040/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testSuccessHttpsfisheye()
         throws Exception
     {
@@ -129,6 +145,7 @@ public class ContinuumUrlValidatorTest
             "https://fisheye6.atlassian.com/browse/~raw,r=680040/continuum/trunk/pom.xml" ) );
     }
 
+    @Test
     public void testValidateFile()
         throws Exception
     {
@@ -137,7 +154,7 @@ public class ContinuumUrlValidatorTest
         assertTrue( getContinuumUrlValidator().validate( rootPom.toURL().toExternalForm() ) );
     }
 
-
+    @Test
     public void testExtractUserNamePwd()
         throws Exception
     {
@@ -148,6 +165,7 @@ public class ContinuumUrlValidatorTest
         assertEquals( "password", usrInfo.getPassword() );
     }
 
+    @Test
     public void testExtractUserNameEmptyPwd()
         throws Exception
     {
@@ -158,6 +176,7 @@ public class ContinuumUrlValidatorTest
         assertNull( usrInfo.getPassword() );
     }
 
+    @Test
     public void testExtractEmptyUserNameEmptyPwd()
         throws Exception
     {

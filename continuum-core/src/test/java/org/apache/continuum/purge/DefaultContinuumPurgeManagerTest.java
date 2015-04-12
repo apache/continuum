@@ -32,6 +32,11 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Maria Catherine Tan
@@ -60,32 +65,21 @@ public class DefaultContinuumPurgeManagerTest
 
     private TaskQueueManager taskQueueManager;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
-        localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
-
-        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup(
-            DirectoryPurgeConfigurationDao.class.getName() );
-
-        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup(
-            RepositoryPurgeConfigurationDao.class.getName() );
-
-        distributedDirectoryPurgeConfigurationDao = (DistributedDirectoryPurgeConfigurationDao) lookup(
-            DistributedDirectoryPurgeConfigurationDao.class.getName() );
-
-        purgeManager = (ContinuumPurgeManager) lookup( ContinuumPurgeManager.ROLE );
-
-        purgeQueue = (TaskQueue) lookup( TaskQueue.ROLE, "purge" );
-
-        taskQueueManager = (TaskQueueManager) lookup( TaskQueueManager.ROLE );
-
+        localRepositoryDao = lookup( LocalRepositoryDao.class );
+        directoryPurgeConfigurationDao = lookup( DirectoryPurgeConfigurationDao.class );
+        repositoryPurgeConfigurationDao = lookup( RepositoryPurgeConfigurationDao.class );
+        distributedDirectoryPurgeConfigurationDao = lookup( DistributedDirectoryPurgeConfigurationDao.class );
+        purgeManager = lookup( ContinuumPurgeManager.class );
+        purgeQueue = lookup( TaskQueue.class, "purge" );
+        taskQueueManager = lookup( TaskQueueManager.class );
         setupDefaultPurgeConfigurations();
     }
 
+    @Test
     public void testPurgingWithSinglePurgeConfiguration()
         throws Exception
     {
@@ -104,6 +98,7 @@ public class DefaultContinuumPurgeManagerTest
         assertNextBuildIsNull();
     }
 
+    @Test
     public void testPurgingWithMultiplePurgeConfiguration()
         throws Exception
     {
@@ -125,6 +120,7 @@ public class DefaultContinuumPurgeManagerTest
         assertNextBuildIsNull();
     }
 
+    @Test
     public void testRemoveFromPurgeQueue()
         throws Exception
     {

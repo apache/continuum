@@ -26,15 +26,19 @@ import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.apache.maven.continuum.PlexusSpringTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ContinuumBuildAgentDavResourceFactoryTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private DavServletRequest request;
 
@@ -48,12 +52,10 @@ public class ContinuumBuildAgentDavResourceFactoryTest
 
     private File workingDirectory;
 
-    @Override
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         request = mock( DavServletRequest.class );
         response = mock( DavServletResponse.class );
         buildAgentConfigurationService = mock( BuildAgentConfigurationService.class );
@@ -61,7 +63,7 @@ public class ContinuumBuildAgentDavResourceFactoryTest
         resourceFactory = new ContinuumBuildAgentDavResourceFactory();
         resourceFactory.setBuildAgentConfigurationService( buildAgentConfigurationService );
 
-        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+        fsManager = lookup( FileSystemManager.class );
 
         String appserverBase = getTestFile( "target/appserver-base" ).getAbsolutePath();
         System.setProperty( "appserver.base", appserverBase );
@@ -72,7 +74,7 @@ public class ContinuumBuildAgentDavResourceFactoryTest
         new File( workingDirectory, "1/target/continuum-artifact-1.0.jar" ).createNewFile();
     }
 
-    @Override
+    @After
     public void tearDown()
         throws Exception
     {
@@ -80,10 +82,9 @@ public class ContinuumBuildAgentDavResourceFactoryTest
         {
             fsManager.removeDir( workingDirectory );
         }
-
-        super.tearDown();
     }
 
+    @Test
     public void testRequestArtifact()
         throws Exception
     {
@@ -109,6 +110,7 @@ public class ContinuumBuildAgentDavResourceFactoryTest
         }
     }
 
+    @Test
     public void testRequestArtifactDoesNotExist()
         throws Exception
     {

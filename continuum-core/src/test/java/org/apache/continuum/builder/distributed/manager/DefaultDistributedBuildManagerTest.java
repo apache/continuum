@@ -33,6 +33,7 @@ import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.OverallDistributedBuildQueue;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -40,9 +41,10 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,10 +53,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class DefaultDistributedBuildManagerTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private final String TEST_BUILD_AGENT1 = "http://sampleagent";
 
@@ -100,12 +103,10 @@ public class DefaultDistributedBuildManagerTest
 
     private BuildAgentGroupConfiguration buildAgentGroup;
 
-    @Override
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
-
         distributedBuildManager = (DefaultDistributedBuildManager) lookup( DistributedBuildManager.class );
 
         buildDefinitionDao = mock( BuildDefinitionDao.class );
@@ -178,6 +179,7 @@ public class DefaultDistributedBuildManagerTest
         project2.setProjectGroup( projectGroup );
     }
 
+    @Test
     public void testViewQueuesAfterBuildAgentIsLost()
         throws Exception
     {
@@ -210,6 +212,7 @@ public class DefaultDistributedBuildManagerTest
         verify( distributedBuildTaskQueueExecutor ).stop();
     }
 
+    @Test
     public void testDisableBuildAgentWhenUnavailableToPing()
         throws Exception
     {
@@ -226,6 +229,7 @@ public class DefaultDistributedBuildManagerTest
         assertFalse( "build agent should have been disabled", buildAgent1.isEnabled() );
     }
 
+    @Test
     public void testViewQueuesWhen2BuildAgentsAreLost()
         throws Exception
     {
@@ -264,6 +268,7 @@ public class DefaultDistributedBuildManagerTest
         verify( distributedBuildTaskQueueExecutor, times( 2 ) ).stop();
     }
 
+    @Test
     public void testBuildProjectWithBuildAgentGroupWithNoCurrentBuilds()
         throws Exception
     {
@@ -301,6 +306,7 @@ public class DefaultDistributedBuildManagerTest
         verify( overallDistributedBuildQueue1 ).addToDistributedBuildQueue( any( Task.class ) );
     }
 
+    @Test
     public void testBuildProjectWithBuildAgentGroupWithCurrentBuild()
         throws Exception
     {
@@ -339,6 +345,7 @@ public class DefaultDistributedBuildManagerTest
     }
 
     // CONTINUUM-2494
+    @Test
     public void testBuildProjectWithTheSecondBuildAgentAttachedToTheBuildAgentGroup()
         throws Exception
     {
@@ -374,6 +381,7 @@ public class DefaultDistributedBuildManagerTest
         verify( overallDistributedBuildQueue2 ).addToDistributedBuildQueue( any( Task.class ) );
     }
 
+    @Test
     public void testGetBuildAgentPlatform()
         throws Exception
     {
@@ -396,6 +404,7 @@ public class DefaultDistributedBuildManagerTest
         verify( distributedBuildTaskQueueExecutor ).stop();
     }
 
+    @Test
     public void testBuildAgentIsAvailable()
         throws Exception
     {
@@ -406,6 +415,7 @@ public class DefaultDistributedBuildManagerTest
         verify( configurationService, never() ).store();
     }
 
+    @Test
     public void testCancelBuildStuckUpdate()
         throws Exception
     {
@@ -421,6 +431,7 @@ public class DefaultDistributedBuildManagerTest
         verify( projectScmRootDao ).updateProjectScmRoot( scmRootUpdating );
     }
 
+    @Test
     public void testCancelBuildStuckBuild()
         throws Exception
     {

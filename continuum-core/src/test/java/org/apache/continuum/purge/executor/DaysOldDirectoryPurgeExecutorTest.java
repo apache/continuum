@@ -19,22 +19,24 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * @author Maria Catherine Tan
  */
 public class DaysOldDirectoryPurgeExecutorTest
     extends AbstractPurgeExecutorTest
 {
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         purgeReleasesDirTask = getDaysOldReleasesDirPurgeTask();
-
         purgeBuildOutputDirTask = getDaysOldBuildOutputDirPurgeTask();
     }
 
+    @Test
     public void testReleasesDirPurgingByLastModified()
         throws Exception
     {
@@ -54,6 +56,7 @@ public class DaysOldDirectoryPurgeExecutorTest
         assertExists( dirPath + "/releases-4234729018" );
     }
 
+    @Test
     public void testReleasesDirPurgingByOrderOfDeletion()
         throws Exception
     {
@@ -74,6 +77,7 @@ public class DaysOldDirectoryPurgeExecutorTest
         assertExists( dirPath + "/releases-1234567809" );
     }
 
+    @Test
     public void testBuildOutputPurgingByLastModified()
         throws Exception
     {
@@ -106,6 +110,7 @@ public class DaysOldDirectoryPurgeExecutorTest
         assertExists( dirPath + "/2/9.log.txt" );
     }
 
+    @Test
     public void testBuildOutputPurgingByOrderOfDeletion()
         throws Exception
     {

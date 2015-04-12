@@ -25,10 +25,14 @@ import org.apache.continuum.purge.AbstractPurgeTest;
 import org.apache.continuum.purge.task.PurgeTask;
 import org.apache.continuum.utils.file.FileSystemManager;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
+import org.junit.After;
+import org.junit.Before;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Maria Catherine Tan
@@ -58,24 +62,22 @@ public abstract class AbstractPurgeExecutorTest
 
     protected FileSystemManager fsManager;
 
-    protected void setUp()
+    @Before
+    public void setupPurgeTaskAndTools()
         throws Exception
     {
-        super.setUp();
-
         if ( purgeExecutor == null )
         {
-            purgeExecutor = (TaskExecutor) lookup( TaskExecutor.class.getName(), "purge" );
+            purgeExecutor = lookup( TaskExecutor.class, "purge" );
         }
 
-        fsManager = (FileSystemManager) lookup( FileSystemManager.class );
+        fsManager = lookup( FileSystemManager.class );
     }
 
-    protected void tearDown()
+    @After
+    public void removeOutputDirs()
         throws Exception
     {
-        super.tearDown();
-
         fsManager.removeDir( getDefaultRepositoryLocation() );
         fsManager.removeDir( getReleasesDirectoryLocation() );
         fsManager.removeDir( getBuildOutputDirectoryLocation() );

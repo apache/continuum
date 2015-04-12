@@ -22,10 +22,12 @@ package org.apache.continuum.taskqueue;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.continuum.utils.build.BuildTrigger;
+import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -41,7 +44,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public class DefaultOverallBuildQueueTest
-    extends PlexusInSpringTestCase
+    extends PlexusSpringTestCase
 {
     private DefaultOverallBuildQueue overallQueue;
 
@@ -53,12 +56,10 @@ public class DefaultOverallBuildQueueTest
 
     private ParallelBuildsThreadedTaskQueueExecutor prepareBuildTaskQueueExecutor;
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         overallQueue = new DefaultOverallBuildQueue();
 
         buildDefinitionDao = mock( BuildDefinitionDao.class );
@@ -74,7 +75,7 @@ public class DefaultOverallBuildQueueTest
     }
 
     // checkout queue
-
+    @Test
     public void testAddToCheckoutQueue()
         throws Exception
     {
@@ -89,6 +90,7 @@ public class DefaultOverallBuildQueueTest
         verify( checkoutQueue ).put( checkoutTask );
     }
 
+    @Test
     public void testGetProjectsInCheckoutQueue()
         throws Exception
     {
@@ -105,6 +107,7 @@ public class DefaultOverallBuildQueueTest
         assertEquals( 1, returnedTasks.size() );
     }
 
+    @Test
     public void testIsInCheckoutQueue()
         throws Exception
     {
@@ -118,6 +121,7 @@ public class DefaultOverallBuildQueueTest
         assertTrue( overallQueue.isInCheckoutQueue( 1 ) );
     }
 
+    @Test
     public void testRemoveProjectFromCheckoutQueue()
         throws Exception
     {
@@ -135,7 +139,7 @@ public class DefaultOverallBuildQueueTest
     }
 
     // build queue
-
+    @Test
     public void testAddToBuildQueue()
         throws Exception
     {
@@ -149,6 +153,7 @@ public class DefaultOverallBuildQueueTest
         verify( buildQueue ).put( buildTask );
     }
 
+    @Test
     public void testGetProjectsFromBuildQueue()
         throws Exception
     {
@@ -165,6 +170,7 @@ public class DefaultOverallBuildQueueTest
         assertEquals( 1, returnedTasks.size() );
     }
 
+    @Test
     public void testIsInBuildQueue()
         throws Exception
     {
@@ -178,6 +184,7 @@ public class DefaultOverallBuildQueueTest
         assertTrue( overallQueue.isInBuildQueue( 2 ) );
     }
 
+    @Test
     public void testCancelBuildTask()
         throws Exception
     {
@@ -191,6 +198,7 @@ public class DefaultOverallBuildQueueTest
 
     }
 
+    @Test
     public void testCancelCurrentBuild()
         throws Exception
     {
@@ -203,6 +211,7 @@ public class DefaultOverallBuildQueueTest
         verify( buildTaskQueueExecutor ).cancelTask( buildTask );
     }
 
+    @Test
     public void testRemoveProjectFromBuildQueueWithGivenBuildDefinition()
         throws Exception
     {
@@ -218,6 +227,7 @@ public class DefaultOverallBuildQueueTest
         verify( buildQueue ).remove( any( Task.class ) );
     }
 
+    @Test
     public void testRemoveProjectFromBuildQueue()
         throws Exception
     {
@@ -235,7 +245,7 @@ public class DefaultOverallBuildQueueTest
     }
 
     // prepare build queue
-
+    @Test
     public void testAddToPrepareBuildQueue()
         throws Exception
     {
@@ -252,6 +262,7 @@ public class DefaultOverallBuildQueueTest
         verify( prepareBuildQueue ).put( prepareBuildTask );
     }
 
+    @Test
     public void testCancelCurrentPrepareBuild()
         throws Exception
     {
@@ -265,6 +276,7 @@ public class DefaultOverallBuildQueueTest
         verify( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
     }
 
+    @Test
     public void testCancelPrepareBuildTaskByProject()
         throws Exception
     {
@@ -279,6 +291,7 @@ public class DefaultOverallBuildQueueTest
         verify( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
     }
 
+    @Test
     public void testCancelPrepareBuildTaskByProjectGroup()
         throws Exception
     {
@@ -293,6 +306,7 @@ public class DefaultOverallBuildQueueTest
         verify( prepareBuildTaskQueueExecutor ).cancelTask( prepareBuildTask );
     }
 
+    @Test
     public void testGetProjectsFromPrepareBuildQueue()
         throws Exception
     {
@@ -309,6 +323,7 @@ public class DefaultOverallBuildQueueTest
         assertEquals( 1, returnedTasks.size() );
     }
 
+    @Test
     public void testIsInPrepareBuildQueueByProject()
         throws Exception
     {
@@ -324,6 +339,7 @@ public class DefaultOverallBuildQueueTest
         assertTrue( overallQueue.isInPrepareBuildQueue( 2 ) );
     }
 
+    @Test
     public void testIsInPrepareBuildQueueByProjectGroupAndScmRootId()
         throws Exception
     {
@@ -339,6 +355,7 @@ public class DefaultOverallBuildQueueTest
         assertTrue( overallQueue.isInPrepareBuildQueue( 1, 2 ) );
     }
 
+    @Test
     public void testIsInPrepareBuildQueueByProjectGroupAndScmRootAddress()
         throws Exception
     {
@@ -354,6 +371,7 @@ public class DefaultOverallBuildQueueTest
         assertTrue( overallQueue.isInPrepareBuildQueue( 1, "http://scm.root.address" ) );
     }
 
+    @Test
     public void testRemoveProjectsFromPrepareBuildQueueByProjectGroupAndScmRootId()
         throws Exception
     {
@@ -370,6 +388,7 @@ public class DefaultOverallBuildQueueTest
         verify( prepareBuildQueue ).remove( prepareBuildTask );
     }
 
+    @Test
     public void testRemoveProjectsFromPrepareBuildQueueByProjectGroupAndScmRootAddress()
         throws Exception
     {

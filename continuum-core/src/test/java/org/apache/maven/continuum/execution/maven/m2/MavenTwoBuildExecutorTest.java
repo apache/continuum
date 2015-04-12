@@ -25,10 +25,14 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author olamy
@@ -37,18 +41,17 @@ import java.util.List;
 public class MavenTwoBuildExecutorTest
     extends AbstractContinuumTest
 {
-
-
     @Override
     protected String getSpringConfigLocation()
     {
         return "applicationContextSlf4jPlexusLogger.xml";
     }
 
+    @Test
     public void testShouldNotBuildNonRecursive()
         throws Exception
     {
-        MavenTwoBuildExecutor executor = (MavenTwoBuildExecutor) lookup( ContinuumBuildExecutor.class, "maven2" );
+        ContinuumBuildExecutor executor = lookup( ContinuumBuildExecutor.class, "maven2" );
         BuildDefinition buildDefinition = new BuildDefinition();
         buildDefinition.setArguments( "-N" );
         Project continuumProject = new Project()
@@ -61,10 +64,11 @@ public class MavenTwoBuildExecutorTest
             "target/test-classes/projects/continuum" ), buildDefinition ) );
     }
 
+    @Test
     public void testShouldNotBuildNonRecursiveChangeInAModule()
         throws Exception
     {
-        MavenTwoBuildExecutor executor = (MavenTwoBuildExecutor) lookup( ContinuumBuildExecutor.class, "maven2" );
+        ContinuumBuildExecutor executor = lookup( ContinuumBuildExecutor.class, "maven2" );
         BuildDefinition buildDefinition = new BuildDefinition();
         buildDefinition.setArguments( "-N -Dfoo=bar" );
         Project continuumProject = new Project()
@@ -87,10 +91,11 @@ public class MavenTwoBuildExecutorTest
             "target/test-classes/projects/continuum" ), buildDefinition ) );
     }
 
+    @Test
     public void testShouldBuildRecursiveChangeInAModule()
         throws Exception
     {
-        MavenTwoBuildExecutor executor = (MavenTwoBuildExecutor) lookup( ContinuumBuildExecutor.class, "maven2" );
+        ContinuumBuildExecutor executor = lookup( ContinuumBuildExecutor.class, "maven2" );
         BuildDefinition buildDefinition = new BuildDefinition();
         buildDefinition.setArguments( "-Dfoo=bar" );
         Project continuumProject = new Project()
