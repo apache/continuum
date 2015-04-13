@@ -19,7 +19,6 @@ package org.apache.continuum.purge.executor.dir;
  * under the License.
  */
 
-import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.utils.file.FileSystemManager;
@@ -75,7 +74,7 @@ class UnsupportedPurgeExecutor
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
-        log.warn( "ignoring purge request, directory type {} no supported", dirType );
+        log.warn( "ignoring purge request, directory type {} not supported", dirType );
     }
 }
 
@@ -137,7 +136,7 @@ class ReleasesPurgeExecutor
         {
             PurgeBuilder.purge( dir )
                         .dirs()
-                        .namedLike( ContinuumPurgeConstants.RELEASE_DIR_PATTERN )
+                        .namedLike( RELEASE_DIR_PATTERN )
                         .executeWith( new RemoveDirHandler( fsManager ) );
         }
         else
@@ -181,15 +180,12 @@ class BuildOutputPurgeExecutor
 
             for ( File projectDir : projectDirs )
             {
-                if ( projectDir.isDirectory() )
-                {
-                    PurgeBuilder.purge( projectDir )
-                                .dirs()
-                                .olderThan( daysOlder )
-                                .inAgeOrder()
-                                .retainLast( retentionCount )
-                                .executeWith( new BuildOutputHandler( fsManager ) );
-                }
+                PurgeBuilder.purge( projectDir )
+                            .dirs()
+                            .olderThan( daysOlder )
+                            .inAgeOrder()
+                            .retainLast( retentionCount )
+                            .executeWith( new BuildOutputHandler( fsManager ) );
             }
         }
     }
@@ -212,7 +208,7 @@ class WorkingPurgeExecutor
         {
             PurgeBuilder.purge( dir )
                         .dirs()
-                        .notNamedLike( ContinuumPurgeConstants.RELEASE_DIR_PATTERN )
+                        .notNamedLike( RELEASE_DIR_PATTERN )
                         .executeWith( new RemoveDirHandler( fsManager ) );
         }
         else
