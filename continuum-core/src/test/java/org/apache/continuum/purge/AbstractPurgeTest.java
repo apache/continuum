@@ -19,6 +19,7 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
@@ -30,6 +31,7 @@ import org.apache.maven.continuum.PlexusSpringTestCase;
 import org.apache.maven.continuum.jdo.MemoryJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.jpox.SchemaTool;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
@@ -140,6 +142,12 @@ public abstract class AbstractPurgeTest
             defaultBuildOutputDirPurge = directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsByType(
                 TEST_BUILDOUTPUT_DIRECTORY_TYPE ).get( 0 );
         }
+    }
+
+    @After
+    public void wipeTestData()
+    {
+        lookup( DaoUtils.class ).eraseDatabase();
     }
 
     protected void init()
