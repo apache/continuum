@@ -50,6 +50,10 @@
       <param name="regex"><![CDATA[[a-zA-Z0-9_.:${}#~=@\\/|\[\]-]*]]></param>
       <message key="addProject.scmUrl.invalid"/>
     </field-validator>
+    <field-validator type="regex">
+      <param name="regex"><![CDATA[scm[:][^:|]+[:|].+]]></param>
+      <message key="addProject.scmUrl.badformat"/>
+    </field-validator>
   </field>
   <field name="projectScmTag">
     <field-validator type="regex">
