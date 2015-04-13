@@ -313,8 +313,8 @@ public class ProjectGroupAction
         catch ( ContinuumException e )
         {
             logger.error( "Error while removing project group with id " + projectGroupId, e );
-            addActionError( getText( "projectGroup.delete.error", "Unable to remove project group", Integer.toString(
-                projectGroupId ) ) );
+            addActionError( getText( "projectGroup.delete.error",
+                                     new String[] { Integer.toString( projectGroupId ), e.getMessage() } ) );
         }
 
         AuditLog event = new AuditLog( "Project Group id=" + projectGroupId, AuditLogConstants.REMOVE_PROJECT_GROUP );

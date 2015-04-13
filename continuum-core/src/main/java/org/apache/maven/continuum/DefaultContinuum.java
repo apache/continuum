@@ -334,30 +334,30 @@ public class DefaultContinuum
                 if ( parallelBuildsManager.isAnyProjectCurrentlyBeingCheckedOut( projectIds ) )
                 {
                     throw new ContinuumException(
-                        "Unable to delete group. At least one project in group is still being checked out." );
+                        "unable to remove group while project is being checked out" );
                 }
 
                 if ( parallelBuildsManager.isAnyProjectCurrentlyPreparingBuild( projectIds ) )
                 {
                     throw new ContinuumException(
-                        "Unable to delete group. The project group is still preparing build." );
+                        "unable to remove group while build is being prepared" );
                 }
 
                 if ( parallelBuildsManager.isAnyProjectCurrentlyBuilding( projectIds ) )
                 {
                     throw new ContinuumException(
-                        "Unable to delete group. At least one project in group is still building." );
+                        "unable to remove group while project is building" );
                 }
 
                 if ( isAnyProjectsInReleaseStage( projects ) )
                 {
                     throw new ContinuumException(
-                        "Unable to delete group. At least one project in group is in release stage" );
+                        "unable to remove group while project is being released" );
                 }
             }
             catch ( BuildManagerException e )
             {
-                throw new ContinuumException( "Unable to delete group.", e );
+                throw new ContinuumException( e.getMessage() );
             }
 
             for ( int projectId : projectIds )
