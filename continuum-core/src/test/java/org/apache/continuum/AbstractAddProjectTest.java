@@ -42,7 +42,7 @@ public abstract class AbstractAddProjectTest
     protected void createLocalRepository()
         throws IOException, SettingsConfigurationException
     {
-        LocalRepositoryHelper helper = (LocalRepositoryHelper) lookup( LocalRepositoryHelper.class );
+        LocalRepositoryHelper helper = lookup( LocalRepositoryHelper.class );
         ArtifactRepository repo = helper.getLocalRepository();
 
         File localRepo = new File( repo.getBasedir() );
