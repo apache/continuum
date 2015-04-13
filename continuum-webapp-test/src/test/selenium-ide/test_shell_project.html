@@ -38,7 +38,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>addProjectGroup_</td>
+	<td>addProjectGroup_0</td>
 	<td></td>
 </tr>
 <tr>
@@ -69,11 +69,11 @@
 <tr>
 	<td>type</td>
 	<td>addProject_projectScmUrl</td>
-	<td>https://svn.apache.org/repos/asf/continuum/sandbox/examples/shell</td>
+	<td>scm:svn:https://svn.apache.org/repos/asf/continuum/sandbox/examples/shell</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>addProject_</td>
+	<td>addProject_0</td>
 	<td></td>
 </tr>
 <!--Either the project was not added, OR you get-->
@@ -100,18 +100,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Shell Test</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>remove</td>
+	<td>clickAndWait</td>
+	<td>id=confirmRemoveProjectGroup_remove</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>removeProjectGroup_</td>
+	<td>clickAndWait</td>
+	<td>id=removeProjectGroup_0</td>
 	<td></td>
 </tr>
 <!--Error - java.lang.NullPointerException on first delete attempt (second seems to work) -->
@@ -120,7 +120,6 @@
 	<td>Shell Test</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
