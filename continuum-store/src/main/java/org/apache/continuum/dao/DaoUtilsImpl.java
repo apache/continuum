@@ -103,6 +103,11 @@ public class DaoUtilsImpl
         PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeFile.class );
     }
 
+    public void rebuildStore() {
+        closeStore();
+        storeUtilities.buildFactory();
+    }
+
     /**
      * Close the PersistenceManagerFactory.
      *

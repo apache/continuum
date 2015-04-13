@@ -30,6 +30,8 @@ public interface DaoUtils
 {
     void closeStore();
 
+    void rebuildStore();
+
     void eraseDatabase();
 
     Map<Integer, Object> getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )

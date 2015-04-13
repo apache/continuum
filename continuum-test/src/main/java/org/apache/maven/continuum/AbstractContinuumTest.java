@@ -211,8 +211,8 @@ public abstract class AbstractContinuumTest
         // ----------------------------------------------------------------------
         //
         // ----------------------------------------------------------------------
-
         daoUtils = lookup( DaoUtils.class );
+        daoUtils.rebuildStore();
     }
 
     protected ProjectDao getProjectDao()

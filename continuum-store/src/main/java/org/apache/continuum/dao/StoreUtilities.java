@@ -45,8 +45,18 @@ public class StoreUtilities
     {
         if ( continuumPersistenceManagerFactory == null )
         {
-            continuumPersistenceManagerFactory = continuumJdoFactory.getPersistenceManagerFactory();
+            buildFactory();
         }
         return continuumPersistenceManagerFactory;
+    }
+
+    /**
+     * Useful when reconfiguring the {@link JdoFactory} since it is cached. Caller should ensure existing
+     * {@link PersistenceManagerFactory} is gracefully torn down since this simply replaces its reference with a newly
+     * configured one.
+     */
+    public void buildFactory()
+    {
+        continuumPersistenceManagerFactory = continuumJdoFactory.getPersistenceManagerFactory();
     }
 }

@@ -195,6 +195,8 @@ public abstract class AbstractPurgeTest
         SchemaTool.createSchemaTables( new URL[] { getClass().getResource( "/package.jdo" ) }, new URL[] {}, null,
                                        false,
                                        null );
+
+        lookup( DaoUtils.class ).rebuildStore();
     }
 
     protected File getDefaultRepositoryLocation()
