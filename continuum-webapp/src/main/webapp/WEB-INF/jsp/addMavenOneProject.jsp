@@ -22,6 +22,32 @@
 <html>
     <head>
         <title><s:text name="add.m1.project.page.title"/></title>
+        <style>
+            table.addProject td:nth-child(1) {
+                width: 162px;
+                text-align: right;
+            }
+        </style>
+        <script>
+            function enablePomMethod(method) {
+                var $urlRow = jQuery('form tr:has(#pomUrlInput)');
+                var $fileRow = jQuery('form tr:has(#pomFileInput)');
+                if (method == 'FILE') {
+                    $urlRow.hide();
+                    $fileRow.show();
+                } else {
+                    $fileRow.hide();
+                    $urlRow.show();
+                }
+            }
+            jQuery(document).ready(function($) {
+                var selectedMethod = $('input[name=pomMethod]:checked').val();
+                enablePomMethod(selectedMethod);
+                $('input[name=pomMethod]').click(function() {
+                    enablePomMethod($(this).val());
+                });
+            });
+        </script>
     </head>
     <body>
         <div class="app">
@@ -39,9 +65,10 @@
                             </s:iterator>
                           </div>
                         </s:if>
-                        <table>
+                        <table class="addProject">
                           <tbody>
-                            <s:textfield label="%{getText('add.m1.project.m1PomUrl.label')}" requiredLabel="true" name="m1PomUrl" size="100">
+                            <s:radio name="pomMethod" list="pomMethodOptions"  label="%{getText('add.maven.project.pomMethod')}" />
+                            <s:textfield id="pomUrlInput" label="%{getText('add.m1.project.m1PomUrl.label')}" requiredLabel="true" name="m1PomUrl" size="100">
                                 <s:param name="after">
                                 <table cellspacing="0" cellpadding="0">
                                   <tbody>
@@ -62,10 +89,7 @@
                                   <p><s:text name="add.m1.project.m1PomUrl.message"/></p>
                                 </s:param>
                             </s:textfield>
-                            <s:label>
-                              <s:param name="after"><strong><s:text name="or"/></strong></s:param>
-                            </s:label>
-                            <s:file label="%{getText('add.m1.project.m1PomFile.label')}" name="m1PomFile" size="100" accept="application/xml,text/xml">
+                            <s:file id="pomFileInput" label="%{getText('add.m1.project.m1PomFile.label')}" requiredLabel="true" name="m1PomFile" size="100" accept="application/xml,text/xml">
                                 <s:param name="after"><p><s:text name="add.m1.project.m1PomFile.message"/></p></s:param>
                             </s:file>
                             <s:if test="disableGroupSelection">

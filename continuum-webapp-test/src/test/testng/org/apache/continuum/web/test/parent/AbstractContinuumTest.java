@@ -599,14 +599,25 @@ public abstract class AbstractContinuumTest
 
     protected void assertAddMavenTwoProjectPage()
     {
-        assertTextPresent( "POM Url" );
-        assertElementPresent( "m2PomUrl" );
-        assertTextPresent( "Username" );
-        assertElementPresent( "scmUsername" );
-        assertTextPresent( "Password" );
-        assertElementPresent( "scmPassword" );
-        assertTextPresent( "Upload POM" );
-        assertElementPresent( "m2PomFile" );
+        assertAddMavenTwoProjectPage( true );
+    }
+
+    protected void assertAddMavenTwoProjectPage( boolean isHttp )
+    {
+        if ( isHttp )
+        {
+            assertTextPresent( "POM Url" );
+            assertElementPresent( "m2PomUrl" );
+            assertTextPresent( "Username" );
+            assertElementPresent( "scmUsername" );
+            assertTextPresent( "Password" );
+            assertElementPresent( "scmPassword" );
+        }
+        else
+        {
+            assertTextPresent( "Upload POM" );
+            assertElementPresent( "m2PomFile" );
+        }
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
     }
@@ -615,6 +626,10 @@ public abstract class AbstractContinuumTest
                                           boolean success )
     {
         goToAddMavenTwoProjectPage();
+
+        click( "addMavenTwoProject_pomMethodFILE" );
+
+        assertAddMavenTwoProjectPage( false );
 
         setFieldValue( "m2PomFile", pomFile.getAbsolutePath() );
 
@@ -634,6 +649,8 @@ public abstract class AbstractContinuumTest
                                        boolean success )
     {
         goToAddMavenTwoProjectPage();
+
+        click( "addMavenTwoProject_pomMethodHTTP" );
 
         // Enter values into Add Maven Two Project fields, and submit
         setFieldValue( "m2PomUrl", pomUrl );
@@ -683,17 +700,27 @@ public abstract class AbstractContinuumTest
 
     protected void assertAddMavenOneProjectPage( String existingProjectGroup )
     {
+        assertAddMavenOneProjectPage( existingProjectGroup, true );
+    }
+
+    protected void assertAddMavenOneProjectPage( String existingProjectGroup, boolean isHttp )
+    {
         assertPage( "Continuum - Add Maven 1 Project" );
         assertTextPresent( "Add Maven 1.x Project" );
-        assertTextPresent( "M1 POM Url" );
-        assertElementPresent( "m1PomUrl" );
-        assertTextPresent( "Username" );
-        assertElementPresent( "scmUsername" );
-        assertTextPresent( "Password" );
-        assertElementPresent( "scmPassword" );
-        assertTextPresent( "OR" );
-        assertTextPresent( "Upload POM" );
-        assertElementPresent( "m1PomFile" );
+        if ( isHttp )
+        {
+            assertTextPresent( "M1 POM Url" );
+            assertElementPresent( "m1PomUrl" );
+            assertTextPresent( "Username" );
+            assertElementPresent( "scmUsername" );
+            assertTextPresent( "Password" );
+            assertElementPresent( "scmPassword" );
+        }
+        else
+        {
+            assertTextPresent( "Upload POM" );
+            assertElementPresent( "m1PomFile" );
+        }
         assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
         if ( existingProjectGroup == null )
@@ -716,6 +743,8 @@ public abstract class AbstractContinuumTest
     protected void addMavenOneProject( String pomUrl, String username, String password, String projectGroup,
                                        boolean success )
     {
+        click( "addMavenOneProject_pomMethodHTTP" );
+
         setFieldValue( "m1PomUrl", pomUrl );
         setFieldValue( "scmUsername", username );
         setFieldValue( "scmPassword", password );
