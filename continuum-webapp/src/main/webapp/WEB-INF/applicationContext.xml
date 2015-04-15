@@ -124,7 +124,7 @@
   <!-- maintenance job triggers -->
   <bean id="distributedBuildStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="distributedBuildStatusUpdateJob"/>
-    <property name="cronExpression" value="0 * * * * ?"/>
+    <property name="cronExpression" value="0 */5 * * * ?"/>
   </bean>
   <bean id="orphanedBuildTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="orphanedBuildJob"/>
