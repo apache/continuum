@@ -33,7 +33,7 @@
         <h3>
             <s:text name="surefireReport.section.title">
               <s:param><s:property value="projectName"/></s:param>
-              <s:param><s:property value="buildId"/></s:param>
+              <s:param><s:property value="project.buildNumber"/></s:param>
             </s:text>
         </h3>
 
