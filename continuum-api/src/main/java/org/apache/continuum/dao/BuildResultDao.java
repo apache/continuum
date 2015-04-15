@@ -56,6 +56,9 @@ public interface BuildResultDao
     BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )
         throws ContinuumStoreException;
 
+    int resolveOrphanedInProgressResults()
+        throws ContinuumStoreException;
+
     long getNbBuildResultsForProject( int projectId );
 
     /**

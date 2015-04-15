@@ -126,12 +126,18 @@
     <property name="jobDetail" ref="distributedBuildStatusUpdateJob"/>
     <property name="cronExpression" value="0 * * * * ?"/>
   </bean>
+  <bean id="orphanedBuildTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="orphanedBuildJob"/>
+    <property name="cronExpression" value="0 */5 * * * ?"/>
+  </bean>
+
 
   <!-- maintenance scheduler -->
   <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
       <list>
         <ref bean="distributedBuildStatusTrigger"/>
+        <ref bean="orphanedBuildTrigger"/>
       </list>
     </property>
     <property name="schedulerName" value="maintenance"/>

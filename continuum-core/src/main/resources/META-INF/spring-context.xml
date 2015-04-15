@@ -76,4 +76,10 @@
     <property name="concurrent" value="false"/>
   </bean>
 
+  <bean name="orphanedBuildJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="targetObject" ref="buildStatusUpdater#orphans"/>
+    <property name="targetMethod" value="performScan"/>
+    <property name="concurrent" value="false"/>
+  </bean>
+
 </beans>

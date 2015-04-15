@@ -34,8 +34,13 @@ import javax.jdo.Transaction;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static org.apache.maven.continuum.project.ContinuumProjectState.BUILDING;
+import static org.apache.maven.continuum.project.ContinuumProjectState.CANCELLED;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -715,6 +720,42 @@ public class BuildResultDaoImpl
             tx.commit();
 
             return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public int resolveOrphanedInProgressResults()
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+        Transaction tx = pm.currentTransaction();
+        try
+        {
+            tx.begin();
+            Query query = pm.newQuery( BuildResult.class );
+            query.declareVariables( "BuildResult r1" );
+            String filter = String.format( "this.project.id == r1.project.id"
+                                               + " && this.buildDefinition.id == r1.buildDefinition.id"
+                                               + " && this.state == %s"
+                                               + " && this.id < r1.id", BUILDING );
+            query.setFilter( filter );
+            int updateCount = 0;
+            List<BuildResult> orphans = (List<BuildResult>) pm.detachCopyAll( (List) query.execute() );
+            Set<Integer> updatedIds = new HashSet<Integer>();
+            for ( BuildResult orphan : orphans )
+            {
+                if ( updatedIds.contains( orphan.getId() ) )
+                    continue;
+                orphan.setState( CANCELLED );
+                orphan.setError( "Build appears to have been orphaned, final status is unknown." );
+                updateObject( orphan );
+                updatedIds.add( orphan.getId() );
+            }
+            tx.commit();
+            return updatedIds.size();
         }
         finally
         {
