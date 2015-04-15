@@ -326,7 +326,7 @@
           </property>
           <property>
             <name>org.quartz.threadPool.threadCount</name>
-            <value>5</value>
+            <value>1</value>
           </property>
           <property>
             <name>org.quartz.threadPool.threadPriority</name>
