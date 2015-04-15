@@ -57,7 +57,7 @@ public class ProjectGroupDaoImpl
 
     public ProjectGroup addProjectGroup( ProjectGroup group )
     {
-        return (ProjectGroup) addObject( group );
+        return addObject( group );
     }
 
     public void removeProjectGroup( ProjectGroup projectGroup )
@@ -117,27 +117,25 @@ public class ProjectGroupDaoImpl
     public ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumStoreException
     {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId );
+        return getObjectById( ProjectGroup.class, projectGroupId );
     }
 
     public ProjectGroup getProjectGroupByGroupId( String groupId )
         throws ContinuumStoreException
     {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId, null );
+        return getObjectFromQuery( ProjectGroup.class, "groupId", groupId, null );
     }
 
     public ProjectGroup getProjectGroupByGroupIdWithBuildDetails( String groupId )
         throws ContinuumStoreException
     {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId,
-                                                  PROJECT_BUILD_DETAILS_FETCH_GROUP );
+        return getObjectFromQuery( ProjectGroup.class, "groupId", groupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
     public ProjectGroup getProjectGroupByGroupIdWithProjects( String groupId )
         throws ContinuumStoreException
     {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId,
-                                                  PROJECTGROUP_PROJECTS_FETCH_GROUP );
+        return getObjectFromQuery( ProjectGroup.class, "groupId", groupId, PROJECTGROUP_PROJECTS_FETCH_GROUP );
     }
 
     public ProjectGroup getProjectGroupByProjectId( int projectId )
@@ -170,7 +168,7 @@ public class ProjectGroupDaoImpl
     public ProjectGroup getProjectGroupWithProjects( int projectGroupId )
         throws ContinuumStoreException
     {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECTGROUP_PROJECTS_FETCH_GROUP );
+        return getObjectById( ProjectGroup.class, projectGroupId, PROJECTGROUP_PROJECTS_FETCH_GROUP );
     }
 
     public Collection<ProjectGroup> getAllProjectGroupsWithProjects()
@@ -201,7 +199,7 @@ public class ProjectGroupDaoImpl
     public ProjectGroup getProjectGroupWithBuildDetailsByProjectGroupId( int projectGroupId )
         throws ContinuumStoreException
     {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
+        return getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
     public List<ProjectGroup> getProjectGroupByRepository( int repositoryId )

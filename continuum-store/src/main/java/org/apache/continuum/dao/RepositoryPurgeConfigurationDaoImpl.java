@@ -138,14 +138,14 @@ public class RepositoryPurgeConfigurationDaoImpl
     public RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int configurationId )
         throws ContinuumStoreException
     {
-        return (RepositoryPurgeConfiguration) getObjectById( RepositoryPurgeConfiguration.class, configurationId );
+        return getObjectById( RepositoryPurgeConfiguration.class, configurationId );
     }
 
     public RepositoryPurgeConfiguration addRepositoryPurgeConfiguration(
         RepositoryPurgeConfiguration purgeConfiguration )
         throws ContinuumStoreException
     {
-        return (RepositoryPurgeConfiguration) addObject( purgeConfiguration );
+        return addObject( purgeConfiguration );
     }
 
     public void updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfiguration )

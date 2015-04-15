@@ -44,7 +44,7 @@ public class ProjectScmRootDaoImpl
     public ProjectScmRoot addProjectScmRoot( ProjectScmRoot projectScmRoot )
         throws ContinuumStoreException
     {
-        return (ProjectScmRoot) addObject( projectScmRoot );
+        return addObject( projectScmRoot );
     }
 
     public List<ProjectScmRoot> getAllProjectScmRoots()
@@ -141,6 +141,6 @@ public class ProjectScmRootDaoImpl
     public ProjectScmRoot getProjectScmRoot( int projectScmRootId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
-        return (ProjectScmRoot) getObjectById( ProjectScmRoot.class, projectScmRootId );
+        return getObjectById( ProjectScmRoot.class, projectScmRootId );
     }
 }

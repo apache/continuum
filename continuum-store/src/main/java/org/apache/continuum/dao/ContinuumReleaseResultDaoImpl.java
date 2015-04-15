@@ -25,12 +25,12 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -44,7 +44,7 @@ public class ContinuumReleaseResultDaoImpl
     public ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )
         throws ContinuumStoreException
     {
-        return (ContinuumReleaseResult) addObject( releaseResult );
+        return addObject( releaseResult );
     }
 
     public List<ContinuumReleaseResult> getAllContinuumReleaseResults()
@@ -55,7 +55,7 @@ public class ContinuumReleaseResultDaoImpl
     public ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
-        return (ContinuumReleaseResult) getObjectById( ContinuumReleaseResult.class, releaseResultId );
+        return getObjectById( ContinuumReleaseResult.class, releaseResultId );
     }
 
     public ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime,

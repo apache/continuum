@@ -24,12 +24,12 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -89,13 +89,13 @@ public class ProfileDaoImpl
 
     public Profile addProfile( Profile profile )
     {
-        return (Profile) addObject( profile );
+        return addObject( profile );
     }
 
     public Profile getProfile( int profileId )
         throws ContinuumStoreException
     {
-        return (Profile) getObjectById( Profile.class, profileId );
+        return getObjectById( Profile.class, profileId );
     }
 
     public void updateProfile( Profile profile )

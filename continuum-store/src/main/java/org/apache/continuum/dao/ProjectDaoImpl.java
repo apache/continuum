@@ -60,7 +60,7 @@ public class ProjectDaoImpl
     public Project getProject( int projectId )
         throws ContinuumStoreException
     {
-        return (Project) getObjectById( Project.class, projectId );
+        return getObjectById( Project.class, projectId );
     }
 
     public Project getProject( String groupId, String artifactId, String version )
@@ -184,19 +184,19 @@ public class ProjectDaoImpl
     public Project getProjectWithBuilds( int projectId )
         throws ContinuumStoreException
     {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_WITH_BUILDS_FETCH_GROUP );
+        return getObjectById( Project.class, projectId, PROJECT_WITH_BUILDS_FETCH_GROUP );
     }
 
     public Project getProjectWithBuildDetails( int projectId )
         throws ContinuumStoreException
     {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
+        return getObjectById( Project.class, projectId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
     public Project getProjectWithCheckoutResult( int projectId )
         throws ContinuumStoreException
     {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP );
+        return getObjectById( Project.class, projectId, PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP );
     }
 
     public List<Project> getProjectsInGroup( int projectGroupId )
@@ -268,7 +268,7 @@ public class ProjectDaoImpl
     public Project getProjectWithAllDetails( int projectId )
         throws ContinuumStoreException
     {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_ALL_DETAILS_FETCH_GROUP );
+        return getObjectById( Project.class, projectId, PROJECT_ALL_DETAILS_FETCH_GROUP );
     }
 
     public List<Project> getAllProjectsByName()
@@ -304,7 +304,7 @@ public class ProjectDaoImpl
     public Project getProjectWithDependencies( int projectId )
         throws ContinuumStoreException
     {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_DEPENDENCIES_FETCH_GROUP );
+        return getObjectById( Project.class, projectId, PROJECT_DEPENDENCIES_FETCH_GROUP );
     }
 
     public Map<Integer, ProjectGroupSummary> getProjectsSummary()

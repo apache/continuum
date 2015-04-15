@@ -37,7 +37,7 @@ public class SystemConfigurationDaoImpl
 {
     public SystemConfiguration addSystemConfiguration( SystemConfiguration systemConf )
     {
-        return (SystemConfiguration) addObject( systemConf );
+        return addObject( systemConf );
     }
 
     public void updateSystemConfiguration( SystemConfiguration systemConf )

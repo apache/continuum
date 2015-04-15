@@ -65,7 +65,7 @@ public class BuildDefinitionDaoImpl
     public BuildDefinition getBuildDefinition( int buildDefinitionId )
         throws ContinuumStoreException
     {
-        return (BuildDefinition) getObjectById( BuildDefinition.class, buildDefinitionId );
+        return getObjectById( BuildDefinition.class, buildDefinitionId );
     }
 
     public void removeBuildDefinition( BuildDefinition buildDefinition )
@@ -85,7 +85,7 @@ public class BuildDefinitionDaoImpl
     public BuildDefinition addBuildDefinition( BuildDefinition buildDefinition )
         throws ContinuumStoreException
     {
-        return (BuildDefinition) addObject( buildDefinition );
+        return addObject( buildDefinition );
     }
 
     public List<BuildDefinition> getAllBuildDefinitions()

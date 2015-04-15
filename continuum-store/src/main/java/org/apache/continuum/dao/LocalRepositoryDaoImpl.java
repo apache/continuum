@@ -24,13 +24,13 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -44,7 +44,7 @@ public class LocalRepositoryDaoImpl
     public LocalRepository addLocalRepository( LocalRepository repository )
         throws ContinuumStoreException
     {
-        return (LocalRepository) addObject( repository );
+        return addObject( repository );
     }
 
     public void updateLocalRepository( LocalRepository repository )
@@ -99,7 +99,7 @@ public class LocalRepositoryDaoImpl
     public LocalRepository getLocalRepository( int repositoryId )
         throws ContinuumStoreException
     {
-        return (LocalRepository) getObjectById( LocalRepository.class, repositoryId );
+        return getObjectById( LocalRepository.class, repositoryId );
     }
 
     public LocalRepository getLocalRepositoryByName( String name )

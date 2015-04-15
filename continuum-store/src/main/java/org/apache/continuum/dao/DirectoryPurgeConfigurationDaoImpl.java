@@ -24,12 +24,12 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -172,13 +172,13 @@ public class DirectoryPurgeConfigurationDaoImpl
     public DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int configurationId )
         throws ContinuumStoreException
     {
-        return (DirectoryPurgeConfiguration) getObjectById( DirectoryPurgeConfiguration.class, configurationId );
+        return getObjectById( DirectoryPurgeConfiguration.class, configurationId );
     }
 
     public DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )
         throws ContinuumStoreException
     {
-        return (DirectoryPurgeConfiguration) addObject( purgeConfiguration );
+        return addObject( purgeConfiguration );
     }
 
     public void updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )

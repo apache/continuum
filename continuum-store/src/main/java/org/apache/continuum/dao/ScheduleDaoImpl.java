@@ -47,7 +47,7 @@ public class ScheduleDaoImpl
 
     public Schedule addSchedule( Schedule schedule )
     {
-        return (Schedule) addObject( schedule );
+        return addObject( schedule );
     }
 
     public Schedule getScheduleByName( String name )
@@ -114,6 +114,6 @@ public class ScheduleDaoImpl
     public Schedule getSchedule( int scheduleId )
         throws ContinuumStoreException
     {
-        return (Schedule) getObjectById( Schedule.class, scheduleId );
+        return getObjectById( Schedule.class, scheduleId );
     }
 }

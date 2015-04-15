@@ -24,12 +24,12 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collections;
+import java.util.List;
 
 @Repository( "distributedDirectoryPurgeConfigurationDao" )
 @Component( role = org.apache.continuum.dao.DistributedDirectoryPurgeConfigurationDao.class )
@@ -139,15 +139,14 @@ public class DistributedDirectoryPurgeConfigurationDaoImpl
     public DistributedDirectoryPurgeConfiguration getDistributedDirectoryPurgeConfiguration( int configurationId )
         throws ContinuumStoreException
     {
-        return (DistributedDirectoryPurgeConfiguration) getObjectById( DistributedDirectoryPurgeConfiguration.class,
-                                                                       configurationId );
+        return getObjectById( DistributedDirectoryPurgeConfiguration.class, configurationId );
     }
 
     public DistributedDirectoryPurgeConfiguration addDistributedDirectoryPurgeConfiguration(
         DistributedDirectoryPurgeConfiguration purgeConfiguration )
         throws ContinuumStoreException
     {
-        return (DistributedDirectoryPurgeConfiguration) addObject( purgeConfiguration );
+        return addObject( purgeConfiguration );
     }
 
     public void updateDistributedDirectoryPurgeConfiguration(

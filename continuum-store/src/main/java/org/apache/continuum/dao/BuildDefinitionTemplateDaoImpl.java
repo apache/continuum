@@ -24,12 +24,12 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -76,14 +76,14 @@ public class BuildDefinitionTemplateDaoImpl
     public BuildDefinitionTemplate getBuildDefinitionTemplate( int id )
         throws ContinuumStoreException
     {
-        return (BuildDefinitionTemplate) getObjectById( BuildDefinitionTemplate.class, id,
+        return getObjectById( BuildDefinitionTemplate.class, id,
                                                         BUILD_TEMPLATE_BUILD_DEFINITIONS );
     }
 
     public BuildDefinitionTemplate addBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
         throws ContinuumStoreException
     {
-        return (BuildDefinitionTemplate) addObject( buildDefinitionTemplate );
+        return addObject( buildDefinitionTemplate );
     }
 
     public BuildDefinitionTemplate updateBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )

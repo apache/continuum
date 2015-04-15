@@ -25,7 +25,7 @@ public class DistributedRepositoryPurgeConfigurationDaoImpl
         DistributedRepositoryPurgeConfiguration purgeConfiguration )
         throws ContinuumStoreException
     {
-        return (DistributedRepositoryPurgeConfiguration) addObject( purgeConfiguration );
+        return addObject( purgeConfiguration );
     }
 
     public void removeDistributedRepositoryPurgeConfiguration(
@@ -37,8 +37,7 @@ public class DistributedRepositoryPurgeConfigurationDaoImpl
     public DistributedRepositoryPurgeConfiguration getDistributedRepositoryPurgeConfiguration( int configId )
         throws ContinuumStoreException
     {
-        return (DistributedRepositoryPurgeConfiguration) getObjectById( DistributedRepositoryPurgeConfiguration.class,
-                                                                        configId );
+        return getObjectById( DistributedRepositoryPurgeConfiguration.class, configId );
     }
 
     public void updateDistributedRepositoryPurgeConfiguration( DistributedRepositoryPurgeConfiguration purgeConfig )

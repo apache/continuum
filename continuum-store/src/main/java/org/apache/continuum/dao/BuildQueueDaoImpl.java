@@ -26,13 +26,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
@@ -48,7 +48,7 @@ public class BuildQueueDaoImpl
     public BuildQueue addBuildQueue( BuildQueue buildQueue )
         throws ContinuumStoreException
     {
-        return (BuildQueue) addObject( buildQueue );
+        return addObject( buildQueue );
     }
 
     public List<BuildQueue> getAllBuildQueues()
@@ -81,7 +81,7 @@ public class BuildQueueDaoImpl
     public BuildQueue getBuildQueue( int buildQueueId )
         throws ContinuumStoreException
     {
-        return (BuildQueue) getObjectById( BuildQueue.class, buildQueueId );
+        return getObjectById( BuildQueue.class, buildQueueId );
     }
 
     public BuildQueue getBuildQueueByName( String name )

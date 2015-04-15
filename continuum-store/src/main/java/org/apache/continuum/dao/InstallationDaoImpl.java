@@ -26,13 +26,13 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -45,7 +45,7 @@ public class InstallationDaoImpl
 {
     public Installation addInstallation( Installation installation )
     {
-        return (Installation) addObject( installation );
+        return addObject( installation );
     }
 
     public List<Installation> getAllInstallations()

@@ -105,7 +105,7 @@ public class BuildResultDaoImpl
 
             project = (Project) pm.getObjectById( objectId );
 
-            build = (BuildResult) makePersistent( pm, build, false );
+            build = makePersistent( pm, build, false );
 
             // TODO: these are in the wrong spot - set them on success (though
             // currently some depend on latest build being the one in progress)
@@ -379,7 +379,7 @@ public class BuildResultDaoImpl
     public BuildResult getBuildResult( int buildId )
         throws ContinuumStoreException
     {
-        return (BuildResult) getObjectById( BuildResult.class, buildId, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+        return getObjectById( BuildResult.class, buildId, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
     }
 
     public List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber )
