@@ -62,14 +62,14 @@ public class AbstractDao
     @Requirement
     protected StoreUtilities storeUtilities;
 
-    protected Object addObject( Object object )
+    protected <T> T addObject( T object )
     {
         return addObject( getPersistenceManager(), object );
     }
 
-    private Object addObject( PersistenceManager pmf, Object object )
+    private <T> T addObject( PersistenceManager pmf, T object )
     {
-        return PlexusJdoUtils.addObject( pmf, object );
+        return (T) PlexusJdoUtils.addObject( pmf, object );
     }
 
     protected void removeObject( Object o )
@@ -96,18 +96,18 @@ public class AbstractDao
         }
     }
 
-    protected Object getObjectById( Class clazz, int id )
+    protected <T> T getObjectById( Class<T> clazz, int id )
         throws ContinuumStoreException
     {
         return getObjectById( clazz, id, null );
     }
 
-    protected Object getObjectById( Class clazz, int id, String fetchGroup )
+    protected <T> T getObjectById( Class<T> clazz, int id, String fetchGroup )
         throws ContinuumStoreException
     {
         try
         {
-            return PlexusJdoUtils.getObjectById( getPersistenceManager(), clazz, id, fetchGroup );
+            return (T) PlexusJdoUtils.getObjectById( getPersistenceManager(), clazz, id, fetchGroup );
         }
         catch ( PlexusObjectNotFoundException e )
         {
@@ -119,12 +119,12 @@ public class AbstractDao
         }
     }
 
-    protected Object getObjectFromQuery( Class clazz, String idField, String id, String fetchGroup )
+    protected <T> T getObjectFromQuery( Class<T> clazz, String idField, String id, String fetchGroup )
         throws ContinuumStoreException
     {
         try
         {
-            return PlexusJdoUtils.getObjectFromQuery( getPersistenceManager(), clazz, idField, id, fetchGroup );
+            return (T) PlexusJdoUtils.getObjectFromQuery( getPersistenceManager(), clazz, idField, id, fetchGroup );
         }
         catch ( PlexusObjectNotFoundException e )
         {
@@ -136,22 +136,23 @@ public class AbstractDao
         }
     }
 
-    protected List getAllObjectsDetached( Class clazz )
+    protected <T> List<T> getAllObjectsDetached( Class<T> clazz )
     {
         return getAllObjectsDetached( clazz, null );
     }
 
-    protected List getAllObjectsDetached( Class clazz, String fetchGroup )
+    protected <T> List<T> getAllObjectsDetached( Class<T> clazz, String fetchGroup )
     {
         return getAllObjectsDetached( clazz, null, fetchGroup );
     }
 
-    protected List getAllObjectsDetached( Class clazz, String ordering, String fetchGroup )
+    protected <T> List<T> getAllObjectsDetached( Class<T> clazz, String ordering, String fetchGroup )
     {
         return getAllObjectsDetached( getPersistenceManager(), clazz, ordering, fetchGroup );
     }
 
-    protected List getAllObjectsDetached( PersistenceManager pmf, Class clazz, String ordering, String fetchGroup )
+    protected <T> List<T> getAllObjectsDetached( PersistenceManager pmf, Class<T> clazz, String ordering,
+                                                 String fetchGroup )
     {
         return PlexusJdoUtils.getAllObjectsDetached( pmf, clazz, ordering, fetchGroup );
     }
@@ -186,9 +187,9 @@ public class AbstractDao
         return storeUtilities.getContinuumPersistenceManagerFactory();
     }
 
-    protected Object makePersistent( PersistenceManager pm, Object object, boolean detach )
+    protected <T> T makePersistent( PersistenceManager pm, T object, boolean detach )
     {
-        return PlexusJdoUtils.makePersistent( pm, object, detach );
+        return (T) PlexusJdoUtils.makePersistent( pm, object, detach );
     }
 
 }
