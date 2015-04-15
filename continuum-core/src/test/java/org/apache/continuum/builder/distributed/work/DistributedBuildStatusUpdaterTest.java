@@ -40,7 +40,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class DefaultBuildStatusUpdaterTest
+public class DistributedBuildStatusUpdaterTest
     extends PlexusSpringTestCase
 {
     private ProjectDao projectDao;
@@ -55,7 +55,7 @@ public class DefaultBuildStatusUpdaterTest
 
     private ConfigurationService configurationService;
 
-    private DefaultBuildStatusUpdater worker;
+    private DistributedBuildStatusUpdater worker;
 
     @Before
     public void setUp()
@@ -68,7 +68,7 @@ public class DefaultBuildStatusUpdaterTest
         configurationService = mock( ConfigurationService.class );
         distributedBuildManager = mock( DistributedBuildManager.class );
 
-        worker = (DefaultBuildStatusUpdater) lookup( BuildStatusUpdater.class, "distributed" );
+        worker = (DistributedBuildStatusUpdater) lookup( BuildStatusUpdater.class, "distributed" );
         worker.setBuildDefinitionDao( buildDefinitionDao );
         worker.setBuildResultDao( buildResultDao );
         worker.setProjectDao( projectDao );

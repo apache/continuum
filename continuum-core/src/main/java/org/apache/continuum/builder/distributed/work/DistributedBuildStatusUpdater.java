@@ -41,10 +41,10 @@ import java.util.Date;
 import java.util.List;
 
 @Component( role = BuildStatusUpdater.class, hint = "distributed" )
-public class DefaultBuildStatusUpdater
+public class DistributedBuildStatusUpdater
     implements BuildStatusUpdater
 {
-    private static final Logger log = LoggerFactory.getLogger( DefaultBuildStatusUpdater.class );
+    private static final Logger log = LoggerFactory.getLogger( DistributedBuildStatusUpdater.class );
 
     @Requirement
     private ProjectDao projectDao;
@@ -64,21 +64,24 @@ public class DefaultBuildStatusUpdater
     @Requirement
     private ConfigurationService configurationService;
 
-    public synchronized void performScan()
+    public void performScan()
     {
         if ( !configurationService.isDistributedBuildEnabled() )
         {
             return;
         }
 
-        log.debug( "Start continuum worker..." );
+        log.info( "scanning for distributed build result anomalies" );
 
         List<ProjectRunSummary> currentRuns = new ArrayList<ProjectRunSummary>(
             distributedBuildManager.getCurrentRuns() );
         List<ProjectRunSummary> runsToDelete = new ArrayList<ProjectRunSummary>();
 
+        int runCount, resolvedCount;
+
         synchronized ( currentRuns )
         {
+            runCount = currentRuns.size();
             for ( ProjectRunSummary currentRun : currentRuns )
             {
                 try
@@ -191,13 +194,13 @@ public class DefaultBuildStatusUpdater
                 }
             }
 
-            if ( runsToDelete.size() > 0 )
+            resolvedCount = runsToDelete.size();
+            if ( resolvedCount > 0 )
             {
                 distributedBuildManager.getCurrentRuns().removeAll( runsToDelete );
             }
         }
-
-        log.debug( "End continuum worker..." );
+        log.info( "scan finished: resolved {} runs out of {}", resolvedCount, runCount );
     }
 
     // for testing
