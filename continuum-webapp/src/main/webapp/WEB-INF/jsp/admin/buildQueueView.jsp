@@ -52,6 +52,7 @@
                   </s:url>
                   <s:a href="%{viewUrl}"><c:out value="${queue.task.projectName}"/></s:a>
                 </ec:column>
+                <ec:column property="task.buildTrigger.triggeredBy" title="buildQueue.triggeredBy" />
                 <ec:column property="task.buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" width="19%"/>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
@@ -101,6 +102,7 @@
                   </s:url>
                   <s:a href="%{viewUrl}"><c:out value="${queue.task.projectName}"/></s:a>
                 </ec:column>
+                <ec:column property="task.buildTrigger.triggeredBy" title="buildQueue.triggeredBy" />
                 <ec:column property="task.buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" width="19%"/>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
