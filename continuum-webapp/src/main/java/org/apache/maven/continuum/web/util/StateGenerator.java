@@ -49,8 +49,6 @@ public class StateGenerator
 
     public static final String CHECKED_OUT = "Checked Out";
 
-    public static final String SENT_TO_AGENT = "Sent to Agent";
-
     public static final int UNKNOWN_STATE = Integer.MIN_VALUE;
 
     public static final String UNKNOWN = "Unknown";
@@ -71,8 +69,6 @@ public class StateGenerator
                            new String[] { "/images/icon_success_sml.gif", CHECKED_OUT } );
         stateIconArgs.put( ContinuumProjectState.CANCELLED,
                            new String[] { "/images/icon_unknown_sml.gif", CANCELLED } );
-        stateIconArgs.put( ContinuumProjectState.SENT_TO_AGENT,
-                           new String[] { "/images/inqueue.gif", SENT_TO_AGENT } );
     }
 
     public static String generate( int state, String contextPath )

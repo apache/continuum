@@ -973,16 +973,14 @@ public class DefaultDistributedBuildManager
                 {
                     int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( result );
 
-                    Project project = projectDao.getProjectWithAllDetails( projectId );
                     BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-
-                    BuildResult oldBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId,
-                                                                                                        buildDefinitionId );
+                    BuildResult latestResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId,
+                                                                                                      buildDefinitionId );
 
                     BuildResult buildResult = distributedBuildUtil.convertMapToBuildResult( result );
                     buildResult.setBuildDefinition( buildDefinition );
-                    buildResult.setBuildNumber( project.getBuildNumber() + 1 );
-                    buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( oldBuildResult,
+                    buildResult.setBuildNumber( latestResult.getBuildNumber() );
+                    buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( latestResult,
                                                                                                        result ) );
                     buildResult.setScmResult( distributedBuildUtil.getScmResult( result ) );
 

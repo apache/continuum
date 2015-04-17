@@ -329,7 +329,7 @@ public class BuildResultAction
     public boolean isBuildInProgress()
     {
         int buildState = buildResult.getState();
-        return buildState == ContinuumProjectState.BUILDING || buildState == ContinuumProjectState.SENT_TO_AGENT;
+        return buildState == ContinuumProjectState.BUILDING;
     }
 
     public boolean isBuildSuccessful()
@@ -339,7 +339,7 @@ public class BuildResultAction
 
     public boolean isShowBuildNumber()
     {
-        return isBuildSuccessful() && buildResult.getBuildNumber() != 0;
+        return buildResult.getBuildNumber() != 0;
     }
 
     public boolean isShowBuildError()

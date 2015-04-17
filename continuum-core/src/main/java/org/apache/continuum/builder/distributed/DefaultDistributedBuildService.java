@@ -105,17 +105,7 @@ public class DefaultDistributedBuildService
             int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( context );
 
             Project project = projectDao.getProjectWithAllDetails( projectId );
-
-            int buildNumber;
-            if ( ContinuumBuildConstant.getBuildState( context ) == ContinuumProjectState.OK )
-            {
-                buildNumber = project.getBuildNumber() + 1;
-            }
-            else
-            {
-                buildNumber = project.getBuildNumber();
-            }
-
+            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
             BuildResult buildResult, oldBuildResult;
 
             log.info( "update build result of project '{}'", projectId );
@@ -144,6 +134,8 @@ public class DefaultDistributedBuildService
 
             boolean existingResult = existingResultId > 0;
 
+            int buildNumber = project.getBuildNumber();
+
             if ( existingResult )
             {
                 buildResult = buildResultDao.getBuildResult( existingResultId );
@@ -154,17 +146,17 @@ public class DefaultDistributedBuildService
             }
             else
             {
+                buildNumber += 1;
                 buildResult = distributedBuildUtil.convertMapToBuildResult( context );
                 oldBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+                buildResult.setBuildNumber( buildNumber );
+                buildResult.setBuildDefinition( buildDefinition );
             }
 
             // Set the complete contents of the build result...
 
-            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-            buildResult.setBuildDefinition( buildDefinition );
-            buildResult.setBuildNumber( buildNumber );
-            buildResult.setModifiedDependencies( distributedBuildUtil.getModifiedDependencies( oldBuildResult,
-                                                                                               context ) );
+            buildResult.setModifiedDependencies(
+                distributedBuildUtil.getModifiedDependencies( oldBuildResult, context ) );
             buildResult.setScmResult( distributedBuildUtil.getScmResult( context ) );
 
             Date date = ContinuumBuildConstant.getLatestUpdateDate( context );
@@ -191,7 +183,6 @@ public class DefaultDistributedBuildService
             project.setState( ContinuumBuildConstant.getBuildState( context ) );
             project.setBuildNumber( buildNumber );
             project.setLatestBuildId( buildResult.getId() );
-
             projectDao.updateProject( project );
 
             File buildOutputFile = configurationService.getBuildOutputFile( buildResult.getId(), project.getId() );
@@ -271,32 +262,41 @@ public class DefaultDistributedBuildService
     {
         try
         {
-            Project project = projectDao.getProject( projectId );
-            project.setOldState( project.getState() );
-            project.setState( ContinuumProjectState.BUILDING );
-            projectDao.updateProject( project );
-
-            try
-            {
-                int existingResultId =
-                    distributedBuildManager.getCurrentRun( projectId, buildDefinitionId ).getBuildResultId();
-                if ( existingResultId > 0 )
-                {
-                    BuildResult result = buildResultDao.getBuildResult( project.getLatestBuildId() );
-                    result.setState( ContinuumProjectState.BUILDING );
-                    buildResultDao.updateBuildResult( result );
-                }
-            }
-            catch ( ContinuumException e )
-            {
-                log.warn( "failed to update result status to 'building': {}", e.getMessage() );
-            }
+            createNewBuildResult( distributedBuildManager.getCurrentRun( projectId, buildDefinitionId ) );
         }
         catch ( ContinuumStoreException e )
         {
             log.error( "Error while updating project's state (projectId=" + projectId + ")", e );
             throw new ContinuumException( "Error while updating project's state (projectId=" + projectId + ")", e );
         }
+    }
+
+    private void createNewBuildResult( ProjectRunSummary summary )
+        throws ContinuumStoreException
+    {
+        long now = System.currentTimeMillis();
+
+        Project project = projectDao.getProject( summary.getProjectId() );
+        BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( summary.getBuildDefinitionId() );
+
+        project.setBuildNumber( project.getBuildNumber() + 1 ); // starting build, create a new build number
+
+        BuildResult buildResult = new BuildResult();
+        buildResult.setBuildNumber( project.getBuildNumber() );
+        buildResult.setBuildUrl( summary.getBuildAgentUrl() );
+        buildResult.setState( ContinuumProjectState.BUILDING );
+        buildResult.setBuildDefinition( buildDef );
+        buildResult.setTrigger( summary.getTrigger() );
+        buildResult.setUsername( summary.getTriggeredBy() );
+        buildResult.setStartTime( now );
+        buildResultDao.addBuildResult( project, buildResult );
+
+        project.setLatestBuildId( buildResult.getId() );
+        project.setOldState( project.getState() );
+        project.setState( ContinuumProjectState.BUILDING );
+        projectDao.updateProject( project );
+
+        summary.setBuildResultId( buildResult.getId() );
     }
 
     public void startPrepareBuild( Map<String, Object> context )

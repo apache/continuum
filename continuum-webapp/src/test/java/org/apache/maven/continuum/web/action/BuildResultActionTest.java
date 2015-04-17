@@ -116,28 +116,6 @@ public class BuildResultActionTest
     }
 
     @Test
-    public void testViewBuildSentToDistributedBuildAgent()
-        throws Exception
-    {
-        int expectedResultId = 777;
-        action.setBuildId( expectedResultId );
-        buildResult.setState( org.apache.maven.continuum.project.ContinuumProjectState.SENT_TO_AGENT );
-        ProjectRunSummary runSummary = new ProjectRunSummary();
-        runSummary.setBuildResultId( expectedResultId );
-        when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
-        when( configurationService.getTestReportsDirectory( anyInt(), anyInt() ) ).thenReturn(
-            new File( "non-existent" ) );
-        when( configurationService.getBuildOutputFile( anyInt(), anyInt() ) ).thenReturn(
-            new File( "nonExistentBuildOutputFile" ) );
-        when( distributedBuildManager.getBuildResult( anyInt() ) ).thenReturn( new HashMap<String, Object>() );
-        when( distributedBuildManager.getCurrentRun( anyInt(), anyInt() ) ).thenReturn( runSummary );
-
-        assertEquals( Action.SUCCESS, action.execute() );
-
-        verify( distributedBuildManager, never() ).getBuildResult( anyInt() );
-    }
-
-    @Test
     public void testSuccessfulWhenTestDirThrows()
         throws Exception
     {

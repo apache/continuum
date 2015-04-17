@@ -91,22 +91,23 @@ public class ExecuteBuilderContinuumAction
         // ----------------------------------------------------------------------
 
         BuildResult buildResult = new BuildResult();
-
         buildResult.setStartTime( new Date().getTime() );
-
         buildResult.setState( ContinuumProjectState.BUILDING );
-
         buildResult.setTrigger( buildTrigger.getTrigger() );
-
         buildResult.setUsername( buildTrigger.getTriggeredBy() );
-
         buildResult.setScmResult( scmResult );
-
         buildResult.setModifiedDependencies( updatedDependencies );
-
         buildResult.setBuildDefinition( getBuildDefinition( context ) );
 
+        // TX START: This should really be done in a single transaction
+        project.setBuildNumber( project.getBuildNumber() + 1 );
+
+        buildResult.setBuildNumber( project.getBuildNumber() );
         buildResultDao.addBuildResult( project, buildResult );
+
+        project.setLatestBuildId( buildResult.getId() );
+        projectDao.updateProject( project );
+        // TX STOP
 
         AbstractContinuumAction.setBuildId( context, Integer.toString( buildResult.getId() ) );
 
@@ -159,15 +160,6 @@ public class ExecuteBuilderContinuumAction
 
             buildResult.setEndTime( new Date().getTime() );
 
-            if ( buildResult.getState() == ContinuumProjectState.OK )
-            {
-                project.setBuildNumber( project.getBuildNumber() + 1 );
-            }
-
-            project.setLatestBuildId( buildResult.getId() );
-
-            buildResult.setBuildNumber( project.getBuildNumber() );
-
             if ( buildResult.getState() != ContinuumProjectState.OK &&
                 buildResult.getState() != ContinuumProjectState.FAILED &&
                 buildResult.getState() != ContinuumProjectState.ERROR &&
@@ -176,6 +168,8 @@ public class ExecuteBuilderContinuumAction
                 buildResult.setState( ContinuumProjectState.ERROR );
             }
 
+            // Assumes this build result is the latest for project
+            project.setOldState( project.getState() );
             project.setState( buildResult.getState() );
 
             // ----------------------------------------------------------------------

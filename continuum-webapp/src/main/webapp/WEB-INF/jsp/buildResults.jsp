@@ -69,9 +69,7 @@
                 </ec:column>
               </redback:ifAuthorized>
               <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">
-                  <c:if test="${pageScope.buildResult.state == 2}">
-                    <c:out value="${pageScope.buildResult.buildNumber}"/>
-                  </c:if>
+                <c:out value="${pageScope.buildResult.buildNumber}"/>
               </ec:column>
               <ec:column property="state" headerStyle="text-align: center;" style="text-align: center;" title="buildResults.result" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
               <ec:column property="trigger" title="buildResult.trigger">

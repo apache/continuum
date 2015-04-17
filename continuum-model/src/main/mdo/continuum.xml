@@ -1439,7 +1439,6 @@
     public final static int CHECKEDOUT = 10;
     public final static int UPDATED = 5;
     public final static int CANCELLED = 11;
-    public final static int SENT_TO_AGENT = 12;
 
     // TODO: maybe move these to another class
     public static final int TRIGGER_FORCED = 1;
