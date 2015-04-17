@@ -117,6 +117,13 @@ public interface FileSystemManager
         throws IOException;
 
     /**
+     * Returns the temporary directory for this environment.
+     *
+     * @return a {@link File} pointing at the file system path specified by the system property, java.io.tmpdir
+     */
+    File getTempDir();
+
+    /**
      * Create a new temporary file under the specified parent directory.
      *
      * @param prefix prefix to start file with

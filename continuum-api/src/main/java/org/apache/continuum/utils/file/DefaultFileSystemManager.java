@@ -98,6 +98,11 @@ public class DefaultFileSystemManager
         }
     }
 
+    public File getTempDir()
+    {
+        return new File( System.getProperty( "java.io.tmpdir" ) );
+    }
+
     public File createTempFile( String prefix, String suffix, File parent )
     {
         return FileUtils.createTempFile( prefix, suffix, parent );
