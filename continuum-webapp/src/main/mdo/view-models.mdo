@@ -626,6 +626,12 @@
           <required>true</required>
           <type>int</type>
         </field>
+        <field>
+          <name>triggeredBy</name>
+          <version>1.5.0+</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
       </fields>
     </class>
     <class>

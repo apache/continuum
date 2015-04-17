@@ -240,6 +240,7 @@ public class QueuesAction
                 summary.setBuildDefinitionLabel( task.getBuildDefinitionLabel() );
                 summary.setHashCode( task.getHashCode() );
                 summary.setBuildAgentUrl( url );
+                summary.setTriggeredBy( task.getBuildTrigger().getTriggeredBy() );
 
                 currentDistributedBuilds.add( summary );
             }
@@ -285,6 +286,7 @@ public class QueuesAction
                     summary.setBuildDefinitionLabel( task.getBuildDefinitionLabel() );
                     summary.setHashCode( task.getHashCode() );
                     summary.setBuildAgentUrl( url );
+                    summary.setTriggeredBy( task.getBuildTrigger().getTriggeredBy() );
 
                     distributedBuildQueues.add( summary );
                 }

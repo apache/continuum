@@ -59,6 +59,7 @@
                 </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
+                <ec:column property="triggeredBy" title="buildQueue.triggeredBy" />
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <s:url id="cancelUrl" action="cancelDistributedBuild" namespace="/">
@@ -108,6 +109,7 @@
                 </ec:column>
                 <ec:column property="buildDefinitionLabel" title="distributedBuild.table.buildDefinitionLabel"/>
                 <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
+                <ec:column property="triggeredBy" title="buildQueue.triggeredBy" />
                 <ec:column property="buildAgentUrl" title="distributedBuild.table.buildAgentUrl"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
