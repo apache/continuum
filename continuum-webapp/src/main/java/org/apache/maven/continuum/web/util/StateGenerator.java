@@ -57,6 +57,7 @@ public class StateGenerator
 
     static
     {
+        stateIconArgs.put( ContinuumProjectState.NEW, new String[] { "/images/icon_new_sml.png", NEW } );
         stateIconArgs.put( ContinuumProjectState.OK, new String[] { "/images/icon_success_sml.gif", SUCCESS } );
         stateIconArgs.put( ContinuumProjectState.UPDATED, new String[] { "/images/icon_success_sml.gif", UPDATED } );
         stateIconArgs.put( ContinuumProjectState.FAILED, new String[] { "/images/icon_warning_sml.gif", FAILED } );
@@ -66,7 +67,7 @@ public class StateGenerator
         stateIconArgs.put( ContinuumProjectState.CHECKING_OUT,
                            new String[] { "/images/checkingout.gif", CHECKING_OUT } );
         stateIconArgs.put( ContinuumProjectState.CHECKEDOUT,
-                           new String[] { "/images/icon_success_sml.gif", CHECKED_OUT } );
+                           new String[] { "/images/icon_new_sml.png", CHECKED_OUT } );
         stateIconArgs.put( ContinuumProjectState.CANCELLED,
                            new String[] { "/images/icon_unknown_sml.gif", CANCELLED } );
     }
@@ -74,11 +75,6 @@ public class StateGenerator
     public static String generate( int state, String contextPath )
     {
         String iconFmt = "<img src=\"" + contextPath + "%s\" alt=\"%2$s\" title=\"%2$s\" border=\"0\" />";
-
-        if ( state == ContinuumProjectState.NEW )
-        {
-            return NEW;
-        }
 
         if ( stateIconArgs.containsKey( state ) )
         {

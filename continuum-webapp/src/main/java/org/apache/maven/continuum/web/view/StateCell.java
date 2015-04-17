@@ -45,7 +45,7 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @deprecated use of cells is discouraged due to lack of i18n and design in java code.
- *             Use jsp:include instead.
+ * Use jsp:include instead.
  */
 public class StateCell
     extends DisplayCell
@@ -58,7 +58,8 @@ public class StateCell
         {
             ProjectSummary project = (ProjectSummary) tableModel.getCurrentRowBean();
             String state = StateGenerator.generate( project.getState(), contextPath );
-            if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) &&
+
+            if ( project.getLatestBuildId() != -1 && project.getState() != ContinuumProjectState.NEW &&
                 project.getState() != ContinuumProjectState.UPDATING && isAuthorized( project.getProjectGroupName() ) )
             {
                 return createActionLink( "buildResult", project, state );
@@ -70,8 +71,9 @@ public class StateCell
         {
             ProjectScmRoot projectScmRoot = (ProjectScmRoot) tableModel.getCurrentRowBean();
             String state = StateGenerator.generate( projectScmRoot.getState(), contextPath );
-            if ( !StateGenerator.NEW.equals( state ) && isAuthorized( projectScmRoot.getProjectGroup().getName() ) &&
-                projectScmRoot.getState() == ContinuumProjectState.ERROR )
+            if ( projectScmRoot.getState() != ContinuumProjectState.NEW
+                && isAuthorized( projectScmRoot.getProjectGroup().getName() )
+                && projectScmRoot.getState() == ContinuumProjectState.ERROR )
             {
                 return createActionLink( "scmResult", projectScmRoot, state );
             }
@@ -93,8 +95,9 @@ public class StateCell
 
         params.put( "projectGroupId", project.getProjectGroupId() );
 
-        String url = UrlHelperFactory.getInstance().buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
-                                         ServletActionContext.getResponse(), params );
+        String url =
+            UrlHelperFactory.getInstance().buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
+                                                     ServletActionContext.getResponse(), params );
 
         return "<a href=\"" + url + "\">" + state + "</a>";
     }
@@ -107,8 +110,9 @@ public class StateCell
 
         params.put( "projectScmRootId", scmRoot.getId() );
 
-        String url = UrlHelperFactory.getInstance().buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
-                                         ServletActionContext.getResponse(), params );
+        String url =
+            UrlHelperFactory.getInstance().buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
+                                                     ServletActionContext.getResponse(), params );
 
         return "<a href=\"" + url + "\">" + state + "</a>";
     }
