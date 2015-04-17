@@ -67,8 +67,6 @@ import java.net.UnknownHostException;
 public abstract class AbstractContinuumProjectBuilder
     implements ContinuumProjectBuilder, Initializable
 {
-    private static final String TMP_DIR = System.getProperty( "java.io.tmpdir" );
-
     protected final Logger log = LoggerFactory.getLogger( getClass() );
 
     @Requirement
@@ -96,7 +94,7 @@ public abstract class AbstractContinuumProjectBuilder
         cm = new ThreadSafeClientConnManager( params, schemeRegistry );
     }
 
-    protected File createMetadataFile( URL metadata, String username, String password,
+    protected File createMetadataFile( File importRoot, URL metadata, String username, String password,
                                        ContinuumProjectBuildingResult result )
         throws IOException, URISyntaxException, HttpException
     {
@@ -197,8 +195,7 @@ public abstract class AbstractContinuumProjectBuilder
 
             // Hack for URLs containing '*' like "http://svn.codehaus.org/*checkout*/trunk/pom.xml?root=plexus"
             baseDirectory = baseDirectory.replaceAll( "[*]", "" );
-            File continuumTmpDir = new File( TMP_DIR, "continuum" );
-            File uploadDirectory = new File( continuumTmpDir, baseDirectory );
+            File uploadDirectory = new File( importRoot, baseDirectory );
 
             // Re-create the directory structure as existed remotely if necessary
             uploadDirectory.mkdirs();
@@ -243,8 +240,8 @@ public abstract class AbstractContinuumProjectBuilder
      * @param password
      * @return
      */
-    protected File createMetadataFile( ContinuumProjectBuildingResult result, URL metadata, String username,
-                                       String password )
+    protected File createMetadataFile( File importRoot, ContinuumProjectBuildingResult result, URL metadata,
+                                       String username, String password )
     {
         String url = metadata.toExternalForm();
 
@@ -255,11 +252,11 @@ public abstract class AbstractContinuumProjectBuilder
 
         try
         {
-            return createMetadataFile( metadata, username, password, result );
+            return createMetadataFile( importRoot, metadata, username, password, result );
         }
         catch ( FileNotFoundException e )
         {
-            log.info( "URL not found: " + url, e );
+            log.info( "Metadata creation failed for '{}': {}", url, e.getMessage() );
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
         }
         catch ( MalformedURLException e )

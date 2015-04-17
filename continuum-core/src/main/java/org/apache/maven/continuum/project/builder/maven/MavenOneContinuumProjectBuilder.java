@@ -20,7 +20,6 @@ package org.apache.maven.continuum.project.builder.maven;
  */
 
 import org.apache.continuum.dao.ProjectGroupDao;
-import org.apache.continuum.utils.file.FileSystemManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
@@ -124,20 +123,26 @@ public class MavenOneContinuumProjectBuilder
     private ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                       BuildDefinitionTemplate buildDefinitionTemplate,
                                                                       ProjectGroup projectGroup )
+        throws ContinuumProjectBuilderException
     {
-        ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
-
-        File pomFile = createMetadataFile( result, url, username, password );
-
-        if ( pomFile == null )
+        File importRoot = fsManager.createTempFile( "continuum-m1import-", "", fsManager.getTempDir() );
+        if ( !importRoot.mkdirs() )
         {
-            return result;
+            throw new ContinuumProjectBuilderException( "failed to create directory for import: " + importRoot );
         }
 
         Project project = new Project();
+        ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
         try
         {
+            File pomFile = createMetadataFile( importRoot, result, url, username, password );
+
+            if ( pomFile == null )
+            {
+                return result;
+            }
+
             metadataHelper.mapMetadata( result, pomFile, project, true );
 
             if ( result.hasErrors() )
@@ -160,16 +165,15 @@ public class MavenOneContinuumProjectBuilder
         }
         finally
         {
-            if ( pomFile != null && pomFile.exists() )
+            if ( importRoot.exists() )
             {
-                File projectRoot = pomFile.getParentFile();
                 try
                 {
-                    fsManager.removeDir( projectRoot );
+                    fsManager.removeDir( importRoot );
                 }
                 catch ( IOException e )
                 {
-                    log.warn( "failed to remove directory after metadata creation: {}", projectRoot );
+                    log.warn( "failed to remove {} after project import: {}", importRoot, e.getMessage() );
                 }
             }
         }

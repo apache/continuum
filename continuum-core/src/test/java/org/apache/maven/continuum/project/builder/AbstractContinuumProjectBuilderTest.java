@@ -19,11 +19,15 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -36,11 +40,25 @@ public abstract class AbstractContinuumProjectBuilderTest
 
     private ContinuumProjectBuilder builder;
 
+    private File importRoot;
+
     @Before
     public void setUp()
         throws Exception
     {
+        File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) );
+        importRoot = File.createTempFile( getClass().getSimpleName(), "", tmpDir );
         builder = new ContinuumProjectBuilder();
+    }
+
+    @After
+    public void tearDown()
+        throws IOException
+    {
+        if ( importRoot.exists() )
+        {
+            FileUtils.deleteDirectory( importRoot );
+        }
     }
 
     @Test
@@ -48,10 +66,11 @@ public abstract class AbstractContinuumProjectBuilderTest
     public void testCreateMetadataFileURLStringString()
         throws Exception
     {
+
         URL url = new URL( "https://someurl/pom.xml" );
         String username = "myusername";
         String password = "mypassword";
-        builder.createMetadataFile( url, username, password, new ContinuumProjectBuildingResult() );
+        builder.createMetadataFile( importRoot, url, username, password, new ContinuumProjectBuildingResult() );
     }
 
     private class ContinuumProjectBuilder
