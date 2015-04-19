@@ -56,12 +56,6 @@ public class OrphanBuildStatusUpdaterTest
 
     private OrphanBuildStatusUpdater updater;
 
-    @Override
-    protected String[] getConfigLocations()
-    {
-        return super.getConfigLocations();
-    }
-
     @Before
     public void populateTestData()
         throws Exception
