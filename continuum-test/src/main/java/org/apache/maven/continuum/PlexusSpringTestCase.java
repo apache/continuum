@@ -100,7 +100,7 @@ public class PlexusSpringTestCase
 
     public <T> T lookup( Class<T> role )
     {
-        return (T) lookup( role, null );
+        return lookup( role, null );
     }
 
     public <T> T lookup( Class<T> role, String roleHint )
