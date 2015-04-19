@@ -727,7 +727,7 @@ public class BuildResultDaoImpl
         }
     }
 
-    public int resolveOrphanedInProgressResults()
+    public Set<Integer> resolveOrphanedInProgressResults( long ageCutoff )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -736,14 +736,10 @@ public class BuildResultDaoImpl
         {
             tx.begin();
             Query query = pm.newQuery( BuildResult.class );
-            query.declareVariables( "BuildResult r1" );
-            String filter = String.format( "this.project.id == r1.project.id"
-                                               + " && this.buildDefinition.id == r1.buildDefinition.id"
-                                               + " && this.state == %s"
-                                               + " && this.id < r1.id", BUILDING );
+            query.declareParameters( "long orphanCutoff" );
+            String filter = String.format( " this.state == %s && this.startTime < orphanCutoff", BUILDING );
             query.setFilter( filter );
-            int updateCount = 0;
-            List<BuildResult> orphans = (List<BuildResult>) pm.detachCopyAll( (List) query.execute() );
+            List<BuildResult> orphans = (List<BuildResult>) pm.detachCopyAll( (List) query.execute( ageCutoff ) );
             Set<Integer> updatedIds = new HashSet<Integer>();
             for ( BuildResult orphan : orphans )
             {
@@ -751,11 +747,12 @@ public class BuildResultDaoImpl
                     continue;
                 orphan.setState( CANCELLED );
                 orphan.setError( "Build appears to have been orphaned, final status is unknown." );
+                orphan.setEndTime( System.currentTimeMillis() );
                 updateObject( orphan );
                 updatedIds.add( orphan.getId() );
             }
             tx.commit();
-            return updatedIds.size();
+            return updatedIds;
         }
         finally
         {

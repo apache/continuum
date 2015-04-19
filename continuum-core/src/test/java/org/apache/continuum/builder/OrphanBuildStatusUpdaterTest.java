@@ -40,24 +40,33 @@ public class OrphanBuildStatusUpdaterTest
     extends AbstractContinuumTest
 {
 
+    private final int ageCutoff = 2;
+
     private BuildResultDao resultDao;
 
     private BuildDefinitionDao buildDefDao;
 
-    private List<BuildResult> canceled = new ArrayList<BuildResult>();
+    private List<BuildResult> aged = new ArrayList<BuildResult>();
 
-    private List<BuildResult> ok = new ArrayList<BuildResult>();
-
-    private List<BuildResult> building = new ArrayList<BuildResult>();
+    private List<BuildResult> recent = new ArrayList<BuildResult>();
 
     private BuildDefinition defOne;
 
     private BuildDefinition defTwo;
 
+    private OrphanBuildStatusUpdater updater;
+
+    @Override
+    protected String[] getConfigLocations()
+    {
+        return super.getConfigLocations();
+    }
+
     @Before
     public void populateTestData()
         throws Exception
     {
+        updater = (OrphanBuildStatusUpdater) lookup( BuildStatusUpdater.class, "orphans" );
         resultDao = lookup( BuildResultDao.class );
         buildDefDao = lookup( BuildDefinitionDao.class );
 
@@ -66,31 +75,85 @@ public class OrphanBuildStatusUpdaterTest
 
         // NOTE: Build results added in build order - last added is most recent build
 
-        Project noCleanup = addProject( "One In-Progress (No Cleanup)" );
-        addResult( noCleanup, defOne, BUILDING, building );
+        Project p1 = addProject( "One Too Young" );
+        addRecent( p1, defOne, BUILDING );
 
-        Project oneCleanup = addProject( "Two In-Progress With Success (One Cleanup)" );
-        addResult( oneCleanup, defTwo, BUILDING, canceled );
-        addResult( oneCleanup, defTwo, OK, ok );
-        addResult( oneCleanup, defTwo, BUILDING, building );
+        Project p2 = addProject( "One Orphan" );
+        addAged( p2, defOne, BUILDING );
 
-        Project twoCleanup = addProject( "Three In-Progress With Success (Two Cleanup)" );
-        addResult( twoCleanup, defTwo, BUILDING, canceled );
-        addResult( twoCleanup, defTwo, OK, ok );
-        addResult( twoCleanup, defTwo, BUILDING, canceled );
-        addResult( twoCleanup, defTwo, BUILDING, building );
+        Project p3 = addProject( "Two Orphans, Interleaved Success" );
+        addAged( p3, defTwo, BUILDING );
+        addRecent( p3, defTwo, OK );
+        addAged( p3, defTwo, BUILDING );
 
-        Project bdNoCleanup = addProject( "Two In-Progress (No Cleanup)" );
-        addResult( bdNoCleanup, defOne, BUILDING, building );
-        addResult( bdNoCleanup, defTwo, BUILDING, building );
+        Project p4 = addProject( "Two Orphans, Interleaved Success, One Too Young" );
+        addAged( p4, defTwo, BUILDING );
+        addRecent( p4, defTwo, OK );
+        addAged( p4, defTwo, BUILDING );
+        addRecent( p4, defTwo, BUILDING );
+
+        Project p5 = addProject( "Two In-Progress, No Orphans" );
+        addAged( p5, defOne, BUILDING );
+        addAged( p5, defTwo, BUILDING );
+
+        Project p6 = addProject( "Two In-Progress, No Orphans (Diff Build Defs)" );
+        addRecent( p6, defOne, BUILDING );
+        addRecent( p6, defTwo, BUILDING );
+
+        updater.setOrphanAfterHours( ageCutoff );
     }
 
     @Test
-    public void testOrphansResolvedSafely()
+    public void testOrphansCanceled()
         throws ContinuumStoreException
     {
-        lookup( BuildStatusUpdater.class, "orphans" ).performScan();
-        verifyResults();
+        updater.performScan();
+        verifyUntouched( recent );
+        verifyCanceled( aged );
+    }
+
+    @Test
+    public void testDisabledByZeroCutoff()
+        throws ContinuumStoreException
+    {
+        updater.setOrphanAfterHours( 0 );
+        updater.performScan();
+        verifyUntouched( recent, aged );
+    }
+
+    @Test
+    public void testDisabledByNegativeCutoff()
+        throws ContinuumStoreException
+    {
+        updater.setOrphanAfterHours( Integer.MIN_VALUE );
+        updater.performScan();
+        verifyUntouched( recent, aged );
+    }
+
+    private void verifyUntouched( List<BuildResult>... resultLists )
+        throws ContinuumStoreException
+    {
+        for ( List<BuildResult> list : resultLists )
+        {
+            for ( BuildResult br : list )
+            {
+                assertEquals( "Status should not have been touched: " + br, br.getState(),
+                              resultDao.getBuildResult( br.getId() ).getState() );
+            }
+        }
+    }
+
+    private void verifyCanceled( List<BuildResult>... resultLists )
+        throws ContinuumStoreException
+    {
+        for ( List<BuildResult> list : resultLists )
+        {
+            for ( BuildResult br : list )
+            {
+                assertEquals( "Status should be canceled: " + br, CANCELLED,
+                              resultDao.getBuildResult( br.getId() ).getState() );
+            }
+        }
     }
 
     private BuildDefinition addBuildDef()
@@ -105,7 +168,20 @@ public class OrphanBuildStatusUpdaterTest
         return def;
     }
 
-    private void addResult( Project project, BuildDefinition buildDef, int state, List<BuildResult> expected )
+    private void addRecent( Project project, BuildDefinition buildDef, int state )
+        throws ContinuumStoreException
+    {
+        addResult( project, buildDef, state, recent, ageCutoff - 1 );
+    }
+
+    private void addAged( Project project, BuildDefinition buildDef, int state )
+        throws ContinuumStoreException
+    {
+        addResult( project, buildDef, state, aged, ageCutoff + 1 );
+    }
+
+    private void addResult( Project project, BuildDefinition buildDef, int state, List<BuildResult> expected,
+                            long ageInHours )
         throws ContinuumStoreException
     {
         BuildResult br = new BuildResult();
@@ -114,7 +190,7 @@ public class OrphanBuildStatusUpdaterTest
         br.setBuildNumber( 0 );
         br.setEndTime( 0 );
         br.setExitCode( 0 );
-        br.setStartTime( 0 );
+        br.setStartTime( System.currentTimeMillis() - ( 1000 * 60 * 60 * ageInHours ) );
         br.setTrigger( 0 );
 
         // associate relationship
@@ -127,27 +203,5 @@ public class OrphanBuildStatusUpdaterTest
         resultDao.addBuildResult( project, br );
         br = resultDao.getBuildResult( br.getId() );
         expected.add( br );
-    }
-
-    private void verifyResults()
-        throws ContinuumStoreException
-    {
-        for ( BuildResult br : ok )
-        {
-            assertEquals( "Successful results should be untouched", OK,
-                          resultDao.getBuildResult( br.getId() ).getState() );
-        }
-
-        for ( BuildResult br : building )
-        {
-            assertEquals( "Latest building result for build def should be untouched", BUILDING,
-                          resultDao.getBuildResult( br.getId() ).getState() );
-        }
-
-        for ( BuildResult br : canceled )
-        {
-            assertEquals( "Prior building results for build def should be canceled", CANCELLED,
-                          resultDao.getBuildResult( br.getId() ).getState() );
-        }
     }
 }

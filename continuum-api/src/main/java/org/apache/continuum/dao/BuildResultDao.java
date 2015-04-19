@@ -26,6 +26,7 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -56,7 +57,14 @@ public interface BuildResultDao
     BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )
         throws ContinuumStoreException;
 
-    int resolveOrphanedInProgressResults()
+    /**
+     * Marks results in the BUILDING status with a start time before the specified cutoff as CANCELLED.
+     *
+     * @param ageCutoff the time in milliseconds, before which a building result is considered orphaned
+     * @return the set of ids considered orphaned, and consequently marked CANCELLED
+     * @throws ContinuumStoreException
+     */
+    Set<Integer> resolveOrphanedInProgressResults( long ageCutoff )
         throws ContinuumStoreException;
 
     long getNbBuildResultsForProject( int projectId );

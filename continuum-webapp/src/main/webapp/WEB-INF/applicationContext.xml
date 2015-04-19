@@ -128,7 +128,7 @@
   </bean>
   <bean id="orphanedBuildTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="orphanedBuildJob"/>
-    <property name="cronExpression" value="0 */5 * * * ?"/>
+    <property name="cronExpression" value="0 0 * * * ?"/>
   </bean>
 
 

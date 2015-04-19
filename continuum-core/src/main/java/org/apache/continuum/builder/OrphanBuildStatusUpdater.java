@@ -23,9 +23,12 @@ import org.apache.continuum.builder.distributed.work.BuildStatusUpdater;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Configuration;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 @Component( role = BuildStatusUpdater.class, hint = "orphans" )
 public class OrphanBuildStatusUpdater
@@ -36,13 +39,37 @@ public class OrphanBuildStatusUpdater
     @Requirement
     private BuildResultDao buildResultDao;
 
+    @Configuration( "24" )
+    private int orphanAfterHours;
+
+    public void setOrphanAfterHours( int orphanAfterHours )
+    {
+        this.orphanAfterHours = orphanAfterHours;
+    }
+
     public void performScan()
     {
+        if ( orphanAfterHours <= 0 )
+        {
+            log.warn( "disabled by configuration: orphan-after-hours = {}", orphanAfterHours );
+            return;
+        }
+
         try
         {
-            log.info( "scanning for orphaned in-progress build results" );
-            int updated = buildResultDao.resolveOrphanedInProgressResults();
-            log.info( "finished: fixed {} results", updated );
+            long hourInMillis = 1000 * 60 * 60, now = System.currentTimeMillis();
+            long orphanCutoff = now - ( orphanAfterHours * hourInMillis );
+            log.info( "attempting to cancel results in-progress for more than {} hours", orphanAfterHours );
+            Set<Integer> orphans = buildResultDao.resolveOrphanedInProgressResults( orphanCutoff );
+            if ( orphans.isEmpty() )
+            {
+                log.info( "marked no results as canceled" );
+            }
+            else
+            {
+                log.info( "marked {} results as canceled: {}", orphans.size(), orphans );
+            }
+
         }
         catch ( ContinuumStoreException e )
         {
