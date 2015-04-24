@@ -252,7 +252,7 @@
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -268,7 +268,7 @@
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -282,7 +282,7 @@
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -293,7 +293,7 @@
       <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -304,7 +304,7 @@
       <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -313,7 +313,7 @@
       <result name="confirmRemove">/WEB-INF/jsp/confirmDeleteProjects.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -366,7 +366,7 @@
       <result name="input">/WEB-INF/jsp/buildDefinitionEdit.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">projectView</param>
-        <param name="projectId">${projectId}</param>
+        <param name="projectId">%{projectId}</param>
       </result>
       <result name="success_group" type="chain">projectGroupBuildDefinition</result>
     </action>
@@ -449,11 +449,11 @@
       <interceptor-ref name="storeStack"/>
       <result name="input" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
       <result name="success" type="redirectAction">
         <param name="actionName">releasePromptGoal</param>
-        <param name="projectId">${releaseProjectId}</param>
+        <param name="projectId">%{releaseProjectId}</param>
       </result>
     </action>
 
@@ -474,7 +474,7 @@
       <result name="input">/WEB-INF/jsp/projectGroupEdit.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -490,7 +490,7 @@
       <interceptor-ref name="storeStack"/>
       <result name="success" type="redirectAction">
         <param name="actionName">buildResults</param>
-        <param name="projectId">${projectId}</param>
+        <param name="projectId">%{projectId}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/confirmBuildResultsRemoval.jsp</result>
     </action>
@@ -522,7 +522,7 @@
       </interceptor-ref>
       <result name="success" type="redirectAction">
         <param name="actionName">buildResults</param>
-        <param name="projectId">${projectId}</param>
+        <param name="projectId">%{projectId}</param>
       </result>
       <result name="confirm">/WEB-INF/jsp/confirmBuildResultsRemoval.jsp</result>
     </action>
@@ -535,16 +535,16 @@
       <result name="success">/WEB-INF/jsp/workingCopy.jsp</result>
       <result name="stream" type="stream">
         <param name="contentType">application/octet-stream</param>
-        <param name="contentDisposition">attachment; filename="${downloadFilename}"</param>
-        <param name="contentLength">${fileLength}</param>
+        <param name="contentDisposition">attachment; filename="%{downloadFilename}"</param>
+        <param name="contentLength">%{fileLength}</param>
       </result>
     </action>
 
     <action name="workingCopyFileText" class="workingCopy">
       <result name="success" type="stream">
         <param name="contentType">application/octet-stream</param>
-        <param name="contentDisposition">filename="${downloadFilename}"</param>
-        <param name="contentLength">${fileLength}</param>
+        <param name="contentDisposition">filename="%{downloadFilename}"</param>
+        <param name="contentLength">%{fileLength}</param>
       </result>
     </action>
 
@@ -585,14 +585,14 @@
     <action name="cancelBuilds" class="cancelBuild" method="cancelBuilds">
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
     <action name="cancelGroupBuild" class="cancelBuild" method="cancelGroupBuild">
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
     </action>
 
@@ -611,16 +611,16 @@
     <action name="releaseProject" class="releaseProject">
       <result name="prepareRelease" type="redirectAction">
         <param name="actionName">releasePrepareInput</param>
-        <param name="projectId">${projectId}</param>
+        <param name="projectId">%{projectId}</param>
       </result>
       <result name="performRelease" type="redirectAction">
         <param name="actionName">releasePerformInput</param>
-        <param name="projectId">${projectId}</param>
-        <param name="releaseId">${preparedReleaseId}</param>
+        <param name="projectId">%{projectId}</param>
+        <param name="releaseId">%{preparedReleaseId}</param>
       </result>
       <result name="performReleaseFromScm" type="redirectAction">
         <param name="actionName">releasePerformFromScmInput</param>
-        <param name="projectId">${projectId}</param>
+        <param name="projectId">%{projectId}</param>
       </result>
     </action>
 
@@ -633,8 +633,8 @@
       <result name="input" type="chain">releasePrepareInput</result>
       <result name="success" type="redirectAction">
         <param name="actionName">releaseInProgress</param>
-        <param name="releaseId">${releaseId}</param>
-        <param name="projectId">${projectId}</param>
+        <param name="releaseId">%{releaseId}</param>
+        <param name="projectId">%{projectId}</param>
         <param name="releaseGoal">prepare</param>
       </result>
       <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
@@ -649,8 +649,8 @@
       <result name="input" type="chain">releasePerformInput</result>
       <result name="success" type="redirectAction">
         <param name="actionName">releaseInProgress</param>
-        <param name="releaseId">${releaseId}</param>
-        <param name="projectId">${projectId}</param>
+        <param name="releaseId">%{releaseId}</param>
+        <param name="projectId">%{projectId}</param>
         <param name="releaseGoal">perform</param>
       </result>
       <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
@@ -665,8 +665,8 @@
       <result name="input">/WEB-INF/jsp/releasePerformFromScm.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">releaseInProgress</param>
-        <param name="projectId">${projectId}</param>
-        <param name="releaseId">${releaseId}</param>
+        <param name="projectId">%{projectId}</param>
+        <param name="releaseId">%{releaseId}</param>
         <param name="releaseGoal">perform</param>
       </result>
       <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
@@ -686,8 +686,8 @@
     <action name="releaseRollback" class="releaseRollback">
       <result name="success" type="redirectAction">
         <param name="actionName">releaseCleanup</param>
-        <param name="projectId">${projectId}</param>
-        <param name="releaseId">${releaseId}</param>
+        <param name="projectId">%{projectId}</param>
+        <param name="releaseId">%{releaseId}</param>
       </result>
       <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
@@ -696,7 +696,7 @@
       <result name="prepareFinished" type="chain">releasePromptGoal</result>
       <result name="performFinished" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
       <result name="releaseError">/WEB-INF/jsp/error/releaseError.jsp</result>
     </action>
@@ -718,7 +718,7 @@
       <result name="confirm">/WEB-INF/jsp/confirmReleaseResultsRemoval.jsp</result>
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupReleaseResults</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
       <interceptor-ref name="configuredContinuumStack">
         <param name="tokenSession.includeMethods">remove</param>
@@ -742,7 +742,7 @@
       <result name="input">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
       <result name="success">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
       <result name="send-file" type="stream">
-        <param name="contentType">${contentType}</param>
+        <param name="contentType">%{contentType}</param>
         <param name="contentDisposition">attachment; filename="continuum_project_builds_report.csv"</param>
       </result>
     </action>
