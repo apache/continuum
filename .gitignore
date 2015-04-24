@@ -9,3 +9,4 @@ continuum-webapp/data/
 *.iml
 .idea
 build/
+!**/src/**/build/
