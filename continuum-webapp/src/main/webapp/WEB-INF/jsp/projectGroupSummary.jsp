@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -32,9 +31,9 @@
     <meta http-equiv="refresh" content="30"/>
     <script type="text/javascript">
 
-      <c:url var="addM2ProjectUrl" value="/addMavenTwoProjectInput.action" />
-      <c:url var="addM1ProjectUrl" value="/addMavenOneProjectInput.action" />
-      <c:url var="addProjectUrl" value="/addProjectInput.action" />
+      <s:url var="addM2ProjectUrl" action="addMavenTwoProjectInput" />
+      <s:url var="addM1ProjectUrl" action="addMavenOneProjectInput" />
+      <s:url var="addProjectUrl" action="addProjectInput" />
 
       function goToAddProject()
       {
@@ -81,7 +80,7 @@
       <s:param name="tabName" value="'Summary'"/>
     </s:action>
 
-    <h3><s:text name="projectGroup.information.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
+    <h3><s:text name="projectGroup.information.title"><s:param value="projectGroup.name"/></s:text></h3>
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <tr class="b">
@@ -128,13 +127,13 @@
     <redback:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${projectGroup.name}">
       <h3><s:text name="projectGroup.actions.title"/></h3>
 
-      <c:if test="${!empty actionErrors}">
+      <s:if test="hasActionErrors()">
         <div class="errormessage">
           <s:iterator value="actionErrors">
             <p><s:property/></p>
           </s:iterator>
         </div>
-      </c:if>
+      </s:if>
 
       <div class="functnbar3">
         <table>
@@ -204,8 +203,8 @@
     </redback:ifAnyAuthorized>
 
     <s:action name="projectSummary" executeResult="true" namespace="component">
-      <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
-      <s:param name="projectGroupName"><c:out value="${projectGroup.name}"/></s:param>
+      <s:param name="projectGroupId" value="projectGroupId" />
+      <s:param name="projectGroupName" value="projectGroup.name" />
     </s:action>
 
   </div>
