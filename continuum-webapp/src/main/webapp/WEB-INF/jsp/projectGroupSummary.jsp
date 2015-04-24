@@ -80,6 +80,17 @@
       <s:param name="tabName" value="'Summary'"/>
     </s:action>
 
+    <s:if test="hasActionErrors()">
+      <div class="errormessage">
+        <s:actionerror/>
+      </div>
+    </s:if>
+    <s:if test="hasActionMessages()">
+      <div class="warningmessage">
+        <s:actionmessage/>
+      </div>
+    </s:if>
+
     <h3><s:text name="projectGroup.information.title"><s:param value="projectGroup.name"/></s:text></h3>
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
@@ -126,14 +137,6 @@
 
     <redback:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${projectGroup.name}">
       <h3><s:text name="projectGroup.actions.title"/></h3>
-
-      <s:if test="hasActionErrors()">
-        <div class="errormessage">
-          <s:iterator value="actionErrors">
-            <p><s:property/></p>
-          </s:iterator>
-        </div>
-      </s:if>
 
       <div class="functnbar3">
         <table>
