@@ -105,7 +105,7 @@ public class BuildDefinitionSummaryAction
 
             checkViewProjectGroupAuthorization( projectGroup.getName() );
 
-            for ( Project project : (List<Project>) projectGroup.getProjects() )
+            for ( Project project : projectGroup.getProjects() )
             {
                 projectBuildDefinitionSummaries.addAll( gatherProjectBuildDefinitionSummaries( project.getId(),
                                                                                                projectGroupId ) );
@@ -161,7 +161,7 @@ public class BuildDefinitionSummaryAction
         List<BuildDefinitionSummary> summaryList = new ArrayList<BuildDefinitionSummary>();
 
         Project project = getContinuum().getProjectWithAllDetails( projectId );
-        for ( BuildDefinition bd : (List<BuildDefinition>) project.getBuildDefinitions() )
+        for ( BuildDefinition bd : project.getBuildDefinitions() )
         {
             BuildDefinitionSummary bds = generateBuildDefinitionSummary( bd );
             bds.setFrom( "PROJECT" );
@@ -182,7 +182,7 @@ public class BuildDefinitionSummaryAction
 
         projectGroup = getContinuum().getProjectGroupWithBuildDetails( projectGroupId );
 
-        for ( BuildDefinition bd : (List<BuildDefinition>) projectGroup.getBuildDefinitions() )
+        for ( BuildDefinition bd : projectGroup.getBuildDefinitions() )
         {
             BuildDefinitionSummary bds = generateBuildDefinitionSummary( bd );
             bds.setFrom( "GROUP" );
