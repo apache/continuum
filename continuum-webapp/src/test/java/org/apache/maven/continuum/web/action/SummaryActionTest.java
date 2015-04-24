@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.opensymphony.xwork2.Action.SUCCESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -83,7 +84,7 @@ public class SummaryActionTest
         when( continuum.getConfiguration() ).thenReturn( configurationService );
         when( configurationService.isDistributedBuildEnabled() ).thenReturn( true );
 
-        action.execute();  // expected result?
+        assertEquals( SUCCESS, action.browse() );
 
         List<ProjectSummary> projects = action.getProjects();
 
@@ -111,7 +112,7 @@ public class SummaryActionTest
         when( continuum.getConfiguration() ).thenReturn( configurationService );
         when( configurationService.isDistributedBuildEnabled() ).thenReturn( false );
 
-        action.execute();  // expected result?
+        assertEquals( SUCCESS, action.browse() );
 
         List<ProjectSummary> projects = action.getProjects();
 
