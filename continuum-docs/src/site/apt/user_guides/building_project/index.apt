@@ -25,7 +25,26 @@
 
 Building Projects
 
-    For Ant and Maven builds the following system properties will be added via -D command line:
+    Continuum's build system is centered around the notion of a project containing one or more build definitions
+    (or build commands). Once defined, project builds can be triggered two ways:
+
+      [[1]] {{{./schedule_build.html} Scheduled Builds}}
+
+      [[2]] {{{./forced_build.html} Forced Builds}}
+
+      []
+
+    Scheduled builds are triggered as a result of a configured schedule and are only actually attempted when there are
+    relevant changes since the last build. Alternatively, forced builds are triggered as a result of user interaction
+    and are always attempted regardless of changes in the project.
+
+    <Note that when using distributed builds, project checkout or update can take longer due to an additional SCM
+    changelog command that must be run in order to determine whether projects should build or not.>
+
+* Build Properties
+
+    To give projects an awareness of their build status, Continuum passes some project build information when running
+    commands. For Ant and Maven builds the following system properties will be added via -D command line:
 
       * <<<continuum.project.group.name>>>
 
@@ -43,29 +62,35 @@ Building Projects
 
       []
 
-    When building projects, the build order is determined by the inter-dependency of the projects.
-    This would mean that the dependencies of a project are built first.
-
-    In cases when a project group can build projects in parallel build queues but one of those projects depend
-    on another project, the inter-dependent projects will build in the same build queue.
-
-    Projects can be built in two ways:
-
-      [[1]] {{{./schedule_build.html} Scheduled Builds}}
-
-      [[2]] {{{./forced_build.html} Forced Builds}}
-
-      []
-
-    Projects will have the <<in queue>> icon once the forced build or a scheduled build is triggered. This means that the project is either in the <<prepare build
-    queue>> or in the <<build queue>>.
-
-[../../images/inqueue.gif]
-
-    Checkout or update of projects takes longer with distributed builds enabled because after an SCM checkout or SCM update, an SCM changelog follows to get the "latest
-    update date" needed to determine whether projects should build or not.
-
 * Cancelling builds
 
     If a build has been started, you can cancel it before it completes. See
     {{{./cancelling_build.html} Cancelling Builds}} for more information.
+
+* Understanding The Build Pipeline
+
+    Continuum's build pipeline currently consists of three task queues: <checkout>, <prepare> and <build>.
+
+      [Checkout] Checks out the working copy for initial working copy creation
+
+      [Prepare] Updates or checks out a fresh working copy (depending on build configuration), detects changes and, if
+                appropriate, creates build tasks
+
+      [Build] Executes build tasks corresponding to project build definitions
+
+      []
+
+    When building projects, Continuum ensures tasks are queued in an order that ensures dependencies of a project are
+    built before the project itself. When a project group configured to use parallel build queues contains a project
+    with a dependency on another project, the inter-dependent projects are added to the same build queue.
+
+** Scheduling Restrictions
+
+    Build tasks modify the working copy during the course of their execution. Consequently, they must not execute
+    concurrently on a single working copy or it would potentially be corrupted. For this reason, Continuum currently
+    prevents manually queuing conflicting tasks, such as when a related project task is already queued or executing.
+
+    <This behavior is understood to be sub-optimal and largely a consequence of the current implementation of the
+    build pipeline. In the future, the implementation may change to support only a single multi-stage task that performs
+    the entire build sequence (checkout, prepare, build) for a working copy. By doing this, integrity can be guaranteed
+    by ensuring tasks requiring sequential execution are always added to the same queue.>
