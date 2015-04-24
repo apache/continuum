@@ -83,7 +83,7 @@
   </redback:ifAuthorized>
 
 
-  <redback:ifAnyAuthorized permissions="continuum-manage-build-templates,continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles,continuum-view-queues,continuum-manage-repositories,continuum-manage-purging">
+  <redback:ifAnyAuthorized permissions="continuum-manage-build-templates,continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles,continuum-manage-queues,continuum-manage-repositories,continuum-manage-purging">
     <div id="projectmenu" class="toolgroup">
       <div class="label">
         <s:text name="menu.administration"/>
@@ -127,9 +127,9 @@
             <s:a href="%{configurationUrl}">
               <s:text name="menu.administration.profile"/>
             </s:a>
-          </div> 
-        </redback:ifAuthorized> 
-        <redback:ifAuthorized permission="continuum-view-queues">
+          </div>
+        </redback:ifAuthorized>
+        <redback:ifAuthorized permission="continuum-manage-queues">
           <s:url id="queueUrls" action="displayQueues" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{queueUrls}">
