@@ -32,7 +32,7 @@
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/continuum.css" includeParams="none"/>" media="screen"/>
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/print.css" includeParams="none"/>" media="print"/>
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
-  <link rel="shortcut icon" href="<s:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>
+  <link rel="icon" href="<s:url value="/favicon.ico" includeParams="none"/>" sizes="16x16 32x32 48x48 64x64" type="image/vnd.microsoft.icon">
   <script type="text/javascript" src="<c:url value='/js/jquery-1.3.2.min.js'/>"></script>
   <script language="javascript" type="text/javascript">
     $.noConflict();
