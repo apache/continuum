@@ -81,6 +81,17 @@ public class CreateBuildProjectTaskAction
 
             try
             {
+                /**
+                 * The following can (and probably should) be simplified to:
+                 *
+                 * If project is building in executor or its state is UPDATING:
+                 *   * Skip the project and log it
+                 *
+                 * If project state is not in { NEW, CHECKEDOUT, OK, FAILED, ERROR }:
+                 *   * Set the project's state to ERROR
+                 *
+                 * Lastly, record the project's original state and add it to the list of projects to build
+                 */
                 if ( project.getState() != ContinuumProjectState.NEW &&
                     project.getState() != ContinuumProjectState.CHECKEDOUT &&
                     project.getState() != ContinuumProjectState.OK &&
