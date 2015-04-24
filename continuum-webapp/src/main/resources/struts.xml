@@ -318,7 +318,7 @@
       </result>
     </action>
 
-    <action name="ProjectsList" class="projects">
+    <action name="projectsList" class="projects">
       <interceptor-ref name="storeStack"/>
       <result name="confirmRemove">/WEB-INF/jsp/confirmDeleteProjects.jsp</result>
       <result name="success" type="redirectAction">

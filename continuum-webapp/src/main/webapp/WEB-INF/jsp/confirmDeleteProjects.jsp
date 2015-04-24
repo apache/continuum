@@ -31,20 +31,20 @@
           <p>
             <strong>
                 <s:text name="deleteProjects.confirmation.message">
-                    <s:param><s:property value="selectedProjectsNames"/></s:param>
+                    <s:param value="selectedProjectsNames"/>
                 </s:text>
             </strong>
           </p>
         </div>
         <div class="functnbar3">
-          <s:form action="ProjectsList" method="post">
-            <s:iterator value="selectedProjects">
-              <input type="hidden" value="<s:property/>" name="selectedProjects"/>
+          <s:form action="projectsList" theme="simple">
+            <s:iterator value="selectedProjects" var="selectedProject">
+              <s:hidden name="selectedProjects" value="%{top}"/>
             </s:iterator>
-            <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
-            <input type="hidden" name="methodToCall" value="remove" />
-            <s:submit value="%{getText('delete')}" theme="simple"/>
-            <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
+            <s:hidden name="projectGroupId" value="%{projectGroupId}" />
+            <s:hidden name="methodToCall" value="remove"/>
+            <s:submit value="%{getText('delete')}"/>
+            <s:submit type="button" name="Cancel" value="%{getText('cancel')}" onclick="history.back();"/>
           </s:form>
         </div>
       </div>

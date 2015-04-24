@@ -40,7 +40,7 @@
 
   <h3><s:text name="projectGroup.projects.title"/></h3>
 
-  <s:form id="projectsForm" action="ProjectsList" theme="simple">
+  <s:form id="projectsForm" action="projectsList" theme="simple">
     <s:hidden name="methodToCall" value="" />
     <s:hidden name="buildDefinitionId" value="-1" />
     <s:hidden name="projectGroupId" />
