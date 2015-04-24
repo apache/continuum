@@ -208,9 +208,8 @@ public class ProjectGroupAction
                     url = rootProject.getUrl();
                 }
 
-                for ( Object o : projectGroup.getProjects() )
+                for ( Project p : projectGroup.getProjects() )
                 {
-                    Project p = (Project) o;
                     if ( "maven2".equals( p.getExecutorId() ) )
                     {
                         nbMaven2Projects += 1;
