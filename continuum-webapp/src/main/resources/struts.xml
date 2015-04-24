@@ -395,7 +395,7 @@
     <!--
     * project group actions
     -->
-    <action name="projectGroupSummary" class="projectGroup" method="summary">
+    <action name="projectGroupSummary" class="projectGroup" method="browse">
       <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/projectGroupSummary.jsp</result>
       <result name="to_summary_page" type="redirectAction">
@@ -1283,7 +1283,7 @@
       <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>
     </action>
 
-    <action name="projectSummary" class="summary">
+    <action name="projectSummary" class="summary" method="browse">
       <result name="input">/WEB-INF/jsp/components/projectSummaryComponent.jsp</result>
       <result name="success">/WEB-INF/jsp/components/projectSummaryComponent.jsp</result>
       <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>

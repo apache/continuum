@@ -145,11 +145,10 @@ public class ProjectGroupAction
         throws Exception
     {
         super.prepare();
-
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
     }
 
-    public String summary()
+    public String browse()
         throws ContinuumException
     {
         try
@@ -284,13 +283,13 @@ public class ProjectGroupAction
     public String buildDefinitions()
         throws ContinuumException
     {
-        return summary();
+        return browse();
     }
 
     public String notifiers()
         throws ContinuumException
     {
-        return summary();
+        return browse();
     }
 
     public String remove()

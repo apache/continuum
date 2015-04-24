@@ -63,7 +63,7 @@ public class SummaryAction
     @Requirement( hint = "parallel" )
     private BuildsManager parallelBuildsManager;
 
-    public String execute()
+    public String browse()
         throws ContinuumException
     {
         try
