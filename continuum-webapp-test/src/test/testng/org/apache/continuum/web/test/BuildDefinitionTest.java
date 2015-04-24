@@ -171,7 +171,8 @@ public class BuildDefinitionTest
     {
         goToGroupBuildDefinitionPage( projectGroupName, projectGroupId, projectGroupDescription );
         clickImgWithAlt( "Build" );
-        assertProjectGroupSummaryPage( projectGroupName, projectGroupId, projectGroupDescription );
+        assertGroupBuildDefinitionPage( projectGroupName );
+        assertTextPresent( "successfully queued builds" );
     }
 
     public void testAddDefaultGroupBuildDefinition()

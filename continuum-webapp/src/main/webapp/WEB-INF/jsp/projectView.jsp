@@ -36,6 +36,17 @@
 
         <h3><s:text name="projectView.section.title"><s:param><c:out value="${project.name}"/></s:param></s:text></h3>
 
+        <s:if test="hasActionErrors()">
+          <div class="errormessage">
+            <s:actionerror/>
+          </div>
+        </s:if>
+        <s:if test="hasActionMessages()">
+          <div class="warningmessage">
+            <s:actionmessage/>
+          </div>
+        </s:if>
+
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <tr class="b">
@@ -83,9 +94,8 @@
                   </s:form>
                 </td>
                 <td>
-                  <s:form action="buildProject" theme="simple">
+                  <s:form action="buildProjectViaProject" theme="simple">
                     <s:hidden name="projectId" />
-                    <s:hidden name="fromProjectPage" value="true"/>
                     <s:submit name="build-project" value="%{getText('summary.buildNow')}"/>
                   </s:form>
                 </td>

@@ -32,6 +32,7 @@ import org.apache.continuum.utils.build.BuildTrigger;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.build.BuildException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -68,7 +69,7 @@ import java.util.Map;
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
  */
-@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectGroup", instantiationStrategy = "per-lookup"  )
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectGroup", instantiationStrategy = "per-lookup" )
 public class ProjectGroupAction
     extends ContinuumConfirmAction
 {
@@ -571,6 +572,11 @@ public class ProjectGroupAction
             {
                 getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, buildTrigger );
             }
+            addActionMessage( getText( "build.projects.success" ) );
+        }
+        catch ( BuildException be )
+        {
+            addActionError( be.getLocalizedMessage() );
         }
         catch ( NoBuildAgentException e )
         {

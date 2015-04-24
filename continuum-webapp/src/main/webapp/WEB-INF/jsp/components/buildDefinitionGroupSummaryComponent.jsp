@@ -63,7 +63,7 @@
       <ec:column property="alwaysBuild" title="projectView.buildDefinition.alwaysBuild"/>
       <ec:column property="buildAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-          <s:url id="buildUrl" action="buildProject" namespace="/">
+          <s:url id="buildUrl" action="buildProjectViaGroupBuildDefinition" namespace="/">
             <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
             <s:param name="fromGroupPage" value="true"/>
@@ -176,7 +176,7 @@
       <ec:column property="alwaysBuild" title="projectView.buildDefinition.alwaysBuild"/>
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-          <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
+          <s:url id="buildProjectUrl" action="buildProjectViaGroupBuildDefinition" namespace="/" includeParams="none">
             <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
             <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
           </s:url>

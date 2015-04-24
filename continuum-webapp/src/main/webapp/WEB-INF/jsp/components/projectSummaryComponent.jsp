@@ -103,7 +103,7 @@
           <s:else>
             <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
                 <s:if test="#attr['projectIdle']">
-                  <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
+                  <s:url id="buildProjectUrl" action="buildProjectViaGroup" namespace="/" includeParams="none">
                     <s:param name="projectId" value="#attr['project'].id"/>
                     <s:param name="projectGroupId" value="#attr['project'].projectGroupId"/>
                     <s:param name="fromGroupPage" value="true"/>
@@ -219,12 +219,26 @@
           <tr>
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                <script>
+                  function handleBuild(projectsForm) {
+                    projectsForm.methodToCall.value = 'build';
+                    projectsForm.submit();
+                  }
+                  function handleCancel(projectsForm) {
+                    projectsForm.action = '<s:url action="cancelBuilds" />';
+                    projectsForm.submit();
+                  }
+                  function handleRemove(projectsForm) {
+                    projectsForm.methodToCall.value = 'confirmRemove';
+                    projectsForm.submit();
+                  }
+                </script>
                 <s:select theme="simple" name="buildDef" list="buildDefinitions"
                            listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"
                            onchange="$('projectsForm').buildDefinitionId.value=$('buildDef').value" />
-                <input type="button" name="build-projects" value="<s:text name="projectGroup.buildProjects"/>" onclick="$('projectsForm').methodToCall.value='build';document.forms.projectsForm.submit();" />
-                <input type="button" name="cancel-builds" value="<s:text name="projectGroup.cancelBuilds"/>" onclick="document.forms.projectsForm.action='cancelBuilds.action';document.forms.projectsForm.submit();" />
-                <input type="button" name="delete-projects" value="<s:text name="projectGroup.deleteProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='confirmRemove';document.forms.projectsForm.submit();" />
+                <s:submit type="button" value="%{getText('projectGroup.buildProjects')}" onclick="handleBuild($('projectsForm'))"/>
+                <s:submit type="button" value="%{getText('projectGroup.cancelBuilds')}" onclick="handleCancel($('projectsForm'))" />
+                <s:submit type="button" value="%{getText('projectGroup.deleteProjects')}" onclick="handleRemove($('projectsForm'))" />
               </redback:ifAuthorized>
             </td>
           </tr>

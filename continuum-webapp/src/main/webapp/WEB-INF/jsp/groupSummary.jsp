@@ -31,20 +31,23 @@
   <body>
   <div id="h3">
 
+    <s:if test="hasActionErrors()">
+      <div class="errormessage">
+        <s:actionerror/>
+      </div>
+    </s:if>
+    <s:if test="hasActionMessages()">
+      <div class="warningmessage">
+        <s:actionmessage/>
+      </div>
+    </s:if>
+
     <s:if test="infoMessage != null">
        <p><s:property value="infoMessage"/></p>
     </s:if>
     <s:else>
        <h3><s:text name="groups.page.section.title"/></h3>
     </s:else>
-  
-    <s:if test="hasActionErrors()">
-      <div class="errormessage">
-        <s:iterator value="actionErrors">
-          <p><s:property/></p>
-        </s:iterator>
-      </div>
-    </s:if>
 
     <s:if test="groups == null || groups.size() == 0">
       <s:text name="groups.page.list.empty"/>

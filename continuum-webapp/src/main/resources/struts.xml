@@ -35,6 +35,7 @@
   <package name="default" extends="json-default">
 
     <interceptors>
+
       <interceptor-stack name="defaultStack">
         <interceptor-ref name="exception"/>
         <interceptor-ref name="alias"/>
@@ -53,10 +54,10 @@
         <interceptor-ref name="params" />
         <interceptor-ref name="conversionError"/>
         <interceptor-ref name="validation">
-          <param name="excludeMethods">input,back,cancel,browse</param>
+          <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
         <interceptor-ref name="workflow">
-          <param name="excludeMethods">input,back,cancel,browse</param>
+          <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
       </interceptor-stack>
 
@@ -91,12 +92,6 @@
         <interceptor-ref name="tokenSession">
           <param name="excludeMethods">*</param>
         </interceptor-ref>
-        <interceptor-ref name="validation">
-          <param name="excludeMethods">input,back,cancel,browse,edit</param>
-        </interceptor-ref>
-        <interceptor-ref name="workflow">
-          <param name="excludeMethods">input,back,cancel,browse,edit</param>
-        </interceptor-ref>
       </interceptor-stack>
 
       <interceptor-stack name="unconfiguredContinuumStack">
@@ -107,12 +102,6 @@
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="redbackSecureActions">
           <param name="enableReferrerCheck">false</param>
-        </interceptor-ref>
-        <interceptor-ref name="validation">
-          <param name="excludeMethods">input,back,cancel,browse,edit</param>
-        </interceptor-ref>
-        <interceptor-ref name="workflow">
-          <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
       </interceptor-stack>
 
@@ -129,6 +118,7 @@
           <param name="operationMode">RETRIEVE</param>
         </interceptor-ref>
       </interceptor-stack>
+
     </interceptors>
 
     <default-interceptor-ref name="configuredContinuumStack"/>
@@ -241,7 +231,7 @@
     </action>
 
 
-    <action name="groupSummary" class="groupSummary">
+    <action name="groupSummary" class="groupSummary" method="browse">
       <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/groupSummary.jsp</result>
     </action>
@@ -327,17 +317,32 @@
       </result>
     </action>
 
-    <action name="buildProject" class="buildProject">
+    <action name="buildProjectViaGroup" class="buildProject">
       <interceptor-ref name="storeStack"/>
-      <result name="success" type="chain">groupSummary</result>
-      <result name="to_group_page" type="redirectAction">
+      <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
-      <result name="to_project_page" type="chain">projectView</result>
+    </action>
+
+    <action name="buildProjectViaGroupBuildDefinition" class="buildProject">
+      <interceptor-ref name="storeStack"/>
+      <result name="success" type="redirectAction">
+        <param name="actionName">projectGroupBuildDefinition</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="buildProjectViaProject" class="buildProject">
+      <interceptor-ref name="storeStack"/>
+      <result name="success" type="redirectAction">
+        <param name="actionName">projectView</param>
+        <param name="projectId">%{projectId}</param>
+      </result>
     </action>
 
     <action name="projectView" class="projectView">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/projectView.jsp</result>
     </action>
 
@@ -391,7 +396,6 @@
       </interceptor-ref>
     </action>
 
-
     <!--
     * project group actions
     -->
@@ -408,6 +412,7 @@
     </action>
 
     <action name="projectGroupBuildDefinition" class="projectGroup" method="buildDefinitions">
+      <interceptor-ref name="retrieveStack"/>
       <result name="success">/WEB-INF/jsp/projectGroupBuildDefinition.jsp</result>
     </action>
 
@@ -419,9 +424,11 @@
       <interceptor-ref name="storeStack"/>
       <result name="success" type="redirectAction">
         <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
+        <param name="projectGroupId">%{projectGroupId}</param>
       </result>
-      <result name="to_summary_page" type="chain">groupSummary</result>
+      <result name="to_summary_page" type="redirectAction">
+        <param name="actionName">groupSummary</param>
+      </result>
     </action>
 
     <action name="confirmRemoveProjectGroup" class="projectGroup" method="confirmRemove">
@@ -1264,9 +1271,33 @@
   </package>
 
   <package name="component" extends="default">
+
     <!--
     * component actions
     -->
+
+    <interceptors>
+      <interceptor-stack name="componentStack">
+        <interceptor-ref name="redbackEnvironmentChecker"/>
+        <interceptor-ref name="redbackForceAdminUser"/>
+        <interceptor-ref name="redbackAutoLogin"/>
+        <interceptor-ref name="defaultStack">
+          <param name="validation.excludeMethods">execute,browse,summarizeForProject,summarizeForGroup</param>
+          <param name="workflow.excludeMethods">execute,browse,summarizeForProject,summarizeForGroup</param>
+        </interceptor-ref>
+        <interceptor-ref name="redbackSecureActions">
+          <param name="enableReferrerCheck">false</param>
+        </interceptor-ref>
+        <interceptor-ref name="redbackPolicyEnforcement"/>
+        <interceptor-ref name="continuumConfigurationCheck"/>
+        <interceptor-ref name="tokenSession">
+          <param name="excludeMethods">*</param>
+        </interceptor-ref>
+      </interceptor-stack>
+    </interceptors>
+
+    <default-interceptor-ref name="componentStack"/>
+
     <action name="buildDefinitionSummary" class="buildDefinitionSummary" method="summarizeForProject">
       <result name="success">/WEB-INF/jsp/components/buildDefinitionSummaryComponent.jsp</result>
       <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>

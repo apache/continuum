@@ -46,7 +46,7 @@ public class GroupSummaryAction
 
     private List<GroupSummary> groups;
 
-    public String execute()
+    public String browse()
         throws ContinuumException
     {
         groups = new ArrayList<GroupSummary>();

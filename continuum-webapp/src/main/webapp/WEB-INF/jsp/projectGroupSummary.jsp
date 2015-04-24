@@ -92,6 +92,7 @@
     </s:if>
 
     <h3><s:text name="projectGroup.information.title"><s:param value="projectGroup.name"/></s:text></h3>
+
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <tr class="b">

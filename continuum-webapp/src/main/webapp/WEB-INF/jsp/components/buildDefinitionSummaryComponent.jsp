@@ -53,7 +53,7 @@
       <ec:column property="type" title="projectView.buildDefinition.type"/>      
       <ec:column property="buildAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-          <s:url id="buildProjectUrl" action="buildProject" namespace="/">
+          <s:url id="buildProjectUrl" action="buildProjectViaProject" namespace="/">
             <s:param name="projectId" value="#attr['projectId']"/>
             <s:param name="buildDefinitionId" value="#attr['buildDefinitionSummary'].id"/>
             <s:param name="fromProjectPage" value="true"/>

@@ -24,6 +24,7 @@ import org.apache.continuum.buildagent.NoBuildAgentInGroupException;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.build.BuildException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -38,7 +39,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
-@Component( role = com.opensymphony.xwork2.Action.class, hint = "projects", instantiationStrategy = "per-lookup"  )
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projects", instantiationStrategy = "per-lookup" )
 public class ProjectsListAction
     extends ContinuumActionSupport
 {
@@ -175,6 +176,11 @@ public class ProjectsListAction
                 {
                     getContinuum().buildProjectsWithBuildDefinition( sortedProjects, buildDefinitionId );
                 }
+                addActionMessage( getText( "build.projects.success" ) );
+            }
+            catch ( BuildException be )
+            {
+                addActionError( be.getLocalizedMessage() );
             }
             catch ( NoBuildAgentException e )
             {
