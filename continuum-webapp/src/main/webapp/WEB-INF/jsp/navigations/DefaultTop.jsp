@@ -25,7 +25,9 @@
   <div id="banner">
     <span id="bannerLeft">
       <a href="http://continuum.apache.org">
-        <img src="<s:url value="/images/continuum_logo_75.gif" includeParams="none"/>" alt="Continuum" title="Continuum" border="0">
+        <img src="<s:url value="/images/continuum.svg" includeParams="none"/>"
+             onerror="this.src='<s:url value="/images/continuum.png" includeParams="none"/>';this.onerror=null;"
+             alt="Continuum" title="Continuum" border="0">
       </a>
     </span>
     <span id="bannerRight">
