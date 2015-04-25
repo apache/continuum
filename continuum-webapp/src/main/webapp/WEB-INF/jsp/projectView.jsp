@@ -80,6 +80,10 @@
               <th><label class="label"><s:text name='projectView.project.lastBuildDateTime'/>:</label></th>
               <td><s:date name="timeToDate(mapZeroTime(latestResult.endTime))"/></td>
             </tr>
+            <tr class="b">
+              <th><label class="label"><s:text name='buildResults.result'/>:</label></th>
+              <td><s:property value="resultIcon(latestResult)" escape="false"/></td>
+            </tr>
           </table>
 
           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">

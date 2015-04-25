@@ -24,6 +24,7 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.view.buildresults.StateCell;
 import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,5 +131,16 @@ public class ProjectViewAction
     public Date timeToDate( long time )
     {
         return new Date( time );
+    }
+
+    /**
+     * Converts the specified result to an html icon.
+     *
+     * @param result the build result to convert.
+     * @return icon as html, either an img or if appropriate, a clickable link containing the img
+     */
+    public String resultIcon( BuildResult result )
+    {
+        return StateCell.iconifyResult( result, result.getState() );
     }
 }
