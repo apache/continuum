@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -34,7 +33,7 @@
           <jsp:param name="tab" value="view"/>
         </jsp:include>
 
-        <h3><s:text name="projectView.section.title"><s:param><c:out value="${project.name}"/></s:param></s:text></h3>
+        <h3><s:text name="projectView.section.title"><s:param value="project.name"/></s:text></h3>
 
         <s:if test="hasActionErrors()">
           <div class="errormessage">
@@ -69,8 +68,8 @@
               <th><label class="label"><s:text name='projectView.project.scmTag'/>:</label></th>
               <td><s:property value="project.scmTag"/></td>
             </tr>
-            <s:url id="projectGroupSummaryUrl" value="/projectGroupSummary.action">
-                <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
+            <s:url id="projectGroupSummaryUrl" action="projectGroupSummary">
+                <s:param name="projectGroupId" value="project.projectGroup.id"/>
             </s:url>
             <tr class="b">
               <th><label class="label"><s:text name='projectView.project.group'/>:</label></th>
@@ -113,8 +112,8 @@
         <h3><s:text name="projectView.buildDefinitions"/></h3>
 
         <s:action name="buildDefinitionSummary" id="summary" namespace="component" executeResult="true">
-          <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-          <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
+          <s:param name="projectId" value="project.id"/>
+          <s:param name="projectGroupId" value="project.projectGroup.id"/>
         </s:action>
 
         <div class="functnbar3">
@@ -128,7 +127,7 @@
         </div>
 
         <h3><s:text name="projectView.notifiers"/></h3>
-        <c:if test="${not empty project.notifiers}">
+        <s:if test="project.notifiers.size() > 0">
           <s:set name="notifiers" value="project.notifiers" scope="request"/>
           <ec:table items="notifiers"
                     var="notifier"
@@ -145,22 +144,20 @@
               <ec:column property="from" title="projectView.notifier.from" cell="org.apache.maven.continuum.web.view.projectview.NotifierFromCell"/>
               <ec:column property="editAction" title="&nbsp;" width="1%">
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
-                  <c:choose>
-                    <c:when test="${!pageScope.notifier.fromProject}">
-                      <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
-                        <s:param name="notifierId"><c:out value="${notifier.id}"/></s:param>
-                        <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-                        <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
-                        <s:param name="notifierType"><c:out value="${notifier.type}"/></s:param>
-                      </s:url>
-                      <s:a href="%{editUrl}">
-                        <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
-                      </s:a>
-                    </c:when>
-                    <c:otherwise>
-                      <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
-                    </c:otherwise>
-                </c:choose>
+                  <s:if test="!#attr['notifier'].fromProject">
+                    <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
+                      <s:param name="notifierId" value="#attr['notifier'].id"/>
+                      <s:param name="projectId" value="project.id"/>
+                      <s:param name="projectGroupId" value="project.projectGroup.id"/>
+                      <s:param name="notifierType" value="#attr['notifier'].type"/>
+                    </s:url>
+                    <s:a href="%{editUrl}">
+                      <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
+                    </s:a>
+                  </s:if>
+                  <s:else>
+                    <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
+                  </s:else>
                 </redback:ifAuthorized>
                 <redback:elseAuthorized>
                   <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
@@ -168,22 +165,20 @@
               </ec:column>
               <ec:column property="deleteAction" title="&nbsp;" width="1%">
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
-                  <c:choose>
-                    <c:when test="${!pageScope.notifier.fromProject}">
-                      <s:url id="removeUrl" action="deleteProjectNotifier_default.action" namespace="/">
-                        <s:param name="projectId"><c:out value="${project.id}"/></s:param>
-                        <s:param name="projectGroupId"><c:out value="${project.projectGroup.id}"/></s:param>
-                        <s:param name="notifierType"><c:out value="${notifier.type}"/></s:param>
-                        <s:param name="notifierId"><c:out value="${notifier.id}"/></s:param>
+                  <s:if test="!#attr['notifier'].fromProject">
+                    <s:url id="removeUrl" action="deleteProjectNotifier_default" namespace="/">
+                      <s:param name="projectId" value="project.id"/>
+                      <s:param name="projectGroupId" value="project.projectGroup.id"/>
+                      <s:param name="notifierType" value="#attr['notifier'].type"/>
+                      <s:param name="notifierId" value="#attr['notifier'].id"/>
                     </s:url>
                     <s:a href="%{removeUrl}">
                       <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
                     </s:a>
-                    </c:when>
-                    <c:otherwise>
-                      <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
-                    </c:otherwise>
-                  </c:choose>
+                  </s:if>
+                  <s:else>
+                    <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
+                  </s:else>
                 </redback:ifAuthorized>
                 <redback:elseAuthorized>
                   <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
@@ -191,7 +186,7 @@
               </ec:column>
             </ec:row>
           </ec:table>
-        </c:if>
+        </s:if>
         <div class="functnbar3">
            <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <s:form action="addProjectNotifier" method="post">
