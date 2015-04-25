@@ -113,7 +113,7 @@ public abstract class AbstractUserRolesManagementTest
         if ( "System Administrator".equals( role ) )
         {
             String navMenu =
-                "About,Show Project Groups,Maven Project,Maven 1.x Project,Ant Project,Shell Project,Local Repositories,Purge Configurations,Schedules,Installations,Build Environments,Queues,Build Definition Templates,Configuration,Appearance,Users,Roles,Build Queue";
+                "About,Show Project Groups,Maven Project,Maven 1.x Project,Ant Project,Shell Project,Local Repositories,Purge Configurations,Schedules,Installations,Build Environments,Build Definition Templates,Configuration,Appearance,Users,Roles,Build Queue";
             String[] arrayNavMenu = navMenu.split( "," );
             for ( String navmenu : arrayNavMenu )
             {
@@ -132,7 +132,7 @@ public abstract class AbstractUserRolesManagementTest
         else if ( "Continuum Group Project Administrator".equals( role ) )
         {
             String navMenu =
-                "About,Show Project Groups,Maven Project,Maven 1.x Project,Ant Project,Shell Project,Schedules,Queues,Users,Roles";
+                "About,Show Project Groups,Maven Project,Maven 1.x Project,Ant Project,Shell Project,Schedules,Users,Roles";
             String[] arrayNavMenu = navMenu.split( "," );
             for ( String navmenu : arrayNavMenu )
             {
@@ -141,7 +141,7 @@ public abstract class AbstractUserRolesManagementTest
         }
         else if ( "Continuum Group Project Developer".equals( role ) )
         {
-            String navMenu = "About,Show Project Groups,Queues";
+            String navMenu = "About,Show Project Groups";
             String[] arrayNavMenu = navMenu.split( "," );
             for ( String navmenu : arrayNavMenu )
             {
@@ -150,7 +150,7 @@ public abstract class AbstractUserRolesManagementTest
         }
         else if ( "Continuum Group Project User".equals( role ) )
         {
-            String navMenu = "About,Show Project Groups,Queues";
+            String navMenu = "About,Show Project Groups";
             String[] arrayNavMenu = navMenu.split( "," );
             for ( String navmenu : arrayNavMenu )
             {
@@ -222,7 +222,7 @@ public abstract class AbstractUserRolesManagementTest
         }
         else if ( "Project Administrator - Default Project Group".equals( role ) )
         {
-            String navMenu = "About,Show Project Groups,Queues,Users,Roles";
+            String navMenu = "About,Show Project Groups,Users,Roles";
             String[] arrayNavMenu = navMenu.split( "," );
             for ( String navmenu : arrayNavMenu )
             {
@@ -232,7 +232,7 @@ public abstract class AbstractUserRolesManagementTest
         else if ( "Project Developer - Default Project Group".equals( role ) ||
             "Project User - Default Project Group".equals( role ) )
         {
-            String navMenu = "About,Show Project Groups,Queues";
+            String navMenu = "About,Show Project Groups";
             String[] arrayNavMenu = navMenu.split( "," );
             for ( String navmenu : arrayNavMenu )
             {
@@ -271,7 +271,6 @@ public abstract class AbstractUserRolesManagementTest
         assertLinkPresent( "Ant Project" );
         assertLinkPresent( "Shell Project" );
         assertLinkPresent( "Schedules" );
-        assertLinkPresent( "Queues" );
         assertLinkPresent( "Users" );
         assertLinkPresent( "Roles" );
         assertLinkNotPresent( "Local Repositories" );
