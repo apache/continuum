@@ -33,17 +33,17 @@ import java.util.Date;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
-@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectView", instantiationStrategy = "per-lookup"  )
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "projectView", instantiationStrategy = "per-lookup" )
 public class ProjectViewAction
     extends ContinuumActionSupport
 {
-    private static final Logger logger = LoggerFactory.getLogger( ProjectViewAction.class );
+    private static final Logger log = LoggerFactory.getLogger( ProjectViewAction.class );
 
     private Project project;
 
-    private int projectId;
+    private BuildResult latestResult;
 
-    private String lastBuildDateTime;
+    private int projectId;
 
     public String execute()
         throws ContinuumException
@@ -60,19 +60,16 @@ public class ProjectViewAction
         }
 
         project = getContinuum().getProjectWithAllDetails( projectId );
-        if ( project.getLatestBuildId() > 0 )
+        int latestResultId = project.getLatestBuildId();
+        if ( latestResultId > 0 )
         {
             try
             {
-                BuildResult lastBuildResult = getContinuum().getBuildResult( project.getLatestBuildId() );
-                if ( lastBuildResult != null )
-                {
-                    this.setLastBuildDateTime( dateFormatter.format( new Date( lastBuildResult.getEndTime() ) ) );
-                }
+                latestResult = getContinuum().getBuildResult( latestResultId );
             }
             catch ( ContinuumException e )
             {
-                logger.info( "buildResult with id " + project.getLatestBuildId() + " has been deleted" );
+                log.debug( "project {} lists non-existent result {} as its latest", projectId, latestResult );
             }
         }
 
@@ -106,13 +103,32 @@ public class ProjectViewAction
         return getContinuum().getProjectGroupByProjectId( projectId );
     }
 
-    public String getLastBuildDateTime()
+    public BuildResult getLatestResult()
     {
-        return lastBuildDateTime;
+        return latestResult;
     }
 
-    public void setLastBuildDateTime( String lastBuildDateTime )
+    /**
+     * Maps the time to an alternative range.
+     *
+     * @param time the time to translate
+     * @return current time in milliseconds if time == 0, otherwise original time value
+     */
+    public long mapZeroTime( long time )
     {
-        this.lastBuildDateTime = lastBuildDateTime;
+        if ( time == 0 )
+            return System.currentTimeMillis();
+        return time;
+    }
+
+    /**
+     * Convenience method for using time values as dates in views.
+     *
+     * @param time the time to convert to a date
+     * @return a {@link Date} created with the specified time
+     */
+    public Date timeToDate( long time )
+    {
+        return new Date( time );
     }
 }

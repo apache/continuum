@@ -78,7 +78,7 @@
             </tr>
             <tr class="b">
               <th><label class="label"><s:text name='projectView.project.lastBuildDateTime'/>:</label></th>
-              <td><s:property value="lastBuildDateTime"/></td>
+              <td><s:date name="timeToDate(mapZeroTime(latestResult.endTime))"/></td>
             </tr>
           </table>
 
