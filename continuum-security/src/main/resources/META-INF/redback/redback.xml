@@ -255,6 +255,7 @@
             <childRole>continuum-manage-queues</childRole>
             <childRole>continuum-manage-repositories</childRole>
             <childRole>continuum-manage-purging</childRole>
+            <childRole>continuum-reporter</childRole>
           </childRoles>
         </role>
         <role>
@@ -460,6 +461,20 @@
             </permission>
           </permissions>
         </role>
+        <role>
+          <id>continuum-reporter</id>
+          <name>Continuum Reporter</name>
+          <assignable>true</assignable>
+          <permanent>true</permanent>
+          <permissions>
+            <permission>
+              <id>continuum-view-report</id>
+              <name>Continuum View Report</name>
+              <operation>continuum-view-report</operation>
+              <resource>global</resource>
+            </permission>
+          </permissions>
+        </role>
       </roles>
       <templates>
         <template>
@@ -635,12 +650,6 @@
               <id>continuum-view-queues</id>
               <name>Continuum View Queues</name>
               <operation>continuum-view-queues</operation>
-              <resource>global</resource>
-            </permission>
-            <permission>
-              <id>continuum-view-report</id>
-              <name>Continuum View Report</name>
-              <operation>continuum-view-report</operation>
               <resource>global</resource>
             </permission>
           </permissions>
