@@ -20,7 +20,6 @@ package org.apache.maven.continuum.web.view.buildresults;
  */
 
 import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.web.model.ProjectBuildsSummary;
 import org.apache.maven.continuum.web.util.StateGenerator;
 import org.apache.maven.continuum.web.util.UrlHelperFactory;
 import org.apache.struts2.ServletActionContext;
@@ -28,8 +27,6 @@ import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
 import java.util.HashMap;
 
 /**
@@ -44,32 +41,21 @@ public class StateCell
 {
     protected String getCellValue( TableModel tableModel, Column column )
     {
-        PageContext pageContext = (PageContext) tableModel.getContext().getContextObject();
+        final Object rowObject = tableModel.getCurrentRowBean();
+        final Object colObject = column.getPropertyValue();
 
-        Object result = tableModel.getCurrentRowBean();
+        final String markedUpValue = iconifyResult( rowObject, colObject );
 
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        column.setPropertyValue( markedUpValue );
 
-        Object value = column.getPropertyValue();
+        return markedUpValue;
+    }
 
-        int state = -1;
-
-        if ( value instanceof Integer )
-        {
-            state = (Integer) value;
-        }
-
-        value = StateGenerator.generate( state, request.getContextPath() );
-
-        if ( result instanceof BuildResult )
-        {
-            value = createActionLink( "buildResult", (BuildResult) result,
-                                      StateGenerator.generate( state, request.getContextPath() ) );
-        }
-
-        column.setPropertyValue( value );
-
-        return value.toString();
+    public static String iconifyResult( Object rowObject, Object colObject )
+    {
+        final int state = colObject instanceof Integer ? (Integer) colObject : -1;
+        final String img = StateGenerator.generate( state, ServletActionContext.getRequest().getContextPath() );
+        return rowObject instanceof BuildResult ? createActionLink( "buildResult", (BuildResult) rowObject, img ) : img;
     }
 
     private static String createActionLink( String action, BuildResult result, String linkText )
