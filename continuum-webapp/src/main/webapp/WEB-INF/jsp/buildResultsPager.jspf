@@ -1,0 +1,30 @@
+<%@ taglib uri="/struts-tags" prefix="s" %>
+<page-controls>
+    <page>
+        <s:text name="buildResults.page">
+            <s:param value="page"/>
+        </s:text>
+    </page>
+    <prev>
+        <s:if test="page > 1">
+            <s:a action="buildResults" includeParams="get">
+                <s:param name="page" value="page - 1"/>
+                <s:text name="buildResults.prev"/>
+            </s:a>
+        </s:if>
+        <s:else>
+            <s:text name="buildResults.prev"/>
+        </s:else>
+    </prev>
+    <next>
+        <s:if test="buildResults.size() >= length">
+            <s:a action="buildResults" includeParams="get">
+                <s:param name="page" value="page + 1"/>
+                <s:text name="buildResults.next"/>
+            </s:a>
+        </s:if>
+        <s:else>
+            <s:text name="buildResults.next"/>
+        </s:else>
+    </next>
+</page-controls>

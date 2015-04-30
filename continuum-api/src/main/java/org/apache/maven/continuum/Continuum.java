@@ -202,6 +202,9 @@ public interface Continuum
     Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException;
 
+    Collection<BuildResult> getBuildResultsForProject( int projectId, int offset, int length )
+        throws ContinuumException;
+
     List<ChangeSet> getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException;
 

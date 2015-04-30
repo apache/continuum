@@ -38,11 +38,15 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
-@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildResults", instantiationStrategy = "per-lookup"  )
+@Component( role = com.opensymphony.xwork2.Action.class, hint = "buildResults", instantiationStrategy = "per-lookup" )
 public class BuildResultsListAction
     extends AbstractBuildAction
 {
     private static final Logger logger = LoggerFactory.getLogger( BuildResultsListAction.class );
+
+    private static final int MAX_PAGE_LEN = 100;
+
+    private static final int MIN_PAGE_LEN = 10;
 
     private Project project;
 
@@ -58,6 +62,10 @@ public class BuildResultsListAction
 
     private String projectGroupName = "";
 
+    private int page;
+
+    private int length = MAX_PAGE_LEN / 4;
+
     public String execute()
         throws ContinuumException
     {
@@ -72,7 +80,12 @@ public class BuildResultsListAction
 
         project = getContinuum().getProject( projectId );
 
-        buildResults = getContinuum().getBuildResultsForProject( projectId );
+        int adjPage = Math.max( 1, page ), adjLength = Math.max( MIN_PAGE_LEN, Math.min( MAX_PAGE_LEN, length ) );
+
+        page = adjPage;
+        length = adjLength;
+
+        buildResults = getContinuum().getBuildResultsForProject( projectId, ( page - 1 ) * length, length );
 
         return SUCCESS;
     }
@@ -149,6 +162,26 @@ public class BuildResultsListAction
             this.setSelectedBuildResults( buildResultsRemovable );
         }
         return CONFIRM;
+    }
+
+    public int getPage()
+    {
+        return page;
+    }
+
+    public void setPage( int page )
+    {
+        this.page = page;
+    }
+
+    public int getLength()
+    {
+        return length;
+    }
+
+    public void setLength( int length )
+    {
+        this.length = length;
     }
 
     public int getProjectId()

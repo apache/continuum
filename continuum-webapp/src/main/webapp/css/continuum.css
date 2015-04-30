@@ -78,3 +78,12 @@ div.errormessage p, span.errorMessage {
   padding-left: 20px;
   min-height: 15px;
 }
+
+page-controls {
+  display: block;
+  text-align: right;
+}
+
+page-controls page {
+  font-weight: bold;
+}

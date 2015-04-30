@@ -2815,6 +2815,12 @@ public class DefaultContinuum
         return buildResultDao.getBuildResultsForProject( projectId );
     }
 
+    public Collection<BuildResult> getBuildResultsForProject( int projectId, int offset, int length )
+        throws ContinuumException
+    {
+        return buildResultDao.getBuildResultsForProject( projectId, offset, offset + length );
+    }
+
     // ----------------------------------------------------------------------
     // Workflow
     // ----------------------------------------------------------------------

@@ -595,12 +595,11 @@ public class BuildResultDaoImpl
 
             query.setFilter( "this.project.id == projectId" );
 
-            query.setOrdering( "this.startTime descending" );
-
             if ( startIndex >= 0 )
             {
                 query.setRange( startIndex, endIndex );
             }
+            query.setOrdering( "this.id descending" );
 
             List<BuildResult> result = (List<BuildResult>) query.execute( projectId );
 
