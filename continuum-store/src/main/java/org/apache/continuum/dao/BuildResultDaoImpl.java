@@ -214,7 +214,8 @@ public class BuildResultDaoImpl
             query.declareParameters( "int projectId, int buildDefinitionId" );
 
             query.setFilter( "this.project.id == projectId && this.buildDefinition.id == buildDefinitionId" );
-            query.setOrdering( "id descending" );
+            query.setRange( 0, 1 );
+            query.setOrdering( "this.id descending" );
 
             Object[] params = new Object[2];
             params[0] = projectId;
