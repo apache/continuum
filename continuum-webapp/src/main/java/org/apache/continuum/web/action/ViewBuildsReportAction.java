@@ -151,6 +151,11 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
+        if (permittedGroups.isEmpty()) {
+            addActionError( "You are not authorized to view any project groups." );
+            return REQUIRES_AUTHORIZATION;
+        }
+
         // action class was called from the Menu; do not generate report first
         return SUCCESS;
     }
@@ -164,6 +169,11 @@ public class ViewBuildsReportAction
         catch ( AuthorizationRequiredException authzE )
         {
             addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+
+        if (permittedGroups.isEmpty()) {
+            addActionError( "You are not authorized to view any project groups." );
             return REQUIRES_AUTHORIZATION;
         }
 
@@ -248,6 +258,11 @@ public class ViewBuildsReportAction
         catch ( AuthorizationRequiredException authzE )
         {
             addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+
+        if (permittedGroups.isEmpty()) {
+            addActionError( "You are not authorized to view any project groups." );
             return REQUIRES_AUTHORIZATION;
         }
 
