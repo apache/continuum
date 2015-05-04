@@ -287,7 +287,7 @@ public class ViewBuildsReportAction
         int resultSize = filteredResults.size();
         pageTotal = resultSize / rowCount + ( resultSize % rowCount == 0 ? 0 : 1 );
 
-        if ( page < 1 || page > pageTotal )
+        if ( resultSize > 0 && ( page < 1 || page > pageTotal ) )
         {
             addActionError( getText( "projectBuilds.report.invalidPage" ) );
             return INPUT;
