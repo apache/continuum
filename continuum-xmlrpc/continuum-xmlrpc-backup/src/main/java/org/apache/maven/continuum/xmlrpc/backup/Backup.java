@@ -315,7 +315,7 @@ public class Backup
         if ( pg.getProjects() != null && !pg.getProjects().isEmpty() )
         {
             startTag( "projects", true );
-            for ( ProjectSummary ps : (List<ProjectSummary>) pg.getProjects() )
+            for ( ProjectSummary ps : pg.getProjects() )
             {
                 backupProject( ps );
             }
@@ -325,7 +325,7 @@ public class Backup
         if ( pg.getBuildDefinitions() != null && !pg.getBuildDefinitions().isEmpty() )
         {
             startTag( "buildDefinitions", true );
-            for ( BuildDefinition bd : (List<BuildDefinition>) pg.getBuildDefinitions() )
+            for ( BuildDefinition bd : pg.getBuildDefinitions() )
             {
                 backupBuildDefinition( bd );
             }
@@ -335,7 +335,7 @@ public class Backup
         if ( pg.getNotifiers() != null && !pg.getNotifiers().isEmpty() )
         {
             startTag( "notifiers", true );
-            for ( ProjectNotifier notif : (List<ProjectNotifier>) pg.getNotifiers() )
+            for ( ProjectNotifier notif : pg.getNotifiers() )
             {
                 backupNotifier( notif );
             }
@@ -368,7 +368,7 @@ public class Backup
         if ( p.getDevelopers() != null && !p.getDevelopers().isEmpty() )
         {
             startTag( "developers", true );
-            for ( ProjectDeveloper pd : (List<ProjectDeveloper>) p.getDevelopers() )
+            for ( ProjectDeveloper pd : p.getDevelopers() )
             {
                 writeObject( pd, "developer", true );
             }
@@ -378,7 +378,7 @@ public class Backup
         if ( p.getDependencies() != null && !p.getDependencies().isEmpty() )
         {
             startTag( "dependencies", true );
-            for ( ProjectDependency pd : (List<ProjectDependency>) p.getDependencies() )
+            for ( ProjectDependency pd : p.getDependencies() )
             {
                 writeObject( pd, "dependency", true );
             }
@@ -388,7 +388,7 @@ public class Backup
         if ( p.getBuildDefinitions() != null && !p.getBuildDefinitions().isEmpty() )
         {
             startTag( "buildDefinitions", true );
-            for ( BuildDefinition bd : (List<BuildDefinition>) p.getBuildDefinitions() )
+            for ( BuildDefinition bd : p.getBuildDefinitions() )
             {
                 backupBuildDefinition( bd );
             }
@@ -398,7 +398,7 @@ public class Backup
         if ( p.getNotifiers() != null && !p.getNotifiers().isEmpty() )
         {
             startTag( "notifiers", true );
-            for ( ProjectNotifier notif : (List<ProjectNotifier>) p.getNotifiers() )
+            for ( ProjectNotifier notif : p.getNotifiers() )
             {
                 backupNotifier( notif );
             }
@@ -450,7 +450,7 @@ public class Backup
         if ( br.getModifiedDependencies() != null && !br.getModifiedDependencies().isEmpty() )
         {
             startTag( "dependencies", true );
-            for ( ProjectDependency pd : (List<ProjectDependency>) br.getModifiedDependencies() )
+            for ( ProjectDependency pd : br.getModifiedDependencies() )
             {
                 writeObject( pd, "dependency", true );
             }
@@ -607,7 +607,7 @@ public class Backup
         if ( scmResult.getChanges() != null && !scmResult.getChanges().isEmpty() )
         {
             startTag( "changeSets", true );
-            for ( ChangeSet cs : (List<ChangeSet>) scmResult.getChanges() )
+            for ( ChangeSet cs : scmResult.getChanges() )
             {
                 writeObject( cs, "changeSet", true );
             }
