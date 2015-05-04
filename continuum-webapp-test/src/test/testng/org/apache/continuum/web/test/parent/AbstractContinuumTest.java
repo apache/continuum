@@ -1031,8 +1031,6 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "triggeredBy" );
         assertTextPresent( "Build Status" );
         assertElementPresent( "buildStatus" );
-        assertTextPresent( "Row Count" );
-        assertElementPresent( "rowCount" );
         assertButtonWithValuePresent( "View Report" );
         assertTextNotPresent( "Results" );
         assertTextNotPresent( "No Results Found" );
@@ -1044,6 +1042,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Results" );
         assertTextPresent( "Project Group" );
         assertTextPresent( "Project Name" );
+        assertTextPresent( "Build Number" );
         assertTextPresent( "Build Date" );
         assertTextPresent( "Triggered By" );
         assertTextPresent( "Build Status" );
