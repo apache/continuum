@@ -256,9 +256,9 @@ public class BuildResultDaoImpl
             Query query = pm.newQuery( extent );
 
             query.declareParameters( "int projectId, int buildDefinitionId, int buildResultId" );
-
             query.setFilter( "this.project.id == projectId && this.buildDefinition.id == buildDefinitionId "
                                  + "&& this.id < buildResultId" );
+            query.setRange( 0, 1 );
             query.setOrdering( "this.id descending" );
 
             Object[] params = new Object[3];
