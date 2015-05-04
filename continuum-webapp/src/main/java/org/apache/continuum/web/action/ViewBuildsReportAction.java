@@ -151,8 +151,9 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if (permittedGroups.isEmpty()) {
-            addActionError( "You are not authorized to view any project groups." );
+        if ( permittedGroups.isEmpty() )
+        {
+            addActionError( getText( "projectBuilds.report.noGroupsAuthorized" ) );
             return REQUIRES_AUTHORIZATION;
         }
 
@@ -172,8 +173,9 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if (permittedGroups.isEmpty()) {
-            addActionError( "You are not authorized to view any project groups." );
+        if ( permittedGroups.isEmpty() )
+        {
+            addActionError( getText( "projectBuilds.report.noGroupsAuthorized" ) );
             return REQUIRES_AUTHORIZATION;
         }
 
@@ -187,13 +189,13 @@ public class ViewBuildsReportAction
         }
         catch ( ParseException e )
         {
-            addActionError( "Error parsing date(s): " + e.getMessage() );
+            addActionError( getText( "projectBuilds.report.badDates", new String[] { e.getMessage() } ) );
             return ERROR;
         }
 
         if ( fromDate != null && toDate != null && fromDate.after( toDate ) )
         {
-            addFieldError( "startDate", "Start Date must be earlier than the End Date" );
+            addFieldError( "startDate", getText( "projectBuilds.report.endBeforeStartDate" ) );
             return INPUT;
         }
 
@@ -225,8 +227,7 @@ public class ViewBuildsReportAction
 
         if ( filteredResults.size() == MAX_BROWSE_SIZE )
         {
-            addActionMessage( "Results may have been limited due to size."
-                                  + " Refine your search criteria or try exporting." );
+            addActionMessage( getText( "projectBuilds.report.limitedResults" ) );
         }
 
         int resultSize = filteredResults.size();
@@ -234,7 +235,7 @@ public class ViewBuildsReportAction
 
         if ( page < 1 || page > pageTotal )
         {
-            addActionError( "Specified page does not exist" );
+            addActionError( getText( "projectBuilds.report.invalidPage" ) );
             return ERROR;
         }
 
@@ -261,8 +262,9 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if (permittedGroups.isEmpty()) {
-            addActionError( "You are not authorized to view any project groups." );
+        if ( permittedGroups.isEmpty() )
+        {
+            addActionError( getText( "projectBuilds.report.noGroupsAuthorized" ) );
             return REQUIRES_AUTHORIZATION;
         }
 
@@ -276,13 +278,13 @@ public class ViewBuildsReportAction
         }
         catch ( ParseException e )
         {
-            addActionError( "Error parsing date(s): " + e.getMessage() );
+            addActionError( getText( "projectBuilds.report.badDates", new String[] { e.getMessage() } ) );
             return ERROR;
         }
 
         if ( fromDate != null && toDate != null && fromDate.after( toDate ) )
         {
-            addFieldError( "startDate", "Start Date must be earlier than the End Date" );
+            addFieldError( "startDate", getText( "projectBuilds.report.endBeforeStartDate" ) );
             return INPUT;
         }
 
@@ -384,7 +386,7 @@ public class ViewBuildsReportAction
         }
         catch ( IOException e )
         {
-            addActionError( "Error occurred while generating CSV file." );
+            addActionError( getText( "projectBuilds.report.exportIOError", new String[] { e.getMessage() } ) );
             return ERROR;
         }
 
