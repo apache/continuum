@@ -634,36 +634,5 @@
         </field>
       </fields>
     </class>
-    <class>
-      <name>ProjectBuildsSummary</name>
-      <version>1.4.1+</version>
-      <fields>
-        <field>
-          <name>projectGroupName</name>
-          <version>1.4.1+</version>
-          <type>String</type>
-        </field>
-        <field>
-          <name>projectName</name>
-          <version>1.4.1+</version>
-          <type>String</type>
-        </field>
-        <field>
-          <name>buildDate</name>
-          <version>1.4.1+</version>
-          <type>long</type>
-        </field>
-        <field>
-          <name>buildState</name>
-          <version>1.4.1+</version>
-          <type>int</type>
-        </field>
-        <field>
-          <name>buildTriggeredBy</name>
-          <version>1.4.1+</version>
-          <type>String</type>
-        </field>
-      </fields>
-    </class>
   </classes>
 </model>
