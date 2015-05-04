@@ -200,7 +200,7 @@
               <ec:row>
                 <ec:column property="author" title="buildResult.scmResult.changes.author"/>
                 <ec:column property="date" title="buildResult.scmResult.changes.date" cell="date"/>
-                <ec:column property="comment" title="buildResult.scmResult.changes.comment" />
+                <ec:column property="comment" title="buildResult.scmResult.changes.comment" cell="escapeHtml" />
                 <ec:column property="files" title="buildResult.scmResult.changes.files">
                     <c:forEach var="scmFile" items="${pageScope.change.files}">
                         <c:out value="${scmFile.name}"/><br />
