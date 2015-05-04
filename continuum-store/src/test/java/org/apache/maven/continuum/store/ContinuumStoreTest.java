@@ -38,7 +38,6 @@ import org.junit.Test;
 
 import javax.jdo.JDODetachedFieldAccessException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -47,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
+
+import static java.util.Arrays.asList;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -299,7 +300,7 @@ public class ContinuumStoreTest
     public void testGetAllProjects()
     {
         List<Project> projects = projectDao.getAllProjectsByName();
-        assertEquals( "check items", Arrays.asList( testProject1, testProject2 ), projects );
+        assertEquals( "check items", asList( testProject1, testProject2 ), projects );
 
         Project project = projects.get( 1 );
         assertProjectEquals( testProject2, project );
@@ -1486,12 +1487,13 @@ public class ContinuumStoreTest
                                                          maxFetch );
         assertEquals( "check number of build results returned with the same startDate and endDate", 1, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, null, 0, maxFetch );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, asList(1), 0, maxFetch );
         assertEquals( "check number of build results returned with an existing group id", 3, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, null, 0, maxFetch );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, asList(2), 0, maxFetch );
         assertEquals( "check number of build results returned with non-existing group id", 0, results.size() );
     }
+
     // ----------------------------------------------------------------------
     //  HELPER METHODS
     // ----------------------------------------------------------------------
