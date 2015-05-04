@@ -294,40 +294,15 @@ public class ViewBuildsReportAction
             groupIds.addAll( permittedGroupMap.values() );
         }
 
-        // Users can preview a limited number of records (use export for more)
-        int offset = 0;
-        List<BuildResult> results;
-        filteredResults = new ArrayList<BuildResult>();
-        populating:
-        do
-        {
+        filteredResults = getContinuum().getBuildResultsInRange(
+            groupIds, fromDate, toDate, buildStatus, triggeredBy, 0, MAX_BROWSE_SIZE );
 
-            // Fetch a batch of records (may be filtered based on permissions)
-            results = getContinuum().getBuildResultsInRange( groupIds, fromDate, toDate, buildStatus, triggeredBy,
-                                                             offset, MAX_BROWSE_SIZE );
-            offset += MAX_BROWSE_SIZE;
-
-            for ( BuildResult result : results )
-            {
-                if ( permittedGroupMap.containsKey( result.getProject().getProjectGroup().getName() ) )
-                {
-                    filteredResults.add( result );
-                }
-
-                if ( filteredResults.size() >= MAX_BROWSE_SIZE )
-                {
-                    break populating;  // Halt when we have filled a batch equivalent with results
-                }
-            }
-        }
-        while ( results.size() == MAX_BROWSE_SIZE );  // Keep fetching until batch is empty or incomplete
-
+        int resultSize = filteredResults.size();
         if ( filteredResults.size() == MAX_BROWSE_SIZE )
         {
             addActionMessage( getText( "projectBuilds.report.limitedResults" ) );
         }
 
-        int resultSize = filteredResults.size();
         pageTotal = resultSize / rowCount + ( resultSize % rowCount == 0 ? 0 : 1 );
 
         if ( resultSize > 0 && ( page < 1 || page > pageTotal ) )
@@ -387,16 +362,17 @@ public class ViewBuildsReportAction
 
         try
         {
-            // First, build the output file
+            // HTTP headers so the browser treats the file nicely for the user
             rawResponse.setContentType( "text/csv" );
             rawResponse.addHeader( "Content-disposition", "attachment;filename=continuum_project_builds_report.csv" );
-            Writer output = rawResponse.getWriter();
 
+            Writer output = rawResponse.getWriter();
             DateFormat dateTimeFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" );
 
+            // Now, stream the file to the browser in pieces
             try
             {
-                // Write the header
+                // Write the CSV file header
                 output.append( "Group,Project,ID,Build#,Started,Duration,Triggered By,Status\n" );
 
                 // Limit query to scan only what the user is permitted to see
@@ -419,19 +395,12 @@ public class ViewBuildsReportAction
                     results = getContinuum().getBuildResultsInRange( groupIds, fromDate, toDate, buildStatus,
                                                                      triggeredBy, offset, EXPORT_BATCH_SIZE );
 
-                    offset += EXPORT_BATCH_SIZE;  // Ensure we advance through results
+                    // Ensure we advance through results
+                    offset += EXPORT_BATCH_SIZE;
 
                     // Convert each build result to a line in the CSV file
                     for ( BuildResult result : results )
                     {
-
-                        if ( !permittedGroupMap.containsKey( result.getProject().getProjectGroup().getName() ) )
-                        {
-                            continue;
-                        }
-
-                        exported += 1;
-
                         Project project = result.getProject();
                         ProjectGroup projectGroup = project.getProjectGroup();
 
@@ -452,7 +421,10 @@ public class ViewBuildsReportAction
                                                               buildDuration,
                                                               result.getUsername(),
                                                               stateName );
+
                         output.append( formattedLine );
+
+                        exported += 1;
 
                         if ( exported >= MAX_EXPORT_SIZE )
                         {
