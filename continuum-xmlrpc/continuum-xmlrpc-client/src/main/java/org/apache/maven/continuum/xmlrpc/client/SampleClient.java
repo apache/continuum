@@ -53,7 +53,7 @@ public class SampleClient
 
         // Test for [CONTINUUM-2641]: (test with distributed builds with multiple build agents or parallel builds with > 1 build queue)
         // make sure to set the projectIds to the actual projectIds of your projects added in Continuum
-        int projectIds[] = new int[]{2, 3, 4, 5, 6};
+        int projectIds[] = new int[] { 2, 3, 4, 5, 6 };
 
         List<Thread> threads = new ArrayList<Thread>();
 
@@ -174,15 +174,20 @@ public class SampleClient
 
         System.out.println( "Removing build results." );
         System.out.println( "============================" );
-        BuildResultSummary brs;
-        List results = client.getBuildResultsForProject( ps.getId() );
-        for ( Iterator i = results.iterator(); i.hasNext(); )
+
+        int batchSize = 100;
+        List<BuildResultSummary> results;
+        do
         {
-            brs = (BuildResultSummary) i.next();
-            System.out.print( "Removing build result (" + brs.getId() + ") - " );
-            BuildResult br = client.getBuildResult( ps.getId(), brs.getId() );
-            System.out.println( ( client.removeBuildResult( br ) == 0 ? "OK" : "Error" ) );
+            results = client.getBuildResultsForProject( ps.getId(), 0, batchSize );
+            for ( BuildResultSummary brs : results )
+            {
+                System.out.print( "Removing build result (" + brs.getId() + ") - " );
+                BuildResult br = client.getBuildResult( ps.getId(), brs.getId() );
+                System.out.println( ( client.removeBuildResult( br ) == 0 ? "OK" : "Error" ) );
+            }
         }
+        while ( results != null && results.size() > 0 );
         System.out.println( "Done." );
 
         System.out.println();

@@ -19,7 +19,6 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -28,25 +27,42 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.continuum.web.model.ProjectBuildsSummary;
+import org.apache.struts2.interceptor.ServletResponseAware;
 import org.codehaus.plexus.component.annotations.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.Writer;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component( role = com.opensymphony.xwork2.Action.class, hint = "projectBuildsReport", instantiationStrategy = "per-lookup" )
 public class ViewBuildsReportAction
     extends ContinuumActionSupport
+    implements ServletResponseAware
 {
+    private static final Logger log = LoggerFactory.getLogger( ViewBuildsReportAction.class );
+
+    private static final int MAX_BROWSE_SIZE = 500;
+
+    private static final int EXPORT_BATCH_SIZE = 4000;
+
+    private static final int MAX_EXPORT_SIZE = 100000;
+
+    private static final String[] datePatterns =
+        new String[] { "MM/dd/yy", "MM/dd/yyyy", "MMMMM/dd/yyyy", "MMMMM/dd/yy", "dd MMMMM yyyy", "dd/MM/yy",
+            "dd/MM/yyyy", "yyyy/MM/dd", "yyyy-MM-dd", "yyyy-dd-MM", "MM-dd-yyyy", "MM-dd-yy" };
+
     private int buildStatus;
 
     private String triggeredBy = "";
@@ -57,25 +73,39 @@ public class ViewBuildsReportAction
 
     private int projectGroupId;
 
-    private int rowCount = 30;
+    private int rowCount = 25;
 
     private int page = 1;
 
-    private int numPages;
+    private int pageTotal;
 
     private Map<Integer, String> buildStatuses;
 
     private Map<Integer, String> projectGroups;
 
-    private List<ProjectBuildsSummary> projectBuilds;
+    private Set<String> permittedGroups = new HashSet<String>();
 
-    private InputStream inputStream;
+    private List<BuildResult> filteredResults = new ArrayList<BuildResult>();
 
-    public static final String SEND_FILE = "send-file";
+    private HttpServletResponse rawResponse;
 
-    private static final String[] datePatterns =
-        new String[] { "MM/dd/yy", "MM/dd/yyyy", "MMMMM/dd/yyyy", "MMMMM/dd/yy", "dd MMMMM yyyy", "dd/MM/yy",
-            "dd/MM/yyyy", "yyyy/MM/dd", "yyyy-MM-dd", "yyyy-dd-MM", "MM-dd-yyyy", "MM-dd-yy" };
+    public void setServletResponse( HttpServletResponse response )
+    {
+        this.rawResponse = response;
+    }
+
+    private boolean isAuthorized( String projectGroupName )
+    {
+        try
+        {
+            checkViewProjectGroupAuthorization( projectGroupName );
+            return true;
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            return false;
+        }
+    }
 
     public void prepare()
         throws Exception
@@ -87,16 +117,24 @@ public class ViewBuildsReportAction
         buildStatuses.put( ContinuumProjectState.OK, "Ok" );
         buildStatuses.put( ContinuumProjectState.FAILED, "Failed" );
         buildStatuses.put( ContinuumProjectState.ERROR, "Error" );
+        buildStatuses.put( ContinuumProjectState.BUILDING, "Building" );
+        buildStatuses.put( ContinuumProjectState.CANCELLED, "Canceled" );
 
         projectGroups = new LinkedHashMap<Integer, String>();
         projectGroups.put( 0, "ALL" );
 
+        // TODO: Use these to limit results at the data layer
         List<ProjectGroup> groups = getContinuum().getAllProjectGroups();
         if ( groups != null )
         {
             for ( ProjectGroup group : groups )
             {
-                projectGroups.put( group.getId(), group.getName() );
+                String groupName = group.getName();
+                if ( isAuthorized( groupName ) )
+                {
+                    projectGroups.put( group.getId(), groupName );
+                    permittedGroups.add( groupName );
+                }
             }
         }
     }
@@ -129,8 +167,8 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        Date fromDate = null;
-        Date toDate = null;
+        Date fromDate;
+        Date toDate;
 
         try
         {
@@ -149,41 +187,51 @@ public class ViewBuildsReportAction
             return INPUT;
         }
 
-        if ( rowCount < 10 )
+        // Users can preview a limited number of records (use export for more)
+        int offset = 0;
+        List<BuildResult> results;
+        populating:
+        do
         {
-            // TODO: move to validation framework
-            addFieldError( "rowCount", "Row count should be at least 10." );
-            return INPUT;
+            // Fetch a batch of records (may be filtered based on permissions)
+            results = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus, triggeredBy,
+                                                             offset, MAX_BROWSE_SIZE );
+            offset += MAX_BROWSE_SIZE;
+
+            for ( BuildResult result : results )
+            {
+                if ( permittedGroups.contains( result.getProject().getProjectGroup().getName() ) )
+                {
+                    filteredResults.add( result );
+                }
+
+                if ( filteredResults.size() >= MAX_BROWSE_SIZE )
+                {
+                    break populating;  // Halt when we have filled a batch equivalent with results
+                }
+            }
+        }
+        while ( results.size() == MAX_BROWSE_SIZE );  // Keep fetching until batch is empty or incomplete
+
+        if ( filteredResults.size() == MAX_BROWSE_SIZE )
+        {
+            addActionMessage( "Results may have been limited due to size."
+                                  + " Refine your search criteria or try exporting." );
         }
 
-        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate,
-                                                                                buildStatus, triggeredBy );
-        projectBuilds = Collections.emptyList();
+        int resultSize = filteredResults.size();
+        pageTotal = resultSize / rowCount + ( resultSize % rowCount == 0 ? 0 : 1 );
 
-        if ( buildResults != null && !buildResults.isEmpty() )
+        if ( page < 1 || page > pageTotal )
         {
-            projectBuilds = mapBuildResultsToProjectBuildsSummaries( buildResults );
-
-            int extraPage = ( projectBuilds.size() % rowCount ) != 0 ? 1 : 0;
-            numPages = ( projectBuilds.size() / rowCount ) + extraPage;
-
-            if ( page > numPages )
-            {
-                addActionError(
-                    "Error encountered while generating project builds report :: The requested page exceeds the total number of pages." );
-                return ERROR;
-            }
-
-            int start = rowCount * ( page - 1 );
-            int end = ( start + rowCount );
-
-            if ( end > projectBuilds.size() )
-            {
-                end = projectBuilds.size();
-            }
-
-            projectBuilds = projectBuilds.subList( start, end );
+            addActionError( "Specified page does not exist" );
+            return ERROR;
         }
+
+        int pageStart = rowCount * ( page - 1 ), pageEnd = rowCount * page;
+
+        // Restrict results to just the page we will show
+        filteredResults = filteredResults.subList( pageStart, pageEnd > resultSize ? resultSize : pageEnd );
 
         return SUCCESS;
     }
@@ -203,8 +251,8 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        Date fromDate = null;
-        Date toDate = null;
+        Date fromDate;
+        Date toDate;
 
         try
         {
@@ -223,59 +271,101 @@ public class ViewBuildsReportAction
             return INPUT;
         }
 
-        List<BuildResult> buildResults = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate,
-                                                                                buildStatus, triggeredBy );
-        List<ProjectBuildsSummary> builds = Collections.emptyList();
-
-        StringBuffer input = new StringBuffer( "Project Group,Project Name,Build Date,Triggered By,Build Status\n" );
-
-        if ( buildResults != null && !buildResults.isEmpty() )
-        {
-            builds = mapBuildResultsToProjectBuildsSummaries( buildResults );
-
-            for ( ProjectBuildsSummary build : builds )
-            {
-                input.append( build.getProjectGroupName() ).append( "," );
-                input.append( build.getProjectName() ).append( "," );
-
-                input.append( new Date( build.getBuildDate() ) ).append( "," );
-
-                input.append( build.getBuildTriggeredBy() ).append( "," );
-
-                String status;
-                switch ( build.getBuildState() )
-                {
-                    case 2:
-                        status = "Ok";
-                        break;
-                    case 3:
-                        status = "Failed";
-                        break;
-                    case 4:
-                        status = "Error";
-                        break;
-                    case 6:
-                        status = "Building";
-                        break;
-                    case 7:
-                        status = "Checking Out";
-                        break;
-                    case 8:
-                        status = "Updating";
-                        break;
-                    default:
-                        status = "";
-                }
-                input.append( status );
-                input.append( "\n" );
-            }
-        }
-
-        StringReader reader = new StringReader( input.toString() );
-
         try
         {
-            inputStream = new ByteArrayInputStream( IOUtils.toByteArray( reader ) );
+            // First, build the output file
+            rawResponse.setContentType( "text/csv" );
+            rawResponse.addHeader( "Content-disposition", "attachment;filename=continuum_project_builds_report.csv" );
+            Writer output = rawResponse.getWriter();
+
+            DateFormat dateTimeFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" );
+
+            try
+            {
+                // Write the header
+                output.append( "Group,Project,ID,Build#,Started,Duration,Triggered By,Status\n" );
+
+                // Build the output file by walking through the results in batches
+                int offset = 0, exported = 0;
+                List<BuildResult> results;
+                export:
+                do
+                {
+                    results = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus,
+                                                                     triggeredBy, offset, EXPORT_BATCH_SIZE );
+
+                    offset += EXPORT_BATCH_SIZE;  // Ensure we advance through results
+
+                    // Convert each build result to a line in the CSV file
+                    for ( BuildResult result : results )
+                    {
+
+                        if ( !permittedGroups.contains( result.getProject().getProjectGroup().getName() ) )
+                        {
+                            continue;
+                        }
+
+                        exported += 1;
+
+                        Project project = result.getProject();
+                        ProjectGroup projectGroup = project.getProjectGroup();
+
+                        // Decode status into human-readable form
+                        String state;
+                        switch ( result.getState() )
+                        {
+                            case 2:
+                                state = "Ok";
+                                break;
+                            case 3:
+                                state = "Failed";
+                                break;
+                            case 4:
+                                state = "Error";
+                                break;
+                            case 6:
+                                state = "Building";
+                                break;
+                            case 7:
+                                state = "Checking Out";
+                                break;
+                            case 8:
+                                state = "Updating";
+                                break;
+                            case 11:
+                                state = "Canceled";
+                                break;
+                            default:
+                                state = "";
+                        }
+
+                        String buildTime = dateTimeFormat.format( new Date( result.getStartTime() ) );
+                        long buildDuration = ( result.getEndTime() - result.getStartTime() ) / 1000;
+
+                        String formattedLine = String.format( "%s,%s,%s,%s,%s,%s,%s,%s\n",
+                                                              projectGroup.getName(),
+                                                              project.getName(),
+                                                              result.getId(),
+                                                              result.getBuildNumber(),
+                                                              buildTime,
+                                                              buildDuration,
+                                                              result.getUsername(),
+                                                              state );
+                        output.append( formattedLine );
+
+                        if ( exported >= MAX_EXPORT_SIZE )
+                        {
+                            log.warn( "build report export hit limit of {} records", MAX_EXPORT_SIZE );
+                            break export;
+                        }
+                    }
+                }
+                while ( results.size() == EXPORT_BATCH_SIZE );
+            }
+            finally
+            {
+                output.flush();
+            }
         }
         catch ( IOException e )
         {
@@ -283,34 +373,7 @@ public class ViewBuildsReportAction
             return ERROR;
         }
 
-        return SEND_FILE;
-    }
-
-    private List<ProjectBuildsSummary> mapBuildResultsToProjectBuildsSummaries( List<BuildResult> buildResults )
-    {
-        List<ProjectBuildsSummary> buildsSummary = new ArrayList<ProjectBuildsSummary>();
-
-        for ( BuildResult buildResult : buildResults )
-        {
-            Project project = buildResult.getProject();
-
-            // check if user is authorised to view build result
-            if ( !isAuthorized( project.getProjectGroup().getName() ) )
-            {
-                continue;
-            }
-
-            ProjectBuildsSummary summary = new ProjectBuildsSummary();
-            summary.setProjectGroupName( project.getProjectGroup().getName() );
-            summary.setProjectName( project.getName() );
-            summary.setBuildDate( buildResult.getStartTime() );
-            summary.setBuildState( buildResult.getState() );
-            summary.setBuildTriggeredBy( buildResult.getUsername() );
-
-            buildsSummary.add( summary );
-        }
-
-        return buildsSummary;
+        return null;
     }
 
     private Date getStartDateInDateFormat()
@@ -394,24 +457,9 @@ public class ViewBuildsReportAction
         return rowCount;
     }
 
-    public void setRowCount( int rowCount )
-    {
-        this.rowCount = rowCount;
-    }
-
     public Map<Integer, String> getBuildStatuses()
     {
         return buildStatuses;
-    }
-
-    public Map<Integer, String> getProjectGroups()
-    {
-        return projectGroups;
-    }
-
-    public List<ProjectBuildsSummary> getProjectBuilds()
-    {
-        return projectBuilds;
     }
 
     public int getPage()
@@ -424,26 +472,18 @@ public class ViewBuildsReportAction
         this.page = page;
     }
 
-    public int getNumPages()
+    public int getPageTotal()
     {
-        return numPages;
+        return pageTotal;
     }
 
-    public InputStream getInputStream()
+    public List<BuildResult> getFilteredResults()
     {
-        return inputStream;
+        return filteredResults;
     }
 
-    private boolean isAuthorized( String projectGroupName )
+    public Map<Integer, String> getProjectGroups()
     {
-        try
-        {
-            checkViewProjectGroupAuthorization( projectGroupName );
-            return true;
-        }
-        catch ( AuthorizationRequiredException authzE )
-        {
-            return false;
-        }
+        return projectGroups;
     }
 }

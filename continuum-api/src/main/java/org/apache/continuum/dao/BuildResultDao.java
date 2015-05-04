@@ -72,12 +72,12 @@ public interface BuildResultDao
     /**
      * Returns the list of build results between the fromdate and the buildResult defined by its toBuildResultId
      *
-     * @param projectId       The project id
-     * @param fromDate        the from date
-     * @param tobuildResultId the build result id
+     * @param projectId    The project id
+     * @param fromResultId the from date
+     * @param toResultId   the build result id
      * @return the list of build results
      */
-    List<BuildResult> getBuildResultsForProjectWithDetails( int projectId, long fromDate, int tobuildResultId );
+    List<BuildResult> getBuildResultsForProjectWithDetails( int projectId, int fromResultId, int toResultId );
 
     /**
      * Returns the number of build results in success since fromDate
@@ -88,9 +88,16 @@ public interface BuildResultDao
      */
     long getNbBuildResultsInSuccessForProject( int projectId, long fromDate );
 
-    List<BuildResult> getBuildResultsForProject( int projectId );
-
-    List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex );
+    /**
+     * Looks up a range of build results for a project ordered from most recent to earliest.
+     *
+     * @param projectId   id of project to fetch results for
+     * @param startIndex  zero-based index indicating start of result interval
+     * @param endIndex    zero-based index indicating boundary of result interval
+     * @param fullDetails whether to use a fetch plan that includes full build result details
+     * @return a list of results in the interval [start, end)
+     */
+    List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex, boolean fullDetails );
 
     /**
      * @param projectId
@@ -115,5 +122,5 @@ public interface BuildResultDao
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 
     List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy,
-                                              int projectGroupId );
+                                              int projectGroupId, int offset, int length );
 }

@@ -1454,23 +1454,24 @@ public class ContinuumStoreTest
     public void testGetBuildResultsInRange()
         throws Exception
     {
-        List<BuildResult> results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 0 );
+        int maxFetch = 5;
+        List<BuildResult> results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 0, 0, maxFetch );
         assertEquals( "check number of build results returned", 3, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 2, null, 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 2, null, 0, 0, maxFetch );
         assertEquals( "check number of build results returned with state == OK", 2, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 0, "user", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, "user", 0, 0, maxFetch );
         assertEquals( "check number of build results returned with triggeredBy == user", 1, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 0, "schedule", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, "schedule", 0, 0, maxFetch );
         assertEquals( "check number of build results returned with triggeredBy == schedule", 2, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 2, "schedule", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 2, "schedule", 0, 0, maxFetch );
         assertEquals( "check number of build results returned with state == Ok and triggeredBy == schedule", 1,
                       results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 3, "user", 0 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 3, "user", 0, 0, maxFetch );
         assertEquals( "check number of build results returned with state == Failed and triggeredBy == user", 0,
                       results.size() );
 
@@ -1478,16 +1479,17 @@ public class ContinuumStoreTest
         cal.setTime( new Date( baseTime ) );
         cal.add( Calendar.DAY_OF_MONTH, 1 );
 
-        results = buildResultDao.getBuildResultsInRange( new Date( baseTime ), cal.getTime(), 0, null, 0 );
+        results = buildResultDao.getBuildResultsInRange( new Date( baseTime ), cal.getTime(), 0, null, 0, 0, maxFetch );
         assertEquals( "check number of build results returned with startDate and endDate", 2, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( new Date( baseTime ), new Date( baseTime ), 0, null, 0 );
+        results = buildResultDao.getBuildResultsInRange( new Date( baseTime ), new Date( baseTime ), 0, null, 0, 0,
+                                                         maxFetch );
         assertEquals( "check number of build results returned with the same startDate and endDate", 1, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 1 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 1, 0, maxFetch );
         assertEquals( "check number of build results returned with an existing group id", 3, results.size() );
 
-        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 2 );
+        results = buildResultDao.getBuildResultsInRange( null, null, 0, null, 2, 0, maxFetch );
         assertEquals( "check number of build results returned with non-existing group id", 0, results.size() );
     }
     // ----------------------------------------------------------------------

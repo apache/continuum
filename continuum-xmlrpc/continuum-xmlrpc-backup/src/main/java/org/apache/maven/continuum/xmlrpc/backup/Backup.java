@@ -29,17 +29,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.maven.continuum.xmlrpc.client.ContinuumXmlRpcClient;
-import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
-import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
-import org.apache.maven.continuum.xmlrpc.project.BuildResult;
-import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
-import org.apache.maven.continuum.xmlrpc.project.Project;
-import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
-import org.apache.maven.continuum.xmlrpc.project.ProjectDeveloper;
-import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
-import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
-import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
-import org.apache.maven.continuum.xmlrpc.project.Schedule;
+import org.apache.maven.continuum.xmlrpc.project.*;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeFile;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
@@ -415,17 +405,24 @@ public class Backup
             endTag( "notifiers", true );
         }
 
-        List<BuildResultSummary> brs = client.getBuildResultsForProject( p.getId() );
-        if ( brs != null && !brs.isEmpty() )
+        int batchSize = 100, offset = 0;
+        List<BuildResultSummary> brs;
+        do
         {
-            startTag( "buildResults", true );
-            for ( BuildResultSummary brSummary : brs )
+            brs = client.getBuildResultsForProject( p.getId(), offset, batchSize );
+            if ( brs != null && !brs.isEmpty() )
             {
-                BuildResult br = client.getBuildResult( p.getId(), brSummary.getId() );
-                backupBuildResult( br );
+                startTag( "buildResults", true );
+                for ( BuildResultSummary brSummary : brs )
+                {
+                    BuildResult br = client.getBuildResult( p.getId(), brSummary.getId() );
+                    backupBuildResult( br );
+                }
+                endTag( "buildResults", true );
             }
-            endTag( "buildResults", true );
+            offset += batchSize;
         }
+        while ( brs != null && brs.size() == batchSize );
         endTag( "project", true );
     }
 

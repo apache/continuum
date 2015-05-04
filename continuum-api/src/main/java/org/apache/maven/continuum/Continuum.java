@@ -108,7 +108,6 @@ public interface Continuum
     void removeProject( int projectId )
         throws ContinuumException;
 
-
     /**
      * @param projectId
      * @throws ContinuumException
@@ -199,9 +198,6 @@ public interface Continuum
 
     long getNbBuildResultsForProject( int projectId );
 
-    Collection<BuildResult> getBuildResultsForProject( int projectId )
-        throws ContinuumException;
-
     Collection<BuildResult> getBuildResultsForProject( int projectId, int offset, int length )
         throws ContinuumException;
 
@@ -212,7 +208,7 @@ public interface Continuum
         throws ContinuumException;
 
     List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state,
-                                              String triggeredBy );
+                                              String triggeredBy, int offset, int length );
 
     // ----------------------------------------------------------------------
     // Projects
@@ -299,7 +295,6 @@ public interface Continuum
     ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId, boolean checkProtocol,
                                                        boolean useCredentialsCache )
         throws ContinuumException;
-
 
     /**
      * Add a Maven 2 project to the list of projects.
@@ -457,7 +452,6 @@ public interface Continuum
 
     /**
      * returns the default build definition for the project
-     * <p/>
      * 1) if project has default build definition, return that
      * 2) otherwise return default build definition for parent project group
      *

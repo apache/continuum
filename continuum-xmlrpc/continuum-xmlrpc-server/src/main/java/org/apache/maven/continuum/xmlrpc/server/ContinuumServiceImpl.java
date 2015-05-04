@@ -881,7 +881,7 @@ public class ContinuumServiceImpl
         return populateBuildResult( continuum.getBuildResult( buildId ) );
     }
 
-    public List<BuildResultSummary> getBuildResultsForProject( int projectId )
+    public List<BuildResultSummary> getBuildResultsForProject( int projectId, int offset, int length )
         throws ContinuumException
     {
         ProjectSummary ps = getProjectSummary( projectId );
@@ -889,7 +889,7 @@ public class ContinuumServiceImpl
 
         List<BuildResultSummary> result = new ArrayList<BuildResultSummary>();
         Collection<org.apache.maven.continuum.model.project.BuildResult> buildResults =
-            continuum.getBuildResultsForProject( projectId );
+            continuum.getBuildResultsForProject( projectId, offset, length );
         if ( buildResults != null )
         {
             for ( org.apache.maven.continuum.model.project.BuildResult buildResult : buildResults )
@@ -3471,10 +3471,10 @@ public class ContinuumServiceImpl
         return serializeObject( this.getBuildResult( projectId, buildId ) );
     }
 
-    public List<Object> getBuildResultsForProjectRPC( int projectId )
+    public List<Object> getBuildResultsForProjectRPC( int projectId, int offset, int length )
         throws Exception
     {
-        return serializeObject( this.getBuildResultsForProject( projectId ) );
+        return serializeObject( this.getBuildResultsForProject( projectId, offset, length ) );
     }
 
     public Map<String, Object> getInstallationRPC( int installationId )

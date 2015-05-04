@@ -386,10 +386,10 @@ public class ContinuumXmlRpcClient
         return continuum.getBuildResult( projectId, buildId );
     }
 
-    public List<BuildResultSummary> getBuildResultsForProject( int projectId )
+    public List<BuildResultSummary> getBuildResultsForProject( int projectId, int offset, int length )
         throws Exception
     {
-        return continuum.getBuildResultsForProject( projectId );
+        return continuum.getBuildResultsForProject( projectId, offset, length );
     }
 
     public int removeBuildResult( BuildResult br )
@@ -928,10 +928,10 @@ public class ContinuumXmlRpcClient
         return continuum.getBuildResultRPC( projectId, buildId );
     }
 
-    public List<Object> getBuildResultsForProjectRPC( int projectId )
+    public List<Object> getBuildResultsForProjectRPC( int projectId, int offset, int length )
         throws Exception
     {
-        return continuum.getBuildResultsForProjectRPC( projectId );
+        return continuum.getBuildResultsForProjectRPC( projectId, offset, length );
     }
 
     public Map<String, Object> getInstallationRPC( int installationId )

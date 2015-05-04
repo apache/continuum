@@ -741,10 +741,6 @@
     <action name="downloadProjectBuildsReport" class="projectBuildsReport" method="downloadBuildsReport">
       <result name="input">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
       <result name="success">/WEB-INF/jsp/viewProjectBuildsReport.jsp</result>
-      <result name="send-file" type="stream">
-        <param name="contentType">%{contentType}</param>
-        <param name="contentDisposition">attachment; filename="continuum_project_builds_report.csv"</param>
-      </result>
     </action>
   </package>
 

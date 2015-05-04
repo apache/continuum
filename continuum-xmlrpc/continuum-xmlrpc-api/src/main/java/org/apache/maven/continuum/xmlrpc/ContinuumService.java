@@ -680,20 +680,24 @@ public interface ContinuumService
      * Returns the project build result summary list.
      *
      * @param projectId The project id
+     * @param offset the zero-based offset to fetch from
+     * @param length the maximum number of results to fetch, starting from offset
      * @return The build result list
      * @throws Exception
      */
-    List<BuildResultSummary> getBuildResultsForProject( int projectId )
+    List<BuildResultSummary> getBuildResultsForProject( int projectId, int offset, int length )
         throws Exception;
 
     /**
      * Same method but compatible with standard XMLRPC
      *
      * @param projectId The project id
+     * @param offset the zero-based offset of result set to start from
+     * @param length the number of results to return, starting from the offset
      * @return The build result list as RPC value
      * @throws Exception
      */
-    List<Object> getBuildResultsForProjectRPC( int projectId )
+    List<Object> getBuildResultsForProjectRPC( int projectId, int offset, int length )
         throws Exception;
 
     /**

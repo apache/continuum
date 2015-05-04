@@ -39,7 +39,6 @@
           $('#startDate').val('')
           $('#endDate').val('')
           $('#triggeredBy').val('')
-          $('#rowCount').val('30')
           $("#buildStatus option[value='0']").attr('selected', 'selected')
           $("#projectGroupId option[value='0']").attr('selected', 'selected')
         });
@@ -55,19 +54,20 @@
   <body>
     <h3><s:text name="projectBuilds.report.section.title"/></h3>
  
-    <s:form name="generateReportForm" action="generateProjectBuildsReport">
-      <c:if test="${!empty actionErrors || !empty errorMessages}">
-        <tr><td>
-        <div class="errormessage">
-          <s:iterator value="actionErrors">
-            <p><s:property/></p>
-          </s:iterator>
-          <c:forEach items="${errorMessages}" var="errorMessage">
-            <p><c:out value="${errorMessage}"/></p>
-          </c:forEach>
-        </div>
-        </td></tr>
-      </c:if>
+    <s:form name="generateReportForm" action="generateProjectBuildsReport" method="GET">
+
+      <tr><td>
+        <s:if test="hasActionErrors()">
+            <div class="errormessage">
+                <s:actionerror/>
+            </div>
+        </s:if>
+        <s:if test="hasActionMessages()">
+            <div class="warningmessage">
+                <s:actionmessage/>
+            </div>
+        </s:if>
+      </td></tr>
 
       <tr><td>
       <div class="axial">
@@ -77,7 +77,6 @@
             <s:textfield label="%{getText('projectBuilds.report.endDate')}" name="endDate" id="endDate" size="20"/>
             <s:select label="%{getText('projectBuilds.report.buildStatus')}" name="buildStatus" id="buildStatus" list="buildStatuses"/>
             <s:textfield label="%{getText('projectBuilds.report.triggeredBy')}" name="triggeredBy" id="triggeredBy" size="40"/>
-            <s:textfield label="%{getText('projectBuilds.report.rowCount')}" name="rowCount" id="rowCount" size="10"/>
         </table>
         <div class="functnbar3">
           <s:submit value="%{getText('projectBuilds.report.view')}" theme="simple" />
@@ -86,145 +85,101 @@
       </div>
       </td></tr>
     </s:form>
-    
-    </p>
 
-    <c:if test="${projectBuilds != null}">
       <div id="h3">
      	  <h3>Results</h3>
-     	  <c:choose>
-       	  <c:when test="${not empty projectBuilds}">
-       	    
+       	  <s:if test="filteredResults.size() > 0">
        	    <table>
          	    <tr>
            	    <td>
-             	    <%-- Pagination --%>
-                  <c:set var="prevPageUrl">
-                    <s:url action="generateProjectBuildsReport">    
-                      <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
-                      <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
-                      <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
-                      <s:param name="rowCount" value="%{#attr.rowCount}"/>
-                      <s:param name="startDate" value="%{#attr.startDate}"/>                      
-                      <s:param name="endDate" value="%{#attr.endDate}"/>
-                      <s:param name="page" value="%{#attr.page - 1}"/>
-                    </s:url>
-                  </c:set>
-                  <c:set var="nextPageUrl">
-                    <s:url action="generateProjectBuildsReport">    
-                      <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
-                      <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
-                      <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
-                      <s:param name="rowCount" value="%{#attr.rowCount}"/>
-                      <s:param name="startDate" value="%{#attr.startDate}"/>                      
-                      <s:param name="endDate" value="%{#attr.endDate}"/>          
-                      <s:param name="page" value="%{#attr.page + 1}"/>
-                    </s:url>
-                  </c:set>
-                  <c:choose>
-                    <c:when test="${page == 1}">                               
-                      <s:text name="projectBuilds.report.prev"/>
-                    </c:when>
-                    <c:otherwise>
-                      <a href="${prevPageUrl}">
-                        <s:text name="projectBuilds.report.prev"/>
-                      </a>
-                    </c:otherwise>
-                  </c:choose>
 
-                  <c:choose>
-                    <c:when test="${numPages > 11}">
-                      <c:choose>
-                        <c:when test="${(page - 5) < 0}">
-                          <c:set var="beginVal">0</c:set>
-                          <c:set var="endVal">10</c:set> 
-                        </c:when>			        
-                        <c:when test="${(page + 5) > (numPages - 1)}">
-                          <c:set var="beginVal">${(numPages - 1) - 10}</c:set>
-                          <c:set var="endVal">${numPages - 1}</c:set>
-                        </c:when>
-                        <c:otherwise>
-                          <c:set var="beginVal">${page - 5}</c:set>
-                          <c:set var="endVal">${page + 5}</c:set>
-                        </c:otherwise>
-                      </c:choose>  
-                    </c:when>
-                    <c:otherwise>
-                      <c:set var="beginVal">0</c:set>
-                      <c:set var="endVal">${numPages - 1}</c:set>
-                    </c:otherwise>
-                  </c:choose>
+             	  <%-- Pagination --%>
+                  <s:url var="prevUrl" action="generateProjectBuildsReport">
+                    <s:param name="projectGroupId" value="projectGroupId"/>
+                    <s:param name="buildStatus" value="buildStatus"/>
+                    <s:param name="triggeredBy" value="triggeredBy"/>
+                    <s:param name="startDate" value="startDate"/>
+                    <s:param name="endDate" value="endDate"/>
+                    <s:param name="page" value="page - 1"/>
+                  </s:url>
+                  <s:url var="nextUrl" action="generateProjectBuildsReport">
+                    <s:param name="projectGroupId" value="projectGroupId"/>
+                    <s:param name="triggeredBy" value="triggeredBy"/>
+                    <s:param name="buildStatus" value="buildStatus"/>
+                    <s:param name="startDate" value="startDate"/>
+                    <s:param name="endDate" value="endDate"/>
+                    <s:param name="page" value="page + 1"/>
+                  </s:url>
 
-                  <c:forEach var="i" begin="${beginVal}" end="${endVal}">      
-                    <c:choose>                   			    
-                      <c:when test="${i != (page - 1)}">
-                        <c:set var="specificPageUrl">
-                          <s:url action="generateProjectBuildsReport">    
-                            <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
-                            <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
-                            <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
-                            <s:param name="rowCount" value="%{#attr.rowCount}"/>
-                            <s:param name="startDate" value="%{#attr.startDate}"/>                      
-                            <s:param name="endDate" value="%{#attr.endDate}"/>          
-                            <s:param name="page" value="%{#attr.i + 1}"/>
-                          </s:url>
-                        </c:set>
-                        <a href="${specificPageUrl}">${i + 1}</a>
-                      </c:when>
-                      <c:otherwise>		
-                        <b>${i + 1}</b>   
-                      </c:otherwise>				  			    
-                    </c:choose>      
-                  </c:forEach>
+                  <s:if test="page <= 1">
+                    <s:text name="projectBuilds.report.prev"/>
+                  </s:if>
+                  <s:else>
+                    <s:a href="%{#prevUrl}"><s:text name="projectBuilds.report.prev"/></s:a>
+                  </s:else>
 
-                  <c:choose>
-                    <c:when test="${page == numPages}">
-                      <s:text name="projectBuilds.report.next"/>
-                    </c:when>
-            	      <c:otherwise>
-                      <a href="${nextPageUrl}">
-                        <s:text name="projectBuilds.report.next"/>
-                      </a>
-                    </c:otherwise>   
-                  </c:choose>
+                  <s:iterator var="page" begin="1" end="pageTotal">
+                    <s:url var="pageUrl" action="generateProjectBuildsReport">
+                      <s:param name="projectGroupId" value="projectGroupId"/>
+                        <s:param name="triggeredBy" value="triggeredBy"/>
+                        <s:param name="buildStatus" value="buildStatus"/>
+                        <s:param name="startDate" value="startDate"/>
+                        <s:param name="endDate" value="endDate"/>
+                        <s:param name="page" value="#page"/>
+                      </s:url>
+                      <s:if test="page == #page">
+                        <b><s:property value="#page"/></b>
+                      </s:if>
+                      <s:else>
+                        <s:a href="%{#pageUrl}"><s:property value="#page"/></s:a>
+                      </s:else>
+                  </s:iterator>
+
+                  <%-- Can not determine exact end of results due to filtering --%>
+                  <s:if test="page >= pageTotal">
+                    <s:text name="projectBuilds.report.next"/>
+                  </s:if>
+                  <s:else>
+                    <s:a href="%{#nextUrl}"><s:text name="projectBuilds.report.next"/></s:a>
+                  </s:else>
+
            	    </td>
            	    <td>
                   <%-- Export to CSV link --%>
                   <s:url id="downloadProjectBuildsReportUrl" action="downloadProjectBuildsReport" namespace="/">
-                    <s:param name="projectGroupId" value="%{#attr.projectGroupId}"/>
-                    <s:param name="triggeredBy" value="%{#attr.triggeredBy}"/>
-                    <s:param name="buildStatus" value="%{#attr.buildStatus}"/>
-                    <s:param name="startDate" value="%{#attr.startDate}"/>
-                    <s:param name="endDate" value="%{#attr.endDate}"/>
+                    <s:param name="projectGroupId" value="projectGroupId"/>
+                    <s:param name="triggeredBy" value="triggeredBy"/>
+                    <s:param name="buildStatus" value="buildStatus"/>
+                    <s:param name="startDate" value="startDate"/>
+                    <s:param name="endDate" value="endDate"/>
                   </s:url>
                   <s:a href="%{downloadProjectBuildsReportUrl}">Export to CSV</s:a>
                 </td>
               </tr>
             </table>
 
-            <s:set name="projectBuilds" value="projectBuilds" scope="request"/>
-            <ec:table items="projectBuilds"
-                        var="projectBuild"
+            <s:set value="filteredResults" name="buildResults" scope="page"/>
+            <ec:table items="buildResults"
+                        var="buildResult"
                         showExports="false"
                         showPagination="false"
                         showStatusBar="false"
                         sortable="false"
                         filterable="false">
               <ec:row highlightRow="true">
-                <ec:column property="projectGroupName" title="projectBuilds.report.projectGroup"/>
-                <ec:column property="projectName" title="projectBuilds.report.project"/>
-                <ec:column property="buildDate" title="projectBuilds.report.buildDate" cell="date"/>
-                <ec:column property="buildTriggeredBy" title="projectBuilds.report.triggeredBy"/>
-                <ec:column property="buildState" title="projectBuilds.report.buildStatus" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
+                <ec:column property="project.projectGroup.name" title="projectBuilds.report.projectGroup"/>
+                <ec:column property="project.name" title="projectBuilds.report.project"/>
+                <ec:column property="buildNumber" title="projectBuilds.report.buildNumber"/>
+                <ec:column property="startTime" title="projectBuilds.report.buildDate" cell="date"/>
+                <ec:column property="username" title="projectBuilds.report.triggeredBy"/>
+                <ec:column property="state" title="projectBuilds.report.buildStatus" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
               </ec:row>
             </ec:table>
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:else>
             <s:text name="projectBuilds.report.noResult"/></p>
-          </c:otherwise>
-        </c:choose>
+          </s:else>
       </div>
-    </c:if>
   </body>
   </s:i18n>
 </html>

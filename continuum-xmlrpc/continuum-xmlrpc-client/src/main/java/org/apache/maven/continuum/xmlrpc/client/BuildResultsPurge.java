@@ -30,7 +30,6 @@ import java.util.List;
 
 /**
  * Utility class to purge old build results.
- * <p/>
  * The easiest way to use it is to change the exec plugin config in the pom to execute this class instead of
  * SampleClient, change RETENTION_DAYS if desired, and type 'mvn clean install exec:exec'
  */
@@ -72,26 +71,37 @@ public class BuildResultsPurge
 
                 System.out.println( " Project [" + project.getId() + "] " + project.getName() );
 
-                List<BuildResultSummary> results = client.getBuildResultsForProject( project.getId() );
+                int batchSize = 100, offset = 0;
+                List<BuildResultSummary> results;
 
-                for ( BuildResultSummary brs : results )
+                do
                 {
+                    int retained = 0;
+                    results = client.getBuildResultsForProject( project.getId(), offset, batchSize );
 
-                    BuildResult br = client.getBuildResult( project.getId(), brs.getId() );
-
-                    System.out.print( "  Build Result [" + br.getId() + "] ended " + new Date( br.getEndTime() ) );
-
-                    if ( br.getEndTime() > 0 && br.getEndTime() < purgeDate )
+                    for ( BuildResultSummary brs : results )
                     {
 
-                        client.removeBuildResult( br );
-                        System.out.println( " ...removed." );
+                        BuildResult br = client.getBuildResult( project.getId(), brs.getId() );
+
+                        System.out.print( "  Build Result [" + br.getId() + "] ended " + new Date( br.getEndTime() ) );
+
+                        if ( br.getEndTime() > 0 && br.getEndTime() < purgeDate )
+                        {
+
+                            client.removeBuildResult( br );
+                            System.out.println( " ...removed." );
+                        }
+                        else
+                        {
+                            System.out.println( " ...retained." );
+                            retained++;
+                        }
                     }
-                    else
-                    {
-                        System.out.println( " ...retained." );
-                    }
+
+                    offset += retained;  // Only need to advance past items we keep
                 }
+                while ( results != null && results.size() == batchSize );
             }
 
         }

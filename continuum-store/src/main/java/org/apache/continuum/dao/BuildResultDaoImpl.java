@@ -258,7 +258,7 @@ public class BuildResultDaoImpl
 
             query.setFilter( "this.project.id == projectId && this.buildDefinition.id == buildDefinitionId "
                                  + "&& this.id < buildResultId" );
-            query.setOrdering( "id descending" );
+            query.setOrdering( "this.id descending" );
 
             Object[] params = new Object[3];
             params[0] = projectId;
@@ -520,7 +520,7 @@ public class BuildResultDaoImpl
         }
     }
 
-    public List<BuildResult> getBuildResultsForProjectWithDetails( int projectId, long fromDate, int tobuildResultId )
+    public List<BuildResult> getBuildResultsForProjectWithDetails( int projectId, int fromResultId, int toResultId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -535,29 +535,28 @@ public class BuildResultDaoImpl
 
             Query query = pm.newQuery( extent );
 
-            String parameters = "int projectId, long fromDate";
-            String filter = "this.project.id == projectId && this.startTime > fromDate";
+            String parameters = "int projectId, int fromResultId";
+            String filter = "this.project.id == projectId && this.id > fromResultId";
 
-            if ( tobuildResultId > 0 )
+            if ( toResultId > 0 )
             {
-                parameters += ", int buildResultId";
-                filter += " && this.id < buildResultId";
+                parameters += ", int toResultId";
+                filter += " && this.id < toResultId";
             }
+
             query.declareParameters( parameters );
-
             query.setFilter( filter );
-
-            query.setOrdering( "this.id descending" );
+            query.setOrdering( "this.id ascending" );
 
             List<BuildResult> result;
 
-            if ( tobuildResultId > 0 )
+            if ( toResultId > 0 )
             {
-                result = (List<BuildResult>) query.execute( projectId, fromDate, tobuildResultId );
+                result = (List<BuildResult>) query.execute( projectId, fromResultId, toResultId );
             }
             else
             {
-                result = (List<BuildResult>) query.execute( projectId, fromDate );
+                result = (List<BuildResult>) query.execute( projectId, fromResultId );
             }
 
             result = (List<BuildResult>) pm.detachCopyAll( result );
@@ -572,15 +571,10 @@ public class BuildResultDaoImpl
         }
     }
 
-    public List<BuildResult> getBuildResultsForProject( int projectId )
-    {
-        return getBuildResultsForProjectWithDetails( projectId, -1, -1 );
-    }
-
-    public List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex )
+    public List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex,
+                                                        boolean fullDetails )
     {
         PersistenceManager pm = getPersistenceManager();
-
         Transaction tx = pm.currentTransaction();
 
         try
@@ -589,17 +583,17 @@ public class BuildResultDaoImpl
 
             Extent extent = pm.getExtent( BuildResult.class, true );
 
+            if ( fullDetails )
+            {
+                pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+            }
+
             Query query = pm.newQuery( extent );
 
             query.declareParameters( "int projectId" );
-
             query.setFilter( "this.project.id == projectId" );
-
-            if ( startIndex >= 0 )
-            {
-                query.setRange( startIndex, endIndex );
-            }
             query.setOrdering( "this.id descending" );
+            query.setRange( startIndex, endIndex );
 
             List<BuildResult> result = (List<BuildResult>) query.execute( projectId );
 
@@ -692,41 +686,6 @@ public class BuildResultDaoImpl
         }
     }
 
-    private int getPreviousBuildResultIdInSuccess( int projectId, int buildResultId )
-    {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( BuildResult.class, true );
-
-            Query query = pm.newQuery( extent );
-
-            query.declareParameters( "int projectId, int buildResultId" );
-
-            String filter = "this.id < buildResultId && this.state == " + ContinuumProjectState.OK +
-                "  && this.project.id == projectId";
-
-            query.setFilter( filter );
-
-            query.setResult( "max(this.id)" );
-
-            int result = (Integer) query.execute( projectId, buildResultId );
-
-            tx.commit();
-
-            return result;
-        }
-        finally
-        {
-            rollback( tx );
-        }
-    }
-
     public Set<Integer> resolveOrphanedInProgressResults( long ageCutoff )
         throws ContinuumStoreException
     {
@@ -763,13 +722,37 @@ public class BuildResultDaoImpl
     public BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )
         throws ContinuumStoreException
     {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
         try
         {
-            return getBuildResult( getPreviousBuildResultIdInSuccess( projectId, buildResultId ) );
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, int buildResultId" );
+
+            String filter = "this.project.id == projectId"
+                + " && this.state == " + ContinuumProjectState.OK
+                + " && this.id < buildResultId";
+
+            query.setFilter( filter );
+            query.setOrdering( "this.id descending" );
+            query.setRange( 0, 1 );
+
+            List<BuildResult> results = (List<BuildResult>) query.execute( projectId, buildResultId );
+
+            tx.commit();
+
+            return results.size() > 0 ? results.get( 0 ) : null;
         }
-        catch ( NullPointerException e )
+        finally
         {
-            return null;
+            rollback( tx );
         }
     }
 
@@ -832,12 +815,10 @@ public class BuildResultDaoImpl
         return null;
     }
 
-    @SuppressWarnings( "unchecked" )
     public List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy,
-                                                     int projectGroupId )
+                                                     int projectGroupId, int offset, int length )
     {
         PersistenceManager pm = getPersistenceManager();
-
         Transaction tx = pm.currentTransaction();
 
         try
@@ -850,66 +831,16 @@ public class BuildResultDaoImpl
 
             Query query = pm.newQuery( extent );
 
-            String parameters = "";
-            String filter = "";
+            InRangeQueryAttrs inRangeQueryAttrs =
+                new InRangeQueryAttrs( fromDate, toDate, state, triggeredBy, projectGroupId, query ).build();
 
-            Map params = new HashMap();
-
-            int ctr = 0;
-
-            if ( state > 0 )
-            {
-                params.put( "state", state );
-                ctr++;
-                parameters += "int state, ";
-                filter += "this.state == state && ";
-            }
-
-            if ( projectGroupId > 0 )
-            {
-                params.put( "projectGroupId", projectGroupId );
-                ctr++;
-                parameters += "int projectGroupId, ";
-                filter += "this.project.projectGroup.id == projectGroupId && ";
-            }
-
-            if ( triggeredBy != null && !triggeredBy.equals( "" ) )
-            {
-                params.put( "triggeredBy", triggeredBy );
-                ctr++;
-                query.declareImports( "import java.lang.String" );
-                parameters += "String triggeredBy, ";
-                filter += "this.username == triggeredBy && ";
-            }
-
-            if ( fromDate != null )
-            {
-                params.put( "fromDate", fromDate.getTime() );
-                ctr++;
-                parameters += "long fromDate, ";
-                filter += "this.startTime >= fromDate && ";
-            }
-
-            if ( toDate != null )
-            {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime( toDate );
-                cal.add( Calendar.DAY_OF_MONTH, 1 );
-
-                params.put( "toDate", cal.getTimeInMillis() );
-                ctr++;
-                parameters += "long toDate";
-                filter += "this.startTime < toDate";
-            }
-
-            if ( filter.endsWith( "&& " ) )
-            {
-                filter = filter.substring( 0, filter.length() - 3 );
-                parameters = parameters.substring( 0, parameters.length() - 2 );
-            }
+            String parameters = inRangeQueryAttrs.getParameters();
+            String filter = inRangeQueryAttrs.getFilter();
+            Map params = inRangeQueryAttrs.getParams();
 
             query.declareParameters( parameters );
             query.setFilter( filter );
+            query.setRange( offset, offset + length );
 
             List<BuildResult> result = (List<BuildResult>) query.executeWithMap( params );
 
@@ -922,6 +853,109 @@ public class BuildResultDaoImpl
         finally
         {
             rollback( tx );
+        }
+
+    }
+
+    private class InRangeQueryAttrs
+    {
+        private Date fromDate;
+
+        private Date toDate;
+
+        private int state;
+
+        private String triggeredBy;
+
+        private int projectGroupId;
+
+        private Query query;
+
+        private String parameters;
+
+        private String filter;
+
+        private Map params;
+
+        public InRangeQueryAttrs( Date fromDate, Date toDate, int state, String triggeredBy, int projectGroupId,
+                                  Query query )
+        {
+            this.fromDate = fromDate;
+            this.toDate = toDate;
+            this.state = state;
+            this.triggeredBy = triggeredBy;
+            this.projectGroupId = projectGroupId;
+            this.query = query;
+        }
+
+        public String getParameters()
+        {
+            return parameters;
+        }
+
+        public String getFilter()
+        {
+            return filter;
+        }
+
+        public Map getParams()
+        {
+            return params;
+        }
+
+        public InRangeQueryAttrs build()
+        {
+            parameters = "";
+            filter = "";
+
+            params = new HashMap();
+
+            if ( state > 0 )
+            {
+                params.put( "state", state );
+                parameters += "int state, ";
+                filter += "this.state == state && ";
+            }
+
+            if ( projectGroupId > 0 )
+            {
+                params.put( "projectGroupId", projectGroupId );
+                parameters += "int projectGroupId, ";
+                filter += "this.project.projectGroup.id == projectGroupId && ";
+            }
+
+            if ( triggeredBy != null && !triggeredBy.equals( "" ) )
+            {
+                params.put( "triggeredBy", triggeredBy );
+                query.declareImports( "import java.lang.String" );
+                parameters += "String triggeredBy, ";
+                filter += "this.username == triggeredBy && ";
+            }
+
+            if ( fromDate != null )
+            {
+                params.put( "fromDate", fromDate.getTime() );
+                parameters += "long fromDate, ";
+                filter += "this.startTime >= fromDate && ";
+            }
+
+            if ( toDate != null )
+            {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime( toDate );
+                cal.add( Calendar.DAY_OF_MONTH, 1 );
+
+                params.put( "toDate", cal.getTimeInMillis() );
+                parameters += "long toDate";
+                filter += "this.startTime < toDate";
+            }
+
+            if ( filter.endsWith( "&& " ) )
+            {
+                filter = filter.substring( 0, filter.length() - 3 );
+                parameters = parameters.substring( 0, parameters.length() - 2 );
+            }
+            return this;
         }
     }
 }

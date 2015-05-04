@@ -541,9 +541,10 @@ public class DefaultContinuum
     }
 
     public List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state,
-                                                     String triggeredBy )
+                                                     String triggeredBy, int offset, int length )
     {
-        return buildResultDao.getBuildResultsInRange( fromDate, toDate, state, triggeredBy, projectGroupId );
+        return buildResultDao.getBuildResultsInRange( fromDate, toDate, state, triggeredBy, projectGroupId, offset,
+                                                      length );
     }
 
     // ----------------------------------------------------------------------
@@ -630,16 +631,22 @@ public class DefaultContinuum
             project.getDependencies().clear();
             projectDao.updateProject( project );
 
-            Collection<BuildResult> buildResults = getBuildResultsForProject( projectId );
-
-            for ( BuildResult br : buildResults )
+            // Remove build results in batches: the number of results could be very large
+            int batchSize = 100;
+            Collection<BuildResult> buildResults;
+            do
             {
-                br.setBuildDefinition( null );
-                //Remove all modified dependencies to prevent SQL errors
-                br.getModifiedDependencies().clear();
-                buildResultDao.updateBuildResult( br );
-                removeBuildResult( br );
+                buildResults = buildResultDao.getBuildResultsForProject( projectId, 0, batchSize, true );
+                for ( BuildResult br : buildResults )
+                {
+                    br.setBuildDefinition( null );
+                    //Remove all modified dependencies to prevent SQL errors
+                    br.getModifiedDependencies().clear();
+                    buildResultDao.updateBuildResult( br );
+                    removeBuildResult( br );
+                }
             }
+            while ( buildResults != null && buildResults.size() > 0 );
 
             File workingDirectory = getWorkingDirectory( projectId );
 
@@ -1145,11 +1152,9 @@ public class DefaultContinuum
         {
             //No previous build in success, Nothing to do
         }
-        long startTime = previousBuildResult == null ? 0 : previousBuildResult.getStartTime();
+        int lastSuccessId = previousBuildResult == null ? 0 : previousBuildResult.getId();
         ArrayList<BuildResult> buildResults = new ArrayList<BuildResult>(
-            buildResultDao.getBuildResultsForProjectWithDetails( projectId, startTime, buildResultId ) );
-
-        Collections.reverse( buildResults );
+            buildResultDao.getBuildResultsForProjectWithDetails( projectId, lastSuccessId, buildResultId ) );
 
         Iterator<BuildResult> buildResultsIterator = buildResults.iterator();
 
@@ -2809,16 +2814,10 @@ public class DefaultContinuum
         return buildResultDao.getNbBuildResultsForProject( projectId );
     }
 
-    public Collection<BuildResult> getBuildResultsForProject( int projectId )
-        throws ContinuumException
-    {
-        return buildResultDao.getBuildResultsForProject( projectId );
-    }
-
     public Collection<BuildResult> getBuildResultsForProject( int projectId, int offset, int length )
         throws ContinuumException
     {
-        return buildResultDao.getBuildResultsForProject( projectId, offset, offset + length );
+        return buildResultDao.getBuildResultsForProject( projectId, offset, offset + length, false );
     }
 
     // ----------------------------------------------------------------------

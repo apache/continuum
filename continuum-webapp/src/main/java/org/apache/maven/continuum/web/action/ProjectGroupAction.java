@@ -529,11 +529,17 @@ public class ProjectGroupAction
                 project.setProjectGroup( newProjectGroup );
 
                 // CONTINUUM-1512
-                Collection<BuildResult> results = getContinuum().getBuildResultsForProject( project.getId() );
-                for ( BuildResult br : results )
+                int batchSize = 100;
+                Collection<BuildResult> results;
+                do
                 {
-                    getContinuum().removeBuildResult( br.getId() );
+                    results = getContinuum().getBuildResultsForProject( project.getId(), 0, batchSize );
+                    for ( BuildResult br : results )
+                    {
+                        getContinuum().removeBuildResult( br.getId() );
+                    }
                 }
+                while ( results != null && results.size() > 0 );
 
                 getContinuum().updateProject( project );
             }

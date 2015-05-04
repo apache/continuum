@@ -280,7 +280,7 @@ public class DefaultContinuumTest
 
         getBuildResultDao().addBuildResult( project, buildResult );
 
-        Collection<BuildResult> brs = continuum.getBuildResultsForProject( project.getId() );
+        Collection<BuildResult> brs = continuum.getBuildResultsForProject( project.getId(), 0, 5 );
 
         assertEquals( "Build result of project was not added", 1, brs.size() );
 
@@ -295,7 +295,7 @@ public class DefaultContinuumTest
         }
         catch ( ContinuumException expected )
         {
-            brs = continuum.getBuildResultsForProject( project.getId() );
+            brs = continuum.getBuildResultsForProject( project.getId(), 0, 5 );
 
             assertEquals( "Build result of project was not removed", 0, brs.size() );
         }
