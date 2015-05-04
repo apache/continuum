@@ -81,56 +81,6 @@ public class ReportTest
         assertImgWithAlt( "Success" );
     }
 
-    /*@Test( dependsOnMethods = { "testProjectGroupAllBuildSuccess" } )
-    public void testBuildsReportPagination()
-        throws Exception
-    {
-        String M2_PROJ_GRP_NAME = getProperty( "M2_PROJ_GRP_NAME" );
-        String M2_PROJ_GRP_ID = getProperty( "M2_PROJ_GRP_ID" );
-        String M2_PROJ_GRP_DESCRIPTION = getProperty( "M2_PROJ_GRP_DESCRIPTION" );
-
-        for ( int ctr = 0; ctr < 10; ctr++ )
-        {
-            buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME, true );
-            clickButtonWithValue( "Release" );
-            assertReleaseSuccess();
-        }
-
-        goToProjectBuildsReport();
-        setFieldValue( "rowCount", "10" );
-        clickButtonWithValue( "View Report" );
-
-        assertProjectBuildReportWithResult();
-        assertLinkNotPresent( "Prev" );
-        assertLinkNotPresent( "1" );
-        assertLinkPresent( "2" );
-        assertLinkPresent( "Next" );
-
-        clickLinkWithText( "2" );
-        assertProjectBuildReportWithResult();
-        assertLinkNotPresent( "Next" );
-        assertLinkNotPresent( "2" );
-        assertLinkPresent( "1" );
-        assertLinkPresent( "Prev" );
-
-        clickLinkWithText( "Prev" );
-        assertProjectBuildReportWithResult();
-        assertLinkNotPresent( "Prev" );
-        assertLinkNotPresent( "1" );
-        assertLinkPresent( "2" );
-        assertLinkPresent( "Next" );
-    }*/
-
-    public void testBuildsReportWithInvalidRowCount()
-    {
-        goToProjectBuildsReport();
-        setFieldValue( "rowCount", "1" );
-        clickButtonWithValue( "View Report" );
-
-        assertProjectBuildReportWithFieldError();
-        assertTextPresent( "Row count should be at least 10." );
-    }
-
     public void testBuildsReportWithInvalidDates()
     {
         goToProjectBuildsReport();
