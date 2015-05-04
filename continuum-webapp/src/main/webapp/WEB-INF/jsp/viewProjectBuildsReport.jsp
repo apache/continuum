@@ -90,75 +90,7 @@
       <div id="h3">
      	  <h3>Results</h3>
        	  <s:if test="filteredResults.size() > 0">
-       	    <table>
-         	    <tr>
-           	    <td>
-
-             	  <%-- Pagination --%>
-                  <s:url var="prevUrl" action="generateProjectBuildsReport">
-                    <s:param name="projectGroupId" value="projectGroupId"/>
-                    <s:param name="buildStatus" value="buildStatus"/>
-                    <s:param name="triggeredBy" value="triggeredBy"/>
-                    <s:param name="startDate" value="startDate"/>
-                    <s:param name="endDate" value="endDate"/>
-                    <s:param name="page" value="page - 1"/>
-                  </s:url>
-                  <s:url var="nextUrl" action="generateProjectBuildsReport">
-                    <s:param name="projectGroupId" value="projectGroupId"/>
-                    <s:param name="triggeredBy" value="triggeredBy"/>
-                    <s:param name="buildStatus" value="buildStatus"/>
-                    <s:param name="startDate" value="startDate"/>
-                    <s:param name="endDate" value="endDate"/>
-                    <s:param name="page" value="page + 1"/>
-                  </s:url>
-
-                  <s:if test="page <= 1">
-                    <s:text name="projectBuilds.report.prev"/>
-                  </s:if>
-                  <s:else>
-                    <s:a href="%{#prevUrl}"><s:text name="projectBuilds.report.prev"/></s:a>
-                  </s:else>
-
-                  <s:iterator var="page" begin="1" end="pageTotal">
-                    <s:url var="pageUrl" action="generateProjectBuildsReport">
-                      <s:param name="projectGroupId" value="projectGroupId"/>
-                        <s:param name="triggeredBy" value="triggeredBy"/>
-                        <s:param name="buildStatus" value="buildStatus"/>
-                        <s:param name="startDate" value="startDate"/>
-                        <s:param name="endDate" value="endDate"/>
-                        <s:param name="page" value="#page"/>
-                      </s:url>
-                      <s:if test="page == #page">
-                        <b><s:property value="#page"/></b>
-                      </s:if>
-                      <s:else>
-                        <s:a href="%{#pageUrl}"><s:property value="#page"/></s:a>
-                      </s:else>
-                  </s:iterator>
-
-                  <%-- Can not determine exact end of results due to filtering --%>
-                  <s:if test="page >= pageTotal">
-                    <s:text name="projectBuilds.report.next"/>
-                  </s:if>
-                  <s:else>
-                    <s:a href="%{#nextUrl}"><s:text name="projectBuilds.report.next"/></s:a>
-                  </s:else>
-
-           	    </td>
-           	    <td>
-                  <%-- Export to CSV link --%>
-                  <s:url id="downloadProjectBuildsReportUrl" action="downloadProjectBuildsReport" namespace="/">
-                    <s:param name="projectGroupId" value="projectGroupId"/>
-                    <s:param name="triggeredBy" value="triggeredBy"/>
-                    <s:param name="buildStatus" value="buildStatus"/>
-                    <s:param name="startDate" value="startDate"/>
-                    <s:param name="endDate" value="endDate"/>
-                  </s:url>
-                  <s:a href="%{downloadProjectBuildsReportUrl}">Export to CSV</s:a>
-                </td>
-              </tr>
-            </table>
-
+            <%@include file="viewProjectBuildsReportPager.jspf"%>
             <s:set value="filteredResults" name="buildResults" scope="page"/>
             <ec:table items="buildResults"
                         var="buildResult"
@@ -176,6 +108,7 @@
                 <ec:column property="state" title="projectBuilds.report.buildStatus" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
               </ec:row>
             </ec:table>
+            <%@include file="viewProjectBuildsReportPager.jspf"%>
           </s:if>
           <s:else>
             <s:text name="projectBuilds.report.noResult"/></p>
