@@ -244,7 +244,7 @@ public class ViewBuildsReportAction
         catch ( ParseException e )
         {
             addActionError( getText( "projectBuilds.report.badDates", new String[] { e.getMessage() } ) );
-            return ERROR;
+            return INPUT;
         }
 
         if ( fromDate != null && toDate != null && fromDate.after( toDate ) )
@@ -290,7 +290,7 @@ public class ViewBuildsReportAction
         if ( page < 1 || page > pageTotal )
         {
             addActionError( getText( "projectBuilds.report.invalidPage" ) );
-            return ERROR;
+            return INPUT;
         }
 
         int pageStart = rowCount * ( page - 1 ), pageEnd = rowCount * page;
@@ -333,7 +333,7 @@ public class ViewBuildsReportAction
         catch ( ParseException e )
         {
             addActionError( getText( "projectBuilds.report.badDates", new String[] { e.getMessage() } ) );
-            return ERROR;
+            return INPUT;
         }
 
         if ( fromDate != null && toDate != null && fromDate.after( toDate ) )
@@ -417,7 +417,7 @@ public class ViewBuildsReportAction
         catch ( IOException e )
         {
             addActionError( getText( "projectBuilds.report.exportIOError", new String[] { e.getMessage() } ) );
-            return ERROR;
+            return INPUT;
         }
 
         return null;
