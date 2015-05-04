@@ -20,7 +20,6 @@ package org.apache.continuum.web.action;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.io.IOUtils;
 import org.apache.continuum.web.action.stub.ViewBuildsReportActionStub;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -29,6 +28,9 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,7 +61,6 @@ public class ViewBuildsReportActionTest
     @Test
     public void testInvalidRowCount()
     {
-        action.setRowCount( -1 );
         String result = action.execute();
 
         assertEquals( Action.INPUT, result );
@@ -136,6 +137,12 @@ public class ViewBuildsReportActionTest
 
         when( continuum.getBuildResultsInRange( anyCollection(), any( Date.class ), any( Date.class ), anyInt(),
                                                 anyString(), anyInt(), anyInt() ) ).thenReturn( results );
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        HttpServletResponse response = mock( HttpServletResponse.class );
+        when( response.getWriter() ).thenReturn( new PrintWriter( out ) );
+
+        action.setServletResponse( response );
         action.setProjectGroupId( 0 );
         action.setBuildStatus( 0 );
         action.setStartDate( "" );
@@ -144,8 +151,8 @@ public class ViewBuildsReportActionTest
 
         String result = action.downloadBuildsReport();
 
-        assertEquals( "send-file", result );
-        assertFileContentsEqual( IOUtils.toString( action.getInputStream() ), cal.getTime().toString() );
+        assertNull( "result should be null", result );
+        assertFileContentsEqual( out.toString(), cal.getTime().toString() );
     }
 
     private void assertSuccessResult( String result )
