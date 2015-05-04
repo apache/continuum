@@ -113,8 +113,6 @@ public interface BuildResultDao
 
     Map<Integer, BuildResult> getBuildResultsInSuccessByProjectGroupId( int projectGroupId );
 
-    List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber );
-
     List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId );
 
     List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId, long startIndex,

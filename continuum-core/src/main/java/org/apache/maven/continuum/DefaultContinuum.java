@@ -532,14 +532,6 @@ public class DefaultContinuum
         return buildResultDao.getLatestBuildResultForProject( projectId );
     }
 
-    public BuildResult getBuildResultByBuildNumber( int projectId, int buildNumber )
-        throws ContinuumException
-    {
-        List<BuildResult> builds = buildResultDao.getBuildResultByBuildNumber( projectId, buildNumber );
-
-        return ( builds.isEmpty() ? null : builds.get( 0 ) );
-    }
-
     public List<BuildResult> getBuildResultsInRange( Collection<Integer> projectGroupIds, Date fromDate, Date toDate,
                                                      int state, String triggeredBy, int offset, int length )
     {

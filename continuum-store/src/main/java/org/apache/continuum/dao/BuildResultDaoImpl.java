@@ -384,38 +384,6 @@ public class BuildResultDaoImpl
         return getObjectById( BuildResult.class, buildId, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
     }
 
-    public List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber )
-    {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( BuildResult.class, true );
-
-            Query query = pm.newQuery( extent );
-
-            query.declareParameters( "int projectId, int buildNumber" );
-
-            query.setFilter( "this.project.id == projectId && this.buildNumber == buildNumber" );
-
-            List<BuildResult> result = (List<BuildResult>) query.execute( projectId, buildNumber );
-
-            result = (List<BuildResult>) pm.detachCopyAll( result );
-
-            tx.commit();
-
-            return result;
-        }
-        finally
-        {
-            rollback( tx );
-        }
-    }
-
     public List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId )
     {
         return getBuildResultsByBuildDefinition( projectId, buildDefinitionId, -1, -1 );
