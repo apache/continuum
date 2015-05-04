@@ -89,7 +89,7 @@ public class ReportTest
         clickButtonWithValue( "View Report" );
 
         assertProjectBuildReportWithFieldError();
-        assertTextPresent( "Start Date must be earlier than the End Date" );
+        assertTextPresent( "Invalid date range: start date must be earlier than the end date." );
     }
 
     public void testViewBuildsReportWithFailedBuild()
