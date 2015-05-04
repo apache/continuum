@@ -20,10 +20,34 @@ package org.apache.continuum.web.action.stub;
  */
 
 import org.apache.continuum.web.action.ViewBuildsReportAction;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.codehaus.plexus.redback.system.SecuritySession;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class ViewBuildsReportActionStub
     extends ViewBuildsReportAction
 {
+
+    Collection<ProjectGroup> authorizedGroups = Collections.EMPTY_LIST;
+
+    public void setSecuritySession( SecuritySession securitySession )
+    {
+        super.setSecuritySession( securitySession );
+    }
+
+    @Override
+    protected Collection<ProjectGroup> getAuthorizedGroups()
+    {
+        return authorizedGroups;
+    }
+
+    public void setAuthorizedGroups( Collection<ProjectGroup> authorizedGroups )
+    {
+        this.authorizedGroups = authorizedGroups;
+    }
+
     protected void checkViewProjectGroupAuthorization( String resource )
     {
         // skip authorization check

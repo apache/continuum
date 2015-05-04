@@ -135,9 +135,9 @@ public class ViewBuildsReportAction
 
     private Map<Integer, String> buildStatuses;
 
-    private Map<Integer, String> projectGroups;
+    private Map<Integer, String> groupSelections;
 
-    private Map<String, Integer> permittedGroups;
+    private Map<String, Integer> permittedGroupMap;
 
     private List<BuildResult> filteredResults = new ArrayList<BuildResult>();
 
@@ -148,7 +148,7 @@ public class ViewBuildsReportAction
         this.rawResponse = response;
     }
 
-    private boolean isAuthorized( String projectGroupName )
+    protected boolean isAuthorized( String projectGroupName )
     {
         try
         {
@@ -166,19 +166,48 @@ public class ViewBuildsReportAction
     {
         super.prepare();
 
-        // Populate the state drop downs
-        buildStatuses = new LinkedHashMap<Integer, String>();
-        buildStatuses.put( 0, "ALL" );
+        Collection<ProjectGroup> permittedGroups = getAuthorizedGroups();
+
+        groupSelections = createGroupSelections( permittedGroups );
+        permittedGroupMap = createPermittedGroupMap( permittedGroups );
+        buildStatuses = createStatusSelections();
+    }
+
+    protected Map<String, Integer> createPermittedGroupMap( Collection<ProjectGroup> allowedGroups )
+    {
+        Map<String, Integer> result = new HashMap<String, Integer>();
+        for ( ProjectGroup group : allowedGroups )
+        {
+            result.put( group.getName(), group.getId() );
+        }
+        return result;
+    }
+
+    protected Map<Integer, String> createGroupSelections( Collection<ProjectGroup> permittedGroups )
+    {
+        Map<Integer, String> result = new LinkedHashMap<Integer, String>();
+        result.put( 0, "ALL" );
+        for ( ProjectGroup group : permittedGroups )
+        {
+            result.put( group.getId(), group.getName() );
+        }
+        return result;
+    }
+
+    protected Map<Integer, String> createStatusSelections()
+    {
+        Map<Integer, String> result = new LinkedHashMap<Integer, String>();
+        result.put( 0, "ALL" );
         for ( ResultState state : ResultState.values() )
         {
-            buildStatuses.put( state.getDataId(), getText( state.getTextKey() ) );
+            result.put( state.getDataId(), getText( state.getTextKey() ) );
         }
+        return result;
+    }
 
-        permittedGroups = new HashMap<String, Integer>();
-        projectGroups = new LinkedHashMap<Integer, String>();
-        projectGroups.put( 0, "ALL" );
-
-        // TODO: Use these to limit results at the data layer
+    protected Collection<ProjectGroup> getAuthorizedGroups()
+    {
+        Collection<ProjectGroup> permitted = new ArrayList<ProjectGroup>();
         List<ProjectGroup> groups = getContinuum().getAllProjectGroups();
         if ( groups != null )
         {
@@ -187,11 +216,11 @@ public class ViewBuildsReportAction
                 String groupName = group.getName();
                 if ( isAuthorized( groupName ) )
                 {
-                    projectGroups.put( group.getId(), groupName );
-                    permittedGroups.put( groupName, group.getId() );
+                    permitted.add( group );
                 }
             }
         }
+        return permitted;
     }
 
     public String init()
@@ -206,7 +235,7 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if ( permittedGroups.isEmpty() )
+        if ( permittedGroupMap.isEmpty() )
         {
             addActionError( getText( "projectBuilds.report.noGroupsAuthorized" ) );
             return REQUIRES_AUTHORIZATION;
@@ -228,7 +257,7 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if ( permittedGroups.isEmpty() )
+        if ( permittedGroupMap.isEmpty() )
         {
             addActionError( getText( "projectBuilds.report.noGroupsAuthorized" ) );
             return REQUIRES_AUTHORIZATION;
@@ -262,7 +291,7 @@ public class ViewBuildsReportAction
         }
         else
         {
-            groupIds.addAll( permittedGroups.values() );
+            groupIds.addAll( permittedGroupMap.values() );
         }
 
         // Users can preview a limited number of records (use export for more)
@@ -279,7 +308,7 @@ public class ViewBuildsReportAction
 
             for ( BuildResult result : results )
             {
-                if ( permittedGroups.containsKey( result.getProject().getProjectGroup().getName() ) )
+                if ( permittedGroupMap.containsKey( result.getProject().getProjectGroup().getName() ) )
                 {
                     filteredResults.add( result );
                 }
@@ -329,7 +358,7 @@ public class ViewBuildsReportAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if ( permittedGroups.isEmpty() )
+        if ( permittedGroupMap.isEmpty() )
         {
             addActionError( getText( "projectBuilds.report.noGroupsAuthorized" ) );
             return REQUIRES_AUTHORIZATION;
@@ -377,7 +406,7 @@ public class ViewBuildsReportAction
                 }
                 else
                 {
-                    groupIds.addAll( permittedGroups.values() );
+                    groupIds.addAll( permittedGroupMap.values() );
                 }
 
                 // Build the output file by walking through the results in batches
@@ -395,7 +424,7 @@ public class ViewBuildsReportAction
                     for ( BuildResult result : results )
                     {
 
-                        if ( !permittedGroups.containsKey( result.getProject().getProjectGroup().getName() ) )
+                        if ( !permittedGroupMap.containsKey( result.getProject().getProjectGroup().getName() ) )
                         {
                             continue;
                         }
@@ -555,6 +584,6 @@ public class ViewBuildsReportAction
 
     public Map<Integer, String> getProjectGroups()
     {
-        return projectGroups;
+        return groupSelections;
     }
 }

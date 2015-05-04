@@ -25,13 +25,17 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.codehaus.plexus.redback.system.SecuritySession;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +52,8 @@ public class ViewBuildsReportActionTest
 
     private List<BuildResult> buildResults = new ArrayList<BuildResult>();
 
+    private ProjectGroup allowedGroup;
+
     @Before
     public void setUp()
         throws Exception
@@ -55,17 +61,15 @@ public class ViewBuildsReportActionTest
         continuum = mock( Continuum.class );
 
         action = new ViewBuildsReportActionStub();
+        action.setSecuritySession( mock( SecuritySession.class ) );
         action.setContinuum( continuum );
-    }
 
-    @Test
-    public void testInvalidRowCount()
-    {
-        String result = action.execute();
+        allowedGroup = new ProjectGroup();
+        allowedGroup.setId( 1 );
+        allowedGroup.setName( "Allowed Group" );
+        action.setAuthorizedGroups( Arrays.asList( allowedGroup ) );
 
-        assertEquals( Action.INPUT, result );
-        assertTrue( action.hasFieldErrors() );
-        assertFalse( action.hasActionErrors() );
+        action.prepare();
     }
 
     @Test
@@ -86,7 +90,7 @@ public class ViewBuildsReportActionTest
         action.setStartDate( "not a date" );
         String result = action.execute();
 
-        assertEquals( Action.ERROR, result );
+        assertEquals( Action.INPUT, result );
         assertTrue( action.hasActionErrors() );
         assertFalse( action.hasFieldErrors() );
     }
@@ -97,7 +101,7 @@ public class ViewBuildsReportActionTest
         action.setEndDate( "not a date" );
         String result = action.execute();
 
-        assertEquals( Action.ERROR, result );
+        assertEquals( Action.INPUT, result );
         assertTrue( action.hasActionErrors() );
         assertFalse( action.hasFieldErrors() );
     }
@@ -152,7 +156,7 @@ public class ViewBuildsReportActionTest
         String result = action.downloadBuildsReport();
 
         assertNull( "result should be null", result );
-        assertFileContentsEqual( out.toString(), cal.getTime().toString() );
+        assertExportContents( results, out.toString() );
     }
 
     private void assertSuccessResult( String result )
@@ -168,12 +172,9 @@ public class ViewBuildsReportActionTest
 
         BuildResult result = new BuildResult();
 
-        ProjectGroup group = new ProjectGroup();
-        group.setName( "Test Group" );
-
         Project project = new Project();
         project.setName( "Test Project" );
-        project.setProjectGroup( group );
+        project.setProjectGroup( allowedGroup );
 
         result.setProject( project );
         result.setState( 2 );
@@ -185,11 +186,22 @@ public class ViewBuildsReportActionTest
         return results;
     }
 
-    private void assertFileContentsEqual( String report, String buildDate )
+    private void assertExportContents( List<BuildResult> results, String actualContents )
     {
-        String result = "Project Group,Project Name,Build Date,Triggered By,Build Status\n" +
-            "Test Group,Test Project," + buildDate + ",test-admin,Ok\n";
-
-        assertEquals( report, result );
+        DateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" );
+        String expectedContents = "Group,Project,ID,Build#,Started,Duration,Triggered By,Status\n";
+        for ( BuildResult result : results )
+        {
+            Project p = result.getProject();
+            ProjectGroup pg = p.getProjectGroup();
+            expectedContents += String.format( "%s,%s,%s,%s,%s,%s,%s,%s\n",
+                                               pg.getName(), p.getName(), result.getId(), result.getBuildNumber(),
+                                               dateFormat.format( new Date( result.getStartTime() ) ),
+                                               ( result.getEndTime() - result.getStartTime() ) / 1000,
+                                               result.getUsername(),
+                                               ViewBuildsReportAction.ResultState.fromId(
+                                                   result.getState() ).getTextKey() );
+        }
+        assertEquals( expectedContents, actualContents );
     }
 }

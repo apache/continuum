@@ -79,6 +79,16 @@ public class ContinuumActionSupport
         }
     }
 
+    /**
+     * Here for unit testing support, it allows configuring a mock security session.
+     *
+     * @param securitySession
+     */
+    protected void setSecuritySession( SecuritySession securitySession )
+    {
+        this.securitySession = securitySession;
+    }
+
     public Continuum getContinuum()
     {
         return continuum;
