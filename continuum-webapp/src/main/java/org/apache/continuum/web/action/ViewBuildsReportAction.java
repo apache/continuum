@@ -40,6 +40,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,6 +63,59 @@ public class ViewBuildsReportAction
     private static final String[] datePatterns =
         new String[] { "MM/dd/yy", "MM/dd/yyyy", "MMMMM/dd/yyyy", "MMMMM/dd/yy", "dd MMMMM yyyy", "dd/MM/yy",
             "dd/MM/yyyy", "yyyy/MM/dd", "yyyy-MM-dd", "yyyy-dd-MM", "MM-dd-yyyy", "MM-dd-yy" };
+
+    /**
+     * Encapsulates constants relevant for build results and makes them localizable.
+     */
+    public enum ResultState
+    {
+        OK( ContinuumProjectState.OK, "projectBuilds.report.resultOk" ),
+        FAILED( ContinuumProjectState.FAILED, "projectBuilds.report.resultFailed" ),
+        ERROR( ContinuumProjectState.ERROR, "projectBuilds.report.resultError" ),
+        BUILDING( ContinuumProjectState.BUILDING, "projectBuilds.report.resultBuilding" ),
+        CANCELLED( ContinuumProjectState.CANCELLED, "projectBuilds.report.resultCanceled" );
+
+        private static final Map<Integer, ResultState> dataMap;
+
+        static
+        {
+            dataMap = new HashMap<Integer, ResultState>();
+            for ( ResultState val : ResultState.values() )
+            {
+                dataMap.put( val.dataId, val );
+            }
+        }
+
+        private int dataId;
+
+        private String textKey;
+
+        ResultState( int dataId, String textKey )
+        {
+            this.dataId = dataId;
+            this.textKey = textKey;
+        }
+
+        public int getDataId()
+        {
+            return dataId;
+        }
+
+        public String getTextKey()
+        {
+            return textKey;
+        }
+
+        public static ResultState fromId( int state )
+        {
+            return dataMap.get( state );
+        }
+
+        public static boolean knownState( int state )
+        {
+            return dataMap.containsKey( state );
+        }
+    }
 
     private int buildStatus;
 
@@ -112,13 +166,13 @@ public class ViewBuildsReportAction
     {
         super.prepare();
 
+        // Populate the state drop downs
         buildStatuses = new LinkedHashMap<Integer, String>();
         buildStatuses.put( 0, "ALL" );
-        buildStatuses.put( ContinuumProjectState.OK, "Ok" );
-        buildStatuses.put( ContinuumProjectState.FAILED, "Failed" );
-        buildStatuses.put( ContinuumProjectState.ERROR, "Error" );
-        buildStatuses.put( ContinuumProjectState.BUILDING, "Building" );
-        buildStatuses.put( ContinuumProjectState.CANCELLED, "Canceled" );
+        for ( ResultState state : ResultState.values() )
+        {
+            buildStatuses.put( state.getDataId(), getText( state.getTextKey() ) );
+        }
 
         projectGroups = new LinkedHashMap<Integer, String>();
         projectGroups.put( 0, "ALL" );
@@ -327,34 +381,10 @@ public class ViewBuildsReportAction
                         Project project = result.getProject();
                         ProjectGroup projectGroup = project.getProjectGroup();
 
-                        // Decode status into human-readable form
-                        String state;
-                        switch ( result.getState() )
-                        {
-                            case 2:
-                                state = "Ok";
-                                break;
-                            case 3:
-                                state = "Failed";
-                                break;
-                            case 4:
-                                state = "Error";
-                                break;
-                            case 6:
-                                state = "Building";
-                                break;
-                            case 7:
-                                state = "Checking Out";
-                                break;
-                            case 8:
-                                state = "Updating";
-                                break;
-                            case 11:
-                                state = "Canceled";
-                                break;
-                            default:
-                                state = "";
-                        }
+                        int resultState = result.getState();
+                        String stateName = ResultState.knownState( resultState ) ?
+                            getText( ResultState.fromId( resultState ).getTextKey() ) :
+                            getText( "projectBuilds.report.resultUnknown" );
 
                         String buildTime = dateTimeFormat.format( new Date( result.getStartTime() ) );
                         long buildDuration = ( result.getEndTime() - result.getStartTime() ) / 1000;
@@ -367,7 +397,7 @@ public class ViewBuildsReportAction
                                                               buildTime,
                                                               buildDuration,
                                                               result.getUsername(),
-                                                              state );
+                                                              stateName );
                         output.append( formattedLine );
 
                         if ( exported >= MAX_EXPORT_SIZE )
