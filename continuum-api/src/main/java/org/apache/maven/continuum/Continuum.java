@@ -207,7 +207,7 @@ public interface Continuum
     void removeBuildResult( int buildId )
         throws ContinuumException;
 
-    List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state,
+    List<BuildResult> getBuildResultsInRange( Collection<Integer> projectGroupId, Date fromDate, Date toDate, int state,
                                               String triggeredBy, int offset, int length );
 
     // ----------------------------------------------------------------------

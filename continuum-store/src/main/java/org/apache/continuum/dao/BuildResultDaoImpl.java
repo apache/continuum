@@ -32,6 +32,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -816,7 +817,7 @@ public class BuildResultDaoImpl
     }
 
     public List<BuildResult> getBuildResultsInRange( Date fromDate, Date toDate, int state, String triggeredBy,
-                                                     int projectGroupId, int offset, int length )
+                                                     Collection<Integer> projectGroupIds, int offset, int length )
     {
         PersistenceManager pm = getPersistenceManager();
         Transaction tx = pm.currentTransaction();
@@ -832,7 +833,7 @@ public class BuildResultDaoImpl
             Query query = pm.newQuery( extent );
 
             InRangeQueryAttrs inRangeQueryAttrs =
-                new InRangeQueryAttrs( fromDate, toDate, state, triggeredBy, projectGroupId, query ).build();
+                new InRangeQueryAttrs( fromDate, toDate, state, triggeredBy, projectGroupIds, query ).build();
 
             String parameters = inRangeQueryAttrs.getParameters();
             String filter = inRangeQueryAttrs.getFilter();
@@ -867,7 +868,7 @@ public class BuildResultDaoImpl
 
         private String triggeredBy;
 
-        private int projectGroupId;
+        private Collection<Integer> projectGroupIds;
 
         private Query query;
 
@@ -877,14 +878,14 @@ public class BuildResultDaoImpl
 
         private Map params;
 
-        public InRangeQueryAttrs( Date fromDate, Date toDate, int state, String triggeredBy, int projectGroupId,
-                                  Query query )
+        public InRangeQueryAttrs( Date fromDate, Date toDate, int state, String triggeredBy,
+                                  Collection<Integer> projectGroupIds, Query query )
         {
             this.fromDate = fromDate;
             this.toDate = toDate;
             this.state = state;
             this.triggeredBy = triggeredBy;
-            this.projectGroupId = projectGroupId;
+            this.projectGroupIds = projectGroupIds;
             this.query = query;
         }
 
@@ -917,11 +918,12 @@ public class BuildResultDaoImpl
                 filter += "this.state == state && ";
             }
 
-            if ( projectGroupId > 0 )
+            if ( projectGroupIds != null && !projectGroupIds.isEmpty() )
             {
-                params.put( "projectGroupId", projectGroupId );
-                parameters += "int projectGroupId, ";
-                filter += "this.project.projectGroup.id == projectGroupId && ";
+                params.put( "projectGroupIds", projectGroupIds );
+                query.declareImports( "import java.util.Collection" );
+                parameters += "Collection projectGroupIds, ";
+                filter += "projectGroupIds.contains(this.project.projectGroup.id)  && ";
             }
 
             if ( triggeredBy != null && !triggeredBy.equals( "" ) )

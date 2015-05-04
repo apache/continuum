@@ -39,13 +39,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Component( role = com.opensymphony.xwork2.Action.class, hint = "projectBuildsReport", instantiationStrategy = "per-lookup" )
 public class ViewBuildsReportAction
@@ -137,7 +137,7 @@ public class ViewBuildsReportAction
 
     private Map<Integer, String> projectGroups;
 
-    private Set<String> permittedGroups = new HashSet<String>();
+    private Map<String, Integer> permittedGroups;
 
     private List<BuildResult> filteredResults = new ArrayList<BuildResult>();
 
@@ -174,6 +174,7 @@ public class ViewBuildsReportAction
             buildStatuses.put( state.getDataId(), getText( state.getTextKey() ) );
         }
 
+        permittedGroups = new HashMap<String, Integer>();
         projectGroups = new LinkedHashMap<Integer, String>();
         projectGroups.put( 0, "ALL" );
 
@@ -187,7 +188,7 @@ public class ViewBuildsReportAction
                 if ( isAuthorized( groupName ) )
                 {
                     projectGroups.put( group.getId(), groupName );
-                    permittedGroups.add( groupName );
+                    permittedGroups.put( groupName, group.getId() );
                 }
             }
         }
@@ -253,20 +254,32 @@ public class ViewBuildsReportAction
             return INPUT;
         }
 
+        // Limit query to scan only what the user is permitted to see
+        Collection<Integer> groupIds = new HashSet<Integer>();
+        if ( projectGroupId > 0 )
+        {
+            groupIds.add( projectGroupId );
+        }
+        else
+        {
+            groupIds.addAll( permittedGroups.values() );
+        }
+
         // Users can preview a limited number of records (use export for more)
         int offset = 0;
         List<BuildResult> results;
         populating:
         do
         {
+
             // Fetch a batch of records (may be filtered based on permissions)
-            results = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus, triggeredBy,
+            results = getContinuum().getBuildResultsInRange( groupIds, fromDate, toDate, buildStatus, triggeredBy,
                                                              offset, MAX_BROWSE_SIZE );
             offset += MAX_BROWSE_SIZE;
 
             for ( BuildResult result : results )
             {
-                if ( permittedGroups.contains( result.getProject().getProjectGroup().getName() ) )
+                if ( permittedGroups.containsKey( result.getProject().getProjectGroup().getName() ) )
                 {
                     filteredResults.add( result );
                 }
@@ -356,13 +369,24 @@ public class ViewBuildsReportAction
                 // Write the header
                 output.append( "Group,Project,ID,Build#,Started,Duration,Triggered By,Status\n" );
 
+                // Limit query to scan only what the user is permitted to see
+                Collection<Integer> groupIds = new HashSet<Integer>();
+                if ( projectGroupId > 0 )
+                {
+                    groupIds.add( projectGroupId );
+                }
+                else
+                {
+                    groupIds.addAll( permittedGroups.values() );
+                }
+
                 // Build the output file by walking through the results in batches
                 int offset = 0, exported = 0;
                 List<BuildResult> results;
                 export:
                 do
                 {
-                    results = getContinuum().getBuildResultsInRange( projectGroupId, fromDate, toDate, buildStatus,
+                    results = getContinuum().getBuildResultsInRange( groupIds, fromDate, toDate, buildStatus,
                                                                      triggeredBy, offset, EXPORT_BATCH_SIZE );
 
                     offset += EXPORT_BATCH_SIZE;  // Ensure we advance through results
@@ -371,7 +395,7 @@ public class ViewBuildsReportAction
                     for ( BuildResult result : results )
                     {
 
-                        if ( !permittedGroups.contains( result.getProject().getProjectGroup().getName() ) )
+                        if ( !permittedGroups.containsKey( result.getProject().getProjectGroup().getName() ) )
                         {
                             continue;
                         }

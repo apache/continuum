@@ -540,10 +540,10 @@ public class DefaultContinuum
         return ( builds.isEmpty() ? null : builds.get( 0 ) );
     }
 
-    public List<BuildResult> getBuildResultsInRange( int projectGroupId, Date fromDate, Date toDate, int state,
-                                                     String triggeredBy, int offset, int length )
+    public List<BuildResult> getBuildResultsInRange( Collection<Integer> projectGroupIds, Date fromDate, Date toDate,
+                                                     int state, String triggeredBy, int offset, int length )
     {
-        return buildResultDao.getBuildResultsInRange( fromDate, toDate, state, triggeredBy, projectGroupId, offset,
+        return buildResultDao.getBuildResultsInRange( fromDate, toDate, state, triggeredBy, projectGroupIds, offset,
                                                       length );
     }
 

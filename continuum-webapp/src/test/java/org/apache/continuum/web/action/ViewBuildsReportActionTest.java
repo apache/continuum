@@ -104,7 +104,7 @@ public class ViewBuildsReportActionTest
     @Test
     public void testStartDateSameWithEndDate()
     {
-        when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
+        when( continuum.getBuildResultsInRange( anyCollection(), any( Date.class ), any( Date.class ), anyInt(),
                                                 anyString(), anyInt(), anyInt() ) ).thenReturn( buildResults );
 
         action.setStartDate( "04/25/2010" );
@@ -117,7 +117,7 @@ public class ViewBuildsReportActionTest
     @Test
     public void testEndDateWithNoStartDate()
     {
-        when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
+        when( continuum.getBuildResultsInRange( anyCollection(), any( Date.class ), any( Date.class ), anyInt(),
                                                 anyString(), anyInt(), anyInt() ) ).thenReturn( buildResults );
         action.setEndDate( "04/25/2010" );
         String result = action.execute();
@@ -134,7 +134,7 @@ public class ViewBuildsReportActionTest
 
         List<BuildResult> results = createBuildResult( cal.getTimeInMillis() );
 
-        when( continuum.getBuildResultsInRange( anyInt(), any( Date.class ), any( Date.class ), anyInt(),
+        when( continuum.getBuildResultsInRange( anyCollection(), any( Date.class ), any( Date.class ), anyInt(),
                                                 anyString(), anyInt(), anyInt() ) ).thenReturn( results );
         action.setProjectGroupId( 0 );
         action.setBuildStatus( 0 );
