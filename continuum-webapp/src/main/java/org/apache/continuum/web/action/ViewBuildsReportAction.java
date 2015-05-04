@@ -139,7 +139,7 @@ public class ViewBuildsReportAction
 
     private Map<String, Integer> permittedGroupMap;
 
-    private List<BuildResult> filteredResults = new ArrayList<BuildResult>();
+    private List<BuildResult> filteredResults;
 
     private HttpServletResponse rawResponse;
 
@@ -297,6 +297,7 @@ public class ViewBuildsReportAction
         // Users can preview a limited number of records (use export for more)
         int offset = 0;
         List<BuildResult> results;
+        filteredResults = new ArrayList<BuildResult>();
         populating:
         do
         {

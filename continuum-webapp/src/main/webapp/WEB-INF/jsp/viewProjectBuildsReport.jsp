@@ -86,6 +86,7 @@
       </td></tr>
     </s:form>
 
+    <s:if test="filteredResults != null">
       <div id="h3">
      	  <h3>Results</h3>
        	  <s:if test="filteredResults.size() > 0">
@@ -180,6 +181,7 @@
             <s:text name="projectBuilds.report.noResult"/></p>
           </s:else>
       </div>
+    </s:if>
   </body>
   </s:i18n>
 </html>
