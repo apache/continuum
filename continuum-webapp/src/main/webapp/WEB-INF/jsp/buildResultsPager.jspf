@@ -1,4 +1,3 @@
-<%@ taglib uri="/struts-tags" prefix="s" %>
 <page-controls>
     <page>
         <s:text name="buildResults.page">

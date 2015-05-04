@@ -49,7 +49,7 @@
           </div>
         </c:if>
 
-        <jsp:include page="buildResultsPager.jspf" />
+        <%@ include file="buildResultsPager.jspf" %>
         <s:form id="buildResultsForm" action="removeBuildResults" theme="simple">
           <s:token/>
           <s:set name="buildResults" value="buildResults" scope="request"/>
@@ -114,7 +114,7 @@
             </div>
           </c:if>
         </s:form>
-        <jsp:include page="buildResultsPager.jspf" />
+        <%@ include file="buildResultsPager.jspf" %>
       </div>
     </body>
   </s:i18n>
