@@ -51,7 +51,7 @@
     <property value="fr" name="user.language"/>
     <property value="sun.awt.windows.WToolkit" name="awt.toolkit"/>
     <property value="mixed mode" name="java.vm.info"/>
-    <property value="jdbc:hsqldb:mem:org.apache.maven.continuum.DefaultContinuumTest.testAddAntProjectWithdefaultBuildDef" name="javax.jdo.option.ConnectionURL"/>
+    <property value="jdbc:hsqldb:mem:org.apache.maven.continuum.DefaultContinuumTest.testAddAntProjectWithDefaultBuildDef" name="javax.jdo.option.ConnectionURL"/>
     <property value="true" name="org.jpox.autoCreateTables"/>
     <property value="1.5.0_08" name="java.version"/>
     <property value="c:\jdk1.5.0_08\jre\lib\ext" name="java.ext.dirs"/>

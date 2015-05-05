@@ -141,95 +141,6 @@ public class DefaultContinuumTest
 
     }
 
-/* test failing intermittently, possibly due to the dodgy for loop
-    // handle flat multi-module projects
-    public void testAddMavenTwoProjectSetInSingleDirectory()
-        throws Exception
-    {   
-        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
-        
-        String url = getTestFile( "src/test-projects/flat-multi-module/parent-project/pom.xml" ).toURL().toExternalForm();
-
-        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url, -1, true, false, true, -1, true );
- 
-        assertNotNull( result );
-
-        List<Project> projects = result.getProjects();
-
-        assertEquals( 4, projects.size() );     
-        
-        Project rootProject = result.getRootProject();
-        
-        assertNotNull( rootProject );
-        
-        Map<String, Project> projectsMap = new HashMap<String, Project>();
-
-        int projectGroupId = 0;
-
-        for ( Project project : getProjectDao().getAllProjectsByName() )
-        {
-            projectsMap.put( project.getName(), project );
-
-            ProjectGroup projectGroup = getProjectGroupDao().getProjectGroupByProjectId( project.getId() );
-            projectGroupId = projectGroup.getId();
-
-            // validate project in project group
-            assertTrue( "project not in project group", projectGroup != null );
-        }
-
-        // sometimes projects don't get added to checkout queue
-        continuum.buildProjectGroup( projectGroupId, new org.apache.continuum.utils.build.BuildTrigger( 1, "user" ) );
-
-        assertTrue( "no module-a", projectsMap.containsKey( "module-a" ) );
-        
-        assertTrue( "no module-b", projectsMap.containsKey( "module-b" ) );
-
-        assertTrue( "no module-d", projectsMap.containsKey( "module-d" ) );
-
-        // check if the modules were checked out in the same directory as the parent
-        ConfigurationService configurationService = ( ConfigurationService ) lookup( "configurationService" );
-        
-        File workingDir = configurationService.getWorkingDirectory();
-        
-        Project parentProject = getProjectDao().getProjectByName( "parent-project" );
-        
-        File checkoutDir = new File( workingDir, String.valueOf( parentProject.getId() ) );
-
-        for( long delay = 0; delay <= 999999999; delay++ )
-        {
-            // wait while the project has been checked out/build
-        }
-        
-        assertTrue( "checkout directory of project 'parent-project' does not exist." , new File( checkoutDir, "parent-project" ).exists() );
-        
-        assertFalse( "module-a should not have been checked out as a separate project.",
-                    new File( workingDir, String.valueOf( getProjectDao().getProjectByName( "module-a" ).getId() ) ).exists() );
-        
-        assertFalse( "module-b should not have been checked out as a separate project.",
-                    new File( workingDir, String.valueOf( getProjectDao().getProjectByName( "module-b" ).getId() ) ).exists() );
-
-        assertFalse( "module-d should not have been checked out as a separate project.",
-                     new File( workingDir, String.valueOf( getProjectDao().getProjectByName( "module-d" ).getId() ) ).exists() );
-
-        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-a" ).exists() );
-        
-        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-b" ).exists() );
-
-        assertTrue( "module-d was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-c/module-d" ).exists() );
-
-        // assert project state
-        // commented out this test case as it sometimes fails because the actual checkout hasn't finished yet so
-        //    the state hasn't been updated yet
-        //assertEquals( "state of 'parent-project' should have been updated.", ContinuumProjectState.CHECKEDOUT, parentProject.getState() );
-        //
-        //assertEquals( "state of 'module-a' should have been updated.", ContinuumProjectState.CHECKEDOUT,
-        //            getProjectDao().getProjectByName( "module-a" ).getState() );
-        //
-        //assertEquals( "state of 'module-b' should have been updated.", ContinuumProjectState.CHECKEDOUT,
-        //            getProjectDao().getProjectByName( "module-b" ).getState() );
-    }
-*/
-
     @Test
     public void testUpdateMavenTwoProject()
         throws Exception
@@ -530,53 +441,8 @@ public class DefaultContinuumTest
             project.getId() ) );
     }
 
-    /*public void testCreationOfProjectScmRootDuringInitialization()
-    throws Exception
-{
-    DefaultContinuum continuum = (DefaultContinuum) getContinuum();
-
-    ProjectGroup defaultProjectGroup =
-        continuum.getProjectGroupByGroupId( ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID );
-
-    ProjectScmRoot scmRoot = new ProjectScmRoot();
-    scmRoot.setProjectGroup( defaultProjectGroup );
-    scmRoot.setScmRootAddress( "http://temp.company.com/svn/trunk" );
-    getProjectScmRootDao().addProjectScmRoot( scmRoot );
-
-    defaultProjectGroup = continuum.getProjectGroupWithProjects( defaultProjectGroup.getId() );
-    assertEquals( 0, defaultProjectGroup.getProjects().size() );
-
-    Project project = new Project();
-    project.setGroupId( "project1" );
-    project.setArtifactId( "project1" );
-    project.setVersion( "1.0-SNAPSHOT" );
-    project.setScmUrl( "http://temp.company.com/svn/trunk/project1" );
-    defaultProjectGroup.addProject( project );
-
-    project = new Project();
-    project.setGroupId( "project2" );
-    project.setArtifactId( "project2" );
-    project.setVersion( "1.0-SNAPSHOT" );
-    project.setScmUrl( "http://temp.company.com/svn/trunk/project2" );
-    defaultProjectGroup.addProject( project );
-
-    project = new Project();
-    project.setGroupId( "project3" );
-    project.setArtifactId( "project3" );
-    project.setVersion( "1.0-SNAPSHOT" );
-    project.setScmUrl( "http://temp.company.com/svn/trunk/project3" );
-    defaultProjectGroup.addProject( project );
-
-    getProjectGroupDao().updateProjectGroup( defaultProjectGroup );
-
-    continuum.initialize();
-
-    List<ProjectScmRoot> scmRoots = continuum.getProjectScmRootByProjectGroup( defaultProjectGroup.getId() );
-    assertEquals( "#scmRoots in the group", 1, scmRoots.size() );
-}    */
-
     @Test
-    public void testAddAntProjectWithdefaultBuildDef()
+    public void testAddAntProjectWithDefaultBuildDef()
         throws Exception
     {
         Continuum continuum = getContinuum();
