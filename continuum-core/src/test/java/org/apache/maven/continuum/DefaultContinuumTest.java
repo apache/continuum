@@ -19,6 +19,7 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -37,6 +38,8 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.junit.Before;
@@ -47,11 +50,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -75,6 +80,7 @@ public class DefaultContinuumTest
     {
         taskQueueManager = mock( TaskQueueManager.class );
         projectDao = mock( ProjectDao.class );
+        buildResultDao = mock( BuildResultDao.class );
     }
 
     @Test
@@ -746,10 +752,98 @@ public class DefaultContinuumTest
         }
     }
 
-    private Continuum getContinuum()
+    @Test
+    public void testGetChangesSinceLastSuccessNoSuccess()
         throws Exception
     {
-        return lookup( Continuum.class );
+        DefaultContinuum continuum = getContinuum();
+        continuum.setBuildResultDao( buildResultDao );
+
+        when( buildResultDao.getPreviousBuildResultInSuccess( anyInt(), anyInt() ) ).thenReturn( null );
+
+        List<ChangeSet> changes = continuum.getChangesSinceLastSuccess( 5, 5 );
+
+        assertEquals( "no prior success should return no changes", 0, changes.size() );
+    }
+
+    @Test
+    public void testGetChangesSinceLastSuccessNoInterveningFailures()
+        throws Exception
+    {
+        DefaultContinuum continuum = getContinuum();
+        continuum.setBuildResultDao( buildResultDao );
+
+        int projectId = 123, fromId = 789, toId = 1011;
+        BuildResult priorResult = new BuildResult();
+        priorResult.setId( fromId );
+
+        when( buildResultDao.getPreviousBuildResultInSuccess( projectId, toId ) ).thenReturn( priorResult );
+        when( buildResultDao.getBuildResultsForProjectWithDetails( projectId, fromId, toId ) ).thenReturn(
+            Collections.EMPTY_LIST );
+
+        List<ChangeSet> changes = continuum.getChangesSinceLastSuccess( projectId, toId );
+
+        assertEquals( "no intervening failures, should return no changes", 0, changes.size() );
+    }
+
+    @Test
+    public void testGetChangesSinceLastSuccessInterveningFailures()
+        throws Exception
+    {
+        DefaultContinuum continuum = getContinuum();
+        continuum.setBuildResultDao( buildResultDao );
+
+        int projectId = 123, fromId = 789, toId = 1011;
+        BuildResult priorResult = new BuildResult();
+        priorResult.setId( fromId );
+
+        BuildResult[] failures = { resultWithChanges( 1 ), resultWithChanges( 0 ), resultWithChanges( 0, 1 ),
+            resultWithChanges( 1, 0 ), resultWithChanges( 0, 1, 0 ), resultWithChanges( 1, 0, 1 ) };
+
+        when( buildResultDao.getPreviousBuildResultInSuccess( projectId, toId ) ).thenReturn( priorResult );
+        when( buildResultDao.getBuildResultsForProjectWithDetails( projectId, fromId, toId ) ).thenReturn(
+            Arrays.asList( failures ) );
+
+        List<ChangeSet> changes = continuum.getChangesSinceLastSuccess( projectId, toId );
+
+        assertEquals( "should return same number of changes as in failed results", 6, changes.size() );
+        assertOldestToNewest( changes );
+    }
+
+    private static int changeCounter = 1;
+
+    private BuildResult resultWithChanges( int... changeSetCounts )
+    {
+        BuildResult result = new BuildResult();
+        ScmResult scmResult = new ScmResult();
+        result.setScmResult( scmResult );
+        for ( Integer changeCount : changeSetCounts )
+        {
+            for ( int i = 0; i < changeCount; i++ )
+            {
+                ChangeSet change = new ChangeSet();
+                change.setId( String.format( "%011d", changeCounter++ ) );  // zero-padded for string comparison
+                scmResult.addChange( change );
+            }
+        }
+        return result;
+    }
+
+    private void assertOldestToNewest( List<ChangeSet> changes )
+    {
+        if ( changes == null || changes.isEmpty() || changes.size() == 1 )
+            return;
+        for ( int prior = 0, next = 1; next < changes.size(); prior++, next = prior + 1 )
+        {
+            String priorId = changes.get( prior ).getId(), nextId = changes.get( next ).getId();
+            assertTrue( "changes were not in ascending order", priorId.compareTo( nextId ) < 0 );
+        }
+    }
+
+    private DefaultContinuum getContinuum()
+        throws Exception
+    {
+        return (DefaultContinuum) lookup( Continuum.class );
     }
 
     private BuildResultDao getBuildResultDao()

@@ -55,8 +55,7 @@ public interface BuildResultDao
 
     BuildResult getLatestBuildResultInSuccess( int projectId );
 
-    BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )
-        throws ContinuumStoreException;
+    BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId );
 
     /**
      * Marks results in the BUILDING status with a start time before the specified cutoff as CANCELLED.

@@ -111,7 +111,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1135,78 +1143,30 @@ public class DefaultContinuum
     public List<ChangeSet> getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException
     {
-        BuildResult previousBuildResult = null;
-        try
-        {
-            previousBuildResult = buildResultDao.getPreviousBuildResultInSuccess( projectId, buildResultId );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            //No previous build in success, Nothing to do
-        }
-        int lastSuccessId = previousBuildResult == null ? 0 : previousBuildResult.getId();
-        ArrayList<BuildResult> buildResults = new ArrayList<BuildResult>(
-            buildResultDao.getBuildResultsForProjectWithDetails( projectId, lastSuccessId, buildResultId ) );
+        List<ChangeSet> changes = new ArrayList<ChangeSet>();
 
-        Iterator<BuildResult> buildResultsIterator = buildResults.iterator();
-
-        boolean stop = false;
-
-        //TODO: Shouldn't be used now with the previous call of buildResultDao.getBuildResultsForProjectWithDetails
-        while ( !stop )
+        /*
+           Assumption: users will not find changes between project addition and first success very useful.
+           This also prevents inadvertently computing huge change lists during exceptional conditions by defaulting
+           to first id.
+         */
+        BuildResult previousSuccess = buildResultDao.getPreviousBuildResultInSuccess( projectId, buildResultId );
+        if ( previousSuccess != null )
         {
-            if ( buildResultsIterator.hasNext() )
+            List<BuildResult> resultsSinceLastSuccess = buildResultDao.getBuildResultsForProjectWithDetails(
+                projectId, previousSuccess.getId(), buildResultId );
+
+            for ( BuildResult result : resultsSinceLastSuccess )
             {
-                BuildResult buildResult = buildResultsIterator.next();
-
-                if ( buildResult.getId() == buildResultId )
+                ScmResult scmResult = result.getScmResult();
+                if ( scmResult != null )
                 {
-                    stop = true;
+                    changes.addAll( scmResult.getChanges() );
                 }
             }
-            else
-            {
-                stop = true;
-            }
         }
 
-        if ( !buildResultsIterator.hasNext() )
-        {
-            return null;
-        }
-
-        BuildResult buildResult = buildResultsIterator.next();
-
-        List<ChangeSet> changes = null;
-
-        while ( buildResult.getState() != ContinuumProjectState.OK )
-        {
-            if ( changes == null )
-            {
-                changes = new ArrayList<ChangeSet>();
-            }
-
-            ScmResult scmResult = buildResult.getScmResult();
-
-            if ( scmResult != null )
-            {
-                changes.addAll( scmResult.getChanges() );
-            }
-
-            if ( !buildResultsIterator.hasNext() )
-            {
-                return changes;
-            }
-
-            buildResult = buildResultsIterator.next();
-        }
-
-        if ( changes == null )
-        {
-            changes = Collections.EMPTY_LIST;
-        }
-
-        return changes;
+        return changes.isEmpty() ? Collections.EMPTY_LIST : changes;
     }
 
     // ----------------------------------------------------------------------
@@ -3950,6 +3910,10 @@ public class DefaultContinuum
     void setProjectDao( ProjectDao projectDao )
     {
         this.projectDao = projectDao;
+    }
+
+    void setBuildResultDao( BuildResultDao buildResultDao ) {
+        this.buildResultDao = buildResultDao;
     }
 
     public DistributedBuildManager getDistributedBuildManager()

@@ -689,7 +689,6 @@ public class BuildResultDaoImpl
     }
 
     public BuildResult getPreviousBuildResultInSuccess( int projectId, int buildResultId )
-        throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
 
