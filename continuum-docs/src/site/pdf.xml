@@ -76,6 +76,7 @@
     <item name="Managing Build Agent Groups" ref="administrator_guides/build-agent-groups.html"/>
     <item name="Managing Project Queues" ref="administrator_guides/queues.html"/>
     <item name="External databases" ref="administrator_guides/external-db.html"/>
+    <item name="Database Maintenance" ref="administrator_guides/database-maintenance.html"/>
     <item name="Monitoring Continuum" ref="administrator_guides/monitoring.html"/>
     <item name="Log Files" ref="administrator_guides/logging/index.html"/>
     <item name="Audit Logs" ref="administrator_guides/logging/audit-logs.html"/>

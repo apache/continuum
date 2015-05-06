@@ -1,0 +1,155 @@
+ ------
+ Database Maintenance
+ ------
+ Brent Atkinson
+ ------
+ May 5 2015
+ ------
+
+~~ Licensed to the Apache Software Foundation (ASF) under one
+~~ or more contributor license agreements.  See the NOTICE file
+~~ distributed with this work for additional information
+~~ regarding copyright ownership.  The ASF licenses this file
+~~ to you under the Apache License, Version 2.0 (the
+~~ "License"); you may not use this file except in compliance
+~~ with the License.  You may obtain a copy of the License at
+~~
+~~   http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing,
+~~ software distributed under the License is distributed on an
+~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~~ KIND, either express or implied.  See the License for the
+~~ specific language governing permissions and limitations
+~~ under the License.
+
+Database Maintenance
+
+  If properly tuned and maintained, Continuum should be able to run efficiently even with a large database. The
+  following guide describes how to tune an existing installation running on the embedded Derby database. While the exact
+  steps will be different for the other supported databases, the general approach should still apply.
+
+* Common Bottlenecks and Tuning Advice
+
+  Before attempting to upgrade or modify the database, it is advisable to take a full backup. With Derby, this is as
+  simple as shutting down Continuum and copying the continuum_database and users_database directories. Before attempting
+  any risky changes it is advisable to confirm the backup copies are functional by connecting to them with a database
+  client.
+
+  After securing and confirming the backups, maintenance or tuning can safely be attempted. Exactly how to go about this
+  will depend on your individual scenario, but the following is a conservative approach that allows you to continue
+  running your production build server while you determine how best to tune performance:
+
+  * Create a tuning installation of Continuum with a copy of the backup databases
+
+  * Using the tuning installation, use query execution plans for slow operations to create relevant indices. Once
+    created, run the same operations and confirm the indices are being used by the execution plans
+
+  * Once you are satisfied with the overall performance, you can attempt the same changes on your production system
+
+  []
+
+  While you should only attempt to optimize based on actual measurements, if you have many build results you might start
+  by looking at queries that use the BUILDRESULTS table. I found that Continuum 1.5 ran quite well with a build result
+  table containing over a million records after creating the following indices. Note that the unique index is likely
+  not possible with data created before 1.5 due to differences in the build number semantics.
+
+----
+CREATE UNIQUE INDEX BUILDRESULT_BUILD_NUMBER_IDX ON BUILDRESULT (PROJECT_ID_OID, BUILD_NUMBER);
+CREATE INDEX BUILDRESULT_ID_DESC ON BUILDRESULT (ID DESC);
+CREATE INDEX BUILDRESULT_PID_ID_DESC ON BUILDRESULT (PROJECT_ID_OID, ID DESC);
+CREATE INDEX BUILDRESULT_STIME_ID_DESC ON BUILDRESULT (START_TIME, ID DESC);
+----
+
+* Enabling the Network Server
+
+  While Continuum is running against the embedded database you can not inspect or manipulate it with an out-of-process
+  tool. It can often be helpful to query the database while Continuum is running against it. To do this, you can
+  reconfigure your system to use the derby network server instead.
+
+  The steps required to do this:
+
+  * Shut down Continuum
+
+  * Add the derbynet jar to your installation's classpath
+
+  * Start the derbynet server with a suitable version for your database files (same derby version as your files or
+    greater)
+
+  * Reconfigure the datasources to use the network client driver, specifying the file system path to the relevant
+    database files
+
+  * Start Continuum
+
+  []
+
+  If you do this correctly, Continuum will successfully start. You should then be able to connect to the database using
+  your development tool as long as you are using the network client driver.
+
+  Using the network client driver data source to connect to a network server running on the local host usually looks
+  something like the following:
+
+  * JDBC driver class: org.apache.derby.jdbc.ClientDataSource
+
+  * Connection URL: jdbc:derby://localhost:1527/<absolute-path-to>/continuum_database
+
+  * Username: sa
+
+  []
+
+* Enabling Query Logging
+
+  Performance optimization can be difficult and frustrating when attempting to do it by trial-and-error. In contrast,
+  making changes based on measurement can save you a lot of time and effort. While it is a little cumbersome to use,
+  Derby can be configured to log executed SQL statements along with the details of the execution plans it used to
+  run the queries. To do this, create a file named derby.properties and add the following:
+
+----
+derby.language.logStatementText=true
+derby.language.logQueryPlan=true
+----
+
+  The correct location will depend on how you are running the database. While using Derby embedded within Continuum, the
+  location will be the parent directory of your continuum_database and users_database. When running the network server,
+  the correct location will be the directory where you started the network server.
+
+* Upgrading Your Database
+
+  By using statistics about a table's data distribution, newer versions of Derby can make more intelligent query
+  execution plans. However, you need may need to upgrade your database files to gain full capabilities like computing
+  and updating statistics. Fortunately, this is a simple process:
+
+  * Ensure you make backups of your databases and verify the backups are good before continuing
+
+  * Using the new version of the derby driver, connect to the database with the upgrade=true attribute specified
+
+  []
+
+  By connecting with this attribute, the derby driver will attempt to upgrade your database files to the newer format.
+  To confirm the upgrade process added the statistics capabilities, connect to the database with a development tool and
+  verify the existence of the SYSCS_UTIL.SYSCS_UPDATE_STATISTICS procedure.
+
+* Maintenance (Rebuilding Indexes and Updating Statistics)
+
+  Indices can become fragmented over time, especially when you remove and add items frequently to a table. This
+  fragmentation can cause performance to degrade. You can re-optimize the indices by periodically rebuilding them. This
+  is done by dropping and recreating them in Derby.
+
+  For example:
+
+----
+DROP INDEX BUILDRESULT_ID_DESC;
+CREATE INDEX BUILDRESULT_ID_DESC ON BUILDRESULT (ID DESC);
+----
+
+  Performance can also degrade when the characteristics of your stored data diverges from the computed statistics. When
+  this occurs, updating the statistics can help.
+
+  The following example recomputes statistics for the build results table under Derby:
+
+----
+call SYSCS_UTIL.SYSCS_UPDATE_STATISTICS('SA', 'BUILDRESULT', null);
+----
+
+
+

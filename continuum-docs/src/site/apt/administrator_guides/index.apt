@@ -53,6 +53,8 @@ Administrator's Guides
 
  * {{{./external-db.html}External Databases}}
 
+ * {{{./database-maintenance.html}Database Maintenance}}
+
  * {{{./monitoring.html}Monitoring Continuum}}
 
  * {{{./logging/index.html} Log Files}}
