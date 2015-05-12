@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 
 <html>
@@ -26,8 +25,8 @@
   <head>
     <title><s:text name="projectBuilds.report.title"/></title>
     <s:head/>
-    <link rel="stylesheet" href="<c:url value='/css/no-theme/jquery-ui-1.7.2.custom.css'/>" type="text/css" />
-    <script type="text/javascript" src="<c:url value='/js/jquery-ui-1.7.2.custom.min.js'/>"></script>
+    <link rel="stylesheet" href="<s:url value='/css/no-theme/jquery-ui-1.7.2.custom.css'/>" type="text/css" />
+    <script type="text/javascript" src="<s:url value='/js/jquery-ui-1.7.2.custom.min.js'/>"></script>
     <script type="text/javascript">
       jQuery(document).ready(function($)
       {
