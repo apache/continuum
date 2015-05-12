@@ -22,7 +22,7 @@
 <html>
   <s:i18n name="localization.Continuum">
     <head>
-      <title><s:text name="buildAgentGroup.page.title"/><title>
+      <title><s:text name="buildAgentGroup.page.title"/></title>
     </head>
     <body>
     <div class="app">
