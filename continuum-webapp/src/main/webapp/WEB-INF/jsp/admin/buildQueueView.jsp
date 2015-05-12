@@ -17,7 +17,6 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
@@ -34,7 +33,7 @@
           <h3>
             <s:text name="buildQueue.currentTask.section.title"/>
           </h3>
-          <c:if test="${not empty currentBuildProjectTasks}">
+          <s:if test="currentBuildProjectTasks.size() > 0">
             <s:set name="currentBuildProjectTasks" value="currentBuildProjectTasks" scope="request"/>
             <ec:table items="currentBuildProjectTasks"
                       autoIncludeParameters="false"
@@ -47,17 +46,17 @@
               <ec:row>
                 <ec:column property="name" title="buildQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectUrl" title="buildQueue.currentTask.projectName" width="50%">
-                  <s:url id="viewUrl" action="buildResults">
-                    <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
+                  <s:url var="viewUrl" action="buildResults">
+                    <s:param name="projectId" value="#attr.queue.task.projectId"/>
                   </s:url>
-                  <s:a href="%{viewUrl}"><c:out value="${queue.task.projectName}"/></s:a>
+                  <s:a href="%{viewUrl}"><s:property value="#attr.queue.task.projectName"/></s:a>
                 </ec:column>
                 <ec:column property="task.buildTrigger.triggeredBy" title="buildQueue.triggeredBy" />
                 <ec:column property="task.buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" width="19%"/>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="cancelCurrentBuildTask" namespace="/">
-                      <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
+                      <s:param name="projectId" value="#attr.queue.task.projectId"/>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
                   </redback:ifAuthorized>
@@ -67,10 +66,10 @@
                 </ec:column>
               </ec:row>
             </ec:table>
-          </c:if>
-          <c:if test="${empty currentBuildProjectTasks}">
+          </s:if>
+          <s:else>
             <s:text name="buildQueue.no.currentTaks" />
-          </c:if>
+          </s:else>
         </div>
       
       
@@ -79,7 +78,7 @@
           <h3>
             <s:text name="buildQueue.section.title"/>
           </h3>
-          <c:if test="${not empty buildsInQueue}">
+          <s:if test="buildsInQueue.size() > 0">
             <s:set name="buildsInQueue" value="buildsInQueue" scope="request"/>
             <ec:table items="buildsInQueue"
                       var="queue"
@@ -97,23 +96,25 @@
                 </redback:ifAuthorized>
                 <ec:column property="name" title="buildQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectUrl" title="buildQueue.currentTask.projectName" width="50%">
-                  <s:url id="viewUrl" action="buildResults">
-                    <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
+                  <s:url var="viewUrl" action="buildResults">
+                    <s:param name="projectId" value="#attr.queue.task.projectId"/>
                   </s:url>
-                  <s:a href="%{viewUrl}"><c:out value="${queue.task.projectName}"/></s:a>
+                  <s:a href="%{viewUrl}"><s:property value="#attr.queue.task.projectName"/></s:a>
                 </ec:column>
                 <ec:column property="task.buildTrigger.triggeredBy" title="buildQueue.triggeredBy" />
                 <ec:column property="task.buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" width="19%"/>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="removeBuildQueueEntry" namespace="/">
-                      <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
-                      <s:param name="buildDefinitionId"><c:out value="${queue.task.buildDefinitionId}"/></s:param>
-                      <s:param name="trigger"><c:out value="${queue.task.buildTrigger.trigger}"/></s:param>
-                      <s:param name="projectName"><c:out value="${queue.task.projectName}"/></s:param>
-                      <s:param name="projectGroupId"><c:out value="${queue.task.projectGroupId}"/></s:param>
+                      <s:param name="projectId" value="#attr.queue.task.projectId"/>
+                      <s:param name="buildDefinitionId" value="#attr.queue.task.buildDefinitionId"/>
+                      <s:param name="trigger" value="#attr.queue.task.buildTrigger.trigger"/>
+                      <s:param name="projectName" value="#attr.queue.task.projectName"/>
+                      <s:param name="projectGroupId" value="#attr.queue.task.projectGroupId"/>
                     </s:url>
-                    <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                    <s:a href="%{cancelUrl}">
+                      <img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                    </s:a>
                   </redback:ifAuthorized>
                   <redback:elseAuthorized>
                     <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
@@ -121,12 +122,12 @@
                 </ec:column>
               </ec:row>
             </ec:table>
-          </c:if>
-          <c:if test="${empty buildsInQueue}">
+          </s:if>
+          <s:else>
             <s:text name="buildQueue.empty"/>
-          </c:if>
+          </s:else>
         </div>
-        <c:if test="${not empty buildsInQueue}">
+        <s:if test="buildsInQueue.size() > 0">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -138,7 +139,7 @@
               </tbody>
             </table>
           </div>
-        </c:if>
+        </s:if>
       </s:form>
 
       
@@ -147,7 +148,7 @@
           <h3>
             <s:text name="checkoutQueue.currentTask.section.title"/>
           </h3>
-          <c:if test="${not empty currentCheckoutTasks}">
+          <s:if test="currentCheckoutTasks.size() > 0">
             <s:set name="currentCheckoutTasks" value="currentCheckoutTasks" scope="request"/>
             <ec:table items="currentCheckoutTasks"
                       var="queue"
@@ -161,16 +162,18 @@
                 <ec:column property="name" title="checkoutQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectUrl" title="checkoutQueue.currentTask.projectName" width="69%">
                   <s:url id="viewUrl" action="projectView">
-                    <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
+                    <s:param name="projectId" value="#attr.queue.task.projectId"/>
                   </s:url>
-                  <s:a href="%{viewUrl}"><c:out value="${queue.task.projectName}"/></s:a>
+                  <s:a href="%{viewUrl}"><s:property value="#attr.queue.task.projectName"/></s:a>
                 </ec:column>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="cancelCurrentQueueTask" namespace="/">
-                      <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
+                      <s:param name="projectId" value="#attr.queue.task.projectId"/>
                     </s:url>
-                    <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                    <s:a href="%{cancelUrl}">
+                      <img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                    </s:a>
                   </redback:ifAuthorized>
                   <redback:elseAuthorized>
                     <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
@@ -178,10 +181,10 @@
                 </ec:column>
               </ec:row>
             </ec:table>
-          </c:if>
-          <c:if test="${empty currentCheckoutTasks}">
+          </s:if>
+          <s:else>
             <s:text name="checkoutQueue.no.currentTaks" />
-          </c:if>
+          </s:else>
         </div>
       
         
@@ -190,7 +193,7 @@
           <h3>
             <s:text name="checkoutQueue.section.title"/>
           </h3>
-          <c:if test="${not empty checkoutsInQueue}">
+          <s:if test="checkoutsInQueue.size() > 0">
             <s:set name="checkoutsInQueue" value="checkoutsInQueue" scope="request"/>
             <ec:table items="checkoutsInQueue"
                       var="queue"
@@ -209,16 +212,18 @@
                 <ec:column property="name" title="checkoutQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectUrl" title="checkoutQueue.currentTask.projectName" width="69%">
                   <s:url id="viewUrl" action="projectView">
-                    <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
+                    <s:param name="projectId" value="#attr.queue.task.projectId"/>
                   </s:url>
-                  <s:a href="%{viewUrl}"><c:out value="${queue.task.projectName}"/></s:a>
+                  <s:a href="%{viewUrl}"><s:property value="#attr.queue.task.projectName"/></s:a>
                 </ec:column>
                 <ec:column property="cancelAction" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="removeCheckoutQueueEntry" namespace="/">
-                      <s:param name="projectId"><c:out value="${queue.task.projectId}"/></s:param>
+                      <s:param name="projectId" value="#attr.queue.task.projectId"/>
                     </s:url>
-                    <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                    <s:a href="%{cancelUrl}">
+                      <img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                    </s:a>
                   </redback:ifAuthorized>
                   <redback:elseAuthorized>
                     <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
@@ -226,12 +231,12 @@
                 </ec:column>
               </ec:row>
             </ec:table>
-          </c:if>
-          <c:if test="${empty checkoutsInQueue}">
+          </s:if>
+          <s:else>
             <s:text name="checkoutQueue.empty" />
-          </c:if>
+          </s:else>
         </div>
-        <c:if test="${not empty checkoutsInQueue}">
+        <s:if test="checkoutsInQueue.size() > 0">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -245,13 +250,13 @@
               </tbody>
             </table>
           </div>
-        </c:if>          
+        </s:if>
       </s:form>
 
       
       	<div id="h3">
           <h3><s:text name="prepareBuildQueue.currentTask.section.title"/></h3>
-          <c:if test="${not empty currentPrepareBuilds}">
+          <s:if test="currentPrepareBuilds.size() > 0">
             <s:set name="currentPrepareBuilds" value="currentPrepareBuilds" scope="request"/>
             <ec:table items="currentPrepareBuilds"
                       var="currentPrepareBuild"
@@ -265,17 +270,17 @@
                 <ec:column property="queueName" title="prepareBuildQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
-                    <s:param name="projectGroupId"><c:out value="${pageScope.currentPrepareBuild.projectGroupId}"/></s:param>
+                    <s:param name="projectGroupId" value="#attr.currentPrepareBuild.projectGroupId"/>
                   </s:url>
-                  <s:a href="%{viewUrl}"><c:out value="${pageScope.currentPrepareBuild.projectGroupName}"/></s:a>
+                  <s:a href="%{viewUrl}"><s:property value="#attr.currentPrepareBuild.projectGroupName"/></s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="prepareBuildQueue.table.scmRootAddress"/>
               </ec:row>
             </ec:table>
-          </c:if>
-          <c:if test="${empty currentPrepareBuilds}">
+          </s:if>
+          <s:else>
             <s:text name="prepareBuildQueue.no.currentTasks"/>
-          </c:if>
+          </s:else>
         </div>
       
        
@@ -284,7 +289,7 @@
           <h3>
             <s:text name="prepareBuildQueue.section.title"/>
           </h3>
-          <c:if test="${not empty prepareBuildQueues}">
+          <s:if test="prepareBuildQueues.size() > 0">
             <s:set name="prepareBuildQueues" value="prepareBuildQueues" scope="request"/>
             <ec:table items="prepareBuildQueues"
                       var="prepareBuildQueue"
@@ -303,16 +308,16 @@
                 <ec:column property="queueName" title="prepareBuildQueue.currentTask.buildQueue" width="29%"/>
                 <ec:column property="projectGroupUrl" title="prepareBuildQueue.table.projectGroupName">
                   <s:url id="viewUrl" action="projectGroupSummary">
-                    <s:param name="projectGroupId"><c:out value="${pageScope.prepareBuildQueue.projectGroupId}"/></s:param>
+                    <s:param name="projectGroupId" value="#attr.prepareBuildQueue.projectGroupId"/>
                   </s:url>
-                  <s:a href="%{viewUrl}"><c:out value="${pageScope.prepareBuildQueue.projectGroupName}"/></s:a>
+                  <s:a href="%{viewUrl}"><s:property value="#attr.prepareBuildQueue.projectGroupName"/></s:a>
                 </ec:column>
                 <ec:column property="scmRootAddress" title="prepareBuildQueue.table.scmRootAddress"/>
                 <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="removePrepareBuildEntry" namespace="/">
-                      <s:param name="projectGroupId"><c:out value="${pageScope.prepareBuildQueue.projectGroupId}"/></s:param>
-                      <s:param name="scmRootId"><c:out value="${pageScope.prepareBuildQueue.scmRootId}"/></s:param>
+                      <s:param name="projectGroupId" value="#attr.prepareBuildQueue.projectGroupId"/>
+                      <s:param name="scmRootId" value="#attr.prepareBuildQueue.scmRootId"/>
                     </s:url>
                     <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
                   </redback:ifAuthorized>
@@ -322,9 +327,9 @@
                 </ec:column>
               </ec:row>
             </ec:table>
-          </c:if>
+          </s:if>
         </div>
-        <c:if test="${not empty prepareBuildQueues}">
+        <s:if test="prepareBuildQueues.size() > 0">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -336,10 +341,10 @@
               </tbody>
             </table>
           </div>
-        </c:if>
-        <c:if test="${empty prepareBuildQueues}">
+        </s:if>
+        <s:else>
           <s:text name="prepareBuildQueue.empty"/>
-        </c:if>
+        </s:else>
       </s:form>
     </body>
   </s:i18n>
