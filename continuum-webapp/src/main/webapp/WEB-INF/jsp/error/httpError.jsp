@@ -17,66 +17,58 @@
   ~ under the License.
   --%>
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
 <s:i18n name="localization.Continuum">
 <html>
 <head>
   <title>
-    <c:choose>
-      <c:when test="${param.errorCode == 403}">
+      <s:if test="#parameters.errorCode == 403">
         <s:text name="error.403.title"/>
-      </c:when>
-      <c:when test="${param.errorCode == 404}">
+      </s:if>
+      <s:elseif test="#parameters.errorCode == 404">
         <s:text name="error.404.title"/>
-      </c:when>
-      <c:when test="${param.errorCode == 500}">
+      </s:elseif>
+      <s:elseif test="#parameters.errorCode == 500">
         <s:text name="error.500.title"/>
-      </c:when>
-      <c:otherwise>
+      </s:elseif>
+      <s:else>
         <s:text name="error.page.title"/>
-      </c:otherwise>
-    </c:choose>
+      </s:else>
   </title>
 </head>
 
 <body>
   <div id="h3">
     <h3>
-      <c:choose>
-        <c:when test="${param.errorCode == 403}">
+        <s:if test="#parameters.errorCode == 403">
           <s:text name="error.403.section.title"/>
-        </c:when>
-        <c:when test="${param.errorCode == 404}">
+        </s:if>
+        <s:elseif test="#parameters.errorCode == 404">
           <s:text name="error.404.section.title"/>
-        </c:when>
-        <c:when test="${param.errorCode == 500}">
+        </s:elseif>
+        <s:elseif test="#parameters.errorCode == 500">
           <s:text name="error.500.section.title"/>
-        </c:when>
-        <c:otherwise>
+        </s:elseif>
+        <s:else>
           The URL requested results to an unknown error (Error <s:property value="errorCode"/>).
-        </c:otherwise>
-      </c:choose>
+        </s:else>
     </h3>
 
     <div class="errormessage">
-      <c:choose>
-        <c:when test="${param.errorCode == 403}">
+        <s:if test="#parameters.errorCode == 403">
           <s:text name="error.403.message"/>
-        </c:when>
-        <c:when test="${param.errorCode == 404}">
+        </s:if>
+        <s:elseif test="#parameters.errorCode == 404">
           <s:text name="error.404.message"/>
-        </c:when>
-        <c:when test="${param.errorCode == 500}">
+        </s:elseif>
+        <s:elseif test="#parameters.errorCode == 500">
           <s:text name="error.500.message"/>
-        </c:when>
-        <c:otherwise>
+        </s:elseif>
+        <s:else>
           The URL requested results to an unknown error (Error <s:property value="errorCode"/>).
-        </c:otherwise>
-      </c:choose>
+        </s:else>
     </div>
   </div>
 </body>
