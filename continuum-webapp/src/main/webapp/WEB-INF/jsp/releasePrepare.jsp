@@ -40,7 +40,7 @@
             <s:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername" size="100"/>
             <s:password label="%{getText('releasePrepare.scmPassword.label')}" name="scmPassword" size="100"/>
             <s:textfield label="%{getText('releasePrepare.scmTag.label')}" name="scmTag" requiredLabel="true" size="100"/>
-            <s:if test="scmTagBase.length() > 0}">
+            <s:if test="scmTagBase.length() > 0">
               <s:textfield label="%{getText('releasePrepare.scmTagBase.label')}" name="scmTagBase" size="100"/>
             </s:if>
             <s:textfield label="%{getText('releasePrepare.scmCommentPrefix.label')}" name="scmCommentPrefix" size="100"/>
