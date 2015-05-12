@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -41,9 +40,9 @@
             <s:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername" size="100"/>
             <s:password label="%{getText('releasePrepare.scmPassword.label')}" name="scmPassword" size="100"/>
             <s:textfield label="%{getText('releasePrepare.scmTag.label')}" name="scmTag" requiredLabel="true" size="100"/>
-            <c:if test="${!empty (scmTagBase)}">
+            <s:if test="scmTagBase.length() > 0}">
               <s:textfield label="%{getText('releasePrepare.scmTagBase.label')}" name="scmTagBase" size="100"/>
-            </c:if>
+            </s:if>
             <s:textfield label="%{getText('releasePrepare.scmCommentPrefix.label')}" name="scmCommentPrefix" size="100"/>
             <s:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" requiredLabel="true" size="100"/>
             <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments" size="100"/>
@@ -51,9 +50,9 @@
                        listKey="id" headerKey="-1" headerValue=""/>
 			      <s:checkbox label="%{getText('releasePrepare.useEditMode.label')}" name="scmUseEditMode" fieldValue="false"/>
             <s:checkbox label="%{getText('releasePrepare.addSchema.label')}" name="addSchema" fieldValue="false"/>
-            <c:if test="${autoVersionSubmodules}">
+            <s:if test="autoVersionSubmodules">
               <s:checkbox label="%{getText('releasePrepare.autoVersionSubmodules.label')}" name="autoVersionSubmodules" disabled="true" fieldValue="false"/>
-            </c:if>
+            </s:if>
           </table>
         </div>
         </td></tr>
