@@ -20,7 +20,6 @@
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
 <s:i18n name="localization.Continuum">
   <head>
@@ -84,20 +83,27 @@
                     autoIncludeParameters="false">
             <ec:row highlightRow="true">
               <ec:column property="nameEdit" title="profile.installation.name.label" style="white-space: nowrap" width="50%">
-                <a href="editInstallation.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
-                  <c:out value="${profileInstallation.name}"/>
-                </a>
-                (<c:out value="${profileInstallation.varValue}"/>)
+                <s:url var="editUrl" action="editInstallation">
+                  <s:param name="installation.installationId" value="#attr.profileInstallation.installationId" />
+                </s:url>
+                <s:a href="%{editUrl}">
+                  <s:property value="#attr.profileInstallation.name"/>
+                </s:a>
+                (<s:property value="#attr.profileInstallation.varValue"/>)
               </ec:column>
               <ec:column property="type" title="installation.type.label" style="white-space: nowrap" width="49%"/>
               <ec:column property="id" title="&nbsp;" width="1%">
-                <a href="removeBuildEnvInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
+                <s:url var="removeUrl" action="removeBuildEnvInstallation">
+                  <s:param name="profile.id" value="profile.id"/>
+                  <s:param name="installationId" value="#attr.profileInstallation.installationId" />
+                </s:url>
+                <s:a href="%{removeUrl}">
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
-                </a>
+                </s:a>
               </ec:column>
             </ec:row>
           </ec:table>
-          <s:if test="allInstallations.size > 0">
+          <s:if test="allInstallations.size() > 0">
             <s:form action="addInstallationBuildEnv" method="get">
               <s:hidden name="profile.id" />
               <div class="functnbar3">
@@ -113,9 +119,9 @@
         </div>
       </s:if>
       <s:else>
-        <c:if test="allInstallations.size < 1">
+        <s:if test="allInstallations.size() <= 0">
           <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
-        </c:if>
+        </s:if>
       </s:else>
     </div>
   </body>
