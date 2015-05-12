@@ -18,11 +18,8 @@
   --%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-
 <html>
 <head>
   <title>
@@ -33,7 +30,7 @@
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/print.css" includeParams="none"/>" media="print"/>
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
   <link rel="icon" href="<s:url value="/favicon.ico" includeParams="none"/>" sizes="16x16 32x32 48x48 64x64" type="image/vnd.microsoft.icon">
-  <script type="text/javascript" src="<c:url value='/js/jquery-1.3.2.min.js'/>"></script>
+  <script type="text/javascript" src="<s:url value='/js/jquery-1.3.2.min.js'/>"></script>
   <script language="javascript" type="text/javascript">
     $.noConflict();
   </script>
