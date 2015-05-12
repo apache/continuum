@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib prefix="c1" uri="continuum" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
@@ -154,12 +153,12 @@
               <th><label class="label"><s:text name='buildResult.username'/>:</label></th>
               <td><s:property value="buildResult.username"/></td>
             </tr>
-            <c:if test="${!empty buildResult.buildUrl}">
+            <s:if test="buildResult.buildUrl.length() > 0">
               <tr class="b">
                 <th><label class="label"><s:text name='buildResult.buildUrl'/>:</label></th>
                 <td><s:property value="buildResult.buildUrl"/></td>
               </tr>
-            </c:if>
+            </s:if>
           </table>
         </div>
         <div class="functnbar3">
@@ -202,9 +201,9 @@
                 <ec:column property="date" title="buildResult.scmResult.changes.date" cell="date"/>
                 <ec:column property="comment" title="buildResult.scmResult.changes.comment" cell="escapeHtml" />
                 <ec:column property="files" title="buildResult.scmResult.changes.files">
-                    <c:forEach var="scmFile" items="${pageScope.change.files}">
-                        <c:out value="${scmFile.name}"/><br />
-                    </c:forEach>
+                    <s:iterator value="#attr.change.files">
+                        <s:property value="name"/><br />
+                    </s:iterator>
                 </ec:column>
               </ec:row>
             </ec:table>
@@ -229,9 +228,9 @@
                 <ec:column property="date" title="buildResult.changes.date" cell="date"/>
                 <ec:column property="comment" title="buildResult.changes.comment" />
                 <ec:column property="files" title="buildResult.changes.files">
-                    <c:forEach var="scmFile" items="${pageScope.change.files}">
-                        <c:out value="${scmFile.name}"/><br />
-                    </c:forEach>
+                    <s:iterator value="#attr.change.files">
+                        <s:property value="name"/><br />
+                    </s:iterator>
                 </ec:column>
               </ec:row>
             </ec:table>
