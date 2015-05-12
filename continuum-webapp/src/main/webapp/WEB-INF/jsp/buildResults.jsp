@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
@@ -40,14 +39,17 @@
                 <s:param><s:property value="project.name"/></s:param>
             </s:text>
         </h3>
-        
-        <c:if test="${!empty actionErrors}">
+
+        <s:if test="hasActionErrors()">
           <div class="errormessage">
-            <s:iterator value="actionErrors">
-              <p><s:property/></p>
-            </s:iterator>
+            <s:actionerror/>
           </div>
-        </c:if>
+        </s:if>
+        <s:if test="hasActionMessages()">
+          <div class="warningmessage">
+            <s:actionmessage/>
+          </div>
+        </s:if>
 
         <%@ include file="buildResultsPager.jspf" %>
         <s:form id="buildResultsForm" action="removeBuildResults" theme="simple">
@@ -70,35 +72,31 @@
                 </ec:column>
               </redback:ifAuthorized>
               <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">
-                <c:out value="${pageScope.buildResult.buildNumber}"/>
+                <s:property value="#attr.buildResult.buildNumber"/>
               </ec:column>
               <ec:column property="state" headerStyle="text-align: center;" style="text-align: center;" title="buildResults.result" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
               <ec:column property="trigger" title="buildResult.trigger">
-                <c:choose>
-                  <c:when test="${pageScope.buildResult.trigger == 1}">
+                  <s:if test="#attr.buildResult.trigger == 1">
                     <s:text name="buildResult.trigger.1"/>
-                  </c:when>
-                  <c:otherwise>
+                  </s:if>
+                  <s:else>
                     <s:text name="buildResult.trigger.0"/>
-                  </c:otherwise>
-                </c:choose>
+                  </s:else>
               </ec:column>
               <ec:column property="duration" title="buildResults.duration">
-                <c:choose>
-                  <c:when test="${buildResult.endTime gt 0}">
-                    ${buildResult.durationTime}
-                  </c:when>
-                  <c:otherwise>
-                    <s:text name="buildResults.startedSince"/> : <c:out value="${buildResult.elapsedTime}"/>
-                  </c:otherwise>
-                </c:choose>
+                  <s:if test="#attr.buildResult.endTime > 0">
+                    <s:property value="#attr.buildResult.durationTime"/>
+                  </s:if>
+                  <s:else>
+                    <s:text name="buildResults.startedSince"/> : <s:property value="#attr.buildResult.elapsedTime"/>
+                  </s:else>
               </ec:column>
               <ec:column property="startTime" title="buildResults.startTime" cell="date" format="yyyy-MM-dd HH:mm z"/>
               <ec:column property="endTime" title="buildResults.endTime" cell="date" format="yyyy-MM-dd HH:mm z"/>
               <ec:column property="buildDefinition.description" title="buildResults.buildDefinition.description" />
             </ec:row>
           </ec:table>
-          <c:if test="${not empty buildResults}">
+          <s:if test="buildResults.size() > 0">
             <div class="functnbar3">
               <table>
                 <tbody>
@@ -112,7 +110,7 @@
                 </tbody>
               </table>
             </div>
-          </c:if>
+          </s:if>
         </s:form>
         <%@ include file="buildResultsPager.jspf" %>
       </div>
