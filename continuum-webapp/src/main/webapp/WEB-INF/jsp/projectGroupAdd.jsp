@@ -30,13 +30,18 @@
 
         <div class="axial">
           <s:form action="addProjectGroup" method="post" validate="true">
-            <c:if test="${!empty actionErrors}">
+
+            <s:if test="hasActionErrors()">
               <div class="errormessage">
-                <s:iterator value="actionErrors">
-                  <p><s:property/></p>
-                </s:iterator>
+                <s:actionerror/>
               </div>
-            </c:if>
+            </s:if>
+            <s:if test="hasActionMessages()">
+              <div class="warningmessage">
+                <s:actionmessage/>
+              </div>
+            </s:if>
+
             <table>
               <tbody>
                 <s:textfield label="%{getText('projectGroup.name.label')}" name="name"  requiredLabel="true" size="100"/>
