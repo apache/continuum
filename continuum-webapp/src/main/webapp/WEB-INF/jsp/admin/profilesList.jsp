@@ -17,11 +17,9 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-
 <html>
 <s:i18n name="localization.Continuum">
   <head>
@@ -33,15 +31,18 @@
       <s:text name="profilesList.section.title"/>
     </h3>
 
-    <c:if test="${!empty actionErrors}">
+    <s:if test="hasActionErrors()">
       <div class="errormessage">
-        <s:iterator value="actionErrors">
-          <p><s:property/></p>
-        </s:iterator>
+        <s:actionerror/>
       </div>
-    </c:if>
+    </s:if>
+    <s:if test="hasActionMessages()">
+      <div class="warningmessage">
+        <s:actionmessage/>
+      </div>
+    </s:if>
         
-    <c:if test="${not empty profiles}">
+    <s:if test="profiles.size() > 0">
     <ec:table items="profiles"
               var="profile"
               autoIncludeParameters="false"
@@ -54,35 +55,41 @@
         <ec:column property="name" title="profile.name.label" style="white-space: nowrap" />
         <ec:column property="Installations" title="profilesList.installations.label" style="white-space: nowrap">
           <ul>
-            <c:if test="${profile.jdk != null}">
-              <li><c:out value="${profile.jdk.name}"/> (<c:out value="${profile.jdk.type}"/>)</li>
-            </c:if>
-            <c:if test="${profile.builder != null}">
-              <li><c:out value="${profile.builder.name}"/> (<c:out value="${profile.builder.type}"/>)</li>
-            </c:if>
-            <c:if test="${profile.environmentVariables != null}">
-              <c:forEach var="envVar" items="${profile.environmentVariables}"> 
-                <li><c:out value="${envVar.name}" /></li>
-              </c:forEach>
-            </c:if>
+            <s:if test="#attr.profile.jdk != null">
+              <li><s:property value="#attr.profile.jdk.name"/> (<s:property value="#attr.profile.jdk.type"/>)</li>
+            </s:if>
+            <s:if test="#attr.profile.builder != null">
+              <li><s:property value="#attr.profile.builder.name"/> (<s:property value="#attr.profile.builder.type"/>)</li>
+            </s:if>
+            <s:if test="#attr.profile.environmentVariables != null">
+              <s:iterator value="#attr.profile.environmentVariables">
+                <li><s:property value="name" /></li>
+              </s:iterator>
+            </s:if>
           </ul>
         </ec:column>
         <c1:ifBuildTypeEnabled buildType="distributed">
           <ec:column property="buildAgentGroup" title="profilesList.buildAgentGroup.label" style="white-space: nowrap" />
         </c1:ifBuildTypeEnabled>                
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="editBuildEnv.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
+          <s:url var="editUrl" action="editBuildEnv">
+            <s:param name="profile.id" value="#attr.profile.id" />
+          </s:url>
+          <s:a href="%{editUrl}">
             <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
-          </a>                    
+          </s:a>
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="confirmDeleteBuildEnv.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
+          <s:url var="deleteUrl" action="confirmDeleteBuildEnv">
+            <s:param name="profile.id" value="#attr.profile.id" />
+          </s:url>
+          <s:a href="%{deleteUrl}">
             <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
-          </a>                    
+          </s:a>
         </ec:column>
       </ec:row>
     </ec:table>
-    </c:if>
+    </s:if>
     <div class="functnbar3">
       <s:form action="addBuildEnv" method="post">
         <s:submit value="%{getText('add')}"/>
