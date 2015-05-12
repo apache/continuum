@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -28,20 +27,21 @@
       <div id="axial" class="h3">
         <h3><s:text name="buildDefinition.template.section.title"/></h3>
 
+        <s:if test="hasActionErrors()">
+          <div class="errormessage">
+            <s:actionerror/>
+          </div>
+          <input type="button" value="Back" onClick="history.go(-1)">
+        </s:if>
+        <s:if test="hasActionMessages()">
+          <div class="warningmessage">
+            <s:actionmessage/>
+          </div>
+        </s:if>
+
         <div class="axial">
           <s:form action="saveBuildDefinitionAsTemplate" method="post" validate="true">
-            <c:choose>
-            
-              <c:when test="${!empty actionErrors}">
-                <div class="errormessage">
-                  <s:iterator value="actionErrors">
-                    <p><s:property/></p>
-                  </s:iterator>
-                </div>
-                <input type="button" value="Back" onClick="history.go(-1)">
-              </c:when>
-  
-              <c:when test="${empty actionErrors}">
+              <s:if test="!hasActionErrors()">
                 <table>
                   <tbody>
                     <s:if test="buildDefinition.type == 'ant'">
@@ -91,9 +91,7 @@
 
                 <s:hidden name="buildDefinition.id"/>
                 <s:hidden name="buildDefinition.template" value="true"/>
-              </c:when>
-            
-            </c:choose>
+              </s:if>
           </s:form>
         </div>
       </div>
