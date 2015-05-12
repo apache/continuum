@@ -19,13 +19,11 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
-
 <s:i18n name="localization.Continuum">
 
-  <h3><s:text name="buildDefinitionSummary.projectGroup.section.title"><s:param><c:out value="${projectGroup.name}"/></s:param></s:text></h3>
-  <c:if test="${not empty groupBuildDefinitionSummaries}">
+  <h3><s:text name="buildDefinitionSummary.projectGroup.section.title"><s:param value="projectGroup.name"/></s:text></h3>
+  <s:if test="groupBuildDefinitionSummaries.size() > 0">
   <ec:table items="groupBuildDefinitionSummaries"
             var="buildDefinitionSummary"
             autoIncludeParameters="false"
@@ -41,19 +39,19 @@
       <ec:column property="scheduleName" title="projectView.buildDefinition.schedule">
         <redback:ifAuthorized permission="continuum-manage-schedules">
           <s:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
-            <s:param name="id"><c:out value="${pageScope.buildDefinitionSummary.scheduleId}"/></s:param>
+            <s:param name="id" value="#attr.buildDefinitionSummary.scheduleId"/>
           </s:url>
-          <s:a href="%{scheduleUrl}"><c:out value="${pageScope.buildDefinitionSummary.scheduleName}"/></s:a>
+          <s:a href="%{scheduleUrl}"><s:property value="#attr.buildDefinitionSummary.scheduleName"/></s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <c:out value="${pageScope.buildDefinitionSummary.scheduleName}"/>
+          <s:property value="#attr.buildDefinitionSummary.scheduleName"/>
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
         <s:url id="profileUrl" action="editBuildEnv.action" namespace="/" includeParams="none">
-          <s:param name="profile.id"><c:out value="${pageScope.buildDefinitionSummary.profileId}"/></s:param>
+          <s:param name="profile.id" value="#attr.buildDefinitionSummary.profileId"/>
         </s:url>
-        <s:a href="%{profileUrl}"><c:out value="${pageScope.buildDefinitionSummary.profileName}"/></s:a>
+        <s:a href="%{profileUrl}"><s:property value="#attr.buildDefinitionSummary.profileName"/></s:a>
       </ec:column>      
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
@@ -64,8 +62,8 @@
       <ec:column property="buildAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <s:url id="buildUrl" action="buildProjectViaGroupBuildDefinition" namespace="/">
-            <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
-            <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+            <s:param name="projectGroupId" value="#attr.buildDefinitionSummary.projectGroupId"/>
+            <s:param name="buildDefinitionId" value="#attr.buildDefinitionSummary.id"/>
             <s:param name="fromGroupPage" value="true"/>
           </s:url>
           <s:a href="%{buildUrl}"><img src="<s:url value='/images/buildnow.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0"></s:a>
@@ -78,8 +76,8 @@
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
           <s:url id="editUrl" action="buildDefinition" namespace="/" includeParams="none">
-            <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
-            <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+            <s:param name="projectGroupId" value="#attr.buildDefinitionSummary.projectGroupId"/>
+            <s:param name="buildDefinitionId" value="#attr.buildDefinitionSummary.id"/>
           </s:url>
           <s:a href="%{editUrl}">
               <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0">
@@ -93,16 +91,15 @@
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <c:choose>
-          <c:when test="${pageScope.buildDefinitionSummary.isDefault == true}">
+          <s:if test="#attr.buildDefinitionSummary.isDefault == true">
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
-          </c:when>
-          <c:otherwise>
+          </s:if>
+          <s:else>
             <s:set var="tname" value="'remGroupDefToken' + #attr['buildDefinitionSummary'].id" scope="page"/>
             <s:token name="%{#attr['tname']}"/>
             <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
-              <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
-              <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+              <s:param name="projectGroupId" value="#attr.buildDefinitionSummary.projectGroupId"/>
+              <s:param name="buildDefinitionId" value="#attr.buildDefinitionSummary.id"/>
               <s:param name="confirmed" value="false"/>
               <s:param name="struts.token.name" value="#attr['tname']"/>
               <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
@@ -110,8 +107,7 @@
             <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
             </s:a>
-          </c:otherwise>
-          </c:choose>
+          </s:else>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
@@ -120,7 +116,7 @@
       </ec:column>
     </ec:row>
   </ec:table>
-  </c:if>
+  </s:if>
   <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
     <div class="functnbar3">
       <s:form action="buildDefinition" method="post">
@@ -130,7 +126,7 @@
     </div>
   </redback:ifAuthorized>
 
-  <c:if test="${not empty projectBuildDefinitionSummaries}">
+  <s:if test="projectBuildDefinitionSummaries.size() > 0">
   <h3><s:text name="buildDefinitionSummary.project.section.title"/></h3>
 
   <ec:table items="projectBuildDefinitionSummaries"
@@ -144,9 +140,9 @@
     <ec:row>
       <ec:column property="projectName" title="buildDefinitionSummary.project">
         <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-          <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
+          <s:param name="projectId" value="#attr.buildDefinitionSummary.projectId"/>
         </s:url>
-        <s:a href="%{projectUrl}"><c:out value="${pageScope.buildDefinitionSummary.projectName}"/></s:a>
+        <s:a href="%{projectUrl}"><s:property value="#attr.buildDefinitionSummary.projectName"/></s:a>
       </ec:column>
       <ec:column property="goals" title="projectView.buildDefinition.goals"/>
       <ec:column property="arguments" title="projectView.buildDefinition.arguments"/>
@@ -154,19 +150,19 @@
       <ec:column property="scheduleName" title="projectView.buildDefinition.schedule">
         <redback:ifAuthorized permission="continuum-manage-schedules">
           <s:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
-            <s:param name="id"><c:out value="${pageScope.buildDefinitionSummary.scheduleId}"/></s:param>
+            <s:param name="id" value="#attr.buildDefinitionSummary.scheduleId"/>
           </s:url>
-          <s:a href="%{scheduleUrl}"><c:out value="${pageScope.buildDefinitionSummary.scheduleName}"/></s:a>
+          <s:a href="%{scheduleUrl}"><s:property value="#attr.buildDefinitionSummary.scheduleName"/></s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <c:out value="${pageScope.buildDefinitionSummary.scheduleName}"/>
+          <s:property value="#attr.buildDefinitionSummary.scheduleName"/>
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
         <s:url id="profileUrl" action="editBuildEnv.action" namespace="/" includeParams="none">
-          <s:param name="profile.id"><c:out value="${pageScope.buildDefinitionSummary.profileId}"/></s:param>
+          <s:param name="profile.id" value="#attr.buildDefinitionSummary.profileId"/>
         </s:url>
-        <s:a href="%{profileUrl}"><c:out value="${pageScope.buildDefinitionSummary.profileName}"/></s:a>
+        <s:a href="%{profileUrl}"><s:property value="#attr.buildDefinitionSummary.profileName"/></s:a>
       </ec:column>      
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
@@ -177,8 +173,8 @@
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <s:url id="buildProjectUrl" action="buildProjectViaGroupBuildDefinition" namespace="/" includeParams="none">
-            <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
-            <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+            <s:param name="projectId" value="#attr.buildDefinitionSummary.projectId"/>
+            <s:param name="buildDefinitionId" value="#attr.buildDefinitionSummary.id"/>
           </s:url>
           <s:a href="%{buildProjectUrl}">
             <img src="<s:url value='/images/buildnow.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0">
@@ -191,10 +187,10 @@
       <ec:column property="editAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
           <s:url id="editUrl" action="buildDefinition" namespace="/">
-            <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
-            <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+            <s:param name="projectId" value="#attr.buildDefinitionSummary.projectId"/>
+            <s:param name="buildDefinitionId" value="#attr.buildDefinitionSummary.id"/>
             <s:param name="groupBuildView" value="true"/>
-            <s:param name="projectGroupId"><c:out value="${pageScope.buildDefinitionSummary.projectGroupId}"/></s:param>
+            <s:param name="projectGroupId" value="#attr.buildDefinitionSummary.projectGroupId"/>
           </s:url>
           <s:a href="%{editUrl}">
               <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0">
@@ -209,8 +205,8 @@
           <s:set var="tname" value="'remDefToken' + #attr['buildDefinitionSummary'].id" scope="page" />
           <s:token name="%{#attr['tname']}"/>
           <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
-            <s:param name="projectId"><c:out value="${pageScope.buildDefinitionSummary.projectId}"/></s:param>
-            <s:param name="buildDefinitionId"><c:out value="${pageScope.buildDefinitionSummary.id}"/></s:param>
+            <s:param name="projectId" value="#attr.buildDefinitionSummary.projectId"/>
+            <s:param name="buildDefinitionId" value="#attr.buildDefinitionSummary.id"/>
             <s:param name="confirmed" value="false"/>
             <s:param name="struts.token.name" value="#attr['tname']"/>
             <s:param name="%{#attr['tname']}" value="#session['struts.tokens.' + #attr['tname']]"/>
@@ -226,6 +222,6 @@
     </ec:row>
   </ec:table>
 
-  </c:if>
+  </s:if>
 
 </s:i18n>
