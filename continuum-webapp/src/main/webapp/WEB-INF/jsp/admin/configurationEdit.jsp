@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
 <s:i18n name="localization.Continuum">
   <head>
@@ -48,15 +47,18 @@
       <s:text name="configuration.section.title"/>
     </h3>
 
-    <s:form name="editConfiguration" action="configuration_save" method="post">
+    <s:if test="hasActionErrors()">
+      <div class="errormessage">
+        <s:actionerror/>
+      </div>
+    </s:if>
+    <s:if test="hasActionMessages()">
+      <div class="warningmessage">
+        <s:actionmessage/>
+      </div>
+    </s:if>
 
-      <c:if test="${!empty actionErrors}">
-        <div class="errormessage">
-          <s:iterator value="actionErrors">
-            <p><s:property/></p>
-          </s:iterator>
-        </div>
-      </c:if>
+    <s:form name="editConfiguration" action="configuration_save" method="post">
 
       <div class="axial">
 
