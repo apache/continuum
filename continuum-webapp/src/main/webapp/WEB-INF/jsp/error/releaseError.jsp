@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <s:i18n name="localization.Continuum">
@@ -29,15 +28,16 @@
 <body>
   <div id="h3">
     <h3><s:text name="releaseError.section.title"/></h3>
-    <div class="errors">
-      <c:if test="${!empty actionErrors}">
-        <div class="errormessage">
-          <s:iterator value="actionErrors">
-            <p><s:property/></p>
-          </s:iterator>
-        </div>
-      </c:if>
-    </div>
+    <s:if test="hasActionErrors()">
+      <div class="errormessage">
+        <s:actionerror/>
+      </div>
+    </s:if>
+    <s:if test="hasActionMessages()">
+      <div class="warningmessage">
+        <s:actionmessage/>
+      </div>
+    </s:if>
   </div>
 </body>
 </s:i18n>
