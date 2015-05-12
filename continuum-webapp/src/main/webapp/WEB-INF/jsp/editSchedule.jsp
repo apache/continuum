@@ -17,7 +17,6 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 
@@ -34,13 +33,17 @@
     <div class="axial">
       <s:form action="saveSchedule" method="post" validate="false" name="scheduleForm">
         <s:hidden name="id"/>
-        <c:if test="${!empty actionErrors}">
+
+        <s:if test="hasActionErrors()">
           <div class="errormessage">
-            <s:iterator value="actionErrors">
-              <p><s:property/></p>
-            </s:iterator>
+            <s:actionerror/>
           </div>
-        </c:if>
+        </s:if>
+        <s:if test="hasActionMessages()">
+          <div class="warningmessage">
+            <s:actionmessage/>
+          </div>
+        </s:if>
 
           <table>
             <s:textfield label="%{getText('schedule.name.label')}" name="name" requiredLabel="true" size="100">
