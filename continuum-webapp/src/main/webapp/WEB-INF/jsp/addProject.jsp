@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <s:i18n name="localization.Continuum">
 <html>
     <head>
@@ -44,13 +43,16 @@
                 </h3>
                 <div class="axial">
                     <s:form method="post" action="addProject" validate="true">
-                        <c:if test="${!empty actionErrors}">
-                          <div class="errormessage">
-                            <s:iterator value="actionErrors">
-                              <p><s:property/></p>
-                            </s:iterator>
-                          </div>
-                        </c:if>
+                        <s:if test="hasActionErrors()">
+                            <div class="errormessage">
+                                <s:actionerror/>
+                            </div>
+                        </s:if>
+                        <s:if test="hasActionMessages()">
+                            <div class="warningmessage">
+                                <s:actionmessage/>
+                            </div>
+                        </s:if>
                         <table>
                           <tbody>
                             <s:textfield label="%{getText('projectName.label')}" name="projectName" requiredLabel="true" size="100">
@@ -75,24 +77,23 @@
                                 <s:param name="after"><p><s:text name="projectScmTag.message"/></p></s:param>
                             </s:textfield>
                             <s:checkbox label="%{getText('projectScmUseCache.label')}" name="projectScmUseCache"/>
-                            <c:choose>
-                            <c:when test="${disableGroupSelection == true}">
+
+                            <s:if test="disableGroupSelection">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
                               <s:textfield label="%{getText('projectGroup.name.label')}" name="projectGroupName" disabled="true" size="100"/>
-                            </c:when>
-                            <c:otherwise>
+                            </s:if>
+                            <s:else>
                               <s:select label="%{getText('projectGroup.name.label')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
-                            </c:otherwise>
-                            </c:choose>
-                            <c:choose>
-                              <c:when test="${!empty projectGroups}">
-                                <s:hidden name="emptyProjectGroups" value="false"/>
-                              </c:when>
-                              <c:otherwise>
-                                <s:hidden name="emptyProjectGroups" value="true"/>
-                              </c:otherwise>
-                            </c:choose>
+                            </s:else>
+
+                            <s:if test="projectGroups.size() > 0">
+                              <s:hidden name="emptyProjectGroups" value="false"/>
+                            </s:if>
+                            <s:else>
+                              <s:hidden name="emptyProjectGroups" value="true"/>
+                            </s:else>
+
                             <s:select label="%{getText('add.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
                                        headerValue="%{getText('add.project.defaultBuildDefinition')}"/>                             
