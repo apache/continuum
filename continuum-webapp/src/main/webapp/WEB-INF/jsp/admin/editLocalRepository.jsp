@@ -17,7 +17,6 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
   <s:i18n name="localization.Continuum">
@@ -29,16 +28,19 @@
   <div id="axial" class="h3">
     <h3><s:text name="repository.section.title"/></h3>
 
+    <s:if test="hasActionErrors()">
+      <div class="errormessage">
+        <s:actionerror/>
+      </div>
+    </s:if>
+    <s:if test="hasActionMessages()">
+      <div class="warningmessage">
+        <s:actionmessage/>
+      </div>
+    </s:if>
+
     <div class="axial">
       <s:form action="saveRepository" method="post" validate="true">
-        <c:if test="${!empty actionErrors}">
-          <div class="errormessage">
-            <s:iterator value="actionErrors">
-              <p><s:property/></p>
-            </s:iterator>
-          </div>
-        </c:if>
-
           <table>
             <s:textfield label="%{getText('repository.name.label')}" name="repository.name" requiredLabel="true" disabled="%{defaultRepo}" size="100"/>
             <s:textfield label="%{getText('repository.location.label')}" name="repository.location" requiredLabel="true" disabled="%{defaultRepo}" size="100"/>
