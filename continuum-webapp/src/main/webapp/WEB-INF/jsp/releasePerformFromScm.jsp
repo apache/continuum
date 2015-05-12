@@ -18,7 +18,6 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -37,9 +36,9 @@
             <s:textfield label="%{getText('releasePerformFromScm.scmUsername.label')}" name="scmUsername" size="100"/>
             <s:password label="%{getText('releasePerformFromScm.scmPassword.label')}" name="scmPassword" size="100"/>
             <s:textfield label="%{getText('releasePerformFromScm.scmTag.label')}" name="scmTag" size="100"/>
-            <c:if test="${!empty (scmTagBase)}">
+            <s:if test="scmTagBase.length() > 0">
               <s:textfield label="%{getText('releasePerformFromScm.scmTagBase.label')}" name="scmTagBase" size="100"/>
-            </c:if>
+            </s:if>
             <s:textfield label="%{getText('releasePerformFromScm.goals.label')}" name="goals" size="100"/>
             <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments" size="100"/>
             <s:checkbox label="%{getText('releasePerformFromScm.useReleaseProfile.label')}" name="useReleaseProfile"/>
