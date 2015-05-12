@@ -19,8 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-
 <s:i18n name="localization.Continuum">
 
   <div id="h3">
@@ -43,50 +41,42 @@
         </s:url>
 
         <s:set name="tabName" value="tabName"/>
-        <c:choose>
-            <c:when test="${tabName != 'Summary'}">
+
+            <s:if test="tabName != 'Summary'">
                 <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${projectGroupSummaryUrl}"><s:text name="projectGroup.tab.summary"/></a>
-            </c:when>
-            <c:otherwise>
+            </s:if>
+            <s:else>
                 <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="projectGroup.tab.summary"/></b>
-            </c:otherwise>
-        </c:choose>
+            </s:else>
 
-        <c:choose>
-            <c:when test="${tabName != 'Members'}">
+            <s:if test="tabName != 'Members'">
                 <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${projectGroupMembersUrl}"><s:text name="projectGroup.tab.members"/></a>
-            </c:when>
-            <c:otherwise>
+            </s:if>
+            <s:else>
                 <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="projectGroup.tab.members"/></b>
-            </c:otherwise>
-        </c:choose>
+            </s:else>
 
-        <c:choose>
-            <c:when test="${tabName != 'BuildDefinitions'}">
+            <s:if test="tabName != 'BuildDefinitions'">
                 <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${projectGroupBuildDefinitionUrl}"><s:text name="projectGroup.tab.buildDefinitions"/></a>
-            </c:when>
-            <c:otherwise>
+            </s:if>
+            <s:else>
                 <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="projectGroup.tab.buildDefinitions"/></b>
-            </c:otherwise>
-        </c:choose>
+            </s:else>
 
-        <c:choose>
-            <c:when test="${tabName != 'Notifier'}">
+            <s:if test="tabName != 'Notifier'">
                 <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${projectGroupNotifierUrl}"><s:text name="projectGroup.tab.notifiers"/></a>
-            </c:when>
-            <c:otherwise>
+            </s:if>
+            <s:else>
                 <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="projectGroup.tab.notifiers"/></b>
-            </c:otherwise>
-        </c:choose>
-        
-        <c:choose>
-            <c:when test="${tabName != 'ReleaseResults'}">
+            </s:else>
+
+            <s:if test="tabName != 'ReleaseResults'">
                 <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${projectGroupReleaseResultsUrl}"><s:text name="projectGroup.tab.releaseResults"/></a>
-            </c:when>
-            <c:otherwise>
+            </s:if>
+            <s:else>
                 <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><s:text name="projectGroup.tab.releaseResults"/></b>
-            </c:otherwise>
-        </c:choose>
+            </s:else>
+
       </p>
     </div>
   </div>
