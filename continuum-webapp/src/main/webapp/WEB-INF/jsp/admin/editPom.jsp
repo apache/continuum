@@ -25,20 +25,18 @@
 </head>
 
 <body>
-<h1><s:text name="companyPom.section.title"/></h1>
+<h3><s:text name="companyPom.section.title"/></h3>
 
 <s:actionmessage/>
 <s:form method="post" action="saveCompanyPom" namespace="/admin" validate="true">
   <s:token/>
   <s:label name="companyModel.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
   <s:label name="companyModel.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>
-  <tr>
-    <td><s:text name="appearance.companyPom.version"/></td>
-    <td>
-      <s:property value="companyModel.version"/>
-      <i>(<s:text name="companyPom.autoIncrementVersion"/>)</i>
-    </td>
-  </tr>
+  <s:label name="companyModel.version" label="%{getText('appearance.companyPom.version')}">
+    <s:param name="after">
+      &nbsp;<i>(<s:text name="companyPom.autoIncrementVersion"/>)</i>
+    </s:param>
+  </s:label>
   <tr>
     <td></td>
     <td><h2><s:text name="companyPom.organization"/></h2></td>
