@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
   <s:i18n name="localization.Continuum">
     <head>
@@ -66,7 +65,7 @@
                   filterable="false">
           <ec:row>
             <ec:column property="name" title="surefireReport.package">
-              <a href="#<c:out value="${pageScope.report.name}"/>"><c:out value="${pageScope.report.name}"/></a>
+              <a href="#<s:property value="#attr.report.name"/>"><s:property value="#attr.report.name"/></a>
             </ec:column>
             <ec:column property="tests" title="surefireReport.tests"/>
             <ec:column property="errors" title="surefireReport.errors"/>
@@ -99,7 +98,7 @@
                 </ec:column>
               </s:else>
               <ec:column property="name" title="surefireReport.class">
-                <a href="#<c:out value="${pageScope.report.id}"/>"><c:out value="${pageScope.report.name}"/></a>
+                <a href="#<s:property value="#attr.report.id"/>"><s:property value="#attr.report.name"/></a>
               </ec:column>
               <ec:column property="tests" title="surefireReport.tests"/>
               <ec:column property="errors" title="surefireReport.errors"/>
@@ -129,8 +128,8 @@
                     <img src="<s:url value="/images/icon_error_sml.gif" includeParams="none"/>" alt="<s:text name="message.error"/>" title="<s:text name="message.error"/>"/>
                   </ec:column>
                   <ec:column property="name" title="surefireReport.testCase" sortable="false">
-                    <c:out value="${pageScope.testCase.name}"/><br/><br/>
-                    <div class="pre-wrap"><c:out value="${pageScope.testCase.failureDetails}"/><div>
+                    <s:property value="#attr.testCase.name"/><br/><br/>
+                    <div class="pre-wrap"><s:property value="#attr.testCase.failureDetails"/><div>
                   </ec:column>
                 </s:if>
                 <s:else>
