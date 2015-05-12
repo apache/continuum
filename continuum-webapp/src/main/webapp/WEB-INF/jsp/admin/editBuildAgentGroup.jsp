@@ -16,8 +16,7 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   --%>
-  
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
+
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
   <s:i18n name="localization.Continuum">
@@ -29,31 +28,32 @@
       <div id="axial" class="h3">
         <h3><s:text name="buildAgentGroup.section.title"/></h3>
 
+        <s:if test="hasActionErrors()">
+            <div class="errormessage">
+                <s:actionerror/>
+            </div>
+        </s:if>
+        <s:if test="hasActionMessages()">
+            <div class="warningmessage">
+                <s:actionmessage/>
+            </div>
+        </s:if>
+
         <div class="axial">
           <s:form action="saveBuildAgentGroup" method="post"  name="buildAgentGroup">
-            <c:if test="${!empty actionErrors}">
-              <div class="errormessage">
-                <s:iterator value="actionErrors">
-                  <p><s:property/></p>
-                </s:iterator>
-              </div>
-            </c:if>
 
             <table>
               <s:hidden name="typeGroup"/>
-              <c:choose>
-                <c:when test="${typeGroup=='new'}">
+                <s:if test="typeGroup == 'new'">
                   <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" size="100"/>
-                </c:when>
-                <c:otherwise>
+                </s:if>
+                <s:else>
                   <s:hidden name="buildAgentGroup.name"/>
                   <s:textfield label="%{getText('buildAgentGroup.name.label')}" name="buildAgentGroup.name" requiredLabel="true" disabled="true" size="100"/>
-                </c:otherwise>
-              </c:choose>
+                </s:else>
             </table>
-            
-            <c:choose>
-              <c:when test="${not empty buildAgents || not empty selectedBuildAgentIds}">
+
+              <s:if test="buildAgents.size() > 0 || selectedBuildAgentIds.size() > 0">
                 <table>
                   <s:optiontransferselect
                         label="%{getText('buildAgentGroup.buildAgents.define')}"    
@@ -80,13 +80,12 @@
                         addToLeftOnclick="selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_buildAgentIds'), 'key', 'hk-1');selectAllOptionsExceptSome(document.getElementById('saveBuildAgentGroup_selectedBuildAgentIds'), 'key', 'hk-1');"
                         />
                 </table>
-              </c:when>
-              <c:otherwise>
-                <table>
+              </s:if>
+              <s:else>
+                <div class="errormessage">
                   <s:text name="buildAgents.empty"/>
-                </table>
-              </c:otherwise>
-            </c:choose>                           
+                </div>
+              </s:else>
 
             <div class="functnbar3">
               <s:submit value="%{getText('save')}" theme="simple"/>
