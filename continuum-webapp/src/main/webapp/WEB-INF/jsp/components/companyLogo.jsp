@@ -18,21 +18,19 @@
   --%>
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-<s:set name="companyLogo" value="companyLogo"/>
-<c:if test="${!empty (companyLogo)}">
-  <s:set name="companyName" value="companyName"/>
-  <s:set name="companyUrl" value="companyUrl"/>
-  <c:choose>
-    <c:when test="${!empty (companyUrl)}">
-      <a href="${fn:escapeXml(companyUrl)}">
-        <img src="${fn:escapeXml(companyLogo)}" title="${fn:escapeXml(companyName)}" border="0" alt="${fn:escapeXml(companyName)}"/>
+<s:if test="companyLogo.length() > 0">
+    <s:if test="companyUrl.length() > 0">
+      <a href="<s:property value="companyUrl"/>">
+        <img src="<s:property value="companyLogo"/>"
+             title="<s:property value="companyName"/>"
+             alt="<s:property value="companyName"/>"
+             border="0" />
       </a>
-    </c:when>
-    <c:otherwise>
-      <img src="${fn:escapeXml(companyLogo)}" title="${fn:escapeXml(companyName)}" border="0" alt="${fn:escapeXml(companyName)}"/>
-    </c:otherwise>
-  </c:choose>
-</c:if>
+    </s:if>
+    <s:else>
+      <img src="<s:property value="companyLogo"/>"
+           title="<s:property value="companyName"/>"
+           alt="<s:property value="companyName"/>"
+           border="0"/>
+    </s:else>
+</s:if>
