@@ -17,7 +17,6 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <html>
@@ -33,16 +32,19 @@
           <s:form action="saveProjectGroup" method="post" validate="true">
             <s:if test="projectInCOQueue">
               <div class="label">
-                <p><s:text name="%{getText('project.in.checkout.queue.error')}"/></p>
+                <p><s:text name="project.in.checkout.queue.error"/></p>
               </div>
             </s:if>
-            <c:if test="${!empty actionErrors}">
+            <s:if test="hasActionErrors()">
               <div class="errormessage">
-                <s:iterator value="actionErrors">
-                  <p><s:property/></p>
-                </s:iterator>
+                <s:actionerror/>
               </div>
-            </c:if>
+            </s:if>
+            <s:if test="hasActionMessages()">
+              <div class="warningmessage">
+                <s:actionmessage/>
+              </div>
+            </s:if>
             <table>
               <s:hidden name="projectGroupId"/>
               <s:textfield label="%{getText('projectGroup.name.label')}" name="name" requiredLabel="true" disabled="%{projectInCOQueue}" size="100"/>
@@ -52,7 +54,7 @@
                          listKey="id" listValue="name" disabled="%{disabledRepositories}"/>
               <s:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}" size="100"/>
             </table>
-            <c:if test="${!empty projectList}">
+            <s:if test="projectList.size() > 0">
               <h3><s:text name="projectGroup.edit.section.projects.title"/></h3>
               <div class="eXtremeTable">
                 <table id="projects_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
@@ -71,17 +73,15 @@
                   </tbody>
                 </table>
               </div>
-            </c:if>
+            </s:if>
             <div class="functnbar3">
-              <c:choose>
-                <c:when test="${!projectInCOQueue}">
+                <s:if test="!projectInCOQueue">
                   <s:submit value="%{getText('save')}" theme="simple"/>
                   <input type="button" name="Cancel" value="<s:text name='cancel'/>" onclick="history.back();"/>
-                </c:when>
-                <c:otherwise>
+                </s:if>
+                <s:else>
                   <input type="button" value="<s:text name="back"/>" onClick="history.go(-1)">
-                </c:otherwise>
-              </c:choose>
+                </s:else>
             </div>
           </s:form>
         </div>
