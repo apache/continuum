@@ -19,7 +19,6 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
-<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
@@ -59,25 +58,23 @@
             <ec:column property="startTime" title="releaseResults.startTime" cell="date"/>
             <ec:column property="endTime" title="releaseResults.endTime" cell="date"/>
             <ec:column property="resultCode" title="releaseResults.state">
-              <c:choose>
-                <c:when test="${pageScope.result.resultCode == 0}">
+                <s:if test="#attr.result.resultCode == 0">
                   <s:text name="releaseViewResult.success"/>
-                </c:when>
-                <c:otherwise>
+                </s:if>
+                <s:else>
                   <s:text name="releaseViewResult.error"/>
-                </c:otherwise>
-              </c:choose>
+                </s:else>
             </ec:column>
             <ec:column property="actions" title="&nbsp;">
                <s:url id="viewReleaseResultUrl" action="viewReleaseResult">
-                 <s:param name="releaseResultId"><c:out value="${pageScope.result.id}"/></s:param>
-                 <s:param name="projectGroupId"><c:out value="${projectGroupId}"/></s:param>
+                 <s:param name="releaseResultId" value="#attr.result.id"/>
+                 <s:param name="projectGroupId" value="projectGroupId"/>
                </s:url>
                <s:a href="%{viewReleaseResultUrl}"><s:text name="releaseResults.viewResult"/></s:a>
              </ec:column>
           </ec:row>
         </ec:table>
-        <c:if test="${not empty releaseResults}">
+        <s:if test="releaseResults.size() > 0">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -92,7 +89,7 @@
               </tbody>
             </table>
           </div>
-        </c:if>
+        </s:if>
       </s:form>
       </div>
     </body>
