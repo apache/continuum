@@ -30,18 +30,14 @@
 
         <div class="axial">
           <s:form action="saveBuildDefinition" method="post">
-            <c:choose>
-            
-              <c:when test="${!empty actionErrors}">
+
+              <s:if test="hasActionErrors()">
                 <div class="errormessage">
-                  <s:iterator value="actionErrors">
-                    <p><s:property/></p>
-                  </s:iterator>
+                  <s:actionerror/>
                 </div>
                 <input type="button" value="Back" onClick="history.go(-1)">
-              </c:when>
-  
-              <c:when test="${empty actionErrors}">
+              </s:if>
+              <s:else>
                 <table>
                   <tbody>
                     <s:if test="executor == 'ant' or buildDefinitionType == 'ant'">
@@ -66,14 +62,14 @@
                     <s:textfield label="%{getText('buildDefinition.arguments.label')}" name="arguments" size="100"/>
                     <s:checkbox label="%{getText('buildDefinition.buildFresh.label')}" id="buildFresh" name="buildFresh" value="buildFresh" fieldValue="true"/>
                     <s:checkbox label="%{getText('buildDefinition.alwaysBuild.label')}" id="alwaysBuild" name="alwaysBuild" value="alwaysBuild" fieldValue="true"/>
-                    <c:choose>
-                    <c:when test="${defaultBuildDefinition == true}">
+
+                    <s:if test="defaultBuildDefinition">
                       <s:label label="%{getText('buildDefinition.defaultForProject.label')}" value="true"/>
-                    </c:when>
-                    <c:otherwise>
+                    </s:if>
+                    <s:else>
                       <s:checkbox label="%{getText('buildDefinition.defaultForProject.label')}" name="defaultBuildDefinition" value="defaultBuildDefinition" fieldValue="true"/>
-                    </c:otherwise>
-                    </c:choose>
+                    </s:else>
+
                     <s:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedules"/>
                     <s:select label="%{getText('buildDefinition.profile.label')}" name="profileId" list="profiles" listValue="name"
                                listKey="id" headerKey="-1" headerValue=""/>
@@ -93,17 +89,13 @@
                 <s:hidden name="projectId"/>
                 <s:hidden name="projectGroupId"/>
                 <s:hidden name="groupBuildDefinition"/>
-                <c:if test="${groupBuildView == true}">
+                <s:if test="groupBuildView">
                   <s:hidden name="groupBuildView" value="true"/>
-                </c:if>
-                <c:choose>
-                <c:when test="${defaultBuildDefinition == true}">
+                </s:if>
+                <s:if test="defaultBuildDefinition">
                   <s:hidden name="defaultBuildDefinition" value="true"/>
-                </c:when>
-                </c:choose>
-              </c:when>
-            
-            </c:choose>
+                </s:if>
+              </s:else>
           </s:form>
         </div>
       </div>
