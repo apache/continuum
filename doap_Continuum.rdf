@@ -26,7 +26,7 @@
     <license rdf:resource="http://usefulinc.com/doap/licenses/asl20" />
     <name>Apache Continuum</name>
     <homepage rdf:resource="http://continuum.apache.org" />
-    <asfext:pmc rdf:resource="http://continuum.apache.org" />
+    <asfext:pmc rdf:resource="http://attic.apache.org" />
     <shortdesc>Apache Continuum software is an enterprise-ready continuous integration server with features such as automated builds, release management, role-based security, and integration with popular build tools and source control management systems.</shortdesc>
     <description>Whether you have a centralized build team or want to put control of releases in the hands of developers, Apache Continuum can help you improve quality and maintain a consistent build environment. Follow us on Twitter @apachecontinuum to get the latest news and updates!</description>
     <bug-database rdf:resource="http://jira.codehaus.org/browse/CONTINUUM" />
