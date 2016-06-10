@@ -34,6 +34,7 @@
     <download-page rdf:resource="http://continuum.apache.org/download.html" />
     <programming-language>Java</programming-language>
     <category rdf:resource="http://projects.apache.org/category/build-management" />
+    <category rdf:resource="http://projects.apache.org/category/retired"/>
     <release>
       <Version>
         <name>Apache Continuum 1.4.2</name>
