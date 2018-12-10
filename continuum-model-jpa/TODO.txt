@@ -1,0 +1,5 @@
+
+TODO for Continuum JPA store implementation
+-------------------------------------------
+
+1)  Review JPA annotated Entities.  

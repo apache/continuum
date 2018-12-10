@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+  <persistence-unit name="continuum-store">    
+    <!-- provider>org.hibernate.ejb.HibernatePersistence</provider -->
+    <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+    
+    <!-- Mapped superclasses -->
+    <class>org.apache.maven.continuum.model.CommonPersistableEntity</class>    
+    <class>org.apache.maven.continuum.model.CommonCreatedEntity</class>
+    <class>org.apache.maven.continuum.model.CommonUpdatableEntity</class>
+    <class>org.apache.maven.continuum.model.CommonUpdatableModelEntity</class>    
+    
+    <!-- Entities -->    
+    <class>org.apache.maven.continuum.model.project.BuildDefinition</class>
+    <class>org.apache.maven.continuum.model.project.BuildDefinitionTemplate</class>
+    <class>org.apache.maven.continuum.model.project.BuildResult</class>
+    <class>org.apache.maven.continuum.model.project.Project</class>
+    <class>org.apache.maven.continuum.model.project.ProjectDependency</class>
+    <class>org.apache.maven.continuum.model.project.ProjectDeveloper</class>
+    <class>org.apache.maven.continuum.model.project.ProjectGroup</class>
+    <class>org.apache.maven.continuum.model.project.ProjectNotifier</class>
+    <class>org.apache.maven.continuum.model.project.Schedule</class>
+    
+    <class>org.apache.maven.continuum.model.scm.ChangeFile</class>
+    <class>org.apache.maven.continuum.model.scm.ChangeSet</class>
+    <class>org.apache.maven.continuum.model.scm.ScmResult</class>
+    <class>org.apache.maven.continuum.model.scm.SuiteResult</class>
+    <class>org.apache.maven.continuum.model.scm.TestCaseFailure</class>
+    <class>org.apache.maven.continuum.model.scm.TestResult</class>
+    
+    <class>org.apache.maven.continuum.model.system.Installation</class>
+    <class>org.apache.maven.continuum.model.system.NotificationAddress</class>
+    <class>org.apache.maven.continuum.model.system.Profile</class>
+    <class>org.apache.maven.continuum.model.system.SystemConfiguration</class>
+    
+    <properties>
+      <property name="openjpa.jdbc.DBDictionary" value="hsql" />
+      <property name="openjpa.ConnectionURL" value="jdbc:hsqldb:mem:continuum_jpa;create=true,autoCommit=true"/>
+      <property name="openjpa.ConnectionDriverName" value="org.hsqldb.jdbcDriver"/>
+      <property name="openjpa.ConnectionUserName" value="sa"/>
+      <property name="openjpa.ConnectionPassword" value=""/>
+      <!--  Configure OpenJPA to automatically run the mapping tool at runtime and create schema on Unit Test setup -->
+      <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/> 
+      
+      <!-- Enable SQL logging in OpenJPA 
+      <property name="openjpa.Log" value="DefaultLevel=INFO,SQL=TRACE" />
+      -->
+      
+      <!-- Change default log level across OpenJPA --> 
+      <property name="openjpa.Log" value="DefaultLevel=WARN"/>
+      
+    </properties>
+    
+  </persistence-unit>
+</persistence>
